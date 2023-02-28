@@ -441,8 +441,8 @@ with 60 vertical levels ranging in thickness from 10 to 250 m.
 Kuroshio8to60 and Kuroshio12to60
 ++++++++++++++++++++++++++++++++
 
-The ``Kuroshio8to60`` and ``Kuroshio12to60`` mehses are designed to explore
-dynamics of the Western Boundary Current (WBC) in the North Pacific Ocean, 
+The ``Kuroshio8to60`` and ``Kuroshio12to60`` meshes are designed to explore
+dynamics of the Western Boundary Current (WBC) in the North Pacific Ocean,
 the Kuroshio.
 
 The class
@@ -508,6 +508,81 @@ module:
     max_res = 60
     # the URL of the pull request documenting the creation of the mesh
     pull_request = https://github.com/MPAS-Dev/compass/pull/525
+
+The vertical grid is a ``60layerPHC`` profile (see
+:ref:`dev_ocean_framework_vertical`) with 60 vertical levels ranging in
+thickness from 10 to 250 m.
+
+.. _dev_ocean_global_ocean_calcofi:
+
+CalCOFI8to60
+++++++++++++
+
+The ``CalCOFI8to60`` mesh is designed to explore dynamics off the California
+coast.
+
+The class
+:py:class:`compass.ocean.tests.global_ocean.mesh.calcofi8to60.CalCOFI8to60BaseMesh`
+defines the resolution for the meshes, where the finest resolution comes from
+the ``min_res`` config option in the ``[global_ocean]`` section of the config
+file.
+
+The ``compass.ocean.tests.global_ocean.mesh.calcofi8to60`` module includes
+namelist options appropriate for forward simulations with split-explicit (but
+not RK4) time integration on this mesh.  These set the time step and default
+run duration for short runs with this mesh.
+
+Default config options for the mesh are:
+
+.. code-block:: cfg
+
+    # options related to the vertical grid
+    [vertical_grid]
+
+    # the type of vertical grid
+    grid_type = 60layerPHC
+
+    # options for global ocean testcases
+    [global_ocean]
+
+    ## config options related to the initial_state step
+    # number of cores to use
+    init_ntasks = 36
+    # minimum of cores, below which the step fails
+    init_min_tasks = 8
+    # maximum memory usage allowed (in MB)
+    init_max_memory = 1000
+
+    ## config options related to the forward steps
+    # number of cores to use
+    forward_ntasks = 1296
+    # minimum of cores, below which the step fails
+    forward_min_tasks = 128
+    # maximum memory usage allowed (in MB)
+    forward_max_memory = 1000
+
+    ## metadata related to the mesh
+    # the prefix (e.g. QU, EC, WC, SO, Kuroshio, CalCOFI)
+    prefix = CalCOFI
+    # a description of the mesh and initial condition
+    mesh_description = MPAS CalCOFI regionally refined mesh for E3SM version
+                       ${e3sm_version} with enhanced resolution (${min_res} km) in
+                       CalCOFI, 45-km resolution in the mid latitudes,
+                       30-km resolution in a 15-degree band around the equator, 60-km
+                       resolution in northern mid latitudes, 30 km in the north
+                       Atlantic and 35 km in the Arctic. This mesh has ${levels}
+                       vertical levels.
+    # E3SM version that the mesh is intended for
+    e3sm_version = 2
+    # The revision number of the mesh, which should be incremented each time the
+    # mesh is revised
+    mesh_revision = 1
+    # the minimum (finest) resolution in the mesh
+    min_res = 8
+    # the maximum (coarsest) resolution in the mesh, can be the same as min_res
+    max_res = 60
+    # the URL of the pull request documenting the creation of the mesh
+    pull_request = https://github.com/MPAS-Dev/compass/pull/546
 
 The vertical grid is a ``60layerPHC`` profile (see
 :ref:`dev_ocean_framework_vertical`) with 60 vertical levels ranging in

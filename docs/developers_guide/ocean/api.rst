@@ -191,11 +191,23 @@ test cases and steps
    mesh.Mesh.configure
    mesh.Mesh.run
 
+   mesh.calcofi8to60.CalCOFI8to60BaseMesh
+   mesh.calcofi8to60.CalCOFI8to60BaseMesh.build_cell_width_lat_lon
+   mesh.calcofi8to60.dynamic_adjustment.CalCOFI8to60DynamicAdjustment
+   mesh.calcofi8to60.dynamic_adjustment.CalCOFI8to60DynamicAdjustment.configure
+   mesh.calcofi8to60.dynamic_adjustment.CalCOFI8to60DynamicAdjustment.run
+
    mesh.ec30to60.EC30to60BaseMesh
    mesh.ec30to60.EC30to60BaseMesh.build_cell_width_lat_lon
    mesh.ec30to60.dynamic_adjustment.EC30to60DynamicAdjustment
    mesh.ec30to60.dynamic_adjustment.EC30to60DynamicAdjustment.configure
    mesh.ec30to60.dynamic_adjustment.EC30to60DynamicAdjustment.run
+
+   mesh.kuroshio.KuroshioBaseMesh
+   mesh.kuroshio.KuroshioBaseMesh.build_cell_width_lat_lon
+   mesh.kuroshio.dynamic_adjustment.KuroshioDynamicAdjustment
+   mesh.kuroshio.dynamic_adjustment.KuroshioDynamicAdjustment.configure
+   mesh.kuroshio.dynamic_adjustment.KuroshioDynamicAdjustment.run
 
    mesh.qu240.dynamic_adjustment.QU240DynamicAdjustment
    mesh.qu240.dynamic_adjustment.QU240DynamicAdjustment.configure

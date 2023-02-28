@@ -351,6 +351,22 @@ North Pacific, tapering to 60 km at mid latitudes, 30 km at the equator, and
    :width: 500 px
    :align: center
 
+.. _global_ocean_mesh_calcofi:
+
+CalCOFI8to60
+^^^^^^^^^^^^
+
+The CalCOFI (`California Cooperative Oceanic Fisheries Investigations <https://calcofi.org/>`_)
+8-to-60-km mesh is designed to explore dynamics off the California coast.
+
+The mesh has 8-km resolution in the eastern Pacific near the California coast,
+tapering to 60 km at mid latitudes, 30 km at the equator, and
+35 km in polar regions (the same as the EC30to60).
+
+.. image:: images/calcofi8to60.png
+   :width: 500 px
+   :align: center
+
 .. _global_ocean_mesh_sowisc12to60:
 
 SOwISC12to60
