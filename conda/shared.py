@@ -116,7 +116,7 @@ def get_spack_base(spack_base, config):
 
 
 def check_call(commands, env=None, logger=None):
-    print_command = '\n   '.join(commands.split('; '))
+    print_command = '\n   '.join(commands.split(' && '))
     if logger is None:
         print('\n Running:\n   {}\n'.format(print_command))
     else:
@@ -171,11 +171,10 @@ def install_miniconda(conda_base, activate_base, logger):
     backup_bashrc()
 
     print('Doing initial setup\n')
-    commands = '{}; ' \
-               'conda config --add channels conda-forge; ' \
-               'conda config --set channel_priority strict; ' \
-               'mamba update -y --all; ' \
-               'mamba install -y boa; ' \
+    commands = '{} && ' \
+               'conda config --add channels conda-forge && ' \
+               'conda config --set channel_priority strict && ' \
+               'mamba update -y --all && ' \
                'mamba init'.format(activate_base)
 
     check_call(commands, logger=logger)

@@ -229,10 +229,10 @@ def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
     env_path = os.path.join(conda_base, 'envs', env_name)
 
     source_activation_scripts = \
-        f'source {conda_base}/etc/profile.d/conda.sh; ' \
+        f'source {conda_base}/etc/profile.d/conda.sh && ' \
         f'source {conda_base}/etc/profile.d/mamba.sh'
 
-    activate_env = f'{source_activation_scripts}; mamba activate {env_name}'
+    activate_env = f'{source_activation_scripts} && mamba activate {env_name}'
 
     return python, recreate, conda_mpi, activ_suffix, env_suffix, \
         activ_path, env_path, env_name, activate_env, spack_env
@@ -264,11 +264,12 @@ def build_conda_env(env_type, recreate, machine, mpi, conda_mpi, version,
     channels = f'--override-channels {" ".join(channels)}'
     packages = f'python={python}'
 
-    base_activation_script = os.path.abspath(
-        f'{conda_base}/etc/profile.d/conda.sh')
+    conda_base = os.path.abspath(conda_base)
 
     activate_env = \
-        f'source {base_activation_script}; mamba activate {env_name}'
+        f'source {conda_base}/etc/profile.d/conda.sh &&' \
+        f'source {conda_base}/etc/profile.d/mamba.sh &&' \
+        f'mamba activate {env_name}'
 
     with open(f'{conda_template_path}/spec-file.template', 'r') as f:
         template = Template(f.read())
@@ -296,14 +297,14 @@ def build_conda_env(env_type, recreate, machine, mpi, conda_mpi, version,
         if env_type == 'dev':
             # install dev dependencies and compass itself
             commands = \
-                f'{activate_base}; ' \
+                f'{activate_base} && ' \
                 f'mamba create -y -n {env_name} {channels} ' \
                 f'--file {spec_filename} {packages}'
             check_call(commands, logger=logger)
 
             commands = \
-                f'{activate_env}; ' \
-                f'cd {source_path}; ' \
+                f'{activate_env} && ' \
+                f'cd {source_path} && ' \
                 f'python -m pip install -e .'
             check_call(commands, logger=logger)
 
@@ -311,7 +312,7 @@ def build_conda_env(env_type, recreate, machine, mpi, conda_mpi, version,
             # conda packages don't like dashes
             version_conda = version.replace('-', '')
             packages = f'{packages} "compass={version_conda}={mpi_prefix}_*"'
-            commands = f'{activate_base}; ' \
+            commands = f'{activate_base} && ' \
                        f'mamba create -y -n {env_name} {channels} {packages}'
             check_call(commands, logger=logger)
     else:
@@ -319,14 +320,14 @@ def build_conda_env(env_type, recreate, machine, mpi, conda_mpi, version,
             print(f'Updating {env_name}\n')
             # install dev dependencies and compass itself
             commands = \
-                f'{activate_base}; ' \
+                f'{activate_base} && ' \
                 f'mamba install -y -n {env_name} {channels} ' \
                 f'--file {spec_filename} {packages}'
             check_call(commands, logger=logger)
 
             commands = \
-                f'{activate_env}; ' \
-                f'cd {source_path}; ' \
+                f'{activate_env} && ' \
+                f'cd {source_path} && ' \
                 f'python -m pip install -e .'
             check_call(commands, logger=logger)
         else:
@@ -493,9 +494,9 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
 
 def set_ld_library_path(spack_branch_base, spack_env, logger):
     commands = \
-        f'source {spack_branch_base}/share/spack/setup-env.sh; ' \
-        f'spack env activate {spack_env}; ' \
-        f'spack config add modules:prefix_inspections:lib:[LD_LIBRARY_PATH]; ' \
+        f'source {spack_branch_base}/share/spack/setup-env.sh && ' \
+        f'spack env activate {spack_env} && ' \
+        f'spack config add modules:prefix_inspections:lib:[LD_LIBRARY_PATH] && ' \
         f'spack config add modules:prefix_inspections:lib64:[LD_LIBRARY_PATH]'  # noqa: E501
     check_call(commands, logger=logger)
 
@@ -597,12 +598,12 @@ def check_env(script_filename, env_name, logger):
                 ['compass', 'clean', '--help']]
 
     for import_name in imports:
-        command = '{}; python -c "import {}"'.format(activate, import_name)
+        command = '{} && python -c "import {}"'.format(activate, import_name)
         test_command(command, os.environ, import_name, logger)
 
     for command in commands:
         package = command[0]
-        command = '{}; {}'.format(activate, ' '.join(command))
+        command = '{} && {}'.format(activate, ' '.join(command))
         test_command(command, os.environ, package, logger)
 
 
@@ -827,10 +828,10 @@ def main():  # noqa: C901
     conda_base = os.path.abspath(conda_base)
 
     source_activation_scripts = \
-        f'source {conda_base}/etc/profile.d/conda.sh; ' \
+        f'source {conda_base}/etc/profile.d/conda.sh && ' \
         f'source {conda_base}/etc/profile.d/mamba.sh'
 
-    activate_base = f'{source_activation_scripts}; mamba activate'
+    activate_base = f'{source_activation_scripts} && mamba activate'
 
     compilers, mpis = get_compilers_mpis(config, machine, args.compilers,
                                          args.mpis, source_path)
@@ -952,7 +953,7 @@ def main():  # noqa: C901
                 check_call(f'ln -sfn {script_filename} {link}')
         os.chdir(source_path)
 
-    commands = '{}; conda clean -y -p -t'.format(activate_base)
+    commands = '{} && conda clean -y -p -t'.format(activate_base)
     check_call(commands, logger=logger)
 
     if args.update_spack or env_type != 'dev':
