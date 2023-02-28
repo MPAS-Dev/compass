@@ -4,6 +4,9 @@ from compass.mesh.spherical import (
 )
 from compass.ocean.mesh.cull import CullMeshStep
 from compass.ocean.tests.global_ocean.mesh.arrm10to60 import ARRM10to60BaseMesh
+from compass.ocean.tests.global_ocean.mesh.calcofi8to60 import (
+    CalCOFI8to60BaseMesh,
+)
 from compass.ocean.tests.global_ocean.mesh.ec30to60 import EC30to60BaseMesh
 from compass.ocean.tests.global_ocean.mesh.kuroshio import KuroshioBaseMesh
 from compass.ocean.tests.global_ocean.mesh.so12to60 import SO12to60BaseMesh
@@ -75,6 +78,9 @@ class Mesh(TestCase):
             base_mesh_step = SO12to60BaseMesh(self, name=name, subdir=subdir)
         elif mesh_name.startswith('Kuroshio'):
             base_mesh_step = KuroshioBaseMesh(self, name=name, subdir=subdir)
+        elif mesh_name in 'CalCOFI8to60':
+            base_mesh_step = CalCOFI8to60BaseMesh(self, name=name,
+                                                  subdir=subdir)
         elif mesh_name in ['WC14']:
             base_mesh_step = WC14BaseMesh(self, name=name, subdir=subdir)
         else:
