@@ -252,8 +252,7 @@ parallel
 .. autosummary::
    :toctree: generated/
 
-   get_available_cores_and_nodes
-   check_parallel_system
+   get_available_parallel_resources
    set_cores_per_node
    run_command
 

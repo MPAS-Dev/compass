@@ -1,5 +1,5 @@
 import time
-from datetime import datetime, timedelta
+from datetime import timedelta
 from importlib.resources import contents
 
 from compass.model import run_model
@@ -28,7 +28,7 @@ class Forward(Step):
 
         resolution : int
             The resolution of the (uniform) mesh in km
-        """
+        """  # noqa: E501
         super().__init__(test_case=test_case,
                          name='{}km_forward'.format(resolution),
                          subdir='{}km/forward'.format(resolution))
@@ -70,12 +70,12 @@ class Forward(Step):
                               template_replacements=stream_replacements)
         self._get_resources()
 
-    def constrain_resources(self, available_cores):
+    def constrain_resources(self, available_resources):
         """
         Update resources at runtime from config options
         """
         self._get_resources()
-        super().constrain_resources(available_cores)
+        super().constrain_resources(available_resources)
 
     def run(self):
         """
@@ -115,8 +115,8 @@ class Forward(Step):
         duration = \
             int(3600 * config.getfloat('planar_convergence', 'duration'))
         delta = timedelta(seconds=duration)
-        hours = delta.seconds//3600
-        minutes = delta.seconds//60 % 60
+        hours = delta.seconds // 3600
+        minutes = delta.seconds // 60 % 60
         seconds = delta.seconds % 60
         duration = f'{delta.days:03d}_{hours:02d}:{minutes:02d}:{seconds:02d}'
 
@@ -130,7 +130,7 @@ class Forward(Step):
     def _get_resources(self):
         config = self.config
         resolution = self.resolution
-        self.ntasks = config.getint(f'planar_convergence',
+        self.ntasks = config.getint('planar_convergence',
                                     f'{resolution}km_ntasks')
-        self.min_tasks = config.getint(f'planar_convergence',
+        self.min_tasks = config.getint('planar_convergence',
                                        f'{resolution}km_min_tasks')

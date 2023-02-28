@@ -1,5 +1,5 @@
-from compass.step import Step
 from compass.ocean.iceshelf import adjust_ssh
+from compass.step import Step
 
 
 class SshAdjustment(Step):
@@ -55,12 +55,12 @@ class SshAdjustment(Step):
         """
         self._get_resources()
 
-    def constrain_resources(self, available_cores):
+    def constrain_resources(self, available_resources):
         """
         Update resources at runtime from config options
         """
         self._get_resources()
-        super().constrain_resources(available_cores)
+        super().constrain_resources(available_resources)
 
     def run(self):
         """

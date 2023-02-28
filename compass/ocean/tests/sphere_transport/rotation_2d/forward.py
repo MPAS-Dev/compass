@@ -1,8 +1,7 @@
-import time
+from datetime import timedelta
 
 from compass.model import run_model
 from compass.step import Step
-from datetime import timedelta
 
 
 class Forward(Step):
@@ -28,7 +27,7 @@ class Forward(Step):
             The resolution of the (uniform) mesh in km
         dt_minutes : int
             The time step size in minutes.  **must divide 1 day (24*60)**
-        """
+        """  # noqa: E501
         super().__init__(test_case=test_case,
                          name='QU{}_forward'.format(resolution),
                          subdir='QU{}/forward'.format(resolution))
@@ -61,12 +60,12 @@ class Forward(Step):
                                        'rotation_2d', 'time_integrator')})
         self._get_resources()
 
-    def constrain_resources(self, available_cores):
+    def constrain_resources(self, available_resources):
         """
         Update resources at runtime from config options
         """
         self._get_resources()
-        super().constrain_resources(available_cores)
+        super().constrain_resources(available_resources)
 
     def run(self):
         """

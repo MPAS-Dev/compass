@@ -1,15 +1,16 @@
-import os
-from lxml import etree
-import shutil
-import numpy
-import stat
 import grp
-import progressbar
 import json
+import os
+import shutil
+import stat
 
-from compass.io import download, symlink, package_path
+import numpy
+import progressbar
+from lxml import etree
+
 import compass.namelist
 import compass.streams
+from compass.io import download, package_path, symlink
 
 
 class Step:
@@ -289,16 +290,23 @@ class Step:
         if max_memory is not None:
             self.max_memory = max_memory
 
-    def constrain_resources(self, available_cores):
+    def constrain_resources(self, available_resources):
         """
         Constrain ``cpus_per_task`` and ``ntasks`` based on the number of
         cores available to this step
 
         Parameters
         ----------
-        available_cores : int
+        available_resources : dict
             The total number of cores available to the step
         """
+        mpi_allowed = available_resources['mpi_allowed']
+        if not mpi_allowed and self.ntasks > 1:
+            raise ValueError(
+                'You are trying to run an MPI job on a login node.\n'
+                'Please switch to a compute node.')
+
+        available_cores = available_resources['cores']
         if self.ntasks == 1:
             # just one task so only need to worry about cpus_per_task
             self.cpus_per_task = min(self.cpus_per_task, available_cores)
@@ -636,7 +644,7 @@ class Step:
                                     replacements=template_replacements)
         compass.streams.write(tree, filename)
 
-    def process_inputs_and_outputs(self):
+    def process_inputs_and_outputs(self):  # noqa: C901
         """
         Process the inputs to and outputs from a step added with
         :py:meth:`compass.Step.add_input_file` and
@@ -870,7 +878,7 @@ class Step:
 
             compass.streams.write(defaults_tree, out_filename)
 
-    def _fix_permissions(self, databases):
+    def _fix_permissions(self, databases):  # noqa: C901
         """
         Fix permissions on the databases where files were downloaded so
         everyone in the group can read/write to them

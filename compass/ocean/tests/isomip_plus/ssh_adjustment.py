@@ -1,6 +1,6 @@
-from compass.step import Step
 from compass.ocean.iceshelf import adjust_ssh
 from compass.ocean.tests.isomip_plus.forward import get_time_steps
+from compass.step import Step
 
 
 class SshAdjustment(Step):
@@ -30,8 +30,9 @@ class SshAdjustment(Step):
         self.add_namelist_file('compass.ocean.tests.isomip_plus',
                                'namelist.forward_and_ssh_adjust')
         if vertical_coordinate == 'single_layer':
-            self.add_namelist_file('compass.ocean.tests.isomip_plus',
-                                   'namelist.single_layer.forward_and_ssh_adjust')
+            self.add_namelist_file(
+                'compass.ocean.tests.isomip_plus',
+                'namelist.single_layer.forward_and_ssh_adjust')
         if thin_film_present:
             self.add_namelist_file('compass.ocean.tests.isomip_plus',
                                    'namelist.thin_film.forward_and_ssh_adjust')
@@ -67,12 +68,12 @@ class SshAdjustment(Step):
         """
         self._get_resources()
 
-    def constrain_resources(self, available_cores):
+    def constrain_resources(self, available_resources):
         """
         Update resources at runtime from config options
         """
         self._get_resources()
-        super().constrain_resources(available_cores)
+        super().constrain_resources(available_resources)
 
     def run(self):
         """
