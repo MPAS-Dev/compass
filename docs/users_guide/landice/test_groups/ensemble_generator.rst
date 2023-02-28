@@ -13,7 +13,7 @@ and one ensemble manager.
 Each ensemble member is a step of the test case, and can be run separately
 or as part of the complete ensemble.  Ensemble members are identified by a
 three digit run number, starting with 000.
-A config file specifies the the run numbers to set up, as well as some common
+A config file specifies the run numbers to set up, as well as some common
 information about the run configuration.
 
 The test case can be generated multiple times to set up and run additional
@@ -23,8 +23,8 @@ look as expected before spending time on a larger ensemble. This also allows
 one to add more ensemble members from the Sobol sequence later if UQ analysis
 indicates the original sample size was insufficient.
 
-Individual test cases will define which parameter are being sampled and
-over what range.  Currently these parameters are supported:
+Individual test cases will define which parameters are being sampled and
+over what ranges.  Currently these parameters are supported:
 
 * basal friction power law exponent
 
@@ -35,7 +35,7 @@ over what range.  Currently these parameters are supported:
 * gamma0 melt sensitivity parameter in ISMIP6-AIS ice-shelf basal melting
   parameterization
 
-* deltaT thermal forcing bias adjustment parameter in ISMIP6-AIS ice-shel
+* deltaT thermal forcing bias adjustment parameter in ISMIP6-AIS ice-shelf
   basal melting parameterization
 
 Additional parameters can be easily added in the future.
@@ -45,7 +45,7 @@ dimensionality or sample size can be increased by modifying this file and
 its usage.  It also would be possible to modify the sampling strategy to
 perform uniform parameter sensitivity tests.
 
-``compass setup`` will set up the set up simulations and the ensemble manager.
+``compass setup`` will set up the simulations and the ensemble manager.
 ``compass run`` from the test case work directory will submit each run as a
 separate slurm job.
 Individual runs can be run independently through ``compass run`` executed in the
@@ -180,8 +180,8 @@ The model configuration uses:
 Steps for setting up and running a Thwaites ensmble
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. With a compass conda environment set up, run
-   ``compass setup -n X -w WORK_DIR_PATH -f USER.cfg``
+1. With a compass conda environment set up, run, e.g.,
+   ``compass setup -t landice/ensemble_generator/thwaites_ensemble -w WORK_DIR_PATH -f USER.cfg``
    where ``WORK_DIR_PATH`` is a location that can store the whole
    ensemble (typically a scratch drive) and ``USER.cfg`` is the
    user-defined config described in the previous section that includes
@@ -206,7 +206,7 @@ Steps for setting up and running a Thwaites ensmble
 
 5. When the ensemble has completed, you can assess the result through the
    basic visualization script ``plot_ensemble.py``.  The script will skip runs
-   that are incomplete or failed, so you can run it while an emsemble is
+   that are incomplete or failed, so you can run it while an ensemble is
    still running to assess progress.
 
 6. If you want to add additional ensemble members, adjust

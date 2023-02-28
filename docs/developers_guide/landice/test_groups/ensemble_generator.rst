@@ -46,9 +46,10 @@ parameters:
 * deltaT thermal forcing bias adjustment  parameter in ISMIP6-AIS ice-shel
   basal melting parameterization
 
-These parameter values are always set; if it desired they not be modified
+These parameter values are always set; if it is desired they not be modified
 from the baseline configuration, a default value should be passed to the
-constructor.
+constructor from the test case calling this class, e.g.,
+:py:class:`compass.landice.tests.ensemble_generator.thwaites.ThwaitesEnsemble`.
 
 Because changing the exponent requires modifying the input file to adjust
 muFriction to yield the same basal shear stress as the original file,
@@ -84,7 +85,7 @@ ensemble_manager
 The class :py:class:`compass.landice.tests.ensemble_generator.EnsembleManager`
 defines a step for managing the entire ensemble.  The constructor and setup
 methods perform minimal operations.  The ``run`` method submits each run in
-the ensemble as a slurm job.  Eventually the ensemble_manager will be able
+the ensemble as a slurm job.  Eventually the ``ensemble_manager`` will be able
 to assess if runs need restarts and modify them to be submitted as such.
 
 thwaites
