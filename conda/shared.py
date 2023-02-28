@@ -1,17 +1,17 @@
 from __future__ import print_function
 
-import os
-import sys
 import argparse
-import subprocess
-import platform
 import logging
+import os
+import platform
 import shutil
+import subprocess
+import sys
 
 try:
-    from urllib.request import urlopen, Request
+    from urllib.request import Request, urlopen
 except ImportError:
-    from urllib2 import urlopen, Request
+    from urllib2 import Request, urlopen
 
 
 def parse_args(bootstrap):
@@ -155,7 +155,7 @@ def install_miniconda(conda_base, activate_base, logger):
         else:
             system = 'Linux'
         miniconda = 'Mambaforge-{}-x86_64.sh'.format(system)
-        url = 'https://github.com/conda-forge/miniforge/releases/latest/download/{}'.format(miniconda)
+        url = 'https://github.com/conda-forge/miniforge/releases/latest/download/{}'.format(miniconda)  # noqa: E501
         print(url)
         req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
         f = urlopen(req)
@@ -174,8 +174,8 @@ def install_miniconda(conda_base, activate_base, logger):
     commands = '{}; ' \
                'conda config --add channels conda-forge; ' \
                'conda config --set channel_priority strict; ' \
-               'conda install -y boa; ' \
-               'conda update -y --all; ' \
+               'mamba update -y --all; ' \
+               'mamba install -y boa; ' \
                'mamba init'.format(activate_base)
 
     check_call(commands, logger=logger)

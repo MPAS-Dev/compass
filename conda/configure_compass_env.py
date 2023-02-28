@@ -8,16 +8,21 @@ import sys
 try:
     from configparser import ConfigParser
 except ImportError:
-    from six.moves import configparser
     import six
+    from six.moves import configparser
 
     if six.PY2:
         ConfigParser = configparser.SafeConfigParser
     else:
         ConfigParser = configparser.ConfigParser
 
-from shared import parse_args, get_conda_base, check_call, install_miniconda, \
-    get_logger
+from shared import (
+    check_call,
+    get_conda_base,
+    get_logger,
+    install_miniconda,
+    parse_args,
+)
 
 
 def get_config(config_file):
@@ -85,11 +90,11 @@ def main():
         'source {}/etc/profile.d/conda.sh; ' \
         'source {}/etc/profile.d/mamba.sh'.format(conda_base, conda_base)
 
-    activate_base = '{}; conda activate'.format(source_activation_scripts)
+    activate_base = '{}; mamba activate'.format(source_activation_scripts)
 
     activate_install_env = \
         '{}; ' \
-        'conda activate {}'.format(source_activation_scripts, env_name)
+        'mamba activate {}'.format(source_activation_scripts, env_name)
     try:
         os.makedirs('conda/logs')
     except OSError:

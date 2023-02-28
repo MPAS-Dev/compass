@@ -232,7 +232,7 @@ def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
         f'source {conda_base}/etc/profile.d/conda.sh; ' \
         f'source {conda_base}/etc/profile.d/mamba.sh'
 
-    activate_env = f'{source_activation_scripts}; conda activate {env_name}'
+    activate_env = f'{source_activation_scripts}; mamba activate {env_name}'
 
     return python, recreate, conda_mpi, activ_suffix, env_suffix, \
         activ_path, env_path, env_name, activate_env, spack_env
@@ -268,7 +268,7 @@ def build_conda_env(env_type, recreate, machine, mpi, conda_mpi, version,
         f'{conda_base}/etc/profile.d/conda.sh')
 
     activate_env = \
-        f'source {base_activation_script}; conda activate {env_name}'
+        f'source {base_activation_script}; mamba activate {env_name}'
 
     with open(f'{conda_template_path}/spec-file.template', 'r') as f:
         template = Template(f.read())
@@ -830,7 +830,7 @@ def main():  # noqa: C901
         f'source {conda_base}/etc/profile.d/conda.sh; ' \
         f'source {conda_base}/etc/profile.d/mamba.sh'
 
-    activate_base = f'{source_activation_scripts}; conda activate'
+    activate_base = f'{source_activation_scripts}; mamba activate'
 
     compilers, mpis = get_compilers_mpis(config, machine, args.compilers,
                                          args.mpis, source_path)
