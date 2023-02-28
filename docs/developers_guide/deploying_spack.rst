@@ -131,7 +131,7 @@ This is a branch off of the develop branch on
 `E3SM’s spack repo <https://github.com/E3SM-Project/spack>`_ that has any
 updates to packages required for this version of mache and compass. The
 spack branch will omit any alpha, beta or rc suffix on the mache version
-because it is intended to be the spack branch we will use once the `mache`
+because it is intended to be the spack branch we will use once the ``mache``
 release happens.  In this example, we will work with the branch
 `spack_for_mache_1.12.0 <https://github.com/E3SM-Project/spack/tree/spack_for_mache_1.12.0>`_.
 
@@ -210,7 +210,8 @@ For testing, you want to point to a different location for installing spack
 using ``--spack``.
 
 On many machines, the ``/tmp`` directory is not a safe place to build spack
-packages.  Use ``--tmpdir`` to point to another place.
+packages.  Use ``--tmpdir`` to point to another place, e.g., your scratch
+space.
 
 The ``--recreate`` flag may not be strictly necessary but it’s a good idea.
 This will make sure both the bootstrapping conda environment (the one that
@@ -223,40 +224,6 @@ supported on each machine, take a look at :ref:`dev_supported_machines`.
 
 Be aware that not all compilers and MPI libraries support Albany and PETSc, as
 discussed below.
-
-During the spack build, you may see:
-
-.. code-block:: none
-
-    ==> Error: no such environment 'dev_compass_1_2_0-alpha_5_intel_openmpi'
-    creating new environment: dev_compass_1_2_0-alpha_5_intel_openmpi
-
-That’s okay, this isn’t a real error and should hopefully be hidden soon.
-
-Testing spack with Albany
--------------------------
-
-If you also want to build Albany, use the ``--with_albany`` flag.  Currently,
-this only works with Gnu compilers.  There is a file,
-`albany_support.txt <https://github.com/MPAS-Dev/compass/blob/main/conda/albany_supported.txt>`_,
-that lists supported compilers and MPI libraries on each machine.
-
-Here is an example:
-
-.. code-block:: bash
-
-    export TMPDIR=/lcrc/group/e3sm/${USER}/spack_temp
-    ./conda/configure_compass_env.py \
-        --conda ${CONDA_BASE} \
-        --mache_fork xylar/mache \
-        --mache_branch update_cime_machines \
-        --update_spack \
-        --spack /lcrc/group/e3sm/${USER}/spack_test \
-        --tmpdir ${TMPDIR} \
-        --compiler gnu \
-        --mpi openmpi \
-        --with_albany \
-        --recreate
 
 Testing spack with PETSc (and Netlib LAPACK)
 --------------------------------------------
@@ -286,19 +253,44 @@ Here is an example:
         --with_petsc \
         --recreate
 
+Testing spack with Albany
+-------------------------
+
+If you also want to build Albany, use the ``--with_albany`` flag.  Currently,
+this only works with Gnu compilers.  There is a file,
+`albany_support.txt <https://github.com/MPAS-Dev/compass/blob/main/conda/albany_supported.txt>`_,
+that lists supported compilers and MPI libraries on each machine.
+
+Here is an example:
+
+.. code-block:: bash
+
+    export TMPDIR=/lcrc/group/e3sm/${USER}/spack_temp
+    ./conda/configure_compass_env.py \
+        --conda ${CONDA_BASE} \
+        --mache_fork xylar/mache \
+        --mache_branch update_cime_machines \
+        --update_spack \
+        --spack /lcrc/group/e3sm/${USER}/spack_test \
+        --tmpdir ${TMPDIR} \
+        --compiler gnu \
+        --mpi openmpi \
+        --with_albany \
+        --recreate
 
 Troubleshooting spack
 ------------------------------
 
 If you encounter an error like:
-.. code-block:: bash
+.. code-block:: none
 
     ==>   spack env activate dev_compass_1_2_0-alpha_4_gnu_mpich
     ==> Error: Package 'armpl' not found.
     You may need to run 'spack clean -m'.
 
-during the attempt to build spack, you will first need to find the path to `setup-env.sh` (see 
-`compass/build_*/build*.sh`) and source that script to get the `spack` command, e.g.:
+during the attempt to build spack, you will first need to find the path to
+``setup-env.sh`` (see ``compass/build_*/build*.sh``) and source that script to
+get the ``spack`` command, e.g.:
 
 .. code-block:: bash
 
@@ -310,7 +302,7 @@ Then run the suggested command:
 
     spack clean -m
 
-After that, re-running `./conda/configure_compass_env.py` should work correctly.
+After that, re-running ``./conda/configure_compass_env.py`` should work correctly.
 
 This issue seems to be related to switching between spack v0.18 and v0.19 (used by different versions of compass).
 
@@ -425,6 +417,10 @@ Once compass has been tested with the spack builds in a temporary location, it
 is time to deploy the shared spack environments for all developers to use.
 A ``mache`` developer will make a ``mache`` release (if needed) before this
 step begins.  So there is no need to build mache from a remote branch anymore.
+
+Compass knows where to deploy spack on each machine because of the ``spack``
+config option specified in the ``[deploy]`` section of each machine's config
+file, see the `machine configs <https://github.com/MPAS-Dev/compass/tree/main/compass/machines>`_.
 
 It is best to update the remote compass branch in case of changes:
 
