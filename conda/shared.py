@@ -171,9 +171,22 @@ def install_miniconda(conda_base, activate_base, logger):
     backup_bashrc()
 
     print('Doing initial setup\n')
+
     commands = '{} && ' \
                'conda config --add channels conda-forge && ' \
-               'conda config --set channel_priority strict && ' \
+               'conda config --set channel_priority strict' \
+               ''.format(activate_base)
+
+    check_call(commands, logger=logger)
+
+    commands = '{} && ' \
+               'conda remove -y boa'.format(activate_base)
+    try:
+        check_call(commands, logger=logger)
+    except subprocess.CalledProcessError:
+        pass
+
+    commands = '{} && ' \
                'mamba update -y --all && ' \
                'mamba init'.format(activate_base)
 
