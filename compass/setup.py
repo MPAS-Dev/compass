@@ -1,19 +1,19 @@
 import argparse
-import sys
 import os
 import pickle
+import sys
 import warnings
 
 from mache import discover_machine
 
-from compass.mpas_cores import get_mpas_cores
+from compass import provenance
 from compass.config import CompassConfigParser
 from compass.io import symlink
-from compass import provenance
 from compass.job import write_job_script
+from compass.mpas_cores import get_mpas_cores
 
 
-def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
+def setup_cases(tests=None, numbers=None, config_file=None, machine=None,  # noqa: C901, E501
                 work_dir=None, baseline_dir=None, mpas_model_path=None,
                 suite_name='custom', cached=None, copy_executable=False):
     """
@@ -406,8 +406,8 @@ def _get_required_cores(test_cases):
                 raise ValueError(
                     f'The number of CPUs per task (cpus_per_task) was never '
                     f'set for {test_case.path} step {step_name}')
-            cores = step.cpus_per_task*step.ntasks
-            min_cores = step.min_cpus_per_task*step.min_tasks
+            cores = step.cpus_per_task * step.ntasks
+            min_cores = step.min_cpus_per_task * step.min_tasks
             max_cores = max(max_cores, cores)
             max_of_min_cores = max(max_of_min_cores, min_cores)
 
@@ -435,6 +435,10 @@ def _get_basic_config(config_file, machine, mpas_model_path, mpas_core):
     if machine is None:
         machine = 'default'
     config.add_from_package('compass.machines', f'{machine}.cfg')
+
+    # store name of machine so tests have access to it if needed
+    if machine is not None:
+        config.set('deploy', 'machine', machine)
 
     if 'COMPASS_BRANCH' in os.environ:
         compass_branch = os.environ['COMPASS_BRANCH']
