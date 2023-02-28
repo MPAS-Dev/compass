@@ -1,17 +1,17 @@
 from __future__ import print_function
 
-import os
-import sys
 import argparse
-import subprocess
-import platform
 import logging
+import os
+import platform
 import shutil
+import subprocess
+import sys
 
 try:
-    from urllib.request import urlopen, Request
+    from urllib.request import Request, urlopen
 except ImportError:
-    from urllib2 import urlopen, Request
+    from urllib2 import Request, urlopen
 
 
 def parse_args(bootstrap):
@@ -116,7 +116,7 @@ def get_spack_base(spack_base, config):
 
 
 def check_call(commands, env=None, logger=None):
-    print_command = '\n   '.join(commands.split('; '))
+    print_command = '\n   '.join(commands.split(' && '))
     if logger is None:
         print('\n Running:\n   {}\n'.format(print_command))
     else:
@@ -155,7 +155,7 @@ def install_miniconda(conda_base, activate_base, logger):
         else:
             system = 'Linux'
         miniconda = 'Mambaforge-{}-x86_64.sh'.format(system)
-        url = 'https://github.com/conda-forge/miniforge/releases/latest/download/{}'.format(miniconda)
+        url = 'https://github.com/conda-forge/miniforge/releases/latest/download/{}'.format(miniconda)  # noqa: E501
         print(url)
         req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
         f = urlopen(req)
@@ -171,11 +171,23 @@ def install_miniconda(conda_base, activate_base, logger):
     backup_bashrc()
 
     print('Doing initial setup\n')
-    commands = '{}; ' \
-               'conda config --add channels conda-forge; ' \
-               'conda config --set channel_priority strict; ' \
-               'conda install -y boa; ' \
-               'conda update -y --all; ' \
+
+    commands = '{} && ' \
+               'conda config --add channels conda-forge && ' \
+               'conda config --set channel_priority strict' \
+               ''.format(activate_base)
+
+    check_call(commands, logger=logger)
+
+    commands = '{} && ' \
+               'conda remove -y boa'.format(activate_base)
+    try:
+        check_call(commands, logger=logger)
+    except subprocess.CalledProcessError:
+        pass
+
+    commands = '{} && ' \
+               'mamba update -y --all && ' \
                'mamba init'.format(activate_base)
 
     check_call(commands, logger=logger)

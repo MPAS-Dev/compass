@@ -8,16 +8,21 @@ import sys
 try:
     from configparser import ConfigParser
 except ImportError:
-    from six.moves import configparser
     import six
+    from six.moves import configparser
 
     if six.PY2:
         ConfigParser = configparser.SafeConfigParser
     else:
         ConfigParser = configparser.ConfigParser
 
-from shared import parse_args, get_conda_base, check_call, install_miniconda, \
-    get_logger
+from shared import (
+    check_call,
+    get_conda_base,
+    get_logger,
+    install_miniconda,
+    parse_args,
+)
 
 
 def get_config(config_file):
@@ -37,7 +42,7 @@ def bootstrap(activate_install_env, source_path, local_conda_build):
 
     print('Creating the compass conda environment\n')
     bootstrap_command = '{}/conda/bootstrap.py'.format(source_path)
-    command = '{}; ' \
+    command = '{} && ' \
               '{} {}'.format(activate_install_env, bootstrap_command,
                              ' '.join(sys.argv[1:]))
     if local_conda_build is not None:
@@ -56,13 +61,13 @@ def setup_install_env(env_name, activate_base, use_local, logger, recreate,
     packages = 'progressbar2 jinja2 "mache=1.10.0"'
     if recreate or not os.path.exists(env_path):
         print('Setting up a conda environment for installing compass\n')
-        commands = '{}; ' \
+        commands = '{} && ' \
                    'mamba create -y -n {} {} {}'.format(activate_base,
                                                         env_name, channels,
                                                         packages)
     else:
         print('Updating conda environment for installing compass\n')
-        commands = '{}; ' \
+        commands = '{} && ' \
                    'mamba install -y -n {} {} {}'.format(activate_base,
                                                          env_name, channels,
                                                          packages)
@@ -82,14 +87,14 @@ def main():
     env_name = 'compass_bootstrap'
 
     source_activation_scripts = \
-        'source {}/etc/profile.d/conda.sh; ' \
+        'source {}/etc/profile.d/conda.sh && ' \
         'source {}/etc/profile.d/mamba.sh'.format(conda_base, conda_base)
 
-    activate_base = '{}; conda activate'.format(source_activation_scripts)
+    activate_base = '{} && mamba activate'.format(source_activation_scripts)
 
     activate_install_env = \
-        '{}; ' \
-        'conda activate {}'.format(source_activation_scripts, env_name)
+        '{} && ' \
+        'mamba activate {}'.format(source_activation_scripts, env_name)
     try:
         os.makedirs('conda/logs')
     except OSError:
