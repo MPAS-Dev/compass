@@ -112,11 +112,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.sphere_transport.divergent_2d.forward</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">time</span>
+<span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
 
 <span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">run_model</span>
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
 
 
 <div class="viewcode-block" id="Forward"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.sphere_transport.divergent_2d.forward.Forward.html#compass.ocean.tests.sphere_transport.divergent_2d.forward.Forward">[docs]</a><span class="k">class</span> <span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
@@ -142,7 +141,7 @@
 <span class="sd">            The resolution of the (uniform) mesh in km</span>
 <span class="sd">        dt_minutes : int</span>
 <span class="sd">            The time step size in minutes.  **must divide 1 day (24*60)**</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span>
                          <span class="n">name</span><span class="o">=</span><span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_forward&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">/forward&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
@@ -175,12 +174,12 @@
                                        <span class="s1">&#39;divergent_2d&#39;</span><span class="p">,</span> <span class="s1">&#39;time_integrator&#39;</span><span class="p">)})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_resources</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_cores</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_resources</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update resources at runtime from config options</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_resources</span><span class="p">()</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">constrain_resources</span><span class="p">(</span><span class="n">available_cores</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">constrain_resources</span><span class="p">(</span><span class="n">available_resources</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Forward.run"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.sphere_transport.divergent_2d.forward.Forward.run.html#compass.ocean.tests.sphere_transport.divergent_2d.forward.Forward.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>

@@ -161,8 +161,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#parallel">parallel</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="generated/compass.parallel.get_available_cores_and_nodes.html">compass.parallel.get_available_cores_and_nodes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="generated/compass.parallel.check_parallel_system.html">compass.parallel.check_parallel_system</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/compass.parallel.get_available_parallel_resources.html">compass.parallel.get_available_parallel_resources</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/compass.parallel.set_cores_per_node.html">compass.parallel.set_cores_per_node</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/compass.parallel.run_command.html">compass.parallel.run_command</a></li>
 </ul>
@@ -427,7 +426,7 @@ documentation.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.Step.set_resources.html#compass.Step.set_resources" title="compass.Step.set_resources"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.set_resources</span></code></a>([cpus_per_task, ...])</p></td>
 <td><p>Update the resources for the subtask.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.Step.constrain_resources.html#compass.Step.constrain_resources" title="compass.Step.constrain_resources"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.constrain_resources</span></code></a>(available_cores)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.Step.constrain_resources.html#compass.Step.constrain_resources" title="compass.Step.constrain_resources"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.constrain_resources</span></code></a>(available_resources)</p></td>
 <td><p>Constrain <code class="docutils literal notranslate"><span class="pre">cpus_per_task</span></code> and <code class="docutils literal notranslate"><span class="pre">ntasks</span></code> based on the number of cores available to this step</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.Step.setup.html#compass.Step.setup" title="compass.Step.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.setup</span></code></a>()</p></td>
@@ -618,16 +617,13 @@ documentation.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.parallel.get_available_cores_and_nodes.html#compass.parallel.get_available_cores_and_nodes" title="compass.parallel.get_available_cores_and_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_available_cores_and_nodes</span></code></a>(config)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.parallel.get_available_parallel_resources.html#compass.parallel.get_available_parallel_resources" title="compass.parallel.get_available_parallel_resources"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_available_parallel_resources</span></code></a>(config)</p></td>
 <td><p>Get the number of total cores and nodes available for running steps</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.parallel.check_parallel_system.html#compass.parallel.check_parallel_system" title="compass.parallel.check_parallel_system"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_parallel_system</span></code></a>(config)</p></td>
-<td><p>Check whether we are in an appropriate state for the given queuing system.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.parallel.set_cores_per_node.html#compass.parallel.set_cores_per_node" title="compass.parallel.set_cores_per_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_cores_per_node</span></code></a>(config)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.parallel.set_cores_per_node.html#compass.parallel.set_cores_per_node" title="compass.parallel.set_cores_per_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_cores_per_node</span></code></a>(config, cores_per_node)</p></td>
 <td><p>If the system has Slurm, find out the <code class="docutils literal notranslate"><span class="pre">cpus_per_node</span></code> and set the config option accordingly.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.parallel.run_command.html#compass.parallel.run_command" title="compass.parallel.run_command"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_command</span></code></a>(args, cpus_per_task, ntasks, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.parallel.run_command.html#compass.parallel.run_command" title="compass.parallel.run_command"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_command</span></code></a>(args, cpus_per_task, ntasks, ...)</p></td>
 <td><p>Run a subprocess with the given command-line arguments and resources</p></td>
 </tr>
 </tbody>

@@ -111,9 +111,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.isomip_plus.ssh_adjustment</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.iceshelf</span> <span class="kn">import</span> <span class="n">adjust_ssh</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.ocean.iceshelf</span> <span class="kn">import</span> <span class="n">adjust_ssh</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.forward</span> <span class="kn">import</span> <span class="n">get_time_steps</span>
+<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
 
 <div class="viewcode-block" id="SshAdjustment"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.ssh_adjustment.SshAdjustment.html#compass.ocean.tests.isomip_plus.ssh_adjustment.SshAdjustment">[docs]</a><span class="k">class</span> <span class="nc">SshAdjustment</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
@@ -143,8 +143,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.isomip_plus&#39;</span><span class="p">,</span>
                                <span class="s1">&#39;namelist.forward_and_ssh_adjust&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">vertical_coordinate</span> <span class="o">==</span> <span class="s1">&#39;single_layer&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.isomip_plus&#39;</span><span class="p">,</span>
-                                   <span class="s1">&#39;namelist.single_layer.forward_and_ssh_adjust&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
+                <span class="s1">&#39;compass.ocean.tests.isomip_plus&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;namelist.single_layer.forward_and_ssh_adjust&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">thin_film_present</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.isomip_plus&#39;</span><span class="p">,</span>
                                    <span class="s1">&#39;namelist.thin_film.forward_and_ssh_adjust&#39;</span><span class="p">)</span>
@@ -180,12 +181,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_resources</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_cores</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_resources</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update resources at runtime from config options</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_resources</span><span class="p">()</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">constrain_resources</span><span class="p">(</span><span class="n">available_cores</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">constrain_resources</span><span class="p">(</span><span class="n">available_resources</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SshAdjustment.run"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.ssh_adjustment.SshAdjustment.run.html#compass.ocean.tests.isomip_plus.ssh_adjustment.SshAdjustment.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>

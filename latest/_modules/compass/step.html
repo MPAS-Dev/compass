@@ -109,18 +109,19 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.step</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">stat</span>
-<span class="kn">import</span> <span class="nn">grp</span>
-<span class="kn">import</span> <span class="nn">progressbar</span>
+<span></span><span class="kn">import</span> <span class="nn">grp</span>
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">stat</span>
 
-<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">download</span><span class="p">,</span> <span class="n">symlink</span><span class="p">,</span> <span class="n">package_path</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">progressbar</span>
+<span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
+
 <span class="kn">import</span> <span class="nn">compass.namelist</span>
 <span class="kn">import</span> <span class="nn">compass.streams</span>
+<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">download</span><span class="p">,</span> <span class="n">package_path</span><span class="p">,</span> <span class="n">symlink</span>
 
 
 <div class="viewcode-block" id="Step"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.html#compass.Step">[docs]</a><span class="k">class</span> <span class="nc">Step</span><span class="p">:</span>
@@ -400,16 +401,23 @@
         <span class="k">if</span> <span class="n">max_memory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">max_memory</span> <span class="o">=</span> <span class="n">max_memory</span></div>
 
-<div class="viewcode-block" id="Step.constrain_resources"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.constrain_resources.html#compass.Step.constrain_resources">[docs]</a>    <span class="k">def</span> <span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_cores</span><span class="p">):</span>
+<div class="viewcode-block" id="Step.constrain_resources"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.constrain_resources.html#compass.Step.constrain_resources">[docs]</a>    <span class="k">def</span> <span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_resources</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constrain ``cpus_per_task`` and ``ntasks`` based on the number of</span>
 <span class="sd">        cores available to this step</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        available_cores : int</span>
+<span class="sd">        available_resources : dict</span>
 <span class="sd">            The total number of cores available to the step</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mpi_allowed</span> <span class="o">=</span> <span class="n">available_resources</span><span class="p">[</span><span class="s1">&#39;mpi_allowed&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">mpi_allowed</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;You are trying to run an MPI job on a login node.</span><span class="se">\n</span><span class="s1">&#39;</span>
+                <span class="s1">&#39;Please switch to a compute node.&#39;</span><span class="p">)</span>
+
+        <span class="n">available_cores</span> <span class="o">=</span> <span class="n">available_resources</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="c1"># just one task so only need to worry about cpus_per_task</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span><span class="p">,</span> <span class="n">available_cores</span><span class="p">)</span>
@@ -747,7 +755,7 @@
                                     <span class="n">replacements</span><span class="o">=</span><span class="n">template_replacements</span><span class="p">)</span>
         <span class="n">compass</span><span class="o">.</span><span class="n">streams</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">process_inputs_and_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">process_inputs_and_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># noqa: C901</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Process the inputs to and outputs from a step added with</span>
 <span class="sd">        :py:meth:`compass.Step.add_input_file` and</span>
@@ -981,7 +989,7 @@
 
             <span class="n">compass</span><span class="o">.</span><span class="n">streams</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">defaults_tree</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_fix_permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">databases</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_fix_permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">databases</span><span class="p">):</span>  <span class="c1"># noqa: C901</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fix permissions on the databases where files were downloaded so</span>
 <span class="sd">        everyone in the group can read/write to them</span>

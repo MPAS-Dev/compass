@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.parallel.get_available_cores_and_nodes &mdash; compass latest documentation</title>
+  <title>compass.parallel.get_available_parallel_resources &mdash; compass latest documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,7 +20,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="compass.parallel.check_parallel_system" href="compass.parallel.check_parallel_system.html" />
+    <link rel="next" title="compass.parallel.set_cores_per_node" href="compass.parallel.set_cores_per_node.html" />
     <link rel="prev" title="compass.mpas_cores.get_mpas_cores" href="compass.mpas_cores.get_mpas_cores.html" /> 
 </head>
 
@@ -83,8 +83,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../api.html#model">model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#id1">mpas_cores</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html#parallel">parallel</a><ul class="current">
-<li class="toctree-l4 current"><a class="current reference internal" href="#">compass.parallel.get_available_cores_and_nodes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="compass.parallel.check_parallel_system.html">compass.parallel.check_parallel_system</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">compass.parallel.get_available_parallel_resources</a></li>
 <li class="toctree-l4"><a class="reference internal" href="compass.parallel.set_cores_per_node.html">compass.parallel.set_cores_per_node</a></li>
 <li class="toctree-l4"><a class="reference internal" href="compass.parallel.run_command.html">compass.parallel.run_command</a></li>
 </ul>
@@ -127,9 +126,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../api.html">API reference</a></li>
-      <li class="breadcrumb-item active">compass.parallel.get_available_cores_and_nodes</li>
+      <li class="breadcrumb-item active">compass.parallel.get_available_parallel_resources</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/developers_guide/generated/compass.parallel.get_available_cores_and_nodes.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/developers_guide/generated/compass.parallel.get_available_parallel_resources.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -137,22 +136,19 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="compass-parallel-get-available-cores-and-nodes">
-<h1>compass.parallel.get_available_cores_and_nodes<a class="headerlink" href="#compass-parallel-get-available-cores-and-nodes" title="Permalink to this heading">¶</a></h1>
+  <section id="compass-parallel-get-available-parallel-resources">
+<h1>compass.parallel.get_available_parallel_resources<a class="headerlink" href="#compass-parallel-get-available-parallel-resources" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="compass.parallel.get_available_cores_and_nodes">
-<span class="sig-prename descclassname"><span class="pre">compass.parallel.</span></span><span class="sig-name descname"><span class="pre">get_available_cores_and_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/parallel.html#get_available_cores_and_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.parallel.get_available_cores_and_nodes" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compass.parallel.get_available_parallel_resources">
+<span class="sig-prename descclassname"><span class="pre">compass.parallel.</span></span><span class="sig-name descname"><span class="pre">get_available_parallel_resources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/parallel.html#get_available_parallel_resources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.parallel.get_available_parallel_resources" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the number of total cores and nodes available for running steps</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="compass.config.CompassConfigParser.html#compass.config.CompassConfigParser" title="compass.config.CompassConfigParser"><em>compass.config.CompassConfigParser</em></a>) – Configuration options for the test case</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>cores</strong> (<em>int</em>) – The number of cores available for running steps</p></li>
-<li><p><strong>nodes</strong> (<em>int</em>) – The number of cores available for running steps</p></li>
-</ul>
-</p>
+<dd class="field-even"><p><strong>available_resources</strong> (<em>dict</em>) – A dictionary containing available resources (cores, tasks, nodes
+and cores_per_node)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -164,7 +160,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="compass.mpas_cores.get_mpas_cores.html" class="btn btn-neutral float-left" title="compass.mpas_cores.get_mpas_cores" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="compass.parallel.check_parallel_system.html" class="btn btn-neutral float-right" title="compass.parallel.check_parallel_system" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.parallel.set_cores_per_node.html" class="btn btn-neutral float-right" title="compass.parallel.set_cores_per_node" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

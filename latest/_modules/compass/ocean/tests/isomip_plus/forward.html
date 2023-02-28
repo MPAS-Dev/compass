@@ -113,14 +113,14 @@
   <h1>Source code for compass.ocean.tests.isomip_plus.forward</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">xarray</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
-<span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">run_model</span>
-<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+<span class="kn">import</span> <span class="nn">xarray</span>
 
+<span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">run_model</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.evap</span> <span class="kn">import</span> <span class="n">update_evaporation_flux</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.viz.plot</span> <span class="kn">import</span> <span class="n">MoviePlotter</span>
+<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
 
 <div class="viewcode-block" id="Forward"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.forward.Forward.html#compass.ocean.tests.isomip_plus.forward.Forward">[docs]</a><span class="k">class</span> <span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
@@ -246,12 +246,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_resources</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_cores</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_resources</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update resources at runtime from config options</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_resources</span><span class="p">()</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">constrain_resources</span><span class="p">(</span><span class="n">available_cores</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">constrain_resources</span><span class="p">(</span><span class="n">available_resources</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Forward.run"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.forward.Forward.run.html#compass.ocean.tests.isomip_plus.forward.Forward.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -305,6 +305,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_min_tasks&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">openmp_threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_threads&#39;</span><span class="p">)</span></div>
 
+
 <span class="k">def</span> <span class="nf">get_time_steps</span><span class="p">(</span><span class="n">resolution</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the time step namelist replacements for the resolution</span>
@@ -321,10 +322,10 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># 4 minutes at 2 km, and proportional to resolution</span>
-    <span class="n">dt</span> <span class="o">=</span> <span class="mf">2.</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="n">resolution</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="n">resolution</span>
 
     <span class="c1"># 10 sec at 2 km, and proportional to resolution</span>
-    <span class="n">btr_dt</span> <span class="o">=</span> <span class="mf">5.</span><span class="o">*</span><span class="n">resolution</span>
+    <span class="n">btr_dt</span> <span class="o">=</span> <span class="mf">5.</span> <span class="o">*</span> <span class="n">resolution</span>
 
     <span class="c1"># https://stackoverflow.com/a/1384565/7728169</span>
     <span class="c1"># Note: this will drop any fractional seconds, which is usually okay</span>
