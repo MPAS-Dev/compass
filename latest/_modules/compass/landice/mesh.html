@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.landice.mesh &mdash; compass latest documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            compass
+          </a>
+              <div class="version">
+                latest
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../landice.html">compass.landice</a></li>
+      <li class="breadcrumb-item active">compass.landice.mesh</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.landice.mesh</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">jigsawpy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="gridded_flood_fill"><a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.mesh.gridded_flood_fill.html#compass.landice.mesh.gridded_flood_fill">[docs]</a><span class="k">def</span> <span class="nf">gridded_flood_fill</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">iStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">jStart</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generic flood-fill routine to create mask of connected elements</span>
+<span class="sd">    in the desired input array (field) from a gridded dataset. This</span>
+<span class="sd">    is generally used to remove glaciers and ice-fields that are not</span>
+<span class="sd">    connected to the ice sheet. Note that there may be more efficient</span>
+<span class="sd">    algorithms.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    field : numpy.ndarray</span>
+<span class="sd">        Array from gridded dataset to use for flood-fill.</span>
+<span class="sd">        Usually ice thickness.</span>
+<span class="sd">    iStart : int</span>
+<span class="sd">        x index from which to start flood fill for field.</span>
+<span class="sd">        Defaults to the center x coordinate.</span>
+<span class="sd">    jStart : int</span>
+<span class="sd">        y index from which to start flood fill.</span>
+<span class="sd">        Defaults to the center y coordinate.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    flood_mask : numpy.ndarray</span>
+<span class="sd">        _mask calculated by the flood fill routine,</span>
+<span class="sd">        where cells connected to the ice sheet (or main feature)</span>
+<span class="sd">        are 1 and everything else is 0.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">sz</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">searched_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">sz</span><span class="p">)</span>
+    <span class="n">flood_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">sz</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">iStart</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">jStart</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">iStart</span> <span class="o">=</span> <span class="n">sz</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="n">jStart</span> <span class="o">=</span> <span class="n">sz</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">flood_mask</span><span class="p">[</span><span class="n">iStart</span><span class="p">,</span> <span class="n">jStart</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">neighbors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+
+    <span class="n">lastSearchList</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel_multi_index</span><span class="p">([[</span><span class="n">iStart</span><span class="p">],</span> <span class="p">[</span><span class="n">jStart</span><span class="p">]],</span>
+                                          <span class="n">sz</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+
+    <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">lastSearchList</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">newSearchList</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;i&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">iii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lastSearchList</span><span class="p">)):</span>
+            <span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">lastSearchList</span><span class="p">[</span><span class="n">iii</span><span class="p">],</span> <span class="n">sz</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+            <span class="c1"># search neighbors</span>
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">neighbors</span><span class="p">:</span>
+                <span class="n">ii</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sz</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># don&#39;t go out of bounds</span>
+                <span class="n">jj</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="n">n</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">sz</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># subscripts to neighbor</span>
+                <span class="c1"># only consider unsearched neighbors</span>
+                <span class="k">if</span> <span class="n">searched_mask</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="n">jj</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">searched_mask</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="n">jj</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># mark as searched</span>
+
+                    <span class="k">if</span> <span class="n">field</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="n">jj</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+                        <span class="n">flood_mask</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="n">jj</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># mark as ice</span>
+                        <span class="c1"># add to list of newly found  cells</span>
+                        <span class="n">newSearchList</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newSearchList</span><span class="p">,</span>
+                                                  <span class="n">np</span><span class="o">.</span><span class="n">ravel_multi_index</span><span class="p">(</span>
+                                                      <span class="p">[[</span><span class="n">ii</span><span class="p">],</span> <span class="p">[</span><span class="n">jj</span><span class="p">]],</span> <span class="n">sz</span><span class="p">,</span>
+                                                      <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;clip&#39;</span><span class="p">,</span>
+                                                      <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">lastSearchList</span> <span class="o">=</span> <span class="n">newSearchList</span>
+
+    <span class="k">return</span> <span class="n">flood_mask</span></div>
+
+
+<div class="viewcode-block" id="set_rectangular_geom_points_and_edges"><a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.mesh.set_rectangular_geom_points_and_edges.html#compass.landice.mesh.set_rectangular_geom_points_and_edges">[docs]</a><span class="k">def</span> <span class="nf">set_rectangular_geom_points_and_edges</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set node and edge coordinates to pass to</span>
+<span class="sd">    :py:func:`mpas_tools.mesh.creation.build_mesh.build_planar_mesh()`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    xmin : int or float</span>
+<span class="sd">        Left-most x-coordinate in region to mesh</span>
+<span class="sd">    xmax : int or float</span>
+<span class="sd">        Right-most x-coordinate in region to mesh</span>
+<span class="sd">    ymin : int or float</span>
+<span class="sd">        Bottom-most y-coordinate in region to mesh</span>
+<span class="sd">    ymax : int or float</span>
+<span class="sd">        Top-most y-coordinate in region to mesh</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    geom_points : jigsawpy.jigsaw_msh_t.VERT2_t</span>
+<span class="sd">        xy node coordinates to pass to build_planar_mesh()</span>
+<span class="sd">    geom_edges : jigsawpy.jigsaw_msh_t.EDGE2_t</span>
+<span class="sd">        xy edge coordinates between nodes to pass to build_planar_mesh()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">geom_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>  <span class="c1"># list of xy &quot;node&quot; coordinates</span>
+        <span class="p">((</span><span class="n">xmin</span><span class="p">,</span> <span class="n">ymin</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="p">((</span><span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="p">((</span><span class="n">xmax</span><span class="p">,</span> <span class="n">ymax</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="p">((</span><span class="n">xmin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">),</span> <span class="mi">0</span><span class="p">)],</span>
+        <span class="n">dtype</span><span class="o">=</span><span class="n">jigsawpy</span><span class="o">.</span><span class="n">jigsaw_msh_t</span><span class="o">.</span><span class="n">VERT2_t</span><span class="p">)</span>
+
+    <span class="n">geom_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>  <span class="c1"># list of &quot;edges&quot; between nodes</span>
+        <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">)],</span>
+        <span class="n">dtype</span><span class="o">=</span><span class="n">jigsawpy</span><span class="o">.</span><span class="n">jigsaw_msh_t</span><span class="o">.</span><span class="n">EDGE2_t</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">geom_points</span><span class="p">,</span> <span class="n">geom_edges</span></div>
+
+
+<div class="viewcode-block" id="set_cell_width"><a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.mesh.set_cell_width.html#compass.landice.mesh.set_cell_width">[docs]</a><span class="k">def</span> <span class="nf">set_cell_width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">thk</span><span class="p">,</span> <span class="n">bed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">dist_to_edge</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dist_to_grounding_line</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">flood_fill_iStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">flood_fill_jStart</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set cell widths based on settings in config file to pass to</span>
+<span class="sd">    :py:func:`mpas_tools.mesh.creation.build_mesh.build_planar_mesh()`.</span>
+<span class="sd">    Requires the following options to be set in the given config section:</span>
+<span class="sd">    ``min_spac``, ``max_spac``, ``high_log_speed``, ``low_log_speed``,</span>
+<span class="sd">    ``high_dist``, ``low_dist``,``cull_distance``, ``use_speed``,</span>
+<span class="sd">    ``use_dist_to_edge``, and ``use_dist_to_grounding_line``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    section : str</span>
+<span class="sd">        Section of the config file from which to read parameters</span>
+<span class="sd">    thk : numpy.ndarray</span>
+<span class="sd">        Ice thickness field from gridded dataset,</span>
+<span class="sd">        usually after trimming to flood fill mask</span>
+<span class="sd">    bed : numpy.ndarray</span>
+<span class="sd">        Bed topography from gridded dataset</span>
+<span class="sd">    vx : numpy.ndarray, optional</span>
+<span class="sd">        x-component of ice velocity from gridded dataset,</span>
+<span class="sd">        usually after trimming to flood fill mask. Can be set to ``None``</span>
+<span class="sd">        if ``use_speed == False`` in config file.</span>
+<span class="sd">    vy : numpy.ndarray, optional</span>
+<span class="sd">        y-component of ice velocity from gridded dataset,</span>
+<span class="sd">        usually after trimming to flood fill mask. Can be set to ``None``</span>
+<span class="sd">        if ``use_speed == False`` in config file.</span>
+<span class="sd">    dist_to_edge : numpy.ndarray, optional</span>
+<span class="sd">        Distance from each cell to ice edge, calculated in separate function.</span>
+<span class="sd">        Can be set to ``None`` if ``use_dist_to_edge == False`` in config file</span>
+<span class="sd">        and you do not want to set large ``cell_width`` where cells will be</span>
+<span class="sd">        culled anyway, but this is not recommended.</span>
+<span class="sd">    dist_to_grounding_line : numpy.ndarray, optional</span>
+<span class="sd">        Distance from each cell to grounding line, calculated in separate</span>
+<span class="sd">        function.  Can be set to ``None`` if</span>
+<span class="sd">        ``use_dist_to_grounding_line == False`` in config file.</span>
+<span class="sd">    flood_fill_iStart : int, optional</span>
+<span class="sd">        x-index location to start flood-fill when using bed topography</span>
+<span class="sd">    flood_fill_jStart : int, optional</span>
+<span class="sd">        y-index location to start flood-fill when using bed topography</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cell_width : numpy.ndarray</span>
+<span class="sd">        Desired width of MPAS cells based on mesh desnity functions to pass to</span>
+<span class="sd">        :py:func:`mpas_tools.mesh.creation.build_mesh.build_planar_mesh()`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">section</span><span class="p">]</span>
+
+    <span class="c1"># Get config inputs for cell spacing functions</span>
+    <span class="n">min_spac</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;min_spac&#39;</span><span class="p">))</span>
+    <span class="n">max_spac</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;max_spac&#39;</span><span class="p">))</span>
+    <span class="n">high_log_speed</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;high_log_speed&#39;</span><span class="p">))</span>
+    <span class="n">low_log_speed</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;low_log_speed&#39;</span><span class="p">))</span>
+    <span class="n">high_dist</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;high_dist&#39;</span><span class="p">))</span>
+    <span class="n">low_dist</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;low_dist&#39;</span><span class="p">))</span>
+    <span class="n">high_dist_bed</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;high_dist_bed&#39;</span><span class="p">))</span>
+    <span class="n">low_dist_bed</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;low_dist_bed&#39;</span><span class="p">))</span>
+    <span class="n">low_bed</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;low_bed&#39;</span><span class="p">))</span>
+    <span class="n">high_bed</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;high_bed&#39;</span><span class="p">))</span>
+
+    <span class="c1"># convert km to m</span>
+    <span class="n">cull_distance</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cull_distance&#39;</span><span class="p">))</span> <span class="o">*</span> <span class="mf">1.e3</span>
+
+    <span class="c1"># Cell spacing function based on union of masks</span>
+    <span class="k">if</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;use_bed&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;True&#39;</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Using bed elevation for spacing.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">flood_fill_iStart</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">flood_fill_jStart</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;calling gridded_flood_fill to find </span><span class="se">\</span>
+<span class="s1">                        bedTopography &lt;= low_bed connected to the ocean.&#39;</span><span class="p">)</span>
+            <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="c1"># initialize mask to low bed topography</span>
+            <span class="n">in_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">bed</span> <span class="o">&lt;=</span> <span class="n">low_bed</span><span class="p">)</span>
+            <span class="c1"># Do not let flood fill reach further than high_dist_bed into</span>
+            <span class="c1"># the ice sheet interior.</span>
+            <span class="n">in_mask</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
+                <span class="n">thk</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dist_to_grounding_line</span> <span class="o">&gt;=</span> <span class="n">high_dist_bed</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">low_bed_mask</span> <span class="o">=</span> <span class="n">gridded_flood_fill</span><span class="p">(</span><span class="n">in_mask</span><span class="p">,</span>
+                                              <span class="n">iStart</span><span class="o">=</span><span class="n">flood_fill_iStart</span><span class="p">,</span>
+                                              <span class="n">jStart</span><span class="o">=</span><span class="n">flood_fill_jStart</span><span class="p">)</span>
+            <span class="n">toc</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Flood fill finished in </span><span class="si">{</span><span class="n">toc</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">tic</span><span class="si">}</span><span class="s1"> seconds.&#39;</span><span class="p">)</span>
+        <span class="c1"># Use a logistics curve for bed topography spacing.</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="mf">0.05</span>  <span class="c1"># This works well, but could try other values</span>
+        <span class="n">spacing_bed</span> <span class="o">=</span> <span class="n">min_spac</span> <span class="o">+</span> <span class="p">(</span><span class="n">max_spac</span> <span class="o">-</span> <span class="n">min_spac</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+            <span class="o">-</span><span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="n">bed</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">high_bed</span><span class="p">,</span> <span class="n">low_bed</span><span class="p">]))))</span>
+        <span class="c1"># We only want bed topography to influence spacing within high_dist_bed</span>
+        <span class="c1"># from the ice margin. In the region between high_dist_bed and</span>
+        <span class="c1"># low_dist_bed, use a linear ramp to damp influence of bed topo.</span>
+        <span class="n">spacing_bed</span><span class="p">[</span><span class="n">dist_to_grounding_line</span> <span class="o">&gt;=</span> <span class="n">low_dist_bed</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="n">dist_to_grounding_line</span><span class="p">[</span>
+                <span class="n">dist_to_grounding_line</span> <span class="o">&gt;=</span> <span class="n">low_dist_bed</span><span class="p">]</span> <span class="o">-</span>
+                <span class="n">low_dist_bed</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">high_dist_bed</span> <span class="o">-</span> <span class="n">low_dist_bed</span><span class="p">))</span> <span class="o">*</span>
+            <span class="n">spacing_bed</span><span class="p">[</span><span class="n">dist_to_grounding_line</span> <span class="o">&gt;=</span> <span class="n">low_dist_bed</span><span class="p">]</span> <span class="o">+</span>
+            <span class="p">(</span><span class="n">dist_to_grounding_line</span><span class="p">[</span><span class="n">dist_to_grounding_line</span> <span class="o">&gt;=</span>
+                                    <span class="n">low_dist_bed</span><span class="p">]</span> <span class="o">-</span> <span class="n">low_dist_bed</span><span class="p">)</span> <span class="o">/</span>
+            <span class="p">(</span><span class="n">high_dist_bed</span> <span class="o">-</span> <span class="n">low_dist_bed</span><span class="p">)</span> <span class="o">*</span> <span class="n">max_spac</span><span class="p">)</span>
+        <span class="n">spacing_bed</span><span class="p">[</span><span class="n">dist_to_grounding_line</span> <span class="o">&gt;=</span> <span class="n">high_dist_bed</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_spac</span>
+        <span class="k">if</span> <span class="n">flood_fill_iStart</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">flood_fill_jStart</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">spacing_bed</span><span class="p">[</span><span class="n">low_bed_mask</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_spac</span>
+            <span class="c1"># Do one more flood fill to eliminate isolated pockets</span>
+            <span class="c1"># of high resolution that were separated when we set</span>
+            <span class="c1"># spacing_bed[dist_to_grounding_line &gt;= high_dist_bed] = max_spac</span>
+            <span class="n">in_mask2</span> <span class="o">=</span> <span class="p">(</span><span class="n">bed</span> <span class="o">&lt;=</span> <span class="n">low_bed</span><span class="p">)</span>
+            <span class="n">in_mask2</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
+                <span class="n">thk</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">spacing_bed</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">min_spac</span><span class="p">))]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">low_bed_mask2</span> <span class="o">=</span> <span class="n">gridded_flood_fill</span><span class="p">(</span><span class="n">in_mask2</span><span class="p">,</span>
+                                               <span class="n">iStart</span><span class="o">=</span><span class="n">flood_fill_iStart</span><span class="p">,</span>
+                                               <span class="n">jStart</span><span class="o">=</span><span class="n">flood_fill_jStart</span><span class="p">)</span>
+            <span class="n">spacing_bed</span><span class="p">[</span><span class="n">low_bed_mask2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_spac</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">spacing_bed</span> <span class="o">=</span> <span class="n">max_spac</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">thk</span><span class="p">)</span>
+
+    <span class="c1"># Make cell spacing function mapping from log speed to cell spacing</span>
+    <span class="k">if</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;use_speed&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;True&#39;</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Using speed for cell spacing&#39;</span><span class="p">)</span>
+        <span class="n">speed</span> <span class="o">=</span> <span class="p">(</span><span class="n">vx</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">vy</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+        <span class="n">lspd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">speed</span><span class="p">)</span>
+        <span class="n">spacing_speed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">lspd</span><span class="p">,</span> <span class="p">[</span><span class="n">low_log_speed</span><span class="p">,</span> <span class="n">high_log_speed</span><span class="p">],</span>
+                                  <span class="p">[</span><span class="n">max_spac</span><span class="p">,</span> <span class="n">min_spac</span><span class="p">],</span> <span class="n">left</span><span class="o">=</span><span class="n">max_spac</span><span class="p">,</span>
+                                  <span class="n">right</span><span class="o">=</span><span class="n">min_spac</span><span class="p">)</span>
+
+        <span class="c1"># Clean up where we have missing velocities. These are usually nans</span>
+        <span class="c1"># or the default netCDF _FillValue of ~10.e36</span>
+        <span class="n">missing_data_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">vx</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">vy</span><span class="p">)),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">vx</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1.e5</span><span class="p">,</span>
+                          <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">vy</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1.e5</span><span class="p">))</span>
+        <span class="n">spacing_speed</span><span class="p">[</span><span class="n">missing_data_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_spac</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Found </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">missing_data_mask</span><span class="p">)</span><span class="si">}</span><span class="s1"> points in input &#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;dataset with missing velocity values. Setting &#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;velocity-based spacing to maximum value.&#39;</span><span class="p">)</span>
+
+        <span class="n">spacing_speed</span><span class="p">[</span><span class="n">thk</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">]</span> <span class="o">=</span> <span class="n">min_spac</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">spacing_speed</span> <span class="o">=</span> <span class="n">max_spac</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">thk</span><span class="p">)</span>
+
+    <span class="c1"># Make cell spacing function mapping from distance to ice edge</span>
+    <span class="k">if</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;use_dist_to_edge&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;True&#39;</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Using distance to ice edge for cell spacing&#39;</span><span class="p">)</span>
+        <span class="n">spacing_edge</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">dist_to_edge</span><span class="p">,</span> <span class="p">[</span><span class="n">low_dist</span><span class="p">,</span> <span class="n">high_dist</span><span class="p">],</span>
+                                 <span class="p">[</span><span class="n">min_spac</span><span class="p">,</span> <span class="n">max_spac</span><span class="p">],</span> <span class="n">left</span><span class="o">=</span><span class="n">min_spac</span><span class="p">,</span>
+                                 <span class="n">right</span><span class="o">=</span><span class="n">max_spac</span><span class="p">)</span>
+        <span class="n">spacing_edge</span><span class="p">[</span><span class="n">thk</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">]</span> <span class="o">=</span> <span class="n">min_spac</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">spacing_edge</span> <span class="o">=</span> <span class="n">max_spac</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">thk</span><span class="p">)</span>
+
+    <span class="c1"># Make cell spacing function mapping from distance to grounding line</span>
+    <span class="k">if</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;use_dist_to_grounding_line&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;True&#39;</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Using distance to grounding line for cell spacing&#39;</span><span class="p">)</span>
+        <span class="n">spacing_gl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">dist_to_grounding_line</span><span class="p">,</span> <span class="p">[</span><span class="n">low_dist</span><span class="p">,</span> <span class="n">high_dist</span><span class="p">],</span>
+                               <span class="p">[</span><span class="n">min_spac</span><span class="p">,</span> <span class="n">max_spac</span><span class="p">],</span> <span class="n">left</span><span class="o">=</span><span class="n">min_spac</span><span class="p">,</span>
+                               <span class="n">right</span><span class="o">=</span><span class="n">max_spac</span><span class="p">)</span>
+        <span class="n">spacing_gl</span><span class="p">[</span><span class="n">thk</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">]</span> <span class="o">=</span> <span class="n">min_spac</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">spacing_gl</span> <span class="o">=</span> <span class="n">max_spac</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">thk</span><span class="p">)</span>
+
+    <span class="c1"># Merge cell spacing methods</span>
+    <span class="n">cell_width</span> <span class="o">=</span> <span class="n">max_spac</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">thk</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">width</span> <span class="ow">in</span> <span class="p">[</span><span class="n">spacing_bed</span><span class="p">,</span> <span class="n">spacing_speed</span><span class="p">,</span> <span class="n">spacing_edge</span><span class="p">,</span> <span class="n">spacing_gl</span><span class="p">]:</span>
+        <span class="n">cell_width</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">cell_width</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+
+    <span class="c1"># Set large cell_width in areas we are going to cull anyway (speeds up</span>
+    <span class="c1"># whole process). Use 3x the cull_distance to avoid this affecting</span>
+    <span class="c1"># cell size in the final mesh. There may be a more rigorous way to set</span>
+    <span class="c1"># that distance.</span>
+    <span class="k">if</span> <span class="n">dist_to_edge</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
+            <span class="n">thk</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">dist_to_edge</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">cull_distance</span><span class="p">))</span>
+        <span class="n">cell_width</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_spac</span>
+
+    <span class="k">return</span> <span class="n">cell_width</span></div>
+
+
+<div class="viewcode-block" id="get_dist_to_edge_and_GL"><a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.mesh.get_dist_to_edge_and_GL.html#compass.landice.mesh.get_dist_to_edge_and_GL">[docs]</a><span class="k">def</span> <span class="nf">get_dist_to_edge_and_GL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thk</span><span class="p">,</span> <span class="n">topg</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate distance from each point to ice edge and grounding line,</span>
+<span class="sd">    to be used in mesh density functions in</span>
+<span class="sd">    :py:func:`compass.landice.mesh.set_cell_width()`. In future development,</span>
+<span class="sd">    this should be updated to use a faster package such as `scikit-fmm`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    thk : numpy.ndarray</span>
+<span class="sd">        Ice thickness field from gridded dataset,</span>
+<span class="sd">        usually after trimming to flood fill mask</span>
+<span class="sd">    topg : numpy.ndarray</span>
+<span class="sd">        Bed topography field from gridded dataset</span>
+<span class="sd">    x : numpy.ndarray</span>
+<span class="sd">        x coordinates from gridded dataset</span>
+<span class="sd">    y : numpy.ndarray</span>
+<span class="sd">        y coordinates from gridded dataset</span>
+<span class="sd">    section : str</span>
+<span class="sd">        section of config file used to define mesh parameters</span>
+<span class="sd">    window_size : int or float</span>
+<span class="sd">        Size (in meters) of a search &#39;box&#39; (one-directional) to use</span>
+<span class="sd">        to calculate the distance from each cell to the ice margin.</span>
+<span class="sd">        Bigger number makes search slower, but if too small, the transition</span>
+<span class="sd">        zone could get truncated. We usually want this calculated as the</span>
+<span class="sd">        maximum of high_dist and high_dist_bed, but there may be cases in</span>
+<span class="sd">        which it is useful to set it manually. However, it should never be</span>
+<span class="sd">        smaller than either high_dist or high_dist_bed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dist_to_edge : numpy.ndarray</span>
+<span class="sd">        Distance from each cell to the ice edge</span>
+<span class="sd">    dist_to_grounding_line : numpy.ndarray</span>
+<span class="sd">        Distance from each cell to the grounding line</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">section</span><span class="p">]</span>
+    <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+    <span class="n">high_dist</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;high_dist&#39;</span><span class="p">))</span>
+    <span class="n">high_dist_bed</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;high_dist_bed&#39;</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">window_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">window_size</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">high_dist</span><span class="p">,</span> <span class="n">high_dist_bed</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">window_size</span> <span class="o">&lt;</span> <span class="nb">min</span><span class="p">(</span><span class="n">high_dist</span><span class="p">,</span> <span class="n">high_dist_bed</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;WARNING: window_size was set to a value smaller&#39;</span>
+                    <span class="s1">&#39; than high_dist and/or high_dist_bed. Resetting&#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39; window_size to </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">high_dist</span><span class="p">,</span><span class="w"> </span><span class="n">high_dist_bed</span><span class="p">)</span><span class="si">}</span><span class="s1">,&#39;</span>
+                    <span class="s1">&#39; which is  max(high_dist, high_dist_bed)&#39;</span><span class="p">)</span>
+        <span class="n">window_size</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">high_dist</span><span class="p">,</span> <span class="n">high_dist_bed</span><span class="p">)</span>
+
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># assumed constant and equal in x and y</span>
+    <span class="n">nx</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">ny</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">sz</span> <span class="o">=</span> <span class="n">thk</span><span class="o">.</span><span class="n">shape</span>
+
+    <span class="c1"># Create masks to define ice edge and grounding line</span>
+    <span class="n">neighbors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                          <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+
+    <span class="n">ice_mask</span> <span class="o">=</span> <span class="n">thk</span> <span class="o">&gt;</span> <span class="mf">0.0</span>
+    <span class="n">grounded_mask</span> <span class="o">=</span> <span class="n">thk</span> <span class="o">&gt;</span> <span class="p">(</span><span class="o">-</span><span class="mf">1028.0</span> <span class="o">/</span> <span class="mf">910.0</span> <span class="o">*</span> <span class="n">topg</span><span class="p">)</span>
+    <span class="n">margin_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">sz</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;i&#39;</span><span class="p">)</span>
+    <span class="n">grounding_line_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">sz</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;i&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">neighbors</span><span class="p">:</span>
+        <span class="n">not_ice_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">ice_mask</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+        <span class="n">margin_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">margin_mask</span><span class="p">,</span> <span class="n">not_ice_mask</span><span class="p">)</span>
+
+        <span class="n">not_grounded_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">grounded_mask</span><span class="p">,</span>
+                                                   <span class="n">n</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+        <span class="n">grounding_line_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">grounding_line_mask</span><span class="p">,</span>
+                                            <span class="n">not_grounded_mask</span><span class="p">)</span>
+
+    <span class="c1"># where ice exists and neighbors non-ice locations</span>
+    <span class="n">margin_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">margin_mask</span><span class="p">,</span> <span class="n">ice_mask</span><span class="p">)</span>
+    <span class="c1"># optional - plot mask</span>
+    <span class="c1"># plt.pcolor(margin_mask); plt.show()</span>
+
+    <span class="c1"># Calculate dist to margin and grounding line</span>
+    <span class="p">[</span><span class="n">XPOS</span><span class="p">,</span> <span class="n">YPOS</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">dist_to_edge</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">sz</span><span class="p">)</span>
+    <span class="n">dist_to_grounding_line</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">sz</span><span class="p">)</span>
+
+    <span class="n">d</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">window_size</span> <span class="o">/</span> <span class="n">dx</span><span class="p">))</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;i&#39;</span><span class="p">)</span>
+    <span class="n">max_dist</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
+
+    <span class="c1"># just look over areas with ice</span>
+    <span class="c1"># ind = np.where(np.ravel(thk, order=&#39;F&#39;) &gt; 0)[0]</span>
+    <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">thk</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># do it everywhere</span>
+    <span class="k">for</span> <span class="n">iii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ind</span><span class="p">)):</span>
+        <span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">ind</span><span class="p">[</span><span class="n">iii</span><span class="p">],</span> <span class="n">sz</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+
+        <span class="n">irng</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">rng</span>
+        <span class="n">jrng</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="n">rng</span>
+
+        <span class="c1"># only keep indices in the grid</span>
+        <span class="n">irng</span> <span class="o">=</span> <span class="n">irng</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">irng</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">irng</span> <span class="o">&lt;</span> <span class="n">ny</span><span class="p">))]</span>
+        <span class="n">jrng</span> <span class="o">=</span> <span class="n">jrng</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">jrng</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">jrng</span> <span class="o">&lt;</span> <span class="n">nx</span><span class="p">))]</span>
+
+        <span class="n">dist_to_here</span> <span class="o">=</span> <span class="p">((</span><span class="n">XPOS</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">irng</span><span class="p">,</span> <span class="n">jrng</span><span class="p">)]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span>
+                        <span class="p">(</span><span class="n">YPOS</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">irng</span><span class="p">,</span> <span class="n">jrng</span><span class="p">)]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+
+        <span class="n">dist_to_here_edge</span> <span class="o">=</span> <span class="n">dist_to_here</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">dist_to_here_grounding_line</span> <span class="o">=</span> <span class="n">dist_to_here</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="n">dist_to_here_edge</span><span class="p">[</span><span class="n">margin_mask</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">irng</span><span class="p">,</span> <span class="n">jrng</span><span class="p">)]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_dist</span>
+        <span class="n">dist_to_here_grounding_line</span><span class="p">[</span><span class="n">grounding_line_mask</span>
+                                    <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">irng</span><span class="p">,</span> <span class="n">jrng</span><span class="p">)]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_dist</span>
+
+        <span class="n">dist_to_edge</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">dist_to_here_edge</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="n">dist_to_grounding_line</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">dist_to_here_grounding_line</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+
+    <span class="n">toc</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;compass.landice.mesh.get_dist_to_edge_and_GL() took </span><span class="si">{:0.2f}</span><span class="s1"> &#39;</span>
+                <span class="s1">&#39;seconds&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">dist_to_edge</span><span class="p">,</span> <span class="n">dist_to_grounding_line</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

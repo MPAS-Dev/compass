@@ -110,21 +110,21 @@
              
   <h1>Source code for compass.setup</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">from</span> <span class="nn">mache</span> <span class="kn">import</span> <span class="n">discover_machine</span>
 
-<span class="kn">from</span> <span class="nn">compass.mpas_cores</span> <span class="kn">import</span> <span class="n">get_mpas_cores</span>
+<span class="kn">from</span> <span class="nn">compass</span> <span class="kn">import</span> <span class="n">provenance</span>
 <span class="kn">from</span> <span class="nn">compass.config</span> <span class="kn">import</span> <span class="n">CompassConfigParser</span>
 <span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span>
-<span class="kn">from</span> <span class="nn">compass</span> <span class="kn">import</span> <span class="n">provenance</span>
 <span class="kn">from</span> <span class="nn">compass.job</span> <span class="kn">import</span> <span class="n">write_job_script</span>
+<span class="kn">from</span> <span class="nn">compass.mpas_cores</span> <span class="kn">import</span> <span class="n">get_mpas_cores</span>
 
 
-<div class="viewcode-block" id="setup_cases"><a class="viewcode-back" href="../../developers_guide/generated/compass.setup.setup_cases.html#compass.setup.setup_cases">[docs]</a><span class="k">def</span> <span class="nf">setup_cases</span><span class="p">(</span><span class="n">tests</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">machine</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="setup_cases"><a class="viewcode-back" href="../../developers_guide/generated/compass.setup.setup_cases.html#compass.setup.setup_cases">[docs]</a><span class="k">def</span> <span class="nf">setup_cases</span><span class="p">(</span><span class="n">tests</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">machine</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># noqa: C901, E501</span>
                 <span class="n">work_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">baseline_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">suite_name</span><span class="o">=</span><span class="s1">&#39;custom&#39;</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">copy_executable</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -517,8 +517,8 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s1">&#39;The number of CPUs per task (cpus_per_task) was never &#39;</span>
                     <span class="sa">f</span><span class="s1">&#39;set for </span><span class="si">{</span><span class="n">test_case</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1"> step </span><span class="si">{</span><span class="n">step_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">cores</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">cpus_per_task</span><span class="o">*</span><span class="n">step</span><span class="o">.</span><span class="n">ntasks</span>
-            <span class="n">min_cores</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">min_cpus_per_task</span><span class="o">*</span><span class="n">step</span><span class="o">.</span><span class="n">min_tasks</span>
+            <span class="n">cores</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">cpus_per_task</span> <span class="o">*</span> <span class="n">step</span><span class="o">.</span><span class="n">ntasks</span>
+            <span class="n">min_cores</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">min_cpus_per_task</span> <span class="o">*</span> <span class="n">step</span><span class="o">.</span><span class="n">min_tasks</span>
             <span class="n">max_cores</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_cores</span><span class="p">,</span> <span class="n">cores</span><span class="p">)</span>
             <span class="n">max_of_min_cores</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_of_min_cores</span><span class="p">,</span> <span class="n">min_cores</span><span class="p">)</span>
 
@@ -546,6 +546,10 @@
     <span class="k">if</span> <span class="n">machine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">machine</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
     <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;compass.machines&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">)</span>
+
+    <span class="c1"># store name of machine so tests have access to it if needed</span>
+    <span class="k">if</span> <span class="n">machine</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;deploy&#39;</span><span class="p">,</span> <span class="s1">&#39;machine&#39;</span><span class="p">,</span> <span class="n">machine</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="s1">&#39;COMPASS_BRANCH&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
         <span class="n">compass_branch</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;COMPASS_BRANCH&#39;</span><span class="p">]</span>

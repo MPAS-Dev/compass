@@ -74,6 +74,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">landice</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="generated/compass.landice.Landice.html">compass.landice.Landice</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#test-groups">Test Groups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#landice-framework">Landice Framework</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../ocean/api.html">ocean</a></li>
@@ -373,6 +374,44 @@
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.eismint2.setup_mesh.SetupMesh.run.html#compass.landice.tests.eismint2.setup_mesh.SetupMesh.run" title="compass.landice.tests.eismint2.setup_mesh.SetupMesh.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_mesh.SetupMesh.run</span></code></a>()</p></td>
 <td><p>Run this step of the test case</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="ensemble-generator">
+<h3>ensemble_generator<a class="headerlink" href="#ensemble-generator" title="Permalink to this heading">¶</a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ensemble_generator.EnsembleGenerator.html#compass.landice.tests.ensemble_generator.EnsembleGenerator" title="compass.landice.tests.ensemble_generator.EnsembleGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnsembleGenerator</span></code></a>(mpas_core)</p></td>
+<td><p>A test group for generating ensembles of MALI simulations for uncertainty quantification or parameter sensitivity tests.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ensemble_generator.ensemble_manager.EnsembleManager.html#compass.landice.tests.ensemble_generator.ensemble_manager.EnsembleManager" title="compass.landice.tests.ensemble_generator.ensemble_manager.EnsembleManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensemble_manager.EnsembleManager</span></code></a>(test_case)</p></td>
+<td><p>A step for an ensemble manager.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ensemble_generator.ensemble_manager.EnsembleManager.setup.html#compass.landice.tests.ensemble_generator.ensemble_manager.EnsembleManager.setup" title="compass.landice.tests.ensemble_generator.ensemble_manager.EnsembleManager.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensemble_manager.EnsembleManager.setup</span></code></a>()</p></td>
+<td><p>Sets up the ensemble manager</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ensemble_generator.ensemble_manager.EnsembleManager.run.html#compass.landice.tests.ensemble_generator.ensemble_manager.EnsembleManager.run" title="compass.landice.tests.ensemble_generator.ensemble_manager.EnsembleManager.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensemble_manager.EnsembleManager.run</span></code></a>()</p></td>
+<td><p>Use the ensemble manager to manage and launch jobs for each run Each ensemble member is a step of the test case.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.html#compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember" title="compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensemble_member.EnsembleMember</span></code></a>(test_case, ...)</p></td>
+<td><p>A step for setting up a single ensemble member</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.setup.html#compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.setup" title="compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensemble_member.EnsembleMember.setup</span></code></a>()</p></td>
+<td><p>Set up this run by setting up a baseline run configuration and then modifying parameters for this ensemble member based on an externally provided unit parameter vector</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.run.html#compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.run" title="compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensemble_member.EnsembleMember.run</span></code></a>()</p></td>
+<td><p>Run this member of the ensemble.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.ensemble_generator.thwaites.ThwaitesEnsemble.html#compass.landice.tests.ensemble_generator.thwaites.ThwaitesEnsemble" title="compass.landice.tests.ensemble_generator.thwaites.ThwaitesEnsemble"><code class="xref py py-obj docutils literal notranslate"><span class="pre">thwaites.ThwaitesEnsemble</span></code></a>(test_group)</p></td>
+<td><p>A test case for performing an ensemble of Thwaites Glacier simulations for uncertainty quantification studies.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.ensemble_generator.thwaites.ThwaitesEnsemble.configure.html#compass.landice.tests.ensemble_generator.thwaites.ThwaitesEnsemble.configure" title="compass.landice.tests.ensemble_generator.thwaites.ThwaitesEnsemble.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">thwaites.ThwaitesEnsemble.configure</span></code></a>()</p></td>
+<td><p>Configure a parameter ensemble of a Thwaites Glacier simulations.</p></td>
 </tr>
 </tbody>
 </table>
@@ -771,6 +810,32 @@
 </tbody>
 </table>
 </section>
+</section>
+<section id="landice-framework">
+<h2>Landice Framework<a class="headerlink" href="#landice-framework" title="Permalink to this heading">¶</a></h2>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.extrapolate.extrapolate_variable.html#compass.landice.extrapolate.extrapolate_variable" title="compass.landice.extrapolate.extrapolate_variable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extrapolate.extrapolate_variable</span></code></a>(nc_file, ...)</p></td>
+<td><p>Function to extrapolate variable values into undefined regions</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.mesh.gridded_flood_fill.html#compass.landice.mesh.gridded_flood_fill" title="compass.landice.mesh.gridded_flood_fill"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.gridded_flood_fill</span></code></a>(field[, iStart, jStart])</p></td>
+<td><p>Generic flood-fill routine to create mask of connected elements in the desired input array (field) from a gridded dataset.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.mesh.set_rectangular_geom_points_and_edges.html#compass.landice.mesh.set_rectangular_geom_points_and_edges" title="compass.landice.mesh.set_rectangular_geom_points_and_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.set_rectangular_geom_points_and_edges</span></code></a>(...)</p></td>
+<td><p>Set node and edge coordinates to pass to <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.mesh.creation.build_mesh.build_planar_mesh.html#mpas_tools.mesh.creation.build_mesh.build_planar_mesh" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.mesh.creation.build_mesh.build_planar_mesh()</span></code></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.mesh.set_cell_width.html#compass.landice.mesh.set_cell_width" title="compass.landice.mesh.set_cell_width"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.set_cell_width</span></code></a>(self, section, thk[, ...])</p></td>
+<td><p>Set cell widths based on settings in config file to pass to <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.mesh.creation.build_mesh.build_planar_mesh.html#mpas_tools.mesh.creation.build_mesh.build_planar_mesh" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.mesh.creation.build_mesh.build_planar_mesh()</span></code></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.mesh.get_dist_to_edge_and_GL.html#compass.landice.mesh.get_dist_to_edge_and_GL" title="compass.landice.mesh.get_dist_to_edge_and_GL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.get_dist_to_edge_and_GL</span></code></a>(self, thk, ...)</p></td>
+<td><p>Calculate distance from each point to ice edge and grounding line, to be used in mesh density functions in <a class="reference internal" href="generated/compass.landice.mesh.set_cell_width.html#compass.landice.mesh.set_cell_width" title="compass.landice.mesh.set_cell_width"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.set_cell_width()</span></code></a>.</p></td>
+</tr>
+</tbody>
+</table>
 </section>
 </section>
 

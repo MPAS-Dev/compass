@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ensemble_generator &mdash; compass latest documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="enthalpy_benchmark" href="enthalpy_benchmark.html" />
+    <link rel="prev" title="eismint2" href="eismint2.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            compass
+          </a>
+              <div class="version">
+                latest
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_suites.html">Test Suites</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Landice core</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Test Groups</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="calving_dt_convergence.html">calving_dt_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="circular_shelf.html">circular_shelf</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dome.html">dome</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eismint2.html">eismint2</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ensemble_generator</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#thwaites">thwaites</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="enthalpy_benchmark.html">enthalpy_benchmark</a></li>
+<li class="toctree-l3"><a class="reference internal" href="greenland.html">greenland</a></li>
+<li class="toctree-l3"><a class="reference internal" href="humboldt.html">humboldt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydro_radial.html">hydro_radial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ismip6_forcing.html">ismip6_forcing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kangerlussuaq.html">kangerlussuaq</a></li>
+<li class="toctree-l3"><a class="reference internal" href="koge_bugt_s.html">koge_bugt_s</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mismipplus.html">mismipplus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thwaites.html">thwaites</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../suites.html">Test suites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../framework/index.html">Framework</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Landice core</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Test Groups</a></li>
+      <li class="breadcrumb-item active">ensemble_generator</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/users_guide/landice/test_groups/ensemble_generator.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ensemble-generator">
+<span id="landice-ensemble-generator"></span><h1>ensemble_generator<a class="headerlink" href="#ensemble-generator" title="Permalink to this heading">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">landice/ensemble_generator</span></code> test group creates ensemble of MALI
+simulations with different parameter values.  The ensemble framework
+sets up a user-defined number of simulations with parameter values selected
+from a space-filling Sobol sequence.</p>
+<p>A test case in this test group consists of a number of ensemble members,
+and one ensemble manager.
+Each ensemble member is a step of the test case, and can be run separately
+or as part of the complete ensemble.  Ensemble members are identified by a
+three digit run number, starting with 000.
+A config file specifies the run numbers to set up, as well as some common
+information about the run configuration.</p>
+<p>The test case can be generated multiple times to set up and run additional
+runs with a different range of run numbers after being run initially. This
+allows one to perform a small ensemble (e.g. 2-10 runs) to make sure results
+look as expected before spending time on a larger ensemble. This also allows
+one to add more ensemble members from the Sobol sequence later if UQ analysis
+indicates the original sample size was insufficient.</p>
+<p>Individual test cases will define which parameters are being sampled and
+over what ranges.  Currently these parameters are supported:</p>
+<ul class="simple">
+<li><p>basal friction power law exponent</p></li>
+<li><p>von Mises threshold stress for calving</p></li>
+<li><p>calving rate speed limit</p></li>
+<li><p>gamma0 melt sensitivity parameter in ISMIP6-AIS ice-shelf basal melting
+parameterization</p></li>
+<li><p>deltaT thermal forcing bias adjustment parameter in ISMIP6-AIS ice-shelf
+basal melting parameterization</p></li>
+</ul>
+<p>Additional parameters can be easily added in the future.
+The test group currently includes a file of unit parameter values for two
+parameters with 100 samples using a Sobol sequence.  The parameter
+dimensionality or sample size can be increased by modifying this file and
+its usage.  It also would be possible to modify the sampling strategy to
+perform uniform parameter sensitivity tests.</p>
+<p><code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code> will set up the simulations and the ensemble manager.
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> from the test case work directory will submit each run as a
+separate slurm job.
+Individual runs can be run independently through <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> executed in the
+run directory.  (E.g., if you want to test or debug a run without running the
+entire ensemble.)</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Due to the requirement that <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> is only executed
+on a compute node, this operation has to be submitted via a batch script or
+interactive job, or compass framework code can be modified by an expert user
+to lift this restriction. (This may be addressed in the future.)</p>
+</div>
+<p>Simulation output can be analyzed with the <code class="docutils literal notranslate"><span class="pre">plot_ensemble.py</span></code> visualization
+script, which generates plots of basic quantities of interest as a function
+of parameter values, as well as identifies runs that did not reach the
+target year.</p>
+<p>Future improvements may include:</p>
+<ul class="simple">
+<li><p>enabling the ensemble manager to identify runs that need to be restarted
+so the restarts do not need to be managed manually</p></li>
+<li><p>safety checks or warnings before submitting ensembles that will use large
+amounts of computing resources</p></li>
+<li><p>more flexibility in customizing ensembles without needing to modify test
+case files</p></li>
+</ul>
+<p>The test group includes a single test case that creates an ensemble of Thwaites
+Glacier simulations.</p>
+<section id="config-options">
+<h2>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h2>
+<p>Test cases in this test group have the following common config options.</p>
+<p>A config file specifies the location of the input file, the basal friction
+exponent used in the input file, the name of the parameter vector file to
+use, and the start and end run numbers to set up.
+This test group is intended for expert users, and it is expected that it
+will typically be run with a customized cfg file.  Note the default run
+numbers create a small ensemble, but uncertainty quantification applications
+will typically need dozens or more simulations.</p>
+<p>The test-case-specific config options are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for setting up an ensemble</span>
+<span class="k">[ensemble]</span>
+
+<span class="c1"># start and end numbers for runs to set up and run</span>
+<span class="c1"># Additional runs can be added and run to an existing ensemble</span>
+<span class="c1"># without affecting existing runs, but trying to set up a run</span>
+<span class="c1"># that already exists may result in unexpected behavior.</span>
+<span class="c1"># Run numbers should be zero-based</span>
+<span class="c1"># These values do not affect viz/analysis, which will include any</span>
+<span class="c1"># runs it finds.</span>
+<span class="na">start_run</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+<span class="na">end_run</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
+
+<span class="c1"># the name of the parameter vector file to use, included in the</span>
+<span class="c1"># compass repository.  Currently there is only one option, but additional</span>
+<span class="c1"># parameter vectors may be added in the future, or entirely replaced with</span>
+<span class="c1"># code to generate parameter vectors as needed.</span>
+<span class="na">param_vector_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Sobol_Initializations_seed_4_samples_100.csv</span>
+
+<span class="c1"># Path to the initial condition input file.</span>
+<span class="c1"># User has to supply.</span>
+<span class="c1"># Eventually this could be hard-coded to use files on the input data</span>
+<span class="c1"># server, but initially we want flexibility to experiment with different</span>
+<span class="c1"># inputs and forcings</span>
+<span class="na">input_file_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/MALI_projects/Thwaites_UQ/Thwaites_4to20km_r02_20230126/relaxation/Thwaites_4to20km_r02_20230126_withStiffness_10yrRelax.nc</span>
+
+<span class="c1"># the value of the friction exponent used for the calculation of muFriction</span>
+<span class="c1"># in the input file</span>
+<span class="na">orig_fric_exp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.2</span>
+
+<span class="c1"># Path to ISMIP6 ice-shelf basal melt parameter input file.</span>
+<span class="c1"># User has to supply.</span>
+<span class="na">basal_melt_param_file_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/MALI_projects/Thwaites_UQ/Thwaites_4to20km_r02_20230126/forcing/basal_melt/parameterizations/Thwaites_4to20km_r02_20230126_basin_and_coeff_gamma0_DeltaT_quadratic_non_local_median.nc</span>
+
+<span class="c1"># number of tasks that each ensemble member should be run with</span>
+<span class="c1"># Eventually, compass could determine this, but we want explicit control for now</span>
+<span class="c1"># ntasks=32 for cori</span>
+<span class="na">ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">32</span>
+</pre></div>
+</div>
+<p>A user should copy the default config file to a user-defined config file
+before setting up the test case and any necessary adjustments made.
+Importantly, the user-defined config should be modified
+to also include the following options that will be used for submitting the
+jobs for each ensemble member.</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[parallel]</span>
+<span class="na">account</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ALLOCATION_NAME_HERE</span>
+<span class="na">qos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">regular</span>
+
+<span class="k">[job]</span>
+<span class="na">wall_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1:30:00</span>
+</pre></div>
+</div>
+</section>
+<section id="thwaites">
+<h2>thwaites<a class="headerlink" href="#thwaites" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">landice/ensemble_generator/thwaites</span></code> uses the ensemble framework to create
+and ensemble of 4 km resolution Thwaites Glacier simulations integrated from
+2000 to 2100 with two parameters varying:</p>
+<ul class="simple">
+<li><p>basal friction power law exponent: range [0.1, 0.333]</p></li>
+<li><p>von Mises threshold stress for calving: range [100, 300] kPa</p></li>
+</ul>
+<p>The initial condition file is specified in the <code class="docutils literal notranslate"><span class="pre">ensemble_generator.cfg</span></code> file
+or a user modification of it.  The forcing files for the simulation are
+hard-coded in the test case streams file  and are located on the NERSC
+filesystem.
+The model configuration uses:</p>
+<ul class="simple">
+<li><p>first-order velocity solver</p></li>
+<li><p>power law basal friction</p></li>
+<li><p>evolving temperature</p></li>
+<li><p>von Mises calving</p></li>
+<li><p>ISMIP6 surface mass balance and sub-ice-shelf melting using climatological
+mean forcing</p></li>
+</ul>
+<section id="steps-for-setting-up-and-running-a-thwaites-ensmble">
+<h3>Steps for setting up and running a Thwaites ensmble<a class="headerlink" href="#steps-for-setting-up-and-running-a-thwaites-ensmble" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p>With a compass conda environment set up, run, e.g.,
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span> <span class="pre">-t</span> <span class="pre">landice/ensemble_generator/thwaites_ensemble</span> <span class="pre">-w</span> <span class="pre">WORK_DIR_PATH</span> <span class="pre">-f</span> <span class="pre">USER.cfg</span></code>
+where <code class="docutils literal notranslate"><span class="pre">WORK_DIR_PATH</span></code> is a location that can store the whole
+ensemble (typically a scratch drive) and <code class="docutils literal notranslate"><span class="pre">USER.cfg</span></code> is the
+user-defined config described in the previous section that includes
+options for <code class="docutils literal notranslate"><span class="pre">[parallel]</span></code> and <code class="docutils literal notranslate"><span class="pre">[job]</span></code>, as well as any required
+modifications to the <code class="docutils literal notranslate"><span class="pre">[ensemble]</span></code> section.  Likely, the only changes
+one would need to make to the <code class="docutils literal notranslate"><span class="pre">[ensemble]</span></code> section are the
+<code class="docutils literal notranslate"><span class="pre">start_run</span></code> and <code class="docutils literal notranslate"><span class="pre">end_run</span></code> values.</p></li>
+<li><p>After <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code> completes and all runs are set up, go to the
+<code class="docutils literal notranslate"><span class="pre">WORK_DIR_PATH</span></code> and change to the
+<code class="docutils literal notranslate"><span class="pre">landice/ensemble_generator/thwaites-uq</span></code> subdirectory.
+From there you will see subdirectories for each run, a subdirectory for the
+<code class="docutils literal notranslate"><span class="pre">ensemble_manager</span></code> and symlink to the visualization script.</p></li>
+<li><p>To submit jobs for the entire ensemble, change to the <code class="docutils literal notranslate"><span class="pre">ensemble_manager</span></code>
+subdirectory and execute <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code>.  Note, as stated above, this
+currently will fail on a login node and has to be performed from a
+interactive job or batch script.  This will be addressed in the future.</p></li>
+<li><p>Each run will have its own batch job that can be monitored with <code class="docutils literal notranslate"><span class="pre">squeue</span></code>
+or similar commands.</p></li>
+<li><p>When the ensemble has completed, you can assess the result through the
+basic visualization script <code class="docutils literal notranslate"><span class="pre">plot_ensemble.py</span></code>.  The script will skip runs
+that are incomplete or failed, so you can run it while an ensemble is
+still running to assess progress.</p></li>
+<li><p>If you want to add additional ensemble members, adjust
+<code class="docutils literal notranslate"><span class="pre">start_run</span></code> and <code class="docutils literal notranslate"><span class="pre">end_run</span></code> in your config file and redo steps 1-5.
+The ensemble_manager will always be set to run the most recent run
+numbers defined in the config when <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code> was run.
+The visualization script is independent of the run manager and will
+process all runs it finds.</p></li>
+</ol>
+<p>It is also possible to run an individual run manually by changing to the run
+directory and submitting the job script yourself with <code class="docutils literal notranslate"><span class="pre">sbatch</span></code>.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eismint2.html" class="btn btn-neutral float-left" title="eismint2" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="enthalpy_benchmark.html" class="btn btn-neutral float-right" title="enthalpy_benchmark" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

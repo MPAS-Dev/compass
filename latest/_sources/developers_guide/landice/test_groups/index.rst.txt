@@ -10,6 +10,7 @@ Test groups
    calving_dt_convergence
    circular_shelf
    dome
+   ensemble_generator
    enthalpy_benchmark
    eismint2
    greenland

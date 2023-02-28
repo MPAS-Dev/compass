@@ -16,6 +16,7 @@ physics but that are not run routinely.
    circular_shelf
    dome
    eismint2
+   ensemble_generator
    enthalpy_benchmark
    greenland
    humboldt
