@@ -123,8 +123,9 @@ rc.  As an example, we will use the branch
 `simplify_local_mache <https://github.com/xylar/compass/tree/simplify_local_mache>`_.
 
 Often, we will need to test with a ``mache`` branch that has changes needed
-by compass.  Here, we will use the ``update_cime_machines`` on the fork
-``xylar/mache`` as an example.
+by compass.  Here, we will use ``<fork>`` as a stand-in for the fork of mache
+to use (e.g. ``E3SM-Project/mache``) and ``<branch>`` as the stand-in for a branch on
+that fork (e.g. ``main``).
 
 We also need to make sure there is a spack branch for the version of mache.
 This is a branch off of the develop branch on
@@ -181,8 +182,8 @@ To do this, we call the ``configure_compass_env.py`` script using
     export TMPDIR=/lcrc/group/e3sm/${USER}/spack_temp
     ./conda/configure_compass_env.py \
         --conda ${CONDA_BASE} \
-        --mache_fork xylar/mache \
-        --mache_branch update_cime_machines \
+        --mache_fork <fork> \
+        --mache_branch <branch> \
         --update_spack \
         --spack /lcrc/group/e3sm/${USER}/spack_test \
         --tmpdir ${TMPDIR} \
@@ -242,8 +243,8 @@ Here is an example:
     export TMPDIR=/lcrc/group/e3sm/${USER}/spack_temp
     ./conda/configure_compass_env.py \
         --conda ${CONDA_BASE} \
-        --mache_fork xylar/mache \
-        --mache_branch update_cime_machines \
+        --mache_fork <fork> \
+        --mache_branch <branch> \
         --update_spack \
         --spack /lcrc/group/e3sm/${USER}/spack_test \
         --tmpdir ${TMPDIR} \
@@ -268,8 +269,8 @@ Here is an example:
     export TMPDIR=/lcrc/group/e3sm/${USER}/spack_temp
     ./conda/configure_compass_env.py \
         --conda ${CONDA_BASE} \
-        --mache_fork xylar/mache \
-        --mache_branch update_cime_machines \
+        --mache_fork <fork> \
+        --mache_branch <branch> \
         --update_spack \
         --spack /lcrc/group/e3sm/${USER}/spack_test \
         --tmpdir ${TMPDIR} \
