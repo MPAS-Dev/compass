@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-
-from __future__ import print_function
+#!/usr/bin/env python3
 
 import glob
 import grp
@@ -238,10 +236,10 @@ def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
         activ_path, env_path, env_name, activate_env, spack_env
 
 
-def build_conda_env(env_type, recreate, machine, mpi, conda_mpi, version,
+def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
                     python, source_path, conda_template_path, conda_base,
                     env_name, env_path, activate_base, use_local,
-                    local_conda_build, logger):
+                    local_conda_build, logger, local_mache):
 
     if env_type != 'dev':
         install_miniconda(conda_base, activate_base, logger)
@@ -284,7 +282,8 @@ def build_conda_env(env_type, recreate, machine, mpi, conda_mpi, version,
             conda_openmp = ''
         spec_file = template.render(supports_otps=supports_otps,
                                     mpi=conda_mpi, openmp=conda_openmp,
-                                    mpi_prefix=mpi_prefix)
+                                    mpi_prefix=mpi_prefix,
+                                    include_mache=not local_mache)
 
         spec_filename = f'spec-file-{conda_mpi}.txt'
         with open(spec_filename, 'w') as handle:
@@ -423,7 +422,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
             f'scorpio@{scorpio}+pnetcdf~timing+internal-timing~tools+malloc')
 
     if albany != 'None':
-        specs.append(f'albany@{albany}+mpas+cxx17')
+        specs.append(f'albany@{albany}+mpas')
 
     yaml_template = f'{spack_template_path}/{machine}_{compiler}_{mpi}.yaml'
     if not os.path.exists(yaml_template):
@@ -802,6 +801,8 @@ def main():  # noqa: C901
 
     compass_version = get_version()
 
+    local_mache = args.mache_fork is not None and args.mache_branch is not None
+
     machine = None
     if not args.env_only:
         if args.machine is None:
@@ -889,10 +890,20 @@ def main():  # noqa: C901
 
         if previous_conda_env != conda_env_name:
             build_conda_env(
-                env_type, recreate, machine, mpi, conda_mpi, compass_version,
+                env_type, recreate, mpi, conda_mpi, compass_version,
                 python, source_path, conda_template_path, conda_base,
                 conda_env_name, conda_env_path, activate_base, args.use_local,
-                args.local_conda_build, logger)
+                args.local_conda_build, logger, local_mache)
+
+            if local_mache:
+                print('Install local mache\n')
+                commands = f'source {conda_base}/etc/profile.d/conda.sh && ' \
+                           f'source {conda_base}/etc/profile.d/mamba.sh && ' \
+                           f'conda activate {conda_env_name} && ' \
+                           'cd ../build_mache/mache && ' \
+                           'python -m pip install .'
+                check_call(commands, logger=logger)
+
             previous_conda_env = conda_env_name
 
             if env_type != 'dev':

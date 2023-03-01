@@ -1,20 +1,8 @@
-#!/usr/bin/env python
-
-from __future__ import print_function
+#!/usr/bin/env python3
 
 import os
 import sys
-
-try:
-    from configparser import ConfigParser
-except ImportError:
-    import six
-    from six.moves import configparser
-
-    if six.PY2:
-        ConfigParser = configparser.SafeConfigParser
-    else:
-        ConfigParser = configparser.ConfigParser
+from configparser import ConfigParser
 
 from shared import (
     check_call,
@@ -41,36 +29,30 @@ def get_config(config_file):
 def bootstrap(activate_install_env, source_path, local_conda_build):
 
     print('Creating the compass conda environment\n')
-    bootstrap_command = '{}/conda/bootstrap.py'.format(source_path)
-    command = '{} && ' \
-              '{} {}'.format(activate_install_env, bootstrap_command,
-                             ' '.join(sys.argv[1:]))
+    bootstrap_command = f'{source_path}/conda/bootstrap.py'
+    command = f'{activate_install_env} && ' \
+              f'{bootstrap_command} {" ".join(sys.argv[1:])}'
     if local_conda_build is not None:
-        command = '{} --local_conda_build {}'.format(command,
-                                                     local_conda_build)
+        command = f'{command} --local_conda_build {local_conda_build}'
     check_call(command)
 
 
 def setup_install_env(env_name, activate_base, use_local, logger, recreate,
-                      conda_base):
+                      conda_base, mache):
     env_path = os.path.join(conda_base, 'envs', env_name)
     if use_local:
         channels = '--use-local'
     else:
         channels = ''
-    packages = 'progressbar2 jinja2 "mache=1.10.0"'
+    packages = f'progressbar2 jinja2 {mache}'
     if recreate or not os.path.exists(env_path):
         print('Setting up a conda environment for installing compass\n')
-        commands = '{} && ' \
-                   'mamba create -y -n {} {} {}'.format(activate_base,
-                                                        env_name, channels,
-                                                        packages)
+        commands = f'{activate_base} && ' \
+                   f'mamba create -y -n {env_name} {channels} {packages}'
     else:
         print('Updating conda environment for installing compass\n')
-        commands = '{} && ' \
-                   'mamba install -y -n {} {} {}'.format(activate_base,
-                                                         env_name, channels,
-                                                         packages)
+        commands = f'{activate_base} && ' \
+                   f'mamba install -y -n {env_name} {channels} {packages}'
 
     check_call(commands, logger=logger)
 
@@ -78,6 +60,12 @@ def setup_install_env(env_name, activate_base, use_local, logger, recreate,
 def main():
     args = parse_args(bootstrap=False)
     source_path = os.getcwd()
+
+    if args.tmpdir is not None:
+        try:
+            os.makedirs(args.tmpdir)
+        except FileExistsError:
+            pass
 
     config = get_config(args.config_file)
 
@@ -87,14 +75,14 @@ def main():
     env_name = 'compass_bootstrap'
 
     source_activation_scripts = \
-        'source {}/etc/profile.d/conda.sh && ' \
-        'source {}/etc/profile.d/mamba.sh'.format(conda_base, conda_base)
+        f'source {conda_base}/etc/profile.d/conda.sh && ' \
+        f'source {conda_base}/etc/profile.d/mamba.sh'
 
-    activate_base = '{} && mamba activate'.format(source_activation_scripts)
+    activate_base = f'{source_activation_scripts} && conda activate'
 
     activate_install_env = \
-        '{} && ' \
-        'mamba activate {}'.format(source_activation_scripts, env_name)
+        f'{source_activation_scripts} && ' \
+        f'conda activate {env_name}'
     try:
         os.makedirs('conda/logs')
     except OSError:
@@ -106,15 +94,34 @@ def main():
     # install miniconda if needed
     install_miniconda(conda_base, activate_base, logger)
 
+    local_mache = args.mache_fork is not None and args.mache_branch is not None
+    if local_mache:
+        mache = ''
+    else:
+        mache = '"mache=1.10.0"'
+
     setup_install_env(env_name, activate_base, args.use_local, logger,
-                      args.recreate, conda_base)
+                      args.recreate, conda_base, mache)
+
+    if local_mache:
+        print('Clone and install local mache\n')
+        commands = f'{activate_install_env} && ' \
+                   f'rm -rf conda/build_mache && ' \
+                   f'mkdir -p conda/build_mache && ' \
+                   f'cd conda/build_mache && ' \
+                   f'git clone -b {args.mache_branch} ' \
+                   f'git@github.com:{args.mache_fork}.git mache && ' \
+                   f'cd mache && ' \
+                   f'python -m pip install .'
+
+        check_call(commands, logger=logger)
 
     env_type = config.get('deploy', 'env_type')
     if env_type not in ['dev', 'test_release', 'release']:
-        raise ValueError('Unexpected env_type: {}'.format(env_type))
+        raise ValueError(f'Unexpected env_type: {env_type}')
 
     if env_type == 'test_release' and args.use_local:
-        local_conda_build = os.path.abspath('{}/conda-bld'.format(conda_base))
+        local_conda_build = os.path.abspath(f'{conda_base}/conda-bld')
     else:
         local_conda_build = None
 
