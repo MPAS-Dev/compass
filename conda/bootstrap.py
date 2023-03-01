@@ -389,6 +389,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
                     spack_base, spack_template_path, env_vars, tmpdir, logger):
 
     albany = config.get('deploy', 'albany')
+    cmake = config.get('deploy', 'cmake')
     esmf = config.get('deploy', 'esmf')
     lapack = config.get('deploy', 'lapack')
     petsc = config.get('deploy', 'petsc')
@@ -397,6 +398,9 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
     spack_branch_base = f'{spack_base}/spack_for_mache_{mache_version}'
 
     specs = list()
+
+    if cmake != 'None':
+        specs.append(f'cmake@{cmake}')
 
     e3sm_hdf5_netcdf = config.getboolean('deploy', 'use_e3sm_hdf5_netcdf')
     if not e3sm_hdf5_netcdf:
