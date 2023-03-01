@@ -397,7 +397,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
     specs = list()
 
     if cmake != 'None':
-        specs.append(f'cmake@{cmake}')
+        specs.append(f'cmake "@{cmake}"')
 
     e3sm_hdf5_netcdf = config.getboolean('deploy', 'use_e3sm_hdf5_netcdf')
     if not e3sm_hdf5_netcdf:
@@ -406,27 +406,28 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
         netcdf_fortran = config.get('deploy', 'netcdf_fortran')
         pnetcdf = config.get('deploy', 'pnetcdf')
         specs.extend([
-            f'hdf5@{hdf5}+cxx+fortran+hl+mpi+shared',
-            f'netcdf-c@{netcdf_c}+mpi~parallel-netcdf',
-            f'netcdf-fortran@{netcdf_fortran}',
-            f'parallel-netcdf@{pnetcdf}+cxx+fortran'])
+            f'hdf5 "@{hdf5}+cxx+fortran+hl+mpi+shared"',
+            f'netcdf-c "@{netcdf_c}+mpi~parallel-netcdf"',
+            f'netcdf-fortran "@{netcdf_fortran}"',
+            f'parallel-netcdf "@{pnetcdf}+cxx+fortran"'])
 
     if esmf != 'None':
-        specs.append(f'esmf@{esmf}+mpi+netcdf~pio+pnetcdf')
+        specs.append(f'esmf "@{esmf}+mpi+netcdf~pio+pnetcdf"')
     if lapack != 'None':
-        specs.append(f'netlib-lapack@{lapack}')
+        specs.append(f'netlib-lapack "@{lapack}"')
         include_e3sm_lapack = False
     else:
         include_e3sm_lapack = True
     if petsc != 'None':
-        specs.append(f'petsc@{petsc}+mpi+batch')
+        specs.append(f'petsc "@{petsc}+mpi+batch"')
 
     if scorpio != 'None':
         specs.append(
-            f'scorpio@{scorpio}+pnetcdf~timing+internal-timing~tools+malloc')
+            f'scorpio '
+            f'"@{scorpio}+pnetcdf~timing+internal-timing~tools+malloc"')
 
     if albany != 'None':
-        specs.append(f'albany@{albany}+mpas')
+        specs.append(f'albany "@{albany}+mpas"')
 
     yaml_template = f'{spack_template_path}/{machine}_{compiler}_{mpi}.yaml'
     if not os.path.exists(yaml_template):
