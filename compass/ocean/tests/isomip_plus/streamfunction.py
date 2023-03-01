@@ -432,6 +432,7 @@ def _interpolate_horizontal_transport_zlevel(ds, z, outFileName,
             zBot = dsIn.zInterfaceEdge.isel(nVertLevelsP1=inZIndex + 1)
             inTransportPerDepth = \
                 dsIn.transportPerDepth.isel(nVertLevels=inZIndex)
+            inTransportPerDepth = inTransportPerDepth.fillna(value=0.)
 
             zt = numpy.minimum(zTop, z0)
             zb = numpy.maximum(zBot, z1)
