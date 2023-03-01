@@ -1,13 +1,14 @@
-import xarray
+import os
+
 import numpy
+import progressbar
 import scipy.sparse
 import scipy.sparse.linalg
-import progressbar
-import os
+import xarray
 from mpas_tools.io import write_netcdf
 
-from compass.step import Step
 from compass.ocean.tests.isomip_plus.viz import file_complete
+from compass.step import Step
 
 
 class Streamfunction(Step):
@@ -117,14 +118,14 @@ def _compute_overturning_streamfunction(dsMesh, ds, out_dir, dx=2e3, dz=5.,
     if file_complete(ds, osfFileName):
         return
 
-    xMin = 320e3 + 0.5*dx
-    xMax = 800e3 - 0.5*dx
-    nx = int((xMax - xMin)/dx + 1)
+    xMin = 320e3 + 0.5 * dx
+    xMax = 800e3 - 0.5 * dx
+    nx = int((xMax - xMin) / dx + 1)
     x = numpy.linspace(xMin, xMax, nx)
 
-    zMin = -720.0 + 0.5*dz
-    zMax = 0.0 - 0.5*dz
-    nz = int((zMax - zMin)/dz + 1)
+    zMin = -720.0 + 0.5 * dz
+    zMax = 0.0 - 0.5 * dz
+    nz = int((zMax - zMin) / dz + 1)
     z = numpy.linspace(zMax, zMin, nz)
 
     try:
@@ -173,8 +174,8 @@ def _compute_barotropic_transport(dsMesh, ds):
     normalVelocity = ds.timeMonthly_avg_normalVelocity[:, innerEdges, :].chunk(
         chunks={'Time': 1})
 
-    layerThicknessEdge = 0.5*(layerThickness[:, cell0, :] +
-                              layerThickness[:, cell1, :])
+    layerThicknessEdge = 0.5 * (layerThickness[:, cell0, :] +
+                                layerThickness[:, cell1, :])
     transport = dsMesh.dvEdge[innerEdges] * \
         (layerThicknessEdge * normalVelocity).sum(dim='nVertLevels')
 
@@ -200,8 +201,8 @@ def _compute_barotropic_streamfunction_vertex(dsMesh, ds, show_progress):
     nBoundaryVertices = len(boundaryVertices)
     nInnerEdges = len(innerEdges)
 
-    indices = numpy.zeros((2, 2*nInnerEdges+nBoundaryVertices), dtype=int)
-    data = numpy.zeros(2*nInnerEdges+nBoundaryVertices, dtype=float)
+    indices = numpy.zeros((2, 2 * nInnerEdges + nBoundaryVertices), dtype=int)
+    data = numpy.zeros(2 * nInnerEdges + nBoundaryVertices, dtype=float)
 
     # The difference between the streamfunction at vertices on an inner edge
     # should be equal to the transport
@@ -209,19 +210,19 @@ def _compute_barotropic_streamfunction_vertex(dsMesh, ds, show_progress):
     v1 = verticesOnEdge[innerEdges, 1].values
 
     ind = numpy.arange(nInnerEdges)
-    indices[0, 2*ind] = ind
-    indices[1, 2*ind] = v1
-    data[2*ind] = 1.
+    indices[0, 2 * ind] = ind
+    indices[1, 2 * ind] = v1
+    data[2 * ind] = 1.
 
-    indices[0, 2*ind+1] = ind
-    indices[1, 2*ind+1] = v0
-    data[2*ind+1] = -1.
+    indices[0, 2 * ind + 1] = ind
+    indices[1, 2 * ind + 1] = v0
+    data[2 * ind + 1] = -1.
 
     # the streamfunction should be zero at all boundary vertices
     ind = numpy.arange(nBoundaryVertices)
-    indices[0, 2*nInnerEdges + ind] = nInnerEdges + ind
-    indices[1, 2*nInnerEdges + ind] = boundaryVertices
-    data[2*nInnerEdges + ind] = 1.
+    indices[0, 2 * nInnerEdges + ind] = nInnerEdges + ind
+    indices[1, 2 * nInnerEdges + ind] = boundaryVertices
+    data[2 * nInnerEdges + ind] = 1.
 
     bsfVertex = xarray.DataArray(numpy.zeros((nTime, nVertices)),
                                  dims=('Time', 'nVertices'))
@@ -235,24 +236,24 @@ def _compute_barotropic_streamfunction_vertex(dsMesh, ds, show_progress):
         bar = None
 
     for tIndex in range(nTime):
-        rhs = numpy.zeros(nInnerEdges+nBoundaryVertices, dtype=float)
+        rhs = numpy.zeros(nInnerEdges + nBoundaryVertices, dtype=float)
 
         # convert to Sv
         ind = numpy.arange(nInnerEdges)
-        rhs[ind] = 1e-6*transport.isel(Time=tIndex)
+        rhs[ind] = 1e-6 * transport.isel(Time=tIndex)
 
         ind = numpy.arange(nBoundaryVertices)
         rhs[nInnerEdges + ind] = 0.
 
         M = scipy.sparse.csr_matrix((data, indices),
-                                    shape=(nInnerEdges+nBoundaryVertices,
+                                    shape=(nInnerEdges + nBoundaryVertices,
                                            nVertices))
 
         solution = scipy.sparse.linalg.lsqr(M, rhs)
 
         bsfVertex[tIndex, :] = -solution[0]
         if show_progress:
-            bar.update(tIndex+1)
+            bar.update(tIndex + 1)
     if show_progress:
         bar.finish()
 
@@ -266,13 +267,13 @@ def _compute_barotropic_streamfunction_cell(dsMesh, bsfVertex):
     nEdgesOnCell = dsMesh.nEdgesOnCell
     edgesOnCell = dsMesh.edgesOnCell - 1
     verticesOnCell = dsMesh.verticesOnCell - 1
-    areaEdge = dsMesh.dcEdge*dsMesh.dvEdge
+    areaEdge = dsMesh.dcEdge * dsMesh.dvEdge
     prevEdgesOnCell = edgesOnCell.copy(deep=True)
     prevEdgesOnCell[:, 1:] = edgesOnCell[:, 0:-1]
-    prevEdgesOnCell[:, 0] = edgesOnCell[:, nEdgesOnCell-1]
+    prevEdgesOnCell[:, 0] = edgesOnCell[:, nEdgesOnCell - 1]
 
     mask = verticesOnCell >= 0
-    areaVert = mask*0.5*(areaEdge[edgesOnCell] + areaEdge[prevEdgesOnCell])
+    areaVert = mask * 0.5 * (areaEdge[edgesOnCell] + areaEdge[prevEdgesOnCell])
 
     bsfCell = ((areaVert * bsfVertex[:, verticesOnCell]).sum(dim='maxEdges') /
                areaVert.sum(dim='maxEdges'))
@@ -327,8 +328,8 @@ def _compute_horizontal_transport_mpas(ds, dsMesh, outFileName):
     minLevelEdgeBot = minLevelEdgeBot.chunk(chunks)
     maxLevelEdgeTop = maxLevelEdgeTop.chunk(chunks)
     dvEdge = dsMesh.dvEdge[internalEdgeIndices].chunk(chunks)
-    bottomDepthEdge = 0.5*(bottomDepth[cell0] +
-                           bottomDepth[cell1]).chunk(chunks)
+    bottomDepthEdge = 0.5 * (bottomDepth[cell0] +
+                             bottomDepth[cell1]).chunk(chunks)
 
     chunks = {'Time': 1, 'nInternalEdges': 1024}
 
@@ -336,8 +337,9 @@ def _compute_horizontal_transport_mpas(ds, dsMesh, outFileName):
         nEdges=internalEdgeIndices).chunk(chunks)
     layerThickness = ds.timeMonthly_avg_layerThickness.chunk()
 
-    layerThicknessEdge = 0.5*(layerThickness.isel(nCells=cell0) +
-                              layerThickness.isel(nCells=cell1)).chunk(chunks)
+    layerThicknessEdge = (
+        0.5 * (layerThickness.isel(nCells=cell0) +
+               layerThickness.isel(nCells=cell1)).chunk(chunks))
 
     mask = numpy.logical_and(vertIndex >= minLevelEdgeBot,
                              vertIndex <= maxLevelEdgeTop)
@@ -356,7 +358,7 @@ def _compute_horizontal_transport_mpas(ds, dsMesh, outFileName):
          zInterfaceEdge.rename({'nVertLevels': 'nVertLevelsP1'})],
         dim='nVertLevelsP1')
 
-    transportPerDepth = dvEdge*normalVelocity
+    transportPerDepth = dvEdge * normalVelocity
 
     dsOut = xarray.Dataset()
     dsOut['xtime_startMonthly'] = ds.xtime_startMonthly
@@ -365,7 +367,7 @@ def _compute_horizontal_transport_mpas(ds, dsMesh, outFileName):
     dsOut['layerThicknessEdge'] = layerThicknessEdge
     dsOut['transportPerDepth'] = transportPerDepth
     dsOut['transportVertSum'] = \
-        (transportPerDepth*layerThicknessEdge).sum(dim='nVertLevels')
+        (transportPerDepth * layerThicknessEdge).sum(dim='nVertLevels')
 
     dsOut = dsOut.transpose('Time', 'nInternalEdges', 'nVertLevels',
                             'nVertLevelsP1')
@@ -401,7 +403,7 @@ def _interpolate_horizontal_transport_zlevel(ds, z, outFileName,
     nVertLevels = ds.sizes['nVertLevels']
 
     if show_progress:
-        widgets = ['interpolating tansport on z-level grid: ',
+        widgets = ['interpolating transport on z-level grid: ',
                    progressbar.Percentage(), ' ', progressbar.Bar(), ' ',
                    progressbar.ETA()]
         bar = progressbar.ProgressBar(widgets=widgets, maxval=nTime).start()
@@ -417,17 +419,17 @@ def _interpolate_horizontal_transport_zlevel(ds, z, outFileName,
             continue
 
         outTransport = xarray.DataArray(
-            numpy.zeros((nInternalEdges, nz-1)),
+            numpy.zeros((nInternalEdges, nz - 1)),
             dims=('nInternalEdges', 'nzM1'))
 
         dzSum = xarray.DataArray(
-            numpy.zeros((nInternalEdges, nz-1)),
+            numpy.zeros((nInternalEdges, nz - 1)),
             dims=('nInternalEdges', 'nzM1'))
 
         dsIn = ds.isel(Time=tIndex)
         for inZIndex in range(nVertLevels):
             zTop = dsIn.zInterfaceEdge.isel(nVertLevelsP1=inZIndex)
-            zBot = dsIn.zInterfaceEdge.isel(nVertLevelsP1=inZIndex+1)
+            zBot = dsIn.zInterfaceEdge.isel(nVertLevelsP1=inZIndex + 1)
             inTransportPerDepth = \
                 dsIn.transportPerDepth.isel(nVertLevels=inZIndex)
 
@@ -435,7 +437,7 @@ def _interpolate_horizontal_transport_zlevel(ds, z, outFileName,
             zb = numpy.maximum(zBot, z1)
             dz = numpy.maximum(zt - zb, 0.)
 
-            outTransport = outTransport + dz*inTransportPerDepth
+            outTransport = outTransport + dz * inTransportPerDepth
 
             dzSum = dzSum + dz
 
@@ -453,7 +455,7 @@ def _interpolate_horizontal_transport_zlevel(ds, z, outFileName,
 
         write_netcdf(dsOut, fileName)
 
-        assert(numpy.abs(dsOut.transportVertSumCheck).max().values < 1e-9)
+        assert numpy.abs(dsOut.transportVertSumCheck).max().values < 1e-9
 
         if show_progress:
             bar.update(tIndex + 1)
@@ -503,7 +505,7 @@ def _vertical_cumsum_horizontal_transport(ds, outFileName):
     # with either the output layer above or the one below
     mask = ds.mask.rename({'nzM1': 'nz'})
     maskTop = mask.isel(nz=0)
-    maskBot = mask.isel(nz=nz-2)
+    maskBot = mask.isel(nz=nz - 2)
 
     outMask = xarray.concat([maskTop,
                              numpy.logical_or(mask[:, 0:-1, :],
@@ -602,12 +604,13 @@ def _horizontally_bin_overturning_streamfunction(ds, dsMesh, x, osfFileName,
 
         if len(edgeIndices) == 0:
 
-            localOSF = numpy.nan*xarray.DataArray(numpy.ones((nTime, nz)),
-                                                  dims=('Time', 'nz'))
+            localOSF = numpy.nan * xarray.DataArray(numpy.ones((nTime, nz)),
+                                                    dims=('Time', 'nz'))
         else:
             # convert to Sv
-            transportSum = 1e-6 * \
-                edgeSigns*ds.transportSum.isel(nInternalEdges=edgeIndices)
+            transportSum = (
+                1e-6 * edgeSigns *
+                ds.transportSum.isel(nInternalEdges=edgeIndices))
 
             localOSF = transportSum.sum(dim='nInternalEdges')
 
@@ -620,7 +623,7 @@ def _horizontally_bin_overturning_streamfunction(ds, dsMesh, x, osfFileName,
         write_netcdf(dsOSF, fileName)
 
         if showProgress:
-            bar.update(xIndex+1)
+            bar.update(xIndex + 1)
 
     if showProgress:
         bar.finish()
