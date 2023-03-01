@@ -1,16 +1,16 @@
-import xarray as xr
-import numpy as np
 import os
 import shutil
 
-from mpas_tools.io import write_netcdf
+import numpy as np
+import xarray as xr
 from mpas_tools.cime.constants import constants
+from mpas_tools.io import write_netcdf
 
-from compass.step import Step
-from compass.ocean.vertical import init_vertical_coord
 from compass.ocean.iceshelf import compute_land_ice_pressure_and_draft
 from compass.ocean.tests.isomip_plus.geom import interpolate_geom
 from compass.ocean.tests.isomip_plus.viz.plot import MoviePlotter
+from compass.ocean.vertical import init_vertical_coord
+from compass.step import Step
 
 
 class InitialState(Step):
@@ -100,7 +100,8 @@ class InitialState(Step):
         ds_geom = xr.open_dataset('input_geometry_processed.nc')
         ds_mesh = xr.open_dataset('culled_mesh.nc')
 
-        ds = interpolate_geom(ds_mesh, ds_geom, min_ocean_fraction, thin_film_present)
+        ds = interpolate_geom(ds_mesh, ds_geom, min_ocean_fraction,
+                              thin_film_present)
 
         ds['landIceFraction'] = \
             ds['landIceFraction'].expand_dims(dim='Time', axis=0)
@@ -134,7 +135,7 @@ class InitialState(Step):
         min_layer_thickness = section.getfloat('min_layer_thickness')
         min_levels = section.getint('minimum_levels')
         min_column_thickness = max(min_column_thickness,
-                                   min_levels*min_layer_thickness)
+                                   min_levels * min_layer_thickness)
         min_depth = -ds.ssh + min_column_thickness
         ds['bottomDepth'] = np.maximum(ds.bottomDepth, min_depth)
         print(f'Adjusted bottomDepth for '
@@ -152,8 +153,8 @@ class InitialState(Step):
         init_top_sal = section.getfloat('init_top_sal')
         init_bot_sal = section.getfloat('init_bot_sal')
         if self.vertical_coordinate == 'single_layer':
-            ds['temperature'] = init_bot_temp*xr.ones_like(frac)
-            ds['salinity'] = init_bot_sal*xr.ones_like(frac)
+            ds['temperature'] = init_bot_temp * xr.ones_like(frac)
+            ds['salinity'] = init_bot_sal * xr.ones_like(frac)
         else:
             ds['temperature'] = \
                 (1.0 - frac) * init_top_temp + frac * init_bot_temp
@@ -163,9 +164,9 @@ class InitialState(Step):
         # compute coriolis
         coriolis_parameter = section.getfloat('coriolis_parameter')
 
-        ds['fCell'] = coriolis_parameter*xr.ones_like(ds.xCell)
-        ds['fEdge'] = coriolis_parameter*xr.ones_like(ds.xEdge)
-        ds['fVertex'] = coriolis_parameter*xr.ones_like(ds.xVertex)
+        ds['fCell'] = coriolis_parameter * xr.ones_like(ds.xCell)
+        ds['fEdge'] = coriolis_parameter * xr.ones_like(ds.xEdge)
+        ds['fVertex'] = coriolis_parameter * xr.ones_like(ds.xVertex)
 
         normalVelocity = xr.zeros_like(ds.xEdge)
         normalVelocity = normalVelocity.broadcast_like(ds.refBottomDepth)
@@ -213,18 +214,18 @@ class InitialState(Step):
                                   True, vmin=-700, vmax=0)
         plotter.plot_horiz_series(ds.ssh + ds.bottomDepth,
                                   'H', 'H', True,
-                                  vmin=min_column_thickness+1e-10, vmax=700,
+                                  vmin=min_column_thickness + 1e-10, vmax=700,
                                   cmap_set_under='r', cmap_scale='log')
         plotter.plot_horiz_series(ds.totalColThickness,
                                   'totalColThickness', 'totalColThickness',
-                                  True, vmin=min_column_thickness+1e-10,
+                                  True, vmin=min_column_thickness + 1e-10,
                                   vmax=700, cmap_set_under='r')
         plotter.plot_layer_interfaces()
 
         plotter.plot_3d_field_top_bot_section(
             ds.layerThickness, nameInTitle='layerThickness',
             prefix='h', units='m',
-            vmin=min_column_thickness+1e-10, vmax=50,
+            vmin=min_column_thickness + 1e-10, vmax=50,
             cmap='cmo.deep_r', cmap_set_under='r')
 
         plotter.plot_3d_field_top_bot_section(
@@ -260,7 +261,8 @@ class InitialState(Step):
         restore_xmin = section.getfloat('restore_xmin')
         restore_xmax = section.getfloat('restore_xmax')
         frac = np.maximum(
-            (ds.xIsomipCell - restore_xmin)/(restore_xmax-restore_xmin), 0.)
+            (ds.xIsomipCell - restore_xmin) / (restore_xmax - restore_xmin),
+            0.)
         frac = frac.broadcast_like(
             ds_forcing.temperatureInteriorRestoringValue)
 
@@ -277,21 +279,22 @@ class InitialState(Step):
                               ds.xIsomipCell <= restore_xmax)
         mask = mask.expand_dims(dim='Time', axis=0)
         # convert to m/s, negative for evaporation rather than precipitation
-        evap_rate = -restore_evap_rate/(constants['SHR_CONST_CDAY']*365)
+        evap_rate = -restore_evap_rate / (constants['SHR_CONST_CDAY'] * 365)
         # PSU*m/s to kg/m^2/s
         sflux_factor = 1.
         # C*m/s to W/m^2
-        hflux_factor = 1./(ref_density*constants['SHR_CONST_CPSW'])
-        ds_forcing['evaporationFlux'] = mask*ref_density*evap_rate
+        hflux_factor = 1. / (ref_density * constants['SHR_CONST_CPSW'])
+        ds_forcing['evaporationFlux'] = mask * ref_density * evap_rate
         ds_forcing['seaIceSalinityFlux'] = \
-            mask*evap_rate*restore_top_sal/sflux_factor
+            mask * evap_rate * restore_top_sal / sflux_factor
         ds_forcing['seaIceHeatFlux'] = \
-            mask*evap_rate*restore_top_temp/hflux_factor
+            mask * evap_rate * restore_top_temp / hflux_factor
 
         if self.vertical_coordinate == 'single_layer':
             x_max = np.max(ds.xIsomipCell.values)
             ds_forcing['tidalInputMask'] = xr.where(
-                ds.xIsomipCell > (x_max - 0.6*self.resolution*1e3), 1.0, 0.0)
+                ds.xIsomipCell > (x_max - 0.6 * self.resolution * 1e3), 1.0,
+                0.0)
         else:
             ds_forcing['tidalInputMask'] = xr.zeros_like(frac)
 
@@ -317,8 +320,8 @@ class InitialState(Step):
         landIceFraction = list()
 
         for scale in scales:
-            landIceDraft.append(scale*ds_init.landIceDraft)
-            landIcePressure.append(scale*ds_init.landIcePressure)
+            landIceDraft.append(scale * ds_init.landIceDraft)
+            landIcePressure.append(scale * ds_init.landIcePressure)
             landIceFraction.append(ds_init.landIceFraction)
 
         ds_out['landIceDraftForcing'] = xr.concat(landIceDraft, 'Time')
@@ -336,6 +339,6 @@ class InitialState(Step):
             'The fraction of each cell covered by land ice'
         write_netcdf(ds_out, 'land_ice_forcing.nc')
 
-        ds_init['landIceDraft'] = scales[0]*ds_init.landIceDraft
+        ds_init['landIceDraft'] = scales[0] * ds_init.landIceDraft
         ds_init['ssh'] = ds_init.landIceDraft
-        ds_init['landIcePressure'] = scales[0]*ds_init.landIcePressure
+        ds_init['landIcePressure'] = scales[0] * ds_init.landIcePressure

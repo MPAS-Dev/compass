@@ -1,16 +1,16 @@
-import numpy
-import xarray
-import os
 import copy
-import progressbar
-import subprocess
 import glob
+import os
+import subprocess
 
+import cmocean  # noqa: F401
 import matplotlib.pyplot as plt
-import cmocean
-from matplotlib.patches import Polygon
+import numpy
+import progressbar
+import xarray
 from matplotlib.collections import PatchCollection
 from matplotlib.colors import LogNorm
+from matplotlib.patches import Polygon
 
 
 class TimeSeriesPlotter(object):
@@ -85,7 +85,7 @@ class TimeSeriesPlotter(object):
         """
 
         rho_fw = 1000.
-        secPerYear = 365*24*60*60
+        secPerYear = 365 * 24 * 60 * 60
 
         areaCell = self.dsMesh.areaCell
         iceMask = self.ds.timeMonthly_avg_landIceFraction
@@ -94,24 +94,27 @@ class TimeSeriesPlotter(object):
             ssh = self.ds.timeMonthly_avg_ssh
             iceMask = iceMask.where(ssh < sshMax)
 
-        totalMeltFlux = (meltFlux*areaCell*iceMask).sum(dim='nCells')
-        totalArea = (areaCell*iceMask).sum(dim='nCells')
-        meanMeltRate = totalMeltFlux/totalArea/rho_fw*secPerYear
+        totalMeltFlux = (meltFlux * areaCell * iceMask).sum(dim='nCells')
+        totalArea = (areaCell * iceMask).sum(dim='nCells')
+        meanMeltRate = totalMeltFlux / totalArea / rho_fw * secPerYear
         self.plot_time_series(meanMeltRate, 'mean melt rate', 'meanMeltRate',
                               'm/yr')
 
-        self.plot_time_series(1e-6*totalMeltFlux, 'total melt flux',
+        self.plot_time_series(1e-6 * totalMeltFlux, 'total melt flux',
                               'totalMeltFlux', 'kT/yr')
 
-        da = (self.ds.timeMonthly_avg_landIceBoundaryLayerTracers_landIceBoundaryLayerTemperature -
-              self.ds.timeMonthly_avg_landIceInterfaceTracers_landIceInterfaceTemperature)
-        da = (da*areaCell*iceMask).sum(dim='nCells')/totalArea
+        blTempName = 'timeMonthly_avg_landIceBoundaryLayerTracers_' \
+                     'landIceBoundaryLayerTemperature'
+        interTempName = 'timeMonthly_avg_landIceInterfaceTracers_' \
+                        'landIceInterfaceTemperature'
+        da = (self.ds[blTempName] - self.ds[interTempName])
+        da = (da * areaCell * iceMask).sum(dim='nCells') / totalArea
 
         self.plot_time_series(da, 'mean thermal driving',
                               'meanThermalDriving', 'deg C')
 
         da = self.ds.timeMonthly_avg_landIceFrictionVelocity
-        da = (da*areaCell*iceMask).sum(dim='nCells')/totalArea
+        da = (da * areaCell * iceMask).sum(dim='nCells') / totalArea
 
         self.plot_time_series(da, 'mean friction velocity',
                               'meanFrictionVelocity', 'm/s')
@@ -124,7 +127,7 @@ class TimeSeriesPlotter(object):
             return
 
         nTime = da.sizes['Time']
-        time = numpy.arange(nTime)/12.
+        time = numpy.arange(nTime) / 12.
 
         plt.figure(1, figsize=figsize)
         plt.plot(time, da.values, color=color)
@@ -192,8 +195,8 @@ class MoviePlotter(object):
         Whether to show a progressbar
     """
 
-    def __init__(self, inFolder, streamfunctionFolder,  outFolder, expt,
-                 sectionY, dsMesh,  ds, showProgress):
+    def __init__(self, inFolder, streamfunctionFolder, outFolder, expt,
+                 sectionY, dsMesh, ds, showProgress):
         """
         Create a plotter object to hold on to some info needed for plotting
         images from ISOMIP+ simulation results
@@ -238,7 +241,7 @@ class MoviePlotter(object):
         self.ds = ds
 
         landIceMask = self.dsMesh.landIceMask.isel(Time=0) > 0
-        self.oceanMask = self.dsMesh.maxLevelCell-1 >= 0
+        self.oceanMask = self.dsMesh.maxLevelCell - 1 >= 0
         self.cavityMask = numpy.logical_and(self.oceanMask, landIceMask)
 
         self.oceanPatches = _compute_cell_patches(
@@ -287,12 +290,12 @@ class MoviePlotter(object):
             self.update_date(tIndex)
             bsf = ds.bsfCell.isel(Time=tIndex)
             outFileName = '{}/bsf/bsf_{:04d}.png'.format(
-                self.outFolder, tIndex+1)
+                self.outFolder, tIndex + 1)
             self._plot_horiz_field(bsf, title='barotropic streamfunction (Sv)',
                                    outFileName=outFileName, oceanDomain=True,
                                    vmin=vmin, vmax=vmax, cmap='cmo.curl')
             if self.showProgress:
-                bar.update(tIndex+1)
+                bar.update(tIndex + 1)
         if self.showProgress:
             bar.finish()
 
@@ -323,7 +326,7 @@ class MoviePlotter(object):
             self.update_date(tIndex)
             osf = ds.osf.isel(Time=tIndex)
             outFileName = '{}/osf/osf_{:04d}.png'.format(self.outFolder,
-                                                         tIndex+1)
+                                                         tIndex + 1)
             x = _interp_extrap_corner(ds.x.values)
             z = _interp_extrap_corner(ds.z.values)
             self._plot_vert_field(
@@ -331,7 +334,7 @@ class MoviePlotter(object):
                 outFileName=outFileName, vmin=vmin, vmax=vmax, cmap='cmo.curl',
                 show_boundaries=False)
             if self.showProgress:
-                bar.update(tIndex+1)
+                bar.update(tIndex + 1)
         if self.showProgress:
             bar.finish()
 
@@ -345,9 +348,10 @@ class MoviePlotter(object):
             The minimum and maximum values for the colorbar
         """
         rho_fw = 1000.
-        secPerYear = 365*24*60*60
+        secPerYear = 365 * 24 * 60 * 60
 
-        da = secPerYear/rho_fw*self.ds.timeMonthly_avg_landIceFreshwaterFlux
+        da = (secPerYear / rho_fw *
+              self.ds.timeMonthly_avg_landIceFreshwaterFlux)
 
         self.plot_horiz_series(da, 'melt rate', prefix='meltRate',
                                oceanDomain=False, units='m/yr', vmin=vmin,
@@ -373,15 +377,23 @@ class MoviePlotter(object):
                                oceanDomain=False, units='W/s',
                                vmin=-1e1, vmax=1e1, cmap='cmo.curl')
 
-        da = (self.ds.timeMonthly_avg_landIceBoundaryLayerTracers_landIceBoundaryLayerTemperature -
-              self.ds.timeMonthly_avg_landIceInterfaceTracers_landIceInterfaceTemperature)
+        blTempName = 'timeMonthly_avg_landIceBoundaryLayerTracers_' \
+                     'landIceBoundaryLayerTemperature'
+        interTempName = 'timeMonthly_avg_landIceInterfaceTracers_' \
+                        'landIceInterfaceTemperature'
+
+        da = (self.ds[blTempName] - self.ds[interTempName])
         self.plot_horiz_series(da, 'thermal driving',
                                prefix='thermalDriving',
                                oceanDomain=False, units='deg C',
                                vmin=-2, vmax=2, cmap='cmo.thermal')
 
-        da = (self.ds.timeMonthly_avg_landIceBoundaryLayerTracers_landIceBoundaryLayerSalinity -
-              self.ds.timeMonthly_avg_landIceInterfaceTracers_landIceInterfaceSalinity)
+        blSalinName = 'timeMonthly_avg_landIceBoundaryLayerTracers_' \
+                      'landIceBoundaryLayerSalinity'
+        interSalinName = 'timeMonthly_avg_landIceInterfaceTracers_' \
+                         'landIceInterfaceSalinity'
+
+        da = (self.ds[blSalinName] - self.ds[interSalinName])
         self.plot_horiz_series(da, 'haline driving',
                                prefix='halineDriving',
                                oceanDomain=False, units='PSU',
@@ -503,7 +515,7 @@ class MoviePlotter(object):
             self.update_date(tIndex)
             field = da.isel(Time=tIndex).values
             outFileName = '{}/{}/{}_{:04d}.png'.format(
-                self.outFolder, prefix, prefix, tIndex+1)
+                self.outFolder, prefix, prefix, tIndex + 1)
             if units is None:
                 title = nameInTitle
             else:
@@ -514,7 +526,7 @@ class MoviePlotter(object):
                                    cmap_set_under=cmap_set_under,
                                    cmap_scale=cmap_scale)
             if self.showProgress:
-                bar.update(tIndex+1)
+                bar.update(tIndex + 1)
         if self.showProgress:
             bar.finish()
 
@@ -555,7 +567,7 @@ class MoviePlotter(object):
         if vmax is None:
             vmax = da.max()
 
-        minLevelCell = self.dsMesh.minLevelCell-1
+        minLevelCell = self.dsMesh.minLevelCell - 1
 
         daTop = xarray.DataArray(da)
 
@@ -577,7 +589,7 @@ class MoviePlotter(object):
                                vmin=vmin, vmax=vmax, cmap=cmap,
                                cmap_set_under=cmap_set_under)
 
-        maxLevelCell = self.dsMesh.maxLevelCell-1
+        maxLevelCell = self.dsMesh.maxLevelCell - 1
 
         daBot = xarray.DataArray(da)
 
@@ -616,18 +628,18 @@ class MoviePlotter(object):
             field = numpy.ma.masked_array(daSection.isel(Time=tIndex).values.T,
                                           mask=mask)
             outFileName = '{}/section{}/section{}_{:04d}.png'.format(
-                self.outFolder, prefix, prefix, tIndex+1)
+                self.outFolder, prefix, prefix, tIndex + 1)
             if units is None:
                 title = nameInTitle
             else:
                 title = '{} ({}) along section at y={:g} km'.format(
-                    nameInTitle, units, 1e-3*self.sectionY)
+                    nameInTitle, units, 1e-3 * self.sectionY)
             self._plot_vert_field(self.X, self.Z[tIndex, :, :],
                                   field, title=title,
                                   outFileName=outFileName,
                                   vmin=vmin, vmax=vmax, cmap=cmap)
             if self.showProgress:
-                bar.update(tIndex+1)
+                bar.update(tIndex + 1)
         if self.showProgress:
             bar.finish()
 
@@ -667,7 +679,7 @@ class MoviePlotter(object):
             self.update_date(tIndex)
 
             outFileName = '{}/layers/layers_{:04d}.png'.format(self.outFolder,
-                                                               tIndex+1)
+                                                               tIndex + 1)
 
             if os.path.exists(outFileName):
                 continue
@@ -687,7 +699,7 @@ class MoviePlotter(object):
 
             ax.autoscale(tight=True)
             x1, x2, y1, y2 = 420, 470, -650, -520
-            xlim = [min(x1, 1e-3*numpy.amin(X)), 1e-3*numpy.amax(X)]
+            xlim = [min(x1, 1e-3 * numpy.amin(X)), 1e-3 * numpy.amax(X)]
             plt.xlim(xlim)
             plt.ylim(ylim)
             axins = ax.inset_axes([0.01, 0.6, 0.3, 0.39])
@@ -706,7 +718,7 @@ class MoviePlotter(object):
             plt.close()
 
             if self.showProgress:
-                bar.update(tIndex+1)
+                bar.update(tIndex + 1)
         if self.showProgress:
             bar.finish()
 
@@ -827,7 +839,7 @@ class MoviePlotter(object):
                              facecolor='grey', zorder=1)
             for z_index in range(1, X.shape[0]):
                 plt.plot(1e-3 * X[z_index, :], Z[z_index, :], 'k', zorder=4)
-        plt.pcolormesh(1e-3*inX, inZ, field, vmin=vmin, vmax=vmax, cmap=cmap,
+        plt.pcolormesh(1e-3 * inX, inZ, field, vmin=vmin, vmax=vmax, cmap=cmap,
                        zorder=3)
         plt.colorbar()
         ax.autoscale(tight=True)
@@ -844,11 +856,11 @@ class MoviePlotter(object):
         nx = len(x)
         nVertLevels = self.dsMesh.sizes['nVertLevels']
         nTime = self.ds.sizes['Time']
-        self.X = numpy.zeros((nVertLevels+1, nx))
-        for zIndex in range(nVertLevels+1):
+        self.X = numpy.zeros((nVertLevels + 1, nx))
+        for zIndex in range(nVertLevels + 1):
             self.X[zIndex, :] = x
 
-        self.sectionMask = numpy.zeros((nVertLevels, nx-1), dtype=bool)
+        self.sectionMask = numpy.zeros((nVertLevels, nx - 1), dtype=bool)
         for zIndex in range(nVertLevels):
             minLevelCell = self.dsMesh.minLevelCell.isel(
                 nCells=self.sectionCellIndices) - 1
@@ -857,7 +869,7 @@ class MoviePlotter(object):
             self.sectionMask[zIndex, :] = numpy.logical_and(
                 zIndex >= minLevelCell, zIndex <= maxLevelCell)
 
-        self.Z = numpy.zeros((nTime, nVertLevels+1, nx))
+        self.Z = numpy.zeros((nTime, nVertLevels + 1, nx))
         self.zBotSection = -_interp_extrap_corner(
             self.dsMesh.bottomDepth.isel(
                 nCells=self.sectionCellIndices).values)
@@ -868,13 +880,13 @@ class MoviePlotter(object):
                 var = 'layerThickness'
             layerThickness = self.ds[var].isel(
                 Time=tIndex, nCells=self.sectionCellIndices)
-            layerThickness = layerThickness.values*self.sectionMask.T
+            layerThickness = layerThickness.values * self.sectionMask.T
             layerThickness = numpy.nan_to_num(layerThickness)
             self.Z[tIndex, -1, :] = self.zBotSection
-            for zIndex in range(nVertLevels-1, -1, -1):
+            for zIndex in range(nVertLevels - 1, -1, -1):
                 layerThicknessSection = _interp_extrap_corner(
                     layerThickness[:, zIndex])
-                self.Z[tIndex, zIndex, :] = self.Z[tIndex, zIndex+1, :] + \
+                self.Z[tIndex, zIndex, :] = self.Z[tIndex, zIndex + 1, :] + \
                     layerThicknessSection
 
 
@@ -890,8 +902,8 @@ def _compute_cell_patches(dsMesh, mask):
         nVert = nVerticesOnCell[iCell]
         vertexIndices = verticesOnCell[iCell, :nVert]
         vertices = numpy.zeros((nVert, 2))
-        vertices[:, 0] = 1e-3*xVertex[vertexIndices]
-        vertices[:, 1] = 1e-3*yVertex[vertexIndices]
+        vertices[:, 0] = 1e-3 * xVertex[vertexIndices]
+        vertices[:, 1] = 1e-3 * yVertex[vertexIndices]
 
         polygon = Polygon(vertices, True)
         patches.append(polygon)
@@ -909,7 +921,7 @@ def _compute_section_cell_indices(y, dsMesh):
     xs = numpy.linspace(xMin, xMax, 10000)
     cellIndices = []
     for x in xs:
-        distanceSquared = (x - xCell)**2 + (y-yCell)**2
+        distanceSquared = (x - xCell)**2 + (y - yCell)**2
         index = numpy.argmin(distanceSquared)
         if len(cellIndices) == 0 or cellIndices[-1] != index:
             cellIndices.append(index)

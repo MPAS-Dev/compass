@@ -1,12 +1,13 @@
 import xarray as xr
-
 from mpas_tools.io import write_netcdf
 from mpas_tools.mesh.conversion import convert, cull
 
-from compass.step import Step
-from compass.ocean.tests.isomip_plus.geom import \
-    define_thin_film_mask_step1, interpolate_ocean_mask
+from compass.ocean.tests.isomip_plus.geom import (
+    define_thin_film_mask_step1,
+    interpolate_ocean_mask,
+)
 from compass.ocean.tests.isomip_plus.spherical_mesh import add_isomip_plus_xy
+from compass.step import Step
 
 
 class CullMesh(Step):
@@ -72,7 +73,8 @@ class CullMesh(Step):
         if thin_film_present:
             ds_mask = define_thin_film_mask_step1(ds_mesh, ds_geom)
         else:
-            ds_mask = interpolate_ocean_mask(ds_mesh, ds_geom, min_ocean_fraction)
+            ds_mask = \
+                interpolate_ocean_mask(ds_mesh, ds_geom, min_ocean_fraction)
         ds_mesh = cull(ds_mesh, dsInverse=ds_mask, logger=logger)
         ds_mesh.attrs['is_periodic'] = 'NO'
 

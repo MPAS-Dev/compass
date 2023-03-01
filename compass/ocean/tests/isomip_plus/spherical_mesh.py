@@ -1,11 +1,11 @@
 import numpy as np
-import xarray as xr
 import pyproj
-
-from mpas_tools.mesh.creation.signed_distance import \
-    signed_distance_from_geojson
+import xarray as xr
 from geometric_features import FeatureCollection
 from mpas_tools.cime.constants import constants
+from mpas_tools.mesh.creation.signed_distance import (
+    signed_distance_from_geojson,
+)
 
 from compass.mesh import QuasiUniformSphericalMeshStep
 
@@ -46,8 +46,8 @@ class SphericalMesh(QuasiUniformSphericalMeshStep):
         dlon = 0.1
         dlat = dlon
         earth_radius = constants['SHR_CONST_REARTH']
-        nlon = int(360./dlon) + 1
-        nlat = int(180./dlat) + 1
+        nlon = int(360. / dlon) + 1
+        nlat = int(180. / dlat) + 1
         lon = np.linspace(-180., 180., nlon)
         lat = np.linspace(-90., 90., nlat)
 
@@ -65,10 +65,10 @@ class SphericalMesh(QuasiUniformSphericalMeshStep):
         # this is a distance (in m) over which the resolution coarsens outside
         # the domain of interest plus buffer
         trans_width = 1000e3
-        weights = np.maximum(0., np.minimum(1., signed_distance/trans_width))
+        weights = np.maximum(0., np.minimum(1., signed_distance / trans_width))
 
-        cell_width = (self.cell_width * (1 - weights)
-                      + background_width * weights)
+        cell_width = (self.cell_width * (1 - weights) +
+                      background_width * weights)
 
         return cell_width, lon, lat
 
@@ -128,7 +128,7 @@ def _get_projections(lat0):
 def _make_feature(lat0):
     # a box with a buffer of 80 km surrounding the are of interest
     # (0 <= x <= 800) and (0 <= y <= 80)
-    bounds = 1e3*np.array((-80., 880., -80., 160.))
+    bounds = 1e3 * np.array((-80., 880., -80., 160.))
     projection, lat_lon_projection = _get_projections(lat0)
     transformer = pyproj.Transformer.from_proj(projection,
                                                lat_lon_projection)

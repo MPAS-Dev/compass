@@ -1,10 +1,8 @@
 import os
-import xarray as xr
-import numpy as np
 from datetime import datetime
 from glob import glob
 
-from mpas_tools.io import write_netcdf
+import numpy as np
 from mpas_tools.logging import check_call
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
 

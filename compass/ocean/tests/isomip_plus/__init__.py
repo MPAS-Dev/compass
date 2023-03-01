@@ -1,6 +1,5 @@
-from compass.testgroup import TestGroup
-
 from compass.ocean.tests.isomip_plus.isomip_plus_test import IsomipPlusTest
+from compass.testgroup import TestGroup
 
 
 class IsomipPlus(TestGroup):
