@@ -1,3 +1,4 @@
+import numpy as np
 import xarray
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
@@ -47,18 +48,60 @@ class ExtractRegion(Step):
         region_number = section.getint('region_number')
         dest_file_name = section.get('dest_file_name')
         levels = section.getint('levels')
+        grow_iters = section.getint('grow_iters')
 
-        # create cull mask file
+        # create cull mask
         logger.info('creating cull mask file')
-        args = ['ncks', '-O', '-d', f'nRegions,{region_number - 1}',
-                region_mask_file, 'region_cull_mask.nc']
-        check_call(args, logger=logger)
+        dsMesh = xarray.open_dataset(source_file_path)
+        dsMask = xarray.open_dataset(region_mask_file)
+        regionCellMasks = dsMask['regionCellMasks'][:].values
+        # get region mask for the requested region
+        keepMask = regionCellMasks[:, region_number - 1]
+        print(f'sum keepMask={keepMask.sum()}')
+        # Now grow the mask into the ocean, because the standard regions
+        # end at the ice terminus.  Don't grow into other regions.
+        # The region to grow into is region adjacent to the domain that
+        # either has no region assigned to it OR is open ocean.
+        # We also want to fill into any *adjacent* floating ice, due to some
+        # funky region boundaries near ice-shelf fronts.
+        noRegionMask = (np.squeeze(regionCellMasks.sum(axis=1)) == 0)
+        thickness = dsMesh['thickness'][:].values
+        bed = dsMesh['bedTopography'][:].values
+        oceanMask = np.squeeze((thickness[0, :] == 0.0) * (bed[0, :] <= 0.0))
+        floatMask = np.squeeze(((thickness[0, :] * 910.0 / 1028.0 +
+                                 bed[0, :]) < 0.0) *
+                               (thickness[0, :] > 0))
+        growMask = np.logical_or(np.logical_or(noRegionMask, oceanMask),
+                                 floatMask)
+        print(f'sum norregion={growMask.sum()}, {growMask.shape}')
+        conc = dsMesh['cellsOnCell'][:].values
+        neonc = dsMesh['nEdgesOnCell'][:].values
+        nCells = dsMesh.dims['nCells']
+        # find cells at current ocean bdy
+        for iter in range(grow_iters):
+            maskInd = np.nonzero(keepMask == 1)[0]
+            print(f'iter={iter}, keepMask size={keepMask.sum()}')
+            newKeepMask = keepMask.copy()
+            for iCell in maskInd:
+                neighs = conc[iCell, :neonc[iCell]] - 1
+                neighs = neighs[neighs >= 0]  # drop garbage cell
+                for jCell in neighs:
+                    if growMask[jCell] == 1:
+                        newKeepMask[jCell] = 1
+            keepMask = newKeepMask.copy()
+        # To call 'cull' with an inverse mask, we need a dataset with the
+        # mask saved to the field regionCellMasks
+        outdata = {'regionCellMasks': (('nCells', 'nRegions'),
+                                       keepMask.reshape(nCells, 1)),
+                   'growMask': (('nCells',),
+                                growMask.astype(int))}
+        dsMaskOut = xarray.Dataset(data_vars=outdata)
+        # For troubleshooting, one may want to inspect the mask, so write out
+        write_netcdf(dsMaskOut, 'cull_mask.nc')
 
         # cull the mesh
         logger.info('culling and converting mesh')
-        dsMesh = xarray.open_dataset(source_file_path)
-        cull_mask = xarray.open_dataset('region_cull_mask.nc')
-        dsMesh = cull(dsMesh, dsInverse=cull_mask, logger=logger)
+        dsMesh = cull(dsMesh, dsInverse=dsMaskOut, logger=logger)
 
         # convert mesh
         dsMesh = convert(dsMesh, logger=logger)

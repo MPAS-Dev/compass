@@ -3,8 +3,9 @@ from importlib import resources
 
 import numpy as np
 
-from compass.landice.tests.mesh_modifications.subdomain_extractor.extract_region \  # noqa
-    import ExtractRegion
+from compass.landice.tests.mesh_modifications.subdomain_extractor.extract_region import (  # noqa
+    ExtractRegion,
+)
 from compass.testcase import TestCase
 
 
