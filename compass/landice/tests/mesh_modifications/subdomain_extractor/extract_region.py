@@ -71,12 +71,34 @@ class ExtractRegion(Step):
         floatMask = np.squeeze(((thickness[0, :] * 910.0 / 1028.0 +
                                  bed[0, :]) < 0.0) *
                                (thickness[0, :] > 0))
-        growMask = np.logical_or(np.logical_or(noRegionMask, oceanMask),
-                                 floatMask)
+        growMask = np.logical_or(noRegionMask, oceanMask)
         print(f'sum norregion={growMask.sum()}, {growMask.shape}')
         conc = dsMesh['cellsOnCell'][:].values
         neonc = dsMesh['nEdgesOnCell'][:].values
         nCells = dsMesh.dims['nCells']
+
+        # First grow forward to capture any adjacent ice shelf
+        print('Starting floating ice fill')
+        iter = 0
+        nMaskCells = keepMask.sum()
+        while True:
+            maskInd = np.nonzero(keepMask == 1)[0]
+            print(f'iter={iter}, keepMask size={keepMask.sum()}')
+            newKeepMask = keepMask.copy()
+            for iCell in maskInd:
+                neighs = conc[iCell, :neonc[iCell]] - 1
+                neighs = neighs[neighs >= 0]  # drop garbage cell
+                for jCell in neighs:
+                    if floatMask[jCell] == 1:
+                        newKeepMask[jCell] = 1
+            keepMask = newKeepMask.copy()
+            nMaskCellsNew = keepMask.sum()
+            if nMaskCellsNew == nMaskCells:
+                break
+            nMaskCells = nMaskCellsNew
+            iter += 1
+
+        print('Starting ocean grow fill')
         # find cells at current ocean bdy
         for iter in range(grow_iters):
             maskInd = np.nonzero(keepMask == 1)[0]
