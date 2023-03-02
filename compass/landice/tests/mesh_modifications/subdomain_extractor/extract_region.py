@@ -49,6 +49,7 @@ class ExtractRegion(Step):
         dest_file_name = section.get('dest_file_name')
         levels = section.getint('levels')
         grow_iters = section.getint('grow_iters')
+        mesh_projection = section.get('mesh_projection')
 
         # create cull mask
         logger.info('creating cull mask file')
@@ -142,12 +143,6 @@ class ExtractRegion(Step):
         dsMesh = convert(dsMesh, logger=logger)
         write_netcdf(dsMesh, f'{source_file_name}_culled_dehorned.nc')
 
-        # set lat/lon
-#        logger.info('calling set_lat_lon_fields_in_planar_grid.py')
-#        args = ['set_lat_lon_fields_in_planar_grid.py', '-f',
-#                f'{source_file_name}_culled_dehorned.nc', '-p', 'gis-gimp']
-#        check_call(args, logger=logger)
-
         # create landice mesh
         logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')
         args = ['create_landice_grid_from_generic_MPAS_grid.py',
@@ -155,6 +150,12 @@ class ExtractRegion(Step):
                 '-o', dest_file_name,
                 '-l', f'{levels}', '-v', 'glimmer',
                 '--beta', '--thermal', '--obs', '--diri']
+        check_call(args, logger=logger)
+
+        # set lat/lon
+        logger.info('calling set_lat_lon_fields_in_planar_grid.py')
+        args = ['set_lat_lon_fields_in_planar_grid.py',
+                '-f', dest_file_name, '-p', mesh_projection]
         check_call(args, logger=logger)
 
         # interpolate to new mesh using NN
