@@ -63,6 +63,7 @@ components themselves evolves and new functionality is added.
    developers_guide/troubleshooting
    developers_guide/docs
    developers_guide/building_docs
+   developers_guide/deploying_spack
    developers_guide/api
 
    design_docs/index

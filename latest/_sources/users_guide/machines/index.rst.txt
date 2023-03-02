@@ -181,19 +181,11 @@ probably via a
 `conda environment <https://docs.conda.io/projects/conda/en/latest/index.html>`_.
 In this case, the ``parallel_executable`` is ``mpirun``.
 
-To install the `compass` package into a conda environment, you will first need
-to install `Miniconda3 <https://docs.conda.io/en/latest/miniconda.html>`_ (if
-miniconda is not already installed), then add the
-`conda-forge channel <https://conda-forge.org/#about>`_:
-
-.. code-block:: bash
-
-    conda config --add channels conda-forge
-    conda config --set channel_priority strict
-
-
-Then, you will run one of the following three commands, depending on how you
-would like to handle MPI support in the conda packages.
+To install the ``compass`` package into a conda environment, you will first
+need to install `Mambaforge <https://github.com/conda-forge/miniforge#mambaforge>`_
+(if it is not already installed).  Then, you will run one of the following
+three commands, depending on how you would like to handle MPI support in the
+conda packages.
 
 MPICH
 -----
@@ -203,7 +195,7 @@ package, run:
 
 .. code-block:: bash
 
-    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.9 "compass=*=mpi_mpich*"
+    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.10 "compass=*=mpi_mpich*"
 
 This is the recommended default for single-node Linux and OSX machines.
 
@@ -215,7 +207,7 @@ package, run:
 
 .. code-block:: bash
 
-    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.9 "compass=*=mpi_openmpi*"
+    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.10 "compass=*=mpi_openmpi*"
 
 No MPI from conda-forge
 -----------------------
@@ -225,7 +217,7 @@ conda-forge, run:
 
 .. code-block:: bash
 
-    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.9 "compass=*=nompi*"
+    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.10 "compass=*=nompi*"
 
 This would be the starting point for working with ``compass`` on an unknown
 HPC machine.  From there, you would also need to load modules and set
