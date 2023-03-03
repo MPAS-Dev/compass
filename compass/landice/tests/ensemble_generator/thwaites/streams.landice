@@ -23,7 +23,7 @@
         type="input"
         mode="forward;analysis"
         input_interval="initial_only"
-        filename_template="/global/cfs/cdirs/fanssie/MALI_projects/Thwaites_UQ/Thwaites_4to20km_r02_20230126/forcing/atmosphere_forcing/RACMO_climatology_1995-2017/Thwaites_4to20km_r02_20230126_RACMO2.3p2_ANT27_smb_climatology_1995-2017.nc"
+        filename_template="{{ SMB_file_path }}"
         runtime_format="single_file">
         <var name="sfcMassBal"/>
 </stream>
@@ -32,7 +32,7 @@
         type="input"
         mode="forward;analysis"
         input_interval="initial_only"
-        filename_template="/global/cfs/cdirs/fanssie/MALI_projects/Thwaites_UQ/Thwaites_4to20km_r02_20230126/forcing/ocean_thermal_forcing/obs/Thwaites_4to20km_r02_20230126_obs_TF_1995-2017_8km_x_60m_no_xtime.nc"
+        filename_template="{{ TF_file_path }}"
         runtime_format="single_file">
         <var name="ismip6shelfMelt_3dThermalForcing"/>
         <var name="ismip6shelfMelt_zOcean"/>
@@ -81,6 +81,7 @@
     <var name="groundedBasalMassBalApplied"/>
     <var name="fluxAcrossGroundingLineOnCells"/>
     <var name="dHdt"/>
+    <var name="betaSolve"/>
 </stream>
 
 <stream name="globalStats"

@@ -212,6 +212,12 @@ class EnsembleMember(Step):
                                   self.gamma0, self.deltaT)
         stream_replacements['basal_melt_param_file_name'] = new_fname
 
+        # set up forcing files (unmodified)
+        TF_file_path = section.get('TF_file_path')
+        stream_replacements['TF_file_path'] = TF_file_path
+        SMB_file_path = section.get('SMB_file_path')
+        stream_replacements['SMB_file_path'] = SMB_file_path
+
         # store accumulated namelist and streams options
         self.add_namelist_options(options=options,
                                   out_name='namelist.landice')
