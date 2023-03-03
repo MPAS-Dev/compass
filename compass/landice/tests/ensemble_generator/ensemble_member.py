@@ -140,46 +140,63 @@ class EnsembleMember(Step):
 
         # modify param values as needed for this ensemble member
 
+        options = {}
+
         # von Mises stress threshold
-        options = {'config_grounded_von_Mises_threshold_stress':
-                   f'{self.von_mises_threshold}',
-                   'config_floating_von_Mises_threshold_stress':
-                   f'{self.von_mises_threshold}'}
+        if self.basal_fric_exp is not None:
+            options['config_grounded_von_Mises_threshold_stress'] = \
+                f'{self.von_mises_threshold}'
+            options['config_floating_von_Mises_threshold_stress'] = \
+                f'{self.von_mises_threshold}'
 
         # calving speed limit
-        options['config_calving_speed_limit'] = \
-            f'{self.calv_spd_lim}'
+        if self.calv_spd_lim is not None:
+            options['config_calving_speed_limit'] = \
+                f'{self.calv_spd_lim}'
 
         # adjust basal friction exponent
         # rename and copy base file
         input_file_path = section.get('input_file_path')
         input_file_name = input_file_path.split('/')[-1]
-        input_new_file_name = \
-            f"{input_file_name.split('.')[:-1][0]}_MODIFIED_fricexp{self.basal_fric_exp:.4f}.nc"  # noqa E501
-        self.input_file_name = input_new_file_name
-        shutil.copy(input_file_path, os.path.join(self.work_dir,
-                                                  input_new_file_name))
-        # adjust mu and exponent
-        orig_fric_exp = section.getfloat('orig_fric_exp')
-        _adjust_friction_exponent(orig_fric_exp, self.basal_fric_exp,
-                                  os.path.join(self.work_dir,
-                                               input_new_file_name),
-                                  os.path.join(self.work_dir,
-                                               'albany_input.yaml'))
+        if self.basal_fric_exp is None:
+            self.input_file_name = input_file_name
+            input_new_file_name = input_file_name
+            shutil.copy(input_file_path, os.path.join(self.work_dir,
+                                                      input_new_file_name))
+        else:
+            input_new_file_name = \
+                f"{input_file_name.split('.')[:-1][0]}_MODIFIED_fricexp{self.basal_fric_exp:.4f}.nc"  # noqa E501
+            self.input_file_name = input_new_file_name
+            shutil.copy(input_file_path, os.path.join(self.work_dir,
+                                                      input_new_file_name))
+            # adjust mu and exponent
+            orig_fric_exp = section.getfloat('orig_fric_exp')
+            _adjust_friction_exponent(orig_fric_exp, self.basal_fric_exp,
+                                      os.path.join(self.work_dir,
+                                                   input_new_file_name),
+                                      os.path.join(self.work_dir,
+                                                   'albany_input.yaml'))
         # set input filename in streams and create streams file
         stream_replacements = {'input_file_init_cond': input_new_file_name}
 
         # adjust gamma0 and deltaT
+        # (only need to check one of these params)
         basal_melt_param_file_path = section.get('basal_melt_param_file_path')
         basal_melt_param_file_name = basal_melt_param_file_path.split('/')[-1]
-        basal_melt_param_new_file_name = \
+        if self.gamma0 is None:
+            basal_melt_param_new_file_name = basal_melt_param_file_name
+            shutil.copy(basal_melt_param_file_path,
+                        os.path.join(self.work_dir,
+                                     basal_melt_param_new_file_name))
+        else:
+            basal_melt_param_new_file_name = \
             f"{basal_melt_param_file_name.split('.')[:-1][0]}_MODIFIED_gamma{self.gamma0:.0f}_dT{self.deltaT:.3f}.nc"  # noqa E501
-        shutil.copy(basal_melt_param_file_path,
-                    os.path.join(self.work_dir,
-                                 basal_melt_param_new_file_name))
-        _adjust_basal_melt_params(os.path.join(self.work_dir,
-                                  basal_melt_param_new_file_name),
-                                  self.gamma0, self.deltaT)
+            shutil.copy(basal_melt_param_file_path,
+                        os.path.join(self.work_dir,
+                                     basal_melt_param_new_file_name))
+            _adjust_basal_melt_params(os.path.join(self.work_dir,
+                                      basal_melt_param_new_file_name),
+                                      self.gamma0, self.deltaT)
         stream_replacements['basal_melt_param_file_name'] = \
             basal_melt_param_new_file_name
 
