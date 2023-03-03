@@ -183,24 +183,15 @@ class EnsembleMember(Step):
         # (only need to check one of these params)
         basal_melt_param_file_path = section.get('basal_melt_param_file_path')
         basal_melt_param_file_name = basal_melt_param_file_path.split('/')[-1]
-        if self.gamma0 is None:
-            basal_melt_param_new_file_name = basal_melt_param_file_name
-            shutil.copy(basal_melt_param_file_path,
-                        os.path.join(self.work_dir,
-                                     basal_melt_param_new_file_name))
-        else:
-            basal_melt_param_new_file_name = \
-            f"{basal_melt_param_file_name.split('.')[:-1][0]}_MODIFIED_gamma{self.gamma0:.0f}_dT{self.deltaT:.3f}.nc"  # noqa E501
-            shutil.copy(basal_melt_param_file_path,
-                        os.path.join(self.work_dir,
-                                     basal_melt_param_new_file_name))
-            _adjust_basal_melt_params(os.path.join(self.work_dir,
-                                      basal_melt_param_new_file_name),
-                                      self.gamma0, self.deltaT)
-        stream_replacements['basal_melt_param_file_name'] = \
-            basal_melt_param_new_file_name
+        base_fname = basal_melt_param_file_name.split('.')[:-1][0]
+        new_fname = f'{base_fname}_MODIFIED.nc'
+        shutil.copy(basal_melt_param_file_path,
+                    os.path.join(self.work_dir, new_fname))
+        _adjust_basal_melt_params(os.path.join(self.work_dir, new_fname),
+                                  self.gamma0, self.deltaT)
+        stream_replacements['basal_melt_param_file_name'] = new_fname
 
-        # store modified namelist and streams options
+        # store accumulated namelist and streams options
         self.add_namelist_options(options=options,
                                   out_name='namelist.landice')
         self.add_streams_file(self.test_resources_location, 'streams.landice',

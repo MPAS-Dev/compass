@@ -77,11 +77,11 @@ class ThwaitesEnsemble(TestCase):
         use_fric_exp = self.config.getboolean('ensemble', 'use_fric_exp')
         use_sigma_max = self.config.getboolean('ensemble', 'use_sigma_max')
         use_calv_limit = self.config.getboolean('ensemble', 'use_calv_limit')
-        use_iceshelf_basal_melt = self.config.getboolean(
-            'ensemble', 'use_iceshelf_basal_melt')
+        use_gamma0 = self.config.getboolean('ensemble', 'use_gamma0')
+        use_meltflux = self.config.getboolean('ensemble', 'use_meltflux')
 
         n_params = (use_fric_exp + use_sigma_max + use_calv_limit +
-                    2 * use_iceshelf_basal_melt)
+                    use_gamma0 + use_meltflux)
         print(f"Using {n_params} parameters")
         if n_params == 0:
             sys.exit("ERROR: At least one parameter must be specified.")
@@ -128,9 +128,9 @@ class ThwaitesEnsemble(TestCase):
         else:
             calv_spd_lim_vec = [None] * max_samples
 
-        # ice-shelf melt
-        if use_iceshelf_basal_melt:
-            print('Including ice-shelf basal melt params: gamma0, melt rate')
+        # gamma0
+        if use_gamma0:
+            print('Including gamma0')
             # gamma0
             minval = self.config.getfloat('ensemble', 'gamma0_min')
             maxval = self.config.getfloat('ensemble', 'gamma0_max')
@@ -138,6 +138,8 @@ class ThwaitesEnsemble(TestCase):
                 (maxval - minval) + minval
             idx += 1
 
+        # melt flux
+        if use_meltflux:
             # melt flux
             minval = self.config.getfloat('ensemble', 'meltflux_min')
             maxval = self.config.getfloat('ensemble', 'meltflux_max')
