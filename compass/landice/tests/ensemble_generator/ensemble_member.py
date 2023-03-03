@@ -173,6 +173,7 @@ class EnsembleMember(Step):
         input_file_name = input_file_path.split('/')[-1]
         base_fname = input_file_name.split('.')[:-1][0]
         new_input_fname = f'{base_fname}_MODIFIED.nc'
+        self.input_file_name = new_input_fname  # store for run method
         shutil.copy(input_file_path, os.path.join(self.work_dir,
                                                   new_input_fname))
         # set input filename in streams and create streams file
