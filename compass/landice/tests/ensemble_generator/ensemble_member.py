@@ -4,7 +4,6 @@ from importlib import resources
 
 import netCDF4
 import yaml
-from mpas_tools.logging import LoggingContext, check_call
 
 from compass.io import symlink
 from compass.job import write_job_script
@@ -189,19 +188,17 @@ class EnsembleMember(Step):
 
         # mu scale
         if self.mu_scale is not None:
-            args = ['ncap2', '-A', '-s',
-                    f'"muFriction=muFriction*{self.mu_scale}"',
-                    os.path.join(self.work_dir, new_input_fname)]
-            with LoggingContext('ensemble_member') as logger:
-                check_call(args, logger=logger)
+            f = netCDF4.Dataset(os.path.join(self.work_dir, new_input_fname),
+                                'r+')
+            f.variables['muFriction'][:] *= self.mu_scale
+            f.close()
 
         # stiff scale
         if self.stiff_scale is not None:
-            args = ['ncap2', '-A', '-s',
-                    f'"stiffnessFactor=stiffnessFactor*{self.stiff_scale}"',
-                    os.path.join(self.work_dir, new_input_fname)]
-            with LoggingContext('ensemble_member') as logger:
-                check_call(args, logger=logger)
+            f = netCDF4.Dataset(os.path.join(self.work_dir, new_input_fname),
+                                'r+')
+            f.variables['stiffnessFactor'][:] *= self.stiff_scale
+            f.close()
 
         # adjust gamma0 and deltaT
         # (only need to check one of these params)
