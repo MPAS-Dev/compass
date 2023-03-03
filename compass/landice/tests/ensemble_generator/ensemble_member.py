@@ -158,26 +158,18 @@ class EnsembleMember(Step):
         # rename and copy base file
         input_file_path = section.get('input_file_path')
         input_file_name = input_file_path.split('/')[-1]
-        if self.basal_fric_exp is None:
-            self.input_file_name = input_file_name
-            input_new_file_name = input_file_name
-            shutil.copy(input_file_path, os.path.join(self.work_dir,
-                                                      input_new_file_name))
-        else:
-            input_new_file_name = \
-                f"{input_file_name.split('.')[:-1][0]}_MODIFIED_fricexp{self.basal_fric_exp:.4f}.nc"  # noqa E501
-            self.input_file_name = input_new_file_name
-            shutil.copy(input_file_path, os.path.join(self.work_dir,
-                                                      input_new_file_name))
+        base_fname = input_file_name.split('.')[:-1][0]
+        new_fname = f'{base_fname}_MODIFIED.nc'
+        shutil.copy(input_file_path, os.path.join(self.work_dir, new_fname))
+        if self.basal_fric_exp is not None:
             # adjust mu and exponent
             orig_fric_exp = section.getfloat('orig_fric_exp')
             _adjust_friction_exponent(orig_fric_exp, self.basal_fric_exp,
-                                      os.path.join(self.work_dir,
-                                                   input_new_file_name),
+                                      os.path.join(self.work_dir, new_fname),
                                       os.path.join(self.work_dir,
                                                    'albany_input.yaml'))
         # set input filename in streams and create streams file
-        stream_replacements = {'input_file_init_cond': input_new_file_name}
+        stream_replacements = {'input_file_init_cond': new_fname}
 
         # adjust gamma0 and deltaT
         # (only need to check one of these params)
