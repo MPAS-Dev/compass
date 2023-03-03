@@ -1,5 +1,4 @@
 import sys
-from importlib import resources
 
 import numpy as np
 from scipy.stats import qmc
@@ -75,20 +74,24 @@ class ThwaitesEnsemble(TestCase):
 
         # Determine how many and which parameters are being used
         use_fric_exp = self.config.getboolean('ensemble', 'use_fric_exp')
+        use_mu_scale = self.config.getboolean('ensemble', 'use_mu_scale')
+        use_stiff_scale = self.config.getboolean('ensemble',
+                                                 'use_stiff_scale')
         use_sigma_max = self.config.getboolean('ensemble', 'use_sigma_max')
         use_calv_limit = self.config.getboolean('ensemble', 'use_calv_limit')
         use_gamma0 = self.config.getboolean('ensemble', 'use_gamma0')
         use_meltflux = self.config.getboolean('ensemble', 'use_meltflux')
 
-        n_params = (use_fric_exp + use_sigma_max + use_calv_limit +
-                    use_gamma0 + use_meltflux)
-        print(f"Using {n_params} parameters")
+        n_params = (use_fric_exp + use_mu_scale + use_stiff_scale +
+                    use_sigma_max + use_calv_limit + use_gamma0 +
+                    use_meltflux)
         if n_params == 0:
             sys.exit("ERROR: At least one parameter must be specified.")
 
         # Generate unit Sobol sequence for number of parameters being used
+        print(f"Generating Sobol sequence for {n_params} parameters")
         sampler = qmc.Sobol(d=n_params, scramble=True, seed=4)
-        max_samples = 1024  # Can make this bigger than ever needed
+        max_samples = 512  # Can make this bigger than ever needed
         param_unit_values = sampler.random(n=max_samples)
 
         # Now define parameter ranges for each param being used
@@ -104,6 +107,28 @@ class ThwaitesEnsemble(TestCase):
             idx += 1
         else:
             basal_fric_exp_vec = [None] * max_samples
+
+        # mu scale
+        if use_mu_scale:
+            print('Including scaling of muFriction')
+            minval = self.config.getfloat('ensemble', 'mu_scale_min')
+            maxval = self.config.getfloat('ensemble', 'mu_scale_max')
+            mu_scale_vec = param_unit_values[:, idx] * \
+                (maxval - minval) + minval
+            idx += 1
+        else:
+            mu_scale_vec = [None] * max_samples
+
+        # stiff scale
+        if use_stiff_scale:
+            print('Including scaling of stiffnessFactor')
+            minval = self.config.getfloat('ensemble', 'stiff_scale_min')
+            maxval = self.config.getfloat('ensemble', 'stiff_scale_max')
+            stiff_scale_vec = param_unit_values[:, idx] * \
+                (maxval - minval) + minval
+            idx += 1
+        else:
+            stiff_scale_vec = [None] * max_samples
 
         # von mises threshold stress
         if use_sigma_max:
@@ -137,6 +162,8 @@ class ThwaitesEnsemble(TestCase):
             gamma0_vec = param_unit_values[:, idx] * \
                 (maxval - minval) + minval
             idx += 1
+        else:
+            gamma0_vec = [None] * max_samples
 
         # melt flux
         if use_meltflux:
@@ -179,7 +206,6 @@ class ThwaitesEnsemble(TestCase):
                     sys.exit("ERROR: interpolated deltaT out of range. "
                              "Adjust definition of 'TFs'")
         else:
-            gamma0_vec = [None] * max_samples
             deltaT_vec = [None] * max_samples
 
         # add runs as steps based on the run range requested
@@ -190,6 +216,8 @@ class ThwaitesEnsemble(TestCase):
             self.add_step(EnsembleMember(test_case=self, run_num=run_num,
                           test_resources_location='compass.landice.tests.ensemble_generator.thwaites',  # noqa
                           basal_fric_exp=basal_fric_exp_vec[run_num],
+                          mu_scale=mu_scale_vec[run_num],
+                          stiff_scale=stiff_scale_vec[run_num],
                           von_mises_threshold=von_mises_threshold_vec[run_num],
                           calv_spd_lim=calv_spd_lim_vec[run_num],
                           gamma0=gamma0_vec[run_num],

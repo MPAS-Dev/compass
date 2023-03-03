@@ -4,6 +4,7 @@ from importlib import resources
 
 import netCDF4
 import yaml
+from mpas_tools.logging import LoggingContext, check_call
 
 from compass.io import symlink
 from compass.job import write_job_script
@@ -37,6 +38,12 @@ class EnsembleMember(Step):
     basal_fric_exp : float
         value of basal friction exponent to use
 
+    mu_scale : float
+        value to scale muFriction by
+
+    stiff_scale : float
+        value to scale stiffnessFactor by
+
     von_mises_threshold : float
         value of von Mises stress threshold to use
 
@@ -53,6 +60,8 @@ class EnsembleMember(Step):
     def __init__(self, test_case, run_num,
                  test_resources_location,
                  basal_fric_exp=None,
+                 mu_scale=None,
+                 stiff_scale=None,
                  von_mises_threshold=None,
                  calv_spd_lim=None,
                  gamma0=None,
@@ -75,6 +84,12 @@ class EnsembleMember(Step):
         basal_fric_exp : float
             value of basal friction exponent to use
 
+        mu_scale : float
+            value to scale muFriction by
+
+        stiff_scale : float
+            value to scale stiffnessFactor by
+
         von_mises_threshold : float
             value of von Mises stress threshold to use
 
@@ -92,6 +107,8 @@ class EnsembleMember(Step):
 
         # store assigned param values for this run
         self.basal_fric_exp = basal_fric_exp
+        self.mu_scale = mu_scale
+        self.stiff_scale = stiff_scale
         self.von_mises_threshold = von_mises_threshold
         self.calv_spd_lim = calv_spd_lim
         self.gamma0 = gamma0
@@ -110,9 +127,6 @@ class EnsembleMember(Step):
         """
 
         print(f'Setting up run number {self.run_num}')
-        # print(f'    basal_fric_exp={self.basal_fric_exp}, '
-        #       'von_mises_threshold={self.von_mises_threshold}, '
-        #       'calv_spd_lim={self.calv_spd_lim}')
 
         # Get config for info needed for setting up simulation
         config = self.config
@@ -159,17 +173,35 @@ class EnsembleMember(Step):
         input_file_path = section.get('input_file_path')
         input_file_name = input_file_path.split('/')[-1]
         base_fname = input_file_name.split('.')[:-1][0]
-        new_fname = f'{base_fname}_MODIFIED.nc'
-        shutil.copy(input_file_path, os.path.join(self.work_dir, new_fname))
+        new_input_fname = f'{base_fname}_MODIFIED.nc'
+        shutil.copy(input_file_path, os.path.join(self.work_dir,
+                                                  new_input_fname))
+        # set input filename in streams and create streams file
+        stream_replacements = {'input_file_init_cond': new_input_fname}
         if self.basal_fric_exp is not None:
             # adjust mu and exponent
             orig_fric_exp = section.getfloat('orig_fric_exp')
             _adjust_friction_exponent(orig_fric_exp, self.basal_fric_exp,
-                                      os.path.join(self.work_dir, new_fname),
+                                      os.path.join(self.work_dir,
+                                                   new_input_fname),
                                       os.path.join(self.work_dir,
                                                    'albany_input.yaml'))
-        # set input filename in streams and create streams file
-        stream_replacements = {'input_file_init_cond': new_fname}
+
+        # mu scale
+        if self.mu_scale is not None:
+            args = ['ncap2', '-A', '-s',
+                    f'"muFriction=muFriction*{self.mu_scale}"',
+                    os.path.join(self.work_dir, new_input_fname)]
+            with LoggingContext('ensemble_member') as logger:
+                check_call(args, logger=logger)
+
+        # stiff scale
+        if self.stiff_scale is not None:
+            args = ['ncap2', '-A', '-s',
+                    f'"stiffnessFactor=stiffnessFactor*{self.stiff_scale}"',
+                    os.path.join(self.work_dir, new_input_fname)]
+            with LoggingContext('ensemble_member') as logger:
+                check_call(args, logger=logger)
 
         # adjust gamma0 and deltaT
         # (only need to check one of these params)
