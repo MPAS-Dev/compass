@@ -166,12 +166,12 @@ class EnsembleMember(Step):
         options = {}
 
         # von Mises stress threshold
-        if self.basal_fric_exp is not None:
+        if self.von_mises_threshold is not None:
             options['config_grounded_von_Mises_threshold_stress'] = \
                 f'{self.von_mises_threshold}'
             options['config_floating_von_Mises_threshold_stress'] = \
                 f'{self.von_mises_threshold}'
-            run_info_cfg.set('run_info', 'sigma_max',
+            run_info_cfg.set('run_info', 'von_mises_threshold',
                              f'{self.von_mises_threshold}')
 
         # calving speed limit

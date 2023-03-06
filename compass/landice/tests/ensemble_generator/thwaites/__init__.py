@@ -77,13 +77,14 @@ class ThwaitesEnsemble(TestCase):
         use_mu_scale = self.config.getboolean('ensemble', 'use_mu_scale')
         use_stiff_scale = self.config.getboolean('ensemble',
                                                  'use_stiff_scale')
-        use_sigma_max = self.config.getboolean('ensemble', 'use_sigma_max')
+        use_von_mises_threshold = self.config.getboolean(
+            'ensemble', 'use_von_mises_threshold')
         use_calv_limit = self.config.getboolean('ensemble', 'use_calv_limit')
         use_gamma0 = self.config.getboolean('ensemble', 'use_gamma0')
         use_meltflux = self.config.getboolean('ensemble', 'use_meltflux')
 
         n_params = (use_fric_exp + use_mu_scale + use_stiff_scale +
-                    use_sigma_max + use_calv_limit + use_gamma0 +
+                    use_von_mises_threshold + use_calv_limit + use_gamma0 +
                     use_meltflux)
         if n_params == 0:
             sys.exit("ERROR: At least one parameter must be specified.")
@@ -142,10 +143,12 @@ class ThwaitesEnsemble(TestCase):
             stiff_scale_vec = [None] * max_samples
 
         # von mises threshold stress
-        if use_sigma_max:
-            print('Including sigma_max')
-            minval = self.config.getfloat('ensemble', 'sigma_max_min')
-            maxval = self.config.getfloat('ensemble', 'sigma_max_max')
+        if use_von_mises_threshold:
+            print('Including von_mises_threshold')
+            minval = self.config.getfloat('ensemble',
+                                          'von_mises_threshold_min')
+            maxval = self.config.getfloat('ensemble',
+                                          'von_mises_threshold_max')
             von_mises_threshold_vec = param_unit_values[:, idx] * \
                 (maxval - minval) + minval
             idx += 1
