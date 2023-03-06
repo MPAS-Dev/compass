@@ -4,7 +4,7 @@ from compass.step import Step
 
 class Forward(Step):
     """
-    A step for performing forward MPAS-Ocean runs as part of turbulence 
+    A step for performing forward MPAS-Ocean runs as part of turbulence
     closure test cases.
 
     Attributes
@@ -32,7 +32,7 @@ class Forward(Step):
             the subdirectory for the step.  The default is ``name``
 
         ntasks: int, optional
-            the number of tasks the step would ideally use.  If fewer tasks 
+            the number of tasks the step would ideally use.  If fewer tasks
             are available on the system, the step will run on all available
             cores as long as this is not below ``min_tasks``
 
@@ -47,7 +47,8 @@ class Forward(Step):
         if min_tasks is None:
             min_tasks = ntasks
         super().__init__(test_case=test_case, name=name, subdir=subdir,
-                         ntasks=ntasks, min_tasks=min_tasks, openmp_threads=openmp_threads)
+                         ntasks=ntasks, min_tasks=min_tasks,
+                         openmp_threads=openmp_threads)
         self.add_namelist_file('compass.ocean.tests.turbulence_closure',
                                'namelist.forward')
         if resolution < 500:
@@ -65,8 +66,9 @@ class Forward(Step):
 
         self.add_input_file(filename='init.nc',
                             target='../initial_state/ocean.nc')
-        self.add_input_file(filename='forcing.nc',
-                            target='../initial_state/init_mode_forcing_data.nc')
+        self.add_input_file(
+            filename='forcing.nc',
+            target='../initial_state/init_mode_forcing_data.nc')
         self.add_input_file(filename='graph.info',
                             target='../initial_state/culled_graph.info')
 

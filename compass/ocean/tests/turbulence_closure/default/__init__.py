@@ -1,8 +1,8 @@
-from compass.testcase import TestCase
-from compass.ocean.tests.turbulence_closure.initial_state import InitialState
-from compass.ocean.tests.turbulence_closure.forward import Forward
-from compass.ocean.tests.turbulence_closure.viz import Viz
 from compass.ocean.tests import turbulence_closure
+from compass.ocean.tests.turbulence_closure.forward import Forward
+from compass.ocean.tests.turbulence_closure.initial_state import InitialState
+from compass.ocean.tests.turbulence_closure.viz import Viz
+from compass.testcase import TestCase
 
 
 class Default(TestCase):
@@ -45,21 +45,24 @@ class Default(TestCase):
 
         if resolution <= 5:
             ntasks = 128
-            plot_comparison=True
+            plot_comparison = True
         else:
             ntasks = 4
-            plot_comparison=False
+            plot_comparison = False
 
         self.add_step(
             InitialState(test_case=self, resolution=resolution))
         self.add_step(
-            Forward(test_case=self, ntasks=ntasks, openmp_threads=1, resolution=resolution))
-        self.add_step(Viz(test_case=self, resolution=resolution, forcing=forcing, do_comparison=plot_comparison))
+            Forward(test_case=self, ntasks=ntasks, openmp_threads=1,
+                    resolution=resolution))
+        self.add_step(Viz(test_case=self, resolution=resolution,
+                          forcing=forcing, do_comparison=plot_comparison))
 
     def configure(self):
         """
         Modify the configuration options for this test case.
         """
-        turbulence_closure.configure(self.resolution, self.forcing, self.config)
+        turbulence_closure.configure(self.resolution, self.forcing,
+                                     self.config)
 
     # no run() is needed because we're doing the default: running all steps

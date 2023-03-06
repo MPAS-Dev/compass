@@ -1,6 +1,6 @@
-import xarray as xr
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+import xarray as xr
 
 from compass.step import Step
 
@@ -24,7 +24,6 @@ class Viz(Step):
                             target='../forward/output.nc')
         self.add_input_file(filename='mesh.nc',
                             target='../initial_state/culled_mesh.nc')
-
 
         if do_comparison:
             if forcing == 'cooling':
@@ -68,9 +67,9 @@ class Viz(Step):
         else:
             # This routine is not generic but should not be used as
             # daysSinceStartOfSim is included in the streams file
-            time0 = 2.0 + (7.0/24.0)
-            dt = 0.5/24.0
-            time = np.linspace(time0 + dt, time0 + nt*dt, num=nt)
+            time0 = 2.0 + (7.0 / 24.0)
+            dt = 0.5 / 24.0
+            time = np.linspace(time0 + dt, time0 + nt * dt, num=nt)
 
         if self.do_comparison:
             time_palm = ds_palm.time
@@ -87,8 +86,6 @@ class Viz(Step):
         ds = ds.sortby('yEdge')
 
         # Get mesh variables
-        xEdge = dsInit.xEdge
-        yEdge = dsInit.yEdge
         xCell = dsInit.xCell
         yCell = dsInit.yCell
         zMid = dsInit.refZMid
@@ -188,7 +185,7 @@ class Viz(Step):
         plt.scatter(np.divide(xCell, 1e3),
                     np.divide(yCell, 1e3),
                     s=markersize, c=w_zTop.values,
-                    cmap='cmo.balance', vmin=-1.*cmax, vmax=cmax)
+                    cmap='cmo.balance', vmin=-1. * cmax, vmax=cmax)
         plt.xlabel('x (km)')
         plt.ylabel('y (km)')
         cbar = plt.colorbar()

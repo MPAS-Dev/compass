@@ -1,7 +1,7 @@
-from compass.testgroup import TestGroup
 from compass.ocean.tests.turbulence_closure.decomp_test import DecompTest
 from compass.ocean.tests.turbulence_closure.default import Default
 from compass.ocean.tests.turbulence_closure.restart_test import RestartTest
+from compass.testgroup import TestGroup
 
 
 class TurbulenceClosure(TestGroup):
@@ -23,12 +23,14 @@ class TurbulenceClosure(TestGroup):
         for resolution in [1, 2, 1e4]:
             for forcing in ['cooling', 'evaporation']:
                 self.add_test_case(
-                    Default(test_group=self, resolution=resolution, forcing=forcing))
+                    Default(test_group=self, resolution=resolution,
+                            forcing=forcing))
 
 
 def configure(resolution, forcing, config):
     """
-    Modify the configuration options for one of the turbulence closure test cases
+    Modify the configuration options for one of the turbulence closure test
+    cases
 
     Parameters
     ----------
@@ -61,7 +63,6 @@ def configure(resolution, forcing, config):
         vert_levels = 128
         bottom_depth = 128.0
 
-
     config.set('turbulence_closure', 'nx', f'{nx}')
     config.set('turbulence_closure', 'ny', f'{ny}')
     config.set('turbulence_closure', 'dc', f'{resolution}')
@@ -71,12 +72,14 @@ def configure(resolution, forcing, config):
     if forcing == 'cooling':
         config.set('turbulence_closure', 'surface_heat_flux', '-100')
         config.set('turbulence_closure', 'surface_freshwater_flux', '0')
-        config.set('turbulence_closure', 'interior_temperature_gradient', '0.1')
+        config.set('turbulence_closure', 'interior_temperature_gradient',
+                   '0.1')
         config.set('turbulence_closure', 'interior_salinity_gradient', '0')
         config.set('turbulence_closure', 'wind_stress_zonal', '0')
     if forcing == 'evaporation':
         config.set('turbulence_closure', 'surface_heat_flux', '0')
         config.set('turbulence_closure', 'surface_freshwater_flux', '0.429')
         config.set('turbulence_closure', 'interior_temperature_gradient', '0')
-        config.set('turbulence_closure', 'interior_salinity_gradient', '-0.025')
+        config.set('turbulence_closure', 'interior_salinity_gradient',
+                   '-0.025')
         config.set('turbulence_closure', 'wind_stress_zonal', '0')
