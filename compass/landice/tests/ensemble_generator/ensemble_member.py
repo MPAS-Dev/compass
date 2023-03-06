@@ -1,3 +1,4 @@
+import configparser
 import os
 import shutil
 from importlib import resources
@@ -131,6 +132,15 @@ class EnsembleMember(Step):
         config = self.config
         section = config['ensemble']
 
+        # Create a python config (not compass config) file
+        # for run-specific info useful for analysis/viz
+        # (Could put these in compass step cfg file, but may be safer to
+        # not mess with it.)
+        run_info_cfg = configparser.ConfigParser()
+        run_info_cfg.add_section('run_info')
+        run_info_cfg.set('run_info', 'run_num', f'{self.run_num}')
+        # Below we set values for each parameter being used in this ensemble
+
         # save number of tasks to use
         # eventually compass could determine this, but for now we want
         # explicit control
@@ -161,11 +171,15 @@ class EnsembleMember(Step):
                 f'{self.von_mises_threshold}'
             options['config_floating_von_Mises_threshold_stress'] = \
                 f'{self.von_mises_threshold}'
+            run_info_cfg.set('run_info', 'sigma_max',
+                             f'{self.von_mises_threshold}')
 
         # calving speed limit
         if self.calv_spd_lim is not None:
             options['config_calving_speed_limit'] = \
                 f'{self.calv_spd_lim}'
+            run_info_cfg.set('run_info', 'calv_spd_limit',
+                             f'{self.calv_spd_lim}')
 
         # adjust basal friction exponent
         # rename and copy base file
@@ -186,6 +200,8 @@ class EnsembleMember(Step):
                                                    new_input_fname),
                                       os.path.join(self.work_dir,
                                                    'albany_input.yaml'))
+            run_info_cfg.set('run_info', 'basal_fric_exp',
+                             f'{self.basal_fric_exp}')
 
         # mu scale
         if self.mu_scale is not None:
@@ -193,6 +209,7 @@ class EnsembleMember(Step):
                                 'r+')
             f.variables['muFriction'][:] *= self.mu_scale
             f.close()
+            run_info_cfg.set('run_info', 'mu_scale', f'{self.mu_scale}')
 
         # stiff scale
         if self.stiff_scale is not None:
@@ -200,6 +217,7 @@ class EnsembleMember(Step):
                                 'r+')
             f.variables['stiffnessFactor'][:] *= self.stiff_scale
             f.close()
+            run_info_cfg.set('run_info', 'stiff_scale', f'{self.stiff_scale}')
 
         # adjust gamma0 and deltaT
         # (only need to check one of these params)
@@ -212,6 +230,10 @@ class EnsembleMember(Step):
         _adjust_basal_melt_params(os.path.join(self.work_dir, new_fname),
                                   self.gamma0, self.deltaT)
         stream_replacements['basal_melt_param_file_name'] = new_fname
+        if self.gamma0 is not None:
+            run_info_cfg.set('run_info', 'gamma0', f'{self.gamma0}')
+        if self.deltaT is not None:
+            run_info_cfg.set('run_info', 'deltaT', f'{self.deltaT}')
 
         # set up forcing files (unmodified)
         TF_file_path = section.get('TF_file_path')
@@ -241,6 +263,11 @@ class EnsembleMember(Step):
             # make a symlink to the script for loading the compass conda env.
             symlink(script_filename, os.path.join(self.work_dir,
                                                   'load_compass_env.sh'))
+
+        # save run info for analysis/viz
+        with open(os.path.join(self.work_dir, 'run_info.cfg'), 'w') \
+             as run_config_file:
+            run_info_cfg.write(run_config_file)
 
     def run(self):
         """
