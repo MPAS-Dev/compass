@@ -88,8 +88,11 @@ def main():
     except OSError:
         pass
 
-    logger = get_logger(log_filename='conda/logs/prebootstrap.log',
-                        name=__name__)
+    if args.verbose:
+        logger = None
+    else:
+        logger = get_logger(log_filename='conda/logs/prebootstrap.log',
+                            name=__name__)
 
     # install miniconda if needed
     install_miniconda(conda_base, activate_base, logger)
