@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import configparser
 import glob
 import os
 
@@ -7,18 +8,66 @@ import matplotlib.tri as tri
 import netCDF4
 import numpy as np
 import xarray as xr
-import yaml
 from matplotlib import pyplot as plt
 
+# --------------
+# general settings
+# --------------
 targetYear = 20.0  # model year from start at which to calculate statistics
 labelRuns = True
 lw = 0.5  # linewidth for ensemble plots
 
+# physical constants
 rhoi = 910.0
 rhosw = 1028.0
 
+# find list of runs
 runs = sorted(glob.glob("run*"))
 nRuns = len(runs)
+
+# --------------
+# Set up data structures
+# --------------
+
+# Set up nested dictionary for possible parameters
+# These are the parameters supported by the script.
+# The script will determine which ones are active in a given ensemble.
+# The values array is 1d array of values from each run
+param_info = {
+    'basal_fric_exp': {'units': 'unitless',
+                       'values': np.zeros((nRuns,)) * np.nan},
+    'von_mises_threshold': {'units': 'Pa',
+                            'values': np.zeros((nRuns,)) * np.nan},
+    'calv_spd_limit': {'units': 'm/s',
+                       'values': np.zeros((nRuns,)) * np.nan},
+    'mu_scale': {'units': 'unitless',
+                 'values': np.zeros((nRuns,)) * np.nan},
+    'stiff_scale': {'units': 'unitless',
+                    'values': np.zeros((nRuns,)) * np.nan},
+    'gamma0': {'units': 'unitless',
+               'values': np.zeros((nRuns,)) * np.nan},
+    'deltaT': {'units': 'deg C',
+               'values': np.zeros((nRuns,)) * np.nan}}
+
+# Set up nested dictionary for possible quantities of interest.
+# The values array is 1d array of values from each run
+qoi_info = {
+    'SLR': {'title': f'SLR at year {targetYear}',
+            'units': 'mm',
+            'values': np.zeros((nRuns,)) * np.nan},
+    'total area': {'title': f'Total area change at year {targetYear}',
+                   'units': 'km$^2$',
+                   'values': np.zeros((nRuns,)) * np.nan},
+    'grd area': {'title': f'Grounded area change at year {targetYear}',
+                 'units': 'km$^2$',
+                 'values': np.zeros((nRuns,)) * np.nan},
+    'GL flux': {'title': f'Grounding line flux at year {targetYear}',
+                'units': 'Gt/yr',
+                'values': np.zeros((nRuns,)) * np.nan}}
+
+# --------------
+# Observations information - to eventually moved to a compass module
+# --------------
 
 # obs from Rignot et al 2019 PNAS
 obs_discharge_thwaites = np.array([
@@ -44,74 +93,55 @@ obs_melt_yrs = np.array([2003, 2008]) - 2000
 obs_melt = 97.5
 obs_melt_unc = 7.0
 
-# initialize param vectors
-vmThresh = np.zeros((nRuns,)) * np.nan
-vmSpdLim = np.zeros((nRuns,)) * np.nan
-fricExp = np.zeros((nRuns,)) * np.nan
-mu_scale = np.zeros((nRuns,)) * np.nan
-stiff_scale = np.zeros((nRuns,)) * np.nan
-gamma0 = np.zeros((nRuns,)) * np.nan
-deltaT = np.zeros((nRuns,)) * np.nan
+# --------------
+# Set up time series plots
+# --------------
 
-# initialize QOIs
-SLRAll = np.zeros((nRuns,)) * np.nan
-grdAreaChangeAll = np.zeros((nRuns,)) * np.nan
-areaChangeAll = np.zeros((nRuns,)) * np.nan
-fltAreaChangeAll = np.zeros((nRuns,)) * np.nan
-GLfluxAll = np.zeros((nRuns,)) * np.nan
-BMBAll = np.zeros((nRuns,)) * np.nan
-
-
-def get_nl_option(file, option_name):
-    with open(file, "r") as fp:
-        for line in fp:
-            if option_name in line:
-                fp.close()
-                return float(line.split("=")[1].strip())
-
-
-# time series plots
-figTS = plt.figure(2, figsize=(8, 12), facecolor='w')
+# Set up axes for time series plots before reading data.
+# Time series are plotted as they are read.
+figTS = plt.figure(1, figsize=(8, 12), facecolor='w')
 nrow = 6
 ncol = 1
 axSLRts = figTS.add_subplot(nrow, ncol, 1)
-# plt.title(f'SLR at year {targetYear} (mm)')
 plt.xlabel('Year')
-plt.ylabel('SLR contribution (mm)')
+plt.ylabel('SLR\ncontribution\n(mm)')
 plt.grid()
 
 axTAts = figTS.add_subplot(nrow, ncol, 2, sharex=axSLRts)
 plt.xlabel('Year')
-plt.ylabel('Total area change (km2)')
+plt.ylabel('Total area\nchange (km2)')
 plt.grid()
 
 axGAts = figTS.add_subplot(nrow, ncol, 3, sharex=axSLRts)
 plt.xlabel('Year')
-plt.ylabel('Grounded area change (km2)')
+plt.ylabel('Grounded area\nchange (km2)')
 plt.grid()
 
 axFAts = figTS.add_subplot(nrow, ncol, 4, sharex=axSLRts)
 plt.xlabel('Year')
-plt.ylabel('Floating area (km2)')
+plt.ylabel('Floating\narea (km2)')
 plt.grid()
 
 axBMBts = figTS.add_subplot(nrow, ncol, 5, sharex=axSLRts)
 plt.xlabel('Year')
-plt.ylabel('Ice-shelf basal melt flux (Gt/yr)')
+plt.ylabel('Ice-shelf\nbasal melt\nflux (Gt/yr)')
 plt.grid()
 axBMBts.fill_between(obs_melt_yrs, obs_melt - obs_melt_unc, obs_melt +
                      obs_melt_unc, color='k', alpha=0.8, label='melt obs')
 
 axGLFts = figTS.add_subplot(nrow, ncol, 6, sharex=axSLRts)
 plt.xlabel('Year')
-plt.ylabel('GL flux (Gt/yr)')
+plt.ylabel('GL flux\n(Gt/yr)')
 plt.grid()
 axGLFts.fill_between(obs_years, obs_discharge - 2.0 * obs_sigmaD,
                      obs_discharge + 2.0 * obs_sigmaD, color='k', alpha=0.8,
                      label='D obs')
 
-# maps
-figMaps = plt.figure(3, figsize=(8, 12), facecolor='w')
+# --------------
+# maps plotting setup
+# --------------
+
+figMaps = plt.figure(2, figsize=(8, 12), facecolor='w')
 nrow = 2
 ncol = 1
 axMaps = figMaps.add_subplot(nrow, ncol, 1)
@@ -124,35 +154,23 @@ firstMap = True
 GLX = np.array([])
 GLY = np.array([])
 
+# --------------
+# Loop through runs and gather data
+# --------------
 for idx, run in enumerate(runs):
     print(f'Analyzing {run}')
     # get param values for this run
-    # Could read from param vec file, but that leaves room for error
-    # Better to get directly from run files
+    run_cfg = configparser.ConfigParser()
+    run_cfg.read(os.path.join(run, 'run_info.cfg'))
+    run_info = run_cfg['run_info']
 
-    # Get values from namelist in case run didn't produce output.nc files.
-    nlFile = run + "/namelist.landice"
-    vmThresh[idx] = get_nl_option(
-        nlFile,
-        "config_floating_von_Mises_threshold_stress") / 1000.0  # kPa
-    # vmSpdLim[idx] = get_nl_option(nlFile, "config_calving_speed_limit") * \
-    #    3600.0 * 24.0 * 365.0 / 1000.0  # convert to km/yr
-
-    # read yaml file for fric exp
-    with open(run + '/albany_input.yaml', 'r') as stream:
-        try:
-            loaded = yaml.safe_load(stream)
-        except yaml.YAMLError as exc:
-            print(exc)
-    fricExp[idx] = (loaded['ANONYMOUS']['Problem']['LandIce BCs']['BC 0']
-                    ['Basal Friction Coefficient']['Power Exponent'])
-    # get ocean params
-    focn_list = glob.glob(run + "/Thwaites_4to20km_r02_20230126_basin_and_coeff_gamma0_DeltaT_quadratic_non_local_median*.nc")  # noqa
-    if len(focn_list) != 1:
-        print(f"Error: ocean parameter file not found for run {run}")
-
-    gamma0[idx] = 14400
-    deltaT[idx] = 0.1
+    # Loop through params and find their values if active
+    for param in param_info:
+        if param in run_info:
+            param_info[param]['active'] = True
+            param_info[param]['values'][idx] = run_info.get(param)
+        else:
+            param_info[param]['active'] = False
 
     fpath = run + "/output/globalStats.nc"
     if os.path.exists(fpath):
@@ -182,18 +200,15 @@ for idx, run in enumerate(runs):
         if len(indices) > 0:
             ii = indices[0]
             print(f'{run} using year {years[ii]}')
-            SLRAll[idx] = SLR[ii]
+            qoi_info['SLR']['values'][idx] = SLR[ii]
 
             grdArea = f.variables['groundedIceArea'][:] / 1000.0**2  # in km^2
-            grdAreaChangeAll[idx] = grdArea[ii] - grdArea[0]
-
-            fltArea = f.variables['floatingIceArea'][:] / 1000.0**2  # in km^2
-            fltAreaChangeAll[idx] = fltArea[ii] - fltArea[0]
+            qoi_info['grd area']['values'][idx] = grdArea[ii] - grdArea[0]
 
             iceArea = f.variables['totalIceArea'][:] / 1000.0**2  # in km^2
-            areaChangeAll[idx] = iceArea[ii] - iceArea[0]
+            qoi_info['total area']['values'][idx] = iceArea[ii] - iceArea[0]
 
-            GLfluxAll[idx] = groundingLineFlux[ii]
+            qoi_info['GL flux']['values'][idx] = groundingLineFlux[ii]
 
         # plot map
         DS = xr.open_mfdataset(run + '/output/' + 'output_*.nc',
@@ -233,114 +248,89 @@ for idx, run in enumerate(runs):
 
         f.close()
 
-# plot results
+# --------------
+# finalize plots generated during data reading
+# --------------
+
 # axMaps2.plot(GLX, GLY, '.')
 axMaps2.hist2d(GLX, GLY, (50, 50), cmap=plt.cm.jet)
+figMaps.savefig('figure_maps.png')
 
-plt.show()
+figTS.tight_layout()
+figTS.savefig('figure_time_series.png')
 
+# --------------
+# single parameter plots
+# --------------
+
+fig_num = 0
+fig_offset = 100
+for param in param_info:
+    if param_info[param]['active']:
+        fig = plt.figure(fig_offset + fig_num, figsize=(10, 8), facecolor='w')
+        nrow = 2
+        ncol = 2
+        fig.suptitle(f'{param} sensitivities')
+        # create subplot for each QOI
+        n_sub = 1
+        for qoi in qoi_info:
+            ax = fig.add_subplot(nrow, ncol, n_sub)
+            plt.title(qoi_info[qoi]['title'])
+            plt.xlabel(f'{param} ({param_info[param]["units"]})')
+            plt.ylabel(f'{qoi} ({qoi_info[qoi]["units"]})')
+            plt.plot(param_info[param]['values'], qoi_info[qoi]['values'],
+                     '.')
+            if labelRuns:
+                for i in range(nRuns):
+                    plt.annotate(f'{runs[i][3:]}',
+                                 (param_info[param]['values'][i],
+                                  qoi_info[qoi]['values'][i]))
+            n_sub += 1
+        fig.tight_layout()
+        fig.savefig(f'figure_sensitivity_{param}.png')
+        fig_num += 1
+
+# --------------
+# pairwise parameter plots
+# --------------
+
+fig_num = 0
+fig_offset = 200
 markerSize = 100
-
-fig = plt.figure(1, figsize=(14, 11), facecolor='w')
-nrow = 2
-ncol = 2
-
-axSLR = fig.add_subplot(nrow, ncol, 1)
-plt.title(f'SLR at year {targetYear} (mm)')
-plt.xlabel('von Mises stress threshold (kPa)')
-plt.ylabel('basal friction law exponent')
-plt.grid()
-plt.scatter(vmThresh, fricExp, s=markerSize, c=SLRAll, plotnonfinite=False)
-if labelRuns:
-    for i in range(nRuns):
-        plt.annotate(f'{runs[i][3:]}', (vmThresh[i], fricExp[i]))
-badIdx = np.nonzero(np.isnan(SLRAll))[0]
-plt.plot(vmThresh[badIdx], fricExp[badIdx], 'kx')
-plt.colorbar()
-
-axArea = fig.add_subplot(nrow, ncol, 2)
-plt.title(f'Total area change at year {targetYear} (km$^2$)')
-plt.xlabel('von Mises stress threshold (kPa)')
-plt.ylabel('basal friction law exponent')
-plt.grid()
-plt.scatter(vmThresh, fricExp, s=markerSize, c=areaChangeAll,
-            plotnonfinite=False)
-badIdx = np.nonzero(np.isnan(areaChangeAll))[0]
-plt.plot(vmThresh[badIdx], fricExp[badIdx], 'kx')
-plt.colorbar()
-
-axGrdArea = fig.add_subplot(nrow, ncol, 3)
-plt.title(f'Grounded area change at year {targetYear} (km$^2$)')
-plt.xlabel('von Mises stress threshold (kPa)')
-plt.ylabel('basal friction law exponent')
-plt.grid()
-plt.scatter(vmThresh, fricExp, s=markerSize, c=grdAreaChangeAll,
-            plotnonfinite=False)
-badIdx = np.nonzero(np.isnan(grdAreaChangeAll))[0]
-plt.plot(vmThresh[badIdx], fricExp[badIdx], 'kx')
-plt.colorbar()
-
-axGLflux = fig.add_subplot(nrow, ncol, 4)
-plt.title(f'Grounding line flux at year {targetYear} (Gt)')
-plt.xlabel('von Mises stress threshold (kPa)')
-plt.ylabel('basal friction law exponent')
-plt.grid()
-plt.scatter(vmThresh, fricExp, s=markerSize, c=GLfluxAll, plotnonfinite=False)
-badIdx = np.nonzero(np.isnan(GLfluxAll))[0]
-plt.plot(vmThresh[badIdx], fricExp[badIdx], 'kx')
-plt.colorbar()
-
-
-fig.tight_layout()
-fig = plt.figure(100, figsize=(14, 11), facecolor='w')
-nrow = 2
-ncol = 2
-
-axSLR = fig.add_subplot(nrow, ncol, 1)
-plt.title(f'SLR at year {targetYear} (mm)')
-plt.xlabel('gamma0')
-plt.ylabel('deltaT')
-plt.grid()
-plt.scatter(gamma0, deltaT, s=markerSize, c=SLRAll, plotnonfinite=False)
-if labelRuns:
-    for i in range(nRuns):
-        plt.annotate(f'{runs[i][3:]}', (vmThresh[i], fricExp[i]))
-badIdx = np.nonzero(np.isnan(SLRAll))[0]
-plt.plot(vmThresh[badIdx], fricExp[badIdx], 'kx')
-plt.colorbar()
-
-axArea = fig.add_subplot(nrow, ncol, 2)
-plt.title(f'Total area change at year {targetYear} (km$^2$)')
-plt.xlabel('gamma0')
-plt.ylabel('deltaT')
-plt.grid()
-plt.scatter(gamma0, deltaT, s=markerSize, c=areaChangeAll,
-            plotnonfinite=False)
-badIdx = np.nonzero(np.isnan(areaChangeAll))[0]
-plt.plot(vmThresh[badIdx], fricExp[badIdx], 'kx')
-plt.colorbar()
-
-axGrdArea = fig.add_subplot(nrow, ncol, 3)
-plt.title(f'Grounded area change at year {targetYear} (km$^2$)')
-plt.xlabel('gamma0')
-plt.ylabel('deltaT')
-plt.grid()
-plt.scatter(gamma0, deltaT, s=markerSize, c=grdAreaChangeAll,
-            plotnonfinite=False)
-badIdx = np.nonzero(np.isnan(grdAreaChangeAll))[0]
-plt.plot(vmThresh[badIdx], fricExp[badIdx], 'kx')
-plt.colorbar()
-
-axGLflux = fig.add_subplot(nrow, ncol, 4)
-plt.title(f'Grounding line flux at year {targetYear} (Gt)')
-plt.xlabel('gamma0')
-plt.ylabel('deltaT')
-plt.grid()
-plt.scatter(gamma0, deltaT, s=markerSize, c=GLfluxAll, plotnonfinite=False)
-badIdx = np.nonzero(np.isnan(GLfluxAll))[0]
-plt.plot(vmThresh[badIdx], fricExp[badIdx], 'kx')
-plt.colorbar()
-
-fig.tight_layout()
+for count1, param1 in enumerate(param_info):
+    if param_info[param1]['active']:
+        p1_cnt = count1
+        for count2, param2 in enumerate(param_info):
+            if count2 > count1 and param_info[param2]['active']:
+                fig = plt.figure(fig_offset + fig_num, figsize=(10, 8),
+                                 facecolor='w')
+                nrow = 2
+                ncol = 2
+                fig.suptitle(f'{param1} vs. {param2} sensitivities')
+                # create subplot for each QOI
+                n_sub = 1
+                for qoi in qoi_info:
+                    ax = fig.add_subplot(nrow, ncol, n_sub)
+                    plt.title(f'{qoi_info[qoi]["title"]} '
+                              f'({qoi_info[qoi]["units"]})')
+                    plt.xlabel(f'{param1} ({param_info[param1]["units"]})')
+                    plt.ylabel(f'{param2} ({param_info[param2]["units"]})')
+                    xdata = param_info[param1]['values']
+                    ydata = param_info[param2]['values']
+                    zdata = qoi_info[qoi]['values']
+                    plt.scatter(xdata, ydata, s=markerSize, c=zdata,
+                                plotnonfinite=False)
+                    badIdx = np.nonzero(np.isnan(zdata))[0]
+                    plt.plot(xdata[badIdx], ydata[badIdx], 'kx')
+                    if labelRuns:
+                        for i in range(nRuns):
+                            plt.annotate(f'{runs[i][3:]}',
+                                         (xdata[i], ydata[i]))
+                    plt.colorbar()
+                    n_sub += 1
+                fig.tight_layout()
+                fig.savefig(
+                    f'figure_pairwise_sensitivity_{param1}_{param2}.png')
+                fig_num += 1
 
 plt.show()
