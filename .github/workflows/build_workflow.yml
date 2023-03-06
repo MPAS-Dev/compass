@@ -94,6 +94,7 @@ jobs:
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
         name: Install compass
         run: |
+          git config --global url."https://github.com/".insteadOf "git@github.com:"
           ./conda/configure_compass_env.py \
             --env_name compass_test \
             --python=${{ matrix.python-version }} \
