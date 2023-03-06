@@ -88,11 +88,22 @@ class ThwaitesEnsemble(TestCase):
         if n_params == 0:
             sys.exit("ERROR: At least one parameter must be specified.")
 
-        # Generate unit Sobol sequence for number of parameters being used
-        print(f"Generating Sobol sequence for {n_params} parameters")
-        sampler = qmc.Sobol(d=n_params, scramble=True, seed=4)
-        max_samples = 512  # Can make this bigger than ever needed
-        param_unit_values = sampler.random(n=max_samples)
+        # Generate unit parameter vectors - either uniform or Sobol
+        sampling_method = self.config.get('ensemble', 'sampling_method')
+        max_samples = self.config.getint('ensemble', 'max_samples')
+        if max_samples < self.end_run:
+            sys.exit("ERROR: max_samples is exceeded by end_run")
+        if sampling_method == 'sobol':
+            # Generate unit Sobol sequence for number of parameters being used
+            print(f"Generating Sobol sequence for {n_params} parameter(s)")
+            sampler = qmc.Sobol(d=n_params, scramble=True, seed=4)
+            param_unit_values = sampler.random(n=max_samples)
+        elif sampling_method == 'uniform':
+            print(f"Generating uniform sampling for {n_params} parameter(s)")
+            samples = np.linspace(0.0, 1.0, max_samples).reshape(-1, 1)
+            param_unit_values = np.tile(samples, (1, n_params))
+        else:
+            sys.exit("ERROR: Unsupported sampling method specified.")
 
         # Now define parameter ranges for each param being used
         idx = 0
