@@ -190,8 +190,11 @@ def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
 
     if args.with_petsc:
         lib_suffix = f'{lib_suffix}_petsc'
-        logger.info('Turning off OpenMP because it doesn\'t work well '
-                    'with  PETSc')
+        message = 'Turning off OpenMP because it doesn\'t work well with PETSc'
+        if logger is None:
+            print(message)
+        else:
+            logger.info(message)
         args.without_openmp = True
     else:
         config.set('deploy', 'petsc', 'None')
