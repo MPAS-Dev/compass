@@ -52,7 +52,8 @@ jobs:
           ./conda/configure_compass_env.py \
             --env_only \
             --env_name compass_test \
-            --python=${{ matrix.python-version }}
+            --python=${{ matrix.python-version }} \
+            --verbose
           source load_compass_test.sh
 
       - name: Build Sphinx Docs

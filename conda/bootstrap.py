@@ -792,8 +792,11 @@ def check_supported(library, machine, compiler, mpi, source_path):
 def main():  # noqa: C901
     args = parse_args(bootstrap=True)
 
-    logger = get_logger(log_filename='conda/logs/bootstrap.log',
-                        name=__name__)
+    if args.verbose:
+        logger = None
+    else:
+        logger = get_logger(log_filename='conda/logs/bootstrap.log',
+                            name=__name__)
 
     source_path = os.getcwd()
     conda_template_path = f'{source_path}/conda/compass_env'
