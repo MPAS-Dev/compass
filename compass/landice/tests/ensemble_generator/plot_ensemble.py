@@ -10,6 +10,8 @@ import numpy as np
 import xarray as xr
 from matplotlib import pyplot as plt
 
+from compass.landice.ais_observations import ais_basin_info
+
 # --------------
 # general settings
 # --------------
@@ -52,46 +54,67 @@ param_info = {
 # Set up nested dictionary for possible quantities of interest.
 # The values array is 1d array of values from each run
 qoi_info = {
-    'SLR': {'title': f'SLR at year {targetYear}',
-            'units': 'mm',
-            'values': np.zeros((nRuns,)) * np.nan},
-    'total area': {'title': f'Total area change at year {targetYear}',
-                   'units': 'km$^2$',
-                   'values': np.zeros((nRuns,)) * np.nan},
-    'grd area': {'title': f'Grounded area change at year {targetYear}',
-                 'units': 'km$^2$',
-                 'values': np.zeros((nRuns,)) * np.nan},
-    'GL flux': {'title': f'Grounding line flux at year {targetYear}',
-                'units': 'Gt/yr',
-                'values': np.zeros((nRuns,)) * np.nan}}
+    'SLR': {
+        'title': f'SLR at year {targetYear}',
+        'units': 'mm',
+        'values': np.zeros((nRuns,)) * np.nan,
+        'obs': None},
+    'total area': {
+        'title': f'Total area change at year {targetYear}',
+        'units': 'km$^2$',
+        'values': np.zeros((nRuns,)) * np.nan,
+        'obs': None},
+    'grd area': {
+        'title': f'Grounded area change at year {targetYear}',
+        'units': 'km$^2$',
+        'values': np.zeros((nRuns,)) * np.nan,
+        'obs': None},
+    'GL flux': {
+        'title': f'Grounding line flux at year {targetYear}',
+        'units': 'Gt/yr',
+        'values': np.zeros((nRuns,)) * np.nan,
+        'obs': None},
+    'melt flux': {
+        'title': f'Ice-shelf basal melt flux at year {targetYear}',
+        'units': 'Gt/yr',
+        'values': np.zeros((nRuns,)) * np.nan,
+        'obs': None}}
+
+# Get ensemble-wide information
+basin = None
+ens_cfg = configparser.ConfigParser()
+ens_cfg_file = 'thwaites_ensemble.cfg'
+if os.path.isfile(ens_cfg_file):
+    ens_cfg.read(ens_cfg_file)
+    ens_info = ens_cfg['ensemble']
+    if 'basin' in ens_info:
+        basin = ens_info['basin']
+if basin is None:
+    print("No basin found.  Not using observational data.")
+else:
+    print(f"Using observations from basin {basin} "
+          f"({ais_basin_info[basin]['name']}).")
 
 # --------------
-# Observations information - to eventually moved to a compass module
+# Observations information
 # --------------
 
-# obs from Rignot et al 2019 PNAS
-obs_discharge_thwaites = np.array([
-    82.42, 83.25, 84.08, 84.90, 85.73, 86.56, 87.39, 88.22, 89.04, 89.87,
-    90.70, 91.40, 92.10, 92.80, 93.50, 94.20, 94.90, 95.60, 95.90, 96.20,
-    96.50, 96.80, 97.10, 97.40, 97.75, 98.10, 101.60, 101.40, 102.80,
-    104.30, 109.70, 114.10, 115.80, 118.70, 121.60, 123.80, 117.20, 115.10,
-    119.68])
-obs_discharge_haynes = np.array([
-    10.10, 10.25, 10.40, 10.55, 10.70, 10.85, 11.00, 11.15, 11.30, 11.45,
-    11.60, 11.49, 11.37, 11.26, 11.14, 11.03, 10.91, 10.80, 10.93, 11.07,
-    11.20, 11.33, 11.47, 11.60, 11.35, 11.10, 12.20, 11.90, 12.50, 12.11,
-    12.80, 12.80, 12.90, 12.80, 13.90, 14.70, 12.30, 11.60, 12.53])
-obs_discharge = obs_discharge_thwaites + obs_discharge_haynes
-obs_years = np.arange(1979, 2017 + 1) - 2000.0
-obs_sigmaD = (3.93**2 + 1.00**2)**0.5  # thwaites + haynes
+if basin is not None:
+    obs_discharge_yrs = np.array([1992., 2006.]) - 2000.0
+    obs_discharge, obs_discharge_unc = ais_basin_info[basin]['outflow']
 
-# obs from Adusumilli et al 2020 Supp Table 1
-obs_melt_yrs = [10, 18]
-obs_melt = 81.1
-obs_melt_unc = 7.4
-obs_melt_yrs = np.array([2003, 2008]) - 2000
-obs_melt = 97.5
-obs_melt_unc = 7.0
+    obs_melt_yrs = np.array([2003., 2008.]) - 2000.0
+    obs_melt, obs_melt_unc = ais_basin_info[basin]['shelf_melt']
+
+    qoi_info['GL flux']['obs'] = [obs_discharge, obs_discharge_unc]
+    qoi_info['melt flux']['obs'] = [obs_melt, obs_melt_unc]
+else:
+    obs_discharge_yrs = 0.0
+    obs_discharge = 0.0
+    obs_discharge_unc = 0.0
+    obs_melt_yrs = 0.0
+    obs_melt = 0.0
+    obs_melt_unc = 0.0
 
 # --------------
 # Set up time series plots
@@ -103,39 +126,37 @@ figTS = plt.figure(1, figsize=(8, 12), facecolor='w')
 nrow = 6
 ncol = 1
 axSLRts = figTS.add_subplot(nrow, ncol, 1)
-plt.xlabel('Year')
 plt.ylabel('SLR\ncontribution\n(mm)')
 plt.grid()
 
 axTAts = figTS.add_subplot(nrow, ncol, 2, sharex=axSLRts)
-plt.xlabel('Year')
 plt.ylabel('Total area\nchange (km2)')
 plt.grid()
 
 axGAts = figTS.add_subplot(nrow, ncol, 3, sharex=axSLRts)
-plt.xlabel('Year')
 plt.ylabel('Grounded area\nchange (km2)')
 plt.grid()
 
 axFAts = figTS.add_subplot(nrow, ncol, 4, sharex=axSLRts)
-plt.xlabel('Year')
 plt.ylabel('Floating\narea (km2)')
 plt.grid()
 
 axBMBts = figTS.add_subplot(nrow, ncol, 5, sharex=axSLRts)
-plt.xlabel('Year')
 plt.ylabel('Ice-shelf\nbasal melt\nflux (Gt/yr)')
 plt.grid()
-axBMBts.fill_between(obs_melt_yrs, obs_melt - obs_melt_unc, obs_melt +
-                     obs_melt_unc, color='k', alpha=0.8, label='melt obs')
+axBMBts.fill_between(obs_melt_yrs,
+                     obs_melt - obs_melt_unc,
+                     obs_melt + obs_melt_unc,
+                     color='k', alpha=0.3, label='melt obs')
 
 axGLFts = figTS.add_subplot(nrow, ncol, 6, sharex=axSLRts)
 plt.xlabel('Year')
 plt.ylabel('GL flux\n(Gt/yr)')
 plt.grid()
-axGLFts.fill_between(obs_years, obs_discharge - 2.0 * obs_sigmaD,
-                     obs_discharge + 2.0 * obs_sigmaD, color='k', alpha=0.8,
-                     label='D obs')
+axGLFts.fill_between(obs_discharge_yrs,
+                     obs_discharge - obs_discharge_unc,
+                     obs_discharge + obs_discharge_unc,
+                     color='k', alpha=0.3, label='D obs')
 
 # --------------
 # maps plotting setup
@@ -210,6 +231,8 @@ for idx, run in enumerate(runs):
 
             qoi_info['GL flux']['values'][idx] = groundingLineFlux[ii]
 
+            qoi_info['melt flux']['values'][idx] = BMB[ii]
+
         # plot map
         DS = xr.open_mfdataset(run + '/output/' + 'output_*.nc',
                                combine='nested', concat_dim='Time',
@@ -267,9 +290,9 @@ fig_num = 0
 fig_offset = 100
 for param in param_info:
     if param_info[param]['active']:
-        fig = plt.figure(fig_offset + fig_num, figsize=(10, 8), facecolor='w')
+        fig = plt.figure(fig_offset + fig_num, figsize=(13, 8), facecolor='w')
         nrow = 2
-        ncol = 2
+        ncol = 3
         fig.suptitle(f'{param} sensitivities')
         # create subplot for each QOI
         n_sub = 1
@@ -278,13 +301,18 @@ for param in param_info:
             plt.title(qoi_info[qoi]['title'])
             plt.xlabel(f'{param} ({param_info[param]["units"]})')
             plt.ylabel(f'{qoi} ({qoi_info[qoi]["units"]})')
-            plt.plot(param_info[param]['values'], qoi_info[qoi]['values'],
-                     '.')
+            pvalues = param_info[param]['values']
+            qvalues = qoi_info[qoi]['values']
+            obs = qoi_info[qoi]['obs']
+            if obs is not None:
+                plt.fill_between([pvalues.min(), pvalues.max()],
+                                 np.array([1., 1.]) * (obs[0] - obs[1]),
+                                 np.array([1., 1.]) * (obs[0] + obs[1]),
+                                 color='k', alpha=0.2, label='melt obs')
+            plt.plot(pvalues, qvalues, '.')
             if labelRuns:
                 for i in range(nRuns):
-                    plt.annotate(f'{runs[i][3:]}',
-                                 (param_info[param]['values'][i],
-                                  qoi_info[qoi]['values'][i]))
+                    plt.annotate(f'{runs[i][3:]}', (pvalues[i], qvalues[i]))
             n_sub += 1
         fig.tight_layout()
         fig.savefig(f'figure_sensitivity_{param}.png')
@@ -302,10 +330,10 @@ for count1, param1 in enumerate(param_info):
         p1_cnt = count1
         for count2, param2 in enumerate(param_info):
             if count2 > count1 and param_info[param2]['active']:
-                fig = plt.figure(fig_offset + fig_num, figsize=(10, 8),
+                fig = plt.figure(fig_offset + fig_num, figsize=(13, 8),
                                  facecolor='w')
                 nrow = 2
-                ncol = 2
+                ncol = 3
                 fig.suptitle(f'{param1} vs. {param2} sensitivities')
                 # create subplot for each QOI
                 n_sub = 1
@@ -322,11 +350,16 @@ for count1, param1 in enumerate(param_info):
                                 plotnonfinite=False)
                     badIdx = np.nonzero(np.isnan(zdata))[0]
                     plt.plot(xdata[badIdx], ydata[badIdx], 'kx')
+                    obs = qoi_info[qoi]['obs']
+                    plt.colorbar()
+                    if obs is not None:
+                        plt.tricontour(xdata, ydata, zdata,
+                                       [obs[0] - obs[1], obs[0] + obs[1]],
+                                       colors='k')
                     if labelRuns:
                         for i in range(nRuns):
                             plt.annotate(f'{runs[i][3:]}',
                                          (xdata[i], ydata[i]))
-                    plt.colorbar()
                     n_sub += 1
                 fig.tight_layout()
                 fig.savefig(
