@@ -14,9 +14,9 @@ from compass.testcase import TestCase
 from compass.validate import compare_variables
 
 
-class ThwaitesEnsemble(TestCase):
+class Ensemble(TestCase):
     """
-    A test case for performing an ensemble of Thwaites Glacier
+    A test case for performing an ensemble of
     simulations for uncertainty quantification studies.
     """
 
@@ -30,7 +30,7 @@ class ThwaitesEnsemble(TestCase):
             The test group that this test case belongs to
 
         """
-        name = 'thwaites_ensemble'
+        name = 'ensemble'
         super().__init__(test_group=test_group, name=name)
 
         # We don't want to initialize all the individual runs
@@ -39,7 +39,7 @@ class ThwaitesEnsemble(TestCase):
 
     def configure(self):
         """
-        Configure a parameter ensemble of a Thwaites Glacier simulations.
+        Configure a parameter ensemble of MALI simulations.
 
         Start by identifying the start and end run numbers to set up
         from the config.
@@ -228,7 +228,7 @@ class ThwaitesEnsemble(TestCase):
                      "sample size available in param_vector_filename")
         for run_num in range(self.start_run, self.end_run + 1):
             self.add_step(EnsembleMember(test_case=self, run_num=run_num,
-                          test_resources_location='compass.landice.tests.ensemble_generator.thwaites',  # noqa
+                          test_resources_location='compass.landice.tests.ensemble_generator.ensemble',  # noqa
                           basal_fric_exp=basal_fric_exp_vec[run_num],
                           mu_scale=mu_scale_vec[run_num],
                           stiff_scale=stiff_scale_vec[run_num],

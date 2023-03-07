@@ -1,4 +1,4 @@
-from compass.landice.tests.ensemble_generator.thwaites import ThwaitesEnsemble
+from compass.landice.tests.ensemble_generator.ensemble import Ensemble
 from compass.testgroup import TestGroup
 
 
@@ -15,4 +15,4 @@ class EnsembleGenerator(TestGroup):
         super().__init__(mpas_core=mpas_core,
                          name='ensemble_generator')
 
-        self.add_test_case(ThwaitesEnsemble(test_group=self))
+        self.add_test_case(Ensemble(test_group=self))
