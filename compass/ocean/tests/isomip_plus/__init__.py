@@ -1,6 +1,5 @@
-from compass.testgroup import TestGroup
-
 from compass.ocean.tests.isomip_plus.isomip_plus_test import IsomipPlusTest
+from compass.testgroup import TestGroup
 
 
 class IsomipPlus(TestGroup):
@@ -76,3 +75,13 @@ class IsomipPlus(TestGroup):
                             vertical_coordinate=vertical_coordinate,
                             tidal_forcing=True,
                             thin_film_present=True))
+
+        for resolution in [2.]:
+            for experiment in ['Ocean0', 'Ocean1', 'Ocean2']:
+                for vertical_coordinate in ['z-star']:
+                    self.add_test_case(
+                        IsomipPlusTest(
+                            test_group=self, resolution=resolution,
+                            experiment=experiment,
+                            vertical_coordinate=vertical_coordinate,
+                            planar=False))

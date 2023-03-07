@@ -599,7 +599,7 @@ def _horizontally_bin_overturning_streamfunction(ds, dsMesh, x, osfFileName,
         if file_complete(ds, fileName):
             continue
 
-        cellMask = dsMesh.xCell >= x[xIndex]
+        cellMask = dsMesh.xIsomipCell >= x[xIndex]
         edgeIndices, edgeSigns = _compute_region_boundary_edges(dsMesh,
                                                                 cellMask)
 

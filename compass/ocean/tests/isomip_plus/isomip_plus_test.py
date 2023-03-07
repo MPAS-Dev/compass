@@ -1,13 +1,15 @@
-from compass.testcase import TestCase
-from compass.ocean.tests.isomip_plus.process_geom import ProcessGeom
-from compass.ocean.tests.isomip_plus.planar_mesh import PlanarMesh
 from compass.ocean.tests.isomip_plus.cull_mesh import CullMesh
-from compass.ocean.tests.isomip_plus.initial_state import InitialState
-from compass.ocean.tests.isomip_plus.ssh_adjustment import SshAdjustment
+from compass.ocean.tests.isomip_plus.files_for_e3sm import FilesForE3sm
 from compass.ocean.tests.isomip_plus.forward import Forward
+from compass.ocean.tests.isomip_plus.initial_state import InitialState
+from compass.ocean.tests.isomip_plus.misomip import Misomip
+from compass.ocean.tests.isomip_plus.planar_mesh import PlanarMesh
+from compass.ocean.tests.isomip_plus.process_geom import ProcessGeom
+from compass.ocean.tests.isomip_plus.spherical_mesh import SphericalMesh
+from compass.ocean.tests.isomip_plus.ssh_adjustment import SshAdjustment
 from compass.ocean.tests.isomip_plus.streamfunction import Streamfunction
 from compass.ocean.tests.isomip_plus.viz import Viz
-from compass.ocean.tests.isomip_plus.misomip import Misomip
+from compass.testcase import TestCase
 from compass.validate import compare_variables
 
 
@@ -31,12 +33,15 @@ class IsomipPlusTest(TestCase):
 
     thin_film_present: bool
         Whether a thin film is present under land ice
+
+    planar : bool, optional
+        Whether the test case runs on a planar or a spherical mesh
     """
 
     def __init__(self, test_group, resolution, experiment,
                  vertical_coordinate, time_varying_forcing=False,
                  time_varying_load=None, thin_film_present=False,
-                 tidal_forcing=False):
+                 tidal_forcing=False, planar=True):
         """
         Create the test case
 
@@ -70,6 +75,9 @@ class IsomipPlusTest(TestCase):
 
         tidal_forcing: bool, optional
             Whether the run includes a single-period tidal forcing
+
+        planar : bool, optional
+            Whether the test case runs on a planar or a spherical mesh
         """
         name = experiment
         if tidal_forcing:
@@ -90,6 +98,7 @@ class IsomipPlusTest(TestCase):
         self.time_varying_forcing = time_varying_forcing
         self.time_varying_load = time_varying_load
         self.thin_film_present = thin_film_present
+        self.planar = planar
 
         if resolution == int(resolution):
             res_folder = f'{int(resolution)}km'
@@ -97,6 +106,11 @@ class IsomipPlusTest(TestCase):
             res_folder = f'{resolution}km'
 
         subdir = f'{res_folder}/{vertical_coordinate}/{name}'
+        if planar:
+            subdir = f'planar/{subdir}'
+        else:
+            subdir = f'sphere/{subdir}'
+
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
         self.add_step(
@@ -104,12 +118,18 @@ class IsomipPlusTest(TestCase):
                         experiment=experiment,
                         thin_film_present=thin_film_present))
 
-        self.add_step(
-            PlanarMesh(test_case=self, thin_film_present=thin_film_present))
+        if planar:
+            self.add_step(
+                PlanarMesh(test_case=self,
+                           thin_film_present=thin_film_present))
+        else:
+            self.add_step(
+                SphericalMesh(test_case=self, subdir='spherical_mesh',
+                              cell_width=resolution))
 
         self.add_step(
             CullMesh(test_case=self, thin_film_present=thin_film_present,
-                     planar=True))
+                     planar=planar))
 
         self.add_step(
             InitialState(test_case=self, resolution=resolution,
@@ -154,6 +174,12 @@ class IsomipPlusTest(TestCase):
                 tidal_forcing=tidal_forcing),
             run_by_default=False)
 
+        if not planar:
+            self.add_step(
+                FilesForE3sm(test_case=self, resolution=resolution,
+                             experiment=experiment),
+                run_by_default=False)
+
         if resolution in [2., 5.]:
             self.add_step(
                 Misomip(test_case=self, resolution=resolution,
@@ -171,12 +197,7 @@ class IsomipPlusTest(TestCase):
         time_varying_load = self.time_varying_load
         config = self.config
         experiment = self.experiment
-
-        nx = round(800 / resolution)
-        ny = round(100 / resolution)
-        dc = 1e3 * resolution
-        # Width of the thin film region
-        nx_thin_film = 10
+        planar = self.planar
 
         if thin_film_present:
             config.set('isomip_plus', 'min_column_thickness', '1e-3')
@@ -212,12 +233,23 @@ class IsomipPlusTest(TestCase):
             config.set('isomip_plus', 'restore_top_sal', '33.8')
             config.set('isomip_plus', 'restore_bot_sal', '34.55')
 
-        config.set('isomip_plus', 'nx', f'{nx}')
-        config.set('isomip_plus', 'ny', f'{ny}')
-        config.set('isomip_plus', 'dc', f'{dc}')
-        config.set('isomip_plus', 'nx_thin_film', f'{nx_thin_film}')
+        if planar:
+            nx = round(800 / resolution)
+            ny = round(100 / resolution)
+            dc = 1e3 * resolution
+            # Width of the thin film region
+            nx_thin_film = 10
 
-        approx_cells = 30e3 / resolution ** 2
+            config.set('isomip_plus', 'nx', f'{nx}')
+            config.set('isomip_plus', 'ny', f'{ny}')
+            config.set('isomip_plus', 'dc', f'{dc}')
+            config.set('isomip_plus', 'nx_thin_film', f'{nx_thin_film}')
+
+            approx_cells = 30e3 / resolution**2
+        else:
+            config.add_from_package('compass.mesh', 'mesh.cfg')
+            approx_cells = 30e3 / resolution**2
+
         # round to the nearest 4 cores
         ntasks = max(1, 4 * round(approx_cells / 200 / 4))
         min_tasks = max(1, round(approx_cells / 2000))

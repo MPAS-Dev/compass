@@ -1,11 +1,10 @@
+import glob
+import os
+
 import numpy
 from netCDF4 import Dataset
-from shapely.geometry import Polygon, LineString
-
-from progressbar import ProgressBar, Percentage, Bar, ETA
-
-import os
-import glob
+from progressbar import ETA, Bar, Percentage, ProgressBar
+from shapely.geometry import LineString, Polygon
 
 from compass.step import Step
 
@@ -75,7 +74,7 @@ class Misomip(Step):
                         show_progress=show_progress)
 
 
-def _compute_misomip_interp_coeffs(in_dir, show_progress):
+def _compute_misomip_interp_coeffs(in_dir, show_progress):  # noqa: C901
     def getTransectWeights(outFileName, axis):
 
         if show_progress:
@@ -118,7 +117,7 @@ def _compute_misomip_interp_coeffs(in_dir, show_progress):
                 sliceAxisVerts = yVert
                 otherAxisVerts = xVert
 
-            if(numpy.amax(sliceAxisVerts) < slicePos) or \
+            if (numpy.amax(sliceAxisVerts) < slicePos) or \
                     (numpy.amin(sliceAxisVerts) > slicePos):
                 # this polygon doesn't intersect the slice
                 continue
@@ -220,11 +219,11 @@ def _compute_misomip_interp_coeffs(in_dir, show_progress):
     inVars = inFile.variables
     nEdgesOnCell = inVars['nEdgesOnCell'][:]
     verticesOnCell = inVars['verticesOnCell'][:, :] - 1
-    xVertex = inVars['xVertex'][:]
-    yVertex = inVars['yVertex'][:]
+    xVertex = inVars['xIsomipVertex'][:]
+    yVertex = inVars['yIsomipVertex'][:]
 
     inFile.close()
-    if(not os.path.exists(interpWeightsFileName)):
+    if not os.path.exists(interpWeightsFileName):
 
         cellIndices = []
         xIndices = []
@@ -341,14 +340,15 @@ def _compute_misomip_interp_coeffs(in_dir, show_progress):
 
         outFile.close()
 
-    if(not os.path.exists(xTransectFileName)):
+    if not os.path.exists(xTransectFileName):
         getTransectWeights(xTransectFileName, axis='x')
 
-    if(not os.path.exists(yTransectFileName)):
+    if not os.path.exists(yTransectFileName):
         getTransectWeights(yTransectFileName, axis='y')
 
 
-def _interp_misomip(in_dir, sf_dir, out_file_name, show_progress):
+def _interp_misomip(in_dir, sf_dir, out_file_name,  # noqa: C901
+                    show_progress):
 
     def interpHoriz(field, inMask=None, outFraction=None):
         if inMask is not None:
@@ -640,7 +640,7 @@ def _interp_misomip(in_dir, sf_dir, out_file_name, show_progress):
     nTimeIn = min(nTimeIn, len(bsfFile.dimensions['Time']))
     nTimeIn = min(nTimeIn, len(osfFile.dimensions['Time']))
 
-    if(continueOutput):
+    if continueOutput:
         nTimeOut = max(0, len(outFile.dimensions['nTime']) - 2)
     else:
         nTimeOut = 0
@@ -692,8 +692,9 @@ def _interp_misomip(in_dir, sf_dir, out_file_name, show_progress):
         meltRate = freshwaterFlux / rho_fw
 
         if not numpy.all(inCavityFraction == 0.):
-            writeMetric('meanMeltRate', numpy.sum(meltRate * areaCell)
-                        / numpy.sum(inCavityFraction * areaCell))
+            writeMetric('meanMeltRate',
+                        numpy.sum(meltRate * areaCell) /
+                        numpy.sum(inCavityFraction * areaCell))
 
         writeMetric('totalMeltFlux', numpy.sum(freshwaterFlux * areaCell))
 
@@ -703,13 +704,13 @@ def _interp_misomip(in_dir, sf_dir, out_file_name, show_progress):
         writeMetric('totalOceanVolume', numpy.sum(columnThickness * areaCell))
 
         thermalDriving = (inVars['timeMonthly_avg_landIceBoundaryLayerTracers'
-                                 '_landIceBoundaryLayerTemperature'][0, :]
-                          - inVars['timeMonthly_avg_landIceInterfaceTracers'
-                                   '_landIceInterfaceTemperature'][0, :])
+                                 '_landIceBoundaryLayerTemperature'][0, :] -
+                          inVars['timeMonthly_avg_landIceInterfaceTracers'
+                                 '_landIceInterfaceTemperature'][0, :])
         halineDriving = (inVars['timeMonthly_avg_landIceBoundaryLayerTracers'
-                                '_landIceBoundaryLayerSalinity'][0, :]
-                         - inVars['timeMonthly_avg_landIceInterfaceTracers'
-                                  '_landIceInterfaceSalinity'][0, :])
+                                '_landIceBoundaryLayerSalinity'][0, :] -
+                         inVars['timeMonthly_avg_landIceInterfaceTracers'
+                                '_landIceInterfaceSalinity'][0, :])
         frictionVelocity = \
             inVars['timeMonthly_avg_landIceFrictionVelocity'][0, :]
 
@@ -777,9 +778,9 @@ def _interp_misomip(in_dir, sf_dir, out_file_name, show_progress):
         osf = 1e6 * osfFile.variables['osf'][tIndex, :, :]
         osfX = osfFile.variables['x'][:]
         osfZ = osfFile.variables['z'][:]
-        assert(numpy.all(osfX == x))
+        assert numpy.all(osfX == x)
         # the first and last OSF z values have been tweaked...
-        assert(numpy.all(osfZ[1:-1] == z[1:-1]))
+        assert numpy.all(osfZ[1:-1] == z[1:-1])
 
         writeVar('overturningStreamfunction', osf)
 
@@ -824,8 +825,8 @@ def _get_out_grid(corners):
         y = outY0 + outDx * (numpy.arange(outNy + 1))
         z = -outDz * (numpy.arange(outNz + 1))
     else:
-        x = outX0 + outDx*(numpy.arange(outNx)+0.5)
-        y = outY0 + outDx*(numpy.arange(outNy)+0.5)
-        z = -outDz*(numpy.arange(outNz)+0.5)
+        x = outX0 + outDx * (numpy.arange(outNx) + 0.5)
+        y = outY0 + outDx * (numpy.arange(outNy) + 0.5)
+        z = -outDz * (numpy.arange(outNz) + 0.5)
 
     return outNx, outNy, outNz, x, y, z, xTransect, yTransect, outDx, outDz

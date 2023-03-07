@@ -1,6 +1,6 @@
+from mpas_tools.io import write_netcdf
 from mpas_tools.planar_hex import make_planar_hex_mesh
 from mpas_tools.translate import translate
-from mpas_tools.io import write_netcdf
 
 from compass.step import Step
 
@@ -47,15 +47,20 @@ class PlanarMesh(Step):
         if thin_film_present:
             nx_offset = nx_thin_film
             # consider increasing nx
-            ds_mesh = make_planar_hex_mesh(nx=nx+nx_offset, ny=ny, dc=dc,
+            ds_mesh = make_planar_hex_mesh(nx=nx + nx_offset, ny=ny, dc=dc,
                                            nonperiodic_x=True,
                                            nonperiodic_y=True)
         else:
             nx_offset = 0
-            ds_mesh = make_planar_hex_mesh(nx=nx+2, ny=ny+2, dc=dc,
+            ds_mesh = make_planar_hex_mesh(nx=nx + 2, ny=ny + 2, dc=dc,
                                            nonperiodic_x=False,
                                            nonperiodic_y=False)
 
-        translate(mesh=ds_mesh, xOffset=-1*nx_offset*dc, yOffset=-2*dc)
+        translate(mesh=ds_mesh, xOffset=-1 * nx_offset * dc, yOffset=-2 * dc)
+
+        ds_mesh['xIsomipCell'] = ds_mesh.xCell
+        ds_mesh['yIsomipCell'] = ds_mesh.yCell
+        ds_mesh['xIsomipVertex'] = ds_mesh.xVertex
+        ds_mesh['yIsomipVertex'] = ds_mesh.yVertex
 
         write_netcdf(ds_mesh, 'base_mesh.nc')
