@@ -112,16 +112,18 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.isomip_plus.isomip_plus_test</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.process_geom</span> <span class="kn">import</span> <span class="n">ProcessGeom</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.planar_mesh</span> <span class="kn">import</span> <span class="n">PlanarMesh</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.cull_mesh</span> <span class="kn">import</span> <span class="n">CullMesh</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.initial_state</span> <span class="kn">import</span> <span class="n">InitialState</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.ssh_adjustment</span> <span class="kn">import</span> <span class="n">SshAdjustment</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.cull_mesh</span> <span class="kn">import</span> <span class="n">CullMesh</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.files_for_e3sm</span> <span class="kn">import</span> <span class="n">FilesForE3sm</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.forward</span> <span class="kn">import</span> <span class="n">Forward</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.initial_state</span> <span class="kn">import</span> <span class="n">InitialState</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.misomip</span> <span class="kn">import</span> <span class="n">Misomip</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.planar_mesh</span> <span class="kn">import</span> <span class="n">PlanarMesh</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.process_geom</span> <span class="kn">import</span> <span class="n">ProcessGeom</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.spherical_mesh</span> <span class="kn">import</span> <span class="n">SphericalMesh</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.ssh_adjustment</span> <span class="kn">import</span> <span class="n">SshAdjustment</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.streamfunction</span> <span class="kn">import</span> <span class="n">Streamfunction</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.viz</span> <span class="kn">import</span> <span class="n">Viz</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.misomip</span> <span class="kn">import</span> <span class="n">Misomip</span>
+<span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
 <span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
 
 
@@ -145,12 +147,15 @@
 
 <span class="sd">    thin_film_present: bool</span>
 <span class="sd">        Whether a thin film is present under land ice</span>
+
+<span class="sd">    planar : bool, optional</span>
+<span class="sd">        Whether the test case runs on a planar or a spherical mesh</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="IsomipPlusTest.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.isomip_plus_test.IsomipPlusTest.html#compass.ocean.tests.isomip_plus.isomip_plus_test.IsomipPlusTest.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">experiment</span><span class="p">,</span>
                  <span class="n">vertical_coordinate</span><span class="p">,</span> <span class="n">time_varying_forcing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">time_varying_load</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">thin_film_present</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                 <span class="n">tidal_forcing</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                 <span class="n">tidal_forcing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">planar</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the test case</span>
 
@@ -184,6 +189,9 @@
 
 <span class="sd">        tidal_forcing: bool, optional</span>
 <span class="sd">            Whether the run includes a single-period tidal forcing</span>
+
+<span class="sd">        planar : bool, optional</span>
+<span class="sd">            Whether the test case runs on a planar or a spherical mesh</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">experiment</span>
         <span class="k">if</span> <span class="n">tidal_forcing</span><span class="p">:</span>
@@ -204,6 +212,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">time_varying_forcing</span> <span class="o">=</span> <span class="n">time_varying_forcing</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time_varying_load</span> <span class="o">=</span> <span class="n">time_varying_load</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">thin_film_present</span> <span class="o">=</span> <span class="n">thin_film_present</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">planar</span> <span class="o">=</span> <span class="n">planar</span>
 
         <span class="k">if</span> <span class="n">resolution</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="p">):</span>
             <span class="n">res_folder</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span><span class="si">}</span><span class="s1">km&#39;</span>
@@ -211,6 +220,11 @@
             <span class="n">res_folder</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">km&#39;</span>
 
         <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">res_folder</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">vertical_coordinate</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">if</span> <span class="n">planar</span><span class="p">:</span>
+            <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;planar/</span><span class="si">{</span><span class="n">subdir</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;sphere/</span><span class="si">{</span><span class="n">subdir</span><span class="si">}</span><span class="s1">&#39;</span>
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
@@ -218,12 +232,18 @@
                         <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
                         <span class="n">thin_film_present</span><span class="o">=</span><span class="n">thin_film_present</span><span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
-            <span class="n">PlanarMesh</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">thin_film_present</span><span class="o">=</span><span class="n">thin_film_present</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">planar</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
+                <span class="n">PlanarMesh</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                           <span class="n">thin_film_present</span><span class="o">=</span><span class="n">thin_film_present</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
+                <span class="n">SphericalMesh</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span>
+                              <span class="n">cell_width</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
             <span class="n">CullMesh</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">thin_film_present</span><span class="o">=</span><span class="n">thin_film_present</span><span class="p">,</span>
-                     <span class="n">planar</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+                     <span class="n">planar</span><span class="o">=</span><span class="n">planar</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
             <span class="n">InitialState</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
@@ -268,6 +288,12 @@
                 <span class="n">tidal_forcing</span><span class="o">=</span><span class="n">tidal_forcing</span><span class="p">),</span>
             <span class="n">run_by_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">planar</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
+                <span class="n">FilesForE3sm</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                             <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">),</span>
+                <span class="n">run_by_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
                 <span class="n">Misomip</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
@@ -285,12 +311,7 @@
         <span class="n">time_varying_load</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_varying_load</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">experiment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment</span>
-
-        <span class="n">nx</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="mi">800</span> <span class="o">/</span> <span class="n">resolution</span><span class="p">)</span>
-        <span class="n">ny</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">/</span> <span class="n">resolution</span><span class="p">)</span>
-        <span class="n">dc</span> <span class="o">=</span> <span class="mf">1e3</span> <span class="o">*</span> <span class="n">resolution</span>
-        <span class="c1"># Width of the thin film region</span>
-        <span class="n">nx_thin_film</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">planar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">planar</span>
 
         <span class="k">if</span> <span class="n">thin_film_present</span><span class="p">:</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;min_column_thickness&#39;</span><span class="p">,</span> <span class="s1">&#39;1e-3&#39;</span><span class="p">)</span>
@@ -326,12 +347,23 @@
             <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;restore_top_sal&#39;</span><span class="p">,</span> <span class="s1">&#39;33.8&#39;</span><span class="p">)</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;restore_bot_sal&#39;</span><span class="p">,</span> <span class="s1">&#39;34.55&#39;</span><span class="p">)</span>
 
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">nx</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ny</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;dc&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;nx_thin_film&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">nx_thin_film</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">planar</span><span class="p">:</span>
+            <span class="n">nx</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="mi">800</span> <span class="o">/</span> <span class="n">resolution</span><span class="p">)</span>
+            <span class="n">ny</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">/</span> <span class="n">resolution</span><span class="p">)</span>
+            <span class="n">dc</span> <span class="o">=</span> <span class="mf">1e3</span> <span class="o">*</span> <span class="n">resolution</span>
+            <span class="c1"># Width of the thin film region</span>
+            <span class="n">nx_thin_film</span> <span class="o">=</span> <span class="mi">10</span>
 
-        <span class="n">approx_cells</span> <span class="o">=</span> <span class="mf">30e3</span> <span class="o">/</span> <span class="n">resolution</span> <span class="o">**</span> <span class="mi">2</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">nx</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ny</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;dc&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;nx_thin_film&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">nx_thin_film</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="n">approx_cells</span> <span class="o">=</span> <span class="mf">30e3</span> <span class="o">/</span> <span class="n">resolution</span><span class="o">**</span><span class="mi">2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;compass.mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;mesh.cfg&#39;</span><span class="p">)</span>
+            <span class="n">approx_cells</span> <span class="o">=</span> <span class="mf">30e3</span> <span class="o">/</span> <span class="n">resolution</span><span class="o">**</span><span class="mi">2</span>
+
         <span class="c1"># round to the nearest 4 cores</span>
         <span class="n">ntasks</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span> <span class="o">*</span> <span class="nb">round</span><span class="p">(</span><span class="n">approx_cells</span> <span class="o">/</span> <span class="mi">200</span> <span class="o">/</span> <span class="mi">4</span><span class="p">))</span>
         <span class="n">min_tasks</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">approx_cells</span> <span class="o">/</span> <span class="mi">2000</span><span class="p">))</span>

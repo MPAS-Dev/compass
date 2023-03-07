@@ -112,19 +112,19 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.isomip_plus.initial_state</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 
-<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
 
-<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.vertical</span> <span class="kn">import</span> <span class="n">init_vertical_coord</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.iceshelf</span> <span class="kn">import</span> <span class="n">compute_land_ice_pressure_and_draft</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.geom</span> <span class="kn">import</span> <span class="n">interpolate_geom</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.viz.plot</span> <span class="kn">import</span> <span class="n">MoviePlotter</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.vertical</span> <span class="kn">import</span> <span class="n">init_vertical_coord</span>
+<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
 
 <div class="viewcode-block" id="InitialState"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.initial_state.InitialState.html#compass.ocean.tests.isomip_plus.initial_state.InitialState">[docs]</a><span class="k">class</span> <span class="nc">InitialState</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
@@ -214,7 +214,8 @@
         <span class="n">ds_geom</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;input_geometry_processed.nc&#39;</span><span class="p">)</span>
         <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">)</span>
 
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">interpolate_geom</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds_geom</span><span class="p">,</span> <span class="n">min_ocean_fraction</span><span class="p">,</span> <span class="n">thin_film_present</span><span class="p">)</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">interpolate_geom</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds_geom</span><span class="p">,</span> <span class="n">min_ocean_fraction</span><span class="p">,</span>
+                              <span class="n">thin_film_present</span><span class="p">)</span>
 
         <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceFraction&#39;</span><span class="p">]</span> <span class="o">=</span> \
             <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceFraction&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -248,7 +249,7 @@
         <span class="n">min_layer_thickness</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;min_layer_thickness&#39;</span><span class="p">)</span>
         <span class="n">min_levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;minimum_levels&#39;</span><span class="p">)</span>
         <span class="n">min_column_thickness</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">min_column_thickness</span><span class="p">,</span>
-                                   <span class="n">min_levels</span><span class="o">*</span><span class="n">min_layer_thickness</span><span class="p">)</span>
+                                   <span class="n">min_levels</span> <span class="o">*</span> <span class="n">min_layer_thickness</span><span class="p">)</span>
         <span class="n">min_depth</span> <span class="o">=</span> <span class="o">-</span><span class="n">ds</span><span class="o">.</span><span class="n">ssh</span> <span class="o">+</span> <span class="n">min_column_thickness</span>
         <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span> <span class="n">min_depth</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Adjusted bottomDepth for &#39;</span>
@@ -266,8 +267,8 @@
         <span class="n">init_top_sal</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;init_top_sal&#39;</span><span class="p">)</span>
         <span class="n">init_bot_sal</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;init_bot_sal&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertical_coordinate</span> <span class="o">==</span> <span class="s1">&#39;single_layer&#39;</span><span class="p">:</span>
-            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_bot_temp</span><span class="o">*</span><span class="n">xr</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">frac</span><span class="p">)</span>
-            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;salinity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_bot_sal</span><span class="o">*</span><span class="n">xr</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">frac</span><span class="p">)</span>
+            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_bot_temp</span> <span class="o">*</span> <span class="n">xr</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">frac</span><span class="p">)</span>
+            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;salinity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_bot_sal</span> <span class="o">*</span> <span class="n">xr</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">frac</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">=</span> \
                 <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">frac</span><span class="p">)</span> <span class="o">*</span> <span class="n">init_top_temp</span> <span class="o">+</span> <span class="n">frac</span> <span class="o">*</span> <span class="n">init_bot_temp</span>
@@ -277,9 +278,9 @@
         <span class="c1"># compute coriolis</span>
         <span class="n">coriolis_parameter</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;coriolis_parameter&#39;</span><span class="p">)</span>
 
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fCell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coriolis_parameter</span><span class="o">*</span><span class="n">xr</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xCell</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fEdge&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coriolis_parameter</span><span class="o">*</span><span class="n">xr</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xEdge</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fVertex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coriolis_parameter</span><span class="o">*</span><span class="n">xr</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xVertex</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fCell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coriolis_parameter</span> <span class="o">*</span> <span class="n">xr</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xCell</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fEdge&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coriolis_parameter</span> <span class="o">*</span> <span class="n">xr</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xEdge</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fVertex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coriolis_parameter</span> <span class="o">*</span> <span class="n">xr</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xVertex</span><span class="p">)</span>
 
         <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xEdge</span><span class="p">)</span>
         <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">normalVelocity</span><span class="o">.</span><span class="n">broadcast_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">refBottomDepth</span><span class="p">)</span>
@@ -327,18 +328,18 @@
                                   <span class="kc">True</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">700</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">ssh</span> <span class="o">+</span> <span class="n">ds</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span>
                                   <span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span>
-                                  <span class="n">vmin</span><span class="o">=</span><span class="n">min_column_thickness</span><span class="o">+</span><span class="mf">1e-10</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">700</span><span class="p">,</span>
+                                  <span class="n">vmin</span><span class="o">=</span><span class="n">min_column_thickness</span> <span class="o">+</span> <span class="mf">1e-10</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">700</span><span class="p">,</span>
                                   <span class="n">cmap_set_under</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">cmap_scale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
         <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">totalColThickness</span><span class="p">,</span>
                                   <span class="s1">&#39;totalColThickness&#39;</span><span class="p">,</span> <span class="s1">&#39;totalColThickness&#39;</span><span class="p">,</span>
-                                  <span class="kc">True</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">min_column_thickness</span><span class="o">+</span><span class="mf">1e-10</span><span class="p">,</span>
+                                  <span class="kc">True</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">min_column_thickness</span> <span class="o">+</span> <span class="mf">1e-10</span><span class="p">,</span>
                                   <span class="n">vmax</span><span class="o">=</span><span class="mi">700</span><span class="p">,</span> <span class="n">cmap_set_under</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
         <span class="n">plotter</span><span class="o">.</span><span class="n">plot_layer_interfaces</span><span class="p">()</span>
 
         <span class="n">plotter</span><span class="o">.</span><span class="n">plot_3d_field_top_bot_section</span><span class="p">(</span>
             <span class="n">ds</span><span class="o">.</span><span class="n">layerThickness</span><span class="p">,</span> <span class="n">nameInTitle</span><span class="o">=</span><span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span>
             <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">,</span>
-            <span class="n">vmin</span><span class="o">=</span><span class="n">min_column_thickness</span><span class="o">+</span><span class="mf">1e-10</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+            <span class="n">vmin</span><span class="o">=</span><span class="n">min_column_thickness</span> <span class="o">+</span> <span class="mf">1e-10</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
             <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.deep_r&#39;</span><span class="p">,</span> <span class="n">cmap_set_under</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
 
         <span class="n">plotter</span><span class="o">.</span><span class="n">plot_3d_field_top_bot_section</span><span class="p">(</span>
@@ -374,7 +375,8 @@
         <span class="n">restore_xmin</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;restore_xmin&#39;</span><span class="p">)</span>
         <span class="n">restore_xmax</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;restore_xmax&#39;</span><span class="p">)</span>
         <span class="n">frac</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span>
-            <span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xCell</span> <span class="o">-</span> <span class="n">restore_xmin</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">restore_xmax</span><span class="o">-</span><span class="n">restore_xmin</span><span class="p">),</span> <span class="mf">0.</span><span class="p">)</span>
+            <span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xIsomipCell</span> <span class="o">-</span> <span class="n">restore_xmin</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">restore_xmax</span> <span class="o">-</span> <span class="n">restore_xmin</span><span class="p">),</span>
+            <span class="mf">0.</span><span class="p">)</span>
         <span class="n">frac</span> <span class="o">=</span> <span class="n">frac</span><span class="o">.</span><span class="n">broadcast_like</span><span class="p">(</span>
             <span class="n">ds_forcing</span><span class="o">.</span><span class="n">temperatureInteriorRestoringValue</span><span class="p">)</span>
 
@@ -387,25 +389,26 @@
         <span class="c1"># compute &quot;evaporation&quot;</span>
         <span class="n">restore_evap_rate</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;restore_evap_rate&#39;</span><span class="p">)</span>
 
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xCell</span> <span class="o">&gt;=</span> <span class="n">restore_xmin</span><span class="p">,</span>
-                              <span class="n">ds</span><span class="o">.</span><span class="n">xCell</span> <span class="o">&lt;=</span> <span class="n">restore_xmax</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xIsomipCell</span> <span class="o">&gt;=</span> <span class="n">restore_xmin</span><span class="p">,</span>
+                              <span class="n">ds</span><span class="o">.</span><span class="n">xIsomipCell</span> <span class="o">&lt;=</span> <span class="n">restore_xmax</span><span class="p">)</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="c1"># convert to m/s, negative for evaporation rather than precipitation</span>
-        <span class="n">evap_rate</span> <span class="o">=</span> <span class="o">-</span><span class="n">restore_evap_rate</span><span class="o">/</span><span class="p">(</span><span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_CDAY&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">365</span><span class="p">)</span>
+        <span class="n">evap_rate</span> <span class="o">=</span> <span class="o">-</span><span class="n">restore_evap_rate</span> <span class="o">/</span> <span class="p">(</span><span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_CDAY&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">365</span><span class="p">)</span>
         <span class="c1"># PSU*m/s to kg/m^2/s</span>
         <span class="n">sflux_factor</span> <span class="o">=</span> <span class="mf">1.</span>
         <span class="c1"># C*m/s to W/m^2</span>
-        <span class="n">hflux_factor</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="n">ref_density</span><span class="o">*</span><span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_CPSW&#39;</span><span class="p">])</span>
-        <span class="n">ds_forcing</span><span class="p">[</span><span class="s1">&#39;evaporationFlux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mask</span><span class="o">*</span><span class="n">ref_density</span><span class="o">*</span><span class="n">evap_rate</span>
+        <span class="n">hflux_factor</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="n">ref_density</span> <span class="o">*</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_CPSW&#39;</span><span class="p">])</span>
+        <span class="n">ds_forcing</span><span class="p">[</span><span class="s1">&#39;evaporationFlux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mask</span> <span class="o">*</span> <span class="n">ref_density</span> <span class="o">*</span> <span class="n">evap_rate</span>
         <span class="n">ds_forcing</span><span class="p">[</span><span class="s1">&#39;seaIceSalinityFlux&#39;</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="n">mask</span><span class="o">*</span><span class="n">evap_rate</span><span class="o">*</span><span class="n">restore_top_sal</span><span class="o">/</span><span class="n">sflux_factor</span>
+            <span class="n">mask</span> <span class="o">*</span> <span class="n">evap_rate</span> <span class="o">*</span> <span class="n">restore_top_sal</span> <span class="o">/</span> <span class="n">sflux_factor</span>
         <span class="n">ds_forcing</span><span class="p">[</span><span class="s1">&#39;seaIceHeatFlux&#39;</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="n">mask</span><span class="o">*</span><span class="n">evap_rate</span><span class="o">*</span><span class="n">restore_top_temp</span><span class="o">/</span><span class="n">hflux_factor</span>
+            <span class="n">mask</span> <span class="o">*</span> <span class="n">evap_rate</span> <span class="o">*</span> <span class="n">restore_top_temp</span> <span class="o">/</span> <span class="n">hflux_factor</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertical_coordinate</span> <span class="o">==</span> <span class="s1">&#39;single_layer&#39;</span><span class="p">:</span>
-            <span class="n">x_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xCell</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+            <span class="n">x_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xIsomipCell</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
             <span class="n">ds_forcing</span><span class="p">[</span><span class="s1">&#39;tidalInputMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
-                <span class="n">ds</span><span class="o">.</span><span class="n">xCell</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">x_max</span> <span class="o">-</span> <span class="mf">0.6</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="o">*</span><span class="mf">1e3</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+                <span class="n">ds</span><span class="o">.</span><span class="n">xIsomipCell</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">x_max</span> <span class="o">-</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">*</span> <span class="mf">1e3</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">,</span>
+                <span class="mf">0.0</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ds_forcing</span><span class="p">[</span><span class="s1">&#39;tidalInputMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">frac</span><span class="p">)</span>
 
@@ -431,8 +434,8 @@
         <span class="n">landIceFraction</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
 
         <span class="k">for</span> <span class="n">scale</span> <span class="ow">in</span> <span class="n">scales</span><span class="p">:</span>
-            <span class="n">landIceDraft</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scale</span><span class="o">*</span><span class="n">ds_init</span><span class="o">.</span><span class="n">landIceDraft</span><span class="p">)</span>
-            <span class="n">landIcePressure</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scale</span><span class="o">*</span><span class="n">ds_init</span><span class="o">.</span><span class="n">landIcePressure</span><span class="p">)</span>
+            <span class="n">landIceDraft</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scale</span> <span class="o">*</span> <span class="n">ds_init</span><span class="o">.</span><span class="n">landIceDraft</span><span class="p">)</span>
+            <span class="n">landIcePressure</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scale</span> <span class="o">*</span> <span class="n">ds_init</span><span class="o">.</span><span class="n">landIcePressure</span><span class="p">)</span>
             <span class="n">landIceFraction</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ds_init</span><span class="o">.</span><span class="n">landIceFraction</span><span class="p">)</span>
 
         <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIceDraftForcing&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">landIceDraft</span><span class="p">,</span> <span class="s1">&#39;Time&#39;</span><span class="p">)</span>
@@ -450,9 +453,9 @@
             <span class="s1">&#39;The fraction of each cell covered by land ice&#39;</span>
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="s1">&#39;land_ice_forcing.nc&#39;</span><span class="p">)</span>
 
-        <span class="n">ds_init</span><span class="p">[</span><span class="s1">&#39;landIceDraft&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scales</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">ds_init</span><span class="o">.</span><span class="n">landIceDraft</span>
+        <span class="n">ds_init</span><span class="p">[</span><span class="s1">&#39;landIceDraft&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scales</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">ds_init</span><span class="o">.</span><span class="n">landIceDraft</span>
         <span class="n">ds_init</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_init</span><span class="o">.</span><span class="n">landIceDraft</span>
-        <span class="n">ds_init</span><span class="p">[</span><span class="s1">&#39;landIcePressure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scales</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">ds_init</span><span class="o">.</span><span class="n">landIcePressure</span></div>
+        <span class="n">ds_init</span><span class="p">[</span><span class="s1">&#39;landIcePressure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scales</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">ds_init</span><span class="o">.</span><span class="n">landIcePressure</span></div>
 </pre></div>
 
            </div>

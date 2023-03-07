@@ -113,14 +113,14 @@
              
   <h1>Source code for compass.ocean.tests.isomip_plus.geom</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.mesh.interpolation</span> <span class="kn">import</span> <span class="n">interp_bilin</span>
 <span class="kn">import</span> <span class="nn">xarray</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.mesh.interpolation</span> <span class="kn">import</span> <span class="n">interp_bilin</span>
 
 
 <div class="viewcode-block" id="define_thin_film_mask_step1"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.geom.define_thin_film_mask_step1.html#compass.ocean.tests.isomip_plus.geom.define_thin_film_mask_step1">[docs]</a><span class="k">def</span> <span class="nf">define_thin_film_mask_step1</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds_geom</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Define an MPAS mesh mask for the ocean domain including cells over the </span>
-<span class="sd">    full x- and y-range in order to include all land cells in the ocean&#39;s </span>
+<span class="sd">    Define an MPAS mesh mask for the ocean domain including cells over the</span>
+<span class="sd">    full x- and y-range in order to include all land cells in the ocean&#39;s</span>
 <span class="sd">    thin-film region.</span>
 
 <span class="sd">    Parameters</span>
@@ -277,14 +277,15 @@
         <span class="n">ds_out</span><span class="p">[</span><span class="n">outfield</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nCells&#39;</span><span class="p">,),</span> <span class="n">field</span><span class="p">)</span>
 
     <span class="n">ocean_frac_observed</span> <span class="o">=</span> <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">ocean_frac_observed</span> <span class="o">&gt;</span> <span class="n">min_ocean_fraction</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">thin_film_present</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">ocean_frac_observed</span> <span class="o">&gt;</span> <span class="n">min_ocean_fraction</span><span class="p">)</span> <span class="ow">and</span> \
+            <span class="ow">not</span> <span class="n">thin_film_present</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Something went wrong with culling.  There are still &#39;</span>
                          <span class="s1">&#39;non-ocean cells in the culled mesh.&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">thin_film_present</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bottomDepthObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;ssh&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceFraction&#39;</span><span class="p">,</span>
                       <span class="s1">&#39;smoothedDraftMask&#39;</span><span class="p">]:</span>
-            <span class="n">ds_out</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_out</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">/</span><span class="n">ocean_frac_observed</span>
+            <span class="n">ds_out</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_out</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">/</span> <span class="n">ocean_frac_observed</span>
 
     <span class="k">return</span> <span class="n">ds_out</span></div>
 
@@ -292,8 +293,8 @@
 <span class="k">def</span> <span class="nf">_get_geom_fields</span><span class="p">(</span><span class="n">ds_geom</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">):</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">ds_geom</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">values</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">ds_geom</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">values</span>
-    <span class="n">x_cell</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">xCell</span><span class="o">.</span><span class="n">values</span>
-    <span class="n">y_cell</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">yCell</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">x_cell</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">xIsomipCell</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">y_cell</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">yIsomipCell</span><span class="o">.</span><span class="n">values</span>
 
     <span class="n">ocean_fraction</span> <span class="o">=</span> <span class="o">-</span> <span class="n">ds_geom</span><span class="p">[</span><span class="s1">&#39;landFraction&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1.0</span>
 
