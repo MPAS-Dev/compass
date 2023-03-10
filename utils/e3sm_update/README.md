@@ -3,7 +3,7 @@ Test E3SM submodule changes
 
 This utility is designed to test a sequence of E3SM commits related to a given
 MPAS component between two commit hashes (assumed to be the current and new
-hashes for the submodule).  The utility finds merges between the current and 
+hashes for the submodule).  The utility finds merges between the current and
 the new hash that relate to the ocean and/or land-ice components and the MPAS
 framework.  The `test_e3sm_changes.py` scrip manages the process with the
 help of a config file similar to `example.cfg`.
@@ -15,7 +15,7 @@ Instructions
    compiler and mpi library, e.g.:
    ```shell
    ./conda/configure_compass_env.py --env_name compass_e3sm_update \
-       --compiler intel --mpi impi --conda ~/mambaforge/
+       --compiler intel --mpi openmpi --conda ~/mambaforge/
    ```
 
 2. Copy `example.cfg` to the base of the branch:
@@ -23,15 +23,13 @@ Instructions
    cp utils/e3sm_update/example.cfg e3sm_update.cfg
    ```
 
-3. Modify the config options with the current and new hashes, the test cases 
+3. Modify the config options with the current and new hashes, the test cases
    or suite you wish to run, the base work directory, etc.
 
 4. On a login node, run:
    ```shell
-   ./utils/e3sm_update/test_e3sm_update.py -f e3sm_update.cfg
+   ./utils/e3sm_update/test_e3sm_changes.py -f e3sm_update.cfg
    ```
-   Optionally use the `--submit` flag to submit jobs once each configuration
-   has been built and set up.
 
 5. Worktrees will be created for the current and new submodules as well as
    each relevant E3SM pull request inbetween.  The code will be built with the
