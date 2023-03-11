@@ -6,7 +6,7 @@ ensemble_generator
 The ``landice/ensemble_generator`` test group creates ensemble of MALI
 simulations with different parameter values.  The ensemble framework
 sets up a user-defined number of simulations with parameter values selected
-from a space-filling Sobol sequence.
+from either uniform sampling or a space-filling Sobol sequence.
 
 A test case in this test group consists of a number of ensemble members,
 and one ensemble manager.
@@ -23,10 +23,15 @@ look as expected before spending time on a larger ensemble. This also allows
 one to add more ensemble members from the Sobol sequence later if UQ analysis
 indicates the original sample size was insufficient.
 
-Individual test cases will define which parameters are being sampled and
-over what ranges.  Currently these parameters are supported:
+A number of possible parameters are supported and whether they are active and
+what parameter value ranges should be used are specified in a user-supplied
+config file.  Currently these parameters are supported:
 
 * basal friction power law exponent
+
+* scaling factor on muFriction
+
+* scaling factor on stiffnessFactor
 
 * von Mises threshold stress for calving
 
@@ -35,15 +40,11 @@ over what ranges.  Currently these parameters are supported:
 * gamma0 melt sensitivity parameter in ISMIP6-AIS ice-shelf basal melting
   parameterization
 
-* deltaT thermal forcing bias adjustment parameter in ISMIP6-AIS ice-shelf
-  basal melting parameterization
+* target ice-shelf basal melt rate for ISMIP6-AIS ice-shelf basal melting
+  parameterization.  In the model setup, the deltaT thermal forcing bias
+  adjustment is adjusted to obtain the target melt rate for a given gamma0
 
 Additional parameters can be easily added in the future.
-The test group currently includes a file of unit parameter values for two
-parameters with 100 samples using a Sobol sequence.  The parameter
-dimensionality or sample size can be increased by modifying this file and
-its usage.  It also would be possible to modify the sampling strategy to
-perform uniform parameter sensitivity tests.
 
 ``compass setup`` will set up the simulations and the ensemble manager.
 ``compass run`` from the test case work directory will submit each run as a
@@ -52,17 +53,14 @@ Individual runs can be run independently through ``compass run`` executed in the
 run directory.  (E.g., if you want to test or debug a run without running the
 entire ensemble.)
 
-.. note::
-
-   Due to the requirement that ``compass run`` is only executed
-   on a compute node, this operation has to be submitted via a batch script or
-   interactive job, or compass framework code can be modified by an expert user
-   to lift this restriction. (This may be addressed in the future.) 
-
 Simulation output can be analyzed with the ``plot_ensemble.py`` visualization
 script, which generates plots of basic quantities of interest as a function
 of parameter values, as well as identifies runs that did not reach the
-target year.
+target year.  The visualization script plots a small number of quantities of
+interest as a function of each active parameter.  It also plots pairwise
+parameter sensitivities for each pair of parameters being varied.  Finally,
+it plots time-series plots for the quantities of interest for all runs in the
+ensemble.
 
 Future improvements may include:
 
@@ -72,24 +70,16 @@ Future improvements may include:
 * safety checks or warnings before submitting ensembles that will use large
   amounts of computing resources
 
-* more flexibility in customizing ensembles without needing to modify test
-  case files
-
-The test group includes a single test case that creates an ensemble of Thwaites
-Glacier simulations.
+The test group includes a single test case for creating an ensemble.
 
 config options
 --------------
 Test cases in this test group have the following common config options.
 
-A config file specifies the location of the input file, the basal friction
-exponent used in the input file, the name of the parameter vector file to
-use, and the start and end run numbers to set up.
 This test group is intended for expert users, and it is expected that it
 will typically be run with a customized cfg file.  Note the default run
 numbers create a small ensemble, but uncertainty quantification applications
 will typically need dozens or more simulations.
-
 
 The test-case-specific config options are:
 
@@ -102,20 +92,37 @@ The test-case-specific config options are:
    # Additional runs can be added and run to an existing ensemble
    # without affecting existing runs, but trying to set up a run
    # that already exists may result in unexpected behavior.
-   # Run numbers should be zero-based
+   # Run numbers should be zero-based.
+   # If using uniform sampling, start_run should be 0 and end_run should be
+   # equal to max_samples, otherwise unexpected behavior may result.
    # These values do not affect viz/analysis, which will include any
    # runs it finds.
    start_run = 0
    end_run = 3
 
-   # the name of the parameter vector file to use, included in the
-   # compass repository.  Currently there is only one option, but additional
-   # parameter vectors may be added in the future, or entirely replaced with
-   # code to generate parameter vectors as needed.
-   param_vector_filename = Sobol_Initializations_seed_4_samples_100.csv
+   # sampling_method can be either 'sobol' for a space-filling Sobol sequence
+   # or 'uniform' for uniform sampling.  Uniform sampling is most appropriate
+   # for a single parameter sensitivity study.  It will sample uniformly across
+   # all dimensions simultaneously, thus sampling only a small fraction of
+   # parameter space
+   sampling_method = uniform
+
+   # max_samples need to be larger than end_run above.  This might be set larger
+   # than end_run if you plan to add more samples to the ensemble later.  When
+   # using Sobol sequences, max_samples ought to be a factor of 2, but that is
+   # effectively not relevant if your final end_run value is not.
+   # If using uniform sampling, max_samples should equal end_run.
+   max_samples = 4
+
+   # basin for comparing model results with observational estimates in
+   # visualization script.
+   # Basin options are defined in compass/landice/ais_observations.py
+   # If desired basin does not exist, it can be added to that dataset.
+   # (They need not be mutually exclusive.)
+   # If a basin is not provided, observational comparisons will not be made.
+   basin =  None
 
    # Path to the initial condition input file.
-   # User has to supply.
    # Eventually this could be hard-coded to use files on the input data
    # server, but initially we want flexibility to experiment with different
    # inputs and forcings
@@ -126,13 +133,78 @@ The test-case-specific config options are:
    orig_fric_exp = 0.2
 
    # Path to ISMIP6 ice-shelf basal melt parameter input file.
-   # User has to supply.
    basal_melt_param_file_path = /global/cfs/cdirs/fanssie/MALI_projects/Thwaites_UQ/Thwaites_4to20km_r02_20230126/forcing/basal_melt/parameterizations/Thwaites_4to20km_r02_20230126_basin_and_coeff_gamma0_DeltaT_quadratic_non_local_median.nc
+
+   # Path to thermal forcing file for the mesh to be used
+   TF_file_path = /global/cfs/cdirs/fanssie/MALI_projects/Thwaites_UQ/Thwaites_4to20km_r02_20230126/forcing/ocean_thermal_forcing/obs/Thwaites_4to20km_r02_20230126_obs_TF_1995-2017_8km_x_60m_no_xtime.nc
+
+   # Path to SMB forcing file for the mesh to be used
+   SMB_file_path = /global/cfs/cdirs/fanssie/MALI_projects/Thwaites_UQ/Thwaites_4to20km_r02_20230126/forcing/atmosphere_forcing/RACMO_climatology_1995-2017/Thwaites_4to20km_r02_202
+   30126_RACMO2.3p2_ANT27_smb_climatology_1995-2017.nc
 
    # number of tasks that each ensemble member should be run with
    # Eventually, compass could determine this, but we want explicit control for now
    # ntasks=32 for cori
-   ntasks = 32
+   ntasks = 128
+
+   # whether basal friction exponent is being varied
+   # [unitless]
+   use_fric_exp = False
+   # min value to vary over
+   fric_exp_min = 0.1
+   # max value to vary over
+   fric_exp_max = 0.33333
+
+   # whether a scaling factor on muFriction is being varied
+   # [unitless: 1.0=no scaling]
+   use_mu_scale = True
+   # min value to vary over
+   mu_scale_min = 0.8
+   # max value to vary over
+   mu_scale_max = 1.2
+
+   # whether a scaling factor on stiffnessFactor is being varied
+   # [unitless: 1.0=no scaling]
+   use_stiff_scale = True
+   # min value to vary over
+   stiff_scale_min = 0.5
+   # max value to vary over
+   stiff_scale_max = 1.5
+
+   # whether the von Mises threshold stress (sigma_max) is being varied
+   # [units: Pa]
+   use_von_mises_threshold = False
+   # min value to vary over
+   von_mises_threshold_min = 100.0e3
+   # max value to vary over
+   von_mises_threshold_max = 300.0e3
+
+   # whether the calving speed limit is being varied
+   # [units: km/yr]
+   use_calv_limit = False
+   # min value to vary over
+   calv_limit_min = 5.0
+   # max value to vary over
+   calv_limit_max = 50.0
+
+   # whether ocean melt parameterization coefficient is being varied
+   # [units: m/yr]
+   use_gamma0  = False
+   # min value to vary over
+   gamma0_min = 9620.0
+   # max value to vary over
+   gamma0_max = 471000.0
+
+   # whether target ice-shelf basal melt flux is being varied
+   # [units: Gt/yr]
+   use_meltflux = False
+   # min value to vary over
+   meltflux_min = 90.5
+   # max value to vary over
+   meltflux_max = 114.5
+   # ice-shelf area associated with target melt rates
+   # [units: m^2]
+   iceshelf_area_obs = 4411.0e6
 
 A user should copy the default config file to a user-defined config file
 before setting up the test case and any necessary adjustments made.
@@ -149,21 +221,15 @@ jobs for each ensemble member.
    [job]
    wall_time = 1:30:00
 
-thwaites
+ensemble
 --------
 
-``landice/ensemble_generator/thwaites`` uses the ensemble framework to create
-and ensemble of 4 km resolution Thwaites Glacier simulations integrated from
-2000 to 2100 with two parameters varying:
+``landice/ensemble_generator/ensemble`` uses the ensemble framework to create
+and ensemble of simulations integrated from 2000 to 2100.  The test case
+can be applied to any domain and set of input files.  If the default namelist
+and streams settings are not appropriate, they can be adjusted or a new test
+case can be set up mirroring the existing one.
 
-* basal friction power law exponent: range [0.1, 0.333]
-
-* von Mises threshold stress for calving: range [100, 300] kPa
-
-The initial condition file is specified in the ``ensemble_generator.cfg`` file
-or a user modification of it.  The forcing files for the simulation are
-hard-coded in the test case streams file  and are located on the NERSC
-filesystem.  
 The model configuration uses:
 
 * first-order velocity solver
@@ -177,29 +243,31 @@ The model configuration uses:
 * ISMIP6 surface mass balance and sub-ice-shelf melting using climatological
   mean forcing
 
-Steps for setting up and running a Thwaites ensmble
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The initial condition and forcing files are specified in the
+``ensemble_generator.cfg`` file or a user modification of it.
+
+Steps for setting up and running an ensmble
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. With a compass conda environment set up, run, e.g.,
-   ``compass setup -t landice/ensemble_generator/thwaites_ensemble -w WORK_DIR_PATH -f USER.cfg``
+   ``compass setup -t landice/ensemble_generator/ensemble -w WORK_DIR_PATH -f USER.cfg``
    where ``WORK_DIR_PATH`` is a location that can store the whole
    ensemble (typically a scratch drive) and ``USER.cfg`` is the
    user-defined config described in the previous section that includes
    options for ``[parallel]`` and ``[job]``, as well as any required
-   modifications to the ``[ensemble]`` section.  Likely, the only changes
-   one would need to make to the ``[ensemble]`` section are the
-   ``start_run`` and ``end_run`` values.
+   modifications to the ``[ensemble]`` section.  Likely, most or all
+   attributes in the ``[ensemble]`` section need to be customized for a
+   given application.
 
 2. After ``compass setup`` completes and all runs are set up, go to the
    ``WORK_DIR_PATH`` and change to the
-   ``landice/ensemble_generator/thwaites-uq`` subdirectory.
+   ``landice/ensemble_generator/ensemble`` subdirectory.
    From there you will see subdirectories for each run, a subdirectory for the
    ``ensemble_manager`` and symlink to the visualization script.
 
 3. To submit jobs for the entire ensemble, change to the ``ensemble_manager``
-   subdirectory and execute ``compass run``.  Note, as stated above, this
-   currently will fail on a login node and has to be performed from a
-   interactive job or batch script.  This will be addressed in the future.
+   subdirectory and execute ``compass run``.  Be careful, as it is possible to
+   consume a large number of computing resources quickly with this tool!
 
 4. Each run will have its own batch job that can be monitored with ``squeue``
    or similar commands.
