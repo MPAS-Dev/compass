@@ -7,14 +7,22 @@ from compass.io import symlink
 from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step import (  # noqa: E501
     FilesForE3SMStep,
 )
+from compass.ocean.tests.global_ocean.metadata import (
+    add_mesh_and_init_metadata,
+)
 
 
 class OceanInitialCondition(FilesForE3SMStep):
     """
     A step for creating an E3SM ocean initial condition from the results of
     a dynamic-adjustment process to dissipate fast waves
+
+    Attributes
+    ----------
+    add_metadata : bool
+        Whether to add metadata to the ocean initial condition
     """
-    def __init__(self, test_case):
+    def __init__(self, test_case, add_metadata=False):
         """
         Create a new step
 
@@ -22,9 +30,13 @@ class OceanInitialCondition(FilesForE3SMStep):
         ----------
         test_case : compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM
             The test case this step belongs to
+
+        add_metadata : bool, optional
+            Whether to add metadata to the ocean initial condition
         """  # noqa: E501
 
         super().__init__(test_case, name='ocean_initial_condition')
+        self.add_metadata = add_metadata
 
         # for now, we won't define any outputs because they include the mesh
         # short name, which is not known at setup time.  Currently, this is
@@ -43,6 +55,10 @@ class OceanInitialCondition(FilesForE3SMStep):
             if 'xtime' in ds.data_vars:
                 ds = ds.drop_vars('xtime')
             write_netcdf(ds, dest_filename)
+
+        if self.add_metadata:
+            add_mesh_and_init_metadata([dest_filename], self.config,
+                                       source_filename)
 
         symlink(
             os.path.abspath(dest_filename),

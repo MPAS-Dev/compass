@@ -87,6 +87,8 @@ class FilesForE3SMStep(Step):
         restart_filename = self.config.get('files_for_e3sm',
                                            'ocean_restart_filename')
         if restart_filename != 'autodetect':
+            restart_filename = os.path.normpath(os.path.join(
+                self.test_case.work_dir, restart_filename))
             self.add_input_file(filename='restart.nc', target=restart_filename)
 
         with_ice_shelf_cavities = self.config.get('files_for_e3sm',
