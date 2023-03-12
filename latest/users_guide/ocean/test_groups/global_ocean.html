@@ -789,15 +789,42 @@ test case is useful for creating these files.</p>
 <p>The user should create a local symlink to an E3SM initial condition for
 MPAS-Ocean for the desired mesh.  Then, the config options in
 <code class="docutils literal notranslate"><span class="pre">files_for_e3sm.cfg</span></code> should be edited.  In this example, we have
-created a local link to the <code class="docutils literal notranslate"><span class="pre">ocean.WCAtl12to45E2r4.210318.nc</span></code> initial
-condition and the <code class="docutils literal notranslate"><span class="pre">mpas-o.graph.info.210318</span></code> graph file in the test case
+created a local link to the <code class="docutils literal notranslate"><span class="pre">ocean.EC30to60E2r3.210210.nc</span></code> initial
+condition and the <code class="docutils literal notranslate"><span class="pre">mpas-o.graph.info.200904</span></code> graph file in the test case
 directory.  The mesh name has also been set to the E3SM short name for this
-mesh <code class="docutils literal notranslate"><span class="pre">WCAtl12to45E2r4</span></code>.  We indicate that the mesh does not include ice-shelf
+mesh <code class="docutils literal notranslate"><span class="pre">EC30to60E2r3</span></code>.  We indicate that the mesh does not include ice-shelf
 cavities, which means we don’t compute masks for ice-shelf melt rates.</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[files_for_e3sm]</span>
-<span class="na">mesh_short_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">WCAtl12to45E2r4</span>
-<span class="na">ocean_restart_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ocean.WCAtl12to45E2r4.210318.nc</span>
-<span class="na">graph_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpas-o.graph.info.210318</span>
+<p>We also need to provide several options in the <code class="docutils literal notranslate"><span class="pre">[global_ocean]</span></code> section of
+the config file so the metadata added to the initial conditions will be
+correct.</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[global_ocean]</span>
+
+<span class="na">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">EC</span>
+
+<span class="na">mesh_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MPAS Eddy Closure mesh for E3SM version ${e3sm_version} with</span>
+<span class="w">                   </span><span class="na">enhanced resolution around the equator (30 km), South pole</span>
+<span class="w">                   </span><span class="na">(35 km), Greenland (${min_res} km), ${max_res}-km resolution</span>
+<span class="w">                   </span><span class="na">at mid latitudes, and ${levels} vertical levels</span>
+
+<span class="na">bathy_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Bathymetry is from GEBCO 2022, combined with BedMachine</span>
+<span class="w">                    </span><span class="na">Antarctica v2 around Antarctica.</span>
+
+<span class="na">init_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Polar science center Hydrographic Climatology (PHC)</span>
+
+<span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
+<span class="na">mesh_revision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
+<span class="na">min_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">30</span>
+<span class="na">max_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">60</span>
+<span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">https://github.com/MPAS-Dev/MPAS-Model/pull/669</span>
+<span class="na">creation_date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">230311</span>
+<span class="na">author</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Xylar Asay-Davis</span>
+<span class="na">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">xylar@lanl.gov</span>
+
+<span class="k">[files_for_e3sm]</span>
+
+<span class="na">mesh_short_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">EC30to60E2r3</span>
+<span class="na">ocean_restart_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ocean.EC30to60E2r3.210210.nc</span>
+<span class="na">graph_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpas-o.graph.info.200904</span>
 <span class="na">with_ice_shelf_cavities</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
 </pre></div>
 </div>

@@ -122,14 +122,22 @@
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
     <span class="n">FilesForE3SMStep</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.metadata</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">add_mesh_and_init_metadata</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="OceanInitialCondition"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.OceanInitialCondition.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.OceanInitialCondition">[docs]</a><span class="k">class</span> <span class="nc">OceanInitialCondition</span><span class="p">(</span><span class="n">FilesForE3SMStep</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for creating an E3SM ocean initial condition from the results of</span>
 <span class="sd">    a dynamic-adjustment process to dissipate fast waves</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    add_metadata : bool</span>
+<span class="sd">        Whether to add metadata to the ocean initial condition</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="OceanInitialCondition.__init__"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.OceanInitialCondition.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.OceanInitialCondition.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
+<div class="viewcode-block" id="OceanInitialCondition.__init__"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.OceanInitialCondition.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.OceanInitialCondition.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">add_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new step</span>
 
@@ -137,9 +145,13 @@
 <span class="sd">        ----------</span>
 <span class="sd">        test_case : compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM</span>
 <span class="sd">            The test case this step belongs to</span>
+
+<span class="sd">        add_metadata : bool, optional</span>
+<span class="sd">            Whether to add metadata to the ocean initial condition</span>
 <span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
 
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ocean_initial_condition&#39;</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ocean_initial_condition&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_metadata</span> <span class="o">=</span> <span class="n">add_metadata</span></div>
 
         <span class="c1"># for now, we won&#39;t define any outputs because they include the mesh</span>
         <span class="c1"># short name, which is not known at setup time.  Currently, this is</span>
@@ -158,6 +170,10 @@
             <span class="k">if</span> <span class="s1">&#39;xtime&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="p">:</span>
                 <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s1">&#39;xtime&#39;</span><span class="p">)</span>
             <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">dest_filename</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_metadata</span><span class="p">:</span>
+            <span class="n">add_mesh_and_init_metadata</span><span class="p">([</span><span class="n">dest_filename</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+                                       <span class="n">source_filename</span><span class="p">)</span>
 
         <span class="n">symlink</span><span class="p">(</span>
             <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">dest_filename</span><span class="p">),</span>
