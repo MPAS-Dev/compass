@@ -798,18 +798,46 @@ test case is useful for creating these files.
 The user should create a local symlink to an E3SM initial condition for
 MPAS-Ocean for the desired mesh.  Then, the config options in
 ``files_for_e3sm.cfg`` should be edited.  In this example, we have
-created a local link to the ``ocean.WCAtl12to45E2r4.210318.nc`` initial
-condition and the ``mpas-o.graph.info.210318`` graph file in the test case
+created a local link to the ``ocean.EC30to60E2r3.210210.nc`` initial
+condition and the ``mpas-o.graph.info.200904`` graph file in the test case
 directory.  The mesh name has also been set to the E3SM short name for this
-mesh ``WCAtl12to45E2r4``.  We indicate that the mesh does not include ice-shelf
+mesh ``EC30to60E2r3``.  We indicate that the mesh does not include ice-shelf
 cavities, which means we don't compute masks for ice-shelf melt rates.
+
+We also need to provide several options in the ``[global_ocean]`` section of
+the config file so the metadata added to the initial conditions will be
+correct.
 
 .. code-block:: cfg
 
+    [global_ocean]
+
+    prefix = EC
+
+    mesh_description = MPAS Eddy Closure mesh for E3SM version ${e3sm_version} with
+                       enhanced resolution around the equator (30 km), South pole
+                       (35 km), Greenland (${min_res} km), ${max_res}-km resolution
+                       at mid latitudes, and ${levels} vertical levels
+
+    bathy_description = Bathymetry is from GEBCO 2022, combined with BedMachine
+                        Antarctica v2 around Antarctica.
+
+    init_description = Polar science center Hydrographic Climatology (PHC)
+
+    e3sm_version = 2
+    mesh_revision = 3
+    min_res = 30
+    max_res = 60
+    pull_request = https://github.com/MPAS-Dev/MPAS-Model/pull/669
+    creation_date = 230311
+    author = Xylar Asay-Davis
+    email = xylar@lanl.gov
+
     [files_for_e3sm]
-    mesh_short_name = WCAtl12to45E2r4
-    ocean_restart_filename = ocean.WCAtl12to45E2r4.210318.nc
-    graph_filename = mpas-o.graph.info.210318
+
+    mesh_short_name = EC30to60E2r3
+    ocean_restart_filename = ocean.EC30to60E2r3.210210.nc
+    graph_filename = mpas-o.graph.info.200904
     with_ice_shelf_cavities = False
 
 The resulting files are symlinked in a subdirectory of the test case called

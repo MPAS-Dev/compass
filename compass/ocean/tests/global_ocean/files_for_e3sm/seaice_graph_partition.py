@@ -50,6 +50,8 @@ class SeaiceGraphPartition(FilesForE3SMStep):
         super().setup()
         graph_filename = self.config.get('files_for_e3sm', 'graph_filename')
         if graph_filename != 'autodetect':
+            graph_filename = os.path.normpath(os.path.join(
+                self.test_case.work_dir, graph_filename))
             self.add_input_file(filename='graph.info', target=graph_filename)
 
     def run(self):

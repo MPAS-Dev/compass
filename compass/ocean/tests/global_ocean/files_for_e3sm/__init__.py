@@ -78,7 +78,10 @@ class FilesForE3SM(TestCase):
         self.init = init
         self.dynamic_adjustment = dynamic_adjustment
 
-        self.add_step(OceanInitialCondition(test_case=self))
+        # add metadata if we're running this on an existing mesh
+        add_metadata = (dynamic_adjustment is None)
+        self.add_step(OceanInitialCondition(test_case=self,
+                                            add_metadata=add_metadata))
         self.add_step(OceanGraphPartition(test_case=self))
         self.add_step(SeaiceInitialCondition(test_case=self))
         self.add_step(SeaiceGraphPartition(test_case=self))
