@@ -1,7 +1,7 @@
-from compass.testgroup import TestGroup
 from compass.ocean.tests.internal_wave.default import Default
 from compass.ocean.tests.internal_wave.rpe_test import RpeTest
 from compass.ocean.tests.internal_wave.ten_day_test import TenDayTest
+from compass.testgroup import TestGroup
 
 
 class InternalWave(TestGroup):
@@ -17,5 +17,7 @@ class InternalWave(TestGroup):
         super().__init__(mpas_core=mpas_core, name='internal_wave')
 
         self.add_test_case(Default(test_group=self))
+        self.add_test_case(Default(test_group=self, vlr=True))
         self.add_test_case(RpeTest(test_group=self))
+        self.add_test_case(RpeTest(test_group=self, vlr=True))
         self.add_test_case(TenDayTest(test_group=self))

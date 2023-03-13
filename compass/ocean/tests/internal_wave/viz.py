@@ -1,6 +1,6 @@
-import xarray
-import numpy
 import matplotlib.pyplot as plt
+import numpy
+import xarray
 
 from compass.step import Step
 
@@ -34,7 +34,6 @@ class Viz(Step):
 
         ds = xarray.open_dataset('output.nc')
         figsize = [6.4, 4.8]
-        markersize = 20
         if 'Time' not in ds.dims:
             print('Dataset missing time dimension')
             return
@@ -53,8 +52,6 @@ class Viz(Step):
 
             xEdge = numpy.zeros((nEdges))
             xEdge = ds1.xEdge
-            xCell = numpy.zeros((nCells))
-            xCell = ds1.xCell
             yCell = numpy.zeros((nCells))
             yCell = ds1.yCell
 
@@ -74,27 +71,27 @@ class Viz(Step):
 
             zMid = numpy.zeros((nCells, nVertLevels))
             for zIndex in range(nVertLevels):
-                zMid[:, zIndex] = (zInterface[:, zIndex]
-                                   + numpy.divide(zInterface[:, zIndex + 1]
-                                                  - zInterface[:, zIndex], 2.))
+                zMid[:, zIndex] = (zInterface[:, zIndex] +
+                                   numpy.divide(zInterface[:, zIndex + 1] -
+                                                zInterface[:, zIndex], 2.))
 
             # Solve for lateral boundaries of uNormal at cell centers for
             # x-section
             cellsOnEdge = ds1.cellsOnEdge
             cellsOnEdge_x = cellsOnEdge[edgeMask_x, :]
-            yEdges = numpy.zeros((len(cellsOnEdge_x)+1))
+            yEdges = numpy.zeros((len(cellsOnEdge_x) + 1))
             for i in range(len(cellsOnEdge_x)):
                 if cellsOnEdge[i, 1] == 0:
                     yEdges[i] = yCell[cellsOnEdge_x[i, 0] - 1]
-                    yEdges[i+1] = yCell[cellsOnEdge_x[i, 0] - 1]
+                    yEdges[i + 1] = yCell[cellsOnEdge_x[i, 0] - 1]
                 elif cellsOnEdge[i, 1] == 0:
                     yEdges[i] = yCell[cellsOnEdge_x[i, 1] - 1]
-                    yEdges[i+1] = yCell[cellsOnEdge_x[i, 1] - 1]
+                    yEdges[i + 1] = yCell[cellsOnEdge_x[i, 1] - 1]
                 else:
                     yEdges[i] = min(yCell[cellsOnEdge_x[i, 0] - 1],
                                     yCell[cellsOnEdge_x[i, 1] - 1])
-                    yEdges[i+1] = max(yCell[cellsOnEdge_x[i, 0] - 1],
-                                      yCell[cellsOnEdge_x[i, 1] - 1])
+                    yEdges[i + 1] = max(yCell[cellsOnEdge_x[i, 0] - 1],
+                                        yCell[cellsOnEdge_x[i, 1] - 1])
 
             zInterfaces_mesh, yEdges_mesh = numpy.meshgrid(zInterface[0, :],
                                                            yEdges)
@@ -109,7 +106,7 @@ class Viz(Step):
             plt.pcolormesh(numpy.divide(yEdges_mesh, 1e3),
                            zInterfaces_mesh,
                            normalVelocity_xmesh.values,
-                           cmap='RdBu', vmin=-1.*cmax, vmax=cmax)
+                           cmap='RdBu', vmin=-1. * cmax, vmax=cmax)
             plt.xlabel('y (km)')
             plt.ylabel('z (m)')
             cbar = plt.colorbar()
@@ -182,7 +179,7 @@ class Viz(Step):
             plt.figure(figsize=figsize, dpi=100)
             plt.pcolormesh(numpy.divide(yCells_mesh, 1e3),
                            zInterfaces_mesh,
-                           w_x.values, cmap='viridis')
+                           w_x.values[:, :-1], cmap='viridis')
             plt.xlabel('y (km)')
             plt.ylabel('z (m)')
             cbar = plt.colorbar()
