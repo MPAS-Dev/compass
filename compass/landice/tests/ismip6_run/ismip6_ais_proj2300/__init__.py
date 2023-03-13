@@ -64,7 +64,17 @@ class Ismip6AisProj2300(TestCase):
                 self.add_step(
                     SetUpExperiment(test_case=self, name=exp,
                                     subdir=exp, exp=exp))
+        # Do not add experiments to step to steps_to_run;
+        # each experiment (step) should be run manually
+        self.steps_to_run = []
 
-    # no run() method is needed
+    def run(self):
+        """
+        A dummy run method
+        """
+        raise ValueError("ERROR: 'compass run' has no functionality at the "
+                         "test case level for this test.  "
+                         "Please submit the job script in "
+                         "each experiment's subdirectory manually instead.")
 
     # no validate() method is needed

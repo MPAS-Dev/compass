@@ -6,6 +6,9 @@ from importlib import resources
 
 from jinja2 import Template
 
+from compass.io import symlink
+from compass.job import write_job_script
+from compass.model import make_graph_file, run_model
 from compass.step import Step
 
 
@@ -38,6 +41,8 @@ class SetUpExperiment(Step):
         config = self.config
         section = config['ismip6_run_ais_2300']
         mesh_res = section.getint('mesh_res')
+        self.ntasks = section.getint('ntasks')
+        self.min_tasks = self.ntasks
         forcing_basepath = section.get('forcing_basepath')
         init_cond_path = section.get('init_cond_path')
         init_cond_fname = os.path.split(init_cond_path)[-1]
@@ -46,7 +51,6 @@ class SetUpExperiment(Step):
         region_mask_path = section.get('region_mask_path')
         region_mask_fname = os.path.split(region_mask_path)[-1]
         calving_method = section.get('calving_method')
-        graph_files_path = section.get('graph_files_path')
 
         if self.exp == 'hist':
             exp_fcg = 'ctrlAE'
@@ -216,15 +220,31 @@ class SetUpExperiment(Step):
             package=resource_location,
             copy=True)
 
-        # copy graph files
-        # may be possible to use compass functionality,
-        # but wasn't working in this way
-        # make_graph_file(mesh_filename=init_cond_path,
-        #                 graph_filename='graph.info')
-        graphFileList = glob.glob(os.path.join(graph_files_path,
-                                               'graph.info*'))
-        for gf in graphFileList:
-            shutil.copy(gf, self.work_dir)
+        # create graph file
+        make_graph_file(mesh_filename=init_cond_path,
+                        graph_filename=os.path.join(self.work_dir,
+                                                    'graph.info'))
+
+        # COMPASS does not create symlinks for the load script in step dirs,
+        # so use the standard approach for creating that symlink in each
+        # step dir.
+        if 'LOAD_COMPASS_ENV' in os.environ:
+            script_filename = os.environ['LOAD_COMPASS_ENV']
+            # make a symlink to the script for loading the compass conda env.
+            symlink(script_filename, os.path.join(self.work_dir,
+                                                  'load_compass_env.sh'))
+
+        # customize job script
+        self.config.set('job', 'job_name', self.exp)
+        machine = self.config.get('deploy', 'machine')
+        pre_run_cmd = ('LOGDIR=previous_logs_`date +"%Y-%m-%d_%H-%M-%S"`;'
+                       'mkdir $LOGDIR; cp log* $LOGDIR; date')
+        post_run_cmd = "date"
+        write_job_script(self.config, machine,
+                         target_cores=self.ntasks, min_cores=self.min_tasks,
+                         work_dir=self.work_dir,
+                         pre_run_commands=pre_run_cmd,
+                         post_run_commands=post_run_cmd)
 
         # provide an example submit script
         template = Template(resources.read_text(
@@ -241,7 +261,5 @@ class SetUpExperiment(Step):
         """
         Run this step of the test case
         """
-        # make_graph_file(mesh_filename=self.mesh_file,
-        #                 graph_filename='graph.info')
-        # run_model(step=self, namelist='namelist.landice',
-        #           streams='streams.landice')
+        run_model(step=self, namelist='namelist.landice',
+                  streams='streams.landice')
