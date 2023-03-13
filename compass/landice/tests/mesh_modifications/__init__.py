@@ -6,8 +6,7 @@ from compass.testgroup import TestGroup
 
 class MeshModifications(TestGroup):
     """
-    A test group for generating ensembles of MALI simulations
-    for uncertainty quantification or parameter sensitivity tests.
+    A test group for automating modifications to existing meshes
     """
     def __init__(self, mpas_core):
         """

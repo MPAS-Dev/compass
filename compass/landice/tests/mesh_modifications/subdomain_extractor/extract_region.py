@@ -10,13 +10,10 @@ from compass.step import Step
 
 class ExtractRegion(Step):
     """
-    A step for creating a mesh and initial condition for koge_bugt_s
-    test cases
+    A step for extracting a regional domain from a larger domain
 
     Attributes
     ----------
-    mesh_type : str
-        The resolution or mesh type of the test case
     """
     def __init__(self, test_case):
         """
@@ -26,9 +23,6 @@ class ExtractRegion(Step):
         ----------
         test_case : compass.TestCase
             The test case this step belongs to
-
-        mesh_type : str
-            The resolution or mesh type of the test case
         """
         super().__init__(test_case=test_case, name='extract_region')
 
@@ -39,9 +33,10 @@ class ExtractRegion(Step):
         Run this step of the test case
         """
         logger = self.logger
+
+        # Get info from config file
         config = self.config
         section = config['subdomain']
-
         source_file_path = section.get('source_file')
         source_file_name = source_file_path.split('/')[-1]
         region_mask_file = section.get('region_mask_file')
@@ -158,7 +153,8 @@ class ExtractRegion(Step):
                 '-f', dest_file_name, '-p', mesh_projection]
         check_call(args, logger=logger)
 
-        # interpolate to new mesh using NN
+        # interpolate to new mesh using nearest neighbor to ensure we get
+        # identical values
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py',
                 '-s', source_file_path,

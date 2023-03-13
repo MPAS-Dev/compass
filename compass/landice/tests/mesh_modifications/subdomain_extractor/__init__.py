@@ -11,6 +11,7 @@ from compass.testcase import TestCase
 
 class SubdomainExtractor(TestCase):
     """
+    A class for a test case that extracts a subdomain from a larger domain
     """
 
     def __init__(self, test_group):
@@ -19,7 +20,7 @@ class SubdomainExtractor(TestCase):
 
         Parameters
         ----------
-        test_group : compass.landice.tests.ensemble_generator.EnsembleGenerator
+        test_group : compass.landice.tests.mesh_modifications.MeshModifications
             The test group that this test case belongs to
 
         """
@@ -28,9 +29,7 @@ class SubdomainExtractor(TestCase):
 
         self.add_step(ExtractRegion(test_case=self))
 
-    def configure(self):
-        """
-        """
+    # no configure() method is needed
 
     # no run() method is needed
 
