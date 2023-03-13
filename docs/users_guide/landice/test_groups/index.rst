@@ -26,5 +26,6 @@ physics but that are not run routinely.
    ismip6_run
    kangerlussuaq
    koge_bugt_s
+   mesh_modifications
    mismipplus
    thwaites

@@ -362,6 +362,20 @@ koge_bugt_s
    mesh.Mesh
    mesh.Mesh.run
 
+mesh_modifications
+~~~~~~~~~~~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.mesh_modifications
+
+.. autosummary::
+   :toctree: generated/
+
+   MeshModifications
+
+   subdomain_extractor.SubdomainExtractor
+
+   subdomain_extractor.extract_region.ExtractRegion
+ 
 mismipplus
 ~~~~~~~~~~
 
