@@ -42,79 +42,83 @@ class ExtractRegion(Step):
         region_mask_file = section.get('region_mask_file')
         region_number = section.getint('region_number')
         dest_file_name = section.get('dest_file_name')
-        levels = section.getint('levels')
-        grow_iters = section.getint('grow_iters')
         mesh_projection = section.get('mesh_projection')
+        extend_mesh = section.getboolean('extend_ocean_buffer')
+        grow_iters = section.getint('grow_iters')
+
+        # get # levels in source mesh
+        dsMesh = xarray.open_dataset(source_file_path)
+        levels = dsMesh.dims['nVertLevels']
 
         # create cull mask
         logger.info('creating cull mask file')
-        dsMesh = xarray.open_dataset(source_file_path)
         dsMask = xarray.open_dataset(region_mask_file)
         regionCellMasks = dsMask['regionCellMasks'][:].values
         # get region mask for the requested region
         keepMask = regionCellMasks[:, region_number - 1]
-        print(f'sum keepMask={keepMask.sum()}')
-        # Now grow the mask into the ocean, because the standard regions
-        # end at the ice terminus.  Don't grow into other regions.
-        # The region to grow into is region adjacent to the domain that
-        # either has no region assigned to it OR is open ocean.
-        # We also want to fill into any *adjacent* floating ice, due to some
-        # funky region boundaries near ice-shelf fronts.
-        noRegionMask = (np.squeeze(regionCellMasks.sum(axis=1)) == 0)
-        thickness = dsMesh['thickness'][:].values
-        bed = dsMesh['bedTopography'][:].values
-        oceanMask = np.squeeze((thickness[0, :] == 0.0) * (bed[0, :] <= 0.0))
-        floatMask = np.squeeze(((thickness[0, :] * 910.0 / 1028.0 +
-                                 bed[0, :]) < 0.0) *
-                               (thickness[0, :] > 0))
-        growMask = np.logical_or(noRegionMask, oceanMask)
-        print(f'sum norregion={growMask.sum()}, {growMask.shape}')
-        conc = dsMesh['cellsOnCell'][:].values
-        neonc = dsMesh['nEdgesOnCell'][:].values
-        nCells = dsMesh.dims['nCells']
+        if extend_mesh:
+            # Grow the mask into the ocean, because the standard regions
+            # may end at the ice terminus.  Don't grow into other regions.
+            # The area to grow into is region adjacent to the domain that
+            # either has no region assigned to it OR is open ocean.
+            # We also want to fill into any *adjacent* floating ice, due to
+            # some funky region boundaries near ice-shelf fronts.
+            noRegionMask = (np.squeeze(regionCellMasks.sum(axis=1)) == 0)
+            thickness = dsMesh['thickness'][:].values
+            bed = dsMesh['bedTopography'][:].values
+            oceanMask = np.squeeze((thickness[0, :] == 0.0) * (bed[0, :] <=
+                                                               0.0))
+            floatMask = np.squeeze(((thickness[0, :] * 910.0 / 1028.0 +
+                                     bed[0, :]) < 0.0) *
+                                   (thickness[0, :] > 0))
+            growMask = np.logical_or(noRegionMask, oceanMask)
+            print(f'sum norregion={growMask.sum()}, {growMask.shape}')
+            conc = dsMesh['cellsOnCell'][:].values
+            neonc = dsMesh['nEdgesOnCell'][:].values
+            nCells = dsMesh.dims['nCells']
 
-        # First grow forward to capture any adjacent ice shelf
-        print('Starting floating ice fill')
-        iter = 0
-        nMaskCells = keepMask.sum()
-        while True:
-            maskInd = np.nonzero(keepMask == 1)[0]
-            print(f'iter={iter}, keepMask size={keepMask.sum()}')
-            newKeepMask = keepMask.copy()
-            for iCell in maskInd:
-                neighs = conc[iCell, :neonc[iCell]] - 1
-                neighs = neighs[neighs >= 0]  # drop garbage cell
-                for jCell in neighs:
-                    if floatMask[jCell] == 1:
-                        newKeepMask[jCell] = 1
-            keepMask = newKeepMask.copy()
-            nMaskCellsNew = keepMask.sum()
-            if nMaskCellsNew == nMaskCells:
-                break
-            nMaskCells = nMaskCellsNew
-            iter += 1
+            # First grow forward to capture any adjacent ice shelf
+            print('Starting floating ice fill')
+            iter = 0
+            nMaskCells = keepMask.sum()
+            while True:
+                maskInd = np.nonzero(keepMask == 1)[0]
+                print(f'iter={iter}, keepMask size={keepMask.sum()}')
+                newKeepMask = keepMask.copy()
+                for iCell in maskInd:
+                    neighs = conc[iCell, :neonc[iCell]] - 1
+                    neighs = neighs[neighs >= 0]  # drop garbage cell
+                    for jCell in neighs:
+                        if floatMask[jCell] == 1:
+                            newKeepMask[jCell] = 1
+                keepMask = newKeepMask.copy()
+                nMaskCellsNew = keepMask.sum()
+                if nMaskCellsNew == nMaskCells:
+                    break
+                nMaskCells = nMaskCellsNew
+                iter += 1
 
-        print('Starting ocean grow fill')
-        # find cells at current ocean bdy
-        for iter in range(grow_iters):
-            maskInd = np.nonzero(keepMask == 1)[0]
-            print(f'iter={iter}, keepMask size={keepMask.sum()}')
-            newKeepMask = keepMask.copy()
-            for iCell in maskInd:
-                neighs = conc[iCell, :neonc[iCell]] - 1
-                neighs = neighs[neighs >= 0]  # drop garbage cell
-                for jCell in neighs:
-                    if growMask[jCell] == 1:
-                        newKeepMask[jCell] = 1
-            keepMask = newKeepMask.copy()
+            print('Starting ocean grow fill')
+            # find cells at current ocean bdy
+            for iter in range(grow_iters):
+                maskInd = np.nonzero(keepMask == 1)[0]
+                print(f'iter={iter}, keepMask size={keepMask.sum()}')
+                newKeepMask = keepMask.copy()
+                for iCell in maskInd:
+                    neighs = conc[iCell, :neonc[iCell]] - 1
+                    neighs = neighs[neighs >= 0]  # drop garbage cell
+                    for jCell in neighs:
+                        if growMask[jCell] == 1:
+                            newKeepMask[jCell] = 1
+                keepMask = newKeepMask.copy()
+
         # To call 'cull' with an inverse mask, we need a dataset with the
         # mask saved to the field regionCellMasks
         outdata = {'regionCellMasks': (('nCells', 'nRegions'),
-                                       keepMask.reshape(nCells, 1)),
-                   'growMask': (('nCells',),
-                                growMask.astype(int))}
+                                       keepMask.reshape(nCells, 1))}
         dsMaskOut = xarray.Dataset(data_vars=outdata)
         # For troubleshooting, one may want to inspect the mask, so write out
+        # (otherwise not necessary to save to disk)
         write_netcdf(dsMaskOut, 'cull_mask.nc')
 
         # cull the mesh
