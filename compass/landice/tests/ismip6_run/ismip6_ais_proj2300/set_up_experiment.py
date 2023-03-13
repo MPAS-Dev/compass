@@ -2,9 +2,6 @@ import glob
 import os
 import shutil
 import sys
-from importlib import resources
-
-from jinja2 import Template
 
 from compass.io import symlink
 from compass.job import write_job_script
@@ -245,14 +242,6 @@ class SetUpExperiment(Step):
                          work_dir=self.work_dir,
                          pre_run_commands=pre_run_cmd,
                          post_run_commands=post_run_cmd)
-
-        # provide an example submit script
-        template = Template(resources.read_text(
-            resource_location, f'slurm.{mesh_res:02d}.run'))
-        slurm_replacements = {'EXP': f'{self.exp}_{mesh_res:02d}'}
-        rendered_text = template.render(slurm_replacements)
-        with open(os.path.join(self.work_dir, 'slurm.run'), "w") as fh:
-            fh.write(rendered_text)
 
         # link in exe
         self.add_model_as_input()
