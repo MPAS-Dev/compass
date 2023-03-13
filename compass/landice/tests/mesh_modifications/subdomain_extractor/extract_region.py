@@ -46,8 +46,9 @@ class ExtractRegion(Step):
         extend_mesh = section.getboolean('extend_ocean_buffer')
         grow_iters = section.getint('grow_iters')
 
-        # get # levels in source mesh
+        # get needed dims from source mesh
         dsMesh = xarray.open_dataset(source_file_path)
+        nCells = dsMesh.dims['nCells']
         levels = dsMesh.dims['nVertLevels']
 
         # create cull mask
@@ -75,7 +76,6 @@ class ExtractRegion(Step):
             print(f'sum norregion={growMask.sum()}, {growMask.shape}')
             conc = dsMesh['cellsOnCell'][:].values
             neonc = dsMesh['nEdgesOnCell'][:].values
-            nCells = dsMesh.dims['nCells']
 
             # First grow forward to capture any adjacent ice shelf
             print('Starting floating ice fill')
