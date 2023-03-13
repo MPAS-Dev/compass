@@ -1,5 +1,6 @@
-import xarray
-import numpy
+import xarray as xr
+import numpy as np
+import matplotlib.pyplot as plt
 
 from compass.ocean.tests.turbulence_closure.boundary_values import add_boundary_arrays
 from random import random, seed
@@ -57,6 +58,8 @@ class InitialState(Step):
         y_nonperiodic = section.getboolean('y_nonperiodic')
         disturbance_amplitude = section.getfloat('disturbance_amplitude')
         surface_temperature = section.getfloat('surface_temperature')
+        interior_temperature_shape = section.get('interior_temperature_shape')
+        interior_salinity_shape = section.get('interior_salinity_shape')
         surface_salinity = section.getfloat('surface_salinity')
         mixed_layer_salinity_gradient = section.getfloat('mixed_layer_salinity_gradient')
         mixed_layer_temperature_gradient = section.getfloat('mixed_layer_temperature_gradient')
@@ -64,6 +67,18 @@ class InitialState(Step):
         mixed_layer_depth_temperature = section.getfloat('mixed_layer_depth_temperature')
         interior_salinity_gradient = section.getfloat('interior_salinity_gradient')
         interior_temperature_gradient = section.getfloat('interior_temperature_gradient')
+        interior_temperature_c0 = section.getfloat('interior_temperature_c0')
+        interior_temperature_c1 = section.getfloat('interior_temperature_c1')
+        interior_temperature_c2 = section.getfloat('interior_temperature_c2')
+        interior_temperature_c3 = section.getfloat('interior_temperature_c3')
+        interior_temperature_c4 = section.getfloat('interior_temperature_c4')
+        interior_temperature_c5 = section.getfloat('interior_temperature_c4')
+        interior_salinity_c0 = section.getfloat('interior_salinity_c0')
+        interior_salinity_c1 = section.getfloat('interior_salinity_c1')
+        interior_salinity_c2 = section.getfloat('interior_salinity_c2')
+        interior_salinity_c3 = section.getfloat('interior_salinity_c3')
+        interior_salinity_c4 = section.getfloat('interior_salinity_c4')
+        interior_salinity_c5 = section.getfloat('interior_salinity_c4')
         surface_heat_flux = section.getfloat('surface_heat_flux')
         surface_freshwater_flux = section.getfloat('surface_freshwater_flux')
         wind_stress_zonal = section.getfloat('wind_stress_zonal')
@@ -86,64 +101,122 @@ class InitialState(Step):
         xCell = ds.xCell
         yCell = ds.yCell
 
-        ds['bottomDepth'] = bottom_depth * xarray.ones_like(xCell)
-        ds['ssh'] = xarray.zeros_like(xCell)
+        ds['bottomDepth'] = bottom_depth * xr.ones_like(xCell)
+        ds['ssh'] = xr.zeros_like(xCell)
 
         init_vertical_coord(config, ds)
 
-        dsForcing['windStressZonal'] = wind_stress_zonal * xarray.ones_like(xCell)
-        dsForcing['windStressMeridional'] = wind_stress_meridional * xarray.ones_like(xCell)
-        dsForcing['sensibleHeatFlux'] = surface_heat_flux * xarray.ones_like(xCell)
-        dsForcing['rainFlux'] = surface_freshwater_flux * xarray.ones_like(xCell)
+        dsForcing['windStressZonal'] = wind_stress_zonal * xr.ones_like(xCell)
+        dsForcing['windStressMeridional'] = wind_stress_meridional * xr.ones_like(xCell)
+        dsForcing['sensibleHeatFlux'] = surface_heat_flux * xr.ones_like(xCell)
+        dsForcing['rainFlux'] = surface_freshwater_flux * xr.ones_like(xCell)
 
         write_netcdf(dsForcing, 'init_mode_forcing_data.nc')
 
-        normalVelocity = xarray.zeros_like(ds.xEdge)
-        normalVelocity, _ = xarray.broadcast(normalVelocity, ds.refBottomDepth)
+        normalVelocity = xr.zeros_like(ds.xEdge)
+        normalVelocity, _ = xr.broadcast(normalVelocity, ds.refBottomDepth)
         normalVelocity = normalVelocity.transpose('nEdges', 'nVertLevels')
 
-        temperature = xarray.zeros_like(ds.layerThickness)
+        temperature = xr.zeros_like(ds.layerThickness)
 
-        salinity = xarray.zeros_like(ds.layerThickness)
+        salinity = xr.zeros_like(ds.layerThickness)
 
-        surf_indices = numpy.where(ds.refZMid.values >= -mixed_layer_depth_temperature)[0]
+        zMid = ds.refZMid.values
 
-        if len(surf_indices) > 0:
-            temperature[0,:,surf_indices] = surface_temperature + mixed_layer_temperature_gradient* \
-			                                ds.zMid[0,:,surf_indices].values
+        temperature_at_mld = (surface_temperature -
+            mixed_layer_temperature_gradient * mixed_layer_depth_temperature)
+        if interior_temperature_shape == 'linear':
+            initial_temperature = np.where(
+                zMid >= -mixed_layer_depth_temperature,
+                surface_temperature + mixed_layer_temperature_gradient * zMid,
+                temperature_at_mld + interior_temperature_gradient * zMid)
+        elif interior_temperature_shape == 'polynomial':
+            initial_temperature = np.where(
+                zMid >= -mixed_layer_depth_temperature,
+                surface_temperature + mixed_layer_temperature_gradient * zMid,
+                interior_temperature_c0 +
+                interior_temperature_c1 * zMid +
+                interior_temperature_c2 * zMid**2. +
+                interior_temperature_c3 * zMid**3. +
+                interior_temperature_c4 * zMid**4. +
+                interior_temperature_c5 * zMid**5.)
+        else:
+            print('interior_temperature_shape is not supported')
 
-        int_indices = numpy.where(ds.refZMid.values < -mixed_layer_depth_temperature)[0]
-
-        if len(int_indices) > 0:
-            temperature[0,:,int_indices] = surface_temperature - mixed_layer_temperature_gradient* \
-													 mixed_layer_depth_temperature + interior_temperature_gradient* \
-													 (ds.zMid[0,:,int_indices] + \
-													  mixed_layer_depth_temperature)
-
-        temperature[0,:,0] += disturbance_amplitude*2*(numpy.random.rand(len(ds.xCell.values)) - 0.5)
-
-        surf_indices = numpy.where(ds.refZMid.values >= -mixed_layer_depth_salinity)[0]
-        if len(surf_indices) > 0:
-            salinity[0,:,surf_indices] = surface_salinity - mixed_layer_salinity_gradient * \
-			                               	ds.zMid[0,:,surf_indices]
-
-        int_indices = numpy.where(ds.refZMid.values < -mixed_layer_depth_salinity)[0]
-        if len(int_indices) > 0:
-            salinity[0,:,int_indices] = surface_salinity - mixed_layer_salinity_gradient* \
-									  				  mixed_layer_depth_salinity + interior_salinity_gradient* \
-													  (ds.zMid[0,:,int_indices] + \
-													   mixed_layer_depth_salinity)
+        salinity_at_mld = (surface_salinity -
+            mixed_layer_salinity_gradient * mixed_layer_depth_salinity)
+        if interior_salinity_shape == 'linear':
+            initial_salinity = np.where(
+                zMid >= -mixed_layer_depth_salinity,
+                surface_salinity + mixed_layer_salinity_gradient * zMid,
+                salinity_at_mld + interior_salinity_gradient * zMid)
+        elif interior_salinity_shape == 'polynomial':
+            initial_salinity = np.where(
+                zMid >= -mixed_layer_depth_salinity,
+                surface_salinity + mixed_layer_salinity_gradient * zMid,
+                interior_salinity_c0 +
+                interior_salinity_c1 * zMid +
+                interior_salinity_c2 * zMid**2. +
+                interior_salinity_c3 * zMid**3. +
+                interior_salinity_c4 * zMid**4. +
+                interior_salinity_c5 * zMid**5.)
+        else:
+            print('interior_salinity_shape is not supported')
+#        surf_indices = np.where(ds.refZMid.values >= -mixed_layer_depth_temperature)[0]
+#
+#        if len(surf_indices) > 0:
+#            temperature[0,:,surf_indices] = surface_temperature + mixed_layer_temperature_gradient* \
+#			                                ds.zMid[0,:,surf_indices].values
+#
+#        int_indices = np.where(ds.refZMid.values < -mixed_layer_depth_temperature)[0]
+#
+#        if len(int_indices) > 0:
+#            temperature[0,:,int_indices] = surface_temperature - mixed_layer_temperature_gradient* \
+#													 mixed_layer_depth_temperature + interior_temperature_gradient* \
+#													 (ds.zMid[0,:,int_indices] + \
+#													  mixed_layer_depth_temperature)
+#
+#        temperature[0,:,0] += disturbance_amplitude*2*(np.random.rand(len(ds.xCell.values)) - 0.5)
+#
+#        surf_indices = np.where(ds.refZMid.values >= -mixed_layer_depth_salinity)[0]
+#        if len(surf_indices) > 0:
+#            salinity[0,:,surf_indices] = surface_salinity - mixed_layer_salinity_gradient * \
+#			                               	ds.zMid[0,:,surf_indices]
+#
+#        int_indices = np.where(ds.refZMid.values < -mixed_layer_depth_salinity)[0]
+#        if len(int_indices) > 0:
+#            salinity[0,:,int_indices] = surface_salinity - mixed_layer_salinity_gradient* \
+#									  				  mixed_layer_depth_salinity + interior_salinity_gradient* \
+#													  (ds.zMid[0,:,int_indices] + \
+#													   mixed_layer_depth_salinity)
 
         normalVelocity = normalVelocity.expand_dims(dim='Time', axis=0)
-
         ds['normalVelocity'] = normalVelocity
+
+        temperature[0, :, :] = initial_temperature
+        salinity[0, :, :] = initial_salinity
         ds['temperature'] = temperature
         ds['salinity'] = salinity
-        ds['fCell'] = coriolis_parameter * xarray.ones_like(xCell)
-        ds['fEdge'] = coriolis_parameter * xarray.ones_like(ds.xEdge)
-        ds['fVertex'] = coriolis_parameter * xarray.ones_like(ds.xVertex)
+        ds['fCell'] = coriolis_parameter * xr.ones_like(xCell)
+        ds['fEdge'] = coriolis_parameter * xr.ones_like(ds.xEdge)
+        ds['fVertex'] = coriolis_parameter * xr.ones_like(ds.xVertex)
 
         ds = add_boundary_arrays(ds, x_nonperiodic, y_nonperiodic)
 
         write_netcdf(ds, 'ocean.nc')
 
+        plt.figure(dpi=100)
+        plt.plot(initial_temperature, zMid, 'k-')
+        plt.xlabel('PT (C)')
+        plt.ylabel('z (m)')
+        plt.savefig(f'pt_depth_t0h.png',
+                    bbox_inches='tight', dpi=200)
+        plt.close()
+
+        plt.figure(dpi=100)
+        plt.plot(initial_salinity, zMid, 'k-')
+        plt.xlabel('SA (g/kg)')
+        plt.ylabel('z (m)')
+        plt.savefig(f'sa_depth_t0h.png',
+                    bbox_inches='tight', dpi=200)
+        plt.close()
