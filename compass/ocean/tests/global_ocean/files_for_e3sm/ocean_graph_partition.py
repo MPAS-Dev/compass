@@ -78,7 +78,13 @@ class OceanGraphPartition(FilesForE3SMStep):
             check_call(args, logger)
 
         # create link in assembled files directory
+
+        inputdata_dir = os.path.join(self.ocean_inputdata_dir, 'partitions')
+        try:
+            os.makedirs(inputdata_dir)
+        except FileExistsError:
+            pass
         files = glob('mpas-o.graph.info.*')
         for file in files:
             symlink(os.path.abspath(file),
-                    f'{self.ocean_inputdata_dir}/{file}')
+                    f'{inputdata_dir}/{file}')
