@@ -33,6 +33,10 @@ def parse_args(bootstrap):
                              "install compilers or build SCORPIO")
     parser.add_argument("--recreate", dest="recreate", action='store_true',
                         help="Recreate the environment if it exists")
+    parser.add_argument("--update_jigsaw", dest="update_jigsaw",
+                        action='store_true',
+                        help="Reinstall JIGSAW even if not recreating conda "
+                             "environment.")
     parser.add_argument("-f", "--config_file", dest="config_file",
                         help="Config file to override deployment config "
                              "options")
