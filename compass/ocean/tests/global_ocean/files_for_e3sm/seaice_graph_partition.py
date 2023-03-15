@@ -60,6 +60,9 @@ class SeaiceGraphPartition(FilesForE3SMStep):
         """
         super().run()
         logger = self.logger
+        config = self.config
+        plotting = config.getboolean('files_for_e3sm',
+                                     'plot_seaice_partitions')
         creation_date = self.creation_date
 
         with xr.open_dataset('restart.nc') as ds:
@@ -92,8 +95,10 @@ class SeaiceGraphPartition(FilesForE3SMStep):
                 '-o', '.',
                 '-p', f'mpas-seaice.graph.info.{creation_date}',
                 '-g', 'gpmetis',
-                '--plotting',
                 '-n']
+
+        if plotting:
+            args.append('--plotting')
         args = args + [f'{ncores}' for ncores in cores]
         check_call(args, logger)
 
