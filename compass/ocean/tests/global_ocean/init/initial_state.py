@@ -1,3 +1,4 @@
+import os
 from importlib.resources import contents
 
 from compass.model import run_model
@@ -79,10 +80,25 @@ class InitialState(Step):
         if mesh_streams in mesh_package_contents:
             self.add_streams_file(mesh_package, mesh_streams, mode='init')
 
-        self.add_input_file(
-            filename='topography.nc',
-            target='BedMachineAntarctica_v2_and_GEBCO_2022_0.05_degree_20220729.nc',  # noqa: E501
-            database='bathymetry_database')
+        if 'remap_topography' in self.mesh.steps:
+            options = {
+                'config_global_ocean_topography_source': "'mpas_variable'",
+                'config_global_ocean_land_ice_topo_source': "'mpas_variable'"
+            }
+            self.add_namelist_options(options, mode='init')
+            self.add_streams_file(package, 'streams.topo', mode='init')
+
+            cull_step = self.mesh.steps['cull_mesh']
+            target = os.path.join(cull_step.path, 'topography_culled.nc')
+            self.add_input_file(filename='topography.nc',
+                                work_dir_target=target)
+
+        else:
+            target = 'BedMachineAntarctica_v2_and_GEBCO_2022_0.05_degree_20220729.nc'  # noqa: E501
+            self.add_input_file(
+                filename='topography.nc',
+                target=target,
+                database='bathymetry_database')
 
         self.add_input_file(
             filename='wind_stress.nc',
