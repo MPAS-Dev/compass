@@ -83,7 +83,7 @@ qoi_info = {
 # Get ensemble-wide information
 basin = None
 ens_cfg = configparser.ConfigParser()
-ens_cfg_file = 'thwaites_ensemble.cfg'
+ens_cfg_file = 'ensemble.cfg'
 if os.path.isfile(ens_cfg_file):
     ens_cfg.read(ens_cfg_file)
     ens_info = ens_cfg['ensemble']
