@@ -1,7 +1,7 @@
 import os
 
 import mpas_tools.io
-import xarray
+import xarray as xr
 from geometric_features import (
     FeatureCollection,
     GeometricFeatures,
@@ -41,11 +41,16 @@ class CullMeshStep(Step):
     preserve_floodplain : bool
         Whether to leave land cells in the mesh based on bathymetry
         specified by do_inject_bathymetry
+
+    remap_topography : compass.ocean.mesh.remap_topography.RemapTopography
+        A step for remapping topography. If provided, the remapped
+        topography is used to determine the land mask
+
     """
 
     def __init__(self, test_case, base_mesh_step, with_ice_shelf_cavities,
                  name='cull_mesh', subdir=None, do_inject_bathymetry=False,
-                 preserve_floodplain=False):
+                 preserve_floodplain=False, remap_topography=None):
         """
         Create a new step
 
@@ -73,10 +78,15 @@ class CullMeshStep(Step):
         preserve_floodplain : bool, optional
             Whether to leave land cells in the mesh based on bathymetry
             specified by do_inject_bathymetry
-        """
+
+        remap_topography : compass.ocean.mesh.remap_topography.RemapTopography, optional
+            A step for remapping topography. If provided, the remapped
+            topography is used to determine the land mask
+        """  # noqa: E501
         super().__init__(test_case, name=name, subdir=subdir,
                          cpus_per_task=None, min_cpus_per_task=None)
         self.base_mesh_step = base_mesh_step
+        self.remap_topography = remap_topography
 
         for file in ['culled_mesh.nc', 'culled_graph.info',
                      'critical_passages_mask_final.nc']:
@@ -101,19 +111,41 @@ class CullMeshStep(Step):
                 target='SRTM15_plus_earth_relief_15s.nc',
                 database='bathymetry_database')
 
-        # get the these properties from the config options
-        config = self.config
-        # todo: move to constrain_resources()
-        self.cpus_per_task = config.getint('spherical_mesh',
-                                           'cull_mesh_cpus_per_task')
-        self.min_cpus_per_task = config.getint('spherical_mesh',
-                                               'cull_mesh_min_cpus_per_task')
-
         base_path = self.base_mesh_step.path
         base_filename = self.base_mesh_step.config.get(
             'spherical_mesh', 'mpas_mesh_filename')
         target = os.path.join(base_path, base_filename)
         self.add_input_file(filename='base_mesh.nc', work_dir_target=target)
+
+        if self.remap_topography is not None:
+            topo_path = self.remap_topography.path
+            target = os.path.join(topo_path, 'topography_remapped.nc')
+            self.add_input_file(filename='topography.nc',
+                                work_dir_target=target)
+            self.add_output_file('topography_culled.nc')
+
+        config = self.config
+        self.cpus_per_task = config.getint('spherical_mesh',
+                                           'cull_mesh_cpus_per_task')
+        self.min_cpus_per_task = config.getint('spherical_mesh',
+                                               'cull_mesh_min_cpus_per_task')
+
+    def constrain_resources(self, available_resources):
+        """
+        Constrain ``cpus_per_task`` and ``ntasks`` based on the number of
+        cores available to this step
+
+        Parameters
+        ----------
+        available_resources : dict
+            The total number of cores available to the step
+        """
+        config = self.config
+        self.cpus_per_task = config.getint('spherical_mesh',
+                                           'cull_mesh_cpus_per_task')
+        self.min_cpus_per_task = config.getint('spherical_mesh',
+                                               'cull_mesh_min_cpus_per_task')
+        super().constrain_resources(available_resources)
 
     def run(self):
         """
@@ -223,53 +255,27 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
         (custom_land_blockages is not None)
 
     gf = GeometricFeatures()
-
-    # start with the land coverage from Natural Earth
-    fcLandCoverage = gf.read(componentName='natural_earth',
-                             objectType='region',
-                             featureNames=['Land Coverage'])
-
-    # remove the region south of 60S so we can replace it based on ice-sheet
-    # topography
-    fcSouthMask = gf.read(componentName='ocean', objectType='region',
-                          featureNames=['Global Ocean 90S to 60S'])
-
-    fcLandCoverage = fcLandCoverage.difference(fcSouthMask)
-
-    # Add "land" coverage from either the full ice sheet or just the grounded
-    # part
-    if with_cavities:
-        fcAntarcticLand = gf.read(
-            componentName='bedmachine', objectType='region',
-            featureNames=['AntarcticGroundedIceCoverage'])
-    else:
-        fcAntarcticLand = gf.read(
-            componentName='bedmachine', objectType='region',
-            featureNames=['AntarcticIceCoverage'])
-
-    fcLandCoverage.merge(fcAntarcticLand)
-
-    # save the feature collection to a geojson file
-    fcLandCoverage.to_geojson('land_coverage.geojson')
-
     # these defaults may have been updated from config options -- pass them
     # along to the subprocess
     netcdf_format = mpas_tools.io.default_format
     netcdf_engine = mpas_tools.io.default_engine
 
-    # Create the land mask based on the land coverage, i.e. coastline data
-    args = ['compute_mpas_region_masks',
-            '-m', 'base_mesh.nc',
-            '-g', 'land_coverage.geojson',
-            '-o', 'land_mask.nc',
-            '-t', 'cell',
-            '--process_count', '{}'.format(process_count),
-            '--format', netcdf_format,
-            '--engine', netcdf_engine]
-    check_call(args, logger=logger)
+    has_remapped_topo = os.path.exists('topography.nc')
 
-    dsBaseMesh = xarray.open_dataset('base_mesh.nc')
-    dsLandMask = xarray.open_dataset('land_mask.nc')
+    if has_remapped_topo:
+        _land_mask_from_topo(with_cavities,
+                             topo_filename='topography.nc',
+                             mask_filename='land_mask.nc')
+    else:
+        _land_mask_from_geojson(with_cavities=with_cavities,
+                                process_count=process_count,
+                                logger=logger,
+                                mesh_filename='base_mesh.nc',
+                                geojson_filename='land_coverage.geojson',
+                                mask_filename='land_mask.nc')
+
+    dsBaseMesh = xr.open_dataset('base_mesh.nc')
+    dsLandMask = xr.open_dataset('land_mask.nc')
     dsLandMask = add_land_locked_cells_to_mask(dsLandMask, dsBaseMesh,
                                                latitude_threshold=43.0,
                                                nSweeps=20)
@@ -307,7 +313,7 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
                 '--format', netcdf_format,
                 '--engine', netcdf_engine]
         check_call(args, logger=logger)
-        dsCritBlockMask = xarray.open_dataset('critical_blockages.nc')
+        dsCritBlockMask = xr.open_dataset('critical_blockages.nc')
 
         dsLandMask = add_critical_land_blockages(dsLandMask, dsCritBlockMask)
 
@@ -337,7 +343,7 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
                 '--format', netcdf_format,
                 '--engine', netcdf_engine]
         check_call(args, logger=logger)
-        dsCritPassMask = xarray.open_dataset('critical_passages.nc')
+        dsCritPassMask = xr.open_dataset('critical_passages.nc')
 
         # Alter critical passages to be at least two cells wide, to avoid sea
         # ice blockage
@@ -377,25 +383,25 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
                 '--engine', netcdf_engine]
         check_call(args, logger=logger)
 
-    if with_cavities:
-        fcAntarcticIce = gf.read(
-            componentName='bedmachine', objectType='region',
-            featureNames=['AntarcticIceCoverage'])
+    _cull_topo()
 
-        fcAntarcticIce.to_geojson('ice_coverage.geojson')
-        args = ['compute_mpas_region_masks',
-                '-m', 'culled_mesh.nc',
-                '-g', 'ice_coverage.geojson',
-                '-o', 'ice_coverage.nc',
-                '-t', 'cell',
-                '--process_count', '{}'.format(process_count),
-                '--format', netcdf_format,
-                '--engine', netcdf_engine]
-        check_call(args, logger=logger)
-        dsMask = xarray.open_dataset('ice_coverage.nc')
+    if with_cavities:
+        if has_remapped_topo:
+            _land_mask_from_topo(with_cavities=False,
+                                 topo_filename='topography_culled.nc',
+                                 mask_filename='ice_coverage.nc')
+        else:
+            _land_mask_from_geojson(with_cavities=False,
+                                    process_count=process_count,
+                                    logger=logger,
+                                    mesh_filename='culled_mesh.nc',
+                                    geojson_filename='ice_coverage.geojson',
+                                    mask_filename='ice_coverage.nc')
+
+        dsMask = xr.open_dataset('ice_coverage.nc')
 
         landIceMask = dsMask.regionCellMasks.isel(nRegions=0)
-        dsLandIceMask = xarray.Dataset()
+        dsLandIceMask = xr.Dataset()
         dsLandIceMask['landIceMask'] = landIceMask
 
         write_netcdf(dsLandIceMask, 'land_ice_mask.nc')
@@ -415,3 +421,107 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
                     filename_pattern='no_ISC_culled_mesh.nc',
                     out_dir='no_ISC_culled_mesh_vtk',
                     use_progress_bar=use_progress_bar)
+
+
+def _cull_topo():
+    ds_base = xr.open_dataset('base_mesh.nc')
+    ncells_base = ds_base.sizes['nCells']
+    lon_base = ds_base.lonCell.values
+    lat_base = ds_base.latCell.values
+
+    ds_culled = xr.open_dataset('culled_mesh.nc')
+    ncells_culled = ds_culled.sizes['nCells']
+    lon_culled = ds_culled.lonCell.values
+    lat_culled = ds_culled.latCell.values
+
+    # create a map from lat-lon pairs to base-mesh cell indices
+    map_base = dict()
+    for cell_index in range(ncells_base):
+        lon = lon_base[cell_index]
+        lat = lat_base[cell_index]
+        map_base[(lon, lat)] = cell_index
+
+    # create a map from culled- to base-mesh cell indices
+    map_culled_to_base = list()
+    for cell_index in range(ncells_culled):
+        lon = lon_culled[cell_index]
+        lat = lat_culled[cell_index]
+        # each (lon, lat) for a culled cell *must* be in the base mesh
+        map_culled_to_base.append(map_base[(lon, lat)])
+
+    ds_topo = xr.open_dataset('topography.nc')
+    ds_topo = ds_topo.isel(nCells=map_culled_to_base)
+    write_netcdf(ds_topo, 'topography_culled.nc')
+
+
+def _land_mask_from_topo(with_cavities, topo_filename, mask_filename):
+    ds_topo = xr.open_dataset(topo_filename)
+
+    ocean_frac = ds_topo.oceanFracObserved
+
+    if with_cavities:
+        # we want the mask to be 1 where there's not ocean
+        cull_mask = xr.where(ocean_frac < 0.5, 1, 0)
+    else:
+        land_ice_frac = ds_topo.landIceFracObserved
+        grounded_ice_frac = ds_topo.landIceGroundedFracObserved
+        floating_ice_frac = land_ice_frac - grounded_ice_frac
+        no_cavities_ocean_frac = ocean_frac - floating_ice_frac
+
+        # we want the mask to be 1 where there's not open ocean
+        cull_mask = xr.where(no_cavities_ocean_frac < 0.5, 1, 0)
+
+    cull_mask = cull_mask.expand_dims(dim='nRegions', axis=1)
+
+    ds_mask = xr.Dataset()
+    ds_mask['regionCellMasks'] = cull_mask
+    write_netcdf(ds_mask, mask_filename)
+
+
+def _land_mask_from_geojson(with_cavities, process_count, logger,
+                            mesh_filename, geojson_filename, mask_filename):
+    gf = GeometricFeatures()
+
+    # start with the land coverage from Natural Earth
+    fcLandCoverage = gf.read(componentName='natural_earth',
+                             objectType='region',
+                             featureNames=['Land Coverage'])
+
+    # remove the region south of 60S so we can replace it based on ice-sheet
+    # topography
+    fcSouthMask = gf.read(componentName='ocean', objectType='region',
+                          featureNames=['Global Ocean 90S to 60S'])
+
+    fcLandCoverage = fcLandCoverage.difference(fcSouthMask)
+
+    # Add "land" coverage from either the full ice sheet or just the grounded
+    # part
+    if with_cavities:
+        fcAntarcticLand = gf.read(
+            componentName='bedmachine', objectType='region',
+            featureNames=['AntarcticGroundedIceCoverage'])
+    else:
+        fcAntarcticLand = gf.read(
+            componentName='bedmachine', objectType='region',
+            featureNames=['AntarcticIceCoverage'])
+
+    fcLandCoverage.merge(fcAntarcticLand)
+
+    # save the feature collection to a geojson file
+    fcLandCoverage.to_geojson(geojson_filename)
+
+    # these defaults may have been updated from config options -- pass them
+    # along to the subprocess
+    netcdf_format = mpas_tools.io.default_format
+    netcdf_engine = mpas_tools.io.default_engine
+
+    # Create the land mask based on the land coverage, i.e. coastline data
+    args = ['compute_mpas_region_masks',
+            '-m', mesh_filename,
+            '-g', geojson_filename,
+            '-o', mask_filename,
+            '-t', 'cell',
+            '--process_count', f'{process_count}',
+            '--format', netcdf_format,
+            '--engine', netcdf_engine]
+    check_call(args, logger=logger)
