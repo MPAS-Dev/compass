@@ -70,14 +70,21 @@ active with the following config options:
 
 .. code-block:: cfg
 
-    config_enable_nonhydrostatic_mode = .true.
-    config_triskCV = .false.
+    # turns the nonhydro model on or off
+    config_enable_nonhydrostatic_mode = .true.  
+
+    # preconditioner for the linear solver. Other options can be used, like
+    # jacobi, sor and asm, but they were found to be slower than block jacobi.
     config_nonhydrostatic_preconditioner = 'bjacobi'
+
+    # linear solver. Other options can be used, like gmres
     config_nonhydrostatic_solver_type = 'cg'
+
+    # do not change!
     config_nonhydrostatic_solve_surface_boundary_condition = 'pressureTopGradientBottom'
-    config_use_constant_forced_pgf = .false.
+
+    # Nonhydro will work with either 'centered' or 'upwind'.
     config_thickness_flux_type = 'upwind'
-    config_aust_scale_factor = 0.70710678
 
 default
 -------
