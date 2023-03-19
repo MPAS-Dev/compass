@@ -15,8 +15,9 @@ from compass.landice.ais_observations import ais_basin_info
 # --------------
 # general settings
 # --------------
-targetYear = 20.0  # model year from start at which to calculate statistics
-labelRuns = True
+targetYear = 100.0  # model year from start at which to calculate statistics
+labelRuns = False
+plot_maps = False
 lw = 0.5  # linewidth for ensemble plots
 
 # physical constants
@@ -147,7 +148,7 @@ plt.grid()
 axBMBts.fill_between(obs_melt_yrs,
                      obs_melt - obs_melt_unc,
                      obs_melt + obs_melt_unc,
-                     color='k', alpha=0.3, label='melt obs')
+                     color='b', alpha=0.2, label='melt obs')
 
 axGLFts = figTS.add_subplot(nrow, ncol, 6, sharex=axSLRts)
 plt.xlabel('Year')
@@ -156,24 +157,25 @@ plt.grid()
 axGLFts.fill_between(obs_discharge_yrs,
                      obs_discharge - obs_discharge_unc,
                      obs_discharge + obs_discharge_unc,
-                     color='k', alpha=0.3, label='D obs')
+                     color='b', alpha=0.2, label='D obs')
 
 # --------------
 # maps plotting setup
 # --------------
 
-figMaps = plt.figure(2, figsize=(8, 12), facecolor='w')
-nrow = 2
-ncol = 1
-axMaps = figMaps.add_subplot(nrow, ncol, 1)
-axMaps.axis('equal')
-axMaps2 = figMaps.add_subplot(nrow, ncol, 2)
-axMaps2.axis('equal')
+if plot_maps:
+    figMaps = plt.figure(2, figsize=(8, 12), facecolor='w')
+    nrow = 2
+    ncol = 1
+    axMaps = figMaps.add_subplot(nrow, ncol, 1)
+    axMaps.axis('equal')
+    axMaps2 = figMaps.add_subplot(nrow, ncol, 2)
+    axMaps2.axis('equal')
 
-firstMap = True
+    firstMap = True
 
-GLX = np.array([])
-GLY = np.array([])
+    GLX = np.array([])
+    GLY = np.array([])
 
 # --------------
 # Loop through runs and gather data
@@ -206,15 +208,33 @@ for idx, run in enumerate(runs):
         groundingLineFlux = f.variables['groundingLineFlux'][:] / 1.0e12  # Gt
         BMB = f.variables['totalFloatingBasalMassBal'][:] / -1.0e12  # in Gt
 
+        # find target year index
+        indices = np.nonzero(years >= targetYear)[0]
+
+        # color lines depending on if they match obs or not
+        col = 'k'
+        alph = 0.2
+        GLobs = qoi_info['GL flux']['obs']
+        if GLobs is not None and len(indices) > 0:
+            ii = indices[0]
+            if groundingLineFlux[ii] > (GLobs[0] - GLobs[1]) and \
+               groundingLineFlux[ii] < (GLobs[0] + GLobs[1]):
+                col = 'r'
+                alph = 0.7
+
         # plot time series
-        axSLRts.plot(years, SLR, linewidth=lw)
-        axTAts.plot(years, totalArea - totalArea[0], linewidth=lw)
-        axGAts.plot(years, grdArea - grdArea[0], linewidth=lw)
-        axFAts.plot(years, fltArea, linewidth=lw)
+        axSLRts.plot(years, SLR, linewidth=lw, color=col, alpha=alph)
+        axTAts.plot(years, totalArea - totalArea[0], linewidth=lw,
+                    color=col, alpha=alph)
+        axGAts.plot(years, grdArea - grdArea[0], linewidth=lw,
+                    color=col, alpha=alph)
+        axFAts.plot(years, fltArea, linewidth=lw, color=col, alpha=alph)
         # ignore first entry which is 0
-        axGLFts.plot(years[1:], groundingLineFlux[1:], linewidth=lw)
+        axGLFts.plot(years[1:], groundingLineFlux[1:], linewidth=lw,
+                     color=col, alpha=alph)
         # ignore first entry which is 0
-        axBMBts.plot(years[1:], BMB[1:], linewidth=lw)
+        axBMBts.plot(years[1:], BMB[1:], linewidth=lw,
+                     color=col, alpha=alph)
 
         # Only process runs that have reached target year
         indices = np.nonzero(years >= targetYear)[0]
@@ -234,40 +254,42 @@ for idx, run in enumerate(runs):
             qoi_info['melt flux']['values'][idx] = BMB[ii]
 
         # plot map
-        DS = xr.open_mfdataset(run + '/output/' + 'output_*.nc',
-                               combine='nested', concat_dim='Time',
-                               decode_timedelta=False,
-                               chunks={"Time": 10})
-        yearsOutput = DS['daysSinceStart'].values[:] / 365.0
-        indices = np.nonzero(yearsOutput >= targetYear)[0]
-        if len(indices) > 0:
-            ii = indices[0]
+        if plot_maps:
+            DS = xr.open_mfdataset(run + '/output/' + 'output_*.nc',
+                                   combine='nested', concat_dim='Time',
+                                   decode_timedelta=False,
+                                   chunks={"Time": 10})
+            yearsOutput = DS['daysSinceStart'].values[:] / 365.0
+            indices = np.nonzero(yearsOutput >= targetYear)[0]
+            if len(indices) > 0:
+                ii = indices[0]
 
-            thickness = DS['thickness'].values
-            bedTopo = DS['bedTopography'].values
-            xCell = DS['xCell'].values[0, :]
-            yCell = DS['yCell'].values[0, :]
+                thickness = DS['thickness'].values
+                bedTopo = DS['bedTopography'].values
+                xCell = DS['xCell'].values[0, :]
+                yCell = DS['yCell'].values[0, :]
 
-            triang = tri.Triangulation(xCell, yCell)
-            grd = ((thickness[ii, :] * 910.0 / 1028.0 + bedTopo[ii, :]) >
-                   0.0) * (thickness[ii, :] > 0.0)
+                triang = tri.Triangulation(xCell, yCell)
+                grd = ((thickness[ii, :] * 910.0 / 1028.0 + bedTopo[ii, :]) >
+                       0.0) * (thickness[ii, :] > 0.0)
 
-            if firstMap is True:
-                firstMap = False
-                axMaps.tricontour(triang, thickness[0], [1.0], colors='k',
-                                  linewidths=3)
-                grd0 = ((thickness[0, :] * 910.0 / 1028.0 + bedTopo[0, :]) >
-                        0.0) * (thickness[0, :] > 0.0)
-                axMaps.tricontour(triang, grd0, [0.5], colors='k',
-                                  linewidths=3)
+                if firstMap is True:
+                    firstMap = False
+                    axMaps.tricontour(triang, thickness[0], [1.0], colors='k',
+                                      linewidths=3)
+                    grd0 = ((thickness[0, :] * 910.0 / 1028.0 +
+                             bedTopo[0, :]) > 0.0) * (thickness[0, :] > 0.0)
+                    axMaps.tricontour(triang, grd0, [0.5], colors='k',
+                                      linewidths=3)
 
-            axMaps.tricontour(triang, thickness[ii], [1.0], colors='r',
-                              linewidths=lw)
-            grdcontourset = axMaps.tricontour(triang, grd, [0.5], colors='b',
-                                              linewidths=lw)
+                axMaps.tricontour(triang, thickness[ii], [1.0], colors='r',
+                                  linewidths=lw)
+                grdcontourset = axMaps.tricontour(triang, grd, [0.5],
+                                                  colors='b',
+                                                  linewidths=lw)
 
-            GLX = np.append(GLX, grdcontourset.allsegs[0][0][:, 0])
-            GLY = np.append(GLY, grdcontourset.allsegs[0][0][:, 1])
+                GLX = np.append(GLX, grdcontourset.allsegs[0][0][:, 0])
+                GLY = np.append(GLY, grdcontourset.allsegs[0][0][:, 1])
 
         f.close()
 
@@ -275,9 +297,10 @@ for idx, run in enumerate(runs):
 # finalize plots generated during data reading
 # --------------
 
-# axMaps2.plot(GLX, GLY, '.')
-axMaps2.hist2d(GLX, GLY, (50, 50), cmap=plt.cm.jet)
-figMaps.savefig('figure_maps.png')
+if plot_maps:
+    # axMaps2.plot(GLX, GLY, '.')
+    axMaps2.hist2d(GLX, GLY, (50, 50), cmap=plt.cm.jet)
+    figMaps.savefig('figure_maps.png')
 
 figTS.tight_layout()
 figTS.savefig('figure_time_series.png')
@@ -349,13 +372,19 @@ for count1, param1 in enumerate(param_info):
                     plt.scatter(xdata, ydata, s=markerSize, c=zdata,
                                 plotnonfinite=False)
                     badIdx = np.nonzero(np.isnan(zdata))[0]
+                    goodIdx = np.nonzero(np.logical_not(np.isnan(zdata)))[0]
                     plt.plot(xdata[badIdx], ydata[badIdx], 'kx')
                     obs = qoi_info[qoi]['obs']
                     plt.colorbar()
                     if obs is not None:
-                        plt.tricontour(xdata, ydata, zdata,
-                                       [obs[0] - obs[1], obs[0] + obs[1]],
-                                       colors='k')
+                        try:
+                            plt.tricontour(xdata[goodIdx], ydata[goodIdx],
+                                           zdata[goodIdx],
+                                           [obs[0] - obs[1], obs[0] + obs[1]],
+                                           colors='k')
+                        except ValueError:
+                            print(f"Skipping obs contour for {param1} vs. "
+                                  f"{param2}, because outside model range")
                     if labelRuns:
                         for i in range(nRuns):
                             plt.annotate(f'{runs[i][3:]}',
