@@ -3,6 +3,7 @@
 import configparser
 import glob
 import os
+import pickle
 
 import matplotlib.tri as tri
 import netCDF4
@@ -292,6 +293,14 @@ for idx, run in enumerate(runs):
                 GLY = np.append(GLY, grdcontourset.allsegs[0][0][:, 1])
 
         f.close()
+
+# --------------
+# save qoi structure
+# --------------
+
+data_out = [param_info, qoi_info]
+with open('ensemble_data.pickle', 'wb') as f:
+    pickle.dump(data_out, f)
 
 # --------------
 # finalize plots generated during data reading
