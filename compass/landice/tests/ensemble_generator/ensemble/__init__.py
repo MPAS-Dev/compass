@@ -201,8 +201,8 @@ class Ensemble(TestCase):
             area_correction = iceshelf_area / iceshelf_area_obs
             print(f"Ice-shelf area correction is {area_correction}.")
             if (np.absolute(area_correction - 1.0) > 0.2):
-                sys.exit("ERROR: ice-shelf area correction is larger than "
-                         "20%. Check data consistency before proceeding.")
+                print("WARNING: ice-shelf area correction is larger than "
+                      "20%. Check data consistency before proceeding.")
             meltflux_vec *= iceshelf_area / iceshelf_area_obs
             TFs = np.linspace(-5.0, 10.0, num=int(15.0 / 0.01))
             c_melt = (rhosw * cp_seawater / (rhoi * latent_heat_ice))**2
