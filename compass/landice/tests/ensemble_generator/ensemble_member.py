@@ -145,6 +145,7 @@ class EnsembleMember(Step):
         # eventually compass could determine this, but for now we want
         # explicit control
         self.ntasks = section.getint('ntasks')
+        self.min_tasks = self.ntasks
 
         # Set up base run configuration
         self.add_namelist_file(self.test_resources_location,
