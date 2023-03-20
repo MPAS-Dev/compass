@@ -81,8 +81,8 @@ def init_vertical_coord(config, ds):
         raise ValueError('Unknown coordinate type {}'.format(coord_type))
 
     # recompute the cell mask since min/max indices may have changed
-    ds['cellMask'] = _compute_cell_mask(ds.minLevelCell, ds.maxLevelCell,
-                                        ds.sizes['nVertLevels'])
+    ds['cellMask'] = compute_cell_mask(ds.minLevelCell, ds.maxLevelCell,
+                                       ds.sizes['nVertLevels'])
 
     # mask layerThickness and restingThickness
     ds['layerThickness'] = ds.layerThickness.where(ds.cellMask)
@@ -94,15 +94,35 @@ def init_vertical_coord(config, ds):
     ds['restingThickness'] = \
         ds.restingThickness.expand_dims(dim='Time', axis=0)
 
-    ds['zMid'] = _compute_zmid_from_layer_thickness(
+    ds['zMid'] = compute_zmid_from_layer_thickness(
         ds.layerThickness, ds.ssh, ds.cellMask)
 
     # fortran 1-based indexing
-    ds['minLevelCell'] = ds.minLevelCell+1
-    ds['maxLevelCell'] = ds.maxLevelCell+1
+    ds['minLevelCell'] = ds.minLevelCell + 1
+    ds['maxLevelCell'] = ds.maxLevelCell + 1
 
 
-def _compute_cell_mask(minLevelCell, maxLevelCell, nVertLevels):
+def compute_cell_mask(minLevelCell, maxLevelCell, nVertLevels):
+    """
+    Compute cellMask for any vertical coordinate
+
+    Parameters
+    ----------
+    minLevelCell : xarray.DataArray
+        The zero-based index of the top of the ocean
+
+    maxLevelCell : xarray.DataArray
+        The zero-based index of the bottom of the ocean
+
+    nVertLevels : int
+        The number of vertical levels in the mesh
+
+    Returns
+    -------
+    cellMask : xarray.DataArray
+        An ``nCells`` x ``nVertLevels`` mask that is 1 where the ocean is
+        valid and 0 elsewhere
+    """
     cellMask = []
     for zIndex in range(nVertLevels):
         mask = numpy.logical_and(zIndex >= minLevelCell,
@@ -113,7 +133,7 @@ def _compute_cell_mask(minLevelCell, maxLevelCell, nVertLevels):
     return cellMask
 
 
-def _compute_zmid_from_layer_thickness(layerThickness, ssh, cellMask):
+def compute_zmid_from_layer_thickness(layerThickness, ssh, cellMask):
     """
     Compute zMid from ssh and layerThickness for any vertical coordinate
 
@@ -140,7 +160,7 @@ def _compute_zmid_from_layer_thickness(layerThickness, ssh, cellMask):
     for zIndex in range(nVertLevels):
         mask = cellMask.isel(nVertLevels=zIndex)
         thickness = layerThickness.isel(nVertLevels=zIndex).where(mask, 0.)
-        z = (zTop - 0.5*thickness).where(mask)
+        z = (zTop - 0.5 * thickness).where(mask)
         zMid.append(z)
         zTop -= thickness
     zMid = xarray.concat(zMid, dim='nVertLevels').transpose('Time', 'nCells',
