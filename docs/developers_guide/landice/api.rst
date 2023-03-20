@@ -12,7 +12,7 @@ Test Groups
 ^^^^^^^^^^^
 
 antarctica
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~
 
 .. currentmodule:: compass.landice.tests.antarctica
 
@@ -22,7 +22,6 @@ antarctica
    Antarctica
 
    mesh_gen.MeshGen
-   mesh_gen.MeshGen.run
 
    mesh.Mesh
    mesh.Mesh.run

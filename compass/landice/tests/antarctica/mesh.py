@@ -43,6 +43,10 @@ class Mesh(Step):
         self.mesh_filename = 'Antarctica.nc'
         self.add_output_file(filename='graph.info')
         self.add_output_file(filename=self.mesh_filename)
+        self.add_output_file(filename=f'{self.mesh_filename[:-3]}_'
+                                      f'imbie_regionMasks.nc')
+        self.add_output_file(filename=f'{self.mesh_filename[:-3]}_'
+                                      f'ismip6_regionMasks.nc')
         self.add_input_file(
             filename='antarctica_8km_2020_10_20.nc',
             target='antarctica_8km_2020_10_20.nc',
@@ -153,13 +157,13 @@ class Mesh(Step):
                         graph_filename='graph.info')
 
         # create a region mask
-        mask_filename = 'imbie_regionMasks.nc'
+        mask_filename = f'{mesh_filename[:-3]}_imbie_regionMasks.nc'
         self._make_region_masks(mesh_filename, mask_filename, self.cores,
                                 tags=['EastAntarcticaIMBIE',
                                       'WestAntarcticaIMBIE',
                                       'AntarcticPeninsulaIMBIE'])
 
-        mask_filename = 'ismip6_regionMasks.nc'
+        mask_filename = f'{mesh_filename[:-3]}_ismip6_regionMasks.nc'
         self._make_region_masks(mesh_filename, mask_filename, self.cores,
                                 tags=['ISMIP6_Basin'])
 

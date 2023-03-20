@@ -52,5 +52,8 @@ the mesh generation options are adjusted through the config file.
 mesh_gen
 --------
 
-``landice/antarctica/mesh_gen`` creates a 8-80km variable resolution mesh.
+``landice/antarctica/mesh_gen`` creates a 8-80km variable resolution mesh with
+the mesh file name `Antarctica.nc`. In addition, two region masks are
+generated based on the IMBIE1 (http://imbie.org/imbie-2016/drainage-basins/)
+and ISMIP6 basins (defined in Jourdain et al. 2020).
 There is no model integration step.
