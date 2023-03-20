@@ -1,6 +1,6 @@
 import os
 
-import xarray
+import xarray as xr
 from mpas_tools.io import write_netcdf
 
 from compass.io import symlink
@@ -9,10 +9,10 @@ from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step import 
 )
 
 
-class SeaiceInitialCondition(FilesForE3SMStep):
+class SeaiceMesh(FilesForE3SMStep):
     """
-    A step for creating an E3SM sea-ice initial condition from variables from
-    an MPAS-Ocean restart file
+    A step for creating an MPAS-Seaice mesh from variables from an MPAS-Ocean
+    initial state file
     """
     def __init__(self, test_case):
         """
@@ -24,7 +24,7 @@ class SeaiceInitialCondition(FilesForE3SMStep):
             The test case this step belongs to
         """  # noqa: E501
 
-        super().__init__(test_case, name='seaice_initial_condition')
+        super().__init__(test_case, name='seaice_mesh')
 
         # for now, we won't define any outputs because they include the mesh
         # short name, which is not known at setup time.  Currently, this is
@@ -36,18 +36,14 @@ class SeaiceInitialCondition(FilesForE3SMStep):
         """
         super().run()
 
-        dest_filename = \
-            f'mpassi.{self.mesh_short_name}.{self.creation_date}.nc'
+        dest_filename = f'{self.mesh_short_name}.{self.creation_date}.nc'
 
-        keep_vars = self.mesh_vars + ['fCell', 'fEdge', 'fVertex']
+        with xr.open_dataset('initial_state.nc') as ds:
 
-        if self.with_ice_shelf_cavities:
-            keep_vars.append('landIceMask')
-
-        with xarray.open_dataset('restart.nc') as ds:
-            ds.load()
+            keep_vars = self.mesh_vars
             ds = ds[keep_vars]
+            ds.load()
             write_netcdf(ds, dest_filename)
 
         symlink(os.path.abspath(dest_filename),
-                f'{self.seaice_inputdata_dir}/{dest_filename}')
+                f'{self.seaice_mesh_dir}/{dest_filename}')
