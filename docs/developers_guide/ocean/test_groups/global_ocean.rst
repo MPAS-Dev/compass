@@ -442,7 +442,7 @@ Kuroshio8to60 and Kuroshio12to60
 ++++++++++++++++++++++++++++++++
 
 The ``Kuroshio8to60`` and ``Kuroshio12to60`` mehses are designed to explore
-dynamics of the Western Boundary Current (WBC) in the North Pacific Ocean, 
+dynamics of the Western Boundary Current (WBC) in the North Pacific Ocean,
 the Kuroshio.
 
 The class
@@ -925,19 +925,19 @@ The test case is constructed with an argument ``restart_filename``. the final
 restart file produced by the :ref:`dev_ocean_global_ocean_dynamic_adjustment`
 for the given mesh.
 
-The test case is made up of 5 steps:
+The test case is made up of 8 steps:
 
 :py:class:`compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.OceanInitialCondition`
     takes out the ``xtime`` variable from the restart file, creating a symlink
-    at ``assembled_files/inputdata/ocn/mpas-o/<mesh_short_name>/<mesh_short_name>_no_xtime.nc``
+    at ``assembled_files/inputdata/ocn/mpas-o/<mesh_short_name>/mpaso.<mesh_short_name>.<datestamp>.nc``
 
 :py:class:`compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.OceanGraphPartition`
     computes graph partitions (see :ref:`dev_model`) appropriate for a wide
-    range of core counts between ``min_graph_size = int(nCells / 6000)`` and
-    ``max_graph_size = int(nCells / 100)``.  Possible processor counts are
-    any power of 2 or any multiple of 12, 120 and 1200 in the range.  Symlinks
-    to the graph files are placed at
-    ``assembled_files/inputdata/ocn/mpas-o/<mesh_short_name>/mpas-o.graph.info.<core_count>``
+    range of core counts between ``min_graph_size = int(nCells / 30000)`` and
+    ``max_graph_size = int(nCells / 2)``.  About 400 different processor counts
+    are produced for each mesh (keeping only counts with small prime factors).
+    Symlinks to the graph files are placed at
+    ``assembled_files/inputdata/ocn/mpas-o/<mesh_short_name>/partitions/mpas-o.graph.info.<datestamp>.part.<core_count>``
 
 :py:class:`compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.SeaiceInitialCondition`
     extracts the following variables from the restart file:
@@ -959,8 +959,18 @@ The test case is made up of 5 steps:
            keep_vars.append('landIceMask')
 
     A symlink to the resulting file is placed at
-    ``assembled_files/inputdata/ocn/mpas-cice/<mesh_short_name>/seaice.<mesh_short_name>_no_xtime.nc``
+    ``assembled_files/inputdata/ocn/mpas-seaice/<mesh_short_name>/mpassi.<mesh_short_name>.<datestamp>.nc``
 
+:py:class:`compass.ocean.tests.global_ocean.files_for_e3sm.seaice_graph_partition.SeaiceGraphPartition`
+    computes graph partitions (see :ref:`dev_model`) appropriate for a wide
+    range of core counts between ``min_graph_size = int(nCells / 30000)`` and
+    ``max_graph_size = int(nCells / 2)``.  The sea-ice graph partitions
+    include cells for each processor in both polar and equatorial regions for
+    better load balancing.  See `Graph partitioning <http://mpas-dev.github.io/MPAS-Tools/stable/seaice/partition.html>`_
+    from the MPAS-Tools documentation for details.  About 400 different
+    processor counts are produced for each mesh (keeping only counts with small
+    prime factors). Symlinks to the graph files are placed at
+    ``assembled_files/inputdata/ice/mpas-seaice/<mesh_short_name>/partitions/mpas-seaice.graph.info.<datestamp>.part.<core_count>``
 
 :py:class:`compass.ocean.tests.global_ocean.files_for_e3sm.scrip.Scrip`
     generates a SCRIP file (see :ref:`global_ocean_files_for_e3sm` in the
@@ -976,6 +986,17 @@ The test case is made up of 5 steps:
     ``ocean.<mesh_short_name>.mask.scrip.<creation_date>.nc``.
     Otherwise, only one file is symlinked, and it is named
     ``ocean.<mesh_short_name>.scrip.<creation_date>.nc``
+
+
+:py:class:`compass.ocean.tests.global_ocean.files_for_e3sm.e3sm_to_cmip_maps.E3smToCmipMaps`
+    creates mapping files for
+    `e3sm_to_cmip <https://e3sm-to-cmip.readthedocs.io/en/latest/>`_.
+
+    Mapping files are created from the MPAS-Ocean and -Seaice mesh to a
+    standard 1-degree latitude-longitude grid using three methods: `aave`
+    (conservative), `mono` (monotonic) and `nco` (NCO's conservative
+    algorithm). The mapping files are symlinked in the directory
+    ``assembled_files/diagnostics/maps/``.
 
 :py:class:`compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps.DiagnosticMaps`
     creates mapping files for
