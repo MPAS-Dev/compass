@@ -133,6 +133,39 @@ def compute_cell_mask(minLevelCell, maxLevelCell, nVertLevels):
     return cellMask
 
 
+def compute_ssh_from_layer_thickness(layerThickness, bottomDepth, cellMask):
+    """
+    Compute the sea surface height by integrating layer thickness up from the
+    ocean bottom
+
+    Parameters
+    ----------
+    layerThickness : xarray.DataArray
+        The thickness of each layer
+
+    bottomDepth : xarray.DataArray
+        The positive-down seafloor depth
+
+    cellMask : xarray.DataArray
+        A boolean mask of where there are valid cells
+
+    Returns
+    -------
+    ssh : xarray.DataArray
+        The sea surface height
+    """
+    # include the same Time dimension as layerThickness
+    zBot = xarray.zeros_like(layerThickness.isel(nVertLevels=0))
+    zBot -= bottomDepth
+    nVertLevels = layerThickness.sizes['nVertLevels']
+    for zIndex in range(nVertLevels):
+        mask = cellMask.isel(nVertLevels=zIndex)
+        thickness = layerThickness.isel(nVertLevels=zIndex).where(mask, 0.)
+        zBot += thickness
+    ssh = zBot
+    return ssh
+
+
 def compute_zmid_from_layer_thickness(layerThickness, ssh, cellMask):
     """
     Compute zMid from ssh and layerThickness for any vertical coordinate
