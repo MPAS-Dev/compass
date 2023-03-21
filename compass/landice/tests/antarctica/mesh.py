@@ -40,8 +40,8 @@ class Mesh(Step):
             The test case this step belongs to
 
         """
-        super().__init__(test_case=test_case, name='mesh', cores=64,
-                         min_cores=1)
+        super().__init__(test_case=test_case, name='mesh', cpus_per_task=64,
+                         min_cpus_per_task=1)
 
         self.mesh_filename = 'Antarctica.nc'
         self.add_output_file(filename='graph.info')
@@ -161,13 +161,15 @@ class Mesh(Step):
 
         # create a region mask
         mask_filename = f'{mesh_filename[:-3]}_imbie_regionMasks.nc'
-        self._make_region_masks(mesh_filename, mask_filename, self.cores,
+        self._make_region_masks(mesh_filename, mask_filename,
+                                self.cpus_per_task,
                                 tags=['EastAntarcticaIMBIE',
                                       'WestAntarcticaIMBIE',
                                       'AntarcticPeninsulaIMBIE'])
 
         mask_filename = f'{mesh_filename[:-3]}_ismip6_regionMasks.nc'
-        self._make_region_masks(mesh_filename, mask_filename, self.cores,
+        self._make_region_masks(mesh_filename, mask_filename,
+                                self.cpus_per_task,
                                 tags=['ISMIP6_Basin'])
 
     def build_cell_width(self):
