@@ -1,20 +1,23 @@
-import netCDF4
-import xarray
 from shutil import copyfile
 
 import matplotlib.pyplot as plt
-from geometric_features import GeometricFeatures, FeatureCollection
 import mpas_tools
-from mpas_tools.mesh.creation import build_planar_mesh
-from mpas_tools.mesh.conversion import convert, cull
+import netCDF4
+import xarray
+from geometric_features import FeatureCollection, GeometricFeatures
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
+from mpas_tools.mesh.conversion import convert, cull
+from mpas_tools.mesh.creation import build_planar_mesh
 
-from compass.step import Step
+from compass.landice.mesh import (
+    get_dist_to_edge_and_GL,
+    gridded_flood_fill,
+    set_cell_width,
+    set_rectangular_geom_points_and_edges,
+)
 from compass.model import make_graph_file
-from compass.landice.mesh import gridded_flood_fill, \
-    set_rectangular_geom_points_and_edges, \
-    set_cell_width, get_dist_to_edge_and_GL
+from compass.step import Step
 
 
 class Mesh(Step):
