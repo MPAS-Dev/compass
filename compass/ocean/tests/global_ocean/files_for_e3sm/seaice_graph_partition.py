@@ -60,6 +60,9 @@ class SeaiceGraphPartition(FilesForE3SMStep):
         """
         super().run()
         logger = self.logger
+        config = self.config
+        plotting = config.getboolean('files_for_e3sm',
+                                     'plot_seaice_partitions')
         creation_date = self.creation_date
 
         with xr.open_dataset('restart.nc') as ds:
@@ -92,16 +95,23 @@ class SeaiceGraphPartition(FilesForE3SMStep):
                 '-o', '.',
                 '-p', f'mpas-seaice.graph.info.{creation_date}',
                 '-g', 'gpmetis',
-                '--plotting',
                 '-n']
+
+        if plotting:
+            args.append('--plotting')
         args = args + [f'{ncores}' for ncores in cores]
         check_call(args, logger)
 
         # create link in assembled files directory
+        inputdata_dir = os.path.join(self.seaice_inputdata_dir, 'partitions')
+        try:
+            os.makedirs(inputdata_dir)
+        except FileExistsError:
+            pass
         files = glob('mpas-seaice.graph.info.*')
         for file in files:
             symlink(os.path.abspath(file),
-                    f'{self.seaice_inputdata_dir}/{file}')
+                    f'{inputdata_dir}/{file}')
 
 
 def _make_mapping_file(in_mesh_filename, in_mesh_name, out_mesh_filename,

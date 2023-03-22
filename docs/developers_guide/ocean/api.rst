@@ -170,8 +170,12 @@ test cases and steps
    files_for_e3sm.ocean_initial_condition.OceanInitialCondition.run
    files_for_e3sm.scrip.Scrip
    files_for_e3sm.scrip.Scrip.run
+   files_for_e3sm.seaice_graph_partition.SeaiceGraphPartition
+   files_for_e3sm.seaice_graph_partition.SeaiceGraphPartition.run
    files_for_e3sm.seaice_initial_condition.SeaiceInitialCondition
    files_for_e3sm.seaice_initial_condition.SeaiceInitialCondition.run
+   files_for_e3sm.e3sm_to_cmip_maps.E3smToCmipMaps
+   files_for_e3sm.e3sm_to_cmip_maps.E3smToCmipMaps.run
    files_for_e3sm.diagnostic_maps.DiagnosticMaps
    files_for_e3sm.diagnostic_maps.DiagnosticMaps.run
    files_for_e3sm.diagnostic_masks.DiagnosticMasks
