@@ -1,13 +1,14 @@
 import argparse
 import json
+import os
+import pickle
+import shutil
 import sys
 from datetime import datetime
-import os
 from importlib import resources
-import shutil
-import pickle
 
 from compass.config import CompassConfigParser
+from compass.io import package_path
 
 
 def update_cache(step_paths, date_string=None, dry_run=False):
@@ -57,10 +58,16 @@ def update_cache(step_paths, date_string=None, dry_run=False):
         else:
             steps[mpas_core] = [step]
 
+    with package_path('compass', 'database_subdirs.json') as path:
+        with open(path) as data_file:
+            database_subdirs = json.load(data_file)
+
+    database_root = config.get('paths', 'database_root')
+
     # now, iterate over cores and steps
     for mpas_core in steps:
-        database_root = config.get('paths', f'{mpas_core}_database_root')
-        cache_root = f'{database_root}/compass_cache'
+        core_path = database_subdirs[mpas_core]
+        cache_root = f'{database_root}/{core_path}/compass_cache'
 
         package = f'compass.{mpas_core}'
         try:
@@ -86,7 +93,7 @@ def update_cache(step_paths, date_string=None, dry_run=False):
                 output = os.path.basename(output)
                 out_filename = os.path.join(step_path, output)
                 # remove the MPAS core from the file path
-                target = out_filename[len(mpas_core)+1:]
+                target = out_filename[len(mpas_core) + 1:]
                 path, ext = os.path.splitext(target)
                 target = f'{path}.{date_string}{ext}'
                 cached_files[out_filename] = target
