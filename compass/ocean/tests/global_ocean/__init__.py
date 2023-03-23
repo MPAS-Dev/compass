@@ -55,16 +55,16 @@ class GlobalOcean(TestGroup):
         self._add_tests(mesh_names=['EC30to60', 'ECwISC30to60'],
                         DynamicAdjustment=EC30to60DynamicAdjustment)
 
-        # ARRM10to60: just the version without cavities
-        self._add_tests(mesh_names=['ARRM10to60'],
+        # ARRM10to60: with and without cavities
+        self._add_tests(mesh_names=['ARRM10to60', 'ARRMwISC10to60'],
                         DynamicAdjustment=ARRM10to60DynamicAdjustment)
 
         # SO12to60: with and without cavities
         self._add_tests(mesh_names=['SO12to60', 'SOwISC12to60'],
                         DynamicAdjustment=SO12to60DynamicAdjustment)
 
-        # WC14: just the version without cavities
-        self._add_tests(mesh_names=['WC14'],
+        # WC14: with and without cavities
+        self._add_tests(mesh_names=['WC14', 'WCwISC14'],
                         DynamicAdjustment=WC14DynamicAdjustment)
 
         # Kuroshio meshes without ice-shelf cavities
