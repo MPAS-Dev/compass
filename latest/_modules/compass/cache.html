@@ -112,14 +112,15 @@
   <h1>Source code for compass.cache</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">resources</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
 
 <span class="kn">from</span> <span class="nn">compass.config</span> <span class="kn">import</span> <span class="n">CompassConfigParser</span>
+<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">package_path</span>
 
 
 <div class="viewcode-block" id="update_cache"><a class="viewcode-back" href="../../developers_guide/generated/compass.cache.update_cache.html#compass.cache.update_cache">[docs]</a><span class="k">def</span> <span class="nf">update_cache</span><span class="p">(</span><span class="n">step_paths</span><span class="p">,</span> <span class="n">date_string</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -169,10 +170,16 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">steps</span><span class="p">[</span><span class="n">mpas_core</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">step</span><span class="p">]</span>
 
+    <span class="k">with</span> <span class="n">package_path</span><span class="p">(</span><span class="s1">&#39;compass&#39;</span><span class="p">,</span> <span class="s1">&#39;database_subdirs.json&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">path</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">as</span> <span class="n">data_file</span><span class="p">:</span>
+            <span class="n">database_subdirs</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">data_file</span><span class="p">)</span>
+
+    <span class="n">database_root</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;database_root&#39;</span><span class="p">)</span>
+
     <span class="c1"># now, iterate over cores and steps</span>
     <span class="k">for</span> <span class="n">mpas_core</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
-        <span class="n">database_root</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">_database_root&#39;</span><span class="p">)</span>
-        <span class="n">cache_root</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">database_root</span><span class="si">}</span><span class="s1">/compass_cache&#39;</span>
+        <span class="n">core_path</span> <span class="o">=</span> <span class="n">database_subdirs</span><span class="p">[</span><span class="n">mpas_core</span><span class="p">]</span>
+        <span class="n">cache_root</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">database_root</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">core_path</span><span class="si">}</span><span class="s1">/compass_cache&#39;</span>
 
         <span class="n">package</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;compass.</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="k">try</span><span class="p">:</span>
@@ -198,7 +205,7 @@
                 <span class="n">output</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
                 <span class="n">out_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_path</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
                 <span class="c1"># remove the MPAS core from the file path</span>
-                <span class="n">target</span> <span class="o">=</span> <span class="n">out_filename</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+                <span class="n">target</span> <span class="o">=</span> <span class="n">out_filename</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
                 <span class="n">path</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
                 <span class="n">target</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">date_string</span><span class="si">}{</span><span class="n">ext</span><span class="si">}</span><span class="s1">&#39;</span>
                 <span class="n">cached_files</span><span class="p">[</span><span class="n">out_filename</span><span class="p">]</span> <span class="o">=</span> <span class="n">target</span>
