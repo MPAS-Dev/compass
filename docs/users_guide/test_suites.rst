@@ -24,19 +24,27 @@ the current set of available test suites is:
 .. code-block:: none
 
     Suites:
+      -c landice -t calving_dt_convergence
       -c landice -t fo_integration
       -c landice -t full_integration
+      -c landice -t humboldt_calving_tests
+      -c landice -t humboldt_calving_tests_fo
       -c landice -t sia_integration
       -c ocean -t cosine_bell_cached_init
       -c ocean -t ec30to60
       -c ocean -t ecwisc30to60
+      -c ocean -t kuroshio8to60
+      -c ocean -t kuroshio12to60
       -c ocean -t nightly
       -c ocean -t pr
       -c ocean -t qu240_for_e3sm
       -c ocean -t quwisc240
       -c ocean -t quwisc240_for_e3sm
+      -c ocean -t so12to60
       -c ocean -t sowisc12to60
       -c ocean -t wc14
+      -c ocean -t wcwisc14
+      -c ocean -t wetdry
 
 As an example, the ocean ``nightly`` test suite includes the test cases used
 for regression testing of MPAS-Ocean.  Here are the tests included:
