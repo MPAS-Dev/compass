@@ -298,7 +298,8 @@ class Step:
         Parameters
         ----------
         available_resources : dict
-            The total number of cores available to the step
+            A dictionary containing available resources (cores, tasks, nodes
+            and cores_per_node)
         """
         mpi_allowed = available_resources['mpi_allowed']
         if not mpi_allowed and self.ntasks > 1:
@@ -307,24 +308,21 @@ class Step:
                 'Please switch to a compute node.')
 
         available_cores = available_resources['cores']
-        if self.ntasks == 1:
-            # just one task so only need to worry about cpus_per_task
-            self.cpus_per_task = min(self.cpus_per_task, available_cores)
-            cores = self.cpus_per_task
-        elif self.cpus_per_task == self.min_cpus_per_task:
-            available_tasks = available_cores // self.cpus_per_task
-            self.ntasks = min(self.ntasks, available_tasks)
-            cores = self.ntasks * self.cpus_per_task
-        else:
-            raise ValueError('Unsupported step configuration in which '
-                             'ntasks > 1 and  '
-                             'cpus_per_task != min_cpus_per_task')
-
-        min_cores = self.min_cpus_per_task * self.min_tasks
-        if cores < min_cores:
+        cores_per_node = available_resources['cores_per_node']
+        self.cpus_per_task = min(self.cpus_per_task,
+                                 min(available_cores, cores_per_node))
+        if self.cpus_per_task < self.min_cpus_per_task:
             raise ValueError(
-                f'Available cores ({cores}) is below the minimum of '
-                f'{min_cores} for step {self.name}')
+                f'Available cpus_per_task ({self.cpus_per_task}) is below the '
+                f'minimum of {self.min_cpus_per_task} for step {self.name}')
+
+        available_tasks = available_cores // self.cpus_per_task
+        self.ntasks = min(self.ntasks, available_tasks)
+
+        if self.ntasks < self.min_tasks:
+            raise ValueError(
+                f'Available number of MPI tasks ({self.ntasks}) is below the '
+                f'minimum of {self.min_tasks} for step {self.name}')
 
     def setup(self):
         """
