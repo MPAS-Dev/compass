@@ -21,6 +21,7 @@ from shared import (
     get_logger,
     get_spack_base,
     install_miniconda,
+    log_message,
     parse_args,
 )
 
@@ -190,11 +191,9 @@ def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
 
     if args.with_petsc:
         lib_suffix = f'{lib_suffix}_petsc'
-        message = 'Turning off OpenMP because it doesn\'t work well with PETSc'
-        if logger is None:
-            print(message)
-        else:
-            logger.info(message)
+        log_message(
+            logger,
+            'Turning off OpenMP because it doesn\'t work well with PETSc')
         args.without_openmp = True
     else:
         config.set('deploy', 'petsc', 'None')
@@ -436,6 +435,9 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
     if not os.path.exists(yaml_template):
         yaml_template = None
     if update_spack:
+        home_dir = os.path.expanduser('~')
+        log_message(logger, 'Removing ~/.spack for safety')
+        safe_rmtree(os.path.join(home_dir, '.spack'))
         make_spack_env(spack_path=spack_branch_base, env_name=spack_env,
                        spack_specs=specs, compiler=compiler, mpi=mpi,
                        machine=machine,
@@ -797,6 +799,13 @@ def check_supported(library, machine, compiler, mpi, source_path):
                      f'on {machine}')
 
 
+def safe_rmtree(path):
+    try:
+        shutil.rmtree(path)
+    except OSError:
+        pass
+
+
 def main():  # noqa: C901
     args = parse_args(bootstrap=True)
 
@@ -876,10 +885,7 @@ def main():  # noqa: C901
 
         build_dir = f'conda/build{activ_suffix}'
 
-        try:
-            shutil.rmtree(build_dir)
-        except OSError:
-            pass
+        safe_rmtree(build_dir)
         try:
             os.makedirs(build_dir)
         except FileExistsError:

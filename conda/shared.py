@@ -220,6 +220,13 @@ def restore_bashrc():
             shutil.move(src, dst)
 
 
+def log_message(logger, message):
+    if logger is None:
+        print(message)
+    else:
+        logger.info(message)
+
+
 def get_logger(name, log_filename):
     print(f'Logging to: {log_filename}\n')
     try:
