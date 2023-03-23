@@ -237,14 +237,20 @@ compilers, MPI and libraries needed to build and run MPAS components, and
 set environment variables needed for MPAS or ``compass``.  It will also set an
 environment variable ``LOAD_COMPASS_ENV`` that points to the activation script.
 ``compass`` uses this to make an symlink to the activation script called
-``load_compass_env.sh`` in the work directory.
+``load_compass_env.sh`` in the work directory.  When the load script is
+executed from the base of the compass repository (i.e., as
+``source ./load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh``),
+it will install the version of the ``compass`` package from that location into the associated
+conda environment.  When the load script is executed from the work
+directory through the symlink, it will activate the associated conda
+environment, but does *not* install the ``compass`` package into the conda
+environment; it is assumed that is already up to date from when the conda
+environment was created or last updated.
 
-If you switch between different ``compass`` branches, it is safest to rerun
-``./conda/configure_compass_env.py``  with the same arguments as above to make
-sure dependencies are up to date and the ``compass`` package points to the
-current directory.  If you are certain that no ``compass`` dependencies are
-different between branches, you can also simply source the activation script
-(``load_dev_compass*.sh``) in the branch.
+It is generally recommended to activate the ``compass`` environment (from
+either the compass repo or via the workdir symlink) from a
+clean environment.  Unexpected behavior may occur if activating a different
+``compass`` environment after having one already activated.
 
 Once you have sourced the activation script, you can run ``compass`` commands
 anywhere, and it always refers to that branch.  To find out which branch you
@@ -258,6 +264,74 @@ This will give you the path to the load script, which will also tell you where
 the branch is.  If you do not use the worktree approach, you will also need to
 check what branch you are currently on with ``git log``, ``git branch`` or
 a similar command.
+
+If you wish to work with another compiler, simply rerun the script with a new
+compiler name and an activation script will be produced.  You can then source
+either activation script to get the same conda environment but with different
+compilers and related modules.  Make sure you are careful to set up compass by
+pointing to a version of the MPAS model that was compiled with the correct
+compiler.
+
+Switching between different compass environments
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Many developers are switching between different ``compass`` branches.
+We have 2 main workflows for doing this: checking out different branches
+in the same directory (with ``git checkout``) or creating new directories for
+each branch (with ``git worktree``).  Either way, you need to be careful that
+the version of the ``compass`` package that is installed in the conda
+environment you are using is the one you want.  But how to handle it
+differs slightly between these workflows.
+
+If you are developing or using multiple ``compass`` branches in the same
+directory (switching between them using ``git checkout``), you will need
+to make sure you update your ``compass`` environment after changing
+branches.  Often the branches you're developing will make use of the
+same conda environment, because they are using the same
+``compass`` version (so the dependencies aren't changing).  The same
+conda environment (e.g. ``dev_compass_<version>``) can safely be used
+with multiple branches if you explicitly reinstall the ``compass`` package
+you want to use into the conda environment *after* moving to a new branch.
+You can do this by simply re-executing
+``source ./load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh``
+from the *root of the repo* before proceeding.
+
+Similarly, if you are developing or using multiple ``compass`` branches
+but you use a different directory for each (creating the directories with
+ ``git worktree``), you will need to make sure the version of the
+ ``compass`` package in your conda environment is the one you want.
+If your branches use the same ``compass`` version (so the dependencies
+are the same), you can use the same conda environment
+(e.g. ``dev_compass_<version>``) for all of them.  But you will only
+be able to test one of them at a time.  You will tell the conda environment
+which branch to use by running
+``source ./load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh``
+from the *root of the directory (worktree) you want to work with* before
+proceeding.
+
+In both of these workflows, you can modify the ``compass`` code and the conda
+environment will notice the changes as you make them.  However, if you have
+added or removed any files during your development, you need to source the
+load script again:
+``source ./load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh``
+in the root of the repo or worktree so that the added or removed files will be
+accounted for in the conda environment.
+
+If you know that ``compass`` has different dependencies
+in a branch or worktree you are working on compared to a previous branch
+you have worked with (or if you aren't sure), it is safest to not just reinstall
+the ``compass`` package but also to check the dependencies by re-running:
+``./conda/configure_compass_env.py``  with the same arguments as above.
+This will also reinstall the ``compass`` package from the current directory.
+
+If you need more than one conda environment (e.g. because you are testing
+multiple branches at the same time), you can choose your own name
+for the conda environment.  Typically, this might be something related to the
+name of the branch you are developing.  This can be done with the
+``--env-name`` argument to ``./conda/configure_compass_env.py``.  You
+can reuse the same custom-named environment across multiple branches
+if that is useful.  Just remember to reinstall ``compass`` each time you
+switch branches.
 
 .. note::
 
@@ -275,11 +349,6 @@ a similar command.
     it's best to start a new terminal without having sourced a load script at
     all.
 
-If you switch to another branch, you will need to rerun
-``./conda/configure_compass_env.py`` with the same arguments as above to make
-sure dependencies are up to date and the ``compass`` package points to the
-current directory.
-
 .. note::
 
     With the conda environment activated, you can switch branches and update
@@ -294,13 +363,6 @@ current directory.
     than rerunning ``./conda/configure_compass_env.py ...`` but risks
     dependencies being out of date.  Since dependencies change fairly rarely,
     this will usually be safe.
-
-If you wish to work with another compiler, simply rerun the script with a new
-compiler name and an activation script will be produced.  You can then source
-either activation script to get the same conda environment but with different
-compilers and related modules.  Make sure you are careful to set up compass by
-pointing to a version of the MPAS model that was compiled with the correct
-compiler.
 
 Troubleshooting
 ~~~~~~~~~~~~~~~
@@ -320,7 +382,9 @@ scratch.  This takes just a little extra time.
 Creating/updating only the compass environment
 ----------------------------------------------
 
-For some workflows (e.g. for MALI development wih the Albany library), you may
+For some workflows (e.g. for MALI development with the Albany library when the
+MALI build environment has been created outside of ``compass``, for example,
+on an unsupported machine), you may
 only want to create the conda environment and not build SCORPIO, ESMF or
 include any system modules or environment variables in your activation script.
 In such cases, run with the ``--env_only`` flag:
