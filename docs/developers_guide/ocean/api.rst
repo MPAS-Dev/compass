@@ -221,6 +221,12 @@ test cases and steps
 
    mesh.qu240.dynamic_adjustment.QU240DynamicAdjustment
 
+   mesh.rrs6to18.RRS6to18BaseMesh
+   mesh.rrs6to18.RRS6to18BaseMesh.build_cell_width_lat_lon
+   mesh.rrs6to18.dynamic_adjustment.RRS6to18DynamicAdjustment
+   mesh.rrs6to18.dynamic_adjustment.RRS6to18DynamicAdjustment.configure
+   mesh.rrs6to18.dynamic_adjustment.RRS6to18DynamicAdjustment.run
+
    mesh.so12to60.SO12to60BaseMesh
    mesh.so12to60.SO12to60BaseMesh.build_cell_width_lat_lon
    mesh.so12to60.dynamic_adjustment.SO12to60DynamicAdjustment

@@ -636,6 +636,77 @@ The vertical grid is a ``60layerPHC`` profile (see
 :ref:`dev_ocean_framework_vertical`) with 60 vertical levels ranging in
 thickness from 10 to 250 m.
 
+.. _dev_ocean_global_ocean_rrs6to18:
+
+RRS6to18 and RRSwISC6to18
++++++++++++++++++++++++++
+
+The ``RRS6to18`` and ``RRSwISC6to18`` Rossby-radius-scaling (RRS) meshes are
+the E3SM v3 "high resolution" meshes.  They have resolution that scales as
+a function of latitude approximately with the Rossby radius of deformation
+from 6 km at the poles to 18 km at the equator.
+
+The class :py:class:`compass.ocean.tests.global_ocean.mesh.rrs6to18.RRS6to18BaseMesh`
+defines the resolution for the meshes. The
+``compass.ocean.tests.global_ocean.mesh.rrs6to18`` module includes namelist options
+appropriate for forward simulations with split-explicit (but not RK4) time
+integration on these meshes.  These set the time step and default run duration
+for short runs with these meshes.
+
+The default config options for these meshes are:
+
+.. code-block:: cfg
+
+    # Options related to the vertical grid
+    [vertical_grid]
+
+    # the type of vertical grid
+    grid_type = 80LayerE3SMv1
+
+
+    # options for global ocean testcases
+    [global_ocean]
+
+    ## config options related to the initial_state step
+    # number of cores to use
+    init_ntasks = 512
+    # minimum of cores, below which the step fails
+    init_min_tasks = 64
+    # maximum memory usage allowed (in MB)
+    init_max_memory = 1000
+
+    ## config options related to the forward steps
+    # number of cores to use
+    forward_ntasks = 8192
+    # minimum of cores, below which the step fails
+    forward_min_tasks = 1024
+    # maximum memory usage allowed (in MB)
+    forward_max_memory = 1000
+
+    ## metadata related to the mesh
+    # the prefix (e.g. QU, EC, WC, SO)
+    prefix = RRS
+    # a description of the mesh and initial condition
+    mesh_description = MPAS Eddy Closure mesh for E3SM version ${e3sm_version} with
+                       enhanced resolution around the equator (30 km), South pole
+                       (35 km), Greenland (${min_res} km), ${max_res}-km resolution
+                       at mid latitudes, and ${levels} vertical levels
+    # E3SM version that the mesh is intended for
+    e3sm_version = 3
+    # The revision number of the mesh, which should be incremented each time the
+    # mesh is revised
+    mesh_revision = 1
+    # the minimum (finest) resolution in the mesh
+    min_res = 6
+    # the maximum (coarsest) resolution in the mesh, can be the same as min_res
+    max_res = 18
+    # The URL of the pull request documenting the creation of the mesh
+    pull_request = <<<Missing>>>
+
+The vertical grid is a ``80LayerE3SMv1`` profile (see
+:ref:`dev_ocean_framework_vertical`) with 80 vertical levels ranging in
+thickness from 2 to 150 m.
+
 .. _dev_ocean_global_ocean_sowisc12to60:
 
 SO12to60 and SOwISC12to60
@@ -729,7 +800,7 @@ WC14 and WCwISC14
 +++++++++++++++++
 
 The ``WC14`` and ``WCwISC14`` meshes are the Water Cycle regionally refined
-meshes for E3SM v3.  It has higher resolution (~14-km) around the continental
+meshes for E3SM v3.  They have higher resolution (~14-km) around the continental
 US, the Arctic Ocean, and a section of the North Atlantic containing the Gulf
 Stream. The resolution elsewhere varies between 35 km at the South Pole to 60
 km at mid latitudes, with a band of 30-km resolution around the equator.
