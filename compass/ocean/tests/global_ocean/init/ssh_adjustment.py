@@ -1,3 +1,5 @@
+from importlib.resources import contents
+
 from compass.ocean.iceshelf import adjust_ssh
 from compass.step import Step
 
@@ -23,6 +25,15 @@ class SshAdjustment(Step):
 
         self.add_namelist_file(
             'compass.ocean.tests.global_ocean', 'namelist.forward')
+
+        mesh_package = test_case.mesh.package
+        mesh_package_contents = list(contents(mesh_package))
+        mesh_namelists = ['namelist.forward',
+                          'namelist.split_explicit']
+        for mesh_namelist in mesh_namelists:
+            if mesh_namelist in mesh_package_contents:
+                self.add_namelist_file(mesh_package, mesh_namelist)
+
         self.add_namelist_options({'config_AM_globalStats_enable': '.false.'})
         self.add_namelist_file('compass.ocean.namelists',
                                'namelist.ssh_adjust')
@@ -36,13 +47,13 @@ class SshAdjustment(Step):
 
         self.add_input_file(
             filename='adjusting_init0.nc',
-            work_dir_target='{}/initial_state.nc'.format(init_path))
+            work_dir_target=f'{init_path}/initial_state.nc')
         self.add_input_file(
             filename='forcing_data.nc',
-            work_dir_target='{}/init_mode_forcing_data.nc'.format(init_path))
+            work_dir_target=f'{init_path}/init_mode_forcing_data.nc')
         self.add_input_file(
             filename='graph.info',
-            work_dir_target='{}/culled_graph.info'.format(mesh_path))
+            work_dir_target=f'{mesh_path}/culled_graph.info')
 
         self.add_model_as_input()
 
