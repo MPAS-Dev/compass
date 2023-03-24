@@ -22,6 +22,9 @@ from compass.ocean.tests.global_ocean.mesh.qu240.dynamic_adjustment import (
 from compass.ocean.tests.global_ocean.mesh.qu.dynamic_adjustment import (
     QUDynamicAdjustment,
 )
+from compass.ocean.tests.global_ocean.mesh.rrs6to18.dynamic_adjustment import (
+    RRS6to18DynamicAdjustment,
+)
 from compass.ocean.tests.global_ocean.mesh.so12to60.dynamic_adjustment import (
     SO12to60DynamicAdjustment,
 )
@@ -73,6 +76,10 @@ class GlobalOcean(TestGroup):
 
         self._add_tests(mesh_names=['WC14', 'WCwISC14'],
                         DynamicAdjustment=WC14DynamicAdjustment)
+
+        # RRS6to18: with and without cavities
+        self._add_tests(mesh_names=['RRS6to18', 'RRSwISC6to18'],
+                        DynamicAdjustment=RRS6to18DynamicAdjustment)
 
         # Kuroshio meshes without ice-shelf cavities
         self._add_tests(mesh_names=['Kuroshio12to60', 'Kuroshio8to60'],
