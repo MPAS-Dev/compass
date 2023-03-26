@@ -175,7 +175,6 @@ class Ensemble(TestCase):
         for run_num in range(self.start_run, self.end_run + 1):
             self.add_step(EnsembleMember(
                 test_case=self, run_num=run_num,
-                test_resources_location='compass.landice.tests.ensemble_generator.ensemble',  # noqa
                 basal_fric_exp=param_dict['fric_exp']['vec'][run_num],
                 mu_scale=param_dict['mu_scale']['vec'][run_num],
                 stiff_scale=param_dict['stiff_scale']['vec'][run_num],

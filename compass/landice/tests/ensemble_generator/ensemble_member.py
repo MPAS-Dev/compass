@@ -28,10 +28,6 @@ class EnsembleMember(Step):
     ntasks : integer
         the number of parallel (MPI) tasks the step would ideally use
 
-    test_resources_location : str
-        path to the python package that contains the resources to be
-        used for the test (namelist, streams, albany input file)
-
     input_file_name : str
         name of the input file that was read from the config
 
@@ -58,7 +54,6 @@ class EnsembleMember(Step):
     """
 
     def __init__(self, test_case, run_num,
-                 test_resources_location,
                  basal_fric_exp=None,
                  mu_scale=None,
                  stiff_scale=None,
@@ -77,10 +72,6 @@ class EnsembleMember(Step):
 
         run_num : integer
             the run number for this ensemble member
-
-        test_resources_location : str
-            path to the python package that contains the resources to be
-            used for the test (namelist, streams, albany input file)
 
         basal_fric_exp : float
             value of basal friction exponent to use
@@ -105,7 +96,6 @@ class EnsembleMember(Step):
             value of deltaT to use in ISMIP6 ice-shelf basal melt param.
         """
         self.run_num = run_num
-        self.test_resources_location = test_resources_location
 
         # store assigned param values for this run
         self.basal_fric_exp = basal_fric_exp
@@ -137,6 +127,8 @@ class EnsembleMember(Step):
                   "'compass setup' again to set this experiment up.")
             return
 
+        module = self.__module__
+
         # Get config for info needed for setting up simulation
         config = self.config
         section = config['ensemble']
@@ -157,14 +149,13 @@ class EnsembleMember(Step):
         self.min_tasks = self.ntasks
 
         # Set up base run configuration
-        self.add_namelist_file(self.test_resources_location,
-                               'namelist.landice')
+        self.add_namelist_file(module, 'namelist.landice')
 
         # copy over albany yaml file
         # cannot use add_input functionality because need to modify the file
         # in this function, and inputs don't get processed until after this
         # function
-        with resources.path(self.test_resources_location,
+        with resources.path(module,
                             'albany_input.yaml') as package_path:
             target = str(package_path)
             shutil.copy(target, self.work_dir)
@@ -260,7 +251,7 @@ class EnsembleMember(Step):
         # store accumulated namelist and streams options
         self.add_namelist_options(options=options,
                                   out_name='namelist.landice')
-        self.add_streams_file(self.test_resources_location, 'streams.landice',
+        self.add_streams_file(module, 'streams.landice',
                               out_name='streams.landice',
                               template_replacements=stream_replacements)
 
