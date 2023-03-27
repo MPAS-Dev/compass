@@ -925,7 +925,13 @@ The test case is constructed with an argument ``restart_filename``. the final
 restart file produced by the :ref:`dev_ocean_global_ocean_dynamic_adjustment`
 for the given mesh.
 
-The test case is made up of 8 steps:
+The test case is made up of 10 steps:
+
+:py:class:`compass.ocean.tests.global_ocean.files_for_e3sm.ocean_mesh.OceanMesh`
+    uses variables from the ocean initial condition and computes others to
+    create an ocean mesh file (with both horizontal and vertical coordinate
+    information), creating a symlink
+    at ``assembled_files/inputdata/share/meshes/mpas/ocean/<mesh_short_name>.<datestamp>.nc``
 
 :py:class:`compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.OceanInitialCondition`
     takes out the ``xtime`` variable from the restart file, creating a symlink
@@ -938,6 +944,11 @@ The test case is made up of 8 steps:
     are produced for each mesh (keeping only counts with small prime factors).
     Symlinks to the graph files are placed at
     ``assembled_files/inputdata/ocn/mpas-o/<mesh_short_name>/partitions/mpas-o.graph.info.<datestamp>.part.<core_count>``
+
+:py:class:`compass.ocean.tests.global_ocean.files_for_e3sm.seaice_mesh.SeaiceMesh`
+    uses variables from the ocean initial condition to create a sea-ice mesh
+    file (with horizontal coordinate information), creating a symlink
+    at ``assembled_files/inputdata/share/meshes/mpas/sea-ice/<mesh_short_name>.<datestamp>.nc``
 
 :py:class:`compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.SeaiceInitialCondition`
     extracts the following variables from the restart file:

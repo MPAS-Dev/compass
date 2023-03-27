@@ -936,8 +936,13 @@ name”, see <a class="reference internal" href="#dev-ocean-global-ocean-metadat
 <p>The test case is constructed with an argument <code class="docutils literal notranslate"><span class="pre">restart_filename</span></code>. the final
 restart file produced by the <a class="reference internal" href="#dev-ocean-global-ocean-dynamic-adjustment"><span class="std std-ref">dynamic_adjustment test case</span></a>
 for the given mesh.</p>
-<p>The test case is made up of 8 steps:</p>
+<p>The test case is made up of 10 steps:</p>
 <dl>
+<dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_mesh.OceanMesh.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_mesh.OceanMesh" title="compass.ocean.tests.global_ocean.files_for_e3sm.ocean_mesh.OceanMesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.ocean_mesh.OceanMesh</span></code></a></dt><dd><p>uses variables from the ocean initial condition and computes others to
+create an ocean mesh file (with both horizontal and vertical coordinate
+information), creating a symlink
+at <code class="docutils literal notranslate"><span class="pre">assembled_files/inputdata/share/meshes/mpas/ocean/&lt;mesh_short_name&gt;.&lt;datestamp&gt;.nc</span></code></p>
+</dd>
 <dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.OceanInitialCondition.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.OceanInitialCondition" title="compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.OceanInitialCondition"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.OceanInitialCondition</span></code></a></dt><dd><p>takes out the <code class="docutils literal notranslate"><span class="pre">xtime</span></code> variable from the restart file, creating a symlink
 at <code class="docutils literal notranslate"><span class="pre">assembled_files/inputdata/ocn/mpas-o/&lt;mesh_short_name&gt;/mpaso.&lt;mesh_short_name&gt;.&lt;datestamp&gt;.nc</span></code></p>
 </dd>
@@ -947,6 +952,10 @@ range of core counts between <code class="docutils literal notranslate"><span cl
 are produced for each mesh (keeping only counts with small prime factors).
 Symlinks to the graph files are placed at
 <code class="docutils literal notranslate"><span class="pre">assembled_files/inputdata/ocn/mpas-o/&lt;mesh_short_name&gt;/partitions/mpas-o.graph.info.&lt;datestamp&gt;.part.&lt;core_count&gt;</span></code></p>
+</dd>
+<dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.seaice_mesh.SeaiceMesh.html#compass.ocean.tests.global_ocean.files_for_e3sm.seaice_mesh.SeaiceMesh" title="compass.ocean.tests.global_ocean.files_for_e3sm.seaice_mesh.SeaiceMesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.seaice_mesh.SeaiceMesh</span></code></a></dt><dd><p>uses variables from the ocean initial condition to create a sea-ice mesh
+file (with horizontal coordinate information), creating a symlink
+at <code class="docutils literal notranslate"><span class="pre">assembled_files/inputdata/share/meshes/mpas/sea-ice/&lt;mesh_short_name&gt;.&lt;datestamp&gt;.nc</span></code></p>
 </dd>
 <dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.SeaiceInitialCondition.html#compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.SeaiceInitialCondition" title="compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.SeaiceInitialCondition"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.SeaiceInitialCondition</span></code></a></dt><dd><p>extracts the following variables from the restart file:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">keep_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;areaCell&#39;</span><span class="p">,</span> <span class="s1">&#39;cellsOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;edgesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;fCell&#39;</span><span class="p">,</span>

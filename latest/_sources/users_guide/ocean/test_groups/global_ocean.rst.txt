@@ -171,6 +171,9 @@ Note that meshes and test cases may modify these options, as noted below.
     # directory of an ocean restart file on the given mesh
     ocean_restart_filename = autodetect
 
+    # the initial state used to extract the ocean and sea-ice meshes
+    ocean_initial_state_filename = ${ocean_restart_filename}
+
     # the absolute path or relative path with respect to the test case's work
     # directory of a graph file that corresponds to the mesh
     graph_filename = autodetect

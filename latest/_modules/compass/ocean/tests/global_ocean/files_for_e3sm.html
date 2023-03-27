@@ -130,12 +130,18 @@
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
     <span class="n">OceanInitialCondition</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.ocean_mesh</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
+    <span class="n">OceanMesh</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.scrip</span> <span class="kn">import</span> <span class="n">Scrip</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.seaice_graph_partition</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
     <span class="n">SeaiceGraphPartition</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
     <span class="n">SeaiceInitialCondition</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.seaice_mesh</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
+    <span class="n">SeaiceMesh</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.forward</span> <span class="kn">import</span> <span class="n">get_forward_subdir</span>
 <span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
@@ -194,9 +200,11 @@
 
         <span class="c1"># add metadata if we&#39;re running this on an existing mesh</span>
         <span class="n">add_metadata</span> <span class="o">=</span> <span class="p">(</span><span class="n">dynamic_adjustment</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">OceanMesh</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">OceanInitialCondition</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                                             <span class="n">add_metadata</span><span class="o">=</span><span class="n">add_metadata</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">OceanGraphPartition</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">SeaiceMesh</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">SeaiceInitialCondition</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">SeaiceGraphPartition</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Scrip</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
@@ -208,8 +216,9 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Modify the configuration options for this test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">init</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">init</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init</span>
+        <span class="k">if</span> <span class="n">init</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">init</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
 
         <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span>
         <span class="n">dynamic_adjustment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_adjustment</span>
@@ -229,6 +238,18 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">base_work_dir</span><span class="p">,</span> <span class="n">mesh_path</span><span class="p">,</span> <span class="s1">&#39;culled_graph.info&#39;</span><span class="p">)</span>
             <span class="n">graph_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">graph_filename</span><span class="p">)</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span> <span class="s1">&#39;graph_filename&#39;</span><span class="p">,</span> <span class="n">graph_filename</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">init</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
+                <span class="n">initial_state_filename</span> <span class="o">=</span> \
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/ssh_adjustment/adjusted_init.nc&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">initial_state_filename</span> <span class="o">=</span> \
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/initial_state/initial_state.nc&#39;</span>
+            <span class="n">initial_state_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_work_dir</span><span class="p">,</span>
+                                                  <span class="n">initial_state_filename</span><span class="p">)</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span> <span class="s1">&#39;ocean_initial_state_filename&#39;</span><span class="p">,</span>
+                       <span class="n">initial_state_filename</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">dynamic_adjustment</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">restart_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
