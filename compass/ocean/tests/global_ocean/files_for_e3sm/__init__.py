@@ -16,12 +16,18 @@ from compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition impor
 from compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition import (  # noqa: E501
     OceanInitialCondition,
 )
+from compass.ocean.tests.global_ocean.files_for_e3sm.ocean_mesh import (  # noqa: E501
+    OceanMesh,
+)
 from compass.ocean.tests.global_ocean.files_for_e3sm.scrip import Scrip
 from compass.ocean.tests.global_ocean.files_for_e3sm.seaice_graph_partition import (  # noqa: E501
     SeaiceGraphPartition,
 )
 from compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition import (  # noqa: E501
     SeaiceInitialCondition,
+)
+from compass.ocean.tests.global_ocean.files_for_e3sm.seaice_mesh import (  # noqa: E501
+    SeaiceMesh,
 )
 from compass.ocean.tests.global_ocean.forward import get_forward_subdir
 from compass.testcase import TestCase
@@ -80,9 +86,11 @@ class FilesForE3SM(TestCase):
 
         # add metadata if we're running this on an existing mesh
         add_metadata = (dynamic_adjustment is None)
+        self.add_step(OceanMesh(test_case=self))
         self.add_step(OceanInitialCondition(test_case=self,
                                             add_metadata=add_metadata))
         self.add_step(OceanGraphPartition(test_case=self))
+        self.add_step(SeaiceMesh(test_case=self))
         self.add_step(SeaiceInitialCondition(test_case=self))
         self.add_step(SeaiceGraphPartition(test_case=self))
         self.add_step(Scrip(test_case=self))
@@ -94,8 +102,9 @@ class FilesForE3SM(TestCase):
         """
         Modify the configuration options for this test case
         """
-        if self.init is not None:
-            self.init.configure(config=self.config)
+        init = self.init
+        if init is not None:
+            init.configure(config=self.config)
 
         mesh = self.mesh
         dynamic_adjustment = self.dynamic_adjustment
@@ -115,6 +124,18 @@ class FilesForE3SM(TestCase):
                 self.base_work_dir, mesh_path, 'culled_graph.info')
             graph_filename = os.path.abspath(graph_filename)
             config.set('files_for_e3sm', 'graph_filename', graph_filename)
+
+        if init is not None:
+            if mesh.with_ice_shelf_cavities:
+                initial_state_filename = \
+                    f'{init.path}/ssh_adjustment/adjusted_init.nc'
+            else:
+                initial_state_filename = \
+                    f'{init.path}/initial_state/initial_state.nc'
+            initial_state_filename = os.path.join(self.base_work_dir,
+                                                  initial_state_filename)
+            config.set('files_for_e3sm', 'ocean_initial_state_filename',
+                       initial_state_filename)
 
         if dynamic_adjustment is not None:
             restart_filename = os.path.join(

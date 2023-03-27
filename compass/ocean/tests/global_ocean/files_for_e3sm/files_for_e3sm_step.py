@@ -27,6 +27,15 @@ class FilesForE3SMStep(Step):
 
     with_ice_shelf_cavities : bool
         Whether the mesh includes ice-shelf cavities
+
+    ocean_mesh_dir : str
+        The relative path to the ocean inputdata directory for all meshes
+
+    seaice_mesh_dir : str
+        The relative path to the sea-ice inputdata directory for all meshes
+
+    mesh_vars : list
+        A list of the variables that belong to the MPAS horizontal mesh
     """
 
     def __init__(self, test_case, name, subdir=None, cpus_per_task=1,
@@ -78,11 +87,36 @@ class FilesForE3SMStep(Step):
         self.seaice_inputdata_dir = None
         self.with_ice_shelf_cavities = None
 
+        self.ocean_mesh_dir = \
+            '../assembled_files/inputdata/share/meshes/mpas/ocean'
+
+        self.seaice_mesh_dir = \
+            '../assembled_files/inputdata/share/meshes/mpas/sea-ice'
+
+        self.mesh_vars = [
+            'areaCell', 'cellsOnCell', 'edgesOnCell', 'indexToCellID',
+            'latCell', 'lonCell', 'meshDensity', 'nEdgesOnCell',
+            'verticesOnCell', 'xCell', 'yCell', 'zCell', 'angleEdge',
+            'cellsOnEdge', 'dcEdge', 'dvEdge', 'edgesOnEdge',
+            'indexToEdgeID', 'latEdge', 'lonEdge', 'nEdgesOnCell',
+            'nEdgesOnEdge', 'verticesOnEdge', 'weightsOnEdge', 'xEdge',
+            'yEdge', 'zEdge', 'areaTriangle', 'cellsOnVertex', 'edgesOnVertex',
+            'indexToVertexID', 'kiteAreasOnVertex', 'latVertex',
+            'lonVertex', 'xVertex', 'yVertex', 'zVertex']
+
     def setup(self):
         """
         setup input files based on config options
         """
         self.add_input_file(filename='README', target='../README')
+
+        initial_state_filename = self.config.get(
+            'files_for_e3sm', 'ocean_initial_state_filename')
+        if initial_state_filename != 'autodetect':
+            initial_state_filename = os.path.normpath(os.path.join(
+                self.test_case.work_dir, initial_state_filename))
+            self.add_input_file(filename='initial_state.nc',
+                                target=initial_state_filename)
 
         restart_filename = self.config.get('files_for_e3sm',
                                            'ocean_restart_filename')
@@ -102,20 +136,21 @@ class FilesForE3SMStep(Step):
         Run this step of the testcase
         """
         config = self.config
-        if not os.path.exists('restart.nc'):
-            restart_filename = config.get('files_for_e3sm',
-                                          'ocean_restart_filename')
-            if restart_filename == 'autodetect':
-                raise ValueError('No ocean restart file was provided in the '
-                                 'ocean_restart_filename config option.')
-            restart_filename = os.path.normpath(os.path.join(
-                self.test_case.work_dir, restart_filename))
-            if not os.path.exists(restart_filename):
-                raise FileNotFoundError(
-                    'The ocean restart file given in ocean_restart_filename '
-                    'could not be found.')
-            if restart_filename != 'restart.nc':
-                symlink(restart_filename, 'restart.nc')
+        for prefix in ['initial_state', 'restart']:
+            if not os.path.exists(f'{prefix}.nc'):
+                filename = config.get('files_for_e3sm',
+                                      f'ocean_{prefix}_filename')
+                if filename == 'autodetect':
+                    raise ValueError(f'No file was provided in the '
+                                     f'ocean_{prefix}_filename config option.')
+                filename = os.path.normpath(os.path.join(
+                    self.test_case.work_dir, filename))
+                if not os.path.exists(filename):
+                    raise FileNotFoundError(
+                        f'The ocean file given in ocean_{prefix}_filename '
+                        f'could not be found.')
+                if filename != f'{prefix}.nc':
+                    symlink(filename, f'{prefix}.nc')
 
         mesh_short_name = config.get('files_for_e3sm', 'mesh_short_name')
         creation_date = config.get('global_ocean', 'creation_date')
@@ -168,7 +203,8 @@ class FilesForE3SMStep(Step):
         self.seaice_inputdata_dir = \
             f'../assembled_files/inputdata/ice/mpas-seaice/{mesh_short_name}'
 
-        for dest_dir in [self.ocean_inputdata_dir, self.seaice_inputdata_dir]:
+        for dest_dir in [self.ocean_inputdata_dir, self.seaice_inputdata_dir,
+                         self.ocean_mesh_dir, self.seaice_mesh_dir]:
             try:
                 os.makedirs(dest_dir)
             except FileExistsError:
