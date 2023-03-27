@@ -1,17 +1,23 @@
-import xarray
 import os
 
-from geometric_features import GeometricFeatures, FeatureCollection, \
-    read_feature_collection
+import mpas_tools.io
+import xarray
+from geometric_features import (
+    FeatureCollection,
+    GeometricFeatures,
+    read_feature_collection,
+)
+from mpas_tools.io import write_netcdf
+from mpas_tools.logging import LoggingContext, check_call
 from mpas_tools.mesh.conversion import cull
 from mpas_tools.mesh.mask import compute_mpas_flood_fill_mask
-import mpas_tools.io
-from mpas_tools.io import write_netcdf
 from mpas_tools.ocean import inject_bathymetry
-from mpas_tools.ocean.coastline_alteration import widen_transect_edge_masks, \
-    add_critical_land_blockages, add_land_locked_cells_to_mask
+from mpas_tools.ocean.coastline_alteration import (
+    add_critical_land_blockages,
+    add_land_locked_cells_to_mask,
+    widen_transect_edge_masks,
+)
 from mpas_tools.viz.paraview_extractor import extract_vtk
-from mpas_tools.logging import LoggingContext, check_call
 
 from compass.step import Step
 
@@ -75,6 +81,9 @@ class CullMeshStep(Step):
         for file in ['culled_mesh.nc', 'culled_graph.info',
                      'critical_passages_mask_final.nc']:
             self.add_output_file(filename=file)
+
+        if with_ice_shelf_cavities:
+            self.add_output_file(filename='land_ice_mask.nc')
 
         self.with_ice_shelf_cavities = with_ice_shelf_cavities
         self.do_inject_bathymetry = do_inject_bathymetry
