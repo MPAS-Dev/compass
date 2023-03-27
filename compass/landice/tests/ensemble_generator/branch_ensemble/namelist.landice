@@ -1,0 +1,53 @@
+    config_velocity_solver = 'FO'
+    config_unrealistic_velocity = 0.00317 ! 100 km/yr
+    config_nonconvergence_error = .false.
+    config_flowParamA_calculation = 'PB1982' ! required for VM calving
+
+    config_thickness_advection = 'fo'
+    config_tracer_advection = 'fo'
+
+    config_calving = 'von_Mises_stress'
+    config_grounded_von_Mises_threshold_stress = 250.0e3
+    config_floating_von_Mises_threshold_stress = 250.0e3
+    config_calving_speed_limit = 0.000952 ! 30 km/yr
+    config_damage_calving_threshold = 0.95
+    config_calculate_damage = .true.
+    config_damage_calving_method = 'none'
+    config_restore_calving_front = .false.
+    config_remove_icebergs = .true.
+    config_remove_small_islands = .true.
+    config_distribute_unablatedVolumeDynCell = .true.
+
+    config_thermal_solver = 'temperature'
+    config_thermal_calculate_bmb = .true.
+    config_temperature_init = 'file'
+    config_thermal_thickness = 0.0
+    config_surface_air_temperature_source = 'file'
+    config_basal_heat_flux_source = 'file'
+
+    config_basal_mass_bal_float = 'ismip6'
+    config_front_mass_bal_grounded = 'none'
+
+    config_ice_density = 910.0
+    config_ocean_density = 1028.0
+    config_dynamic_thickness = 10.0
+
+    config_adaptive_timestep = .true.
+    config_adaptive_timestep_calvingCFL_fraction = 0.8
+    config_adaptive_timestep_include_calving = .true.
+    config_adaptive_timestep_CFL_fraction = 0.2
+    config_adaptive_timestep_force_interval = '0001-00-00_00:00:00'
+
+    config_do_restart = .false.
+    config_restart_timestamp_name = 'restart_timestamp'
+    config_start_time = '2000-01-01_00:00:00'
+    config_stop_time = '2200-01-01_00:00:00'
+
+    config_pio_num_iotasks = 1
+    config_pio_stride = 32
+
+    config_AM_globalStats_enable = .true.
+    config_AM_globalStats_compute_interval = 'output_interval'
+    config_AM_globalStats_stream_name = 'globalStats'
+    config_AM_globalStats_compute_on_startup = .true.
+    config_AM_globalStats_write_on_startup = .true.
