@@ -1118,10 +1118,10 @@ The names of the resources are related to the
 
 ``cpus_per_task``
     If ``ntasks > 1``, this is typically a number of threads used by each
-    MPI tasks (e.g. with OpenMP threading).  If ``ntasks == 1``, this may
+    MPI task (e.g. with OpenMP threading).  If ``ntasks == 1``, this may
     be the number of target cores used in on-node parallelism like python or
     c++ threading, or python multiprocessing.  ``cpus_per_task`` will
-    automatically be constrained to be less that the number of cores on a node
+    automatically be constrained to be less than or equal to the number of cores on a node
     (and the total available cores).  So it may be appropriate to set it to a
     high value appropriate for machines with large nodes, knowing that it will
     be constrained to fit on one node.
