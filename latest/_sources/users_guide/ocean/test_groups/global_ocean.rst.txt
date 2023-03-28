@@ -356,14 +356,16 @@ North Pacific, tapering to 60 km at mid latitudes, 30 km at the equator, and
 
 .. _global_ocean_mesh_sowisc12to60:
 
-SOwISC12to60
-^^^^^^^^^^^^
+SO12to60 and SOwISC12to60
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The Southern Ocean 12- to 60-km mesh with ice-shelf cavities (SOwISC12to60),
 sometimes called the Southern Ocean regionally refined mesh (SORRM), is
-intended to be the main simulation mesh for the
-`E3SM v2 Cryosphere Science Campaign <https://e3sm.org/research/cryosphere-ocean/v2-cryosphere-research/>`_.
+the main simulation mesh for the
+`E3SM v2 Cryosphere Science Campaign <https://e3sm.org/research/cryosphere-ocean/v2-cryosphere-research/>`_
+and E3SM v3 Polar Processes, Sea-Level Rise, and Coastal Impacts Campaign.
 
+The SO12to60 is the same mesh but without ice-shelf cavities.
 The mesh has 12 km resolution around Antarctica, tapering to 45 km in mid
 Southern latitudes, 30 km at the equator and in the North Atlantic, 60 km
 in the North Pacific, and 35 km in the Arctic.  The mesh includes the
@@ -375,12 +377,14 @@ in the North Pacific, and 35 km in the Arctic.  The mesh includes the
 
 .. _global_ocean_mesh_wc14:
 
-WC14
-^^^^
+WC14 and WCwISC14
+^^^^^^^^^^^^^^^^^
 
 The Water Cycle 14- to 60-km mesh (WC14) is intended to be the main regionally
 refined simulation mesh for the
 `E3SM v2 Water Cycle Science Campaign <https://e3sm.org/research/water-cycle/v2-water-cycle-research//>`_.
+The E3SM v3 Water Cycle Changes and Impacts Campaign is expected to use the
+same mesh but including ice-shelf cavities (WCwISC14).
 
 The mesh has 14 km resolution around the continental US, Arctic Ocean and parts
 of the North Atlantic, tapering to 60 km in mid latitudes, 30 km at the

@@ -114,8 +114,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.global_ocean.mesh.wc14.dynamic_adjustment</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.dynamic_adjustment</span> <span class="kn">import</span> \
-    <span class="n">DynamicAdjustment</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.dynamic_adjustment</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DynamicAdjustment</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.forward</span> <span class="kn">import</span> <span class="n">ForwardStep</span>
 
 
@@ -337,6 +338,8 @@
 
         <span class="n">namelist_options</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;config_run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00-00-24_00:00:00&#39;&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;config_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:12:00&#39;&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;config_btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:00:30&#39;&quot;</span><span class="p">,</span>
             <span class="s1">&#39;config_do_restart&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
             <span class="s1">&#39;config_start_time&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">restart_times</span><span class="p">[</span><span class="mi">5</span><span class="p">])}</span>
         <span class="n">namelist_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">shared_options</span><span class="p">)</span>
