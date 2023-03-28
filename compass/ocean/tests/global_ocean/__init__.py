@@ -44,216 +44,141 @@ class GlobalOcean(TestGroup):
         super().__init__(mpas_core=mpas_core, name='global_ocean')
 
         # we do a lot of tests for QU240/QUwISC240
-        for mesh_name in ['QU240', 'Icos240', 'QUwISC240']:
-            mesh = Mesh(test_group=self, mesh_name=mesh_name)
-            self.add_test_case(mesh)
-
-            init = Init(test_group=self, mesh=mesh,
-                        initial_condition='PHC',
-                        with_bgc=False)
-            self.add_test_case(init)
-
-            time_integrator = 'split_explicit'
-            self.add_test_case(
-                PerformanceTest(
-                    test_group=self, mesh=mesh, init=init,
-                    time_integrator=time_integrator))
-            self.add_test_case(
-                RestartTest(
-                    test_group=self, mesh=mesh, init=init,
-                    time_integrator=time_integrator))
-            self.add_test_case(
-                DecompTest(
-                    test_group=self, mesh=mesh, init=init,
-                    time_integrator=time_integrator))
-            self.add_test_case(
-                ThreadsTest(
-                    test_group=self, mesh=mesh, init=init,
-                    time_integrator=time_integrator))
-            self.add_test_case(
-                AnalysisTest(
-                    test_group=self, mesh=mesh, init=init,
-                    time_integrator=time_integrator))
-            self.add_test_case(
-                DailyOutputTest(
-                    test_group=self, mesh=mesh, init=init,
-                    time_integrator=time_integrator))
-            self.add_test_case(
-                MonthlyOutputTest(
-                    test_group=self, mesh=mesh, init=init,
-                    time_integrator=time_integrator))
-
-            dynamic_adjustment = QU240DynamicAdjustment(
-                test_group=self, mesh=mesh, init=init,
-                time_integrator=time_integrator)
-            self.add_test_case(dynamic_adjustment)
-            self.add_test_case(
-                FilesForE3SM(
-                    test_group=self, mesh=mesh, init=init,
-                    dynamic_adjustment=dynamic_adjustment))
-
-            time_integrator = 'RK4'
-            self.add_test_case(
-                PerformanceTest(
-                    test_group=self, mesh=mesh, init=init,
-                    time_integrator=time_integrator))
-            self.add_test_case(
-                RestartTest(
-                    test_group=self, mesh=mesh, init=init,
-                    time_integrator=time_integrator))
-            self.add_test_case(
-                DecompTest(
-                    test_group=self, mesh=mesh, init=init,
-                    time_integrator=time_integrator))
-            self.add_test_case(
-                ThreadsTest(
-                    test_group=self, mesh=mesh, init=init,
-                    time_integrator=time_integrator))
-
-            # EN4_1900 tests
-            time_integrator = 'split_explicit'
-            init = Init(test_group=self, mesh=mesh,
-                        initial_condition='EN4_1900',
-                        with_bgc=False)
-            self.add_test_case(init)
-            self.add_test_case(
-                PerformanceTest(
-                    test_group=self, mesh=mesh, init=init,
-                    time_integrator=time_integrator))
-            dynamic_adjustment = QU240DynamicAdjustment(
-                test_group=self, mesh=mesh, init=init,
-                time_integrator=time_integrator)
-            self.add_test_case(dynamic_adjustment)
-            self.add_test_case(
-                FilesForE3SM(
-                    test_group=self, mesh=mesh, init=init,
-                    dynamic_adjustment=dynamic_adjustment))
-
-            # BGC tests
-            init = Init(test_group=self, mesh=mesh,
-                        initial_condition='PHC',
-                        with_bgc=True)
-            self.add_test_case(init)
-            self.add_test_case(
-                PerformanceTest(
-                    test_group=self, mesh=mesh, init=init,
-                    time_integrator=time_integrator))
+        self._add_tests(mesh_names=['QU240', 'Icos240', 'QUwISC240'],
+                        DynamicAdjustment=QU240DynamicAdjustment,
+                        include_rk4=True,
+                        include_regression=True,
+                        include_en4_1900=True,
+                        include_bgc=True)
 
         # for other meshes, we do fewer tests
-        for mesh_name in ['EC30to60', 'ECwISC30to60']:
-            mesh = Mesh(test_group=self, mesh_name=mesh_name)
-            self.add_test_case(mesh)
-
-            init = Init(test_group=self, mesh=mesh,
-                        initial_condition='PHC',
-                        with_bgc=False)
-            self.add_test_case(init)
-
-            time_integrator = 'split_explicit'
-            self.add_test_case(
-                PerformanceTest(
-                    test_group=self, mesh=mesh, init=init,
-                    time_integrator=time_integrator))
-            dynamic_adjustment = EC30to60DynamicAdjustment(
-                test_group=self, mesh=mesh, init=init,
-                time_integrator=time_integrator)
-            self.add_test_case(dynamic_adjustment)
-            self.add_test_case(
-                FilesForE3SM(
-                    test_group=self, mesh=mesh, init=init,
-                    dynamic_adjustment=dynamic_adjustment))
+        self._add_tests(mesh_names=['EC30to60', 'ECwISC30to60'],
+                        DynamicAdjustment=EC30to60DynamicAdjustment)
 
         # ARRM10to60: just the version without cavities
-        for mesh_name in ['ARRM10to60']:
-            mesh = Mesh(test_group=self, mesh_name=mesh_name)
-            self.add_test_case(mesh)
-
-            init = Init(test_group=self, mesh=mesh,
-                        initial_condition='PHC',
-                        with_bgc=False)
-            self.add_test_case(init)
-            time_integrator = 'split_explicit'
-            self.add_test_case(
-                PerformanceTest(
-                    test_group=self, mesh=mesh, init=init,
-                    time_integrator=time_integrator))
-            dynamic_adjustment = ARRM10to60DynamicAdjustment(
-                test_group=self, mesh=mesh, init=init,
-                time_integrator=time_integrator)
-            self.add_test_case(dynamic_adjustment)
-            self.add_test_case(
-                FilesForE3SM(
-                    test_group=self, mesh=mesh, init=init,
-                    dynamic_adjustment=dynamic_adjustment))
+        self._add_tests(mesh_names=['ARRM10to60'],
+                        DynamicAdjustment=ARRM10to60DynamicAdjustment)
 
         # SO12to60: with and without cavities
-        for mesh_name in ['SO12to60', 'SOwISC12to60']:
-            mesh = Mesh(test_group=self, mesh_name=mesh_name)
-            self.add_test_case(mesh)
-
-            init = Init(test_group=self, mesh=mesh,
-                        initial_condition='PHC',
-                        with_bgc=False)
-            self.add_test_case(init)
-            time_integrator = 'split_explicit'
-            self.add_test_case(
-                PerformanceTest(
-                    test_group=self, mesh=mesh, init=init,
-                    time_integrator=time_integrator))
-            dynamic_adjustment = SO12to60DynamicAdjustment(
-                test_group=self, mesh=mesh, init=init,
-                time_integrator=time_integrator)
-            self.add_test_case(dynamic_adjustment)
-            self.add_test_case(
-                FilesForE3SM(
-                    test_group=self, mesh=mesh, init=init,
-                    dynamic_adjustment=dynamic_adjustment))
+        self._add_tests(mesh_names=['SO12to60', 'SOwISC12to60'],
+                        DynamicAdjustment=SO12to60DynamicAdjustment)
 
         # WC14: just the version without cavities
-        for mesh_name in ['WC14']:
-            mesh = Mesh(test_group=self, mesh_name=mesh_name)
-            self.add_test_case(mesh)
-
-            init = Init(test_group=self, mesh=mesh,
-                        initial_condition='PHC',
-                        with_bgc=False)
-            self.add_test_case(init)
-            time_integrator = 'split_explicit'
-            self.add_test_case(
-                PerformanceTest(
-                    test_group=self, mesh=mesh, init=init,
-                    time_integrator=time_integrator))
-            dynamic_adjustment = WC14DynamicAdjustment(
-                test_group=self, mesh=mesh, init=init,
-                time_integrator=time_integrator)
-            self.add_test_case(dynamic_adjustment)
-            self.add_test_case(
-                FilesForE3SM(
-                    test_group=self, mesh=mesh, init=init,
-                    dynamic_adjustment=dynamic_adjustment))
+        self._add_tests(mesh_names=['WC14'],
+                        DynamicAdjustment=WC14DynamicAdjustment)
 
         # Kuroshio meshes without ice-shelf cavities
-        for mesh_name in ['Kuroshio12to60', 'Kuroshio8to60']:
-            mesh = Mesh(test_group=self, mesh_name=mesh_name)
-            self.add_test_case(mesh)
-
-            init = Init(test_group=self, mesh=mesh,
-                        initial_condition='PHC',
-                        with_bgc=False)
-            self.add_test_case(init)
-            time_integrator = 'split_explicit'
-            self.add_test_case(
-                PerformanceTest(
-                    test_group=self, mesh=mesh, init=init,
-                    time_integrator=time_integrator))
-            dynamic_adjustment = KuroshioDynamicAdjustment(
-                test_group=self, mesh=mesh, init=init,
-                time_integrator=time_integrator)
-            self.add_test_case(dynamic_adjustment)
-            self.add_test_case(
-                FilesForE3SM(
-                    test_group=self, mesh=mesh, init=init,
-                    dynamic_adjustment=dynamic_adjustment))
+        self._add_tests(mesh_names=['Kuroshio12to60', 'Kuroshio8to60'],
+                        DynamicAdjustment=KuroshioDynamicAdjustment)
 
         # A test case for making E3SM support files from an existing mesh
         self.add_test_case(FilesForE3SM(test_group=self))
+
+    def _add_tests(self, mesh_names, DynamicAdjustment, include_rk4=False,
+                   include_regression=False, include_en4_1900=False,
+                   include_bgc=False):
+        """ Add test cases for the given mesh(es) """
+
+        for mesh_name in mesh_names:
+            mesh_test = Mesh(test_group=self, mesh_name=mesh_name)
+            self.add_test_case(mesh_test)
+
+            init_test = Init(test_group=self, mesh=mesh_test,
+                             initial_condition='PHC',
+                             with_bgc=False)
+            self.add_test_case(init_test)
+
+            time_integrator = 'split_explicit'
+            self.add_test_case(
+                PerformanceTest(
+                    test_group=self, mesh=mesh_test, init=init_test,
+                    time_integrator=time_integrator))
+            if include_regression:
+                self.add_test_case(
+                    RestartTest(
+                        test_group=self, mesh=mesh_test, init=init_test,
+                        time_integrator=time_integrator))
+                self.add_test_case(
+                    DecompTest(
+                        test_group=self, mesh=mesh_test, init=init_test,
+                        time_integrator=time_integrator))
+                self.add_test_case(
+                    ThreadsTest(
+                        test_group=self, mesh=mesh_test, init=init_test,
+                        time_integrator=time_integrator))
+                self.add_test_case(
+                    AnalysisTest(
+                        test_group=self, mesh=mesh_test, init=init_test,
+                        time_integrator=time_integrator))
+                self.add_test_case(
+                    DailyOutputTest(
+                        test_group=self, mesh=mesh_test, init=init_test,
+                        time_integrator=time_integrator))
+                self.add_test_case(
+                    MonthlyOutputTest(
+                        test_group=self, mesh=mesh_test, init=init_test,
+                        time_integrator=time_integrator))
+
+            dynamic_adjustment_test = DynamicAdjustment(
+                test_group=self, mesh=mesh_test, init=init_test,
+                time_integrator=time_integrator)
+            self.add_test_case(dynamic_adjustment_test)
+
+            self.add_test_case(
+                FilesForE3SM(
+                    test_group=self, mesh=mesh_test, init=init_test,
+                    dynamic_adjustment=dynamic_adjustment_test))
+
+            if include_rk4:
+                time_integrator = 'RK4'
+                self.add_test_case(
+                    PerformanceTest(
+                        test_group=self, mesh=mesh_test, init=init_test,
+                        time_integrator=time_integrator))
+                self.add_test_case(
+                    RestartTest(
+                        test_group=self, mesh=mesh_test, init=init_test,
+                        time_integrator=time_integrator))
+                self.add_test_case(
+                    DecompTest(
+                        test_group=self, mesh=mesh_test, init=init_test,
+                        time_integrator=time_integrator))
+                self.add_test_case(
+                    ThreadsTest(
+                        test_group=self, mesh=mesh_test, init=init_test,
+                        time_integrator=time_integrator))
+
+            if include_en4_1900:
+                # EN4_1900 tests
+                time_integrator = 'split_explicit'
+                init_test = Init(test_group=self, mesh=mesh_test,
+                                 initial_condition='EN4_1900',
+                                 with_bgc=False)
+                self.add_test_case(init_test)
+
+                self.add_test_case(
+                    PerformanceTest(
+                        test_group=self, mesh=mesh_test, init=init_test,
+                        time_integrator=time_integrator))
+
+                dynamic_adjustment_test = DynamicAdjustment(
+                    test_group=self, mesh=mesh_test, init=init_test,
+                    time_integrator=time_integrator)
+                self.add_test_case(dynamic_adjustment_test)
+
+                self.add_test_case(
+                    FilesForE3SM(
+                        test_group=self, mesh=mesh_test, init=init_test,
+                        dynamic_adjustment=dynamic_adjustment_test))
+
+            if include_bgc:
+                # BGC tests
+                init_test = Init(test_group=self, mesh=mesh_test,
+                                 initial_condition='PHC',
+                                 with_bgc=True)
+                self.add_test_case(init_test)
+
+                self.add_test_case(
+                    PerformanceTest(
+                        test_group=self, mesh=mesh_test, init=init_test,
+                        time_integrator=time_integrator))
