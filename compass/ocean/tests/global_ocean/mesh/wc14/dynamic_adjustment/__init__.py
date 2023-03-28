@@ -1,5 +1,6 @@
-from compass.ocean.tests.global_ocean.dynamic_adjustment import \
-    DynamicAdjustment
+from compass.ocean.tests.global_ocean.dynamic_adjustment import (
+    DynamicAdjustment,
+)
 from compass.ocean.tests.global_ocean.forward import ForwardStep
 
 
@@ -221,6 +222,8 @@ class WC14DynamicAdjustment(DynamicAdjustment):
 
         namelist_options = {
             'config_run_duration': "'00-00-24_00:00:00'",
+            'config_dt': "'00:12:00'",
+            'config_btr_dt': "'00:00:30'",
             'config_do_restart': '.true.',
             'config_start_time': "'{}'".format(restart_times[5])}
         namelist_options.update(shared_options)

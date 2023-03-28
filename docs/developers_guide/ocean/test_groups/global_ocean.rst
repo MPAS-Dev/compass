@@ -286,10 +286,10 @@ shelves in the ocean domain. The mesh is defined by
 :py:class:`compass.mesh.QuasiUniformSphericalMeshStep`.  The
 ``compass.ocean.tests.global_ocean.mesh.qu240`` module includes namelist
 options appropriate for forward simulations with both RK4 and split-explicit
-time integration on this mesh.  These set the time step and default run
-duration for short runs with this mesh.
+time integration on these meshes.  These set the time step and default run
+duration for short runs with these meshes.
 
-The default config options for this mesh are:
+The default config options for these meshes are:
 
 .. code-block:: cfg
 
@@ -380,10 +380,10 @@ The class
 :py:class:`compass.ocean.tests.global_ocean.mesh.ec30to60.EC30to60BaseMesh` defines
 the resolution for both meshes. The ``compass.ocean.tests.global_ocean.mesh.ec30to60``
 module includes  namelist options appropriate for forward simulations with
-split-explicit (but not RK4) time integration on this mesh.  These set the time
-step and default run duration for short runs with this mesh.
+split-explicit (but not RK4) time integration on these meshes.  These set the time
+step and default run duration for short runs with these meshes.
 
-The default config options for this mesh are:
+The default config options for these meshes are:
 
 .. code-block:: cfg
 
@@ -454,8 +454,8 @@ file.
 The ``compass.ocean.tests.global_ocean.mesh.kuroshio8to60`` and
 ``compass.ocean.tests.global_ocean.mesh.kuroshio12to60`` modules include
 namelist options appropriate for forward simulations with split-explicit (but
-not RK4) time integration on this mesh.  These set the time step and default
-run duration for short runs with this mesh.
+not RK4) time integration on these meshes.  These set the time step and default
+run duration for short runs with these meshes.
 
 Except for ``min_res``, default config options for these meshes come from a
 shared config file in the ``compass.ocean.tests.global_ocean.mesh.kuroshio``
@@ -515,22 +515,23 @@ thickness from 10 to 250 m.
 
 .. _dev_ocean_global_ocean_sowisc12to60:
 
-SOwISC12to60
-++++++++++++
+SO12to60 and SOwISC12to60
++++++++++++++++++++++++++
 
-The ``SOwISC12to60`` mesh is a Southern Ocean regionally refined mesh with
-12-km resolution around the Southern Ocean and Antarctica, 45-km at southern
-mid-latitudes, 30-km at the equator and in the North Atlantic, 60-km resolution
-in the North Pacific, and 35-km resolution in the Arctic.
+The ``SO12to60`` and ``SOwISC12to60`` meshes are Southern Ocean regionally
+refined meshes with 12-km resolution around the Southern Ocean and Antarctica,
+45-km at southern mid-latitudes, 30-km at the equator and in the North
+Atlantic, 60-km resolution in the North Pacific, and 35-km resolution in the
+Arctic.
 
 The class
 :py:class:`compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60BaseMesh` defines
-the resolution for the mesh. The ``compass.ocean.tests.global_ocean.mesh.so12to60``
+the resolution for the meshes. The ``compass.ocean.tests.global_ocean.mesh.so12to60``
 module includes namelist options appropriate for forward simulations with
-split-explicit (but not RK4) time integration on this mesh.  These set the time
-step and default run duration for short runs with this mesh.
+split-explicit (but not RK4) time integration on these meshes.  These set the time
+step and default run duration for short runs with these meshes.
 
-The default config options for this mesh are:
+The default config options for these meshes are:
 
 .. code-block:: cfg
 
@@ -589,23 +590,23 @@ with 60 vertical levels ranging in thickness from 10 to 250 m.
 
 .. _dev_ocean_global_ocean_wc14:
 
-WC14
-++++
+WC14 and WCwISC14
++++++++++++++++++
 
-The ``WC14`` mesh is the Water Cycle regionally refined mesh for E3SM v2.  It
-has higher resolution (~14-km) around the continental US, the Arctic Ocean,
-and a section of the North Atlantic containing the Gulf Stream. The resolution
-elsewhere varies between 35 km at the South Pole to 60 km at mid latitudes,
-with a band of 30-km resolution around the equator.
+The ``WC14`` and ``WCwISC14`` meshes are the Water Cycle regionally refined
+meshes for E3SM v3.  It has higher resolution (~14-km) around the continental
+US, the Arctic Ocean, and a section of the North Atlantic containing the Gulf
+Stream. The resolution elsewhere varies between 35 km at the South Pole to 60
+km at mid latitudes, with a band of 30-km resolution around the equator.
 
 The class :py:class:`compass.ocean.tests.global_ocean.mesh.wc14.WC14BaseMesh`
-defines the resolution for the mesh. The
+defines the resolution for the meshes. The
 ``compass.ocean.tests.global_ocean.mesh.wc14`` module includes namelist options
 appropriate for forward simulations with split-explicit (but not RK4) time
-integration on this mesh.  These set the time step and default run duration for
-short runs with this mesh.
+integration on these meshes.  These set the time step and default run duration for
+short runs with these meshes.
 
-The default config options for this mesh are:
+The default config options for these meshes are:
 
 .. code-block:: cfg
 
@@ -880,8 +881,8 @@ friction.  The dynamic adjustment test case takes advantage of Jinja templating
 for streams files to use the same streams template for each step in the test
 case, see :ref:`dev_step_add_streams_file_template`.
 
-SOwISC12to60
-^^^^^^^^^^^^
+SO12to60 and SOwISC12to60
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The class :py:class:`compass.ocean.tests.global_ocean.mesh.so12to60.dynamic_adjustment.SO12to60DynamicAdjustment`
 defines a test case for performing dynamical adjustment on the mesh.  In the
@@ -893,8 +894,8 @@ dynamic adjustment test case takes advantage of Jinja templating for streams
 files to use the same streams template for each step in the test case, see
 :ref:`dev_step_add_streams_file_template`.
 
-WC14
-^^^^
+WC14 and WCwISC14
+^^^^^^^^^^^^^^^^^
 
 The class :py:class:`compass.ocean.tests.global_ocean.mesh.wc14.dynamic_adjustment.WC14DynamicAdjustment`
 defines a test case for performing dynamical adjustment on the mesh.  In the

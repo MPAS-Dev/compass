@@ -69,13 +69,13 @@ class Mesh(TestCase):
                 self, name=name, subdir=subdir, cell_width=240)
         elif mesh_name in ['EC30to60', 'ECwISC30to60']:
             base_mesh_step = EC30to60BaseMesh(self, name=name, subdir=subdir)
-        elif mesh_name in ['ARRM10to60']:
+        elif mesh_name in ['ARRM10to60', 'ARRMwISC10to60']:
             base_mesh_step = ARRM10to60BaseMesh(self, name=name, subdir=subdir)
         elif mesh_name in ['SO12to60', 'SOwISC12to60']:
             base_mesh_step = SO12to60BaseMesh(self, name=name, subdir=subdir)
         elif mesh_name.startswith('Kuroshio'):
             base_mesh_step = KuroshioBaseMesh(self, name=name, subdir=subdir)
-        elif mesh_name in ['WC14']:
+        elif mesh_name in ['WC14', 'WCwISC14']:
             base_mesh_step = WC14BaseMesh(self, name=name, subdir=subdir)
         else:
             raise ValueError(f'Unknown mesh name {mesh_name}')
