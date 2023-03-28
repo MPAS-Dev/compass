@@ -157,219 +157,144 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">)</span>
 
         <span class="c1"># we do a lot of tests for QU240/QUwISC240</span>
-        <span class="k">for</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;QU240&#39;</span><span class="p">,</span> <span class="s1">&#39;Icos240&#39;</span><span class="p">,</span> <span class="s1">&#39;QUwISC240&#39;</span><span class="p">]:</span>
-            <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
-
-            <span class="n">init</span> <span class="o">=</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
-                        <span class="n">initial_condition</span><span class="o">=</span><span class="s1">&#39;PHC&#39;</span><span class="p">,</span>
-                        <span class="n">with_bgc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
-
-            <span class="n">time_integrator</span> <span class="o">=</span> <span class="s1">&#39;split_explicit&#39;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">PerformanceTest</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                    <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">RestartTest</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                    <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">DecompTest</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                    <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">ThreadsTest</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                    <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">AnalysisTest</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                    <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">DailyOutputTest</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                    <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">MonthlyOutputTest</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                    <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
-
-            <span class="n">dynamic_adjustment</span> <span class="o">=</span> <span class="n">QU240DynamicAdjustment</span><span class="p">(</span>
-                <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">dynamic_adjustment</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">FilesForE3SM</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                    <span class="n">dynamic_adjustment</span><span class="o">=</span><span class="n">dynamic_adjustment</span><span class="p">))</span>
-
-            <span class="n">time_integrator</span> <span class="o">=</span> <span class="s1">&#39;RK4&#39;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">PerformanceTest</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                    <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">RestartTest</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                    <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">DecompTest</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                    <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">ThreadsTest</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                    <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
-
-            <span class="c1"># EN4_1900 tests</span>
-            <span class="n">time_integrator</span> <span class="o">=</span> <span class="s1">&#39;split_explicit&#39;</span>
-            <span class="n">init</span> <span class="o">=</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
-                        <span class="n">initial_condition</span><span class="o">=</span><span class="s1">&#39;EN4_1900&#39;</span><span class="p">,</span>
-                        <span class="n">with_bgc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">PerformanceTest</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                    <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
-            <span class="n">dynamic_adjustment</span> <span class="o">=</span> <span class="n">QU240DynamicAdjustment</span><span class="p">(</span>
-                <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">dynamic_adjustment</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">FilesForE3SM</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                    <span class="n">dynamic_adjustment</span><span class="o">=</span><span class="n">dynamic_adjustment</span><span class="p">))</span>
-
-            <span class="c1"># BGC tests</span>
-            <span class="n">init</span> <span class="o">=</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
-                        <span class="n">initial_condition</span><span class="o">=</span><span class="s1">&#39;PHC&#39;</span><span class="p">,</span>
-                        <span class="n">with_bgc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">PerformanceTest</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                    <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;QU240&#39;</span><span class="p">,</span> <span class="s1">&#39;Icos240&#39;</span><span class="p">,</span> <span class="s1">&#39;QUwISC240&#39;</span><span class="p">],</span>
+                        <span class="n">DynamicAdjustment</span><span class="o">=</span><span class="n">QU240DynamicAdjustment</span><span class="p">,</span>
+                        <span class="n">include_rk4</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">include_regression</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">include_en4_1900</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">include_bgc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># for other meshes, we do fewer tests</span>
-        <span class="k">for</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;EC30to60&#39;</span><span class="p">,</span> <span class="s1">&#39;ECwISC30to60&#39;</span><span class="p">]:</span>
-            <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
-
-            <span class="n">init</span> <span class="o">=</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
-                        <span class="n">initial_condition</span><span class="o">=</span><span class="s1">&#39;PHC&#39;</span><span class="p">,</span>
-                        <span class="n">with_bgc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
-
-            <span class="n">time_integrator</span> <span class="o">=</span> <span class="s1">&#39;split_explicit&#39;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">PerformanceTest</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                    <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
-            <span class="n">dynamic_adjustment</span> <span class="o">=</span> <span class="n">EC30to60DynamicAdjustment</span><span class="p">(</span>
-                <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">dynamic_adjustment</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">FilesForE3SM</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                    <span class="n">dynamic_adjustment</span><span class="o">=</span><span class="n">dynamic_adjustment</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;EC30to60&#39;</span><span class="p">,</span> <span class="s1">&#39;ECwISC30to60&#39;</span><span class="p">],</span>
+                        <span class="n">DynamicAdjustment</span><span class="o">=</span><span class="n">EC30to60DynamicAdjustment</span><span class="p">)</span>
 
         <span class="c1"># ARRM10to60: just the version without cavities</span>
-        <span class="k">for</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ARRM10to60&#39;</span><span class="p">]:</span>
-            <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
-
-            <span class="n">init</span> <span class="o">=</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
-                        <span class="n">initial_condition</span><span class="o">=</span><span class="s1">&#39;PHC&#39;</span><span class="p">,</span>
-                        <span class="n">with_bgc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
-            <span class="n">time_integrator</span> <span class="o">=</span> <span class="s1">&#39;split_explicit&#39;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">PerformanceTest</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                    <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
-            <span class="n">dynamic_adjustment</span> <span class="o">=</span> <span class="n">ARRM10to60DynamicAdjustment</span><span class="p">(</span>
-                <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">dynamic_adjustment</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">FilesForE3SM</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                    <span class="n">dynamic_adjustment</span><span class="o">=</span><span class="n">dynamic_adjustment</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ARRM10to60&#39;</span><span class="p">],</span>
+                        <span class="n">DynamicAdjustment</span><span class="o">=</span><span class="n">ARRM10to60DynamicAdjustment</span><span class="p">)</span>
 
         <span class="c1"># SO12to60: with and without cavities</span>
-        <span class="k">for</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;SO12to60&#39;</span><span class="p">,</span> <span class="s1">&#39;SOwISC12to60&#39;</span><span class="p">]:</span>
-            <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
-
-            <span class="n">init</span> <span class="o">=</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
-                        <span class="n">initial_condition</span><span class="o">=</span><span class="s1">&#39;PHC&#39;</span><span class="p">,</span>
-                        <span class="n">with_bgc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
-            <span class="n">time_integrator</span> <span class="o">=</span> <span class="s1">&#39;split_explicit&#39;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">PerformanceTest</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                    <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
-            <span class="n">dynamic_adjustment</span> <span class="o">=</span> <span class="n">SO12to60DynamicAdjustment</span><span class="p">(</span>
-                <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">dynamic_adjustment</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">FilesForE3SM</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                    <span class="n">dynamic_adjustment</span><span class="o">=</span><span class="n">dynamic_adjustment</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;SO12to60&#39;</span><span class="p">,</span> <span class="s1">&#39;SOwISC12to60&#39;</span><span class="p">],</span>
+                        <span class="n">DynamicAdjustment</span><span class="o">=</span><span class="n">SO12to60DynamicAdjustment</span><span class="p">)</span>
 
         <span class="c1"># WC14: just the version without cavities</span>
-        <span class="k">for</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;WC14&#39;</span><span class="p">]:</span>
-            <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
-
-            <span class="n">init</span> <span class="o">=</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
-                        <span class="n">initial_condition</span><span class="o">=</span><span class="s1">&#39;PHC&#39;</span><span class="p">,</span>
-                        <span class="n">with_bgc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
-            <span class="n">time_integrator</span> <span class="o">=</span> <span class="s1">&#39;split_explicit&#39;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">PerformanceTest</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                    <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
-            <span class="n">dynamic_adjustment</span> <span class="o">=</span> <span class="n">WC14DynamicAdjustment</span><span class="p">(</span>
-                <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">dynamic_adjustment</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">FilesForE3SM</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                    <span class="n">dynamic_adjustment</span><span class="o">=</span><span class="n">dynamic_adjustment</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;WC14&#39;</span><span class="p">],</span>
+                        <span class="n">DynamicAdjustment</span><span class="o">=</span><span class="n">WC14DynamicAdjustment</span><span class="p">)</span>
 
         <span class="c1"># Kuroshio meshes without ice-shelf cavities</span>
-        <span class="k">for</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Kuroshio12to60&#39;</span><span class="p">,</span> <span class="s1">&#39;Kuroshio8to60&#39;</span><span class="p">]:</span>
-            <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Kuroshio12to60&#39;</span><span class="p">,</span> <span class="s1">&#39;Kuroshio8to60&#39;</span><span class="p">],</span>
+                        <span class="n">DynamicAdjustment</span><span class="o">=</span><span class="n">KuroshioDynamicAdjustment</span><span class="p">)</span>
 
-            <span class="n">init</span> <span class="o">=</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
-                        <span class="n">initial_condition</span><span class="o">=</span><span class="s1">&#39;PHC&#39;</span><span class="p">,</span>
-                        <span class="n">with_bgc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+        <span class="c1"># A test case for making E3SM support files from an existing mesh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">FilesForE3SM</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span></div>
+
+    <span class="k">def</span> <span class="nf">_add_tests</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_names</span><span class="p">,</span> <span class="n">DynamicAdjustment</span><span class="p">,</span> <span class="n">include_rk4</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                   <span class="n">include_regression</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_en4_1900</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                   <span class="n">include_bgc</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Add test cases for the given mesh(es) &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="n">mesh_names</span><span class="p">:</span>
+            <span class="n">mesh_test</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">mesh_test</span><span class="p">)</span>
+
+            <span class="n">init_test</span> <span class="o">=</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span>
+                             <span class="n">initial_condition</span><span class="o">=</span><span class="s1">&#39;PHC&#39;</span><span class="p">,</span>
+                             <span class="n">with_bgc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">init_test</span><span class="p">)</span>
+
             <span class="n">time_integrator</span> <span class="o">=</span> <span class="s1">&#39;split_explicit&#39;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
                 <span class="n">PerformanceTest</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
+                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
                     <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
-            <span class="n">dynamic_adjustment</span> <span class="o">=</span> <span class="n">KuroshioDynamicAdjustment</span><span class="p">(</span>
-                <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
+            <span class="k">if</span> <span class="n">include_regression</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                    <span class="n">RestartTest</span><span class="p">(</span>
+                        <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
+                        <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                    <span class="n">DecompTest</span><span class="p">(</span>
+                        <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
+                        <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                    <span class="n">ThreadsTest</span><span class="p">(</span>
+                        <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
+                        <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                    <span class="n">AnalysisTest</span><span class="p">(</span>
+                        <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
+                        <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                    <span class="n">DailyOutputTest</span><span class="p">(</span>
+                        <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
+                        <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                    <span class="n">MonthlyOutputTest</span><span class="p">(</span>
+                        <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
+                        <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
+
+            <span class="n">dynamic_adjustment_test</span> <span class="o">=</span> <span class="n">DynamicAdjustment</span><span class="p">(</span>
+                <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
                 <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">dynamic_adjustment</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">dynamic_adjustment_test</span><span class="p">)</span>
+
             <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
                 <span class="n">FilesForE3SM</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                    <span class="n">dynamic_adjustment</span><span class="o">=</span><span class="n">dynamic_adjustment</span><span class="p">))</span>
+                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
+                    <span class="n">dynamic_adjustment</span><span class="o">=</span><span class="n">dynamic_adjustment_test</span><span class="p">))</span>
 
-        <span class="c1"># A test case for making E3SM support files from an existing mesh</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">FilesForE3SM</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span></div></div>
+            <span class="k">if</span> <span class="n">include_rk4</span><span class="p">:</span>
+                <span class="n">time_integrator</span> <span class="o">=</span> <span class="s1">&#39;RK4&#39;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                    <span class="n">PerformanceTest</span><span class="p">(</span>
+                        <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
+                        <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                    <span class="n">RestartTest</span><span class="p">(</span>
+                        <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
+                        <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                    <span class="n">DecompTest</span><span class="p">(</span>
+                        <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
+                        <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                    <span class="n">ThreadsTest</span><span class="p">(</span>
+                        <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
+                        <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">include_en4_1900</span><span class="p">:</span>
+                <span class="c1"># EN4_1900 tests</span>
+                <span class="n">time_integrator</span> <span class="o">=</span> <span class="s1">&#39;split_explicit&#39;</span>
+                <span class="n">init_test</span> <span class="o">=</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span>
+                                 <span class="n">initial_condition</span><span class="o">=</span><span class="s1">&#39;EN4_1900&#39;</span><span class="p">,</span>
+                                 <span class="n">with_bgc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">init_test</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                    <span class="n">PerformanceTest</span><span class="p">(</span>
+                        <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
+                        <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
+
+                <span class="n">dynamic_adjustment_test</span> <span class="o">=</span> <span class="n">DynamicAdjustment</span><span class="p">(</span>
+                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
+                    <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">dynamic_adjustment_test</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                    <span class="n">FilesForE3SM</span><span class="p">(</span>
+                        <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
+                        <span class="n">dynamic_adjustment</span><span class="o">=</span><span class="n">dynamic_adjustment_test</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">include_bgc</span><span class="p">:</span>
+                <span class="c1"># BGC tests</span>
+                <span class="n">init_test</span> <span class="o">=</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span>
+                                 <span class="n">initial_condition</span><span class="o">=</span><span class="s1">&#39;PHC&#39;</span><span class="p">,</span>
+                                 <span class="n">with_bgc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">init_test</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                    <span class="n">PerformanceTest</span><span class="p">(</span>
+                        <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
+                        <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span></div>
 </pre></div>
 
            </div>
