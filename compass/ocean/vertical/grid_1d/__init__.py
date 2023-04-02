@@ -42,6 +42,19 @@ def generate_1d_grid(config):
                                          min_layer_thickness,
                                          max_layer_thickness)
 
+    elif grid_type == 'index_tanh_dz':
+        vert_levels = section.getint('vert_levels')
+        min_layer_thickness = section.getfloat('min_layer_thickness')
+        max_layer_thickness = section.getfloat('max_layer_thickness')
+        bottom_depth = section.getfloat('bottom_depth')
+        transition_levels = section.getfloat('transition_levels')
+        interfaces = create_index_tanh_dz_grid(
+            vert_levels,
+            bottom_depth,
+            min_layer_thickness,
+            max_layer_thickness,
+            transition_levels)
+
     elif grid_type in ['60layerPHC', '80layerE3SMv1', '100layerE3SMv1']:
         interfaces = _read_json(grid_type)
     else:
