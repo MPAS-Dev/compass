@@ -150,6 +150,10 @@ config options in the <code class="docutils literal notranslate"><span class="pr
 <span class="c1"># The maximum layer thickness</span>
 <span class="na">max_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">500.0</span>
 
+<span class="c1"># The characteristic number of levels over which the index_tanh_dz</span>
+<span class="c1"># transition between the min and max occurs</span>
+<span class="na">transition_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">28</span>
+
 <span class="c1"># The type of vertical coordinate (e.g. z-level, z-star)</span>
 <span class="na">coord_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">z-star</span>
 
@@ -161,11 +165,11 @@ config options in the <code class="docutils literal notranslate"><span class="pr
 </pre></div>
 </div>
 <p>The vertical coordinate is typically defined based on a 1D reference grid.
-Possible 1D grid types are: <code class="docutils literal notranslate"><span class="pre">uniform</span></code>, <code class="docutils literal notranslate"><span class="pre">tanh_dz</span></code>, <code class="docutils literal notranslate"><span class="pre">60layerPHC</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">100layerE3SMv1</span></code>.</p>
+Possible 1D grid types are: <code class="docutils literal notranslate"><span class="pre">uniform</span></code>, <code class="docutils literal notranslate"><span class="pre">tanh_dz</span></code>, <code class="docutils literal notranslate"><span class="pre">index_tanh_dz</span></code>,
+<code class="docutils literal notranslate"><span class="pre">60layerPHC</span></code>, <code class="docutils literal notranslate"><span class="pre">80layerE3SMv1</span></code>, and <code class="docutils literal notranslate"><span class="pre">100layerE3SMv1</span></code>.</p>
 <p>The meaning of the config options <code class="docutils literal notranslate"><span class="pre">vert_levels</span></code>, <code class="docutils literal notranslate"><span class="pre">bottom_depth</span></code>,
-<code class="docutils literal notranslate"><span class="pre">min_layer_thickness</span></code> and <code class="docutils literal notranslate"><span class="pre">max_layer_thickness</span></code> depends grid type and is
-described below.</p>
+<code class="docutils literal notranslate"><span class="pre">min_layer_thickness</span></code>, <code class="docutils literal notranslate"><span class="pre">max_layer_thickness</span></code>, and <code class="docutils literal notranslate"><span class="pre">transition_levels</span></code>
+depends grid type and is described below.</p>
 <p>The options <code class="docutils literal notranslate"><span class="pre">coord_type</span></code>, <code class="docutils literal notranslate"><span class="pre">partial_cell_type</span></code> and <code class="docutils literal notranslate"><span class="pre">min_pc_fraction</span></code>
 relate to <a class="reference internal" href="#ocean-vert-3d"><span class="std std-ref">3D vertical coordinates</span></a>, described below.</p>
 <section id="d-grid-type">
@@ -231,6 +235,53 @@ number of vertical levels (one less than the number of layer interfaces) and
 </pre></div>
 </div>
 </section>
+<section id="index-tanh-dz">
+<h3>index_tanh_dz<a class="headerlink" href="#index-tanh-dz" title="Permalink to this heading">¶</a></h3>
+<p>This is similar to <code class="docutils literal notranslate"><span class="pre">tanh_dz</span></code> but the hyperbolic tangent function is defined
+in layer index space rather than physical depth. Layer thickness is defined by:</p>
+<div class="math notranslate nohighlight">
+\[\Delta z\left(k\right) = (\Delta z_2 - \Delta z_1)
+           \mathrm{tanh}\left[\frac{\pi \left(k - k_0\right)}{\Delta}\right]+ \Delta z_1,\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Delta z_1\)</span> (<code class="docutils literal notranslate"><span class="pre">min_layer_thickness</span></code>) is the value of the layer
+thickness <span class="math notranslate nohighlight">\(\Delta z\)</span> at <span class="math notranslate nohighlight">\(z = 0\)</span> and <span class="math notranslate nohighlight">\(\Delta z_2\)</span>
+(<code class="docutils literal notranslate"><span class="pre">max_layer_thickness</span></code>) is the same as <span class="math notranslate nohighlight">\(z \rightarrow \infty\)</span>.  The
+vertical layer index is <cite>k</cite>, <cite>Delta</cite> (<code class="docutils literal notranslate"><span class="pre">transition_levels</span></code>) is the number of
+vertical levels over which the <code class="docutils literal notranslate"><span class="pre">tanh</span></code> transitions from the finer to the
+coarser resolution, and <span class="math notranslate nohighlight">\(k_0\)</span> is the origin in vertical index space of the
+transition. Interface locations <cite>z_k</cite> are defined by:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}z_0 = 0, \\
+z_{k+1} = z_k - \Delta z\left(k\right).\end{split}\]</div>
+<p>We use a root finder to solve for <span class="math notranslate nohighlight">\(k_0\)</span>, such that
+<span class="math notranslate nohighlight">\(z_{n_z+1} = -H_\mathrm{bot}\)</span>, where <span class="math notranslate nohighlight">\(n_z\)</span> is <code class="docutils literal notranslate"><span class="pre">vert_levels</span></code>, the
+number of vertical levels (one less than the number of layer interfaces) and
+<span class="math notranslate nohighlight">\(H_\mathrm{bot}\)</span> is <code class="docutils literal notranslate"><span class="pre">bottom_depth</span></code>, the depth of the seafloor.</p>
+<p>The following config options are all required.  This is an example of a
+64-layer vertical grid that has been explored in E3SM v2:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
+<span class="k">[vertical_grid]</span>
+
+<span class="c1"># the type of vertical grid</span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">index_tanh_dz</span>
+
+<span class="c1"># Number of vertical levels</span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">64</span>
+
+<span class="c1"># Depth of the bottom of the ocean</span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5500.0</span>
+
+<span class="c1"># The minimum layer thickness</span>
+<span class="na">min_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span>
+
+<span class="c1"># The maximum layer thickness</span>
+<span class="na">max_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">250.0</span>
+
+<span class="c1"># The characteristic number of levels over which the index_tanh_dz</span>
+<span class="c1"># transition between the min and max occurs</span>
+<span class="na">transition_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">28</span>
+</pre></div>
+</div>
+</section>
 <section id="layerphc">
 <h3>60layerPHC<a class="headerlink" href="#layerphc" title="Permalink to this heading">¶</a></h3>
 <p>This is the vertical grid used by the Polar science center Hydrographic Climatology
@@ -248,7 +299,23 @@ seafloor, which is at 5500 m depth.  To get the default grid, use:</p>
 so that bottom of the deepest layer is at <code class="docutils literal notranslate"><span class="pre">z</span> <span class="pre">=</span> <span class="pre">-bottom_depth</span></code></p>
 </section>
 <section id="layere3smv1">
-<h3>100layerE3SMv1<a class="headerlink" href="#layere3smv1" title="Permalink to this heading">¶</a></h3>
+<h3>80layerE3SMv1<a class="headerlink" href="#layere3smv1" title="Permalink to this heading">¶</a></h3>
+<p>This is the vertical grid was used in some E3SM v1 and v2 meshes, such as the
+ARRM10to60 mesh. Layer thicknesses vary over 80 layers from 2 m at the surface
+to 146 m at the seafloor, which is at 5550 m depth.  To get the default grid,
+use:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
+<span class="k">[vertical_grid]</span>
+
+<span class="c1"># the type of vertical grid</span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">80layerE3SMv1</span>
+</pre></div>
+</div>
+<p>If the <code class="docutils literal notranslate"><span class="pre">bottom_depth</span></code> option is also defined, the depths will be renormalized
+so that bottom of the deepest layer is at <code class="docutils literal notranslate"><span class="pre">z</span> <span class="pre">=</span> <span class="pre">-bottom_depth</span></code>.</p>
+</section>
+<section id="id1">
+<h3>100layerE3SMv1<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
 <p>This is the vertical grid was used in some E3SM v1 experiments. Layer
 thicknesses vary over 100 layers from 1.51 m at the surface to 221 m at the
 seafloor, which is at 6000 m depth.  To get the default grid, use:</p>

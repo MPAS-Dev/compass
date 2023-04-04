@@ -26,6 +26,10 @@ config options in the ``vertical_grid`` section of the config file:
     # The maximum layer thickness
     max_layer_thickness = 500.0
 
+    # The characteristic number of levels over which the index_tanh_dz
+    # transition between the min and max occurs
+    transition_levels = 28
+
     # The type of vertical coordinate (e.g. z-level, z-star)
     coord_type = z-star
 
@@ -36,12 +40,12 @@ config options in the ``vertical_grid`` section of the config file:
     min_pc_fraction = 0.1
 
 The vertical coordinate is typically defined based on a 1D reference grid.
-Possible 1D grid types are: ``uniform``, ``tanh_dz``, ``60layerPHC``, and
-``100layerE3SMv1``.
+Possible 1D grid types are: ``uniform``, ``tanh_dz``, ``index_tanh_dz``,
+``60layerPHC``, ``80layerE3SMv1``, and ``100layerE3SMv1``.
 
 The meaning of the config options ``vert_levels``, ``bottom_depth``,
-``min_layer_thickness`` and ``max_layer_thickness`` depends grid type and is
-described below.
+``min_layer_thickness``, ``max_layer_thickness``, and ``transition_levels``
+depends grid type and is described below.
 
 The options ``coord_type``, ``partial_cell_type`` and ``min_pc_fraction``
 relate to :ref:`ocean_vert_3d`, described below.
@@ -121,6 +125,62 @@ The following config options are all required.  This is an example of a
     # The maximum layer thickness
     max_layer_thickness = 210.0
 
+index_tanh_dz
+~~~~~~~~~~~~~
+
+This is similar to ``tanh_dz`` but the hyperbolic tangent function is defined
+in layer index space rather than physical depth. Layer thickness is defined by:
+
+.. math::
+
+    \Delta z\left(k\right) = (\Delta z_2 - \Delta z_1)
+               \mathrm{tanh}\left[\frac{\pi \left(k - k_0\right)}{\Delta}\right]+ \Delta z_1,
+
+where :math:`\Delta z_1` (``min_layer_thickness``) is the value of the layer
+thickness :math:`\Delta z` at :math:`z = 0` and :math:`\Delta z_2`
+(``max_layer_thickness``) is the same as :math:`z \rightarrow \infty`.  The
+vertical layer index is `k`, `\Delta` (``transition_levels``) is the number of
+vertical levels over which the ``tanh`` transitions from the finer to the
+coarser resolution, and :math:`k_0` is the origin in vertical index space of the
+transition. Interface locations `z_k` are defined by:
+
+.. math::
+
+    z_0 = 0, \\
+    z_{k+1} = z_k - \Delta z\left(k\right).
+
+We use a root finder to solve for :math:`k_0`, such that
+:math:`z_{n_z+1} = -H_\mathrm{bot}`, where :math:`n_z` is ``vert_levels``, the
+number of vertical levels (one less than the number of layer interfaces) and
+:math:`H_\mathrm{bot}` is ``bottom_depth``, the depth of the seafloor.
+
+The following config options are all required.  This is an example of a
+64-layer vertical grid that has been explored in E3SM v2:
+
+.. code-block:: cfg
+
+    # Options related to the vertical grid
+    [vertical_grid]
+
+    # the type of vertical grid
+    grid_type = index_tanh_dz
+
+    # Number of vertical levels
+    vert_levels = 64
+
+    # Depth of the bottom of the ocean
+    bottom_depth = 5500.0
+
+    # The minimum layer thickness
+    min_layer_thickness = 10.0
+
+    # The maximum layer thickness
+    max_layer_thickness = 250.0
+
+    # The characteristic number of levels over which the index_tanh_dz
+    # transition between the min and max occurs
+    transition_levels = 28
+
 60layerPHC
 ~~~~~~~~~~
 
@@ -139,6 +199,25 @@ seafloor, which is at 5500 m depth.  To get the default grid, use:
 
 If the ``bottom_depth`` option is also defined, the depths will be renormalized
 so that bottom of the deepest layer is at ``z = -bottom_depth``
+
+80layerE3SMv1
+~~~~~~~~~~~~~~
+
+This is the vertical grid was used in some E3SM v1 and v2 meshes, such as the
+ARRM10to60 mesh. Layer thicknesses vary over 80 layers from 2 m at the surface
+to 146 m at the seafloor, which is at 5550 m depth.  To get the default grid,
+use:
+
+.. code-block:: cfg
+
+    # Options related to the vertical grid
+    [vertical_grid]
+
+    # the type of vertical grid
+    grid_type = 80layerE3SMv1
+
+If the ``bottom_depth`` option is also defined, the depths will be renormalized
+so that bottom of the deepest layer is at ``z = -bottom_depth``.
 
 100layerE3SMv1
 ~~~~~~~~~~~~~~

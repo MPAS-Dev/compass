@@ -471,7 +471,23 @@ step and default run duration for short runs with these meshes.</p>
 <span class="k">[vertical_grid]</span>
 
 <span class="c1"># the type of vertical grid</span>
-<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">60layerPHC</span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">index_tanh_dz</span>
+
+<span class="c1"># Number of vertical levels</span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">64</span>
+
+<span class="c1"># Depth of the bottom of the ocean</span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5500.0</span>
+
+<span class="c1"># The minimum layer thickness</span>
+<span class="na">min_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span>
+
+<span class="c1"># The maximum layer thickness</span>
+<span class="na">max_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">250.0</span>
+
+<span class="c1"># The characteristic number of levels over which the transition between</span>
+<span class="c1"># the min and max occurs</span>
+<span class="na">transition_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">28</span>
 
 
 <span class="c1"># options for global ocean testcases</span>
@@ -514,8 +530,9 @@ step and default run duration for short runs with these meshes.</p>
 <span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
 </pre></div>
 </div>
-<p>The vertical grid is a <code class="docutils literal notranslate"><span class="pre">60layerPHC</span></code> profile (see <a class="reference internal" href="../framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a>)
-with 60 vertical levels ranging in thickness from 10 to 250 m.</p>
+<p>The vertical grid is an <code class="docutils literal notranslate"><span class="pre">index_tanh_dz</span></code> profile (see
+<a class="reference internal" href="../framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a>) with 64 vertical levels ranging in
+thickness from 10 to 250 m.</p>
 </section>
 <section id="kuroshio8to60-and-kuroshio12to60">
 <span id="dev-ocean-global-ocean-kuroshio"></span><h5>Kuroshio8to60 and Kuroshio12to60<a class="headerlink" href="#kuroshio8to60-and-kuroshio12to60" title="Permalink to this heading">¶</a></h5>
@@ -604,7 +621,23 @@ step and default run duration for short runs with these meshes.</p>
 <span class="k">[vertical_grid]</span>
 
 <span class="c1"># the type of vertical grid</span>
-<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">60layerPHC</span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">index_tanh_dz</span>
+
+<span class="c1"># Number of vertical levels</span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">64</span>
+
+<span class="c1"># Depth of the bottom of the ocean</span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5500.0</span>
+
+<span class="c1"># The minimum layer thickness</span>
+<span class="na">min_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span>
+
+<span class="c1"># The maximum layer thickness</span>
+<span class="na">max_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">250.0</span>
+
+<span class="c1"># The characteristic number of levels over which the transition between</span>
+<span class="c1"># the min and max occurs</span>
+<span class="na">transition_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">28</span>
 
 
 <span class="c1"># options for global ocean testcases</span>
@@ -642,17 +675,26 @@ step and default run duration for short runs with these meshes.</p>
 <span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
 <span class="c1"># The revision number of the mesh, which should be incremented each time the</span>
 <span class="c1"># mesh is revised</span>
-<span class="na">mesh_revision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span>
+<span class="na">mesh_revision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5</span>
 <span class="c1"># the minimum (finest) resolution in the mesh</span>
 <span class="na">min_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">12</span>
 <span class="c1"># the maximum (coarsest) resolution in the mesh, can be the same as min_res</span>
 <span class="na">max_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">60</span>
 <span class="c1"># The URL of the pull request documenting the creation of the mesh</span>
-<span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">https://github.com/MPAS-Dev/compass/pull/37</span>
+<span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">https://github.com/MPAS-Dev/compass/pull/460</span>
+
+
+<span class="c1"># config options related to initial condition and diagnostics support files</span>
+<span class="c1"># for E3SM</span>
+<span class="k">[files_for_e3sm]</span>
+
+<span class="c1"># CMIP6 grid resolution</span>
+<span class="na">cmip6_grid_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">180x360</span>
 </pre></div>
 </div>
-<p>The vertical grid is a <code class="docutils literal notranslate"><span class="pre">60layerPHC</span></code> profile (see <a class="reference internal" href="../framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a>)
-with 60 vertical levels ranging in thickness from 10 to 250 m.</p>
+<p>The vertical grid is an <code class="docutils literal notranslate"><span class="pre">index_tanh_dz</span></code> profile (see
+<a class="reference internal" href="../framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a>) with 64 vertical levels ranging in
+thickness from 10 to 250 m.</p>
 </section>
 <section id="wc14-and-wcwisc14">
 <span id="dev-ocean-global-ocean-wc14"></span><h5>WC14 and WCwISC14<a class="headerlink" href="#wc14-and-wcwisc14" title="Permalink to this heading">¶</a></h5>
@@ -672,7 +714,23 @@ short runs with these meshes.</p>
 <span class="k">[vertical_grid]</span>
 
 <span class="c1"># the type of vertical grid</span>
-<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">60layerPHC</span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">index_tanh_dz</span>
+
+<span class="c1"># Number of vertical levels</span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">64</span>
+
+<span class="c1"># Depth of the bottom of the ocean</span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5500.0</span>
+
+<span class="c1"># The minimum layer thickness</span>
+<span class="na">min_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span>
+
+<span class="c1"># The maximum layer thickness</span>
+<span class="na">max_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">250.0</span>
+
+<span class="c1"># The characteristic number of levels over which the transition between</span>
+<span class="c1"># the min and max occurs</span>
+<span class="na">transition_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">28</span>
 
 
 <span class="c1"># options for global ocean testcases</span>
@@ -713,10 +771,19 @@ short runs with these meshes.</p>
 <span class="na">max_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">60</span>
 <span class="c1"># The URL of the pull request documenting the creation of the mesh</span>
 <span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">https://github.com/MPAS-Dev/MPAS-Model/pull/628</span>
+
+
+<span class="c1"># config options related to initial condition and diagnostics support files</span>
+<span class="c1"># for E3SM</span>
+<span class="k">[files_for_e3sm]</span>
+
+<span class="c1"># CMIP6 grid resolution</span>
+<span class="na">cmip6_grid_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">180x360</span>
 </pre></div>
 </div>
-<p>The vertical grid is a <code class="docutils literal notranslate"><span class="pre">60layerPHC</span></code> profile (see <a class="reference internal" href="../framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a>)
-with 60 vertical levels ranging in thickness from 10 to 250 m.</p>
+<p>The vertical grid is an <code class="docutils literal notranslate"><span class="pre">index_tanh_dz</span></code> profile (see
+<a class="reference internal" href="../framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a>) with 64 vertical levels ranging in
+thickness from 10 to 250 m.</p>
 </section>
 </section>
 </section>
