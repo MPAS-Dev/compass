@@ -135,7 +135,7 @@
            <div itemprop="articleBody">
              
   <section id="perlmutter">
-<h1>Perlmutter<a class="headerlink" href="#perlmutter" title="Permalink to this heading">¶</a></h1>
+<span id="machine-perlmutter"></span><h1>Perlmutter<a class="headerlink" href="#perlmutter" title="Permalink to this heading">¶</a></h1>
 <p>login: <code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">$my_username&#64;perlmutter-p1.nersc.gov</span></code></p>
 <p>interactive login:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># for CPU:</span>
@@ -253,6 +253,26 @@ cases or a test suite:</p>
 
 <span class="c1"># whether the machine uses cray compilers</span>
 <span class="na">cray_compilers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+</pre></div>
+</div>
+</section>
+<section id="hyperthreading">
+<h3>Hyperthreading<a class="headerlink" href="#hyperthreading" title="Permalink to this heading">¶</a></h3>
+<p>By default, hyperthreading has been disable on Perlmutter. We had found some
+some issues with runs hanging in early testing that seemed to be mitigated by
+disabling hyperthreading.  We disable hyperthreading by setting
+<code class="docutils literal notranslate"><span class="pre">threads_per_core</span> <span class="pre">=</span> <span class="pre">1</span></code> and reducing <code class="docutils literal notranslate"><span class="pre">cores_per_node</span></code> to not include the
+2 hyperthreads.  You can re-enable hyperthreading on Perlmutter by providing a
+user config file where you set <code class="docutils literal notranslate"><span class="pre">threads_per_core</span></code> and <code class="docutils literal notranslate"><span class="pre">cores_per_node</span></code>
+as follows:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The parallel section describes options related to running jobs in parallel</span>
+<span class="k">[parallel]</span>
+
+<span class="c1"># cores per node on the machine (including hyperthreading)</span>
+<span class="na">cores_per_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">256</span>
+
+<span class="c1"># threads per core with hyperthreading</span>
+<span class="na">threads_per_core</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
 </pre></div>
 </div>
 </section>
