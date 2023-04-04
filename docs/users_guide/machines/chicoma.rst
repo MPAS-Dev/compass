@@ -177,6 +177,28 @@ Additionally, some relevant config options come from the
     # environment
     modules_after = False
 
+Hyperthreading
+~~~~~~~~~~~~~~
+
+By default, hyperthreading has been disable on Chicoma. We had found some
+some issues with runs hanging in early testing that seemed to be mitigated by
+disabling hyperthreading.  We disable hyperthreading by setting
+``threads_per_core = 1`` and reducing ``cores_per_node`` to not include the
+2 hyperthreads.  You can re-enable hyperthreading on Chicoma by providing a
+user config file where you set ``threads_per_core`` and ``cores_per_node``
+as follows:
+
+.. code-block:: cfg
+
+    # The parallel section describes options related to running jobs in parallel
+    [parallel]
+
+    # cores per node on the machine (including hyperthreading)
+    cores_per_node = 256
+
+    # threads per core with hyperthreading
+    threads_per_core = 2
+
 Gnu on Chicoma-CPU
 ~~~~~~~~~~~~~~~~~~
 

@@ -1,6 +1,9 @@
 Perlmutter
 ==========
 
+For most machine-specific details (including config options and how to
+enable hyperthreading), see the User's Guide under :ref:`machine_perlmutter`.
+
 pm-cpu, gnu
 -----------
 
