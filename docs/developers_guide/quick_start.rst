@@ -297,9 +297,10 @@ You can do this by simply re-executing
 from the *root of the repo* before proceeding.
 
 Similarly, if you are developing or using multiple ``compass`` branches
-but you use a different directory for each (creating the directories with
- ``git worktree``), you will need to make sure the version of the
- ``compass`` package in your conda environment is the one you want.
+but you use a different directory for each
+(creating the directories with ``git worktree``),
+you will need to make sure the version of the ``compass`` package
+in your conda environment is the one you want.
 If your branches use the same ``compass`` version (so the dependencies
 are the same), you can use the same conda environment
 (e.g. ``dev_compass_<version>``) for all of them.  But you will only
