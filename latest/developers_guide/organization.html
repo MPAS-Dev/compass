@@ -1112,6 +1112,31 @@ attributes.  Another reason might be to set these attributes using an algorithm
 (e.g. based on the number of cells in the mesh used in the step.)
 When overriding <code class="docutils literal notranslate"><span class="pre">constrain_resources</span></code>, it is important to also call the base
 class’ version of the method with <code class="docutils literal notranslate"><span class="pre">super().constrain_resources()</span></code>.</p>
+<p>The names of the resources are related to the
+<a class="reference external" href="https://slurm.schedmd.com/srun.html">Slurm</a> naming conventions:</p>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">ntasks</span></code></dt><dd><p>The target number of MPI tasks that a step will use if the resources are
+available.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">min_tasks</span></code></dt><dd><p>The minimum number of MPI tasks for a step.  If too few resources are
+available, the step will not run.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">cpus_per_task</span></code></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">ntasks</span> <span class="pre">&gt;</span> <span class="pre">1</span></code>, this is typically a number of threads used by each
+MPI task (e.g. with OpenMP threading).  If <code class="docutils literal notranslate"><span class="pre">ntasks</span> <span class="pre">==</span> <span class="pre">1</span></code>, this may
+be the number of target cores used in on-node parallelism like python or
+c++ threading, or python multiprocessing.  <code class="docutils literal notranslate"><span class="pre">cpus_per_task</span></code> will
+automatically be constrained to be less than or equal to the number of cores on a node
+(and the total available cores).  So it may be appropriate to set it to a
+high value appropriate for machines with large nodes, knowing that it will
+be constrained to fit on one node.</p>
+<p>For MPI applications without threading, <code class="docutils literal notranslate"><span class="pre">cpus_per_task</span></code> will always be
+<code class="docutils literal notranslate"><span class="pre">1</span></code>, the default.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">min_cpus_per_task</span></code></dt><dd><p>The minimum number of cores for on-node parallelism (threading,
+multiprocessing, etc.).  If too few resources are available, the step
+will fail with an error message.</p>
+</dd>
+</dl>
 </section>
 <section id="setup">
 <span id="dev-step-setup"></span><h3>setup()<a class="headerlink" href="#setup" title="Permalink to this heading">¶</a></h3>
