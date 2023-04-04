@@ -1,5 +1,6 @@
-from compass.ocean.tests.global_ocean.dynamic_adjustment import \
-    DynamicAdjustment
+from compass.ocean.tests.global_ocean.dynamic_adjustment import (
+    DynamicAdjustment,
+)
 from compass.ocean.tests.global_ocean.forward import ForwardStep
 
 
@@ -63,6 +64,7 @@ class EC30to60DynamicAdjustment(DynamicAdjustment):
         namelist_options = {
             'config_run_duration': "'00-00-10_00:00:00'",
             'config_dt': "'00:15:00'",
+            'config_btr_dt': "'00:00:10'",
             'config_Rayleigh_friction': '.true.',
             'config_Rayleigh_damping_coeff': '1.0e-4'}
         namelist_options.update(shared_options)
@@ -86,6 +88,7 @@ class EC30to60DynamicAdjustment(DynamicAdjustment):
         namelist_options = {
             'config_run_duration': "'00-00-20_00:00:00'",
             'config_dt': "'00:15:00'",
+            'config_btr_dt': "'00:00:10'",
             'config_do_restart': '.true.',
             'config_start_time': "'{}'".format(restart_times[0])}
         namelist_options.update(shared_options)
@@ -109,6 +112,8 @@ class EC30to60DynamicAdjustment(DynamicAdjustment):
 
         namelist_options = {
             'config_run_duration': "'00-00-10_00:00:00'",
+            'config_dt': "'00:30:00'",
+            'config_btr_dt': "'00:00:10'",
             'config_do_restart': '.true.',
             'config_start_time': "'{}'".format(restart_times[1])}
         namelist_options.update(shared_options)

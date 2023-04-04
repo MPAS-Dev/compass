@@ -391,7 +391,23 @@ The default config options for these meshes are:
     [vertical_grid]
 
     # the type of vertical grid
-    grid_type = 60layerPHC
+    grid_type = index_tanh_dz
+
+    # Number of vertical levels
+    vert_levels = 64
+
+    # Depth of the bottom of the ocean
+    bottom_depth = 5500.0
+
+    # The minimum layer thickness
+    min_layer_thickness = 10.0
+
+    # The maximum layer thickness
+    max_layer_thickness = 250.0
+
+    # The characteristic number of levels over which the transition between
+    # the min and max occurs
+    transition_levels = 28
 
 
     # options for global ocean testcases
@@ -433,8 +449,9 @@ The default config options for these meshes are:
     # The URL of the pull request documenting the creation of the mesh
     pull_request = <<<Missing>>>
 
-The vertical grid is a ``60layerPHC`` profile (see :ref:`dev_ocean_framework_vertical`)
-with 60 vertical levels ranging in thickness from 10 to 250 m.
+The vertical grid is an ``index_tanh_dz`` profile (see
+:ref:`dev_ocean_framework_vertical`) with 64 vertical levels ranging in
+thickness from 10 to 250 m.
 
 .. _dev_ocean_global_ocean_kuroshio:
 
@@ -539,7 +556,23 @@ The default config options for these meshes are:
     [vertical_grid]
 
     # the type of vertical grid
-    grid_type = 60layerPHC
+    grid_type = index_tanh_dz
+
+    # Number of vertical levels
+    vert_levels = 64
+
+    # Depth of the bottom of the ocean
+    bottom_depth = 5500.0
+
+    # The minimum layer thickness
+    min_layer_thickness = 10.0
+
+    # The maximum layer thickness
+    max_layer_thickness = 250.0
+
+    # The characteristic number of levels over which the transition between
+    # the min and max occurs
+    transition_levels = 28
 
 
     # options for global ocean testcases
@@ -577,16 +610,25 @@ The default config options for these meshes are:
     e3sm_version = 2
     # The revision number of the mesh, which should be incremented each time the
     # mesh is revised
-    mesh_revision = 4
+    mesh_revision = 5
     # the minimum (finest) resolution in the mesh
     min_res = 12
     # the maximum (coarsest) resolution in the mesh, can be the same as min_res
     max_res = 60
     # The URL of the pull request documenting the creation of the mesh
-    pull_request = https://github.com/MPAS-Dev/compass/pull/37
+    pull_request = https://github.com/MPAS-Dev/compass/pull/460
 
-The vertical grid is a ``60layerPHC`` profile (see :ref:`dev_ocean_framework_vertical`)
-with 60 vertical levels ranging in thickness from 10 to 250 m.
+
+    # config options related to initial condition and diagnostics support files
+    # for E3SM
+    [files_for_e3sm]
+
+    # CMIP6 grid resolution
+    cmip6_grid_res = 180x360
+
+The vertical grid is an ``index_tanh_dz`` profile (see
+:ref:`dev_ocean_framework_vertical`) with 64 vertical levels ranging in
+thickness from 10 to 250 m.
 
 .. _dev_ocean_global_ocean_wc14:
 
@@ -614,7 +656,23 @@ The default config options for these meshes are:
     [vertical_grid]
 
     # the type of vertical grid
-    grid_type = 60layerPHC
+    grid_type = index_tanh_dz
+
+    # Number of vertical levels
+    vert_levels = 64
+
+    # Depth of the bottom of the ocean
+    bottom_depth = 5500.0
+
+    # The minimum layer thickness
+    min_layer_thickness = 10.0
+
+    # The maximum layer thickness
+    max_layer_thickness = 250.0
+
+    # The characteristic number of levels over which the transition between
+    # the min and max occurs
+    transition_levels = 28
 
 
     # options for global ocean testcases
@@ -656,8 +714,17 @@ The default config options for these meshes are:
     # The URL of the pull request documenting the creation of the mesh
     pull_request = https://github.com/MPAS-Dev/MPAS-Model/pull/628
 
-The vertical grid is a ``60layerPHC`` profile (see :ref:`dev_ocean_framework_vertical`)
-with 60 vertical levels ranging in thickness from 10 to 250 m.
+
+    # config options related to initial condition and diagnostics support files
+    # for E3SM
+    [files_for_e3sm]
+
+    # CMIP6 grid resolution
+    cmip6_grid_res = 180x360
+
+The vertical grid is an ``index_tanh_dz`` profile (see
+:ref:`dev_ocean_framework_vertical`) with 64 vertical levels ranging in
+thickness from 10 to 250 m.
 
 .. _dev_ocean_global_ocean_init:
 
