@@ -19,7 +19,7 @@ ismip6_ais_proj2300
 
 The :py:class:`compass.landice.tests.ismip6_run.ismip6_ais_proj2300.Ismip6AisProj2300`
 sets up an ensemble of ISMIP6 Antarctica 2300
-simulations.  The constructor does nothing other than
+simulations.  The constructor (``__init__``) does nothing other than
 allow the ``ismip6_ais_proj2300`` test case to be listed by ``compass list``
 without having all individual experiments listed in a verbose listing.
 Each individual experiment is a step rather than a test case to avoid having
@@ -28,7 +28,7 @@ excessive subdirectories.
 The ``configure`` method is where the experiments to be set up are determined.
 The config option ``exp_list`` is parsed and each experiment to be included
 is set up as a step of the test case by calling the 
-``SetUpExperiment`` constructor.
+``SetUpExperiment`` constructor (``__init__``).
 All of the experiments are removed from ``steps_to_run``, because the
 experiments (steps) are not meant to be run together through the test
 case, which is a contrary design to most compass test cases.
@@ -41,7 +41,7 @@ set_up_experiment
 
 The class :py:class:`compass.landice.tests.ismip6_run.ismip6_ais_proj2300.set_up_experiment.SetUpExperiment`
 defines a step for a single ISMIP6 experiment (model run).  The constructor
-stores the experiment name.
+(``__init__``) stores the experiment name.
 
 The ``setup`` method actually sets up an experiment by taking a baseline
 configuration and then namelist and streams as necessary to define the ISMIP6

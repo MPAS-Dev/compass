@@ -6,7 +6,8 @@ ismip6_run
 The ``landice/ismip6_run`` test group includes a test case for setting up
 one or more experiments from the `ISMIP6 set of experiments <https://www.climate-cryosphere.org/wiki/index.php?title=ISMIP6_wiki_page>`_.
 This functionality assumes the initial condition, parameter, and forcing files
-have already been generated.  It creates a consistent set of run directories
+have already been generated using the :ref:`landice_ismip6_forcing` test case.
+It creates a consistent set of run directories
 for the experiments requested.  It is not meant for automated running of the
 experiments, and expert knowledge is recommended for conducting the actual
 experiments.
@@ -101,7 +102,12 @@ Steps for setting up and running experiments
    options for ``[parallel]`` and ``[job]``, as well as any required
    modifications to the ``[ismip6_run_ais_2300]`` section.  Likely, most or all
    attributes in the ``[ismip6_run_ais_2300]`` section need to be customized for a
-   given application.
+   given application.  It is possible to set up the test case without the
+   ``-f`` option, but generally users will need to make their own
+   adjustments to the example syntax above include it.  Also, if you
+   do not compile MALI in the ``MALI-Dev`` submodule within compass, you will
+   need to include the ``-p`` option specifying the path to where you compiled
+   MALI.
 
 2. After ``compass setup`` completes and all runs are set up, go to the
    ``WORK_DIR_PATH`` and change to the

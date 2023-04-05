@@ -32,7 +32,7 @@ class Ismip6AisProj2300(TestCase):
         """
         Set up the desired ISMIP6 AIS 2300 experiments.
 
-        Read the list from the config of which experiemnts the
+        Read the list from the config of which experiments the
         user wants to set up.  Call thee add_step method and add the
         experiment to steps_to_run.  Those operations are typically done
         in the constructor, but they are done here so that the list to set up
