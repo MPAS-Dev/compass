@@ -1,20 +1,23 @@
-import numpy as np
-import netCDF4
-import xarray
-from matplotlib import pyplot as plt
 from shutil import copyfile
 
-from mpas_tools.mesh.creation import build_planar_mesh
-from mpas_tools.mesh.conversion import convert, cull
-from mpas_tools.planar_hex import make_planar_hex_mesh
+import matplotlib.pyplot as plt
+import mpas_tools
+import netCDF4
+import xarray
+from geometric_features import FeatureCollection, GeometricFeatures
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
+from mpas_tools.mesh.conversion import convert, cull
+from mpas_tools.mesh.creation import build_planar_mesh
 
-from compass.step import Step
+from compass.landice.mesh import (
+    get_dist_to_edge_and_GL,
+    gridded_flood_fill,
+    set_cell_width,
+    set_rectangular_geom_points_and_edges,
+)
 from compass.model import make_graph_file
-from compass.landice.mesh import gridded_flood_fill, \
-    set_rectangular_geom_points_and_edges, \
-    set_cell_width, get_dist_to_edge_and_GL
+from compass.step import Step
 
 
 class Mesh(Step):
@@ -23,8 +26,8 @@ class Mesh(Step):
 
     Attributes
     ----------
-    mesh_type : str
-        The resolution or mesh type of the test case
+    mesh_filename : str
+        File name of the MALI mesh
     """
 
     def __init__(self, test_case):
@@ -36,13 +39,17 @@ class Mesh(Step):
         test_case : compass.TestCase
             The test case this step belongs to
 
-        mesh_type : str
-            The resolution or mesh type of the test case
         """
-        super().__init__(test_case=test_case, name='mesh')
+        super().__init__(test_case=test_case, name='mesh', cpus_per_task=64,
+                         min_cpus_per_task=1)
 
+        self.mesh_filename = 'Antarctica.nc'
         self.add_output_file(filename='graph.info')
-        self.add_output_file(filename='Antarctica.nc')
+        self.add_output_file(filename=self.mesh_filename)
+        self.add_output_file(filename=f'{self.mesh_filename[:-3]}_'
+                                      f'imbie_regionMasks.nc')
+        self.add_output_file(filename=f'{self.mesh_filename[:-3]}_'
+                                      f'ismip6_regionMasks.nc')
         self.add_input_file(
             filename='antarctica_8km_2020_10_20.nc',
             target='antarctica_8km_2020_10_20.nc',
@@ -123,10 +130,11 @@ class Mesh(Step):
         dsMesh = convert(dsMesh, logger=logger)
         write_netcdf(dsMesh, 'antarctica_dehorned.nc')
 
+        mesh_filename = self.mesh_filename
         logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')
         args = ['create_landice_grid_from_generic_MPAS_grid.py', '-i',
                 'antarctica_dehorned.nc', '-o',
-                'Antarctica.nc', '-l', levels, '-v', 'glimmer',
+                mesh_filename, '-l', levels, '-v', 'glimmer',
                 '--beta', '--thermal', '--obs', '--diri']
 
         check_call(args, logger=logger)
@@ -134,22 +142,35 @@ class Mesh(Step):
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
                 'antarctica_8km_2020_10_20.nc',
-                '-d', 'Antarctica.nc', '-m', 'b']
+                '-d', mesh_filename, '-m', 'b']
         check_call(args, logger=logger)
 
         logger.info('Marking domain boundaries dirichlet')
         args = ['mark_domain_boundaries_dirichlet.py',
-                '-f', 'Antarctica.nc']
+                '-f', mesh_filename]
         check_call(args, logger=logger)
 
         logger.info('calling set_lat_lon_fields_in_planar_grid.py')
         args = ['set_lat_lon_fields_in_planar_grid.py', '-f',
-                'Antarctica.nc', '-p', 'ais-bedmap2']
+                mesh_filename, '-p', 'ais-bedmap2']
         check_call(args, logger=logger)
 
         logger.info('creating graph.info')
-        make_graph_file(mesh_filename='Antarctica.nc',
+        make_graph_file(mesh_filename=mesh_filename,
                         graph_filename='graph.info')
+
+        # create a region mask
+        mask_filename = f'{mesh_filename[:-3]}_imbie_regionMasks.nc'
+        self._make_region_masks(mesh_filename, mask_filename,
+                                self.cpus_per_task,
+                                tags=['EastAntarcticaIMBIE',
+                                      'WestAntarcticaIMBIE',
+                                      'AntarcticPeninsulaIMBIE'])
+
+        mask_filename = f'{mesh_filename[:-3]}_ismip6_regionMasks.nc'
+        self._make_region_masks(mesh_filename, mask_filename,
+                                self.cpus_per_task,
+                                tags=['ISMIP6_Basin'])
 
     def build_cell_width(self):
         """
@@ -187,8 +208,9 @@ class Mesh(Step):
 
         # Calculate distance from each grid point to ice edge
         # and grounding line, for use in cell spacing functions.
-        distToEdge, distToGL = get_dist_to_edge_and_GL(self, thk, topg, x1,
-                                                       y1, window_size=1.e5)
+        distToEdge, distToGL = get_dist_to_edge_and_GL(self, thk, topg, x1, y1,
+                                                       section='antarctica',
+                                                       window_size=1.e5)
         # optional - plot distance calculation
         # plt.pcolor(distToEdge/1000.0); plt.colorbar(); plt.show()
 
@@ -200,3 +222,33 @@ class Mesh(Step):
 
         return (cell_width.astype('float64'), x1.astype('float64'),
                 y1.astype('float64'), geom_points, geom_edges, floodMask)
+
+    def _make_region_masks(self, mesh_filename, mask_filename, cores, tags):
+        logger = self.logger
+        gf = GeometricFeatures()
+        fcMask = FeatureCollection()
+
+        for tag in tags:
+            fc = gf.read(componentName='landice', objectType='region',
+                         tags=[tag])
+            fc.plot('southpole')
+            plt.savefig(f'plot_basins_{tag}.png')
+            fcMask.merge(fc)
+
+        geojson_filename = 'regionMask.geojson'
+        fcMask.to_geojson(geojson_filename)
+
+        # these defaults may have been updated from config options -- pass them
+        # along to the subprocess
+        netcdf_format = mpas_tools.io.default_format
+        netcdf_engine = mpas_tools.io.default_engine
+
+        args = ['compute_mpas_region_masks',
+                '-m', mesh_filename,
+                '-g', geojson_filename,
+                '-o', mask_filename,
+                '-t', 'cell',
+                '--process_count', f'{cores}',
+                '--format', netcdf_format,
+                '--engine', netcdf_engine]
+        check_call(args, logger=logger)

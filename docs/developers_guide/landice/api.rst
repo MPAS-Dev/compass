@@ -11,6 +11,21 @@ landice
 Test Groups
 ^^^^^^^^^^^
 
+antarctica
+~~~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.antarctica
+
+.. autosummary::
+   :toctree: generated/
+
+   Antarctica
+
+   mesh_gen.MeshGen
+
+   mesh.Mesh
+   mesh.Mesh.run
+
 calving_dt_convergence
 ~~~~~~~~~~~~~~~~~~~~~~
 
