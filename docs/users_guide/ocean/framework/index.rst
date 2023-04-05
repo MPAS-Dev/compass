@@ -11,4 +11,5 @@ test groups are added.
    :titlesonly:
 
    ice_shelf
+   mesh
    vertical

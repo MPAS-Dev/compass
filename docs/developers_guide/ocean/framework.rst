@@ -42,8 +42,38 @@ as config options from ``vertical_grid``.
 Mesh
 ----
 
-The ``compass.ocean.mesh`` package includes modules for spherical ocean meshes
-shared across test groups.
+The ``compass.ocean.mesh`` package includes modules for modifying spherical
+ocean meshes shared across test groups.
+
+.. _dev_ocean_framework_remap_topogrpahy:
+
+Remapping Topography
+~~~~~~~~~~~~~~~~~~~~
+
+After building a base spherical mesh (see :ref:`dev_spherical_meshes`),
+the global ocean :ref:`dev_ocean_global_ocean_mesh` includes a step for
+remapping topography data (bathymetry, ocean mask, land-ice draft, land-ice
+thickness, grounded and floating land-ice masks, etc.) to the MPAS mesh.  This
+step is controlled by config options described in
+:ref:`ocean_remap_topography`.
+
+The step uses the `pyremap <https://mpas-dev.github.io/pyremap/stable/>`_
+package to call
+`ESMF_RegridWeightGen <https://earthsystemmodeling.org/docs/release/ESMF_8_4_1/ESMF_refdoc/node3.html#SECTION03020000000000000000>`_
+to generate a mapping file, then it uses
+`ncremap <https://nco.sourceforge.net/nco.html#ncremap-netCDF-Remapper>`_
+to perform remapping to the MPAS mesh.  Then, it renames the
+topography variables to the following names, expected in MPAS-Ocean's init mode
+for the global ocean:
+
+.. code-block:: python
+
+    rename = {'bathymetry_var': 'bed_elevation',
+              'ice_draft_var': 'landIceDraftObserved',
+              'ice_thickness_var': 'landIceThkObserved',
+              'ice_frac_var': 'landIceFracObserved',
+              'grounded_ice_frac_var': 'landIceGroundedFracObserved',
+              'ocean_frac_var': 'oceanFracObserved'}
 
 
 .. _dev_ocean_framework_cull_mesh:
