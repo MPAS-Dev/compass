@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.ocean.mesh.cull.CullMeshStep &mdash; compass latest documentation</title>
+  <title>compass.ocean.mesh.remap_topography.RemapTopography &mdash; compass latest documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,8 +20,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="compass.ocean.mesh.cull.CullMeshStep.setup" href="compass.ocean.mesh.cull.CullMeshStep.setup.html" />
-    <link rel="prev" title="compass.ocean.tests.ziso.initial_state.InitialState.run" href="compass.ocean.tests.ziso.initial_state.InitialState.run.html" /> 
+    <link rel="next" title="compass.ocean.mesh.remap_topography.RemapTopography.setup" href="compass.ocean.mesh.remap_topography.RemapTopography.setup.html" />
+    <link rel="prev" title="compass.ocean.mesh.floodplain.FloodplainMeshStep.run" href="compass.ocean.mesh.floodplain.FloodplainMeshStep.run.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -117,9 +117,9 @@
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../api.html">API reference</a></li>
           <li class="breadcrumb-item"><a href="../api.html">ocean</a></li>
-      <li class="breadcrumb-item active">compass.ocean.mesh.cull.CullMeshStep</li>
+      <li class="breadcrumb-item active">compass.ocean.mesh.remap_topography.RemapTopography</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/developers_guide/ocean/generated/compass.ocean.mesh.cull.CullMeshStep.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/developers_guide/ocean/generated/compass.ocean.mesh.remap_topography.RemapTopography.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -127,44 +127,33 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="compass-ocean-mesh-cull-cullmeshstep">
-<h1>compass.ocean.mesh.cull.CullMeshStep<a class="headerlink" href="#compass-ocean-mesh-cull-cullmeshstep" title="Permalink to this heading">¶</a></h1>
+  <section id="compass-ocean-mesh-remap-topography-remaptopography">
+<h1>compass.ocean.mesh.remap_topography.RemapTopography<a class="headerlink" href="#compass-ocean-mesh-remap-topography-remaptopography" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="compass.ocean.mesh.cull.CullMeshStep">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compass.ocean.mesh.cull.</span></span><span class="sig-name descname"><span class="pre">CullMeshStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_case</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_mesh_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_ice_shelf_cavities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cull_mesh'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_inject_bathymetry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preserve_floodplain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remap_topography</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/mesh/cull.html#CullMeshStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.mesh.cull.CullMeshStep" title="Permalink to this definition">¶</a></dt>
-<dd><p>A step for culling a global MPAS-Ocean mesh</p>
+<dt class="sig sig-object py" id="compass.ocean.mesh.remap_topography.RemapTopography">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compass.ocean.mesh.remap_topography.</span></span><span class="sig-name descname"><span class="pre">RemapTopography</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_case</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_mesh_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'remap_topography'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MPAS_mesh'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/mesh/remap_topography.html#RemapTopography"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.mesh.remap_topography.RemapTopography" title="Permalink to this definition">¶</a></dt>
+<dd><p>A step for remapping bathymetry and ice-shelf topography from a
+latitude-longitude grid to a global MPAS-Ocean mesh</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>base_mesh_step</strong> (<a class="reference internal" href="../../generated/compass.mesh.spherical.SphericalBaseStep.html#compass.mesh.spherical.SphericalBaseStep" title="compass.mesh.spherical.SphericalBaseStep"><em>compass.mesh.spherical.SphericalBaseStep</em></a>) – The base mesh step containing input files to this step</p></li>
-<li><p><strong>with_ice_shelf_cavities</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether the mesh includes ice-shelf cavities</p></li>
-<li><p><strong>do_inject_bathymetry</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether to interpolate bathymetry from a data file so it
-can be used as a culling criteria</p></li>
-<li><p><strong>preserve_floodplain</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether to leave land cells in the mesh based on bathymetry
-specified by do_inject_bathymetry</p></li>
-<li><p><strong>remap_topography</strong> (<a class="reference internal" href="compass.ocean.mesh.remap_topography.RemapTopography.html#compass.ocean.mesh.remap_topography.RemapTopography" title="compass.ocean.mesh.remap_topography.RemapTopography"><em>compass.ocean.mesh.remap_topography.RemapTopography</em></a>) – A step for remapping topography. If provided, the remapped
-topography is used to determine the land mask</p></li>
+<li><p><strong>mesh_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the MPAS mesh to include in the mapping file</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="compass.ocean.mesh.cull.CullMeshStep.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_case</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_mesh_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_ice_shelf_cavities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cull_mesh'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_inject_bathymetry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preserve_floodplain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remap_topography</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/mesh/cull.html#CullMeshStep.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.mesh.cull.CullMeshStep.__init__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compass.ocean.mesh.remap_topography.RemapTopography.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_case</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_mesh_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'remap_topography'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MPAS_mesh'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/mesh/remap_topography.html#RemapTopography.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.mesh.remap_topography.RemapTopography.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new step</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>test_case</strong> (<a class="reference internal" href="compass.ocean.tests.global_ocean.mesh.Mesh.html#compass.ocean.tests.global_ocean.mesh.Mesh" title="compass.ocean.tests.global_ocean.mesh.Mesh"><em>compass.ocean.tests.global_ocean.mesh.Mesh</em></a>) – The test case this step belongs to</p></li>
 <li><p><strong>base_mesh_step</strong> (<a class="reference internal" href="../../generated/compass.mesh.spherical.SphericalBaseStep.html#compass.mesh.spherical.SphericalBaseStep" title="compass.mesh.spherical.SphericalBaseStep"><em>compass.mesh.spherical.SphericalBaseStep</em></a>) – The base mesh step containing input files to this step</p></li>
-<li><p><strong>with_ice_shelf_cavities</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether the mesh includes ice-shelf cavities</p></li>
 <li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>optional</em>) – the name of the step</p></li>
 <li><p><strong>subdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>optional</em>) – the subdirectory for the step.  The default is <code class="docutils literal notranslate"><span class="pre">name</span></code></p></li>
-<li><p><strong>do_inject_bathymetry</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to interpolate bathymetry from a data file so it
-can be used as a culling criteria</p></li>
-<li><p><strong>preserve_floodplain</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to leave land cells in the mesh based on bathymetry
-specified by do_inject_bathymetry</p></li>
-<li><p><strong>remap_topography</strong> (<a class="reference internal" href="compass.ocean.mesh.remap_topography.RemapTopography.html#compass.ocean.mesh.remap_topography.RemapTopography" title="compass.ocean.mesh.remap_topography.RemapTopography"><em>compass.ocean.mesh.remap_topography.RemapTopography</em></a><em>, </em><em>optional</em>) – A step for remapping topography. If provided, the remapped
-topography is used to determine the land mask</p></li>
+<li><p><strong>mesh_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>optional</em>) – The name of the MPAS mesh to include in the mapping file</p></li>
 </ul>
 </dd>
 </dl>
@@ -177,7 +166,7 @@ topography is used to determine the land mask</p></li>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#compass.ocean.mesh.cull.CullMeshStep.__init__" title="compass.ocean.mesh.cull.CullMeshStep.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(test_case, base_mesh_step, ...[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#compass.ocean.mesh.remap_topography.RemapTopography.__init__" title="compass.ocean.mesh.remap_topography.RemapTopography.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(test_case, base_mesh_step[, name, ...])</p></td>
 <td><p>Create a new step</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_input_file</span></code>([filename, target, database, ...])</p></td>
@@ -198,13 +187,13 @@ topography is used to determine the land mask</p></li>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_streams_file</span></code>(package, streams[, ...])</p></td>
 <td><p>Add a streams file to the step to be parsed when generating a complete streams file if and when the step gets set up.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">constrain_resources</span></code>(available_resources)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compass.ocean.mesh.remap_topography.RemapTopography.constrain_resources.html#compass.ocean.mesh.remap_topography.RemapTopography.constrain_resources" title="compass.ocean.mesh.remap_topography.RemapTopography.constrain_resources"><code class="xref py py-obj docutils literal notranslate"><span class="pre">constrain_resources</span></code></a>(available_resources)</p></td>
 <td><p>Constrain <code class="docutils literal notranslate"><span class="pre">cpus_per_task</span></code> and <code class="docutils literal notranslate"><span class="pre">ntasks</span></code> based on the number of cores available to this step</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_inputs_and_outputs</span></code>()</p></td>
 <td><p>Process the inputs to and outputs from a step added with <a class="reference internal" href="../../generated/compass.Step.add_input_file.html#compass.Step.add_input_file" title="compass.Step.add_input_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_input_file()</span></code></a> and <a class="reference internal" href="../../generated/compass.Step.add_output_file.html#compass.Step.add_output_file" title="compass.Step.add_output_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_output_file()</span></code></a>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compass.ocean.mesh.cull.CullMeshStep.run.html#compass.ocean.mesh.cull.CullMeshStep.run" title="compass.ocean.mesh.cull.CullMeshStep.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compass.ocean.mesh.remap_topography.RemapTopography.run.html#compass.ocean.mesh.remap_topography.RemapTopography.run" title="compass.ocean.mesh.remap_topography.RemapTopography.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>()</p></td>
 <td><p>Run this step of the test case</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">runtime_setup</span></code>()</p></td>
@@ -213,8 +202,8 @@ topography is used to determine the land mask</p></li>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_resources</span></code>([cpus_per_task, ...])</p></td>
 <td><p>Update the resources for the subtask.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compass.ocean.mesh.cull.CullMeshStep.setup.html#compass.ocean.mesh.cull.CullMeshStep.setup" title="compass.ocean.mesh.cull.CullMeshStep.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup</span></code></a>()</p></td>
-<td><p>Set up the test case in the work directory, including downloading any dependencies.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compass.ocean.mesh.remap_topography.RemapTopography.setup.html#compass.ocean.mesh.remap_topography.RemapTopography.setup" title="compass.ocean.mesh.remap_topography.RemapTopography.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup</span></code></a>()</p></td>
+<td><p>Set up the step in the work directory, including downloading any dependencies.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_namelist_at_runtime</span></code>(options[, out_name])</p></td>
 <td><p>Update an existing namelist file with additional options.</p></td>
@@ -235,8 +224,8 @@ topography is used to determine the land mask</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="compass.ocean.tests.ziso.initial_state.InitialState.run.html" class="btn btn-neutral float-left" title="compass.ocean.tests.ziso.initial_state.InitialState.run" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="compass.ocean.mesh.cull.CullMeshStep.setup.html" class="btn btn-neutral float-right" title="compass.ocean.mesh.cull.CullMeshStep.setup" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.ocean.mesh.floodplain.FloodplainMeshStep.run.html" class="btn btn-neutral float-left" title="compass.ocean.mesh.floodplain.FloodplainMeshStep.run" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.ocean.mesh.remap_topography.RemapTopography.setup.html" class="btn btn-neutral float-right" title="compass.ocean.mesh.remap_topography.RemapTopography.setup" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

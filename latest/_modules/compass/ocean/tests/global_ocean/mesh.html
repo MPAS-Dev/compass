@@ -117,6 +117,7 @@
     <span class="n">QuasiUniformSphericalMeshStep</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.mesh.cull</span> <span class="kn">import</span> <span class="n">CullMeshStep</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.mesh.remap_topography</span> <span class="kn">import</span> <span class="n">RemapTopography</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.arrm10to60</span> <span class="kn">import</span> <span class="n">ARRM10to60BaseMesh</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.ec30to60</span> <span class="kn">import</span> <span class="n">EC30to60BaseMesh</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.kuroshio</span> <span class="kn">import</span> <span class="n">KuroshioBaseMesh</span>
@@ -144,7 +145,7 @@
 <span class="sd">    with_ice_shelf_cavities : bool</span>
 <span class="sd">        Whether the mesh includes ice-shelf cavities</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="Mesh.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.mesh.Mesh.html#compass.ocean.tests.global_ocean.mesh.Mesh.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">):</span>
+<div class="viewcode-block" id="Mesh.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.mesh.Mesh.html#compass.ocean.tests.global_ocean.mesh.Mesh.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">remap_topography</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create test case for creating a global MPAS-Ocean mesh</span>
 
@@ -155,6 +156,10 @@
 
 <span class="sd">        mesh_name : str</span>
 <span class="sd">            The name of the mesh</span>
+
+<span class="sd">        remap_topography : bool</span>
+<span class="sd">            Whether to remap topography as a separate step (as opposed to in</span>
+<span class="sd">            MPAS-Ocean init mode)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;mesh&#39;</span>
         <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
@@ -196,9 +201,18 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">base_mesh_step</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">remap_topography</span><span class="p">:</span>
+            <span class="n">remap_step</span> <span class="o">=</span> <span class="n">RemapTopography</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                                         <span class="n">base_mesh_step</span><span class="o">=</span><span class="n">base_mesh_step</span><span class="p">,</span>
+                                         <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">remap_step</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">remap_step</span> <span class="o">=</span> <span class="kc">None</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">CullMeshStep</span><span class="p">(</span>
             <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_mesh_step</span><span class="o">=</span><span class="n">base_mesh_step</span><span class="p">,</span>
-            <span class="n">with_ice_shelf_cavities</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">))</span></div>
+            <span class="n">with_ice_shelf_cavities</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">,</span>
+            <span class="n">remap_topography</span><span class="o">=</span><span class="n">remap_step</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Mesh.configure"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.mesh.Mesh.configure.html#compass.ocean.tests.global_ocean.mesh.Mesh.configure">[docs]</a>    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -211,7 +225,12 @@
             <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;add_mesh_density&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;plot_cell_width&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">)</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;compass.mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;mesh.cfg&#39;</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;compass.mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;mesh.cfg&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># a description of the bathymetry</span>
+        <span class="k">if</span> <span class="s1">&#39;remap_topography&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">:</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;compass.ocean.mesh&#39;</span><span class="p">,</span>
+                                    <span class="s1">&#39;remap_topography.cfg&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Kuroshio&#39;</span><span class="p">):</span>
             <span class="c1"># add the config options for all kuroshio meshes</span>
             <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span>
@@ -228,9 +247,13 @@
                        <span class="s1">&#39;Antarctica&#39;</span><span class="p">)</span>
 
         <span class="c1"># a description of the bathymetry</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;bathy_description&#39;</span><span class="p">,</span>
-                   <span class="s1">&#39;Bathymetry is from GEBCO 2022, combined with BedMachine &#39;</span>
-                   <span class="s1">&#39;Antarctica v2 around Antarctica.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;remap_topography&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">:</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Bathymetry is from GEBCO 2022, combined with &#39;</span> \
+                          <span class="s1">&#39;BedMachine Antarctica v3 around Antarctica.&#39;</span>
+
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;bathy_description&#39;</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span>
 
         <span class="n">get_author_and_email_from_git</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
 

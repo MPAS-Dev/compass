@@ -839,6 +839,12 @@ ocean framework
    mesh.floodplain.FloodplainMeshStep
    mesh.floodplain.FloodplainMeshStep.run
 
+   mesh.remap_topography.RemapTopography
+   mesh.remap_topography.RemapTopography.setup
+   mesh.remap_topography.RemapTopography.constrain_resources
+   mesh.remap_topography.RemapTopography.run
+
+
    haney.compute_haney_number
 
    iceshelf.compute_land_ice_pressure_and_draft

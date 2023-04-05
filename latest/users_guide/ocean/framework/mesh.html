@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ice shelf-cavities &mdash; compass latest documentation</title>
+  <title>Mesh &mdash; compass latest documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,8 +20,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Mesh" href="mesh.html" />
-    <link rel="prev" title="Framework" href="index.html" /> 
+    <link rel="next" title="Vertical coordinate" href="vertical.html" />
+    <link rel="prev" title="Ice shelf-cavities" href="ice_shelf.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -56,11 +56,12 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Ocean core</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../test_groups/index.html">Test groups</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">Framework</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Ice shelf-cavities</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#sea-surface-height-adjustment">Sea surface height adjustment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ice_shelf.html">Ice shelf-cavities</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Mesh</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#remapping-topography">Remapping topography</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#culling-land-cells">Culling land cells</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="mesh.html">Mesh</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vertical.html">Vertical coordinate</a></li>
 </ul>
 </li>
@@ -117,9 +118,9 @@
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Ocean core</a></li>
           <li class="breadcrumb-item"><a href="index.html">Framework</a></li>
-      <li class="breadcrumb-item active">Ice shelf-cavities</li>
+      <li class="breadcrumb-item active">Mesh</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/users_guide/ocean/framework/ice_shelf.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/users_guide/ocean/framework/mesh.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -127,53 +128,80 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="ice-shelf-cavities">
-<span id="ocean-ice-shelf-cavities"></span><h1>Ice shelf-cavities<a class="headerlink" href="#ice-shelf-cavities" title="Permalink to this heading">¶</a></h1>
-<p>The inclusion of ice-shelf cavities and melt rates below ice shelves around
-Antarctica is a major objective of the
-<a class="reference external" href="https://e3sm.org/research/cryosphere-ocean/v1-cryosphere-ocean/">E3SM Cryosphere Campaign</a>.
-Sub-ice-shelf melt rates are needed in order to estimate future mass loss
-from the Antarctic Ice Sheet.  Along with dynamic ocean boundaries, they are an
-important component in future coupling between MPAS-Ocean and MALI.</p>
-<p>Currently, both the <a class="reference internal" href="../test_groups/global_ocean.html#ocean-global-ocean"><span class="std std-ref">global_ocean</span></a> and <a class="reference internal" href="../test_groups/ice_shelf_2d.html#ocean-ice-shelf-2d"><span class="std std-ref">ice_shelf_2d</span></a>
-configurations include test cases where the ocean domain includes ice-shelf
-cavities.</p>
-<p>MPAS-Ocean implements the topography of ice-shelf cavities by allowing the
-sea-surface height (SSH) to follow the ice shelf-ocean interface (the ice
-draft).  The sea surface is depressed by applying the pressure of the overlying
-ice shelf as a top boundary condition.  The <a class="reference internal" href="vertical.html#ocean-vertical"><span class="std std-ref">Vertical coordinate</span></a> in ice-shelf
-cavities is a bit more complex than the simpler z* coordinate used elsewhere
-in the ocean domain because ocean layers have to be made thicker or their
-slope has to be reduced via smoothing to prevent the Haney number
-(<a class="reference external" href="https://doi.org/10.1175/1520-0485(1991)021%3C0610:OTPGFO%3E2.0.CO;2">Haney 1991</a>)
-from becoming too large.</p>
-<section id="sea-surface-height-adjustment">
-<span id="ocean-ssh-adjustment"></span><h2>Sea surface height adjustment<a class="headerlink" href="#sea-surface-height-adjustment" title="Permalink to this heading">¶</a></h2>
-<p>Standalone-ocean test cases typically provide the ice draft (which is then used
-as the <code class="docutils literal notranslate"><span class="pre">ssh</span></code>)  rather than the pressure from the weight of the ice shelf
-(the <code class="docutils literal notranslate"><span class="pre">landIcePressure</span></code> variable).  This is in contrast to coupled
-ice sheet-ocean configurations that we expect to support in the future, in
-which the weight of the ice is know, rather than the ice draft.  Ideally, the
-initial ice draft and the ice-shelf pressure would be consistent with one
-another, so that the SSH would remain nearly stationary in time once the
-MPAS-Ocean simulation starts.  In practice, this is difficult to achieve.</p>
-<p>Typically, ice shelves are assumed to be freely floating on the ocean with
-negligible stresses, meaning that the ice draft and the weight
-of the ice are related through the average density of the ice and of the
-displaced ocean water in a given column.  However, in most circumstances it is
-hard to accurately determine the average density of displaced ocean water, and
-details of the numerical algorithm for computing the horizontal pressure
-gradient can also affect how consistent the ice draft and pressure fields are.</p>
-<p>MPAS-Ocean achieves a consistent ice draft and ice-shelf pressure by:</p>
-<ol class="arabic simple">
-<li><p>making an initial guess that the displaced ocean density is the same as the
-density in the top ocean layer and</p></li>
-<li><p>iteratively performing short (typically 1-hour) forward simulations in which
-the SSH is free to evolve, then modifying the ice-shelf pressure to attempt
-to compensate for changes in the SSH during the forward run.</p></li>
-</ol>
-<p>We have found this approach to be robust over a range of resolutions from &lt;1 km
-to 240 km and in both idealized and realistic model configurations.</p>
+  <section id="mesh">
+<span id="ocean-mesh"></span><h1>Mesh<a class="headerlink" href="#mesh" title="Permalink to this heading">¶</a></h1>
+<p>Several ocean test groups use a set of common functionality for manipulating
+MPAS-Ocean meshes.  This includes remapping topography datasets to the MPAS
+mesh, culling land from the mesh based on a series of masks.</p>
+<section id="remapping-topography">
+<span id="ocean-remap-topography"></span><h2>Remapping topography<a class="headerlink" href="#remapping-topography" title="Permalink to this heading">¶</a></h2>
+<p>After building a base spherical mesh (see <a class="reference internal" href="../../../developers_guide/framework.html#dev-spherical-meshes"><span class="std std-ref">Spherical Meshes</span></a>),
+the global ocean <a class="reference internal" href="../test_groups/global_ocean.html#global-ocean-mesh"><span class="std std-ref">mesh test case</span></a> includes a step for remapping
+topography data (bathymetry, ocean mask, land-ice draft, land-ice thickness,
+grounded and floating land-ice masks, etc.) to the MPAS mesh.  This step is
+controlled by the following config options:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options related to remapping topography to an MPAS-Ocean mesh</span>
+<span class="k">[remap_topography]</span>
+
+<span class="c1"># the name of the topography file in the bathymetry database</span>
+<span class="na">topo_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">BedMachineAntarctica_v3_and_GEBCO_2022_0.0125_degree_20230315.nc</span>
+
+<span class="c1"># variable names in topo_filename</span>
+<span class="na">lon_var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">lon</span>
+<span class="na">lat_var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">lat</span>
+<span class="na">bathymetry_var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">bathymetry</span>
+<span class="na">ice_draft_var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ice_draft</span>
+<span class="na">ice_thickness_var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">thickness</span>
+<span class="na">ice_frac_var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ice_mask</span>
+<span class="na">grounded_ice_frac_var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">grounded_mask</span>
+<span class="na">ocean_frac_var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ocean_mask</span>
+
+<span class="c1"># the description to include in metadata</span>
+<span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Bathymetry is from GEBCO 2022, combined with BedMachine</span>
+<span class="w">              </span><span class="na">Antarctica v3 around Antarctica.</span>
+
+<span class="c1"># the target and minimum number of MPI tasks to use in remapping</span>
+<span class="na">ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1024</span>
+<span class="na">min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">360</span>
+
+<span class="c1"># remapping method {&#39;bilinear&#39;, &#39;neareststod&#39;, &#39;conserve&#39;}</span>
+<span class="na">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">conserve</span>
+</pre></div>
+</div>
+<p>The topography filename should be something from the ocean
+<a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-ocean/bathymetry_database/">bathymetry database</a>.</p>
+<p>The various variable names are designed to provide flexibility in case a given
+topography file used different variable names tha the defaults provided above.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">description</span></code> config option is passed on as part of the mesh metadata in
+global ocean files.</p>
+<p>The target and minimum number of MPI tasks (<code class="docutils literal notranslate"><span class="pre">ntasks</span></code> and <code class="docutils literal notranslate"><span class="pre">min_tasks</span></code>,
+respectively) will depend on the resolution of the topography file.  The
+default file is at 1/80 of a degree and typically requires at least 360 tasks
+to successfully remap the data even to relatively coarse MPAS meshes.  Coarser
+bathymetry datasets can likely get away with far fewer MPI tasks.  The method
+used for remapping (<code class="docutils literal notranslate"><span class="pre">conserve</span></code> by default) also makes a difference in how
+many tasks are required.</p>
+</section>
+<section id="culling-land-cells">
+<h2>Culling land cells<a class="headerlink" href="#culling-land-cells" title="Permalink to this heading">¶</a></h2>
+<p>The framework also includes a step for culling land from the MPAS mesh,
+including enforcing a series of critical passages (transects that must be
+ocean, such as narrow channels) and critical land blockages (transects that
+must be land, such as thin peninsulas).  The config options that can be used to
+control this step are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for spherical meshes</span>
+<span class="k">[spherical_mesh]</span>
+
+<span class="c1">## config options related to the step for culling land from the mesh</span>
+<span class="c1"># number of cores to use</span>
+<span class="na">cull_mesh_cpus_per_task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">128</span>
+<span class="c1"># minimum of cores, below which the step fails</span>
+<span class="na">cull_mesh_min_cpus_per_task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+</pre></div>
+</div>
+<p>To create various land masks, the culling step uses python multiprocessing.
+The target and minimum number of processes are controlled by
+<code class="docutils literal notranslate"><span class="pre">cull_mesh_cpus_per_task</span></code> and <code class="docutils literal notranslate"><span class="pre">cull_mesh_min_cpus_per_task</span></code>, respectively.</p>
 </section>
 </section>
 
@@ -181,8 +209,8 @@ to 240 km and in both idealized and realistic model configurations.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="Framework" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="mesh.html" class="btn btn-neutral float-right" title="Mesh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ice_shelf.html" class="btn btn-neutral float-left" title="Ice shelf-cavities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="vertical.html" class="btn btn-neutral float-right" title="Vertical coordinate" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

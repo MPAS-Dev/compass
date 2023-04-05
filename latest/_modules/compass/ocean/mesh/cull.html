@@ -114,7 +114,7 @@
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">import</span> <span class="nn">mpas_tools.io</span>
-<span class="kn">import</span> <span class="nn">xarray</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">FeatureCollection</span><span class="p">,</span>
     <span class="n">GeometricFeatures</span><span class="p">,</span>
@@ -154,11 +154,16 @@
 <span class="sd">    preserve_floodplain : bool</span>
 <span class="sd">        Whether to leave land cells in the mesh based on bathymetry</span>
 <span class="sd">        specified by do_inject_bathymetry</span>
+
+<span class="sd">    remap_topography : compass.ocean.mesh.remap_topography.RemapTopography</span>
+<span class="sd">        A step for remapping topography. If provided, the remapped</span>
+<span class="sd">        topography is used to determine the land mask</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="CullMeshStep.__init__"><a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.mesh.cull.CullMeshStep.html#compass.ocean.mesh.cull.CullMeshStep.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">base_mesh_step</span><span class="p">,</span> <span class="n">with_ice_shelf_cavities</span><span class="p">,</span>
                  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;cull_mesh&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">do_inject_bathymetry</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                 <span class="n">preserve_floodplain</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                 <span class="n">preserve_floodplain</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">remap_topography</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new step</span>
 
@@ -186,10 +191,15 @@
 <span class="sd">        preserve_floodplain : bool, optional</span>
 <span class="sd">            Whether to leave land cells in the mesh based on bathymetry</span>
 <span class="sd">            specified by do_inject_bathymetry</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+
+<span class="sd">        remap_topography : compass.ocean.mesh.remap_topography.RemapTopography, optional</span>
+<span class="sd">            A step for remapping topography. If provided, the remapped</span>
+<span class="sd">            topography is used to determine the land mask</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">,</span>
                          <span class="n">cpus_per_task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_cpus_per_task</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">base_mesh_step</span> <span class="o">=</span> <span class="n">base_mesh_step</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remap_topography</span> <span class="o">=</span> <span class="n">remap_topography</span>
 
         <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
                      <span class="s1">&#39;critical_passages_mask_final.nc&#39;</span><span class="p">]:</span>
@@ -214,19 +224,41 @@
                 <span class="n">target</span><span class="o">=</span><span class="s1">&#39;SRTM15_plus_earth_relief_15s.nc&#39;</span><span class="p">,</span>
                 <span class="n">database</span><span class="o">=</span><span class="s1">&#39;bathymetry_database&#39;</span><span class="p">)</span>
 
-        <span class="c1"># get the these properties from the config options</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="c1"># todo: move to constrain_resources()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span>
-                                           <span class="s1">&#39;cull_mesh_cpus_per_task&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">min_cpus_per_task</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span>
-                                               <span class="s1">&#39;cull_mesh_min_cpus_per_task&#39;</span><span class="p">)</span>
-
         <span class="n">base_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_mesh_step</span><span class="o">.</span><span class="n">path</span>
         <span class="n">base_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_mesh_step</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
             <span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas_mesh_filename&#39;</span><span class="p">)</span>
         <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="n">base_filename</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span> <span class="n">work_dir_target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span> <span class="n">work_dir_target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">remap_topography</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">topo_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remap_topography</span><span class="o">.</span><span class="n">path</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">topo_path</span><span class="p">,</span> <span class="s1">&#39;topography_remapped.nc&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">,</span>
+                                <span class="n">work_dir_target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="s1">&#39;topography_culled.nc&#39;</span><span class="p">)</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span>
+                                           <span class="s1">&#39;cull_mesh_cpus_per_task&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_cpus_per_task</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span>
+                                               <span class="s1">&#39;cull_mesh_min_cpus_per_task&#39;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_resources</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constrain ``cpus_per_task`` and ``ntasks`` based on the number of</span>
+<span class="sd">        cores available to this step</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        available_resources : dict</span>
+<span class="sd">            The total number of cores available to the step</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span>
+                                           <span class="s1">&#39;cull_mesh_cpus_per_task&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_cpus_per_task</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span>
+                                               <span class="s1">&#39;cull_mesh_min_cpus_per_task&#39;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">constrain_resources</span><span class="p">(</span><span class="n">available_resources</span><span class="p">)</span>
 
 <div class="viewcode-block" id="CullMeshStep.run"><a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.mesh.cull.CullMeshStep.run.html#compass.ocean.mesh.cull.CullMeshStep.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -336,53 +368,27 @@
         <span class="p">(</span><span class="n">custom_land_blockages</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="n">gf</span> <span class="o">=</span> <span class="n">GeometricFeatures</span><span class="p">()</span>
-
-    <span class="c1"># start with the land coverage from Natural Earth</span>
-    <span class="n">fcLandCoverage</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;natural_earth&#39;</span><span class="p">,</span>
-                             <span class="n">objectType</span><span class="o">=</span><span class="s1">&#39;region&#39;</span><span class="p">,</span>
-                             <span class="n">featureNames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Land Coverage&#39;</span><span class="p">])</span>
-
-    <span class="c1"># remove the region south of 60S so we can replace it based on ice-sheet</span>
-    <span class="c1"># topography</span>
-    <span class="n">fcSouthMask</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="n">objectType</span><span class="o">=</span><span class="s1">&#39;region&#39;</span><span class="p">,</span>
-                          <span class="n">featureNames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Global Ocean 90S to 60S&#39;</span><span class="p">])</span>
-
-    <span class="n">fcLandCoverage</span> <span class="o">=</span> <span class="n">fcLandCoverage</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">fcSouthMask</span><span class="p">)</span>
-
-    <span class="c1"># Add &quot;land&quot; coverage from either the full ice sheet or just the grounded</span>
-    <span class="c1"># part</span>
-    <span class="k">if</span> <span class="n">with_cavities</span><span class="p">:</span>
-        <span class="n">fcAntarcticLand</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
-            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;bedmachine&#39;</span><span class="p">,</span> <span class="n">objectType</span><span class="o">=</span><span class="s1">&#39;region&#39;</span><span class="p">,</span>
-            <span class="n">featureNames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;AntarcticGroundedIceCoverage&#39;</span><span class="p">])</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">fcAntarcticLand</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
-            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;bedmachine&#39;</span><span class="p">,</span> <span class="n">objectType</span><span class="o">=</span><span class="s1">&#39;region&#39;</span><span class="p">,</span>
-            <span class="n">featureNames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;AntarcticIceCoverage&#39;</span><span class="p">])</span>
-
-    <span class="n">fcLandCoverage</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">fcAntarcticLand</span><span class="p">)</span>
-
-    <span class="c1"># save the feature collection to a geojson file</span>
-    <span class="n">fcLandCoverage</span><span class="o">.</span><span class="n">to_geojson</span><span class="p">(</span><span class="s1">&#39;land_coverage.geojson&#39;</span><span class="p">)</span>
-
     <span class="c1"># these defaults may have been updated from config options -- pass them</span>
     <span class="c1"># along to the subprocess</span>
     <span class="n">netcdf_format</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_format</span>
     <span class="n">netcdf_engine</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_engine</span>
 
-    <span class="c1"># Create the land mask based on the land coverage, i.e. coastline data</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;compute_mpas_region_masks&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="s1">&#39;land_coverage.geojson&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;land_mask.nc&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;cell&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">process_count</span><span class="p">),</span>
-            <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
-            <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
-    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    <span class="n">has_remapped_topo</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">)</span>
 
-    <span class="n">dsBaseMesh</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
-    <span class="n">dsLandMask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;land_mask.nc&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">has_remapped_topo</span><span class="p">:</span>
+        <span class="n">_land_mask_from_topo</span><span class="p">(</span><span class="n">with_cavities</span><span class="p">,</span>
+                             <span class="n">topo_filename</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">,</span>
+                             <span class="n">mask_filename</span><span class="o">=</span><span class="s1">&#39;land_mask.nc&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_land_mask_from_geojson</span><span class="p">(</span><span class="n">with_cavities</span><span class="o">=</span><span class="n">with_cavities</span><span class="p">,</span>
+                                <span class="n">process_count</span><span class="o">=</span><span class="n">process_count</span><span class="p">,</span>
+                                <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
+                                <span class="n">mesh_filename</span><span class="o">=</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span>
+                                <span class="n">geojson_filename</span><span class="o">=</span><span class="s1">&#39;land_coverage.geojson&#39;</span><span class="p">,</span>
+                                <span class="n">mask_filename</span><span class="o">=</span><span class="s1">&#39;land_mask.nc&#39;</span><span class="p">)</span>
+
+    <span class="n">dsBaseMesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
+    <span class="n">dsLandMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;land_mask.nc&#39;</span><span class="p">)</span>
     <span class="n">dsLandMask</span> <span class="o">=</span> <span class="n">add_land_locked_cells_to_mask</span><span class="p">(</span><span class="n">dsLandMask</span><span class="p">,</span> <span class="n">dsBaseMesh</span><span class="p">,</span>
                                                <span class="n">latitude_threshold</span><span class="o">=</span><span class="mf">43.0</span><span class="p">,</span>
                                                <span class="n">nSweeps</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
@@ -420,7 +426,7 @@
                 <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
                 <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">dsCritBlockMask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;critical_blockages.nc&#39;</span><span class="p">)</span>
+        <span class="n">dsCritBlockMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;critical_blockages.nc&#39;</span><span class="p">)</span>
 
         <span class="n">dsLandMask</span> <span class="o">=</span> <span class="n">add_critical_land_blockages</span><span class="p">(</span><span class="n">dsLandMask</span><span class="p">,</span> <span class="n">dsCritBlockMask</span><span class="p">)</span>
 
@@ -450,7 +456,7 @@
                 <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
                 <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">dsCritPassMask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;critical_passages.nc&#39;</span><span class="p">)</span>
+        <span class="n">dsCritPassMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;critical_passages.nc&#39;</span><span class="p">)</span>
 
         <span class="c1"># Alter critical passages to be at least two cells wide, to avoid sea</span>
         <span class="c1"># ice blockage</span>
@@ -490,25 +496,25 @@
                 <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">with_cavities</span><span class="p">:</span>
-        <span class="n">fcAntarcticIce</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
-            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;bedmachine&#39;</span><span class="p">,</span> <span class="n">objectType</span><span class="o">=</span><span class="s1">&#39;region&#39;</span><span class="p">,</span>
-            <span class="n">featureNames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;AntarcticIceCoverage&#39;</span><span class="p">])</span>
+    <span class="n">_cull_topo</span><span class="p">()</span>
 
-        <span class="n">fcAntarcticIce</span><span class="o">.</span><span class="n">to_geojson</span><span class="p">(</span><span class="s1">&#39;ice_coverage.geojson&#39;</span><span class="p">)</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;compute_mpas_region_masks&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="s1">&#39;ice_coverage.geojson&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;ice_coverage.nc&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;cell&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">process_count</span><span class="p">),</span>
-                <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
-                <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
-        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">dsMask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;ice_coverage.nc&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">with_cavities</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">has_remapped_topo</span><span class="p">:</span>
+            <span class="n">_land_mask_from_topo</span><span class="p">(</span><span class="n">with_cavities</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                 <span class="n">topo_filename</span><span class="o">=</span><span class="s1">&#39;topography_culled.nc&#39;</span><span class="p">,</span>
+                                 <span class="n">mask_filename</span><span class="o">=</span><span class="s1">&#39;ice_coverage.nc&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_land_mask_from_geojson</span><span class="p">(</span><span class="n">with_cavities</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                    <span class="n">process_count</span><span class="o">=</span><span class="n">process_count</span><span class="p">,</span>
+                                    <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
+                                    <span class="n">mesh_filename</span><span class="o">=</span><span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">,</span>
+                                    <span class="n">geojson_filename</span><span class="o">=</span><span class="s1">&#39;ice_coverage.geojson&#39;</span><span class="p">,</span>
+                                    <span class="n">mask_filename</span><span class="o">=</span><span class="s1">&#39;ice_coverage.nc&#39;</span><span class="p">)</span>
+
+        <span class="n">dsMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;ice_coverage.nc&#39;</span><span class="p">)</span>
 
         <span class="n">landIceMask</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">regionCellMasks</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nRegions</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">dsLandIceMask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+        <span class="n">dsLandIceMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
         <span class="n">dsLandIceMask</span><span class="p">[</span><span class="s1">&#39;landIceMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIceMask</span>
 
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsLandIceMask</span><span class="p">,</span> <span class="s1">&#39;land_ice_mask.nc&#39;</span><span class="p">)</span>
@@ -528,6 +534,110 @@
                     <span class="n">filename_pattern</span><span class="o">=</span><span class="s1">&#39;no_ISC_culled_mesh.nc&#39;</span><span class="p">,</span>
                     <span class="n">out_dir</span><span class="o">=</span><span class="s1">&#39;no_ISC_culled_mesh_vtk&#39;</span><span class="p">,</span>
                     <span class="n">use_progress_bar</span><span class="o">=</span><span class="n">use_progress_bar</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_cull_topo</span><span class="p">():</span>
+    <span class="n">ds_base</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
+    <span class="n">ncells_base</span> <span class="o">=</span> <span class="n">ds_base</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]</span>
+    <span class="n">lon_base</span> <span class="o">=</span> <span class="n">ds_base</span><span class="o">.</span><span class="n">lonCell</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">lat_base</span> <span class="o">=</span> <span class="n">ds_base</span><span class="o">.</span><span class="n">latCell</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">ds_culled</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">)</span>
+    <span class="n">ncells_culled</span> <span class="o">=</span> <span class="n">ds_culled</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]</span>
+    <span class="n">lon_culled</span> <span class="o">=</span> <span class="n">ds_culled</span><span class="o">.</span><span class="n">lonCell</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">lat_culled</span> <span class="o">=</span> <span class="n">ds_culled</span><span class="o">.</span><span class="n">latCell</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1"># create a map from lat-lon pairs to base-mesh cell indices</span>
+    <span class="n">map_base</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">cell_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ncells_base</span><span class="p">):</span>
+        <span class="n">lon</span> <span class="o">=</span> <span class="n">lon_base</span><span class="p">[</span><span class="n">cell_index</span><span class="p">]</span>
+        <span class="n">lat</span> <span class="o">=</span> <span class="n">lat_base</span><span class="p">[</span><span class="n">cell_index</span><span class="p">]</span>
+        <span class="n">map_base</span><span class="p">[(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)]</span> <span class="o">=</span> <span class="n">cell_index</span>
+
+    <span class="c1"># create a map from culled- to base-mesh cell indices</span>
+    <span class="n">map_culled_to_base</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">cell_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ncells_culled</span><span class="p">):</span>
+        <span class="n">lon</span> <span class="o">=</span> <span class="n">lon_culled</span><span class="p">[</span><span class="n">cell_index</span><span class="p">]</span>
+        <span class="n">lat</span> <span class="o">=</span> <span class="n">lat_culled</span><span class="p">[</span><span class="n">cell_index</span><span class="p">]</span>
+        <span class="c1"># each (lon, lat) for a culled cell *must* be in the base mesh</span>
+        <span class="n">map_culled_to_base</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">map_base</span><span class="p">[(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)])</span>
+
+    <span class="n">ds_topo</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">)</span>
+    <span class="n">ds_topo</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nCells</span><span class="o">=</span><span class="n">map_culled_to_base</span><span class="p">)</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_topo</span><span class="p">,</span> <span class="s1">&#39;topography_culled.nc&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_land_mask_from_topo</span><span class="p">(</span><span class="n">with_cavities</span><span class="p">,</span> <span class="n">topo_filename</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">):</span>
+    <span class="n">ds_topo</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">topo_filename</span><span class="p">)</span>
+
+    <span class="n">ocean_frac</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="o">.</span><span class="n">oceanFracObserved</span>
+
+    <span class="k">if</span> <span class="n">with_cavities</span><span class="p">:</span>
+        <span class="c1"># we want the mask to be 1 where there&#39;s not ocean</span>
+        <span class="n">cull_mask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ocean_frac</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">land_ice_frac</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="o">.</span><span class="n">landIceFracObserved</span>
+        <span class="n">grounded_ice_frac</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="o">.</span><span class="n">landIceGroundedFracObserved</span>
+        <span class="n">floating_ice_frac</span> <span class="o">=</span> <span class="n">land_ice_frac</span> <span class="o">-</span> <span class="n">grounded_ice_frac</span>
+        <span class="n">no_cavities_ocean_frac</span> <span class="o">=</span> <span class="n">ocean_frac</span> <span class="o">-</span> <span class="n">floating_ice_frac</span>
+
+        <span class="c1"># we want the mask to be 1 where there&#39;s not open ocean</span>
+        <span class="n">cull_mask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">no_cavities_ocean_frac</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">cull_mask</span> <span class="o">=</span> <span class="n">cull_mask</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nRegions&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">ds_mask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+    <span class="n">ds_mask</span><span class="p">[</span><span class="s1">&#39;regionCellMasks&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cull_mask</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_mask</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_land_mask_from_geojson</span><span class="p">(</span><span class="n">with_cavities</span><span class="p">,</span> <span class="n">process_count</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
+                            <span class="n">mesh_filename</span><span class="p">,</span> <span class="n">geojson_filename</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">):</span>
+    <span class="n">gf</span> <span class="o">=</span> <span class="n">GeometricFeatures</span><span class="p">()</span>
+
+    <span class="c1"># start with the land coverage from Natural Earth</span>
+    <span class="n">fcLandCoverage</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;natural_earth&#39;</span><span class="p">,</span>
+                             <span class="n">objectType</span><span class="o">=</span><span class="s1">&#39;region&#39;</span><span class="p">,</span>
+                             <span class="n">featureNames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Land Coverage&#39;</span><span class="p">])</span>
+
+    <span class="c1"># remove the region south of 60S so we can replace it based on ice-sheet</span>
+    <span class="c1"># topography</span>
+    <span class="n">fcSouthMask</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="n">objectType</span><span class="o">=</span><span class="s1">&#39;region&#39;</span><span class="p">,</span>
+                          <span class="n">featureNames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Global Ocean 90S to 60S&#39;</span><span class="p">])</span>
+
+    <span class="n">fcLandCoverage</span> <span class="o">=</span> <span class="n">fcLandCoverage</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">fcSouthMask</span><span class="p">)</span>
+
+    <span class="c1"># Add &quot;land&quot; coverage from either the full ice sheet or just the grounded</span>
+    <span class="c1"># part</span>
+    <span class="k">if</span> <span class="n">with_cavities</span><span class="p">:</span>
+        <span class="n">fcAntarcticLand</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;bedmachine&#39;</span><span class="p">,</span> <span class="n">objectType</span><span class="o">=</span><span class="s1">&#39;region&#39;</span><span class="p">,</span>
+            <span class="n">featureNames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;AntarcticGroundedIceCoverage&#39;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fcAntarcticLand</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;bedmachine&#39;</span><span class="p">,</span> <span class="n">objectType</span><span class="o">=</span><span class="s1">&#39;region&#39;</span><span class="p">,</span>
+            <span class="n">featureNames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;AntarcticIceCoverage&#39;</span><span class="p">])</span>
+
+    <span class="n">fcLandCoverage</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">fcAntarcticLand</span><span class="p">)</span>
+
+    <span class="c1"># save the feature collection to a geojson file</span>
+    <span class="n">fcLandCoverage</span><span class="o">.</span><span class="n">to_geojson</span><span class="p">(</span><span class="n">geojson_filename</span><span class="p">)</span>
+
+    <span class="c1"># these defaults may have been updated from config options -- pass them</span>
+    <span class="c1"># along to the subprocess</span>
+    <span class="n">netcdf_format</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_format</span>
+    <span class="n">netcdf_engine</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_engine</span>
+
+    <span class="c1"># Create the land mask based on the land coverage, i.e. coastline data</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;compute_mpas_region_masks&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span>
+            <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="n">geojson_filename</span><span class="p">,</span>
+            <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">,</span>
+            <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;cell&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">process_count</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
+            <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
+    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 </pre></div>
 
            </div>
