@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Test Groups &mdash; compass latest documentation</title>
+  <title>antarctica &mdash; compass latest documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,8 +20,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="antarctica" href="antarctica.html" />
-    <link rel="prev" title="Landice core" href="../index.html" /> 
+    <link rel="next" title="calving_dt_convergence" href="calving_dt_convergence.html" />
+    <link rel="prev" title="Test Groups" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -53,8 +53,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../config_files.html">Config Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../test_suites.html">Test Suites</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Landice core</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Test Groups</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="antarctica.html">antarctica</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Test Groups</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">antarctica</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mesh-gen">mesh_gen</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="calving_dt_convergence.html">calving_dt_convergence</a></li>
 <li class="toctree-l3"><a class="reference internal" href="circular_shelf.html">circular_shelf</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dome.html">dome</a></li>
@@ -125,9 +129,10 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Landice core</a></li>
-      <li class="breadcrumb-item active">Test Groups</li>
+          <li class="breadcrumb-item"><a href="index.html">Test Groups</a></li>
+      <li class="breadcrumb-item active">antarctica</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/users_guide/landice/test_groups/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/users_guide/landice/test_groups/antarctica.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -135,40 +140,67 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="test-groups">
-<span id="landice-configs"></span><h1>Test Groups<a class="headerlink" href="#test-groups" title="Permalink to this heading">¶</a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">landice</span></code> test groups include tests are generally of three varieties:
-tests run routinely for code integration and regression testing,
-“tests” used to set up meshes and initial conditions,
-and other specialty tests for more carefully assessing model
-physics but that are not run routinely.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="antarctica.html">antarctica</a></li>
-<li class="toctree-l1"><a class="reference internal" href="calving_dt_convergence.html">calving_dt_convergence</a></li>
-<li class="toctree-l1"><a class="reference internal" href="circular_shelf.html">circular_shelf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dome.html">dome</a></li>
-<li class="toctree-l1"><a class="reference internal" href="eismint2.html">eismint2</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ensemble_generator.html">ensemble_generator</a></li>
-<li class="toctree-l1"><a class="reference internal" href="enthalpy_benchmark.html">enthalpy_benchmark</a></li>
-<li class="toctree-l1"><a class="reference internal" href="greenland.html">greenland</a></li>
-<li class="toctree-l1"><a class="reference internal" href="humboldt.html">humboldt</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hydro_radial.html">hydro_radial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ismip6_forcing.html">ismip6_forcing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="kangerlussuaq.html">kangerlussuaq</a></li>
-<li class="toctree-l1"><a class="reference internal" href="koge_bugt_s.html">koge_bugt_s</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mismipplus.html">mismipplus</a></li>
-<li class="toctree-l1"><a class="reference internal" href="thwaites.html">thwaites</a></li>
-</ul>
+  <section id="antarctica">
+<span id="landice-antarctica"></span><h1>antarctica<a class="headerlink" href="#antarctica" title="Permalink to this heading">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">landice/antarctica</span></code> test group includes a test case for creating a
+mesh for Antarctica.</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="../../../_images/antarctica_8to80km.png"><img alt="../../../_images/antarctica_8to80km.png" src="../../../_images/antarctica_8to80km.png" style="width: 777px;" /></a>
+<figcaption>
+<p><span class="caption-text">Ice thickness on Antarctica 8-80km variable resolution mesh.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<section id="config-options">
+<h2>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h2>
+<p>The test group uses the following default config options.  At this point only
+the mesh generation options are adjusted through the config file.</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[antarctica]</span>
+
+<span class="c1"># number of levels in the mesh</span>
+<span class="na">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5</span>
+
+<span class="c1"># distance from ice margin to cull (km).</span>
+<span class="c1"># Set to a value &lt;= 0 if you do not want</span>
+<span class="c1"># to cull based on distance from margin.</span>
+<span class="na">cull_distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">70.0</span>
+
+<span class="c1"># mesh density parameters</span>
+<span class="c1"># minimum cell spacing (meters)</span>
+<span class="na">min_spac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8.e3</span>
+<span class="c1"># maximum cell spacing (meters)</span>
+<span class="na">max_spac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8.e4</span>
+<span class="c1"># log10 of max speed (m/yr) for cell spacing</span>
+<span class="na">high_log_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2.5</span>
+<span class="c1"># log10 of min speed (m/yr) for cell spacing</span>
+<span class="na">low_log_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.75</span>
+<span class="c1"># distance at which cell spacing = max_spac (meters)</span>
+<span class="na">high_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e5</span>
+<span class="c1"># distance within which cell spacing = min_spac (meters)</span>
+<span class="na">low_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e4</span>
+
+<span class="c1"># mesh density functions</span>
+<span class="na">use_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="na">use_dist_to_grounding_line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="na">use_dist_to_edge</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+</pre></div>
 </div>
+</section>
+<section id="mesh-gen">
+<h2>mesh_gen<a class="headerlink" href="#mesh-gen" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">landice/antarctica/mesh_gen</span></code> creates a 8-80km variable resolution mesh with
+the mesh file name <cite>Antarctica.nc</cite>. In addition, two region masks are
+generated based on the IMBIE1 (<a class="reference external" href="http://imbie.org/imbie-2016/drainage-basins/">http://imbie.org/imbie-2016/drainage-basins/</a>)
+and ISMIP6 basins (defined in Jourdain et al. 2020).
+There is no model integration step.</p>
+</section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../index.html" class="btn btn-neutral float-left" title="Landice core" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="antarctica.html" class="btn btn-neutral float-right" title="antarctica" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Test Groups" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="calving_dt_convergence.html" class="btn btn-neutral float-right" title="calving_dt_convergence" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
