@@ -37,7 +37,6 @@ class SetUpExperiment(Step):
 
         config = self.config
         section = config['ismip6_run_ais_2300']
-        mesh_res = section.getint('mesh_res')
         self.ntasks = section.getint('ntasks')
         self.min_tasks = self.ntasks
         forcing_basepath = section.get('forcing_basepath')
@@ -86,7 +85,7 @@ class SetUpExperiment(Step):
         # Find and copy correct forcing files
         smb_search_path = os.path.join(
             forcing_basepath, exp_fcg,
-            'processed_SMB_*_smbNeg_over_bareland.nc')
+            '*smb*_minus1_bare_land.nc')
         fcgFileList = glob.glob(smb_search_path)
         if len(fcgFileList) == 1:
             smb_path = fcgFileList[0]
@@ -97,7 +96,7 @@ class SetUpExperiment(Step):
                      f"{smb_search_path}: {fcgFileList}")
 
         tf_search_path = os.path.join(forcing_basepath, exp_fcg,
-                                      'processed_TF_*.nc')
+                                      '*TF_*.nc')
         fcgFileList = glob.glob(tf_search_path)
         if len(fcgFileList) == 1:
             tf_path = fcgFileList[0]
@@ -172,11 +171,15 @@ class SetUpExperiment(Step):
             resource_location, 'namelist.landice',
             out_name='namelist.landice')
 
-        if mesh_res == 4:
-            options = {'config_pio_num_iotasks': '60',
-                       'config_pio_stride': '64'}
-            self.add_namelist_options(options=options,
-                                      out_name='namelist.landice')
+        # set up pio options because we are not using compass run
+        pio_stride = section.getint('pio_stride')
+        assert self.ntasks % pio_stride == 0, \
+            'pio_stride is not evenly divisble into ntasks'
+        io_tasks = self.ntasks // pio_stride
+        options = {'config_pio_stride': f'{pio_stride}',
+                   'config_pio_num_iotasks': f'{io_tasks}'}
+        self.add_namelist_options(options=options,
+                                  out_name='namelist.landice')
 
         if self.exp == 'hist':
             options = {'config_do_restart': ".false.",

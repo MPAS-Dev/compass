@@ -53,6 +53,7 @@ class Ismip6AisProj2300(TestCase):
                        [f'expAE{i:02}' for i in range(1, 15)]
         else:
             exp_list = exp_list.split(",")
+        mesh_res = self.config.getint('ismip6_run_ais_2300', 'mesh_res')
 
         for exp in exp_list:
             if os.path.exists(os.path.join(self.work_dir, exp)):
@@ -61,9 +62,10 @@ class Ismip6AisProj2300(TestCase):
                       f"{os.path.join(self.work_dir, exp)} and execute "
                       "'compass setup' again to set this experiment up.")
             else:
+                exp_name = f'{exp}_{mesh_res:02}'
                 self.add_step(
-                    SetUpExperiment(test_case=self, name=exp,
-                                    subdir=exp, exp=exp))
+                    SetUpExperiment(test_case=self, name=exp_name,
+                                    subdir=exp_name, exp=exp))
         # Do not add experiments to step to steps_to_run;
         # each experiment (step) should be run manually
         self.steps_to_run = []

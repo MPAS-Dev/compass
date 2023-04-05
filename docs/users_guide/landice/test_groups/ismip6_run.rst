@@ -55,6 +55,10 @@ All config options should be reviewed and altered as needed.
     # number of tasks to use for each run
     ntasks = 256
 
+    # value to use for config_pio_stride.
+    # Should be divisible into ntasks
+    pio_stride = 128
+
     # Base path to the processed input ismip6 ocean and smb forcing files.
     # User has to supply.
     forcing_basepath = /global/cfs/cdirs/fanssie/MALI_projects/ISMIP6-2300/forcing/ais_mesh_8to30km_res
