@@ -1,4 +1,5 @@
 from compass.ocean.mesh.cull import CullMeshStep
+from compass.ocean.mesh.lts_regions import LTSRegionsStep
 from compass.ocean.tests.hurricane_lts.configure import configure_hurricane_lts
 from compass.ocean.tests.hurricane_lts.mesh.dequ120at30cr10rr2 import (
     DEQU120at30cr10rr2BaseMesh,
@@ -44,10 +45,15 @@ class Mesh(TestCase):
 
         self.add_step(base_mesh_step)
 
-        self.add_step(CullMeshStep(
+        cull_mesh_step = CullMeshStep(
             test_case=self, base_mesh_step=base_mesh_step,
             with_ice_shelf_cavities=False, do_inject_bathymetry=True,
-            preserve_floodplain=True))
+            preserve_floodplain=True)
+
+        self.add_step(cull_mesh_step)
+
+        self.add_step(LTSRegionsStep(
+                      test_case=self, cull_mesh_step=cull_mesh_step))
 
     def configure(self):
         """
