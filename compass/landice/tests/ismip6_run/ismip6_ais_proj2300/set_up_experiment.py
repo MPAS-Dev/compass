@@ -86,7 +86,7 @@ class SetUpExperiment(Step):
         # Find and copy correct forcing files
         smb_search_path = os.path.join(
             forcing_basepath, exp_fcg,
-            '*smb*_minus1_bare_land.nc')
+            '*smb*.nc')
         fcgFileList = glob.glob(smb_search_path)
         if len(fcgFileList) == 1:
             smb_path = fcgFileList[0]
