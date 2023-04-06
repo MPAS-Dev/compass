@@ -48,6 +48,7 @@ class SetUpExperiment(Step):
         region_mask_path = section.get('region_mask_path')
         region_mask_fname = os.path.split(region_mask_path)[-1]
         calving_method = section.get('calving_method')
+        use_face_melting = section.getboolean('use_face_melting')
 
         if self.exp == 'hist':
             exp_fcg = 'ctrlAE'
@@ -86,7 +87,7 @@ class SetUpExperiment(Step):
         # Find and copy correct forcing files
         smb_search_path = os.path.join(
             forcing_basepath, exp_fcg,
-            '*smb*.nc')
+            '*smb*bare*.nc')
         fcgFileList = glob.glob(smb_search_path)
         if len(fcgFileList) == 1:
             smb_path = fcgFileList[0]
@@ -167,6 +168,11 @@ class SetUpExperiment(Step):
                 out_name='streams.landice',
                 template_replacements=vM_stream_replacements)
 
+        if use_face_melting:
+            self.add_streams_file(
+                resource_location, 'streams.faceMelting',
+                out_name='streams.landice')
+
         # Set up namelist and customize as needed
         self.add_namelist_file(
             resource_location, 'namelist.landice',
@@ -196,6 +202,14 @@ class SetUpExperiment(Step):
                        "'data'",
                        'config_grounded_von_Mises_threshold_stress_source':
                        "'data'"}
+            self.add_namelist_options(options=options,
+                                      out_name='namelist.landice')
+
+        # Include facemelting if needed
+        if use_face_melting:
+            options = {
+                'config_front_mass_bal_grounded': "'ismip6'",
+                'config_use_3d_thermal_forcing_for_face_melt': '.true.'}
             self.add_namelist_options(options=options,
                                       out_name='namelist.landice')
 

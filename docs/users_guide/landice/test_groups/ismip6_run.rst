@@ -82,6 +82,9 @@ All config options should be reviewed and altered as needed.
     # Only required if calving_method is set to 'von_mises'
     von_mises_parameter_path = UNKNOWN
 
+    # Whether facemelting should be included in the runs
+    include_face_melting = True
+
 Additionally, a user should also include the following options (and possibly
 others) that will be used for submitting the jobs for each ensemble member
 (set to appropriate values for their usage situation):
