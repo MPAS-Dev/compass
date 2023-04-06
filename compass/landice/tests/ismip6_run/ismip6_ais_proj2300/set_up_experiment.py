@@ -39,6 +39,7 @@ class SetUpExperiment(Step):
         section = config['ismip6_run_ais_2300']
         self.ntasks = section.getint('ntasks')
         self.min_tasks = self.ntasks
+        mesh_res = section.getint('mesh_res')
         forcing_basepath = section.get('forcing_basepath')
         init_cond_path = section.get('init_cond_path')
         init_cond_fname = os.path.split(init_cond_path)[-1]
@@ -208,7 +209,7 @@ class SetUpExperiment(Step):
         # historical run
         # don't symlink restart_timestamp or you'll have a mighty mess
         if not self.exp == 'hist':
-            os.symlink("../hist/rst.2015-01-01.nc",
+            os.symlink(f"../hist_{mesh_res:02}/rst.2015-01-01.nc",
                        os.path.join(self.work_dir, 'rst.2015-01-01.nc'))
             with open(os.path.join(self.work_dir, "restart_timestamp"),
                       "w") as text_file:
