@@ -53,7 +53,7 @@ All config options should be reviewed and altered as needed.
     mesh_res = 8
 
     # number of tasks to use for each run
-    ntasks = 256
+    ntasks = 128
 
     # value to use for config_pio_stride.
     # Should be divisible into ntasks
@@ -83,7 +83,7 @@ All config options should be reviewed and altered as needed.
     von_mises_parameter_path = UNKNOWN
 
     # Whether facemelting should be included in the runs
-    include_face_melting = True
+    include_face_melting = False
 
 Additionally, a user should also include the following options (and possibly
 others) that will be used for submitting the jobs for each ensemble member
