@@ -65,7 +65,7 @@ class EC30to60DynamicAdjustment(DynamicAdjustment):
             'config_run_duration': "'00-00-10_00:00:00'",
             'config_dt': "'00:15:00'",
             'config_btr_dt': "'00:00:10'",
-            'config_implicit_bottom_drag_type': 'rayleigh',
+            'config_implicit_bottom_drag_type': 'constant_and_rayleigh',
             'config_Rayleigh_damping_coeff': '1.0e-4'}
         namelist_options.update(shared_options)
         step.add_namelist_options(namelist_options)
