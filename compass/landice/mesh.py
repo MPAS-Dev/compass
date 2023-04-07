@@ -419,6 +419,34 @@ def build_cell_width(self, section_name, gridded_dataset,
     """
     Determine MPAS mesh cell size based on user-defined density function.
 
+    Parameters
+    ----------
+    section : str
+        section of config file used to define mesh parameters
+    gridded_dataset : str
+        name of .nc file used to define cell spacing
+    flood_fill_start : list of ints
+        i and j indices used to define starting location for flood fill.
+        Most cases will use [None, None], which will just start the flood
+        fill in the center of the gridded dataset.
+
+    Returns
+    -------
+    cell_width : numpy.ndarray
+        Desired width of MPAS cells based on mesh desnity functions to pass to
+        :py:func:`mpas_tools.mesh.creation.build_mesh.build_planar_mesh()`.
+    x1 : float
+        x coordinates from gridded dataset
+    y1 : float
+        y coordinates from gridded dataset
+    geom_points : jigsawpy.jigsaw_msh_t.VERT2_t
+        xy node coordinates to pass to build_planar_mesh()
+    geom_edges : jigsawpy.jigsaw_msh_t.EDGE2_t
+        xy edge coordinates between nodes to pass to build_planar_mesh()
+    flood_mask : numpy.ndarray
+        mask calculated by the flood fill routine,
+        where cells connected to the ice sheet (or main feature)
+        are 1 and everything else is 0.
     """
 
     section = self.config[section_name]
@@ -456,10 +484,10 @@ def build_cell_width(self, section_name, gridded_dataset,
         xx0, xx1, yy0, yy1)
 
     # Remove ice not connected to the ice sheet.
-    floodMask = gridded_flood_fill(thk)
-    thk[floodMask == 0] = 0.0
-    vx[floodMask == 0] = 0.0
-    vy[floodMask == 0] = 0.0
+    flood_mask = gridded_flood_fill(thk)
+    thk[flood_mask == 0] = 0.0
+    vx[flood_mask == 0] = 0.0
+    vy[flood_mask == 0] = 0.0
 
     # Calculate distance from each grid point to ice edge
     # and grounding line, for use in cell spacing functions.
@@ -476,4 +504,4 @@ def build_cell_width(self, section_name, gridded_dataset,
                                 flood_fill_jStart=flood_fill_start[1])
 
     return (cell_width.astype('float64'), x1.astype('float64'),
-            y1.astype('float64'), geom_points, geom_edges, floodMask)
+            y1.astype('float64'), geom_points, geom_edges, flood_mask)
