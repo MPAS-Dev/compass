@@ -35,6 +35,10 @@ config options
 --------------
 
 All config options should be reviewed and altered as needed.
+Example cfg files are included in the test case directory within the
+``compass`` repo for previously used configurations on specific
+machines to facilitate reproducibility and form a useful starting place
+for new runs
 
 .. code-block:: cfg
 
