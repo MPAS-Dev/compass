@@ -2208,7 +2208,6 @@ The available machines are listed with:
     Machines:
        anvil
        default
-       cori-haswell
        chrysalis
        compy
 

@@ -16,7 +16,7 @@ For each ``compass`` release, we maintain a
 ``compass`` package as well as all of its dependencies and some libraries
 (currently `ESMF <https://earthsystemmodeling.org/>`_ and
 `SCORPIO <https://e3sm.org/scorpio-parallel-io-library/>`_) built with system
-MPI on our standard machines (Anvil, Chrysalis, Compy, and Cori).
+MPI on our standard machines (Anvil, Chicoma, Chrysalis, Compy, and Perlmutter).
 Here are the commands to load the the environment for the latest
 ``compass`` release with the default compiler and MPI library on each machine:
 
@@ -43,12 +43,6 @@ Here are the commands to load the the environment for the latest
 .. code-block:: bash
 
     source /share/apps/E3SM/conda_envs/compass/load_latest_compass.sh
-
-* Cori-Haswell:
-
-.. code-block:: bash
-
-    source /global/cfs/cdirs/e3sm/software/compass/cori-haswell/load_latest_compass.sh
 
 * Perlmutter-CPU (coming soon):
 

@@ -136,7 +136,6 @@ to use the default MPI variant for each compiler on each machine.
    chicoma
    chrysalis
    compy
-   cori
    perlmutter
 
 

@@ -63,10 +63,6 @@ the MPAS model.
 |              +------------+-----------+-------------------+
 |              | gnu        | openmpi   | gfortran          |
 +--------------+------------+-----------+-------------------+
-| cori-haswell | intel      | mpt       | intel-cray        |
-|              +------------+-----------+-------------------+
-|              | gnu        | mpt       | gnu-cray          |
-+--------------+------------+-----------+-------------------+
 | pm-cpu       | gnu        | mpich     | gnu-cray          |
 +--------------+------------+-----------+-------------------+
 
@@ -79,7 +75,6 @@ Below are specifics for each supported machine
    chicoma
    chrysalis
    compy
-   cori
    perlmutter
 
 
