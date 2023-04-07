@@ -21,6 +21,7 @@ from shared import (
     get_logger,
     get_spack_base,
     install_miniconda,
+    log_message,
     parse_args,
 )
 
@@ -190,11 +191,9 @@ def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
 
     if args.with_petsc:
         lib_suffix = f'{lib_suffix}_petsc'
-        message = 'Turning off OpenMP because it doesn\'t work well with PETSc'
-        if logger is None:
-            print(message)
-        else:
-            logger.info(message)
+        log_message(
+            logger,
+            'Turning off OpenMP because it doesn\'t work well with PETSc')
         args.without_openmp = True
     else:
         config.set('deploy', 'petsc', 'None')
@@ -389,6 +388,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
                     spack_base, spack_template_path, env_vars, tmpdir, logger):
 
     albany = config.get('deploy', 'albany')
+    cmake = config.get('deploy', 'cmake')
     esmf = config.get('deploy', 'esmf')
     lapack = config.get('deploy', 'lapack')
     petsc = config.get('deploy', 'petsc')
@@ -398,6 +398,9 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
 
     specs = list()
 
+    if cmake != 'None':
+        specs.append(f'cmake "@{cmake}"')
+
     e3sm_hdf5_netcdf = config.getboolean('deploy', 'use_e3sm_hdf5_netcdf')
     if not e3sm_hdf5_netcdf:
         hdf5 = config.get('deploy', 'hdf5')
@@ -405,32 +408,36 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
         netcdf_fortran = config.get('deploy', 'netcdf_fortran')
         pnetcdf = config.get('deploy', 'pnetcdf')
         specs.extend([
-            f'hdf5@{hdf5}+cxx+fortran+hl+mpi+shared',
-            f'netcdf-c@{netcdf_c}+mpi~parallel-netcdf',
-            f'netcdf-fortran@{netcdf_fortran}',
-            f'parallel-netcdf@{pnetcdf}+cxx+fortran'])
+            f'hdf5 "@{hdf5}+cxx+fortran+hl+mpi+shared"',
+            f'netcdf-c "@{netcdf_c}+mpi~parallel-netcdf"',
+            f'netcdf-fortran "@{netcdf_fortran}"',
+            f'parallel-netcdf "@{pnetcdf}+cxx+fortran"'])
 
     if esmf != 'None':
-        specs.append(f'esmf@{esmf}+mpi+netcdf~pio+pnetcdf')
+        specs.append(f'esmf "@{esmf}+mpi+netcdf~pio+pnetcdf"')
     if lapack != 'None':
-        specs.append(f'netlib-lapack@{lapack}')
+        specs.append(f'netlib-lapack "@{lapack}"')
         include_e3sm_lapack = False
     else:
         include_e3sm_lapack = True
     if petsc != 'None':
-        specs.append(f'petsc@{petsc}+mpi+batch')
+        specs.append(f'petsc "@{petsc}+mpi+batch"')
 
     if scorpio != 'None':
         specs.append(
-            f'scorpio@{scorpio}+pnetcdf~timing+internal-timing~tools+malloc')
+            f'scorpio '
+            f'"@{scorpio}+pnetcdf~timing+internal-timing~tools+malloc"')
 
     if albany != 'None':
-        specs.append(f'albany@{albany}+mpas')
+        specs.append(f'albany "@{albany}+mpas"')
 
     yaml_template = f'{spack_template_path}/{machine}_{compiler}_{mpi}.yaml'
     if not os.path.exists(yaml_template):
         yaml_template = None
     if update_spack:
+        home_dir = os.path.expanduser('~')
+        log_message(logger, 'Removing ~/.spack for safety')
+        safe_rmtree(os.path.join(home_dir, '.spack'))
         make_spack_env(spack_path=spack_branch_base, env_name=spack_env,
                        spack_specs=specs, compiler=compiler, mpi=mpi,
                        machine=machine,
@@ -792,6 +799,13 @@ def check_supported(library, machine, compiler, mpi, source_path):
                      f'on {machine}')
 
 
+def safe_rmtree(path):
+    try:
+        shutil.rmtree(path)
+    except OSError:
+        pass
+
+
 def main():  # noqa: C901
     args = parse_args(bootstrap=True)
 
@@ -871,10 +885,7 @@ def main():  # noqa: C901
 
         build_dir = f'conda/build{activ_suffix}'
 
-        try:
-            shutil.rmtree(build_dir)
-        except OSError:
-            pass
+        safe_rmtree(build_dir)
         try:
             os.makedirs(build_dir)
         except FileExistsError:

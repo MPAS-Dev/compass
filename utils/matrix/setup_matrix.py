@@ -8,16 +8,15 @@ import shutil
 try:
     from configparser import ConfigParser
 except ImportError:
-    from six.moves import configparser
     import six
+    from six.moves import configparser
 
     if six.PY2:
         ConfigParser = configparser.SafeConfigParser
     else:
         ConfigParser = configparser.ConfigParser
 
-from shared import get_logger, check_call
-
+from shared import check_call, get_logger
 
 # build targets from
 # https://mpas-dev.github.io/compass/latest/developers_guide/machines/index.html#supported-machines
@@ -37,9 +36,6 @@ all_build_targets = {
     'compy': {
         ('intel', 'impi'): 'intel-mpi',
         ('gnu', 'openmpi'): 'gfortran'},
-    'cori-haswell': {
-        ('intel', 'mpt'): 'intel-cray',
-        ('gnu', 'mpt'): 'gnu-cray'},
     'pm-cpu': {
         ('gnu', 'mpich'): 'gnu-cray'},
     'conda-linux': {
@@ -311,8 +307,8 @@ def compass_setup(script_name, setup_command, mpas_path, mpas_model, work_base,
             if index == -1:
                 index = parts.index('--test_suite')
 
-            if index != -1 and len(parts) > index+1:
-                suite = parts[index+1]
+            if index != -1 and len(parts) > index + 1:
+                suite = parts[index + 1]
         elif setup_command.startswith('compass setup'):
             suite = 'custom'
 
