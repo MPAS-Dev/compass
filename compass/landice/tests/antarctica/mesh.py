@@ -10,12 +10,7 @@ from mpas_tools.logging import check_call
 from mpas_tools.mesh.conversion import convert, cull
 from mpas_tools.mesh.creation import build_planar_mesh
 
-from compass.landice.mesh import (
-    get_dist_to_edge_and_GL,
-    gridded_flood_fill,
-    set_cell_width,
-    set_rectangular_geom_points_and_edges,
-)
+from compass.landice.mesh import build_cell_width
 from compass.model import make_graph_file
 from compass.step import Step
 
@@ -67,7 +62,9 @@ class Mesh(Step):
 
         logger.info('calling build_cell_width')
         cell_width, x1, y1, geom_points, geom_edges, floodFillMask = \
-            self.build_cell_width()
+            build_cell_width(
+                self, section_name='antarctica',
+                gridded_dataset='antarctica_8km_2020_10_20.nc')
         logger.info('calling build_planar_mesh')
         build_planar_mesh(cell_width, x1, y1, geom_points,
                           geom_edges, logger=logger)
@@ -171,57 +168,6 @@ class Mesh(Step):
         self._make_region_masks(mesh_filename, mask_filename,
                                 self.cpus_per_task,
                                 tags=['ISMIP6_Basin'])
-
-    def build_cell_width(self):
-        """
-        Determine MPAS mesh cell size based on user-defined density function.
-
-        This includes hard-coded definition of the extent of the regional
-        mesh and user-defined mesh density functions based on observed flow
-        speed and distance to the ice margin.
-        """
-        # get needed fields from AIS dataset
-        f = netCDF4.Dataset('antarctica_8km_2020_10_20.nc', 'r')
-        f.set_auto_mask(False)  # disable masked arrays
-
-        x1 = f.variables['x1'][:]
-        y1 = f.variables['y1'][:]
-        thk = f.variables['thk'][0, :, :]
-        topg = f.variables['topg'][0, :, :]
-        vx = f.variables['vx'][0, :, :]
-        vy = f.variables['vy'][0, :, :]
-
-        # Define extent of region to mesh.
-        # These coords are specific to the Antarctica mesh.
-        xx0 = -3333500
-        xx1 = 3330500
-        yy0 = -3333500
-        yy1 = 3330500
-        geom_points, geom_edges = set_rectangular_geom_points_and_edges(
-            xx0, xx1, yy0, yy1)
-
-        # Remove ice not connected to the ice sheet.
-        floodMask = gridded_flood_fill(thk)
-        thk[floodMask == 0] = 0.0
-        vx[floodMask == 0] = 0.0
-        vy[floodMask == 0] = 0.0
-
-        # Calculate distance from each grid point to ice edge
-        # and grounding line, for use in cell spacing functions.
-        distToEdge, distToGL = get_dist_to_edge_and_GL(self, thk, topg, x1, y1,
-                                                       section='antarctica',
-                                                       window_size=1.e5)
-        # optional - plot distance calculation
-        # plt.pcolor(distToEdge/1000.0); plt.colorbar(); plt.show()
-
-        # Set cell widths based on mesh parameters set in config file
-        cell_width = set_cell_width(self, section='antarctica', thk=thk,
-                                    vx=vx, vy=vy, dist_to_edge=distToEdge,
-                                    dist_to_grounding_line=distToGL)
-        # plt.pcolor(cell_width); plt.colorbar(); plt.show()
-
-        return (cell_width.astype('float64'), x1.astype('float64'),
-                y1.astype('float64'), geom_points, geom_edges, floodMask)
 
     def _make_region_masks(self, mesh_filename, mask_filename, cores, tags):
         logger = self.logger

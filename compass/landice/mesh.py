@@ -2,6 +2,7 @@ import time
 
 import jigsawpy
 import numpy as np
+from netCDF4 import Dataset
 
 
 def gridded_flood_fill(field, iStart=None, jStart=None):
@@ -167,16 +168,16 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
     section = self.config[section]
 
     # Get config inputs for cell spacing functions
-    min_spac = float(section.get('min_spac'))
-    max_spac = float(section.get('max_spac'))
-    high_log_speed = float(section.get('high_log_speed'))
-    low_log_speed = float(section.get('low_log_speed'))
-    high_dist = float(section.get('high_dist'))
-    low_dist = float(section.get('low_dist'))
-    high_dist_bed = float(section.get('high_dist_bed'))
-    low_dist_bed = float(section.get('low_dist_bed'))
-    low_bed = float(section.get('low_bed'))
-    high_bed = float(section.get('high_bed'))
+    min_spac = section.getfloat('min_spac')
+    max_spac = section.getfloat('max_spac')
+    high_log_speed = section.getfloat('high_log_speed')
+    low_log_speed = section.getfloat('low_log_speed')
+    high_dist = section.getfloat('high_dist')
+    low_dist = section.getfloat('low_dist')
+    high_dist_bed = section.getfloat('high_dist_bed')
+    low_dist_bed = section.getfloat('low_dist_bed')
+    low_bed = section.getfloat('low_bed')
+    high_bed = section.getfloat('high_bed')
 
     # convert km to m
     cull_distance = float(section.get('cull_distance')) * 1.e3
@@ -411,3 +412,68 @@ def get_dist_to_edge_and_GL(self, thk, topg, x, y, section, window_size=None):
                 'seconds'.format(toc - tic))
 
     return dist_to_edge, dist_to_grounding_line
+
+
+def build_cell_width(self, section_name, gridded_dataset,
+                     flood_fill_start=[None, None]):
+    """
+    Determine MPAS mesh cell size based on user-defined density function.
+
+    """
+
+    section = self.config[section_name]
+    # get needed fields from gridded dataset
+    f = Dataset(gridded_dataset, 'r')
+    f.set_auto_mask(False)  # disable masked arrays
+
+    x1 = f.variables['x1'][:]
+    y1 = f.variables['y1'][:]
+    thk = f.variables['thk'][0, :, :]
+    topg = f.variables['topg'][0, :, :]
+    vx = f.variables['vx'][0, :, :]
+    vy = f.variables['vy'][0, :, :]
+
+    f.close()
+
+    # Define extent of region to mesh.
+    xx0 = section.get('x_min')
+    xx1 = section.get('x_max')
+    yy0 = section.get('y_min')
+    yy1 = section.get('y_max')
+
+    if 'None' in [xx0, xx1, yy0, yy1]:
+        xx0 = np.min(x1)
+        xx1 = np.max(x1)
+        yy0 = np.min(y1)
+        yy1 = np.max(y1)
+    else:
+        xx0 = float(xx0)
+        xx1 = float(xx1)
+        yy0 = float(yy0)
+        yy1 = float(yy1)
+
+    geom_points, geom_edges = set_rectangular_geom_points_and_edges(
+        xx0, xx1, yy0, yy1)
+
+    # Remove ice not connected to the ice sheet.
+    floodMask = gridded_flood_fill(thk)
+    thk[floodMask == 0] = 0.0
+    vx[floodMask == 0] = 0.0
+    vy[floodMask == 0] = 0.0
+
+    # Calculate distance from each grid point to ice edge
+    # and grounding line, for use in cell spacing functions.
+    distToEdge, distToGL = get_dist_to_edge_and_GL(
+        self, thk, topg, x1,
+        y1, section=section_name)
+
+    # Set cell widths based on mesh parameters set in config file
+    cell_width = set_cell_width(self, section=section_name,
+                                thk=thk, bed=topg, vx=vx, vy=vy,
+                                dist_to_edge=distToEdge,
+                                dist_to_grounding_line=distToGL,
+                                flood_fill_iStart=flood_fill_start[0],
+                                flood_fill_jStart=flood_fill_start[1])
+
+    return (cell_width.astype('float64'), x1.astype('float64'),
+            y1.astype('float64'), geom_points, geom_edges, floodMask)
