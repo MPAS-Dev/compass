@@ -2,6 +2,11 @@ import time
 
 import jigsawpy
 import numpy as np
+import xarray
+from mpas_tools.io import write_netcdf
+from mpas_tools.logging import check_call
+from mpas_tools.mesh.conversion import convert, cull
+from mpas_tools.mesh.creation import build_planar_mesh
 from netCDF4 import Dataset
 
 
@@ -505,3 +510,107 @@ def build_cell_width(self, section_name, gridded_dataset,
 
     return (cell_width.astype('float64'), x1.astype('float64'),
             y1.astype('float64'), geom_points, geom_edges, flood_mask)
+
+
+def build_MALI_mesh(self, cell_width, x1, y1, geom_points,
+                    geom_edges, mesh_name, section_name,
+                    gridded_dataset, projection, geojson_file=None):
+
+    logger = self.logger
+    section = self.config[section_name]
+
+    logger.info('calling build_planar_mesh')
+    build_planar_mesh(cell_width, x1, y1, geom_points,
+                      geom_edges, logger=logger)
+    dsMesh = xarray.open_dataset('base_mesh.nc')
+    logger.info('culling mesh')
+    dsMesh = cull(dsMesh, logger=logger)
+    logger.info('converting to MPAS mesh')
+    dsMesh = convert(dsMesh, logger=logger)
+    logger.info('writing grid_converted.nc')
+    write_netcdf(dsMesh, 'grid_converted.nc')
+    levels = section.get('levels')
+    logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')
+    args = ['create_landice_grid_from_generic_MPAS_grid.py',
+            '-i', 'grid_converted.nc',
+            '-o', 'grid_preCull.nc',
+            '-l', levels, '-v', 'glimmer']
+    check_call(args, logger=logger)
+
+    logger.info('calling interpolate_to_mpasli_grid.py')
+    args = ['interpolate_to_mpasli_grid.py', '-s',
+            gridded_dataset, '-d',
+            'grid_preCull.nc', '-m', 'b', '-t']
+
+    check_call(args, logger=logger)
+
+    cullDistance = section.get('cull_distance')
+    if float(cullDistance) > 0.:
+        logger.info('calling define_cullMask.py')
+        args = ['define_cullMask.py', '-f',
+                'grid_preCull.nc', '-m',
+                'distance', '-d', cullDistance]
+
+        check_call(args, logger=logger)
+    else:
+        logger.info('cullDistance <= 0 in config file. '
+                    'Will not cull by distance to margin. \n')
+
+    if geojson_file is not None:
+        # This step is only necessary because the GeoJSON region
+        # is defined by lat-lon.
+        logger.info('calling set_lat_lon_fields_in_planar_grid.py')
+        args = ['set_lat_lon_fields_in_planar_grid.py', '-f',
+                'grid_preCull.nc', '-p', projection]
+
+        check_call(args, logger=logger)
+
+        logger.info('calling MpasMaskCreator.x')
+        args = ['MpasMaskCreator.x', 'grid_preCull.nc',
+                'mask.nc', '-f', geojson_file]
+
+        check_call(args, logger=logger)
+
+        logger.info('culling to geojson file')
+
+    dsMesh = xarray.open_dataset('grid_preCull.nc')
+    if geojson_file is not None:
+        mask = xarray.open_dataset('mask.nc')
+    else:
+        mask = None
+
+    dsMesh = cull(dsMesh, dsInverse=mask, logger=logger)
+    write_netcdf(dsMesh, 'culled.nc')
+
+    logger.info('Marking horns for culling')
+    args = ['mark_horns_for_culling.py', '-f', 'culled.nc']
+    check_call(args, logger=logger)
+
+    logger.info('culling and converting')
+    dsMesh = xarray.open_dataset('culled.nc')
+    dsMesh = cull(dsMesh, logger=logger)
+    dsMesh = convert(dsMesh, logger=logger)
+    write_netcdf(dsMesh, 'dehorned.nc')
+
+    logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')
+    args = ['create_landice_grid_from_generic_MPAS_grid.py', '-i',
+            'dehorned.nc', '-o',
+            mesh_name, '-l', levels, '-v', 'glimmer',
+            '--beta', '--thermal', '--obs', '--diri']
+
+    check_call(args, logger=logger)
+
+    logger.info('calling interpolate_to_mpasli_grid.py')
+    args = ['interpolate_to_mpasli_grid.py', '-s',
+            gridded_dataset, '-d', mesh_name, '-m', 'b']
+    check_call(args, logger=logger)
+
+    logger.info('Marking domain boundaries dirichlet')
+    args = ['mark_domain_boundaries_dirichlet.py',
+            '-f', mesh_name]
+    check_call(args, logger=logger)
+
+    logger.info('calling set_lat_lon_fields_in_planar_grid.py')
+    args = ['set_lat_lon_fields_in_planar_grid.py', '-f',
+            mesh_name, '-p', projection]
+    check_call(args, logger=logger)
