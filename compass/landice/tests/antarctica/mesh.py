@@ -53,12 +53,12 @@ class Mesh(Step):
         Run this step of the test case
         """
         logger = self.logger
-        section_name = 'antarctica'
+        section_name = 'mesh'
 
         logger.info('calling build_cell_width')
         cell_width, x1, y1, geom_points, geom_edges, floodFillMask = \
             build_cell_width(
-                self, section_name='antarctica',
+                self, section_name=section_name,
                 gridded_dataset='antarctica_8km_2020_10_20.nc')
 
         # Apply floodFillMask to thickness field to help with culling

@@ -68,11 +68,11 @@ mesh
 
 The class :py:class:`compass.landice.tests.thwaites.mesh.Mesh`
 defines a step for creating a variable resolution Thwaites Glacier mesh.
-This is used by the ``high_res_mesh`` test case.
+This is used by the ``mesh_gen`` test case.
 
-high_res_mesh
+mesh_gen
 -------------
 
-The :py:class:`compass.landice.tests.thwaites.high_res_mesh.HighResMesh`
+The :py:class:`compass.landice.tests.thwaites.mesh_gen.MeshGen`
 calls the :py:class:`compass.landice.tests.thwaites.mesh.Mesh` to create
 the variable resolution Thwaites Glacier mesh.

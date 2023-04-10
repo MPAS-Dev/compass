@@ -44,7 +44,7 @@ class Mesh(Step):
         """
         logger = self.logger
         mesh_name = 'GIS.nc'
-        section_name = 'high_res_GIS_mesh'
+        section_name = 'mesh'
 
         logger.info('calling build_cell_width')
         cell_width, x1, y1, geom_points, geom_edges, floodMask = \

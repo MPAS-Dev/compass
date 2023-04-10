@@ -44,7 +44,7 @@ mesh
 
 The class :py:class:`compass.landice.tests.greenland.mesh.Mesh`
 defines a step for creating a variable resolution Greenland Ice Sheet mesh.
-This is used by the ``high_res_mesh`` test case.
+This is used by the ``mesh_gen`` test case.
 
 .. _dev_landice_greenland_smoke_test:
 
@@ -83,9 +83,9 @@ the latter perform a 2-day restart run beginning with the end of the first.
 
 .. _dev_landice_greenland_high_res_mesh:
 
-high_res_mesh
+mesh_gen
 -------------
 
-The :py:class:`compass.landice.tests.greenland.high_res_mesh.HighResMesh`
+The :py:class:`compass.landice.tests.greenland.mesh_gen.MeshGen`
 calls the :py:class:`compass.landice.tests.greenland.mesh.Mesh` to create
 the variable resolution Greenland Ice Sheet mesh.

@@ -49,7 +49,7 @@ class Mesh(Step):
         """
         logger = self.logger
         mesh_name = 'Koge_Bugt_S.nc'
-        section_name = 'high_res_KogeBugtS_mesh'
+        section_name = 'mesh'
 
         logger.info('calling build_cell_width')
         cell_width, x1, y1, geom_points, geom_edges, floodMask = \

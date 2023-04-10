@@ -47,7 +47,7 @@ class Mesh(Step):
         Run this step of the test case
         """
         logger = self.logger
-        section_name = 'humboldt_mesh'
+        section_name = 'mesh'
         mesh_name = 'Humboldt.nc'
 
         logger.info('calling build_cell_width')

@@ -15,24 +15,24 @@ The ``landice/greenland`` test group runs tests with a coarse (20-km)
 The test group includes 3 test cases, each of which has one or more steps
 that are variants on ``run_model`` (given other names in the decomposition and
 restart test cases to distinguish multiple model runs), which performs time
-integration of the model. There is a fourth test case, ``high_res_mesh``, that
+integration of the model. There is a fourth test case, ``mesh_gen``, that
 creates a variable resolution Greenland Ice Sheet mesh, with the step ``mesh``.
 
 The test cases in this test group can run with either the SIA or FO velocity
 solvers. Running with the FO solver requires a build of MALI that includes
 Albany, but the SIA variant of the test can be run without Albany.  The FO
 version uses no-slip basal boundary condition. There is no integration step
-for the test case ``high_res_mesh``.
+for the test case ``mesh_gen``.
 
 config options
 --------------
 
-The ``high_res_mesh`` test case uses the default config options below.
+The ``mesh_gen`` test case uses the default config options below.
 The other test cases do not use config options.
 
 .. code-block:: cfg
 
-    [high_res_mesh]
+    [mesh]
 
     # number of levels in the mesh
     levels = 10
@@ -85,10 +85,10 @@ from a restart file saved by the first. Prognostic variables are compared
 between the "full" and "restart" runs at year 2 to make sure they are
 bit-for-bit identical.
 
-high_res_mesh
+mesh_gen
 -------------
 
-``landice/greenland/high_res_mesh`` creates a variable resolution mesh based
+``landice/greenland/mesh_gen`` creates a variable resolution mesh based
 on the the config options listed above. This will not be the same as the
 pre-generated 20 km mesh used in the other three test cases because it uses
 a newer version of Jigsaw. Note that the basal friction optimization is
