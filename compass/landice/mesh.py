@@ -3,7 +3,8 @@ import time
 import jigsawpy
 import numpy as np
 import xarray
-from mpas_tools.io import write_netcdf
+from geometric_features import FeatureCollection, GeometricFeatures
+from mpas_tools.io import default_format, write_netcdf
 from mpas_tools.logging import check_call
 from mpas_tools.mesh.conversion import convert, cull
 from mpas_tools.mesh.creation import build_planar_mesh
@@ -613,4 +614,44 @@ def build_MALI_mesh(self, cell_width, x1, y1, geom_points,
     logger.info('calling set_lat_lon_fields_in_planar_grid.py')
     args = ['set_lat_lon_fields_in_planar_grid.py', '-f',
             mesh_name, '-p', projection]
+    check_call(args, logger=logger)
+
+
+def make_region_masks(self, mesh_filename, mask_filename, cores, tags):
+    """
+    Create masks for ice-sheet subregions based on data
+    in MPAS-Dev/geometric_fatures.
+
+    Parameters
+    ----------
+    mesh_filename : str
+        name of .nc mesh file for which to create region masks
+    mask_filename : str
+        name of .nc file to contain region masks
+    cores : int
+        number of processors used to create region masks
+    tags : list of str
+        Groups of regions for which masks are to be defined
+    """
+
+    logger = self.logger
+    logger.info('creating region masks')
+    gf = GeometricFeatures()
+    fcMask = FeatureCollection()
+
+    for tag in tags:
+        fc = gf.read(componentName='landice', objectType='region',
+                     tags=[tag])
+        fcMask.merge(fc)
+
+    geojson_filename = 'regionMask.geojson'
+    fcMask.to_geojson(geojson_filename)
+
+    args = ['compute_mpas_region_masks',
+            '-m', mesh_filename,
+            '-g', geojson_filename,
+            '-o', mask_filename,
+            '-t', 'cell',
+            '--process_count', f'{cores}',
+            '--format', default_format]
     check_call(args, logger=logger)

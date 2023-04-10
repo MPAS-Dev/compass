@@ -1,4 +1,8 @@
-from compass.landice.mesh import build_cell_width, build_MALI_mesh
+from compass.landice.mesh import (
+    build_cell_width,
+    build_MALI_mesh,
+    make_region_masks,
+)
 from compass.model import make_graph_file
 from compass.step import Step
 
@@ -62,3 +66,16 @@ class Mesh(Step):
         logger.info('creating graph.info')
         make_graph_file(mesh_filename=mesh_name,
                         graph_filename='graph.info')
+
+        # create region masks
+        mask_filename = f'{mesh_name[:-3]}_regionMasks.nc'
+        make_region_masks(self, mesh_name, mask_filename,
+                          self.cpus_per_task,
+                          tags=['eastCentralGreenland',
+                                'northEastGreenland',
+                                'northGreenland',
+                                'northWestGreenland',
+                                'southEastGreenland',
+                                'southGreenland',
+                                'southWestGreenland',
+                                'westCentralGreenland'])

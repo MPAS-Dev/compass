@@ -422,3 +422,4 @@ Landice Framework
    mesh.get_dist_to_edge_and_GL
    mesh.build_cell_width
    mesh.build_MALI_mesh
+   mesh.make_region_masks

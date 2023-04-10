@@ -1,12 +1,12 @@
 from shutil import copyfile
 
-import matplotlib.pyplot as plt
-import mpas_tools
 import netCDF4
-from geometric_features import FeatureCollection, GeometricFeatures
-from mpas_tools.logging import check_call
 
-from compass.landice.mesh import build_cell_width, build_MALI_mesh
+from compass.landice.mesh import (
+    build_cell_width,
+    build_MALI_mesh,
+    make_region_masks,
+)
 from compass.model import make_graph_file
 from compass.step import Step
 
@@ -83,43 +83,13 @@ class Mesh(Step):
 
         # create a region mask
         mask_filename = f'{self.mesh_filename[:-3]}_imbie_regionMasks.nc'
-        self._make_region_masks(self.mesh_filename, mask_filename,
-                                self.cpus_per_task,
-                                tags=['EastAntarcticaIMBIE',
-                                      'WestAntarcticaIMBIE',
-                                      'AntarcticPeninsulaIMBIE'])
+        make_region_masks(self, self.mesh_filename, mask_filename,
+                          self.cpus_per_task,
+                          tags=['EastAntarcticaIMBIE',
+                                'WestAntarcticaIMBIE',
+                                'AntarcticPeninsulaIMBIE'])
 
         mask_filename = f'{self.mesh_filename[:-3]}_ismip6_regionMasks.nc'
-        self._make_region_masks(self.mesh_filename, mask_filename,
-                                self.cpus_per_task,
-                                tags=['ISMIP6_Basin'])
-
-    def _make_region_masks(self, mesh_filename, mask_filename, cores, tags):
-        logger = self.logger
-        gf = GeometricFeatures()
-        fcMask = FeatureCollection()
-
-        for tag in tags:
-            fc = gf.read(componentName='landice', objectType='region',
-                         tags=[tag])
-            fc.plot('southpole')
-            plt.savefig(f'plot_basins_{tag}.png')
-            fcMask.merge(fc)
-
-        geojson_filename = 'regionMask.geojson'
-        fcMask.to_geojson(geojson_filename)
-
-        # these defaults may have been updated from config options -- pass them
-        # along to the subprocess
-        netcdf_format = mpas_tools.io.default_format
-        netcdf_engine = mpas_tools.io.default_engine
-
-        args = ['compute_mpas_region_masks',
-                '-m', mesh_filename,
-                '-g', geojson_filename,
-                '-o', mask_filename,
-                '-t', 'cell',
-                '--process_count', f'{cores}',
-                '--format', netcdf_format,
-                '--engine', netcdf_engine]
-        check_call(args, logger=logger)
+        make_region_masks(self, self.mesh_filename, mask_filename,
+                          self.cpus_per_task,
+                          tags=['ISMIP6_Basin'])
