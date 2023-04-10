@@ -27,7 +27,7 @@ class Mesh(Step):
         super().__init__(test_case=test_case, name='mesh')
 
         self.add_output_file(filename='graph.info')
-        self.add_output_file(filename='Humboldt_1to10km.nc')
+        self.add_output_file(filename='Humboldt.nc')
         self.add_input_file(
             filename='humboldt_1km_2020_04_20.epsg3413.icesheetonly.nc',
             target='humboldt_1km_2020_04_20.epsg3413.icesheetonly.nc',
