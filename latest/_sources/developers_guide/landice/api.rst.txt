@@ -313,6 +313,23 @@ ismip6_forcing
    ocean_thermal.process_thermal_forcing.ProcessThermalForcing.remap_ismip6_thermal_forcing_to_mali_vars
    ocean_thermal.process_thermal_forcing.ProcessThermalForcing.rename_ismip6_thermal_forcing_to_mali_vars
 
+ismip6_run
+~~~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.ismip6_run
+
+.. autosummary::
+   :toctree: generated/
+
+   Ismip6Run
+
+   ismip6_ais_proj2300.Ismip6AisProj2300
+   ismip6_ais_proj2300.Ismip6AisProj2300.configure
+   ismip6_ais_proj2300.Ismip6AisProj2300.run
+
+   ismip6_ais_proj2300.set_up_experiment.SetUpExperiment
+   ismip6_ais_proj2300.set_up_experiment.SetUpExperiment.setup
+   ismip6_ais_proj2300.set_up_experiment.SetUpExperiment.run
 
 kangerlussuaq
 ~~~~~~~~~~~~~

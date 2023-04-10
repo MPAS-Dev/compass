@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.landice.tests.ismip6_run.ismip6_ais_proj2300.set_up_experiment &mdash; compass latest documentation</title>
+      <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../../" id="documentation_options" src="../../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../../_static/jquery.js"></script>
+        <script src="../../../../../../_static/underscore.js"></script>
+        <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../../../_static/doctools.js"></script>
+        <script src="../../../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+              <div class="version">
+                latest
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../../landice.html">compass.landice</a></li>
+          <li class="breadcrumb-item"><a href="../../ismip6_run.html">compass.landice.tests.ismip6_run</a></li>
+          <li class="breadcrumb-item"><a href="../ismip6_ais_proj2300.html">compass.landice.tests.ismip6_run.ismip6_ais_proj2300</a></li>
+      <li class="breadcrumb-item active">compass.landice.tests.ismip6_run.ismip6_ais_proj2300.set_up_experiment</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.landice.tests.ismip6_run.ismip6_ais_proj2300.set_up_experiment</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span>
+<span class="kn">from</span> <span class="nn">compass.job</span> <span class="kn">import</span> <span class="n">write_job_script</span>
+<span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">make_graph_file</span><span class="p">,</span> <span class="n">run_model</span>
+<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+
+
+<div class="viewcode-block" id="SetUpExperiment"><a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_run.ismip6_ais_proj2300.set_up_experiment.SetUpExperiment.html#compass.landice.tests.ismip6_run.ismip6_ais_proj2300.set_up_experiment.SetUpExperiment">[docs]</a><span class="k">class</span> <span class="nc">SetUpExperiment</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A step for setting up an ISMIP6 experiment</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SetUpExperiment.__init__"><a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_run.ismip6_ais_proj2300.set_up_experiment.SetUpExperiment.html#compass.landice.tests.ismip6_run.ismip6_ais_proj2300.set_up_experiment.SetUpExperiment.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="p">,</span> <span class="n">exp</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set up a new experiment</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        exp : experiment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">exp</span> <span class="o">=</span> <span class="n">exp</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SetUpExperiment.setup"><a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_run.ismip6_ais_proj2300.set_up_experiment.SetUpExperiment.setup.html#compass.landice.tests.ismip6_run.ismip6_ais_proj2300.set_up_experiment.SetUpExperiment.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># noqa:C901</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Setting up experiment </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">exp</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;ismip6_run_ais_2300&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ntasks&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span>
+        <span class="n">mesh_res</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;mesh_res&#39;</span><span class="p">)</span>
+        <span class="n">forcing_basepath</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;forcing_basepath&#39;</span><span class="p">)</span>
+        <span class="n">init_cond_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;init_cond_path&#39;</span><span class="p">)</span>
+        <span class="n">init_cond_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">init_cond_path</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">melt_params_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;melt_params_path&#39;</span><span class="p">)</span>
+        <span class="n">melt_params_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">melt_params_path</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">region_mask_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;region_mask_path&#39;</span><span class="p">)</span>
+        <span class="n">region_mask_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">region_mask_path</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">calving_method</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;calving_method&#39;</span><span class="p">)</span>
+        <span class="n">use_face_melting</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;use_face_melting&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span> <span class="o">==</span> <span class="s1">&#39;hist&#39;</span><span class="p">:</span>
+            <span class="n">exp_fcg</span> <span class="o">=</span> <span class="s1">&#39;ctrlAE&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">exp_fcg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span>
+
+        <span class="c1"># Define where to get namelist, streams, yaml, etc. templates</span>
+        <span class="c1"># (in current package)</span>
+        <span class="n">resource_location</span> <span class="o">=</span> \
+            <span class="s1">&#39;compass.landice.tests.ismip6_run.ismip6_ais_proj2300&#39;</span>
+
+        <span class="c1"># Define calving method</span>
+        <span class="k">if</span> <span class="n">calving_method</span> <span class="o">==</span> <span class="s1">&#39;von_mises&#39;</span><span class="p">:</span>
+            <span class="n">use_vM_calving</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">calving_method</span> <span class="o">==</span> <span class="s1">&#39;restore&#39;</span><span class="p">:</span>
+            <span class="n">use_vM_calving</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># Figure out if the forcing is in tier1 or tier2 subdir</span>
+        <span class="k">if</span> <span class="s1">&#39;exp&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exp</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span> <span class="o">&gt;=</span> <span class="mi">7</span><span class="p">:</span>
+                <span class="n">forcing_basepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">forcing_basepath</span><span class="p">,</span>
+                                                <span class="s1">&#39;tier2_experiments&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">forcing_basepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">forcing_basepath</span><span class="p">,</span>
+                                                <span class="s1">&#39;tier1_experiments&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">forcing_basepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">forcing_basepath</span><span class="p">,</span>
+                                            <span class="s1">&#39;tier1_experiments&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Copy files we&#39;ll need from local paths specified in cfg file</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span> <span class="o">==</span> <span class="s1">&#39;hist&#39;</span><span class="p">:</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">init_cond_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">melt_params_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">region_mask_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
+
+        <span class="c1"># Find and copy correct forcing files</span>
+        <span class="n">smb_search_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">forcing_basepath</span><span class="p">,</span> <span class="n">exp_fcg</span><span class="p">,</span>
+            <span class="s1">&#39;*smb*bare*.nc&#39;</span><span class="p">)</span>
+        <span class="n">fcgFileList</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">smb_search_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fcgFileList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">smb_path</span> <span class="o">=</span> <span class="n">fcgFileList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">smb_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">smb_path</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">smb_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;ERROR: Did not find exactly one matching SMB file at &quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">smb_search_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">fcgFileList</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">tf_search_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">forcing_basepath</span><span class="p">,</span> <span class="n">exp_fcg</span><span class="p">,</span>
+                                      <span class="s1">&#39;*TF_*.nc&#39;</span><span class="p">)</span>
+        <span class="n">fcgFileList</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">tf_search_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fcgFileList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">tf_path</span> <span class="o">=</span> <span class="n">fcgFileList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">tf_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">tf_path</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">tf_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;ERROR: Did not find exactly one matching TF file at &quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tf_search_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">fcgFileList</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># copy calving mask files for exp11-14</span>
+        <span class="n">useCalvingMask</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">exp_fcg</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="n">exp_num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">exp_fcg</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span>
+            <span class="k">if</span> <span class="n">exp_num</span> <span class="o">&gt;=</span> <span class="mi">11</span><span class="p">:</span>
+                <span class="n">mask_search_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="n">forcing_basepath</span><span class="p">,</span> <span class="n">exp_fcg</span><span class="p">,</span>
+                    <span class="s1">&#39;Antarctica_8to30km_ice_shelf_collapse_mask_*.nc&#39;</span><span class="p">)</span>
+                <span class="n">fcgFileList</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">mask_search_path</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fcgFileList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">mask_path</span> <span class="o">=</span> <span class="n">fcgFileList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">mask_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">mask_path</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">mask_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
+                    <span class="n">useCalvingMask</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;ERROR: Did not find exactly one matching &quot;</span>
+                             <span class="s2">&quot;calving mask file at &quot;</span>
+                             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mask_search_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">fcgFileList</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Make stream modifications based on files that were determined above</span>
+        <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;input_file_SMB_forcing&#39;</span><span class="p">:</span> <span class="n">smb_fname</span><span class="p">,</span>
+                               <span class="s1">&#39;input_file_TF_forcing&#39;</span><span class="p">:</span> <span class="n">tf_fname</span><span class="p">}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span> <span class="o">==</span> <span class="s1">&#39;hist&#39;</span><span class="p">:</span>
+            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;input_file_init_cond&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_cond_fname</span>
+            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;input_file_region_mask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">region_mask_fname</span>
+            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;input_file_melt_params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">melt_params_fname</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;input_file_init_cond&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="s1">&#39;USE_RESTART_FILE_INSTEAD&#39;</span>
+            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;input_file_region_mask&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="s1">&#39;USE_RESTART_FILE_INSTEAD&#39;</span>
+            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;input_file_melt_params&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="s1">&#39;USE_RESTART_FILE_INSTEAD&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;hist&#39;</span><span class="p">,</span> <span class="s1">&#39;ctrlAE&#39;</span><span class="p">]:</span>
+            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;forcing_interval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;initial_only&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;forcing_interval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0001-00-00_00:00:00&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
+            <span class="n">resource_location</span><span class="p">,</span>
+            <span class="s1">&#39;streams.landice.template&#39;</span><span class="p">,</span>
+            <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.landice&#39;</span><span class="p">,</span>
+            <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">useCalvingMask</span><span class="p">:</span>
+            <span class="n">mask_stream_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;input_file_calving_mask_forcing_name&#39;</span><span class="p">:</span>
+                                        <span class="n">mask_fname</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
+                <span class="n">resource_location</span><span class="p">,</span> <span class="s1">&#39;streams.mask_calving&#39;</span><span class="p">,</span>
+                <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.landice&#39;</span><span class="p">,</span>
+                <span class="n">template_replacements</span><span class="o">=</span><span class="n">mask_stream_replacements</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">use_vM_calving</span><span class="p">:</span>
+            <span class="n">vM_param_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;von_mises_parameter_path&#39;</span><span class="p">)</span>
+            <span class="n">vM_stream_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;input_file_VM_params&#39;</span><span class="p">:</span> <span class="n">vM_param_path</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
+                <span class="n">resource_location</span><span class="p">,</span> <span class="s1">&#39;streams.vM_params&#39;</span><span class="p">,</span>
+                <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.landice&#39;</span><span class="p">,</span>
+                <span class="n">template_replacements</span><span class="o">=</span><span class="n">vM_stream_replacements</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">use_face_melting</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
+                <span class="n">resource_location</span><span class="p">,</span> <span class="s1">&#39;streams.faceMelting&#39;</span><span class="p">,</span>
+                <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.landice&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Set up namelist and customize as needed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
+            <span class="n">resource_location</span><span class="p">,</span> <span class="s1">&#39;namelist.landice&#39;</span><span class="p">,</span>
+            <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
+
+        <span class="c1"># set up pio options because we are not using compass run</span>
+        <span class="n">pio_stride</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;pio_stride&#39;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">%</span> <span class="n">pio_stride</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> \
+            <span class="s1">&#39;pio_stride is not evenly divisble into ntasks&#39;</span>
+        <span class="n">io_tasks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">//</span> <span class="n">pio_stride</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_pio_stride&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pio_stride</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;config_pio_num_iotasks&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">io_tasks</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
+                                  <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span> <span class="o">==</span> <span class="s1">&#39;hist&#39;</span><span class="p">:</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_do_restart&#39;</span><span class="p">:</span> <span class="s2">&quot;.false.&quot;</span><span class="p">,</span>
+                       <span class="s1">&#39;config_start_time&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;2000-01-01_00:00:00&#39;&quot;</span><span class="p">,</span>
+                       <span class="s1">&#39;config_stop_time&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;2015-01-01_00:00:00&#39;&quot;</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
+                                      <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">use_vM_calving</span><span class="p">:</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_calving&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;von_Mises_stress&#39;&quot;</span><span class="p">,</span>
+                       <span class="s1">&#39;config_restore_calving_front&#39;</span><span class="p">:</span> <span class="s2">&quot;.false.&quot;</span><span class="p">,</span>
+                       <span class="s1">&#39;config_floating_von_Mises_threshold_stress_source&#39;</span><span class="p">:</span>
+                       <span class="s2">&quot;&#39;data&#39;&quot;</span><span class="p">,</span>
+                       <span class="s1">&#39;config_grounded_von_Mises_threshold_stress_source&#39;</span><span class="p">:</span>
+                       <span class="s2">&quot;&#39;data&#39;&quot;</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
+                                      <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Include facemelting if needed</span>
+        <span class="k">if</span> <span class="n">use_face_melting</span><span class="p">:</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;config_front_mass_bal_grounded&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;ismip6&#39;&quot;</span><span class="p">,</span>
+                <span class="s1">&#39;config_use_3d_thermal_forcing_for_face_melt&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
+                                      <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">useCalvingMask</span><span class="p">:</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_calving&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;none&#39;&quot;</span><span class="p">,</span>
+                       <span class="s1">&#39;config_apply_calving_mask&#39;</span><span class="p">:</span> <span class="s2">&quot;.true.&quot;</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
+                                      <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
+
+        <span class="c1"># For all projection runs, symlink the restart file for the</span>
+        <span class="c1"># historical run</span>
+        <span class="c1"># don&#39;t symlink restart_timestamp or you&#39;ll have a mighty mess</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span> <span class="o">==</span> <span class="s1">&#39;hist&#39;</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;../hist_</span><span class="si">{</span><span class="n">mesh_res</span><span class="si">:</span><span class="s2">02</span><span class="si">}</span><span class="s2">/rst.2015-01-01.nc&quot;</span><span class="p">,</span>
+                       <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;rst.2015-01-01.nc&#39;</span><span class="p">))</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s2">&quot;restart_timestamp&quot;</span><span class="p">),</span>
+                      <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">text_file</span><span class="p">:</span>
+                <span class="n">text_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;2015-01-01_00:00:00&quot;</span><span class="p">)</span>
+
+        <span class="c1"># add the albany_input.yaml file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;albany_input.yaml&#39;</span><span class="p">,</span>
+            <span class="n">package</span><span class="o">=</span><span class="n">resource_location</span><span class="p">,</span>
+            <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># create graph file</span>
+        <span class="n">make_graph_file</span><span class="p">(</span><span class="n">mesh_filename</span><span class="o">=</span><span class="n">init_cond_path</span><span class="p">,</span>
+                        <span class="n">graph_filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
+                                                    <span class="s1">&#39;graph.info&#39;</span><span class="p">))</span>
+
+        <span class="c1"># COMPASS does not create symlinks for the load script in step dirs,</span>
+        <span class="c1"># so use the standard approach for creating that symlink in each</span>
+        <span class="c1"># step dir.</span>
+        <span class="k">if</span> <span class="s1">&#39;LOAD_COMPASS_ENV&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+            <span class="n">script_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;LOAD_COMPASS_ENV&#39;</span><span class="p">]</span>
+            <span class="c1"># make a symlink to the script for loading the compass conda env.</span>
+            <span class="n">symlink</span><span class="p">(</span><span class="n">script_filename</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
+                                                  <span class="s1">&#39;load_compass_env.sh&#39;</span><span class="p">))</span>
+
+        <span class="c1"># customize job script</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;job&#39;</span><span class="p">,</span> <span class="s1">&#39;job_name&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span><span class="p">)</span>
+        <span class="n">machine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;deploy&#39;</span><span class="p">,</span> <span class="s1">&#39;machine&#39;</span><span class="p">)</span>
+        <span class="n">pre_run_cmd</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;LOGDIR=previous_logs_`date +&quot;%Y-%m-</span><span class="si">%d</span><span class="s1">_%H-%M-%S&quot;`;&#39;</span>
+                       <span class="s1">&#39;mkdir $LOGDIR; cp log* $LOGDIR; date&#39;</span><span class="p">)</span>
+        <span class="n">post_run_cmd</span> <span class="o">=</span> <span class="s2">&quot;date&quot;</span>
+        <span class="n">write_job_script</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span>
+                         <span class="n">target_cores</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span><span class="p">,</span>
+                         <span class="n">work_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
+                         <span class="n">pre_run_commands</span><span class="o">=</span><span class="n">pre_run_cmd</span><span class="p">,</span>
+                         <span class="n">post_run_commands</span><span class="o">=</span><span class="n">post_run_cmd</span><span class="p">)</span>
+
+        <span class="c1"># link in exe</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SetUpExperiment.run"><a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_run.ismip6_ais_proj2300.set_up_experiment.SetUpExperiment.run.html#compass.landice.tests.ismip6_run.ismip6_ais_proj2300.set_up_experiment.SetUpExperiment.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run this step of the test case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">run_model</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">namelist</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">,</span>
+                  <span class="n">streams</span><span class="o">=</span><span class="s1">&#39;streams.landice&#39;</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

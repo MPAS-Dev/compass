@@ -18,6 +18,7 @@ Test groups
    humboldt
    hydro_radial
    ismip6_forcing
+   ismip6_run
    kangerlussuaq
    koge_bugt_s
    mismipplus
