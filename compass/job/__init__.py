@@ -1,11 +1,12 @@
-from jinja2 import Template
-from importlib import resources
 import os
+from importlib import resources
+
 import numpy as np
+from jinja2 import Template
 
 
 def write_job_script(config, machine, target_cores, min_cores, work_dir,
-                     suite=''):
+                     suite='', pre_run_commands='', post_run_commands=''):
     """
 
     Parameters
@@ -28,6 +29,14 @@ def write_job_script(config, machine, target_cores, min_cores, work_dir,
 
     suite : str, optional
         The name of the suite
+
+    pre_run_commands : str, optional
+        Optional commands to be inserted into job script prior to calling
+        compass run
+
+    post_run_commands : str, optional
+        Optional commands to be inserted into job script after calling of
+        compass run
     """
 
     if config.has_option('parallel', 'account'):
@@ -38,8 +47,8 @@ def write_job_script(config, machine, target_cores, min_cores, work_dir,
     cores_per_node = config.getint('parallel', 'cores_per_node')
 
     # as a rule of thumb, let's do the geometric mean between min and target
-    cores = np.sqrt(target_cores*min_cores)
-    nodes = int(np.ceil(cores/cores_per_node))
+    cores = np.sqrt(target_cores * min_cores)
+    nodes = int(np.ceil(cores / cores_per_node))
 
     partition = config.get('job', 'partition')
     if partition == '<<<default>>>':
@@ -87,7 +96,8 @@ def write_job_script(config, machine, target_cores, min_cores, work_dir,
     text = template.render(job_name=job_name, account=account,
                            nodes=f'{nodes}', wall_time=wall_time, qos=qos,
                            partition=partition, constraint=constraint,
-                           suite=suite)
+                           suite=suite, pre_run_commands=pre_run_commands,
+                           post_run_commands=post_run_commands)
     text = _clean_up_whitespace(text)
     if suite == '':
         script_filename = 'job_script.sh'
