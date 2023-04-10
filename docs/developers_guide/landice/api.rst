@@ -205,8 +205,8 @@ greenland
    mesh.Mesh.run
    mesh.Mesh.build_cell_width
 
-   high_res_mesh.HighResMesh
-   high_res_mesh.HighResMesh.run
+   mesh_gen.MeshGen
+   mesh_gen.MeshGen.run
 
 humboldt
 ~~~~~~~~
@@ -400,6 +400,12 @@ thwaites
    run_model.RunModel.setup
    run_model.RunModel.run
 
+   mesh_gen.MeshGen
+   mesh_gen.MeshGen.run
+
+   mesh.Mesh
+   mesh.Mesh.run
+
 Landice Framework
 ^^^^^^^^^^^^^^^^^
 
@@ -414,3 +420,5 @@ Landice Framework
    mesh.set_rectangular_geom_points_and_edges
    mesh.set_cell_width
    mesh.get_dist_to_edge_and_GL
+   mesh.build_cell_width
+   mesh.build_MALI_mesh
