@@ -1,10 +1,11 @@
 import time
 
 import jigsawpy
+import mpas_tools.io
 import numpy as np
 import xarray
 from geometric_features import FeatureCollection, GeometricFeatures
-from mpas_tools.io import default_format, write_netcdf
+from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 from mpas_tools.mesh.conversion import convert, cull
 from mpas_tools.mesh.creation import build_planar_mesh
@@ -653,5 +654,6 @@ def make_region_masks(self, mesh_filename, mask_filename, cores, tags):
             '-o', mask_filename,
             '-t', 'cell',
             '--process_count', f'{cores}',
-            '--format', default_format]
+            '--format', mpas_tools.io.default_format,
+            '--engine', mpas_tools.io.default_engine]
     check_call(args, logger=logger)
