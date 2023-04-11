@@ -63,7 +63,9 @@ Humboldt mesh):
     # number of levels in the mesh
     levels = 10
 
-    # Bounds of Humboldt domain
+    # Bounds of Humboldt domain. If you want the extent
+    # of the gridded dataset to determine the extent of
+    # the MALI domain, set these to None.
     x_min = -630000.
     x_max = 84000.
     y_min = -1560000.
