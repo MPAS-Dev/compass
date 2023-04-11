@@ -37,6 +37,9 @@ class Forward(Step):
 
         nu : float, optional
             the viscosity (if different from the default for the test group)
+
+        vlr : boolean, optional
+            Whether vertical Lagrangian remapping will be tested
         """
         if min_tasks is None:
             min_tasks = ntasks
@@ -53,7 +56,7 @@ class Forward(Step):
         if vlr:
             # turn vertical Lagrangian-remapping on
             self.add_namelist_options({
-                'config_vert_advection_method': '"remap"'})
+                'config_vert_advection_method': "'remap'"})
 
         self.add_streams_file('compass.ocean.tests.internal_wave',
                               'streams.forward')

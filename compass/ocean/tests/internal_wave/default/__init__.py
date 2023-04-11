@@ -18,12 +18,12 @@ class Default(TestCase):
         ----------
         test_group : compass.ocean.tests.internal_wave.InternalWave
             The test group that this test case belongs to
-        vlr : boolean
+        vlr : boolean, optional
             Whether vertical Lagrangian remapping will be tested
         """
         name = 'default'
         if vlr:
-            subdir = 'vlr/' + name
+            subdir = f'vlr/{name}'
         else:
             subdir = name
         super().__init__(test_group=test_group, subdir=subdir, name=name)

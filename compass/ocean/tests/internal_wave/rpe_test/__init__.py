@@ -19,6 +19,9 @@ class RpeTest(TestCase):
         ----------
         test_group : compass.ocean.tests.internal_wave.InternalWave
             The test group that this test case belongs to
+
+        vlr : boolean, optional
+            Whether vertical Lagrangian remapping will be tested
         """
         name = 'rpe_test'
         if vlr:
