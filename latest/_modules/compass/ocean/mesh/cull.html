@@ -496,7 +496,8 @@
                 <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
-    <span class="n">_cull_topo</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">has_remapped_topo</span><span class="p">:</span>
+        <span class="n">_cull_topo</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">with_cavities</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">has_remapped_topo</span><span class="p">:</span>
