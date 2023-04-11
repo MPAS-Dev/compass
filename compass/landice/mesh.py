@@ -140,6 +140,7 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
     section_name : str
         Section of the config file from which to read parameters. The
         following options to be set in the given config section:
+        ``levels``, ``x_min``, ``x_max``, ``y_min``, ``y_max``,
         ``min_spac``, ``max_spac``, ``high_log_speed``, ``low_log_speed``,
         ``high_dist``, ``low_dist``, ``high_dist_bed``, ``low_dist_bed``,
         ``high_bed``, ``low_bed``, ``cull_distance``, ``use_speed``,
@@ -342,6 +343,7 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y,
     section_name : str
         Section of the config file from which to read parameters. The
         following options to be set in the given config section:
+        ``levels``, ``x_min``, ``x_max``, ``y_min``, ``y_max``,
         ``min_spac``, ``max_spac``, ``high_log_speed``, ``low_log_speed``,
         ``high_dist``, ``low_dist``, ``high_dist_bed``, ``low_dist_bed``,
         ``high_bed``, ``low_bed``, ``cull_distance``, ``use_speed``,
@@ -462,6 +464,7 @@ def build_cell_width(self, section_name, gridded_dataset,
     section_name : str
         Section of the config file from which to read parameters. The
         following options to be set in the given config section:
+        ``levels``, ``x_min``, ``x_max``, ``y_min``, ``y_max``,
         ``min_spac``, ``max_spac``, ``high_log_speed``, ``low_log_speed``,
         ``high_dist``, ``low_dist``, ``high_dist_bed``, ``low_dist_bed``,
         ``high_bed``, ``low_bed``, ``cull_distance``, ``use_speed``,
@@ -595,6 +598,7 @@ def build_mali_mesh(self, cell_width, x1, y1, geom_points,
     section_name : str
         Section of the config file from which to read parameters. The
         following options to be set in the given config section:
+        ``levels``, ``x_min``, ``x_max``, ``y_min``, ``y_max``,
         ``min_spac``, ``max_spac``, ``high_log_speed``, ``low_log_speed``,
         ``high_dist``, ``low_dist``, ``high_dist_bed``, ``low_dist_bed``,
         ``high_bed``, ``low_bed``, ``cull_distance``, ``use_speed``,
