@@ -383,7 +383,8 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
                 '--engine', netcdf_engine]
         check_call(args, logger=logger)
 
-    _cull_topo()
+    if has_remapped_topo:
+        _cull_topo()
 
     if with_cavities:
         if has_remapped_topo:
