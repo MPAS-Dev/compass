@@ -393,11 +393,13 @@ def main():
 def _get_required_cores(test_cases):
     """ Get the maximum number of target cores and the max of min cores """
 
-    max_cores = 0
-    max_of_min_cores = 0
+    max_cores = 1
+    max_of_min_cores = 1
     for test_case in test_cases.values():
         for step_name in test_case.steps_to_run:
             step = test_case.steps[step_name]
+            if step.cached:
+                continue
             if step.ntasks is None:
                 raise ValueError(
                     f'The number of tasks (ntasks) was never set for '
