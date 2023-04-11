@@ -520,7 +520,7 @@ def build_MALI_mesh(self, cell_width, x1, y1, geom_points,
                     gridded_dataset, projection, geojson_file=None):
     """
     Create the MALI mesh based on final cell widths determined by
-    py:func:`compass.landice.mesh.build_cell_width()`, using Jigsaw and
+    :py:func:`compass.landice.mesh.build_cell_width()`, using Jigsaw and
     MPAS-Tools functions. Culls the mesh based on config options, interpolates
     all available fields from the gridded dataset to the MALI mesh using the
     bilinear method, and marks domain boundaries as Dirichlet cells.
@@ -529,7 +529,7 @@ def build_MALI_mesh(self, cell_width, x1, y1, geom_points,
     ----------
     cell_width : numpy.ndarray
         Desired width of MPAS cells calculated by :py:func:`build_cell_width()`
-        based on mesh density functions define in :py_func:`set_cell_width()`
+        based on mesh density functions define in :py:func:`set_cell_width()`
         to pass to
         :py:func:`mpas_tools.mesh.creation.build_mesh.build_planar_mesh()`.
     x1 : float

@@ -203,7 +203,6 @@ greenland
 
    mesh.Mesh
    mesh.Mesh.run
-   mesh.Mesh.build_cell_width
 
    mesh_gen.MeshGen
    mesh_gen.MeshGen.run

@@ -1,4 +1,4 @@
-.. _dev_landice_framework:
+.. _landice_framework:
 
 Land-ice Framework
 ==================
@@ -12,46 +12,46 @@ function for extrapolating variables into undefined regions.  It is copied
 from a similar script in MPAS-Tools.
 
 mesh
-~~~
+~~~~
 
 The landice framework module :py:mod:`compass.landice.mesh` provides functions
 used by all ``mesh_gen`` tests cases, which currently exist within the
 ``antarctica``, ``greenland``, ``humboldt``, ``kangerlussuaq``, ``koge_bugt_s``,
 and ``thwaites`` test groups. These functions include:
 
-py:func:`compass.landice.mesh.gridded_flood_fill()` applies a flood-fill algorithm
+:py:func:`compass.landice.mesh.gridded_flood_fill()` applies a flood-fill algorithm
 to the gridded dataset in order to separate the ice sheet from peripheral ice.
 
-py:func:`compass.landice.mesh.set_rectangular_geom_points_and_edges()` sets node
+:py:func:`compass.landice.mesh.set_rectangular_geom_points_and_edges()` sets node
 and edge coordinates to pass to py:func:`mpas_tools.mesh.creation.build_mesh.build_planar_mesh()`.
 
-py:func:`compass.landice.mesh.set_cell_width()` sets cell widths based on settings
+:py:func:`compass.landice.mesh.set_cell_width()` sets cell widths based on settings
 in config file to pass to :py:func:`mpas_tools.mesh.creation.build_mesh.build_planar_mesh()`.
 Requires the following options to be set in the given config section: ``min_spac``,
 ``max_spac``, ``high_log_speed``, ``low_log_speed``, ``high_dist``, ``low_dist``,
 ``high_dist_bed``, ``low_dist_bed``, ``high_bed``, ``low_bed``, ``cull_distance``,
 ``use_speed``, ``use_dist_to_edge``, ``use_dist_to_grounding_line``, and ``use_bed``.
 
-py:func:`compass.landice.mesh.get_dist_to_edge_and_GL()` calculates distance from
+:py:func:`compass.landice.mesh.get_dist_to_edge_and_GL()` calculates distance from
 each point to ice edge and grounding line, to be used in mesh density functions in
 :py:func:`compass.landice.mesh.set_cell_width()`. In future development,
 this should be updated to use a faster package such as `scikit-fmm`.
 
-py:func:`compass.landice.mesh.build_cell_width()` determine final MPAS mesh cell sizes
+:py:func:`compass.landice.mesh.build_cell_width()` determine final MPAS mesh cell sizes
 using desired cell widths calculated by py:func:`compass.landice.mesh.set_cell_width()`,
 based on user-defined density functions and config options.
 
-py:func:`compass.landice.mesh.build_MALI_mesh()` creates the MALI mesh based on final
+:py:func:`compass.landice.mesh.build_MALI_mesh()` creates the MALI mesh based on final
 cell widths determined by py:func:`compass.landice.mesh.build_cell_width()`, using Jigsaw
 and MPAS-Tools functions. Culls the mesh based on config options, interpolates
 all available fields from the gridded dataset to the MALI mesh using the bilinear
 method, and marks domain boundaries as Dirichlet cells.
 
-py:func:`compass.landice.mesh.make_region_masks()` creates region masks using regions
+:py:func:`compass.landice.mesh.make_region_masks()` creates region masks using regions
 defined in Geometric Features repository. It is only used by the ``antarctica``
 and ``greenland`` test cases.
 
-The following config options should be define for all ``mesh_gen`` test cases (although
+The following config options should be defined for all ``mesh_gen`` test cases (although
 not necessarily with the same values shown here, which are the defaults for the 1–10km
 Humboldt mesh):
 
