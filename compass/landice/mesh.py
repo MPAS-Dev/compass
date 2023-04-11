@@ -130,8 +130,9 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
     :py:func:`mpas_tools.mesh.creation.build_mesh.build_planar_mesh()`.
     Requires the following options to be set in the given config section:
     ``min_spac``, ``max_spac``, ``high_log_speed``, ``low_log_speed``,
-    ``high_dist``, ``low_dist``,``cull_distance``, ``use_speed``,
-    ``use_dist_to_edge``, and ``use_dist_to_grounding_line``.
+    ``high_dist``, ``low_dist``, ``high_dist_bed``, ``low_dist_bed``,
+    ``high_bed``, ``low_bed``, ``cull_distance``, ``use_speed``,
+    ``use_dist_to_edge``, ``use_dist_to_grounding_line``, and ``use_bed``.
 
     Parameters
     ----------
@@ -517,6 +518,40 @@ def build_cell_width(self, section_name, gridded_dataset,
 def build_MALI_mesh(self, cell_width, x1, y1, geom_points,
                     geom_edges, mesh_name, section_name,
                     gridded_dataset, projection, geojson_file=None):
+    """
+    Create the MALI mesh based on final cell widths determined by
+    py:func:`compass.landice.mesh.build_cell_width()`, using Jigsaw and
+    MPAS-Tools functions. Culls the mesh based on config options, interpolates
+    all available fields from the gridded dataset to the MALI mesh using the
+    bilinear method, and marks domain boundaries as Dirichlet cells.
+
+    Parameters
+    ----------
+    cell_width : numpy.ndarray
+        Desired width of MPAS cells calculated by :py:func:`build_cell_width()`
+        based on mesh density functions define in :py_func:`set_cell_width()`
+        to pass to
+        :py:func:`mpas_tools.mesh.creation.build_mesh.build_planar_mesh()`.
+    x1 : float
+        x coordinates from gridded dataset
+    y1 : float
+        y coordinates from gridded dataset
+    geom_points : jigsawpy.jigsaw_msh_t.VERT2_t
+        xy node coordinates to pass to build_planar_mesh()
+    geom_edges : jigsawpy.jigsaw_msh_t.EDGE2_t
+        xy edge coordinates between nodes to pass to build_planar_mesh()
+    mesh_name : str
+        Filename to be used for final MALI .nc mesh file.
+    section_name : str
+        Name of config section containing mesh creation options.
+    gridded_dataset : str
+        Name of gridded dataset file to be used for interpolation to MALI mesh
+    projection : str
+        Projection to be used for setting lat-long fields.
+        Likely 'gis-gimp' or 'ais-bedmap2'
+    geojson_file : str
+        Name of geojson file that defines regional domain extent.
+    """
 
     logger = self.logger
     section = self.config[section_name]
