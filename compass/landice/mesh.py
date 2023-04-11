@@ -518,25 +518,15 @@ def build_cell_width(self, section_name, gridded_dataset,
 
     f.close()
 
-    # Define extent of region to mesh.
-    xx0 = section.get('x_min')
-    xx1 = section.get('x_max')
-    yy0 = section.get('y_min')
-    yy1 = section.get('y_max')
+    # Get bounds defined by user, or use bound of gridded dataset
+    bnds = [np.min(x1), np.max(x1), np.min(y1), np.max(y1)]
+    bnds_options = ['x_min', 'x_max', 'y_min', 'y_max']
+    for index, option in enumerate(bnds_options):
+        bnd = section.get(option)
+        if bnd != 'None':
+            bnds[index] = float(bnd)
 
-    if 'None' in [xx0, xx1, yy0, yy1]:
-        xx0 = np.min(x1)
-        xx1 = np.max(x1)
-        yy0 = np.min(y1)
-        yy1 = np.max(y1)
-    else:
-        xx0 = float(xx0)
-        xx1 = float(xx1)
-        yy0 = float(yy0)
-        yy1 = float(yy1)
-
-    geom_points, geom_edges = set_rectangular_geom_points_and_edges(
-        xx0, xx1, yy0, yy1)
+    geom_points, geom_edges = set_rectangular_geom_points_and_edges(*bnds)
 
     # Remove ice not connected to the ice sheet.
     flood_mask = gridded_flood_fill(thk)
