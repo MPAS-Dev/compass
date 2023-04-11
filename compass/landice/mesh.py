@@ -300,7 +300,7 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
     return cell_width
 
 
-def get_dist_to_edge_and_GL(self, thk, topg, x, y, section, window_size=None):
+def get_dist_to_edge_and_gl(self, thk, topg, x, y, section, window_size=None):
     """
     Calculate distance from each point to ice edge and grounding line,
     to be used in mesh density functions in
@@ -416,7 +416,7 @@ def get_dist_to_edge_and_GL(self, thk, topg, x, y, section, window_size=None):
         dist_to_grounding_line[i, j] = dist_to_here_grounding_line.min()
 
     toc = time.time()
-    logger.info('compass.landice.mesh.get_dist_to_edge_and_GL() took {:0.2f} '
+    logger.info('compass.landice.mesh.get_dist_to_edge_and_gl() took {:0.2f} '
                 'seconds'.format(toc - tic))
 
     return dist_to_edge, dist_to_grounding_line
@@ -499,7 +499,7 @@ def build_cell_width(self, section_name, gridded_dataset,
 
     # Calculate distance from each grid point to ice edge
     # and grounding line, for use in cell spacing functions.
-    distToEdge, distToGL = get_dist_to_edge_and_GL(
+    distToEdge, distToGL = get_dist_to_edge_and_gl(
         self, thk, topg, x1,
         y1, section=section_name)
 
@@ -515,7 +515,7 @@ def build_cell_width(self, section_name, gridded_dataset,
             y1.astype('float64'), geom_points, geom_edges, flood_mask)
 
 
-def build_MALI_mesh(self, cell_width, x1, y1, geom_points,
+def build_mali_mesh(self, cell_width, x1, y1, geom_points,
                     geom_edges, mesh_name, section_name,
                     gridded_dataset, projection, geojson_file=None):
     """

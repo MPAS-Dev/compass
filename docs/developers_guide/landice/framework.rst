@@ -32,7 +32,7 @@ Requires the following options to be set in the given config section: ``min_spac
 ``high_dist_bed``, ``low_dist_bed``, ``high_bed``, ``low_bed``, ``cull_distance``,
 ``use_speed``, ``use_dist_to_edge``, ``use_dist_to_grounding_line``, and ``use_bed``.
 
-:py:func:`compass.landice.mesh.get_dist_to_edge_and_GL()` calculates distance from
+:py:func:`compass.landice.mesh.get_dist_to_edge_and_gl()` calculates distance from
 each point to ice edge and grounding line, to be used in mesh density functions in
 :py:func:`compass.landice.mesh.set_cell_width()`. In future development,
 this should be updated to use a faster package such as `scikit-fmm`.
@@ -41,7 +41,7 @@ this should be updated to use a faster package such as `scikit-fmm`.
 using desired cell widths calculated by py:func:`compass.landice.mesh.set_cell_width()`,
 based on user-defined density functions and config options.
 
-:py:func:`compass.landice.mesh.build_MALI_mesh()` creates the MALI mesh based on final
+:py:func:`compass.landice.mesh.build_mali_mesh()` creates the MALI mesh based on final
 cell widths determined by py:func:`compass.landice.mesh.build_cell_width()`, using Jigsaw
 and MPAS-Tools functions. Culls the mesh based on config options, interpolates
 all available fields from the gridded dataset to the MALI mesh using the bilinear

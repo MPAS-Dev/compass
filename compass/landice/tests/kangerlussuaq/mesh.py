@@ -1,4 +1,4 @@
-from compass.landice.mesh import build_cell_width, build_MALI_mesh
+from compass.landice.mesh import build_cell_width, build_mali_mesh
 from compass.model import make_graph_file
 from compass.step import Step
 
@@ -57,7 +57,7 @@ class Mesh(Step):
                 self, section_name=section_name,
                 gridded_dataset='greenland_8km_2020_04_20.epsg3413.nc')
 
-        build_MALI_mesh(
+        build_mali_mesh(
             self, cell_width, x1, y1, geom_points, geom_edges,
             mesh_name=mesh_name, section_name=section_name,
             gridded_dataset='greenland_1km_2020_04_20.epsg3413.icesheetonly.nc',  # noqa

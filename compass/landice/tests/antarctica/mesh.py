@@ -4,7 +4,7 @@ import netCDF4
 
 from compass.landice.mesh import (
     build_cell_width,
-    build_MALI_mesh,
+    build_mali_mesh,
     make_region_masks,
 )
 from compass.model import make_graph_file
@@ -71,7 +71,7 @@ class Mesh(Step):
         gg.variables['vy'][0, :, :] *= floodFillMask
         gg.close()
 
-        build_MALI_mesh(
+        build_mali_mesh(
             self, cell_width, x1, y1, geom_points, geom_edges,
             mesh_name=self.mesh_filename, section_name=section_name,
             gridded_dataset='antarctica_8km_2020_10_20_floodFillMask.nc',

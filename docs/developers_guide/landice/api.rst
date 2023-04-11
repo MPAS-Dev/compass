@@ -418,7 +418,7 @@ Landice Framework
    mesh.gridded_flood_fill
    mesh.set_rectangular_geom_points_and_edges
    mesh.set_cell_width
-   mesh.get_dist_to_edge_and_GL
+   mesh.get_dist_to_edge_and_gl
    mesh.build_cell_width
-   mesh.build_MALI_mesh
+   mesh.build_mali_mesh
    mesh.make_region_masks
