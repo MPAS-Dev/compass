@@ -1,9 +1,10 @@
 
-import os
-import numpy as np
-import netCDF4 as nc
-from scipy.ndimage import gaussian_filter
 import argparse
+import os
+
+import netCDF4 as nc
+import numpy as np
+from scipy.ndimage import gaussian_filter
 
 # Authors: Darren Engwirda
 
@@ -27,9 +28,9 @@ def blend_front(e1st, i1st, e2nd, halo, sdev):
         e1st.shape, halo + 1, dtype=np.float32)
 
     nidx = np.full(
-        e1st.shape[0], False, dtype=np.bool)
+        e1st.shape[0], False, dtype=bool)
     sidx = np.full(
-        e1st.shape[0], False, dtype=np.bool)
+        e1st.shape[0], False, dtype=bool)
 
     bnds = np.asarray(np.round(
         np.linspace(0, e1st.shape[0], 5)), dtype=np.uint32)
