@@ -111,10 +111,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.internal_wave</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.internal_wave.default</span> <span class="kn">import</span> <span class="n">Default</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests.internal_wave.default</span> <span class="kn">import</span> <span class="n">Default</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.internal_wave.rpe_test</span> <span class="kn">import</span> <span class="n">RpeTest</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.internal_wave.ten_day_test</span> <span class="kn">import</span> <span class="n">TenDayTest</span>
+<span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
 
 
 <div class="viewcode-block" id="InternalWave"><a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.tests.internal_wave.InternalWave.html#compass.ocean.tests.internal_wave.InternalWave">[docs]</a><span class="k">class</span> <span class="nc">InternalWave</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
@@ -130,7 +130,9 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;internal_wave&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">Default</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">Default</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">vlr</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">RpeTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">RpeTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">vlr</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">TenDayTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span></div></div>
 </pre></div>
 

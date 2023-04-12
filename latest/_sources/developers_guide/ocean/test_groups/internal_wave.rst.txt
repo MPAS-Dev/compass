@@ -42,9 +42,11 @@ The class :py:class:`compass.ocean.tests.internal_wave.forward.Forward`
 defines a step for running MPAS-Ocean from the initial condition produced in
 the ``initial_state`` step.  If ``nu`` is provided as an argument to the
 constructor, the associate namelist option (``config_mom_del2``) will be given
-this value. Namelist and streams files are generate during ``setup()`` and
-MPAS-Ocean is run (including updating PIO namelist options and generating a
-graph partition) in ``run()``.
+this value. If ``vlr`` is true, ``config_vertical_advection_method`` will be
+assigned ``"remap"`` rather than the default value of ``"flux-form"``.
+Namelist and streams files are generate during ``setup()`` and MPAS-Ocean is
+run (including updating PIO namelist options and generating a graph partition)
+in ``run()``.
 
 .. _dev_ocean_internal_wave_default:
 
@@ -55,6 +57,9 @@ The :py:class:`compass.ocean.tests.internal_wave.default.Default`
 test performs a 15-minute run on 4 cores.  It doesn't contain any
 :ref:`dev_validation`.
 
+There is also a variant for testing vertical Lagrangian remap capabilities at
+``ocean/internal_wave/vlr/default``.
+
 .. _dev_ocean_internal_wave_rpe_test:
 
 rpe_test
@@ -62,8 +67,9 @@ rpe_test
 
 The :py:class:`compass.ocean.tests.internal_wave.rpe_test.RpeTest`
 performs a longer (20 day) integration of the model forward in time at 5
-different values of the viscosity.  These ``nu`` values are later added as arguments to the ``Forward`` steps'
-constructors when they are added to the test case:
+different values of the viscosity.  These ``nu`` values are later added as
+arguments to the ``Forward`` steps' constructors when they are added to the
+test case:
 
 .. code-block:: python
 
@@ -79,6 +85,9 @@ makes plots of the final results with each value of the viscosity.
 
 This test is resource intensive enough that it is not used in regression
 testing.
+
+There is also a variant for testing vertical Lagrangian remap capabilities at
+``ocean/internal_wave/vlr/rpe_test``.
 
 .. _dev_ocean_internal_wave_ten_day_test:
 

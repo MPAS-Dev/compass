@@ -177,9 +177,11 @@ velocity.</p>
 defines a step for running MPAS-Ocean from the initial condition produced in
 the <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step.  If <code class="docutils literal notranslate"><span class="pre">nu</span></code> is provided as an argument to the
 constructor, the associate namelist option (<code class="docutils literal notranslate"><span class="pre">config_mom_del2</span></code>) will be given
-this value. Namelist and streams files are generate during <code class="docutils literal notranslate"><span class="pre">setup()</span></code> and
-MPAS-Ocean is run (including updating PIO namelist options and generating a
-graph partition) in <code class="docutils literal notranslate"><span class="pre">run()</span></code>.</p>
+this value. If <code class="docutils literal notranslate"><span class="pre">vlr</span></code> is true, <code class="docutils literal notranslate"><span class="pre">config_vertical_advection_method</span></code> will be
+assigned <code class="docutils literal notranslate"><span class="pre">&quot;remap&quot;</span></code> rather than the default value of <code class="docutils literal notranslate"><span class="pre">&quot;flux-form&quot;</span></code>.
+Namelist and streams files are generate during <code class="docutils literal notranslate"><span class="pre">setup()</span></code> and MPAS-Ocean is
+run (including updating PIO namelist options and generating a graph partition)
+in <code class="docutils literal notranslate"><span class="pre">run()</span></code>.</p>
 </section>
 </section>
 <section id="default">
@@ -187,13 +189,16 @@ graph partition) in <code class="docutils literal notranslate"><span class="pre"
 <p>The <a class="reference internal" href="../generated/compass.ocean.tests.internal_wave.default.Default.html#compass.ocean.tests.internal_wave.default.Default" title="compass.ocean.tests.internal_wave.default.Default"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.internal_wave.default.Default</span></code></a>
 test performs a 15-minute run on 4 cores.  It doesn’t contain any
 <a class="reference internal" href="../../framework.html#dev-validation"><span class="std std-ref">Validation</span></a>.</p>
+<p>There is also a variant for testing vertical Lagrangian remap capabilities at
+<code class="docutils literal notranslate"><span class="pre">ocean/internal_wave/vlr/default</span></code>.</p>
 </section>
 <section id="rpe-test">
 <span id="dev-ocean-internal-wave-rpe-test"></span><h2>rpe_test<a class="headerlink" href="#rpe-test" title="Permalink to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="../generated/compass.ocean.tests.internal_wave.rpe_test.RpeTest.html#compass.ocean.tests.internal_wave.rpe_test.RpeTest" title="compass.ocean.tests.internal_wave.rpe_test.RpeTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.internal_wave.rpe_test.RpeTest</span></code></a>
 performs a longer (20 day) integration of the model forward in time at 5
-different values of the viscosity.  These <code class="docutils literal notranslate"><span class="pre">nu</span></code> values are later added as arguments to the <code class="docutils literal notranslate"><span class="pre">Forward</span></code> steps’
-constructors when they are added to the test case:</p>
+different values of the viscosity.  These <code class="docutils literal notranslate"><span class="pre">nu</span></code> values are later added as
+arguments to the <code class="docutils literal notranslate"><span class="pre">Forward</span></code> steps’ constructors when they are added to the
+test case:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">step</span> <span class="o">=</span> <span class="n">Forward</span><span class="p">(</span>
     <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
     <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">nu</span><span class="p">))</span>
@@ -206,6 +211,8 @@ constructors when they are added to the test case:</p>
 makes plots of the final results with each value of the viscosity.</p>
 <p>This test is resource intensive enough that it is not used in regression
 testing.</p>
+<p>There is also a variant for testing vertical Lagrangian remap capabilities at
+<code class="docutils literal notranslate"><span class="pre">ocean/internal_wave/vlr/rpe_test</span></code>.</p>
 </section>
 <section id="ten-day-test">
 <span id="dev-ocean-internal-wave-ten-day-test"></span><h2>ten_day_test<a class="headerlink" href="#ten-day-test" title="Permalink to this heading">¶</a></h2>

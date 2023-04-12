@@ -122,7 +122,7 @@
 <span class="sd">    test cases.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Forward.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.internal_wave.forward.Forward.html#compass.ocean.tests.internal_wave.forward.Forward.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                 <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vlr</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new test case</span>
 
@@ -151,6 +151,9 @@
 
 <span class="sd">        nu : float, optional</span>
 <span class="sd">            the viscosity (if different from the default for the test group)</span>
+
+<span class="sd">        vlr : boolean, optional</span>
+<span class="sd">            Whether vertical Lagrangian remapping will be tested</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">min_tasks</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">min_tasks</span> <span class="o">=</span> <span class="n">ntasks</span>
@@ -163,6 +166,11 @@
             <span class="c1"># update the viscosity to the requested value</span>
             <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_mom_del2&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nu</span><span class="p">)}</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">vlr</span><span class="p">:</span>
+            <span class="c1"># turn vertical Lagrangian-remapping on</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">({</span>
+                <span class="s1">&#39;config_vert_advection_method&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;remap&#39;&quot;</span><span class="p">})</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.internal_wave&#39;</span><span class="p">,</span>
                               <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>

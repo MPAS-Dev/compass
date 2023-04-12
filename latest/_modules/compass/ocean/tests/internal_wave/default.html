@@ -112,10 +112,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.internal_wave.default</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests.internal_wave.forward</span> <span class="kn">import</span> <span class="n">Forward</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.internal_wave.initial_state</span> <span class="kn">import</span> <span class="n">InitialState</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.internal_wave.forward</span> <span class="kn">import</span> <span class="n">Forward</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.internal_wave.viz</span> <span class="kn">import</span> <span class="n">Viz</span>
+<span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
 <span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
 
 
@@ -124,7 +124,7 @@
 <span class="sd">    The default test case for the internal wave test</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Default.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.internal_wave.default.Default.html#compass.ocean.tests.internal_wave.default.Default.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
+<div class="viewcode-block" id="Default.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.internal_wave.default.Default.html#compass.ocean.tests.internal_wave.default.Default.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">vlr</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the test case</span>
 
@@ -132,10 +132,19 @@
 <span class="sd">        ----------</span>
 <span class="sd">        test_group : compass.ocean.tests.internal_wave.InternalWave</span>
 <span class="sd">            The test group that this test case belongs to</span>
+
+<span class="sd">        vlr : bool, optional</span>
+<span class="sd">            Whether vertical Lagrangian remapping will be tested</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
+        <span class="k">if</span> <span class="n">vlr</span><span class="p">:</span>
+            <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;vlr/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">subdir</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">InitialState</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Forward</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Forward</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                              <span class="n">vlr</span><span class="o">=</span><span class="n">vlr</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Viz</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">),</span> <span class="n">run_by_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Default.validate"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.internal_wave.default.Default.validate.html#compass.ocean.tests.internal_wave.default.Default.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
