@@ -18,7 +18,8 @@ class Default(TestCase):
         ----------
         test_group : compass.ocean.tests.internal_wave.InternalWave
             The test group that this test case belongs to
-        vlr : boolean, optional
+
+        vlr : bool, optional
             Whether vertical Lagrangian remapping will be tested
         """
         name = 'default'
