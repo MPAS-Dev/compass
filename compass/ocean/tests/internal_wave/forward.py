@@ -8,7 +8,7 @@ class Forward(Step):
     test cases.
     """
     def __init__(self, test_case, name='forward', subdir=None, ntasks=1,
-                 min_tasks=None, openmp_threads=1, nu=None):
+                 min_tasks=None, openmp_threads=1, nu=None, vlr=False):
         """
         Create a new test case
 
@@ -37,6 +37,9 @@ class Forward(Step):
 
         nu : float, optional
             the viscosity (if different from the default for the test group)
+
+        vlr : boolean, optional
+            Whether vertical Lagrangian remapping will be tested
         """
         if min_tasks is None:
             min_tasks = ntasks
@@ -49,6 +52,11 @@ class Forward(Step):
             # update the viscosity to the requested value
             options = {'config_mom_del2': '{}'.format(nu)}
             self.add_namelist_options(options)
+
+        if vlr:
+            # turn vertical Lagrangian-remapping on
+            self.add_namelist_options({
+                'config_vert_advection_method': "'remap'"})
 
         self.add_streams_file('compass.ocean.tests.internal_wave',
                               'streams.forward')

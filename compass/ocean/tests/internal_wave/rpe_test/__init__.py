@@ -1,7 +1,7 @@
-from compass.testcase import TestCase
-from compass.ocean.tests.internal_wave.initial_state import InitialState
 from compass.ocean.tests.internal_wave.forward import Forward
+from compass.ocean.tests.internal_wave.initial_state import InitialState
 from compass.ocean.tests.internal_wave.rpe_test.analysis import Analysis
+from compass.testcase import TestCase
 
 
 class RpeTest(TestCase):
@@ -11,7 +11,7 @@ class RpeTest(TestCase):
     5 different values of the viscosity at the given resolution.
     """
 
-    def __init__(self, test_group):
+    def __init__(self, test_group, vlr=False):
         """
         Create the test case
 
@@ -19,10 +19,17 @@ class RpeTest(TestCase):
         ----------
         test_group : compass.ocean.tests.internal_wave.InternalWave
             The test group that this test case belongs to
+
+        vlr : bool, optional
+            Whether vertical Lagrangian remapping will be tested
         """
         name = 'rpe_test'
-        super().__init__(test_group=test_group, name=name)
-
+        if vlr:
+            subdir = 'vlr/' + name
+        else:
+            subdir = name
+        self.vlr = vlr
+        super().__init__(test_group=test_group, subdir=subdir, name=name)
 
     def configure(self):
         """
@@ -36,7 +43,7 @@ class RpeTest(TestCase):
             name = f'rpe_test_{index + 1}_nu_{nu:g}'
             step = Forward(
                 test_case=self, name=name, subdir=name, ntasks=4,
-                openmp_threads=1, nu=float(nu))
+                openmp_threads=1, nu=float(nu), vlr=self.vlr)
 
             step.add_namelist_file(
                 'compass.ocean.tests.internal_wave.rpe_test',

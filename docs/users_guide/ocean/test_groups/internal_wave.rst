@@ -130,6 +130,9 @@ default
 internal wave test case for a short (15 min) test run and validation of
 prognostic variables for regression testing.
 
+There is also a variant for testing vertical Lagrangian remap capabilities at
+``ocean/internal_wave/vlr/default``.
+
 rpe_test
 --------
 
@@ -141,6 +144,11 @@ Results of these tests have been used
 to show that MPAS-Ocean has lower spurious dissipation of reference potential
 energy (RPE) than POP, MOM and MITgcm models
 (`Petersen et al. 2015 <https://doi.org/10.1016/j.ocemod.2014.12.004>`_).
+
+There is also a variant for testing vertical Lagrangian remap capabilities at
+``ocean/internal_wave/vlr/rpe_test``. The result of this test should show less
+RPE for all viscosity values at every time horizon compared with the flux-form
+vertical advection method.
 
 ten_day_test
 ------------
