@@ -57,7 +57,7 @@ class CreatePointstatsFile(Step):
             self.add_input_file(
                 filename=f'{file}',
                 target=f'{storm}_stations/{file}',
-                database='hurricane_lts')
+                database='hurricane')
 
         self.add_output_file(filename=self.pointstats_file)
 

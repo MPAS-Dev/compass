@@ -8,6 +8,9 @@ from compass.ocean.tests.hurricane_lts.init.initial_state import InitialState
 from compass.ocean.tests.hurricane_lts.init.interpolate_atm_forcing import (
     InterpolateAtmForcing,
 )
+from compass.ocean.tests.hurricane_lts.init.topographic_wave_drag import (
+    ComputeTopographicWaveDrag,
+)
 from compass.testcase import TestCase
 
 
@@ -48,6 +51,7 @@ class Init(TestCase):
                                             storm=storm))
         self.add_step(CreatePointstatsFile(test_case=self, mesh=mesh,
                                            storm=storm))
+        self.add_step(ComputeTopographicWaveDrag(test_case=self, mesh=mesh))
 
     def configure(self):
         """
