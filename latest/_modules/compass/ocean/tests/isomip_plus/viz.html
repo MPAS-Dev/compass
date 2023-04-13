@@ -112,15 +112,17 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.isomip_plus.viz</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">xarray</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
 
+<span class="kn">import</span> <span class="nn">xarray</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
 
-<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.viz.plot</span> <span class="kn">import</span> <span class="n">MoviePlotter</span><span class="p">,</span> \
-    <span class="n">TimeSeriesPlotter</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.haney</span> <span class="kn">import</span> <span class="n">compute_haney_number</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.viz.plot</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">MoviePlotter</span><span class="p">,</span>
+    <span class="n">TimeSeriesPlotter</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
 
 <div class="viewcode-block" id="Viz"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.Viz.html#compass.ocean.tests.isomip_plus.viz.Viz">[docs]</a><span class="k">class</span> <span class="nc">Viz</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
@@ -179,7 +181,7 @@
             <span class="n">sim_dir</span> <span class="o">=</span> <span class="s1">&#39;../performance&#39;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">sim_dir</span> <span class="o">=</span> <span class="s1">&#39;../simulation&#39;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">sim_dir</span><span class="si">}</span><span class="s1">/timeSeriesStatsMonthly.0001-01-01.nc&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">sim_dir</span><span class="si">}</span><span class="s1">/timeSeriesStatsMonthly.0001-01-01.nc&#39;</span><span class="p">):</span>  <span class="c1"># noqa: E501</span>
             <span class="n">sim_dir</span> <span class="o">=</span> <span class="s1">&#39;../performance&#39;</span>
         <span class="n">streamfunction_dir</span> <span class="o">=</span> <span class="s1">&#39;../streamfunction&#39;</span>
         <span class="n">out_dir</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span>
@@ -197,7 +199,7 @@
         <span class="k">if</span> <span class="s1">&#39;time_varying&#39;</span> <span class="ow">in</span> <span class="n">expt</span><span class="p">:</span>
             <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">dsOut</span><span class="o">.</span><span class="n">ssh</span><span class="p">,</span> <span class="s1">&#39;ssh&#39;</span><span class="p">,</span> <span class="s1">&#39;ssh&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span>
                                       <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.curl&#39;</span><span class="p">)</span>
-            <span class="n">delice</span> <span class="o">=</span> <span class="n">dsOut</span><span class="o">.</span><span class="n">landIcePressure</span><span class="o">-</span><span class="n">dsOut</span><span class="o">.</span><span class="n">landIcePressure</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">delice</span> <span class="o">=</span> <span class="n">dsOut</span><span class="o">.</span><span class="n">landIcePressure</span> <span class="o">-</span> <span class="n">dsOut</span><span class="o">.</span><span class="n">landIcePressure</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
             <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">delice</span><span class="p">,</span> <span class="s1">&#39;delLandIcePressure&#39;</span><span class="p">,</span>
                                       <span class="s1">&#39;delLandIcePressure&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span>
                                       <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.curl&#39;</span><span class="p">)</span>
@@ -206,12 +208,12 @@
         <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">dsOut</span><span class="o">.</span><span class="n">velocityY</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;v&#39;</span><span class="p">,</span> <span class="s1">&#39;v&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span>
                                   <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.balance&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">5e-1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">5e-1</span><span class="p">)</span>
         <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">dsOut</span><span class="o">.</span><span class="n">ssh</span> <span class="o">+</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">,</span>
-                                  <span class="kc">True</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">min_column_thickness</span><span class="o">+</span><span class="mf">1e-10</span><span class="p">,</span>
+                                  <span class="kc">True</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">min_column_thickness</span> <span class="o">+</span> <span class="mf">1e-10</span><span class="p">,</span>
                                   <span class="n">vmax</span><span class="o">=</span><span class="mi">700</span><span class="p">,</span> <span class="n">cmap_set_under</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span>
                                   <span class="n">cmap_scale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="s1">&#39;tidal&#39;</span> <span class="ow">in</span> <span class="n">expt</span><span class="p">:</span>
-            <span class="n">delssh</span> <span class="o">=</span> <span class="n">dsOut</span><span class="o">.</span><span class="n">ssh</span><span class="o">-</span><span class="n">dsOut</span><span class="o">.</span><span class="n">ssh</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">delssh</span> <span class="o">=</span> <span class="n">dsOut</span><span class="o">.</span><span class="n">ssh</span> <span class="o">-</span> <span class="n">dsOut</span><span class="o">.</span><span class="n">ssh</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
             <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">delssh</span><span class="p">,</span> <span class="s1">&#39;delssh&#39;</span><span class="p">,</span> <span class="s1">&#39;delssh&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span>
                                       <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.curl&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 

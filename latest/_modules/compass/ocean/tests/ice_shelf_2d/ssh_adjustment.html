@@ -112,8 +112,8 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.ice_shelf_2d.ssh_adjustment</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.iceshelf</span> <span class="kn">import</span> <span class="n">adjust_ssh</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.ocean.iceshelf</span> <span class="kn">import</span> <span class="n">adjust_ssh</span>
+<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
 
 <div class="viewcode-block" id="SshAdjustment"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ice_shelf_2d.ssh_adjustment.SshAdjustment.html#compass.ocean.tests.ice_shelf_2d.ssh_adjustment.SshAdjustment">[docs]</a><span class="k">class</span> <span class="nc">SshAdjustment</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
@@ -157,9 +157,10 @@
         <span class="c1"># we don&#39;t want the global stats AM for this run</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">({</span><span class="s1">&#39;config_AM_globalStats_enable&#39;</span><span class="p">:</span> <span class="s1">&#39;.false.&#39;</span><span class="p">})</span>
 
-        <span class="c1"># we want a shorter run and no freshwater fluxes under the ice shelf from</span>
-        <span class="c1"># these namelist options</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.namelists&#39;</span><span class="p">,</span> <span class="s1">&#39;namelist.ssh_adjust&#39;</span><span class="p">)</span>
+        <span class="c1"># we want a shorter run and no freshwater fluxes under the ice shelf</span>
+        <span class="c1"># from these namelist options</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.namelists&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;namelist.ssh_adjust&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.streams&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.ssh_adjust&#39;</span><span class="p">)</span>
 

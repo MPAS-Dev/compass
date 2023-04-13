@@ -113,15 +113,14 @@
              
   <h1>Source code for compass.ocean.tests.ice_shelf_2d.initial_state</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">xarray</span>
-
-<span class="kn">from</span> <span class="nn">mpas_tools.planar_hex</span> <span class="kn">import</span> <span class="n">make_planar_hex_mesh</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.mesh.conversion</span> <span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">cull</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.planar_hex</span> <span class="kn">import</span> <span class="n">make_planar_hex_mesh</span>
 
-<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.vertical</span> <span class="kn">import</span> <span class="n">init_vertical_coord</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.iceshelf</span> <span class="kn">import</span> <span class="n">compute_land_ice_pressure_and_draft</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.vertical</span> <span class="kn">import</span> <span class="n">init_vertical_coord</span>
+<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
 
 <div class="viewcode-block" id="InitialState"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ice_shelf_2d.initial_state.InitialState.html#compass.ocean.tests.ice_shelf_2d.initial_state.InitialState">[docs]</a><span class="k">class</span> <span class="nc">InitialState</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
