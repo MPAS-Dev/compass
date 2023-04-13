@@ -1,12 +1,14 @@
-import xarray
 import os
 
+import xarray
 from mpas_tools.io import write_netcdf
 
-from compass.step import Step
-from compass.ocean.tests.isomip_plus.viz.plot import MoviePlotter, \
-    TimeSeriesPlotter
 from compass.ocean.haney import compute_haney_number
+from compass.ocean.tests.isomip_plus.viz.plot import (
+    MoviePlotter,
+    TimeSeriesPlotter,
+)
+from compass.step import Step
 
 
 class Viz(Step):
@@ -65,7 +67,7 @@ class Viz(Step):
             sim_dir = '../performance'
         else:
             sim_dir = '../simulation'
-        if not os.path.exists(f'{sim_dir}/timeSeriesStatsMonthly.0001-01-01.nc'):
+        if not os.path.exists(f'{sim_dir}/timeSeriesStatsMonthly.0001-01-01.nc'):  # noqa: E501
             sim_dir = '../performance'
         streamfunction_dir = '../streamfunction'
         out_dir = '.'
@@ -83,7 +85,7 @@ class Viz(Step):
         if 'time_varying' in expt:
             plotter.plot_horiz_series(dsOut.ssh, 'ssh', 'ssh', True,
                                       cmap='cmo.curl')
-            delice = dsOut.landIcePressure-dsOut.landIcePressure[0, :]
+            delice = dsOut.landIcePressure - dsOut.landIcePressure[0, :]
             plotter.plot_horiz_series(delice, 'delLandIcePressure',
                                       'delLandIcePressure', True,
                                       cmap='cmo.curl')
@@ -92,12 +94,12 @@ class Viz(Step):
         plotter.plot_horiz_series(dsOut.velocityY[:, :, 0], 'v', 'v', True,
                                   cmap='cmo.balance', vmin=-5e-1, vmax=5e-1)
         plotter.plot_horiz_series(dsOut.ssh + dsMesh.bottomDepth, 'H', 'H',
-                                  True, vmin=min_column_thickness+1e-10,
+                                  True, vmin=min_column_thickness + 1e-10,
                                   vmax=700, cmap_set_under='r',
                                   cmap_scale='log')
 
         if 'tidal' in expt:
-            delssh = dsOut.ssh-dsOut.ssh[0, :]
+            delssh = dsOut.ssh - dsOut.ssh[0, :]
             plotter.plot_horiz_series(delssh, 'delssh', 'delssh', True,
                                       cmap='cmo.curl', vmin=-1, vmax=1)
 
