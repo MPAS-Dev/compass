@@ -1,5 +1,5 @@
-from compass.step import Step
 from compass.ocean.iceshelf import adjust_ssh
+from compass.step import Step
 
 
 class SshAdjustment(Step):
@@ -43,9 +43,10 @@ class SshAdjustment(Step):
         # we don't want the global stats AM for this run
         self.add_namelist_options({'config_AM_globalStats_enable': '.false.'})
 
-        # we want a shorter run and no freshwater fluxes under the ice shelf from
-        # these namelist options
-        self.add_namelist_file('compass.ocean.namelists', 'namelist.ssh_adjust')
+        # we want a shorter run and no freshwater fluxes under the ice shelf
+        # from these namelist options
+        self.add_namelist_file('compass.ocean.namelists',
+                               'namelist.ssh_adjust')
 
         self.add_streams_file('compass.ocean.streams', 'streams.ssh_adjust')
 

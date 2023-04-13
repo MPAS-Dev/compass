@@ -1,6 +1,6 @@
-import xarray as xr
 import numpy as np
 import scipy.ndimage.filters as filters
+import xarray as xr
 
 from compass.step import Step
 
@@ -58,11 +58,11 @@ class ProcessGeom(Step):
         thin_film_present = self.thin_film_present
 
         section = config['isomip_plus']
-        filter_sigma = section.getfloat('topo_smoothing')*self.resolution
+        filter_sigma = section.getfloat('topo_smoothing') * self.resolution
         min_ice_thickness = section.getfloat('min_ice_thickness')
         draft_scaling = section.getfloat('draft_scaling')
         # km to m
-        x_min = 1e3*section.getfloat('x_min')
+        x_min = 1e3 * section.getfloat('x_min')
 
         # a buffer of cells for masking "land" around the domain
         buffer = 1
@@ -110,7 +110,7 @@ class ProcessGeom(Step):
 
         ds['iceThickness'] = ds.Z_ice_surface - ds.Z_ice_draft
 
-        ds['Z_ice_draft'] = draft_scaling*ds.Z_ice_draft
+        ds['Z_ice_draft'] = draft_scaling * ds.Z_ice_draft
 
         # take care of calving criterion
         mask = np.logical_or(ds.floatingIceFraction <= 0.1,
