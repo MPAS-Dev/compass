@@ -1,9 +1,9 @@
-from compass.testcase import TestCase
+from compass.ocean.tests import ice_shelf_2d
+from compass.ocean.tests.ice_shelf_2d.forward import Forward
 from compass.ocean.tests.ice_shelf_2d.initial_state import InitialState
 from compass.ocean.tests.ice_shelf_2d.ssh_adjustment import SshAdjustment
-from compass.ocean.tests.ice_shelf_2d.forward import Forward
 from compass.ocean.tests.ice_shelf_2d.viz import Viz
-from compass.ocean.tests import ice_shelf_2d
+from compass.testcase import TestCase
 from compass.validate import compare_variables
 
 

@@ -1,6 +1,6 @@
-import xarray
-import numpy
 import matplotlib.pyplot as plt
+import numpy
+import xarray
 
 from compass.step import Step
 

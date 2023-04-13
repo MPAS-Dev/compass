@@ -1,13 +1,12 @@
 import xarray
-
-from mpas_tools.planar_hex import make_planar_hex_mesh
+from mpas_tools.cime.constants import constants
 from mpas_tools.io import write_netcdf
 from mpas_tools.mesh.conversion import convert, cull
-from mpas_tools.cime.constants import constants
+from mpas_tools.planar_hex import make_planar_hex_mesh
 
-from compass.step import Step
-from compass.ocean.vertical import init_vertical_coord
 from compass.ocean.iceshelf import compute_land_ice_pressure_and_draft
+from compass.ocean.vertical import init_vertical_coord
+from compass.step import Step
 
 
 class InitialState(Step):
