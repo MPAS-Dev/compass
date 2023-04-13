@@ -19,6 +19,9 @@ from compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition imp
 from compass.ocean.tests.global_ocean.files_for_e3sm.ocean_mesh import (  # noqa: E501
     OceanMesh,
 )
+from compass.ocean.tests.global_ocean.files_for_e3sm.remap_ice_shelf_melt import (  # noqa: E501
+    RemapIceShelfMelt,
+)
 from compass.ocean.tests.global_ocean.files_for_e3sm.scrip import Scrip
 from compass.ocean.tests.global_ocean.files_for_e3sm.seaice_graph_partition import (  # noqa: E501
     SeaiceGraphPartition,
@@ -50,9 +53,12 @@ class FilesForE3SM(TestCase):
     dynamic_adjustment : compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment
         The test case that performs dynamic adjustment to dissipate
         fast-moving waves from the initial condition
+
+    data_ice_shelf_melt : compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt
+        A test case for remapping observed melt rates to the MPAS grid
     """  # noqa: E501
     def __init__(self, test_group, mesh=None, init=None,
-                 dynamic_adjustment=None):
+                 dynamic_adjustment=None, data_ice_shelf_melt=None):
         """
         Create test case for creating a global MPAS-Ocean mesh
 
@@ -70,6 +76,9 @@ class FilesForE3SM(TestCase):
         dynamic_adjustment : compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment, optional
             The test case that performs dynamic adjustment to dissipate
             fast-moving waves from the initial condition
+
+        data_ice_shelf_melt : compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt, optional
+            A test case for remapping observed melt rates to the MPAS grid
         """  # noqa: E501
         name = 'files_for_e3sm'
         if dynamic_adjustment is not None:
@@ -83,6 +92,7 @@ class FilesForE3SM(TestCase):
         self.mesh = mesh
         self.init = init
         self.dynamic_adjustment = dynamic_adjustment
+        self.data_ice_shelf_melt = data_ice_shelf_melt
 
         # add metadata if we're running this on an existing mesh
         add_metadata = (dynamic_adjustment is None)
@@ -97,6 +107,10 @@ class FilesForE3SM(TestCase):
         self.add_step(E3smToCmipMaps(test_case=self))
         self.add_step(DiagnosticMaps(test_case=self))
         self.add_step(DiagnosticMasks(test_case=self))
+
+        self.add_step(RemapIceShelfMelt(
+            test_case=self,
+            data_ice_shelf_melt=data_ice_shelf_melt))
 
     def configure(self):
         """

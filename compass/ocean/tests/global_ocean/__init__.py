@@ -131,10 +131,12 @@ class GlobalOcean(TestGroup):
                         time_integrator=time_integrator))
 
             if mesh_test.with_ice_shelf_cavities:
-                self.add_test_case(
-                    DataIceShelfMelt(
-                        test_group=self, mesh=mesh_test, init=init_test,
-                        time_integrator=time_integrator))
+                data_melt_test = DataIceShelfMelt(
+                    test_group=self, mesh=mesh_test, init=init_test,
+                    time_integrator=time_integrator)
+                self.add_test_case(data_melt_test)
+            else:
+                data_melt_test = None
 
             dynamic_adjustment_test = DynamicAdjustment(
                 test_group=self, mesh=mesh_test, init=init_test,
@@ -144,7 +146,8 @@ class GlobalOcean(TestGroup):
             self.add_test_case(
                 FilesForE3SM(
                     test_group=self, mesh=mesh_test, init=init_test,
-                    dynamic_adjustment=dynamic_adjustment_test))
+                    dynamic_adjustment=dynamic_adjustment_test,
+                    data_ice_shelf_melt=data_melt_test))
 
             if include_rk4:
                 time_integrator = 'RK4'
@@ -184,10 +187,12 @@ class GlobalOcean(TestGroup):
                         time_integrator=time_integrator))
 
                 if mesh_test.with_ice_shelf_cavities:
-                    self.add_test_case(
-                        DataIceShelfMelt(
-                            test_group=self, mesh=mesh_test, init=init_test,
-                            time_integrator=time_integrator))
+                    data_melt_test = DataIceShelfMelt(
+                        test_group=self, mesh=mesh_test, init=init_test,
+                        time_integrator=time_integrator)
+                    self.add_test_case(data_melt_test)
+                else:
+                    data_melt_test = None
 
                 dynamic_adjustment_test = DynamicAdjustment(
                     test_group=self, mesh=mesh_test, init=init_test,
@@ -197,4 +202,5 @@ class GlobalOcean(TestGroup):
                 self.add_test_case(
                     FilesForE3SM(
                         test_group=self, mesh=mesh_test, init=init_test,
-                        dynamic_adjustment=dynamic_adjustment_test))
+                        dynamic_adjustment=dynamic_adjustment_test,
+                        data_ice_shelf_melt=data_melt_test))
