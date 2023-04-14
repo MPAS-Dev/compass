@@ -29,4 +29,5 @@ coming months.
    sphere_transport
    spherical_harmonic_transform
    tides
+   utility
    ziso

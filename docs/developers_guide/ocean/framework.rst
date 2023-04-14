@@ -45,7 +45,7 @@ Mesh
 The ``compass.ocean.mesh`` package includes modules for modifying spherical
 ocean meshes shared across test groups.
 
-.. _dev_ocean_framework_remap_topogrpahy:
+.. _dev_ocean_framework_remap_topography:
 
 Remapping Topography
 ~~~~~~~~~~~~~~~~~~~~
