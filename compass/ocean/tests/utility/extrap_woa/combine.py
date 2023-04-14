@@ -1,3 +1,5 @@
+import gsw
+import numpy as np
 import xarray as xr
 
 from compass.step import Step
@@ -89,4 +91,40 @@ class Combine(Step):
             ds_out[var] = xr.concat(slices, dim='depth')
             ds_out[var].attrs = ds_ann[var].attrs
 
+        ds_out = self._temp_to_pot_temp(ds_out)
         ds_out.to_netcdf('woa_combined.nc')
+
+    @staticmethod
+    def _temp_to_pot_temp(ds):
+        dims = ds.t_an.dims
+
+        slices = list()
+        for depth_index in range(ds.sizes['depth']):
+            temp_slice = ds.t_an.isel(depth=depth_index)
+            in_situ_temp = temp_slice.values
+            salin = ds.s_an.isel(depth=depth_index).values
+            lat = ds.lat.broadcast_like(temp_slice).values
+            lon = ds.lon.broadcast_like(temp_slice).values
+            z = -ds.depth.isel(depth=depth_index).values
+            pressure = gsw.p_from_z(z, lat)
+            mask = np.isfinite(in_situ_temp)
+            SA = gsw.SA_from_SP(salin[mask], pressure[mask], lon[mask],
+                                lat[mask])
+            pot_temp = np.nan * np.ones(in_situ_temp.shape)
+            pot_temp[mask] = gsw.pt_from_t(SA, in_situ_temp[mask],
+                                           pressure[mask], p_ref=0.)
+            pot_temp_slice = xr.DataArray(data=pot_temp, dims=temp_slice.dims,
+                                          attrs=temp_slice.attrs)
+
+            slices.append(pot_temp_slice)
+
+        ds['pt_an'] = xr.concat(slices, dim='depth').transpose(*dims)
+
+        ds.pt_an.attrs['standard_name'] = \
+            'sea_water_potential_temperature'
+        ds.pt_an.attrs['long_name'] = \
+            'Objectively analyzed mean fields for ' \
+            'sea_water_potential_temperature at standard depth levels.'
+
+        ds = ds.drop_vars('t_an')
+        return ds

@@ -122,7 +122,7 @@ class ExtrapStep(Step):
 
         with xr.open_dataset(in_filename) as ds_woa:
             ndepth = ds_woa.sizes['depth']
-            dims = ds_woa.t_an.dims
+            dims = ds_woa.pt_an.dims
 
         logger.info('  Horizontally extrapolating WOA data...')
         progress = self.log_filename is None
@@ -150,7 +150,7 @@ class ExtrapStep(Step):
             bar.finish()
 
         ds_out = xr.open_mfdataset(files, combine='nested', concat_dim='depth')
-        for field_name in ['t_an', 's_an']:
+        for field_name in ['pt_an', 's_an']:
             ds_out[field_name] = ds_out[field_name].transpose(*dims)
         ds_out.to_netcdf(out_filename)
 
@@ -177,7 +177,7 @@ class ExtrapStep(Step):
         logger.info('  Vertically extrapolating WOA data...')
         progress = self.log_filename is None
         if progress:
-            widgets = [f'  t_an z=1/{ndepth}: ',
+            widgets = [f'  pt_an z=1/{ndepth}: ',
                        progressbar.Percentage(), ' ',
                        progressbar.Bar(), ' ', progressbar.ETA()]
             bar = progressbar.ProgressBar(widgets=widgets,
@@ -186,7 +186,7 @@ class ExtrapStep(Step):
             bar = None
 
         count = 0
-        for field_name in ['t_an', 's_an']:
+        for field_name in ['pt_an', 's_an']:
             slices = [ds[field_name].isel(depth=0).drop_vars(['depth'])]
             for depth_index in range(1, ndepth):
                 field = ds[field_name]
@@ -228,7 +228,7 @@ def _extrap_level(use_ocean_mask, in_filename, progress_dir, depth_index):
     else:
         ocean_mask = None
 
-    field = ds.t_an.values
+    field = ds.pt_an.values
 
     # a small averaging kernel
     x = np.arange(-1, 2)
@@ -245,7 +245,7 @@ def _extrap_level(use_ocean_mask, in_filename, progress_dir, depth_index):
     else:
         invalid_after_fill = None
 
-    fields = dict(t_an=ds.t_an.values.copy(),
+    fields = dict(pt_an=ds.pt_an.values.copy(),
                   s_an=ds.s_an.values.copy())
 
     nlon = field.shape[1]
