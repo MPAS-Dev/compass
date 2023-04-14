@@ -1,7 +1,7 @@
 import os
 import shutil
-import cmocean
 
+import cmocean  # noqa: F401
 import numpy as np
 import xarray as xr
 from mpas_tools.cime.constants import constants
@@ -185,7 +185,8 @@ class InitialState(Step):
             ds['salinity'] = \
                 (1.0 - frac) * init_top_sal + frac * init_bot_sal
         # for thin film cells, set temperature to freezing point
-        ds['temperature'] = xr.where(thin_film_mask, thin_film_temp, ds.temperature)
+        ds['temperature'] = xr.where(thin_film_mask, thin_film_temp,
+                                     ds.temperature)
 
         # compute coriolis
         coriolis_parameter = section.getfloat('coriolis_parameter')
@@ -236,7 +237,7 @@ class InitialState(Step):
         ds['totalColThickness'] = ds['ssh']
         ds['totalColThickness'].values = \
             ds['layerThickness'].sum(dim='nVertLevels')
-        tol=1e-10
+        tol = 1e-10
         plotter.plot_horiz_series(ds.landIceMask,
                                   'landIceMask', 'landIceMask',
                                   True)
@@ -254,7 +255,7 @@ class InitialState(Step):
                                   True, vmin=0, vmax=700)
         plotter.plot_horiz_series(ds.ssh + ds.bottomDepth,
                                   'H', 'H', True,
-                                  vmin=min_column_thickness+tol, vmax=700,
+                                  vmin=min_column_thickness + tol, vmax=700,
                                   cmap_set_under='r', cmap_scale='log')
         plotter.plot_horiz_series(ds.totalColThickness,
                                   'totalColThickness', 'totalColThickness',
@@ -262,24 +263,24 @@ class InitialState(Step):
                                   vmax=700, cmap_set_under='r')
         plotter.plot_horiz_series(ds.landIceFraction,
                                   'landIceFraction', 'landIceFraction',
-                                  True, vmin=0+tol, vmax=1-tol,
+                                  True, vmin=0 + tol, vmax=1 - tol,
                                   cmap='cmo.balance',
                                   cmap_set_under='k', cmap_set_over='r')
         plotter.plot_horiz_series(ds.landIceFloatingFraction,
                                   'landIceFloatingFraction',
                                   'landIceFloatingFraction',
-                                  True, vmin=0+tol, vmax=1-tol,
+                                  True, vmin=0 + tol, vmax=1 - tol,
                                   cmap='cmo.balance',
                                   cmap_set_under='k', cmap_set_over='r')
         plotter.plot_horiz_series(ds.landIceGroundedFraction,
                                   'landIceGroundedFraction',
                                   'landIceGroundedFraction',
-                                  True, vmin=0+tol, vmax=1-tol,
+                                  True, vmin=0 + tol, vmax=1 - tol,
                                   cmap='cmo.balance',
                                   cmap_set_under='k', cmap_set_over='r')
         plotter.plot_horiz_series(ds.oceanFracObserved,
                                   'oceanFracObserved', 'oceanFracObserved',
-                                  True, vmin=0+tol, vmax=1-tol,
+                                  True, vmin=0 + tol, vmax=1 - tol,
                                   cmap='cmo.balance',
                                   cmap_set_under='k', cmap_set_over='r')
         plotter.plot_layer_interfaces()
@@ -287,7 +288,7 @@ class InitialState(Step):
         plotter.plot_3d_field_top_bot_section(
             ds.layerThickness, nameInTitle='layerThickness',
             prefix='h', units='m',
-            vmin=min_column_thickness + 1e-10, vmax=50,
+            vmin=min_column_thickness + tol, vmax=50,
             cmap='cmo.deep_r', cmap_set_under='r')
 
         plotter.plot_3d_field_top_bot_section(

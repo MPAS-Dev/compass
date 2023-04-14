@@ -144,7 +144,7 @@ def interpolate_geom(ds_mesh, ds_geom, min_ocean_fraction, thin_film_present):
     # fluxes are represented
     for field in ['bottomDepthObserved', 'ssh', 'landIceFraction',
                   'smoothedDraftMask']:
-        ds_out[field] = ds_out[field]/ocean_frac_observed
+        ds_out[field] = ds_out[field] / ocean_frac_observed
 
     return ds_out
 

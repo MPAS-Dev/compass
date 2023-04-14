@@ -1,8 +1,8 @@
 import os
 import shutil
 import time
-import numpy as np
 
+import numpy as np
 import xarray
 
 from compass.model import run_model
@@ -177,11 +177,12 @@ class Forward(Step):
                 units='PSU', vmin=33.8, vmax=34.7, cmap='cmo.haline')
             tol = 1e-10
             dsIce = xarray.open_dataset(
-                os.path.join(self.work_dir, 'land_ice_fluxes.nc'))
+                os.path.join(self.work_dir,
+                             'land_ice_fluxes.nc'))
             plotter.plot_horiz_series(
                 dsIce.topDragMagnitude,
                 'topDragMagnitude', 'topDragMagnitude', True,
-                vmin=0+tol, vmax=np.max(dsIce.topDragMagnitude.values),
+                vmin=0 + tol, vmax=np.max(dsIce.topDragMagnitude.values),
                 cmap_set_under='k')
             plotter.plot_horiz_series(
                 dsIce.landIceHeatFlux,
@@ -197,26 +198,26 @@ class Forward(Step):
             plotter.plot_horiz_series(
                 dsIce.landIceFreshwaterFlux,
                 'landIceFreshwaterFlux', 'landIceFreshwaterFlux', True,
-                vmin=0+tol,
-                vmax=1e-4, cmap_set_under='k', cmap_scale='log')
+                vmin=0 + tol, vmax=1e-4,
+                cmap_set_under='k', cmap_scale='log')
             plotter.plot_horiz_series(
                 dsIce.landIceFraction,
                 'landIceFraction', 'landIceFraction', True,
-                vmin=0+tol, vmax=1-tol,
+                vmin=0 + tol, vmax=1 - tol,
                 cmap='cmo.balance',
                 cmap_set_under='k', cmap_set_over='r')
             if 'landIceFloatingFraction' in dsIce.keys():
-                plotter.plot_horiz_series(dsIce.landIceFloatingFraction,
-                                          'landIceFloatingFraction',
-                                          'landIceFloatingFraction',
-                                          True, vmin=0+tol, vmax=1-tol,
-                                          cmap='cmo.balance',
-                                          cmap_set_under='k', cmap_set_over='r')
+                plotter.plot_horiz_series(
+                    dsIce.landIceFloatingFraction,
+                    'landIceFloatingFraction', 'landIceFloatingFraction',
+                    True, vmin=0 + tol, vmax=1 - tol,
+                    cmap='cmo.balance', cmap_set_under='k', cmap_set_over='r')
 
         if self.name == 'simulation':
-            update_evaporation_flux(in_forcing_file='forcing_data_init.nc',
-                                    out_forcing_file='forcing_data_updated.nc',
-                                    out_forcing_link='forcing_data.nc')
+            update_evaporation_flux(
+                in_forcing_file='forcing_data_init.nc',
+                out_forcing_file='forcing_data_updated.nc',
+                out_forcing_link='forcing_data.nc')
 
             replacements = {'config_do_restart': '.true.',
                             'config_start_time': "'file'"}

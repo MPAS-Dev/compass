@@ -171,9 +171,8 @@ class ProcessGeom(Step):
                                       mode='constant', cval=0.)
         bed[mask] /= smoothed_mask[mask]
 
-        smoothed_draft_mask = filters.gaussian_filter(ds.landIceFloatingFraction,
-                                                      filter_sigma,
-                                                      mode='constant', cval=0.)
+        smoothed_draft_mask = filters.gaussian_filter(
+            ds.landIceFloatingFraction, filter_sigma, mode='constant', cval=0.)
         smoothed_draft_mask[mask] /= smoothed_mask[mask]
 
         ds['Z_ice_draft'] = (('y', 'x'), draft)
