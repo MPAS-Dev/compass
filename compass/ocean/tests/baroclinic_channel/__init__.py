@@ -1,9 +1,9 @@
-from compass.testgroup import TestGroup
 from compass.ocean.tests.baroclinic_channel.decomp_test import DecompTest
 from compass.ocean.tests.baroclinic_channel.default import Default
 from compass.ocean.tests.baroclinic_channel.restart_test import RestartTest
 from compass.ocean.tests.baroclinic_channel.rpe_test import RpeTest
 from compass.ocean.tests.baroclinic_channel.threads_test import ThreadsTest
+from compass.testgroup import TestGroup
 
 
 class BaroclinicChannel(TestGroup):
