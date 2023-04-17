@@ -1,6 +1,13 @@
-.. _landice_framework:
+.. _ocean_framework:
 
 Framework
 =========
 
-So far, the ``landice`` core has no shared framework.
+The landice core includes a small amount of framework code that is shared across
+test groups.
+
+.. toctree::
+   :titlesonly:
+
+   mesh
+   extrapolate
