@@ -1,6 +1,7 @@
 import os
 import shutil
 
+import cmocean  # noqa: F401
 import numpy as np
 import xarray as xr
 from mpas_tools.cime.constants import constants
@@ -105,13 +106,22 @@ class InitialState(Step):
 
         ds['landIceFraction'] = \
             ds['landIceFraction'].expand_dims(dim='Time', axis=0)
+        ds['landIceFloatingFraction'] = \
+            ds['landIceFloatingFraction'].expand_dims(dim='Time', axis=0)
 
         ds['modifyLandIcePressureMask'] = \
             (ds['landIceFraction'] > 0.01).astype(int)
 
-        mask = ds.landIceFraction >= min_land_ice_fraction
+        # This inequality needs to be > rather than >= to ensure correctness
+        # when min_land_ice_fraction = 0
+        mask = ds.landIceFraction > min_land_ice_fraction
+
+        floating_mask = np.logical_and(
+            ds.landIceFloatingFraction > 0,
+            ds.landIceFraction > min_land_ice_fraction)
 
         ds['landIceMask'] = mask.astype(int)
+        ds['landIceFloatingMask'] = floating_mask.astype(int)
 
         ds['landIceFraction'] = xr.where(mask, ds.landIceFraction, 0.)
 
@@ -152,6 +162,20 @@ class InitialState(Step):
         init_bot_temp = section.getfloat('init_bot_temp')
         init_top_sal = section.getfloat('init_top_sal')
         init_bot_sal = section.getfloat('init_bot_sal')
+        thin_film_mask = np.logical_and(mask.values,
+                                        np.logical_not(floating_mask.values))
+        # These coefficients are hard-coded as the defaults in the namelist
+        # Note that using the land ice pressure rather than the pressure at
+        # floatation will mean that there is a small amount of cooling from
+        # grounding line retreat. However, the thin film should be thin enough
+        # that this effect isn't signicant.
+        freezing_temp = (6.22e-2 +
+                         -5.63e-2 * init_bot_sal +
+                         -7.43e-8 * landIcePressure +
+                         -1.74e-10 * landIcePressure * init_bot_sal)
+        _, thin_film_temp = np.meshgrid(ds.refZMid, freezing_temp)
+        _, thin_film_mask = np.meshgrid(ds.refZMid, thin_film_mask)
+        thin_film_temp = np.expand_dims(thin_film_temp, axis=0)
         if self.vertical_coordinate == 'single_layer':
             ds['temperature'] = init_bot_temp * xr.ones_like(frac)
             ds['salinity'] = init_bot_sal * xr.ones_like(frac)
@@ -160,6 +184,9 @@ class InitialState(Step):
                 (1.0 - frac) * init_top_temp + frac * init_bot_temp
             ds['salinity'] = \
                 (1.0 - frac) * init_top_sal + frac * init_bot_sal
+        # for thin film cells, set temperature to freezing point
+        ds['temperature'] = xr.where(thin_film_mask, thin_film_temp,
+                                     ds.temperature)
 
         # compute coriolis
         coriolis_parameter = section.getfloat('coriolis_parameter')
@@ -200,32 +227,68 @@ class InitialState(Step):
                                sectionY=section_y, dsMesh=ds, ds=ds,
                                showProgress=show_progress)
 
+        ds['oceanFracObserved'] = \
+            ds['oceanFracObserved'].expand_dims(dim='Time', axis=0)
         ds['landIcePressure'] = \
             ds['landIcePressure'].expand_dims(dim='Time', axis=0)
+        ds['landIceGroundedFraction'] = \
+            ds['landIceGroundedFraction'].expand_dims(dim='Time', axis=0)
         ds['bottomDepth'] = ds['bottomDepth'].expand_dims(dim='Time', axis=0)
         ds['totalColThickness'] = ds['ssh']
         ds['totalColThickness'].values = \
             ds['layerThickness'].sum(dim='nVertLevels')
+        tol = 1e-10
+        plotter.plot_horiz_series(ds.landIceMask,
+                                  'landIceMask', 'landIceMask',
+                                  True)
+        plotter.plot_horiz_series(ds.landIceFloatingMask,
+                                  'landIceFloatingMask', 'landIceFloatingMask',
+                                  True)
         plotter.plot_horiz_series(ds.landIcePressure,
                                   'landIcePressure', 'landIcePressure',
-                                  True)
+                                  True, vmin=1, vmax=1e6, cmap_scale='log')
         plotter.plot_horiz_series(ds.ssh,
                                   'ssh', 'ssh',
                                   True, vmin=-700, vmax=0)
+        plotter.plot_horiz_series(ds.bottomDepth,
+                                  'bottomDepth', 'bottomDepth',
+                                  True, vmin=0, vmax=700)
         plotter.plot_horiz_series(ds.ssh + ds.bottomDepth,
                                   'H', 'H', True,
-                                  vmin=min_column_thickness + 1e-10, vmax=700,
+                                  vmin=min_column_thickness + tol, vmax=700,
                                   cmap_set_under='r', cmap_scale='log')
         plotter.plot_horiz_series(ds.totalColThickness,
                                   'totalColThickness', 'totalColThickness',
                                   True, vmin=min_column_thickness + 1e-10,
                                   vmax=700, cmap_set_under='r')
+        plotter.plot_horiz_series(ds.landIceFraction,
+                                  'landIceFraction', 'landIceFraction',
+                                  True, vmin=0 + tol, vmax=1 - tol,
+                                  cmap='cmo.balance',
+                                  cmap_set_under='k', cmap_set_over='r')
+        plotter.plot_horiz_series(ds.landIceFloatingFraction,
+                                  'landIceFloatingFraction',
+                                  'landIceFloatingFraction',
+                                  True, vmin=0 + tol, vmax=1 - tol,
+                                  cmap='cmo.balance',
+                                  cmap_set_under='k', cmap_set_over='r')
+        plotter.plot_horiz_series(ds.landIceGroundedFraction,
+                                  'landIceGroundedFraction',
+                                  'landIceGroundedFraction',
+                                  True, vmin=0 + tol, vmax=1 - tol,
+                                  cmap='cmo.balance',
+                                  cmap_set_under='k', cmap_set_over='r')
+        plotter.plot_horiz_series(ds.oceanFracObserved,
+                                  'oceanFracObserved', 'oceanFracObserved',
+                                  True, vmin=0 + tol, vmax=1 - tol,
+                                  cmap='cmo.balance',
+                                  cmap_set_under='k', cmap_set_over='r')
         plotter.plot_layer_interfaces()
 
         plotter.plot_3d_field_top_bot_section(
             ds.layerThickness, nameInTitle='layerThickness',
             prefix='h', units='m',
-            vmin=min_column_thickness + 1e-10, vmax=50,
+            vmin=min_column_thickness + tol, vmax=50,
             cmap='cmo.deep_r', cmap_set_under='r')
 
         plotter.plot_3d_field_top_bot_section(
@@ -318,11 +381,13 @@ class InitialState(Step):
         landIceDraft = list()
         landIcePressure = list()
         landIceFraction = list()
+        landIceFloatingFraction = list()
 
         for scale in scales:
             landIceDraft.append(scale * ds_init.landIceDraft)
             landIcePressure.append(scale * ds_init.landIcePressure)
             landIceFraction.append(ds_init.landIceFraction)
+            landIceFloatingFraction.append(ds_init.landIceFloatingFraction)
 
         ds_out['landIceDraftForcing'] = xr.concat(landIceDraft, 'Time')
         ds_out.landIceDraftForcing.attrs['units'] = 'm'
@@ -337,6 +402,10 @@ class InitialState(Step):
             xr.concat(landIceFraction, 'Time')
         ds_out.landIceFractionForcing.attrs['long_name'] = \
             'The fraction of each cell covered by land ice'
+        ds_out['landIceFloatingFractionForcing'] = \
+            xr.concat(landIceFloatingFraction, 'Time')
+        ds_out.landIceFloatingFractionForcing.attrs['long_name'] = \
+            'The fraction of each cell covered by floating land ice'
         write_netcdf(ds_out, 'land_ice_forcing.nc')
 
         ds_init['landIceDraft'] = scales[0] * ds_init.landIceDraft

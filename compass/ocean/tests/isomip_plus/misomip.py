@@ -686,7 +686,8 @@ def _interp_misomip(in_dir, sf_dir, out_file_name,  # noqa: C901
         vars['time'][tIndex] = secPerDay * days
 
         freshwaterFlux = inVars['timeMonthly_avg_landIceFreshwaterFlux'][0, :]
-        inCavityFraction = inVars['timeMonthly_avg_landIceFraction'][0, :]
+        inCavityFraction = \
+            inVars['timeMonthly_avg_landIceFloatingFraction'][0, :]
         outCavityFraction = interpHoriz(inCavityFraction)
         outCavityMask = outCavityFraction > normalizationThreshold
         meltRate = freshwaterFlux / rho_fw

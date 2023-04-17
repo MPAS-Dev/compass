@@ -74,11 +74,13 @@ class ProcessGeom(Step):
         rename = {'upperSurface': 'Z_ice_surface',
                   'lowerSurface': 'Z_ice_draft',
                   'bedrockTopography': 'Z_bed',
-                  'floatingMask': 'floatingIceFraction',
-                  'groundedMask': 'landFraction',
+                  'floatingMask': 'landIceFloatingFraction',
+                  'groundedMask': 'landIceGroundedFraction',
                   'openOceanMask': 'openOceanFraction'}
 
         ds_in = ds_in.rename(rename)
+        # This test case assumes that all land is ice covered
+        ds_in['landFraction'] = ds_in.landIceGroundedFraction
 
         x_in = ds_in.x.values
         y_in = ds_in.y.values
@@ -99,7 +101,8 @@ class ProcessGeom(Step):
         land_values = {'Z_ice_surface': 0.,
                        'Z_ice_draft': 0.,
                        'Z_bed': 0.,
-                       'floatingIceFraction': 0.,
+                       'landIceFloatingFraction': 0.,
+                       'landIceGroundedFraction': 1.,
                        'landFraction': 1.,
                        'openOceanFraction': 0.}
 
@@ -113,10 +116,10 @@ class ProcessGeom(Step):
         ds['Z_ice_draft'] = draft_scaling * ds.Z_ice_draft
 
         # take care of calving criterion
-        mask = np.logical_or(ds.floatingIceFraction <= 0.1,
+        mask = np.logical_or(ds.landIceFloatingFraction <= 0.1,
                              ds.iceThickness >= min_ice_thickness)
 
-        for var in ['Z_ice_surface', 'Z_ice_draft', 'floatingIceFraction']:
+        for var in ['Z_ice_surface', 'Z_ice_draft', 'landIceFloatingFraction']:
             ds[var] = xr.where(mask, ds[var], 0.0)
         ds['openOceanFraction'] = xr.where(mask, ds.openOceanFraction,
                                            1. - ds.landFraction)
@@ -131,8 +134,8 @@ class ProcessGeom(Step):
 
         # copy attributes
         for var in ['x', 'y', 'Z_ice_surface', 'Z_ice_draft', 'Z_bed',
-                    'floatingIceFraction', 'landFraction',
-                    'openOceanFraction']:
+                    'landIceFloatingFraction', 'landIceGroundedFraction',
+                    'landFraction', 'openOceanFraction']:
             attrs = ds_in[var].attrs
             if 'units' in attrs and attrs['units'] == 'unitless':
                 attrs.pop('units')
@@ -168,9 +171,8 @@ class ProcessGeom(Step):
                                       mode='constant', cval=0.)
         bed[mask] /= smoothed_mask[mask]
 
-        smoothed_draft_mask = filters.gaussian_filter(ds.floatingIceFraction,
-                                                      filter_sigma,
-                                                      mode='constant', cval=0.)
+        smoothed_draft_mask = filters.gaussian_filter(
+            ds.landIceFloatingFraction, filter_sigma, mode='constant', cval=0.)
         smoothed_draft_mask[mask] /= smoothed_mask[mask]
 
         ds['Z_ice_draft'] = (('y', 'x'), draft)
