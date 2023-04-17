@@ -183,10 +183,12 @@ case at 5 km resolution, showing potential temperature averaged over month
 9 of the simulation.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </figcaption>
 </figure>
-<p>The <code class="docutils literal notranslate"><span class="pre">isomip_plus</span></code> test cases are composed of 3 steps that run by default:
-<code class="docutils literal notranslate"><span class="pre">initial_state</span></code>, which defines the mesh, interpolates the ice geometry, and
-computes the initial conditions for the model; <code class="docutils literal notranslate"><span class="pre">ssh_adjustment</span></code>, which
-modifies the <code class="docutils literal notranslate"><span class="pre">landIcePressure</span></code> field to balance the <code class="docutils literal notranslate"><span class="pre">ssh</span></code> field, see
+<p>The <code class="docutils literal notranslate"><span class="pre">isomip_plus</span></code> test cases are composed of 5 steps that run by default:
+<code class="docutils literal notranslate"><span class="pre">process_geom</span></code>, which loads the data on the ice sheet mesh; <code class="docutils literal notranslate"><span class="pre">planar_mesh</span></code>,
+which defines the planar mesh; <code class="docutils literal notranslate"><span class="pre">cull_mesh</span></code>,  which culls the mesh;
+<code class="docutils literal notranslate"><span class="pre">initial_state</span></code>, which interpolates the ice geometry and computes the
+initial conditions for the model; <code class="docutils literal notranslate"><span class="pre">ssh_adjustment</span></code>, which modifies the
+<code class="docutils literal notranslate"><span class="pre">landIcePressure</span></code> field to balance the <code class="docutils literal notranslate"><span class="pre">ssh</span></code> field, see
 <a class="reference internal" href="../framework/ice_shelf.html#ocean-ssh-adjustment"><span class="std std-ref">Sea surface height adjustment</span></a>; and <code class="docutils literal notranslate"><span class="pre">performance</span></code>, which performs a 1-hour time
 integration of the model and compares the results with a baseline if one is
 provided.</p>

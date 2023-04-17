@@ -116,6 +116,7 @@
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">xarray</span>
 
 <span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">run_model</span>
@@ -279,6 +280,8 @@
                                    <span class="n">dsMesh</span><span class="o">=</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="n">ds</span><span class="p">,</span> <span class="n">expt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment</span><span class="p">,</span>
                                    <span class="n">showProgress</span><span class="o">=</span><span class="n">show_progress</span><span class="p">)</span>
 
+            <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">ssh</span><span class="p">,</span> <span class="s1">&#39;ssh&#39;</span><span class="p">,</span> <span class="s1">&#39;ssh&#39;</span><span class="p">,</span>
+                                      <span class="kc">True</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">700</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
             <span class="n">plotter</span><span class="o">.</span><span class="n">plot_3d_field_top_bot_section</span><span class="p">(</span>
                 <span class="n">ds</span><span class="o">.</span><span class="n">temperature</span><span class="p">,</span> <span class="n">nameInTitle</span><span class="o">=</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;temp&#39;</span><span class="p">,</span>
                 <span class="n">units</span><span class="o">=</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">2.</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.thermal&#39;</span><span class="p">)</span>
@@ -286,11 +289,49 @@
             <span class="n">plotter</span><span class="o">.</span><span class="n">plot_3d_field_top_bot_section</span><span class="p">(</span>
                 <span class="n">ds</span><span class="o">.</span><span class="n">salinity</span><span class="p">,</span> <span class="n">nameInTitle</span><span class="o">=</span><span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;salin&#39;</span><span class="p">,</span>
                 <span class="n">units</span><span class="o">=</span><span class="s1">&#39;PSU&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">33.8</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">34.7</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.haline&#39;</span><span class="p">)</span>
+            <span class="n">tol</span> <span class="o">=</span> <span class="mf">1e-10</span>
+            <span class="n">dsIce</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
+                             <span class="s1">&#39;land_ice_fluxes.nc&#39;</span><span class="p">))</span>
+            <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span>
+                <span class="n">dsIce</span><span class="o">.</span><span class="n">topDragMagnitude</span><span class="p">,</span>
+                <span class="s1">&#39;topDragMagnitude&#39;</span><span class="p">,</span> <span class="s1">&#39;topDragMagnitude&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span> <span class="o">+</span> <span class="n">tol</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">dsIce</span><span class="o">.</span><span class="n">topDragMagnitude</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
+                <span class="n">cmap_set_under</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+            <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span>
+                <span class="n">dsIce</span><span class="o">.</span><span class="n">landIceHeatFlux</span><span class="p">,</span>
+                <span class="s1">&#39;landIceHeatFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceHeatFlux&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="n">vmin</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">dsIce</span><span class="o">.</span><span class="n">landIceHeatFlux</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
+                <span class="n">vmax</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">dsIce</span><span class="o">.</span><span class="n">landIceHeatFlux</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+            <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span>
+                <span class="n">dsIce</span><span class="o">.</span><span class="n">landIceInterfaceTemperature</span><span class="p">,</span>
+                <span class="s1">&#39;landIceInterfaceTemperature&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceInterfaceTemperature&#39;</span><span class="p">,</span>
+                <span class="kc">True</span><span class="p">,</span>
+                <span class="n">vmin</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">dsIce</span><span class="o">.</span><span class="n">landIceInterfaceTemperature</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
+                <span class="n">vmax</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">dsIce</span><span class="o">.</span><span class="n">landIceInterfaceTemperature</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+            <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span>
+                <span class="n">dsIce</span><span class="o">.</span><span class="n">landIceFreshwaterFlux</span><span class="p">,</span>
+                <span class="s1">&#39;landIceFreshwaterFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceFreshwaterFlux&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span> <span class="o">+</span> <span class="n">tol</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
+                <span class="n">cmap_set_under</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">cmap_scale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+            <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span>
+                <span class="n">dsIce</span><span class="o">.</span><span class="n">landIceFraction</span><span class="p">,</span>
+                <span class="s1">&#39;landIceFraction&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceFraction&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span> <span class="o">+</span> <span class="n">tol</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span> <span class="n">tol</span><span class="p">,</span>
+                <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.balance&#39;</span><span class="p">,</span>
+                <span class="n">cmap_set_under</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">cmap_set_over</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;landIceFloatingFraction&#39;</span> <span class="ow">in</span> <span class="n">dsIce</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span>
+                    <span class="n">dsIce</span><span class="o">.</span><span class="n">landIceFloatingFraction</span><span class="p">,</span>
+                    <span class="s1">&#39;landIceFloatingFraction&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceFloatingFraction&#39;</span><span class="p">,</span>
+                    <span class="kc">True</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span> <span class="o">+</span> <span class="n">tol</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span> <span class="n">tol</span><span class="p">,</span>
+                    <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.balance&#39;</span><span class="p">,</span> <span class="n">cmap_set_under</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">cmap_set_over</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;simulation&#39;</span><span class="p">:</span>
-            <span class="n">update_evaporation_flux</span><span class="p">(</span><span class="n">in_forcing_file</span><span class="o">=</span><span class="s1">&#39;forcing_data_init.nc&#39;</span><span class="p">,</span>
-                                    <span class="n">out_forcing_file</span><span class="o">=</span><span class="s1">&#39;forcing_data_updated.nc&#39;</span><span class="p">,</span>
-                                    <span class="n">out_forcing_link</span><span class="o">=</span><span class="s1">&#39;forcing_data.nc&#39;</span><span class="p">)</span>
+            <span class="n">update_evaporation_flux</span><span class="p">(</span>
+                <span class="n">in_forcing_file</span><span class="o">=</span><span class="s1">&#39;forcing_data_init.nc&#39;</span><span class="p">,</span>
+                <span class="n">out_forcing_file</span><span class="o">=</span><span class="s1">&#39;forcing_data_updated.nc&#39;</span><span class="p">,</span>
+                <span class="n">out_forcing_link</span><span class="o">=</span><span class="s1">&#39;forcing_data.nc&#39;</span><span class="p">)</span>
 
             <span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_do_restart&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
                             <span class="s1">&#39;config_start_time&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;file&#39;&quot;</span><span class="p">}</span>

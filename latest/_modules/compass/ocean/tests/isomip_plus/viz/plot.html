@@ -581,7 +581,8 @@
 
 <div class="viewcode-block" id="MoviePlotter.plot_horiz_series"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_horiz_series.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_horiz_series">[docs]</a>    <span class="k">def</span> <span class="nf">plot_horiz_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">da</span><span class="p">,</span> <span class="n">nameInTitle</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">oceanDomain</span><span class="p">,</span>
                           <span class="n">units</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                          <span class="n">cmap_set_under</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap_scale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">):</span>
+                          <span class="n">cmap_set_under</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap_set_over</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                          <span class="n">cmap_scale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot a series of image of a given variable</span>
 
@@ -639,6 +640,7 @@
                                    <span class="n">oceanDomain</span><span class="o">=</span><span class="n">oceanDomain</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span>
                                    <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
                                    <span class="n">cmap_set_under</span><span class="o">=</span><span class="n">cmap_set_under</span><span class="p">,</span>
+                                   <span class="n">cmap_set_over</span><span class="o">=</span><span class="n">cmap_set_over</span><span class="p">,</span>
                                    <span class="n">cmap_scale</span><span class="o">=</span><span class="n">cmap_scale</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">showProgress</span><span class="p">:</span>
                 <span class="n">bar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tIndex</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
@@ -647,7 +649,8 @@
 
 <div class="viewcode-block" id="MoviePlotter.plot_3d_field_top_bot_section"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_3d_field_top_bot_section.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_3d_field_top_bot_section">[docs]</a>    <span class="k">def</span> <span class="nf">plot_3d_field_top_bot_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">da</span><span class="p">,</span> <span class="n">nameInTitle</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span>
                                       <span class="n">units</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                      <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap_set_under</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                                      <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap_set_under</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                      <span class="n">cmap_set_over</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot a series of images of a given 3D variable showing the value</span>
 <span class="sd">        at the top (sea surface or ice-ocean interface), sea floor and in an</span>
@@ -702,7 +705,8 @@
                                <span class="s1">&#39;top </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nameInTitle</span><span class="p">),</span>
                                <span class="s1">&#39;top</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">),</span> <span class="n">oceanDomain</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
-                               <span class="n">cmap_set_under</span><span class="o">=</span><span class="n">cmap_set_under</span><span class="p">)</span>
+                               <span class="n">cmap_set_under</span><span class="o">=</span><span class="n">cmap_set_under</span><span class="p">,</span>
+                               <span class="n">cmap_set_over</span><span class="o">=</span><span class="n">cmap_set_over</span><span class="p">)</span>
 
         <span class="n">maxLevelCell</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">maxLevelCell</span> <span class="o">-</span> <span class="mi">1</span>
 
@@ -885,7 +889,8 @@
 
     <span class="k">def</span> <span class="nf">_plot_horiz_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span> <span class="n">oceanDomain</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                           <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                          <span class="n">cmap_set_under</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap_scale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">):</span>
+                          <span class="n">cmap_set_under</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap_set_over</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                          <span class="n">cmap_scale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">):</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">outFileName</span><span class="p">))</span>
@@ -907,6 +912,9 @@
         <span class="k">if</span> <span class="n">cmap_set_under</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">current_cmap</span> <span class="o">=</span> <span class="n">localPatches</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">()</span>
             <span class="n">current_cmap</span><span class="o">.</span><span class="n">set_under</span><span class="p">(</span><span class="n">cmap_set_under</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cmap_set_over</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">current_cmap</span> <span class="o">=</span> <span class="n">localPatches</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">()</span>
+            <span class="n">current_cmap</span><span class="o">.</span><span class="n">set_over</span><span class="p">(</span><span class="n">cmap_set_over</span><span class="p">)</span>
         <span class="n">localPatches</span><span class="o">.</span><span class="n">set_edgecolor</span><span class="p">(</span><span class="s1">&#39;face&#39;</span><span class="p">)</span>
         <span class="n">localPatches</span><span class="o">.</span><span class="n">set_clim</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">)</span>
 

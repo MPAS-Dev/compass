@@ -517,6 +517,7 @@
         <span class="n">landIceMask</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">regionCellMasks</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nRegions</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">dsLandIceMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
         <span class="n">dsLandIceMask</span><span class="p">[</span><span class="s1">&#39;landIceMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIceMask</span>
+        <span class="n">dsLandIceMask</span><span class="p">[</span><span class="s1">&#39;landIceFloatingMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIceMask</span>
 
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsLandIceMask</span><span class="p">,</span> <span class="s1">&#39;land_ice_mask.nc&#39;</span><span class="p">)</span>
 

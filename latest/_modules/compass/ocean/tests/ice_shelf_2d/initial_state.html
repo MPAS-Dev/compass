@@ -212,6 +212,8 @@
             <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">landIceFraction</span> <span class="o">=</span> <span class="n">modify_mask</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
         <span class="n">landIceMask</span> <span class="o">=</span> <span class="n">modify_mask</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">landIceFloatingFraction</span> <span class="o">=</span> <span class="n">landIceFraction</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">landIceFloatingMask</span> <span class="o">=</span> <span class="n">landIceMask</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
         <span class="n">ref_density</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_RHOSW&#39;</span><span class="p">]</span>
         <span class="n">landIcePressure</span><span class="p">,</span> <span class="n">landIceDraft</span> <span class="o">=</span> <span class="n">compute_land_ice_pressure_and_draft</span><span class="p">(</span>
@@ -235,7 +237,9 @@
         <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fVertex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xVertex</span><span class="p">)</span>
         <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;modifyLandIcePressureMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">modify_mask</span>
         <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceFraction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIceFraction</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceFloatingFraction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIceFloatingFraction</span>
         <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIceMask</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceFloatingMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIceFloatingMask</span>
         <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIcePressure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIcePressure</span>
         <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceDraft&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIceDraft</span>
 

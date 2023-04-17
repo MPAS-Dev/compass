@@ -33,11 +33,6 @@ rising indefinitely due to the input of freshwater from ice-shelf melting.
 geom
 ~~~~
 
-The function :py:func:`compass.ocean.tests.isomip_plus.geom.define_thin_film_mask_step1()`
-defines an MPAS mesh mask for the ocean domain including cells over the full x- and y-range
-in cases with a thin film. Thus, all land cells are included in the ocean's thin-film region.
-
-
 The function :py:func:`compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask()`
 interpolates the ocean mask from the BISICLES grid of the input geometry to
 the MPAS-Ocean mesh.  The mask can later be used to cull land cells from the
@@ -71,6 +66,19 @@ in ice-shelf thickness, then apply smoothing to the topography data.
 Optionally, the ice draft can be scaled by a factor as a simple way to explore
 changing ice-shelf topography.  Variables are renamed to those expected by
 MPAS-Ocean.
+
+planar_mesh
+~~~~~~~~~
+
+The class :py:class:`compass.ocean.tests.isomip_plus.planar_mesh.PlanarMesh`
+defines a step for generating a planar mesh.
+
+cull_mesh
+~~~~~~~~~
+
+The class :py:class:`compass.ocean.tests.isomip_plus.cull_mesh.CullMesh`
+defines a step for culling the mesh to include only ocean cells, with or
+without a thin film depending on the test. 
 
 initial_state
 ~~~~~~~~~~~~~

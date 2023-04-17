@@ -800,7 +800,8 @@
         <span class="nb">vars</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">][</span><span class="n">tIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">secPerDay</span> <span class="o">*</span> <span class="n">days</span>
 
         <span class="n">freshwaterFlux</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_landIceFreshwaterFlux&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
-        <span class="n">inCavityFraction</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_landIceFraction&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">inCavityFraction</span> <span class="o">=</span> \
+            <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_landIceFloatingFraction&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
         <span class="n">outCavityFraction</span> <span class="o">=</span> <span class="n">interpHoriz</span><span class="p">(</span><span class="n">inCavityFraction</span><span class="p">)</span>
         <span class="n">outCavityMask</span> <span class="o">=</span> <span class="n">outCavityFraction</span> <span class="o">&gt;</span> <span class="n">normalizationThreshold</span>
         <span class="n">meltRate</span> <span class="o">=</span> <span class="n">freshwaterFlux</span> <span class="o">/</span> <span class="n">rho_fw</span>

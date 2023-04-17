@@ -37,10 +37,12 @@ in this region.
    case at 5 km resolution, showing potential temperature averaged over month
    9 of the simulation.
 
-The ``isomip_plus`` test cases are composed of 3 steps that run by default:
-``initial_state``, which defines the mesh, interpolates the ice geometry, and
-computes the initial conditions for the model; ``ssh_adjustment``, which
-modifies the ``landIcePressure`` field to balance the ``ssh`` field, see
+The ``isomip_plus`` test cases are composed of 5 steps that run by default:
+``process_geom``, which loads the data on the ice sheet mesh; ``planar_mesh``,
+which defines the planar mesh; ``cull_mesh``,  which culls the mesh;
+``initial_state``, which interpolates the ice geometry and computes the
+initial conditions for the model; ``ssh_adjustment``, which modifies the
+``landIcePressure`` field to balance the ``ssh`` field, see
 :ref:`ocean_ssh_adjustment`; and ``performance``, which performs a 1-hour time
 integration of the model and compares the results with a baseline if one is
 provided.
