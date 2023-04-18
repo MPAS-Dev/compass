@@ -73,13 +73,13 @@
 <li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#decomposition-test">decomposition_test</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#restart-test">restart_test</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#high-res-mesh">high_res_mesh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mesh-gen">mesh_gen</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../suites.html">Test suites</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../framework/index.html">Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../framework.html">Land-ice Framework</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../ocean/index.html">Ocean core</a></li>
@@ -167,12 +167,12 @@ integration of the model.  There is a not an explicit smoke test, but the
 <p>The <code class="docutils literal notranslate"><span class="pre">decomposition_test</span></code> and <code class="docutils literal notranslate"><span class="pre">restart_test</span></code> test cases in this test group
 can only be run with the FO velocity solvers. Running with the FO solver requires
 a build of MALI that includes Albany. There is no integration step for the test
-case <code class="docutils literal notranslate"><span class="pre">high_res_mesh</span></code>.</p>
+case <code class="docutils literal notranslate"><span class="pre">mesh_gen</span></code>.</p>
 <section id="config-options">
 <h2>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">high_res_mesh</span></code> test case uses the default config options below.
+<p>The <code class="docutils literal notranslate"><span class="pre">mesh_gen</span></code> test case uses the default config options below.
 The other test cases do not use config options.</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[high_res_mesh]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[mesh]</span>
 
 <span class="c1"># number of levels in the mesh</span>
 <span class="na">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span>
@@ -219,9 +219,9 @@ second begins from a restart file saved by the first. Prognostic variables
 are compared between the “full” and “restart” runs to make sure they are
 bit-for-bit identical.</p>
 </section>
-<section id="high-res-mesh">
-<h2>high_res_mesh<a class="headerlink" href="#high-res-mesh" title="Permalink to this heading">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">landice/thwaites/high_res_mesh</span></code> creates a variable resolution mesh based
+<section id="mesh-gen">
+<h2>mesh_gen<a class="headerlink" href="#mesh-gen" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">landice/thwaites/mesh_gen</span></code> creates a variable resolution mesh based
 on the the config options listed above. This will not be the same as the
 pre-generated 4-14km mesh used in <code class="docutils literal notranslate"><span class="pre">decomposition_test</span></code> and <code class="docutils literal notranslate"><span class="pre">restart_test</span></code>
 because it uses a newer version of Jigsaw. Note that the basal friction

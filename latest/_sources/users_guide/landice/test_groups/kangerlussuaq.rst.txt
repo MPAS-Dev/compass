@@ -24,7 +24,7 @@ the mesh generation options are adjusted through the config file.
 
 .. code-block:: cfg
 
-    [high_res_Kangerlussuaq_mesh]
+    [mesh]
 
     # number of levels in the mesh
     levels = 10

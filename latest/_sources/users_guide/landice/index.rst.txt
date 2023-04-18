@@ -30,4 +30,4 @@ Some helpful external links:
 
    test_groups/index
    suites
-   framework/index
+   framework

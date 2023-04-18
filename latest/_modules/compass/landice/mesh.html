@@ -114,7 +114,15 @@
 <span></span><span class="kn">import</span> <span class="nn">time</span>
 
 <span class="kn">import</span> <span class="nn">jigsawpy</span>
+<span class="kn">import</span> <span class="nn">mpas_tools.io</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">xarray</span>
+<span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">FeatureCollection</span><span class="p">,</span> <span class="n">GeometricFeatures</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.mesh.conversion</span> <span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">cull</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.mesh.creation</span> <span class="kn">import</span> <span class="n">build_planar_mesh</span>
+<span class="kn">from</span> <span class="nn">netCDF4</span> <span class="kn">import</span> <span class="n">Dataset</span>
 
 
 <div class="viewcode-block" id="gridded_flood_fill"><a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.mesh.gridded_flood_fill.html#compass.landice.mesh.gridded_flood_fill">[docs]</a><span class="k">def</span> <span class="nf">gridded_flood_fill</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">iStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">jStart</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -130,9 +138,11 @@
 <span class="sd">    field : numpy.ndarray</span>
 <span class="sd">        Array from gridded dataset to use for flood-fill.</span>
 <span class="sd">        Usually ice thickness.</span>
+
 <span class="sd">    iStart : int</span>
 <span class="sd">        x index from which to start flood fill for field.</span>
 <span class="sd">        Defaults to the center x coordinate.</span>
+
 <span class="sd">    jStart : int</span>
 <span class="sd">        y index from which to start flood fill.</span>
 <span class="sd">        Defaults to the center y coordinate.</span>
@@ -140,7 +150,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    flood_mask : numpy.ndarray</span>
-<span class="sd">        _mask calculated by the flood fill routine,</span>
+<span class="sd">        mask calculated by the flood fill routine,</span>
 <span class="sd">        where cells connected to the ice sheet (or main feature)</span>
 <span class="sd">        are 1 and everything else is 0.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -195,19 +205,23 @@
 <span class="sd">    ----------</span>
 <span class="sd">    xmin : int or float</span>
 <span class="sd">        Left-most x-coordinate in region to mesh</span>
+
 <span class="sd">    xmax : int or float</span>
 <span class="sd">        Right-most x-coordinate in region to mesh</span>
+
 <span class="sd">    ymin : int or float</span>
 <span class="sd">        Bottom-most y-coordinate in region to mesh</span>
+
 <span class="sd">    ymax : int or float</span>
 <span class="sd">        Top-most y-coordinate in region to mesh</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    geom_points : jigsawpy.jigsaw_msh_t.VERT2_t</span>
-<span class="sd">        xy node coordinates to pass to build_planar_mesh()</span>
+<span class="sd">        xy node coordinates to pass to ``build_planar_mesh()``</span>
+
 <span class="sd">    geom_edges : jigsawpy.jigsaw_msh_t.EDGE2_t</span>
-<span class="sd">        xy edge coordinates between nodes to pass to build_planar_mesh()</span>
+<span class="sd">        xy edge coordinates between nodes to pass to ``build_planar_mesh()``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">geom_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>  <span class="c1"># list of xy &quot;node&quot; coordinates</span>
@@ -227,45 +241,57 @@
     <span class="k">return</span> <span class="n">geom_points</span><span class="p">,</span> <span class="n">geom_edges</span></div>
 
 
-<div class="viewcode-block" id="set_cell_width"><a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.mesh.set_cell_width.html#compass.landice.mesh.set_cell_width">[docs]</a><span class="k">def</span> <span class="nf">set_cell_width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">thk</span><span class="p">,</span> <span class="n">bed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="set_cell_width"><a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.mesh.set_cell_width.html#compass.landice.mesh.set_cell_width">[docs]</a><span class="k">def</span> <span class="nf">set_cell_width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section_name</span><span class="p">,</span> <span class="n">thk</span><span class="p">,</span> <span class="n">bed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                    <span class="n">dist_to_edge</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dist_to_grounding_line</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                    <span class="n">flood_fill_iStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">flood_fill_jStart</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Set cell widths based on settings in config file to pass to</span>
 <span class="sd">    :py:func:`mpas_tools.mesh.creation.build_mesh.build_planar_mesh()`.</span>
-<span class="sd">    Requires the following options to be set in the given config section:</span>
-<span class="sd">    ``min_spac``, ``max_spac``, ``high_log_speed``, ``low_log_speed``,</span>
-<span class="sd">    ``high_dist``, ``low_dist``,``cull_distance``, ``use_speed``,</span>
-<span class="sd">    ``use_dist_to_edge``, and ``use_dist_to_grounding_line``.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    section : str</span>
-<span class="sd">        Section of the config file from which to read parameters</span>
+<span class="sd">    section_name : str</span>
+<span class="sd">        Section of the config file from which to read parameters. The</span>
+<span class="sd">        following options to be set in the given config section:</span>
+<span class="sd">        ``levels``, ``x_min``, ``x_max``, ``y_min``, ``y_max``,</span>
+<span class="sd">        ``min_spac``, ``max_spac``, ``high_log_speed``, ``low_log_speed``,</span>
+<span class="sd">        ``high_dist``, ``low_dist``, ``high_dist_bed``, ``low_dist_bed``,</span>
+<span class="sd">        ``high_bed``, ``low_bed``, ``cull_distance``, ``use_speed``,</span>
+<span class="sd">        ``use_dist_to_edge``, ``use_dist_to_grounding_line``, and ``use_bed``.</span>
+<span class="sd">        See the Land-Ice Framework section of the Users or Developers guide</span>
+<span class="sd">        for more information about these options and their uses.</span>
+
 <span class="sd">    thk : numpy.ndarray</span>
 <span class="sd">        Ice thickness field from gridded dataset,</span>
 <span class="sd">        usually after trimming to flood fill mask</span>
+
 <span class="sd">    bed : numpy.ndarray</span>
 <span class="sd">        Bed topography from gridded dataset</span>
+
 <span class="sd">    vx : numpy.ndarray, optional</span>
 <span class="sd">        x-component of ice velocity from gridded dataset,</span>
 <span class="sd">        usually after trimming to flood fill mask. Can be set to ``None``</span>
 <span class="sd">        if ``use_speed == False`` in config file.</span>
+
 <span class="sd">    vy : numpy.ndarray, optional</span>
 <span class="sd">        y-component of ice velocity from gridded dataset,</span>
 <span class="sd">        usually after trimming to flood fill mask. Can be set to ``None``</span>
 <span class="sd">        if ``use_speed == False`` in config file.</span>
+
 <span class="sd">    dist_to_edge : numpy.ndarray, optional</span>
 <span class="sd">        Distance from each cell to ice edge, calculated in separate function.</span>
 <span class="sd">        Can be set to ``None`` if ``use_dist_to_edge == False`` in config file</span>
 <span class="sd">        and you do not want to set large ``cell_width`` where cells will be</span>
 <span class="sd">        culled anyway, but this is not recommended.</span>
+
 <span class="sd">    dist_to_grounding_line : numpy.ndarray, optional</span>
 <span class="sd">        Distance from each cell to grounding line, calculated in separate</span>
 <span class="sd">        function.  Can be set to ``None`` if</span>
 <span class="sd">        ``use_dist_to_grounding_line == False`` in config file.</span>
+
 <span class="sd">    flood_fill_iStart : int, optional</span>
 <span class="sd">        x-index location to start flood-fill when using bed topography</span>
+
 <span class="sd">    flood_fill_jStart : int, optional</span>
 <span class="sd">        y-index location to start flood-fill when using bed topography</span>
 
@@ -277,19 +303,19 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
-    <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">section</span><span class="p">]</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">section_name</span><span class="p">]</span>
 
     <span class="c1"># Get config inputs for cell spacing functions</span>
-    <span class="n">min_spac</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;min_spac&#39;</span><span class="p">))</span>
-    <span class="n">max_spac</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;max_spac&#39;</span><span class="p">))</span>
-    <span class="n">high_log_speed</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;high_log_speed&#39;</span><span class="p">))</span>
-    <span class="n">low_log_speed</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;low_log_speed&#39;</span><span class="p">))</span>
-    <span class="n">high_dist</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;high_dist&#39;</span><span class="p">))</span>
-    <span class="n">low_dist</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;low_dist&#39;</span><span class="p">))</span>
-    <span class="n">high_dist_bed</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;high_dist_bed&#39;</span><span class="p">))</span>
-    <span class="n">low_dist_bed</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;low_dist_bed&#39;</span><span class="p">))</span>
-    <span class="n">low_bed</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;low_bed&#39;</span><span class="p">))</span>
-    <span class="n">high_bed</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;high_bed&#39;</span><span class="p">))</span>
+    <span class="n">min_spac</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;min_spac&#39;</span><span class="p">)</span>
+    <span class="n">max_spac</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;max_spac&#39;</span><span class="p">)</span>
+    <span class="n">high_log_speed</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;high_log_speed&#39;</span><span class="p">)</span>
+    <span class="n">low_log_speed</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;low_log_speed&#39;</span><span class="p">)</span>
+    <span class="n">high_dist</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;high_dist&#39;</span><span class="p">)</span>
+    <span class="n">low_dist</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;low_dist&#39;</span><span class="p">)</span>
+    <span class="n">high_dist_bed</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;high_dist_bed&#39;</span><span class="p">)</span>
+    <span class="n">low_dist_bed</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;low_dist_bed&#39;</span><span class="p">)</span>
+    <span class="n">low_bed</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;low_bed&#39;</span><span class="p">)</span>
+    <span class="n">high_bed</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;high_bed&#39;</span><span class="p">)</span>
 
     <span class="c1"># convert km to m</span>
     <span class="n">cull_distance</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cull_distance&#39;</span><span class="p">))</span> <span class="o">*</span> <span class="mf">1.e3</span>
@@ -404,44 +430,59 @@
     <span class="k">return</span> <span class="n">cell_width</span></div>
 
 
-<div class="viewcode-block" id="get_dist_to_edge_and_GL"><a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.mesh.get_dist_to_edge_and_GL.html#compass.landice.mesh.get_dist_to_edge_and_GL">[docs]</a><span class="k">def</span> <span class="nf">get_dist_to_edge_and_GL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thk</span><span class="p">,</span> <span class="n">topg</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="get_dist_to_edge_and_gl"><a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.mesh.get_dist_to_edge_and_gl.html#compass.landice.mesh.get_dist_to_edge_and_gl">[docs]</a><span class="k">def</span> <span class="nf">get_dist_to_edge_and_gl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thk</span><span class="p">,</span> <span class="n">topg</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+                            <span class="n">section_name</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate distance from each point to ice edge and grounding line,</span>
 <span class="sd">    to be used in mesh density functions in</span>
 <span class="sd">    :py:func:`compass.landice.mesh.set_cell_width()`. In future development,</span>
-<span class="sd">    this should be updated to use a faster package such as `scikit-fmm`.</span>
+<span class="sd">    this should be updated to use a faster package such as ``scikit-fmm``.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    thk : numpy.ndarray</span>
 <span class="sd">        Ice thickness field from gridded dataset,</span>
 <span class="sd">        usually after trimming to flood fill mask</span>
+
 <span class="sd">    topg : numpy.ndarray</span>
 <span class="sd">        Bed topography field from gridded dataset</span>
+
 <span class="sd">    x : numpy.ndarray</span>
 <span class="sd">        x coordinates from gridded dataset</span>
+
 <span class="sd">    y : numpy.ndarray</span>
 <span class="sd">        y coordinates from gridded dataset</span>
-<span class="sd">    section : str</span>
-<span class="sd">        section of config file used to define mesh parameters</span>
+
+<span class="sd">    section_name : str</span>
+<span class="sd">        Section of the config file from which to read parameters. The</span>
+<span class="sd">        following options to be set in the given config section:</span>
+<span class="sd">        ``levels``, ``x_min``, ``x_max``, ``y_min``, ``y_max``,</span>
+<span class="sd">        ``min_spac``, ``max_spac``, ``high_log_speed``, ``low_log_speed``,</span>
+<span class="sd">        ``high_dist``, ``low_dist``, ``high_dist_bed``, ``low_dist_bed``,</span>
+<span class="sd">        ``high_bed``, ``low_bed``, ``cull_distance``, ``use_speed``,</span>
+<span class="sd">        ``use_dist_to_edge``, ``use_dist_to_grounding_line``, and ``use_bed``.</span>
+<span class="sd">        See the Land-Ice Framework section of the Users or Developers guide</span>
+<span class="sd">        for more information about these options and their uses.</span>
+
 <span class="sd">    window_size : int or float</span>
 <span class="sd">        Size (in meters) of a search &#39;box&#39; (one-directional) to use</span>
 <span class="sd">        to calculate the distance from each cell to the ice margin.</span>
 <span class="sd">        Bigger number makes search slower, but if too small, the transition</span>
 <span class="sd">        zone could get truncated. We usually want this calculated as the</span>
-<span class="sd">        maximum of high_dist and high_dist_bed, but there may be cases in</span>
-<span class="sd">        which it is useful to set it manually. However, it should never be</span>
-<span class="sd">        smaller than either high_dist or high_dist_bed.</span>
+<span class="sd">        maximum of ``high_dist`` and ``high_dist_bed``, but there may be cases</span>
+<span class="sd">        in which it is useful to set it manually. However, it should never be</span>
+<span class="sd">        smaller than either ``high_dist`` or ``high_dist_bed``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    dist_to_edge : numpy.ndarray</span>
 <span class="sd">        Distance from each cell to the ice edge</span>
+
 <span class="sd">    dist_to_grounding_line : numpy.ndarray</span>
 <span class="sd">        Distance from each cell to the grounding line</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
-    <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">section</span><span class="p">]</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">section_name</span><span class="p">]</span>
     <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
     <span class="n">high_dist</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;high_dist&#39;</span><span class="p">))</span>
@@ -520,10 +561,302 @@
         <span class="n">dist_to_grounding_line</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">dist_to_here_grounding_line</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
 
     <span class="n">toc</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;compass.landice.mesh.get_dist_to_edge_and_GL() took </span><span class="si">{:0.2f}</span><span class="s1"> &#39;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;compass.landice.mesh.get_dist_to_edge_and_gl() took </span><span class="si">{:0.2f}</span><span class="s1"> &#39;</span>
                 <span class="s1">&#39;seconds&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">toc</span> <span class="o">-</span> <span class="n">tic</span><span class="p">))</span>
 
     <span class="k">return</span> <span class="n">dist_to_edge</span><span class="p">,</span> <span class="n">dist_to_grounding_line</span></div>
+
+
+<div class="viewcode-block" id="build_cell_width"><a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.mesh.build_cell_width.html#compass.landice.mesh.build_cell_width">[docs]</a><span class="k">def</span> <span class="nf">build_cell_width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section_name</span><span class="p">,</span> <span class="n">gridded_dataset</span><span class="p">,</span>
+                     <span class="n">flood_fill_start</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determine MPAS mesh cell size based on user-defined density function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    section_name : str</span>
+<span class="sd">        Section of the config file from which to read parameters. The</span>
+<span class="sd">        following options to be set in the given config section:</span>
+<span class="sd">        ``levels``, ``x_min``, ``x_max``, ``y_min``, ``y_max``,</span>
+<span class="sd">        ``min_spac``, ``max_spac``, ``high_log_speed``, ``low_log_speed``,</span>
+<span class="sd">        ``high_dist``, ``low_dist``, ``high_dist_bed``, ``low_dist_bed``,</span>
+<span class="sd">        ``high_bed``, ``low_bed``, ``cull_distance``, ``use_speed``,</span>
+<span class="sd">        ``use_dist_to_edge``, ``use_dist_to_grounding_line``, and ``use_bed``.</span>
+<span class="sd">        See the Land-Ice Framework section of the Users or Developers guide</span>
+<span class="sd">        for more information about these options and their uses.</span>
+
+<span class="sd">    gridded_dataset : str</span>
+<span class="sd">        name of NetCDF file used to define cell spacing</span>
+
+<span class="sd">    flood_fill_start : list of ints</span>
+<span class="sd">        ``i`` and ``j`` indices used to define starting location for flood</span>
+<span class="sd">        fill. Most cases will use ``[None, None]``, which will just start the</span>
+<span class="sd">        flood fill in the center of the gridded dataset.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cell_width : numpy.ndarray</span>
+<span class="sd">        Desired width of MPAS cells based on mesh desnity functions to pass to</span>
+<span class="sd">        :py:func:`mpas_tools.mesh.creation.build_mesh.build_planar_mesh()`.</span>
+
+<span class="sd">    x1 : float</span>
+<span class="sd">        x coordinates from gridded dataset</span>
+
+<span class="sd">    y1 : float</span>
+<span class="sd">        y coordinates from gridded dataset</span>
+
+<span class="sd">    geom_points : jigsawpy.jigsaw_msh_t.VERT2_t</span>
+<span class="sd">        xy node coordinates to pass to ``build_planar_mesh()``</span>
+
+<span class="sd">    geom_edges : jigsawpy.jigsaw_msh_t.EDGE2_t</span>
+<span class="sd">        xy edge coordinates between nodes to pass to ``build_planar_mesh()``</span>
+
+<span class="sd">    flood_mask : numpy.ndarray</span>
+<span class="sd">        mask calculated by the flood fill routine,</span>
+<span class="sd">        where cells connected to the ice sheet (or main feature)</span>
+<span class="sd">        are 1 and everything else is 0.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">section_name</span><span class="p">]</span>
+    <span class="c1"># get needed fields from gridded dataset</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">gridded_dataset</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">set_auto_mask</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># disable masked arrays</span>
+
+    <span class="n">x1</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;x1&#39;</span><span class="p">][:]</span>
+    <span class="n">y1</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;y1&#39;</span><span class="p">][:]</span>
+    <span class="n">thk</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;thk&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+    <span class="n">topg</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;topg&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+    <span class="n">vx</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;vx&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+    <span class="n">vy</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;vy&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c1"># Get bounds defined by user, or use bound of gridded dataset</span>
+    <span class="n">bnds</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">y1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">y1</span><span class="p">)]</span>
+    <span class="n">bnds_options</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x_min&#39;</span><span class="p">,</span> <span class="s1">&#39;x_max&#39;</span><span class="p">,</span> <span class="s1">&#39;y_min&#39;</span><span class="p">,</span> <span class="s1">&#39;y_max&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">option</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">bnds_options</span><span class="p">):</span>
+        <span class="n">bnd</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">bnd</span> <span class="o">!=</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+            <span class="n">bnds</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">bnd</span><span class="p">)</span>
+
+    <span class="n">geom_points</span><span class="p">,</span> <span class="n">geom_edges</span> <span class="o">=</span> <span class="n">set_rectangular_geom_points_and_edges</span><span class="p">(</span><span class="o">*</span><span class="n">bnds</span><span class="p">)</span>
+
+    <span class="c1"># Remove ice not connected to the ice sheet.</span>
+    <span class="n">flood_mask</span> <span class="o">=</span> <span class="n">gridded_flood_fill</span><span class="p">(</span><span class="n">thk</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="n">thk</span><span class="p">[</span><span class="n">flood_mask</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">vx</span><span class="p">[</span><span class="n">flood_mask</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">vy</span><span class="p">[</span><span class="n">flood_mask</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="c1"># Calculate distance from each grid point to ice edge</span>
+    <span class="c1"># and grounding line, for use in cell spacing functions.</span>
+    <span class="n">distToEdge</span><span class="p">,</span> <span class="n">distToGL</span> <span class="o">=</span> <span class="n">get_dist_to_edge_and_gl</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">thk</span><span class="p">,</span> <span class="n">topg</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span>
+        <span class="n">y1</span><span class="p">,</span> <span class="n">section_name</span><span class="o">=</span><span class="n">section_name</span><span class="p">)</span>
+
+    <span class="c1"># Set cell widths based on mesh parameters set in config file</span>
+    <span class="n">cell_width</span> <span class="o">=</span> <span class="n">set_cell_width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section_name</span><span class="o">=</span><span class="n">section_name</span><span class="p">,</span>
+                                <span class="n">thk</span><span class="o">=</span><span class="n">thk</span><span class="p">,</span> <span class="n">bed</span><span class="o">=</span><span class="n">topg</span><span class="p">,</span> <span class="n">vx</span><span class="o">=</span><span class="n">vx</span><span class="p">,</span> <span class="n">vy</span><span class="o">=</span><span class="n">vy</span><span class="p">,</span>
+                                <span class="n">dist_to_edge</span><span class="o">=</span><span class="n">distToEdge</span><span class="p">,</span>
+                                <span class="n">dist_to_grounding_line</span><span class="o">=</span><span class="n">distToGL</span><span class="p">,</span>
+                                <span class="n">flood_fill_iStart</span><span class="o">=</span><span class="n">flood_fill_start</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                <span class="n">flood_fill_jStart</span><span class="o">=</span><span class="n">flood_fill_start</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">cell_width</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">),</span> <span class="n">x1</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">),</span>
+            <span class="n">y1</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">),</span> <span class="n">geom_points</span><span class="p">,</span> <span class="n">geom_edges</span><span class="p">,</span> <span class="n">flood_mask</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="build_mali_mesh"><a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.mesh.build_mali_mesh.html#compass.landice.mesh.build_mali_mesh">[docs]</a><span class="k">def</span> <span class="nf">build_mali_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell_width</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">geom_points</span><span class="p">,</span>
+                    <span class="n">geom_edges</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">section_name</span><span class="p">,</span>
+                    <span class="n">gridded_dataset</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">geojson_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create the MALI mesh based on final cell widths determined by</span>
+<span class="sd">    :py:func:`compass.landice.mesh.build_cell_width()`, using Jigsaw and</span>
+<span class="sd">    MPAS-Tools functions. Culls the mesh based on config options, interpolates</span>
+<span class="sd">    all available fields from the gridded dataset to the MALI mesh using the</span>
+<span class="sd">    bilinear method, and marks domain boundaries as Dirichlet cells.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cell_width : numpy.ndarray</span>
+<span class="sd">        Desired width of MPAS cells calculated by :py:func:`build_cell_width()`</span>
+<span class="sd">        based on mesh density functions define in :py:func:`set_cell_width()`</span>
+<span class="sd">        to pass to</span>
+<span class="sd">        :py:func:`mpas_tools.mesh.creation.build_mesh.build_planar_mesh()`.</span>
+
+<span class="sd">    x1 : float</span>
+<span class="sd">        x coordinates from gridded dataset</span>
+
+<span class="sd">    y1 : float</span>
+<span class="sd">        y coordinates from gridded dataset</span>
+
+<span class="sd">    geom_points : jigsawpy.jigsaw_msh_t.VERT2_t</span>
+<span class="sd">        xy node coordinates to pass to ``build_planar_mesh()``</span>
+
+<span class="sd">    geom_edges : jigsawpy.jigsaw_msh_t.EDGE2_t</span>
+<span class="sd">        xy edge coordinates between nodes to pass to ``build_planar_mesh()``</span>
+
+<span class="sd">    mesh_name : str</span>
+<span class="sd">        Filename to be used for final MALI NetCDF mesh file.</span>
+
+<span class="sd">    section_name : str</span>
+<span class="sd">        Section of the config file from which to read parameters. The</span>
+<span class="sd">        following options to be set in the given config section:</span>
+<span class="sd">        ``levels``, ``x_min``, ``x_max``, ``y_min``, ``y_max``,</span>
+<span class="sd">        ``min_spac``, ``max_spac``, ``high_log_speed``, ``low_log_speed``,</span>
+<span class="sd">        ``high_dist``, ``low_dist``, ``high_dist_bed``, ``low_dist_bed``,</span>
+<span class="sd">        ``high_bed``, ``low_bed``, ``cull_distance``, ``use_speed``,</span>
+<span class="sd">        ``use_dist_to_edge``, ``use_dist_to_grounding_line``, and ``use_bed``.</span>
+<span class="sd">        See the Land-Ice Framework section of the Users or Developers guide</span>
+<span class="sd">        for more information about these options and their uses.</span>
+
+<span class="sd">    gridded_dataset : str</span>
+<span class="sd">        Name of gridded dataset file to be used for interpolation to MALI mesh</span>
+
+<span class="sd">    projection : str</span>
+<span class="sd">        Projection to be used for setting lat-long fields.</span>
+<span class="sd">        Likely ``&#39;gis-gimp&#39;`` or ``&#39;ais-bedmap2&#39;``</span>
+
+<span class="sd">    geojson_file : str</span>
+<span class="sd">        Name of geojson file that defines regional domain extent.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">section_name</span><span class="p">]</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;calling build_planar_mesh&#39;</span><span class="p">)</span>
+    <span class="n">build_planar_mesh</span><span class="p">(</span><span class="n">cell_width</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">geom_points</span><span class="p">,</span>
+                      <span class="n">geom_edges</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;culling mesh&#39;</span><span class="p">)</span>
+    <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;converting to MPAS mesh&#39;</span><span class="p">)</span>
+    <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;writing grid_converted.nc&#39;</span><span class="p">)</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;grid_converted.nc&#39;</span><span class="p">)</span>
+    <span class="n">levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;levels&#39;</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;create_landice_grid_from_generic_MPAS_grid.py&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;grid_converted.nc&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;grid_preCull.nc&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;glimmer&#39;</span><span class="p">]</span>
+
+    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;interpolate_to_mpasli_grid.py&#39;</span><span class="p">,</span> <span class="s1">&#39;-s&#39;</span><span class="p">,</span>
+            <span class="n">gridded_dataset</span><span class="p">,</span> <span class="s1">&#39;-d&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;grid_preCull.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;-t&#39;</span><span class="p">]</span>
+
+    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+    <span class="n">cullDistance</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cull_distance&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">cullDistance</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;define_cullMask.py&#39;</span><span class="p">,</span> <span class="s1">&#39;-f&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;grid_preCull.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;-m&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;distance&#39;</span><span class="p">,</span> <span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="n">cullDistance</span><span class="p">]</span>
+
+        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;cullDistance &lt;= 0 in config file. &#39;</span>
+                    <span class="s1">&#39;Will not cull by distance to margin. </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">geojson_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># This step is only necessary because the GeoJSON region</span>
+        <span class="c1"># is defined by lat-lon.</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;set_lat_lon_fields_in_planar_grid.py&#39;</span><span class="p">,</span> <span class="s1">&#39;-f&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;grid_preCull.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="n">projection</span><span class="p">]</span>
+
+        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;MpasMaskCreator.x&#39;</span><span class="p">,</span> <span class="s1">&#39;grid_preCull.nc&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;mask.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="n">geojson_file</span><span class="p">]</span>
+
+        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;culling to geojson file&#39;</span><span class="p">)</span>
+
+    <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;grid_preCull.nc&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">geojson_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;mask.nc&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">dsInverse</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;culled.nc&#39;</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Marking horns for culling&#39;</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mark_horns_for_culling.py&#39;</span><span class="p">,</span> <span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="s1">&#39;culled.nc&#39;</span><span class="p">]</span>
+
+    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;culling and converting&#39;</span><span class="p">)</span>
+    <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;culled.nc&#39;</span><span class="p">)</span>
+    <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;dehorned.nc&#39;</span><span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;create_landice_grid_from_generic_MPAS_grid.py&#39;</span><span class="p">,</span> <span class="s1">&#39;-i&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;dehorned.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;-o&#39;</span><span class="p">,</span>
+            <span class="n">mesh_name</span><span class="p">,</span> <span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;glimmer&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--beta&#39;</span><span class="p">,</span> <span class="s1">&#39;--thermal&#39;</span><span class="p">,</span> <span class="s1">&#39;--obs&#39;</span><span class="p">,</span> <span class="s1">&#39;--diri&#39;</span><span class="p">]</span>
+
+    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;interpolate_to_mpasli_grid.py&#39;</span><span class="p">,</span> <span class="s1">&#39;-s&#39;</span><span class="p">,</span>
+            <span class="n">gridded_dataset</span><span class="p">,</span> <span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">]</span>
+
+    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Marking domain boundaries dirichlet&#39;</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mark_domain_boundaries_dirichlet.py&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">]</span>
+    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;set_lat_lon_fields_in_planar_grid.py&#39;</span><span class="p">,</span> <span class="s1">&#39;-f&#39;</span><span class="p">,</span>
+            <span class="n">mesh_name</span><span class="p">,</span> <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="n">projection</span><span class="p">]</span>
+    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="make_region_masks"><a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.mesh.make_region_masks.html#compass.landice.mesh.make_region_masks">[docs]</a><span class="k">def</span> <span class="nf">make_region_masks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">,</span> <span class="n">cores</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create masks for ice-sheet subregions based on data</span>
+<span class="sd">    in ``MPAS-Dev/geometric_fatures``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mesh_filename : str</span>
+<span class="sd">        name of NetCDF mesh file for which to create region masks</span>
+
+<span class="sd">    mask_filename : str</span>
+<span class="sd">        name of NetCDF file to contain region masks</span>
+
+<span class="sd">    cores : int</span>
+<span class="sd">        number of processors used to create region masks</span>
+
+<span class="sd">    tags : list of str</span>
+<span class="sd">        Groups of regions for which masks are to be defined</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;creating region masks&#39;</span><span class="p">)</span>
+    <span class="n">gf</span> <span class="o">=</span> <span class="n">GeometricFeatures</span><span class="p">()</span>
+    <span class="n">fcMask</span> <span class="o">=</span> <span class="n">FeatureCollection</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+        <span class="n">fc</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;landice&#39;</span><span class="p">,</span> <span class="n">objectType</span><span class="o">=</span><span class="s1">&#39;region&#39;</span><span class="p">,</span>
+                     <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="n">tag</span><span class="p">])</span>
+        <span class="n">fcMask</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">fc</span><span class="p">)</span>
+
+    <span class="n">geojson_filename</span> <span class="o">=</span> <span class="s1">&#39;regionMask.geojson&#39;</span>
+    <span class="n">fcMask</span><span class="o">.</span><span class="n">to_geojson</span><span class="p">(</span><span class="n">geojson_filename</span><span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;compute_mpas_region_masks&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span>
+            <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="n">geojson_filename</span><span class="p">,</span>
+            <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">,</span>
+            <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;cell&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cores</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_format</span><span class="p">,</span>
+            <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_engine</span><span class="p">]</span>
+    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

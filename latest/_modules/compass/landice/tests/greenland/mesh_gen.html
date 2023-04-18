@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.landice.tests.greenland.high_res_mesh &mdash; compass latest documentation</title>
+  <title>compass.landice.tests.greenland.mesh_gen &mdash; compass latest documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -102,7 +102,7 @@
           <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
           <li class="breadcrumb-item"><a href="../../../landice.html">compass.landice</a></li>
           <li class="breadcrumb-item"><a href="../greenland.html">compass.landice.tests.greenland</a></li>
-      <li class="breadcrumb-item active">compass.landice.tests.greenland.high_res_mesh</li>
+      <li class="breadcrumb-item active">compass.landice.tests.greenland.mesh_gen</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -111,12 +111,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for compass.landice.tests.greenland.high_res_mesh</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.greenland.mesh</span> <span class="kn">import</span> <span class="n">Mesh</span>
+  <h1>Source code for compass.landice.tests.greenland.mesh_gen</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">compass.landice.tests.greenland.mesh</span> <span class="kn">import</span> <span class="n">Mesh</span>
+<span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
 
 
-<div class="viewcode-block" id="HighResMesh"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.greenland.high_res_mesh.HighResMesh.html#compass.landice.tests.greenland.high_res_mesh.HighResMesh">[docs]</a><span class="k">class</span> <span class="nc">HighResMesh</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="MeshGen"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.greenland.mesh_gen.MeshGen.html#compass.landice.tests.greenland.mesh_gen.MeshGen">[docs]</a><span class="k">class</span> <span class="nc">MeshGen</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The high resolution test case for the greenland test</span>
 <span class="sd">    group simply creates the mesh and initial condition.</span>
@@ -124,7 +124,7 @@
 <span class="sd">    outside of COMPASS.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="HighResMesh.__init__"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.greenland.high_res_mesh.HighResMesh.html#compass.landice.tests.greenland.high_res_mesh.HighResMesh.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
+<div class="viewcode-block" id="MeshGen.__init__"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.greenland.mesh_gen.MeshGen.html#compass.landice.tests.greenland.mesh_gen.MeshGen.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the test case</span>
 <span class="sd">        Parameters</span>
@@ -132,7 +132,7 @@
 <span class="sd">        test_group : compass.landice.tests.greenland.Greenland</span>
 <span class="sd">            The test group that this test case belongs to</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;high_res_mesh&#39;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;mesh_gen&#39;</span>
         <span class="n">subdir</span> <span class="o">=</span> <span class="n">name</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>

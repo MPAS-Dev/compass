@@ -66,7 +66,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#smoke-test">smoke_test</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#decomposition-test">decomposition_test</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#restart-test">restart_test</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#high-res-mesh">high_res_mesh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mesh-gen">mesh_gen</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="humboldt.html">humboldt</a></li>
@@ -80,7 +80,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../suites.html">Test suites</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../framework/index.html">Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../framework.html">Land-ice Framework</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../ocean/index.html">Ocean core</a></li>
@@ -157,18 +157,18 @@
 <p>The test group includes 3 test cases, each of which has one or more steps
 that are variants on <code class="docutils literal notranslate"><span class="pre">run_model</span></code> (given other names in the decomposition and
 restart test cases to distinguish multiple model runs), which performs time
-integration of the model. There is a fourth test case, <code class="docutils literal notranslate"><span class="pre">high_res_mesh</span></code>, that
+integration of the model. There is a fourth test case, <code class="docutils literal notranslate"><span class="pre">mesh_gen</span></code>, that
 creates a variable resolution Greenland Ice Sheet mesh, with the step <code class="docutils literal notranslate"><span class="pre">mesh</span></code>.</p>
 <p>The test cases in this test group can run with either the SIA or FO velocity
 solvers. Running with the FO solver requires a build of MALI that includes
 Albany, but the SIA variant of the test can be run without Albany.  The FO
 version uses no-slip basal boundary condition. There is no integration step
-for the test case <code class="docutils literal notranslate"><span class="pre">high_res_mesh</span></code>.</p>
+for the test case <code class="docutils literal notranslate"><span class="pre">mesh_gen</span></code>.</p>
 <section id="config-options">
 <h2>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">high_res_mesh</span></code> test case uses the default config options below.
+<p>The <code class="docutils literal notranslate"><span class="pre">mesh_gen</span></code> test case uses the default config options below.
 The other test cases do not use config options.</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[high_res_mesh]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[mesh]</span>
 
 <span class="c1"># number of levels in the mesh</span>
 <span class="na">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span>
@@ -220,9 +220,9 @@ from a restart file saved by the first. Prognostic variables are compared
 between the “full” and “restart” runs at year 2 to make sure they are
 bit-for-bit identical.</p>
 </section>
-<section id="high-res-mesh">
-<h2>high_res_mesh<a class="headerlink" href="#high-res-mesh" title="Permalink to this heading">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">landice/greenland/high_res_mesh</span></code> creates a variable resolution mesh based
+<section id="mesh-gen">
+<h2>mesh_gen<a class="headerlink" href="#mesh-gen" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">landice/greenland/mesh_gen</span></code> creates a variable resolution mesh based
 on the the config options listed above. This will not be the same as the
 pre-generated 20 km mesh used in the other three test cases because it uses
 a newer version of Jigsaw. Note that the basal friction optimization is

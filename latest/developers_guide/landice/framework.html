@@ -66,6 +66,7 @@
 <li class="toctree-l2"><a class="reference internal" href="test_groups/index.html">Test groups</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Land-ice Framework</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#extrapolate">extrapolate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mesh">mesh</a></li>
 </ul>
 </li>
 </ul>
@@ -127,6 +128,91 @@
 <p>The landice framework module <code class="docutils literal notranslate"><span class="pre">compass/landice/extrapolate.py</span></code> provides a
 function for extrapolating variables into undefined regions.  It is copied
 from a similar script in MPAS-Tools.</p>
+</section>
+<section id="mesh">
+<h2>mesh<a class="headerlink" href="#mesh" title="Permalink to this heading">¶</a></h2>
+<p>The landice framework module <code class="xref py py-mod docutils literal notranslate"><span class="pre">compass.landice.mesh</span></code> provides functions
+used by all <code class="docutils literal notranslate"><span class="pre">mesh_gen</span></code> tests cases, which currently exist within the
+<code class="docutils literal notranslate"><span class="pre">antarctica</span></code>, <code class="docutils literal notranslate"><span class="pre">greenland</span></code>, <code class="docutils literal notranslate"><span class="pre">humboldt</span></code>, <code class="docutils literal notranslate"><span class="pre">kangerlussuaq</span></code>, <code class="docutils literal notranslate"><span class="pre">koge_bugt_s</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">thwaites</span></code> test groups. These functions include:</p>
+<p><a class="reference internal" href="generated/compass.landice.mesh.gridded_flood_fill.html#compass.landice.mesh.gridded_flood_fill" title="compass.landice.mesh.gridded_flood_fill"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.gridded_flood_fill()</span></code></a> applies a flood-fill algorithm
+to the gridded dataset in order to separate the ice sheet from peripheral ice.</p>
+<p><a class="reference internal" href="generated/compass.landice.mesh.set_rectangular_geom_points_and_edges.html#compass.landice.mesh.set_rectangular_geom_points_and_edges" title="compass.landice.mesh.set_rectangular_geom_points_and_edges"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.set_rectangular_geom_points_and_edges()</span></code></a> sets node
+and edge coordinates to pass to py:func:<cite>mpas_tools.mesh.creation.build_mesh.build_planar_mesh()</cite>.</p>
+<p><a class="reference internal" href="generated/compass.landice.mesh.set_cell_width.html#compass.landice.mesh.set_cell_width" title="compass.landice.mesh.set_cell_width"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.set_cell_width()</span></code></a> sets cell widths based on settings
+in config file to pass to <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.mesh.creation.build_mesh.build_planar_mesh.html#mpas_tools.mesh.creation.build_mesh.build_planar_mesh" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.mesh.creation.build_mesh.build_planar_mesh()</span></code></a>.
+Requires the following options to be set in the given config section: <code class="docutils literal notranslate"><span class="pre">min_spac</span></code>,
+<code class="docutils literal notranslate"><span class="pre">max_spac</span></code>, <code class="docutils literal notranslate"><span class="pre">high_log_speed</span></code>, <code class="docutils literal notranslate"><span class="pre">low_log_speed</span></code>, <code class="docutils literal notranslate"><span class="pre">high_dist</span></code>, <code class="docutils literal notranslate"><span class="pre">low_dist</span></code>,
+<code class="docutils literal notranslate"><span class="pre">high_dist_bed</span></code>, <code class="docutils literal notranslate"><span class="pre">low_dist_bed</span></code>, <code class="docutils literal notranslate"><span class="pre">high_bed</span></code>, <code class="docutils literal notranslate"><span class="pre">low_bed</span></code>, <code class="docutils literal notranslate"><span class="pre">cull_distance</span></code>,
+<code class="docutils literal notranslate"><span class="pre">use_speed</span></code>, <code class="docutils literal notranslate"><span class="pre">use_dist_to_edge</span></code>, <code class="docutils literal notranslate"><span class="pre">use_dist_to_grounding_line</span></code>, and <code class="docutils literal notranslate"><span class="pre">use_bed</span></code>.</p>
+<p><a class="reference internal" href="generated/compass.landice.mesh.get_dist_to_edge_and_gl.html#compass.landice.mesh.get_dist_to_edge_and_gl" title="compass.landice.mesh.get_dist_to_edge_and_gl"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.get_dist_to_edge_and_gl()</span></code></a> calculates distance from
+each point to ice edge and grounding line, to be used in mesh density functions in
+<a class="reference internal" href="generated/compass.landice.mesh.set_cell_width.html#compass.landice.mesh.set_cell_width" title="compass.landice.mesh.set_cell_width"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.set_cell_width()</span></code></a>. In future development,
+this should be updated to use a faster package such as <cite>scikit-fmm</cite>.</p>
+<p><a class="reference internal" href="generated/compass.landice.mesh.build_cell_width.html#compass.landice.mesh.build_cell_width" title="compass.landice.mesh.build_cell_width"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.build_cell_width()</span></code></a> determine final MPAS mesh cell sizes
+using desired cell widths calculated by py:func:<cite>compass.landice.mesh.set_cell_width()</cite>,
+based on user-defined density functions and config options.</p>
+<p><a class="reference internal" href="generated/compass.landice.mesh.build_mali_mesh.html#compass.landice.mesh.build_mali_mesh" title="compass.landice.mesh.build_mali_mesh"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.build_mali_mesh()</span></code></a> creates the MALI mesh based on final
+cell widths determined by py:func:<cite>compass.landice.mesh.build_cell_width()</cite>, using Jigsaw
+and MPAS-Tools functions. Culls the mesh based on config options, interpolates
+all available fields from the gridded dataset to the MALI mesh using the bilinear
+method, and marks domain boundaries as Dirichlet cells.</p>
+<p><a class="reference internal" href="generated/compass.landice.mesh.make_region_masks.html#compass.landice.mesh.make_region_masks" title="compass.landice.mesh.make_region_masks"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.make_region_masks()</span></code></a> creates region masks using regions
+defined in Geometric Features repository. It is only used by the <code class="docutils literal notranslate"><span class="pre">antarctica</span></code>
+and <code class="docutils literal notranslate"><span class="pre">greenland</span></code> test cases.</p>
+<p>The following config options should be defined for all <code class="docutils literal notranslate"><span class="pre">mesh_gen</span></code> test cases (although
+not necessarily with the same values shown here, which are the defaults for the 1–10km
+Humboldt mesh):</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for humboldt test cases</span>
+<span class="k">[mesh]</span>
+
+<span class="c1"># number of levels in the mesh</span>
+<span class="na">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span>
+
+<span class="c1"># Bounds of Humboldt domain. If you want the extent</span>
+<span class="c1"># of the gridded dataset to determine the extent of</span>
+<span class="c1"># the MALI domain, set these to None.</span>
+<span class="na">x_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-630000.</span>
+<span class="na">x_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">84000.</span>
+<span class="na">y_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-1560000.</span>
+<span class="na">y_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-860000.</span>
+
+<span class="c1"># distance from ice margin to cull (km).</span>
+<span class="c1"># Set to a value &lt;= 0 if you do not want</span>
+<span class="c1"># to cull based on distance from margin.</span>
+<span class="na">cull_distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5.0</span>
+
+<span class="c1"># mesh density parameters</span>
+<span class="c1"># minimum cell spacing (meters)</span>
+<span class="na">min_spac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e3</span>
+<span class="c1"># maximum cell spacing (meters)</span>
+<span class="na">max_spac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e4</span>
+<span class="c1"># log10 of max speed (m/yr) for cell spacing</span>
+<span class="na">high_log_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2.5</span>
+<span class="c1"># log10 of min speed (m/yr) for cell spacing</span>
+<span class="na">low_log_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.75</span>
+<span class="c1"># distance at which cell spacing = max_spac (meters)</span>
+<span class="na">high_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e5</span>
+<span class="c1"># distance within which cell spacing = min_spac (meters)</span>
+<span class="na">low_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e4</span>
+
+<span class="c1"># These *_bed settings are only applied when use_bed = True.</span>
+<span class="c1"># distance at which bed topography has no effect</span>
+<span class="na">high_dist_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e5</span>
+<span class="c1"># distance within which bed topography has maximum effect</span>
+<span class="na">low_dist_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5.e4</span>
+<span class="c1"># Bed elev beneath which cell spacing is minimized</span>
+<span class="na">low_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">50.0</span>
+<span class="c1"># Bed elev above which cell spacing is maximized</span>
+<span class="na">high_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100.0</span>
+
+<span class="c1"># mesh density functions</span>
+<span class="na">use_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="na">use_dist_to_grounding_line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+<span class="na">use_dist_to_edge</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="na">use_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+</pre></div>
+</div>
 </section>
 </section>
 

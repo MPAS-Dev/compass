@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.landice.tests.greenland.mesh.Mesh.build_cell_width &mdash; compass latest documentation</title>
+  <title>compass.landice.mesh.build_cell_width &mdash; compass latest documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,8 +20,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="compass.landice.tests.greenland.high_res_mesh.HighResMesh" href="compass.landice.tests.greenland.high_res_mesh.HighResMesh.html" />
-    <link rel="prev" title="compass.landice.tests.greenland.mesh.Mesh.run" href="compass.landice.tests.greenland.mesh.Mesh.run.html" /> 
+    <link rel="next" title="compass.landice.mesh.build_mali_mesh" href="compass.landice.mesh.build_mali_mesh.html" />
+    <link rel="prev" title="compass.landice.mesh.get_dist_to_edge_and_gl" href="compass.landice.mesh.get_dist_to_edge_and_gl.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -74,8 +74,8 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../../api.html#mpas-cores">MPAS Cores</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html">landice</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="compass.landice.Landice.html">compass.landice.Landice</a></li>
-<li class="toctree-l4 current"><a class="reference internal" href="../api.html#test-groups">Test Groups</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api.html#landice-framework">Landice Framework</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api.html#test-groups">Test Groups</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../api.html#landice-framework">Landice Framework</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../ocean/api.html">ocean</a></li>
@@ -117,9 +117,9 @@
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../api.html">API reference</a></li>
           <li class="breadcrumb-item"><a href="../api.html">landice</a></li>
-      <li class="breadcrumb-item active">compass.landice.tests.greenland.mesh.Mesh.build_cell_width</li>
+      <li class="breadcrumb-item active">compass.landice.mesh.build_cell_width</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/developers_guide/landice/generated/compass.landice.tests.greenland.mesh.Mesh.build_cell_width.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/developers_guide/landice/generated/compass.landice.mesh.build_cell_width.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -127,15 +127,45 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="compass-landice-tests-greenland-mesh-mesh-build-cell-width">
-<h1>compass.landice.tests.greenland.mesh.Mesh.build_cell_width<a class="headerlink" href="#compass-landice-tests-greenland-mesh-mesh-build-cell-width" title="Permalink to this heading">¶</a></h1>
-<dl class="py method">
-<dt class="sig sig-object py" id="compass.landice.tests.greenland.mesh.Mesh.build_cell_width">
-<span class="sig-prename descclassname"><span class="pre">Mesh.</span></span><span class="sig-name descname"><span class="pre">build_cell_width</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/tests/greenland/mesh.html#Mesh.build_cell_width"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.tests.greenland.mesh.Mesh.build_cell_width" title="Permalink to this definition">¶</a></dt>
+  <section id="compass-landice-mesh-build-cell-width">
+<h1>compass.landice.mesh.build_cell_width<a class="headerlink" href="#compass-landice-mesh-build-cell-width" title="Permalink to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="compass.landice.mesh.build_cell_width">
+<span class="sig-prename descclassname"><span class="pre">compass.landice.mesh.</span></span><span class="sig-name descname"><span class="pre">build_cell_width</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">section_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridded_dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flood_fill_start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/mesh.html#build_cell_width"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.mesh.build_cell_width" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine MPAS mesh cell size based on user-defined density function.</p>
-<p>This includes the definition of the extent of the regional
-mesh and user-defined mesh density functions based on observed flow
-speed and distance to the ice margin.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>section_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Section of the config file from which to read parameters. The
+following options to be set in the given config section:
+<code class="docutils literal notranslate"><span class="pre">levels</span></code>, <code class="docutils literal notranslate"><span class="pre">x_min</span></code>, <code class="docutils literal notranslate"><span class="pre">x_max</span></code>, <code class="docutils literal notranslate"><span class="pre">y_min</span></code>, <code class="docutils literal notranslate"><span class="pre">y_max</span></code>,
+<code class="docutils literal notranslate"><span class="pre">min_spac</span></code>, <code class="docutils literal notranslate"><span class="pre">max_spac</span></code>, <code class="docutils literal notranslate"><span class="pre">high_log_speed</span></code>, <code class="docutils literal notranslate"><span class="pre">low_log_speed</span></code>,
+<code class="docutils literal notranslate"><span class="pre">high_dist</span></code>, <code class="docutils literal notranslate"><span class="pre">low_dist</span></code>, <code class="docutils literal notranslate"><span class="pre">high_dist_bed</span></code>, <code class="docutils literal notranslate"><span class="pre">low_dist_bed</span></code>,
+<code class="docutils literal notranslate"><span class="pre">high_bed</span></code>, <code class="docutils literal notranslate"><span class="pre">low_bed</span></code>, <code class="docutils literal notranslate"><span class="pre">cull_distance</span></code>, <code class="docutils literal notranslate"><span class="pre">use_speed</span></code>,
+<code class="docutils literal notranslate"><span class="pre">use_dist_to_edge</span></code>, <code class="docutils literal notranslate"><span class="pre">use_dist_to_grounding_line</span></code>, and <code class="docutils literal notranslate"><span class="pre">use_bed</span></code>.
+See the Land-Ice Framework section of the Users or Developers guide
+for more information about these options and their uses.</p></li>
+<li><p><strong>gridded_dataset</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – name of NetCDF file used to define cell spacing</p></li>
+<li><p><strong>flood_fill_start</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em> of </em><em>ints</em>) – <code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code> indices used to define starting location for flood
+fill. Most cases will use <code class="docutils literal notranslate"><span class="pre">[None,</span> <span class="pre">None]</span></code>, which will just start the
+flood fill in the center of the gridded dataset.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>cell_width</strong> (<em>numpy.ndarray</em>) – Desired width of MPAS cells based on mesh desnity functions to pass to
+<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.mesh.creation.build_mesh.build_planar_mesh.html#mpas_tools.mesh.creation.build_mesh.build_planar_mesh" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.mesh.creation.build_mesh.build_planar_mesh()</span></code></a>.</p></li>
+<li><p><strong>x1</strong> (<em>float</em>) – x coordinates from gridded dataset</p></li>
+<li><p><strong>y1</strong> (<em>float</em>) – y coordinates from gridded dataset</p></li>
+<li><p><strong>geom_points</strong> (<em>jigsawpy.jigsaw_msh_t.VERT2_t</em>) – xy node coordinates to pass to <code class="docutils literal notranslate"><span class="pre">build_planar_mesh()</span></code></p></li>
+<li><p><strong>geom_edges</strong> (<em>jigsawpy.jigsaw_msh_t.EDGE2_t</em>) – xy edge coordinates between nodes to pass to <code class="docutils literal notranslate"><span class="pre">build_planar_mesh()</span></code></p></li>
+<li><p><strong>flood_mask</strong> (<em>numpy.ndarray</em>) – mask calculated by the flood fill routine,
+where cells connected to the ice sheet (or main feature)
+are 1 and everything else is 0.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -144,8 +174,8 @@ speed and distance to the ice margin.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="compass.landice.tests.greenland.mesh.Mesh.run.html" class="btn btn-neutral float-left" title="compass.landice.tests.greenland.mesh.Mesh.run" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="compass.landice.tests.greenland.high_res_mesh.HighResMesh.html" class="btn btn-neutral float-right" title="compass.landice.tests.greenland.high_res_mesh.HighResMesh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.landice.mesh.get_dist_to_edge_and_gl.html" class="btn btn-neutral float-left" title="compass.landice.mesh.get_dist_to_edge_and_gl" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.landice.mesh.build_mali_mesh.html" class="btn btn-neutral float-right" title="compass.landice.mesh.build_mali_mesh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

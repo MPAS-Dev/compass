@@ -111,11 +111,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice.tests.greenland</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.greenland.smoke_test</span> <span class="kn">import</span> <span class="n">SmokeTest</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.greenland.decomposition_test</span> <span class="kn">import</span> <span class="n">DecompositionTest</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.landice.tests.greenland.decomposition_test</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DecompositionTest</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">compass.landice.tests.greenland.mesh_gen</span> <span class="kn">import</span> <span class="n">MeshGen</span>
 <span class="kn">from</span> <span class="nn">compass.landice.tests.greenland.restart_test</span> <span class="kn">import</span> <span class="n">RestartTest</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.greenland.high_res_mesh</span> <span class="kn">import</span> <span class="n">HighResMesh</span>
+<span class="kn">from</span> <span class="nn">compass.landice.tests.greenland.smoke_test</span> <span class="kn">import</span> <span class="n">SmokeTest</span>
+<span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
 
 
 <div class="viewcode-block" id="Greenland"><a class="viewcode-back" href="../../../../developers_guide/landice/generated/compass.landice.tests.greenland.Greenland.html#compass.landice.tests.greenland.Greenland">[docs]</a><span class="k">class</span> <span class="nc">Greenland</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
@@ -140,7 +142,7 @@
                 <span class="n">RestartTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-            <span class="n">HighResMesh</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span></div></div>
+            <span class="n">MeshGen</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span></div></div>
 </pre></div>
 
            </div>
