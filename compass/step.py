@@ -748,7 +748,11 @@ class Step:
                 download_path = os.path.join(database_root, core_path,
                                              database, download_target)
                 if not os.path.exists(download_path):
-                    database_subdir = os.path.join(database_root, database)
+                    databases_with_downloads.add(database_root)
+                    core_root = os.path.join(database_root, core_path)
+                    databases_with_downloads.add(core_root)
+                    database_subdir = os.path.join(database_root, core_path,
+                                                   database)
                     databases_with_downloads.add(database_subdir)
             elif url is not None:
                 download_path = download_target
@@ -904,10 +908,7 @@ class Step:
         # first the base directories that don't seem to be included in
         # os.walk()
         for directory in databases:
-            try:
-                dir_stat = os.stat(directory)
-            except OSError:
-                continue
+            dir_stat = os.stat(directory)
 
             perm = dir_stat.st_mode & mask
 
