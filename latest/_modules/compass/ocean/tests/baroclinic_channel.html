@@ -111,12 +111,12 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.baroclinic_channel</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel.decomp_test</span> <span class="kn">import</span> <span class="n">DecompTest</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel.decomp_test</span> <span class="kn">import</span> <span class="n">DecompTest</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel.default</span> <span class="kn">import</span> <span class="n">Default</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel.restart_test</span> <span class="kn">import</span> <span class="n">RestartTest</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel.rpe_test</span> <span class="kn">import</span> <span class="n">RpeTest</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel.threads_test</span> <span class="kn">import</span> <span class="n">ThreadsTest</span>
+<span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
 
 
 <div class="viewcode-block" id="BaroclinicChannel"><a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.tests.baroclinic_channel.BaroclinicChannel.html#compass.ocean.tests.baroclinic_channel.BaroclinicChannel">[docs]</a><span class="k">class</span> <span class="nc">BaroclinicChannel</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
@@ -157,13 +157,13 @@
 <span class="sd">        Configuration options for this test case</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;10km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-                           <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+                           <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">58</span><span class="p">,</span>  <span class="c1"># NB. 2/sqrt(3) due to hexagons</span>
                            <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">10e3</span><span class="p">},</span>
                   <span class="s1">&#39;4km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
-                          <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">126</span><span class="p">,</span>
+                          <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">144</span><span class="p">,</span>
                           <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">4e3</span><span class="p">},</span>
                   <span class="s1">&#39;1km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">160</span><span class="p">,</span>
-                          <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+                          <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">578</span><span class="p">,</span>
                           <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">1e3</span><span class="p">}}</span>
 
     <span class="n">comment</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="s1">&#39;the number of mesh cells in the x direction&#39;</span><span class="p">,</span>
