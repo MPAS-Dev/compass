@@ -1,7 +1,15 @@
 import time
 
 import jigsawpy
+import mpas_tools.io
 import numpy as np
+import xarray
+from geometric_features import FeatureCollection, GeometricFeatures
+from mpas_tools.io import write_netcdf
+from mpas_tools.logging import check_call
+from mpas_tools.mesh.conversion import convert, cull
+from mpas_tools.mesh.creation import build_planar_mesh
+from netCDF4 import Dataset
 
 
 def gridded_flood_fill(field, iStart=None, jStart=None):
@@ -17,9 +25,11 @@ def gridded_flood_fill(field, iStart=None, jStart=None):
     field : numpy.ndarray
         Array from gridded dataset to use for flood-fill.
         Usually ice thickness.
+
     iStart : int
         x index from which to start flood fill for field.
         Defaults to the center x coordinate.
+
     jStart : int
         y index from which to start flood fill.
         Defaults to the center y coordinate.
@@ -27,7 +37,7 @@ def gridded_flood_fill(field, iStart=None, jStart=None):
     Returns
     -------
     flood_mask : numpy.ndarray
-        _mask calculated by the flood fill routine,
+        mask calculated by the flood fill routine,
         where cells connected to the ice sheet (or main feature)
         are 1 and everything else is 0.
     """
@@ -82,19 +92,23 @@ def set_rectangular_geom_points_and_edges(xmin, xmax, ymin, ymax):
     ----------
     xmin : int or float
         Left-most x-coordinate in region to mesh
+
     xmax : int or float
         Right-most x-coordinate in region to mesh
+
     ymin : int or float
         Bottom-most y-coordinate in region to mesh
+
     ymax : int or float
         Top-most y-coordinate in region to mesh
 
     Returns
     -------
     geom_points : jigsawpy.jigsaw_msh_t.VERT2_t
-        xy node coordinates to pass to build_planar_mesh()
+        xy node coordinates to pass to ``build_planar_mesh()``
+
     geom_edges : jigsawpy.jigsaw_msh_t.EDGE2_t
-        xy edge coordinates between nodes to pass to build_planar_mesh()
+        xy edge coordinates between nodes to pass to ``build_planar_mesh()``
     """
 
     geom_points = np.array([  # list of xy "node" coordinates
@@ -114,45 +128,57 @@ def set_rectangular_geom_points_and_edges(xmin, xmax, ymin, ymax):
     return geom_points, geom_edges
 
 
-def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
+def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
                    dist_to_edge=None, dist_to_grounding_line=None,
                    flood_fill_iStart=None, flood_fill_jStart=None):
     """
     Set cell widths based on settings in config file to pass to
     :py:func:`mpas_tools.mesh.creation.build_mesh.build_planar_mesh()`.
-    Requires the following options to be set in the given config section:
-    ``min_spac``, ``max_spac``, ``high_log_speed``, ``low_log_speed``,
-    ``high_dist``, ``low_dist``,``cull_distance``, ``use_speed``,
-    ``use_dist_to_edge``, and ``use_dist_to_grounding_line``.
 
     Parameters
     ----------
-    section : str
-        Section of the config file from which to read parameters
+    section_name : str
+        Section of the config file from which to read parameters. The
+        following options to be set in the given config section:
+        ``levels``, ``x_min``, ``x_max``, ``y_min``, ``y_max``,
+        ``min_spac``, ``max_spac``, ``high_log_speed``, ``low_log_speed``,
+        ``high_dist``, ``low_dist``, ``high_dist_bed``, ``low_dist_bed``,
+        ``high_bed``, ``low_bed``, ``cull_distance``, ``use_speed``,
+        ``use_dist_to_edge``, ``use_dist_to_grounding_line``, and ``use_bed``.
+        See the Land-Ice Framework section of the Users or Developers guide
+        for more information about these options and their uses.
+
     thk : numpy.ndarray
         Ice thickness field from gridded dataset,
         usually after trimming to flood fill mask
+
     bed : numpy.ndarray
         Bed topography from gridded dataset
+
     vx : numpy.ndarray, optional
         x-component of ice velocity from gridded dataset,
         usually after trimming to flood fill mask. Can be set to ``None``
         if ``use_speed == False`` in config file.
+
     vy : numpy.ndarray, optional
         y-component of ice velocity from gridded dataset,
         usually after trimming to flood fill mask. Can be set to ``None``
         if ``use_speed == False`` in config file.
+
     dist_to_edge : numpy.ndarray, optional
         Distance from each cell to ice edge, calculated in separate function.
         Can be set to ``None`` if ``use_dist_to_edge == False`` in config file
         and you do not want to set large ``cell_width`` where cells will be
         culled anyway, but this is not recommended.
+
     dist_to_grounding_line : numpy.ndarray, optional
         Distance from each cell to grounding line, calculated in separate
         function.  Can be set to ``None`` if
         ``use_dist_to_grounding_line == False`` in config file.
+
     flood_fill_iStart : int, optional
         x-index location to start flood-fill when using bed topography
+
     flood_fill_jStart : int, optional
         y-index location to start flood-fill when using bed topography
 
@@ -164,19 +190,19 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
     """
 
     logger = self.logger
-    section = self.config[section]
+    section = self.config[section_name]
 
     # Get config inputs for cell spacing functions
-    min_spac = float(section.get('min_spac'))
-    max_spac = float(section.get('max_spac'))
-    high_log_speed = float(section.get('high_log_speed'))
-    low_log_speed = float(section.get('low_log_speed'))
-    high_dist = float(section.get('high_dist'))
-    low_dist = float(section.get('low_dist'))
-    high_dist_bed = float(section.get('high_dist_bed'))
-    low_dist_bed = float(section.get('low_dist_bed'))
-    low_bed = float(section.get('low_bed'))
-    high_bed = float(section.get('high_bed'))
+    min_spac = section.getfloat('min_spac')
+    max_spac = section.getfloat('max_spac')
+    high_log_speed = section.getfloat('high_log_speed')
+    low_log_speed = section.getfloat('low_log_speed')
+    high_dist = section.getfloat('high_dist')
+    low_dist = section.getfloat('low_dist')
+    high_dist_bed = section.getfloat('high_dist_bed')
+    low_dist_bed = section.getfloat('low_dist_bed')
+    low_bed = section.getfloat('low_bed')
+    high_bed = section.getfloat('high_bed')
 
     # convert km to m
     cull_distance = float(section.get('cull_distance')) * 1.e3
@@ -291,44 +317,59 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
     return cell_width
 
 
-def get_dist_to_edge_and_GL(self, thk, topg, x, y, section, window_size=None):
+def get_dist_to_edge_and_gl(self, thk, topg, x, y,
+                            section_name, window_size=None):
     """
     Calculate distance from each point to ice edge and grounding line,
     to be used in mesh density functions in
     :py:func:`compass.landice.mesh.set_cell_width()`. In future development,
-    this should be updated to use a faster package such as `scikit-fmm`.
+    this should be updated to use a faster package such as ``scikit-fmm``.
 
     Parameters
     ----------
     thk : numpy.ndarray
         Ice thickness field from gridded dataset,
         usually after trimming to flood fill mask
+
     topg : numpy.ndarray
         Bed topography field from gridded dataset
+
     x : numpy.ndarray
         x coordinates from gridded dataset
+
     y : numpy.ndarray
         y coordinates from gridded dataset
-    section : str
-        section of config file used to define mesh parameters
+
+    section_name : str
+        Section of the config file from which to read parameters. The
+        following options to be set in the given config section:
+        ``levels``, ``x_min``, ``x_max``, ``y_min``, ``y_max``,
+        ``min_spac``, ``max_spac``, ``high_log_speed``, ``low_log_speed``,
+        ``high_dist``, ``low_dist``, ``high_dist_bed``, ``low_dist_bed``,
+        ``high_bed``, ``low_bed``, ``cull_distance``, ``use_speed``,
+        ``use_dist_to_edge``, ``use_dist_to_grounding_line``, and ``use_bed``.
+        See the Land-Ice Framework section of the Users or Developers guide
+        for more information about these options and their uses.
+
     window_size : int or float
         Size (in meters) of a search 'box' (one-directional) to use
         to calculate the distance from each cell to the ice margin.
         Bigger number makes search slower, but if too small, the transition
         zone could get truncated. We usually want this calculated as the
-        maximum of high_dist and high_dist_bed, but there may be cases in
-        which it is useful to set it manually. However, it should never be
-        smaller than either high_dist or high_dist_bed.
+        maximum of ``high_dist`` and ``high_dist_bed``, but there may be cases
+        in which it is useful to set it manually. However, it should never be
+        smaller than either ``high_dist`` or ``high_dist_bed``.
 
     Returns
     -------
     dist_to_edge : numpy.ndarray
         Distance from each cell to the ice edge
+
     dist_to_grounding_line : numpy.ndarray
         Distance from each cell to the grounding line
     """
     logger = self.logger
-    section = self.config[section]
+    section = self.config[section_name]
     tic = time.time()
 
     high_dist = float(section.get('high_dist'))
@@ -407,7 +448,299 @@ def get_dist_to_edge_and_GL(self, thk, topg, x, y, section, window_size=None):
         dist_to_grounding_line[i, j] = dist_to_here_grounding_line.min()
 
     toc = time.time()
-    logger.info('compass.landice.mesh.get_dist_to_edge_and_GL() took {:0.2f} '
+    logger.info('compass.landice.mesh.get_dist_to_edge_and_gl() took {:0.2f} '
                 'seconds'.format(toc - tic))
 
     return dist_to_edge, dist_to_grounding_line
+
+
+def build_cell_width(self, section_name, gridded_dataset,
+                     flood_fill_start=[None, None]):
+    """
+    Determine MPAS mesh cell size based on user-defined density function.
+
+    Parameters
+    ----------
+    section_name : str
+        Section of the config file from which to read parameters. The
+        following options to be set in the given config section:
+        ``levels``, ``x_min``, ``x_max``, ``y_min``, ``y_max``,
+        ``min_spac``, ``max_spac``, ``high_log_speed``, ``low_log_speed``,
+        ``high_dist``, ``low_dist``, ``high_dist_bed``, ``low_dist_bed``,
+        ``high_bed``, ``low_bed``, ``cull_distance``, ``use_speed``,
+        ``use_dist_to_edge``, ``use_dist_to_grounding_line``, and ``use_bed``.
+        See the Land-Ice Framework section of the Users or Developers guide
+        for more information about these options and their uses.
+
+    gridded_dataset : str
+        name of NetCDF file used to define cell spacing
+
+    flood_fill_start : list of ints
+        ``i`` and ``j`` indices used to define starting location for flood
+        fill. Most cases will use ``[None, None]``, which will just start the
+        flood fill in the center of the gridded dataset.
+
+    Returns
+    -------
+    cell_width : numpy.ndarray
+        Desired width of MPAS cells based on mesh desnity functions to pass to
+        :py:func:`mpas_tools.mesh.creation.build_mesh.build_planar_mesh()`.
+
+    x1 : float
+        x coordinates from gridded dataset
+
+    y1 : float
+        y coordinates from gridded dataset
+
+    geom_points : jigsawpy.jigsaw_msh_t.VERT2_t
+        xy node coordinates to pass to ``build_planar_mesh()``
+
+    geom_edges : jigsawpy.jigsaw_msh_t.EDGE2_t
+        xy edge coordinates between nodes to pass to ``build_planar_mesh()``
+
+    flood_mask : numpy.ndarray
+        mask calculated by the flood fill routine,
+        where cells connected to the ice sheet (or main feature)
+        are 1 and everything else is 0.
+    """
+
+    section = self.config[section_name]
+    # get needed fields from gridded dataset
+    f = Dataset(gridded_dataset, 'r')
+    f.set_auto_mask(False)  # disable masked arrays
+
+    x1 = f.variables['x1'][:]
+    y1 = f.variables['y1'][:]
+    thk = f.variables['thk'][0, :, :]
+    topg = f.variables['topg'][0, :, :]
+    vx = f.variables['vx'][0, :, :]
+    vy = f.variables['vy'][0, :, :]
+
+    f.close()
+
+    # Get bounds defined by user, or use bound of gridded dataset
+    bnds = [np.min(x1), np.max(x1), np.min(y1), np.max(y1)]
+    bnds_options = ['x_min', 'x_max', 'y_min', 'y_max']
+    for index, option in enumerate(bnds_options):
+        bnd = section.get(option)
+        if bnd != 'None':
+            bnds[index] = float(bnd)
+
+    geom_points, geom_edges = set_rectangular_geom_points_and_edges(*bnds)
+
+    # Remove ice not connected to the ice sheet.
+    flood_mask = gridded_flood_fill(thk) == 0
+    thk[flood_mask] = 0.0
+    vx[flood_mask] = 0.0
+    vy[flood_mask] = 0.0
+
+    # Calculate distance from each grid point to ice edge
+    # and grounding line, for use in cell spacing functions.
+    distToEdge, distToGL = get_dist_to_edge_and_gl(
+        self, thk, topg, x1,
+        y1, section_name=section_name)
+
+    # Set cell widths based on mesh parameters set in config file
+    cell_width = set_cell_width(self, section_name=section_name,
+                                thk=thk, bed=topg, vx=vx, vy=vy,
+                                dist_to_edge=distToEdge,
+                                dist_to_grounding_line=distToGL,
+                                flood_fill_iStart=flood_fill_start[0],
+                                flood_fill_jStart=flood_fill_start[1])
+
+    return (cell_width.astype('float64'), x1.astype('float64'),
+            y1.astype('float64'), geom_points, geom_edges, flood_mask)
+
+
+def build_mali_mesh(self, cell_width, x1, y1, geom_points,
+                    geom_edges, mesh_name, section_name,
+                    gridded_dataset, projection, geojson_file=None):
+    """
+    Create the MALI mesh based on final cell widths determined by
+    :py:func:`compass.landice.mesh.build_cell_width()`, using Jigsaw and
+    MPAS-Tools functions. Culls the mesh based on config options, interpolates
+    all available fields from the gridded dataset to the MALI mesh using the
+    bilinear method, and marks domain boundaries as Dirichlet cells.
+
+    Parameters
+    ----------
+    cell_width : numpy.ndarray
+        Desired width of MPAS cells calculated by :py:func:`build_cell_width()`
+        based on mesh density functions define in :py:func:`set_cell_width()`
+        to pass to
+        :py:func:`mpas_tools.mesh.creation.build_mesh.build_planar_mesh()`.
+
+    x1 : float
+        x coordinates from gridded dataset
+
+    y1 : float
+        y coordinates from gridded dataset
+
+    geom_points : jigsawpy.jigsaw_msh_t.VERT2_t
+        xy node coordinates to pass to ``build_planar_mesh()``
+
+    geom_edges : jigsawpy.jigsaw_msh_t.EDGE2_t
+        xy edge coordinates between nodes to pass to ``build_planar_mesh()``
+
+    mesh_name : str
+        Filename to be used for final MALI NetCDF mesh file.
+
+    section_name : str
+        Section of the config file from which to read parameters. The
+        following options to be set in the given config section:
+        ``levels``, ``x_min``, ``x_max``, ``y_min``, ``y_max``,
+        ``min_spac``, ``max_spac``, ``high_log_speed``, ``low_log_speed``,
+        ``high_dist``, ``low_dist``, ``high_dist_bed``, ``low_dist_bed``,
+        ``high_bed``, ``low_bed``, ``cull_distance``, ``use_speed``,
+        ``use_dist_to_edge``, ``use_dist_to_grounding_line``, and ``use_bed``.
+        See the Land-Ice Framework section of the Users or Developers guide
+        for more information about these options and their uses.
+
+    gridded_dataset : str
+        Name of gridded dataset file to be used for interpolation to MALI mesh
+
+    projection : str
+        Projection to be used for setting lat-long fields.
+        Likely ``'gis-gimp'`` or ``'ais-bedmap2'``
+
+    geojson_file : str
+        Name of geojson file that defines regional domain extent.
+    """
+
+    logger = self.logger
+    section = self.config[section_name]
+
+    logger.info('calling build_planar_mesh')
+    build_planar_mesh(cell_width, x1, y1, geom_points,
+                      geom_edges, logger=logger)
+    dsMesh = xarray.open_dataset('base_mesh.nc')
+    logger.info('culling mesh')
+    dsMesh = cull(dsMesh, logger=logger)
+    logger.info('converting to MPAS mesh')
+    dsMesh = convert(dsMesh, logger=logger)
+    logger.info('writing grid_converted.nc')
+    write_netcdf(dsMesh, 'grid_converted.nc')
+    levels = section.get('levels')
+    args = ['create_landice_grid_from_generic_MPAS_grid.py',
+            '-i', 'grid_converted.nc',
+            '-o', 'grid_preCull.nc',
+            '-l', levels, '-v', 'glimmer']
+
+    check_call(args, logger=logger)
+
+    args = ['interpolate_to_mpasli_grid.py', '-s',
+            gridded_dataset, '-d',
+            'grid_preCull.nc', '-m', 'b', '-t']
+
+    check_call(args, logger=logger)
+
+    cullDistance = section.get('cull_distance')
+    if float(cullDistance) > 0.:
+        args = ['define_cullMask.py', '-f',
+                'grid_preCull.nc', '-m',
+                'distance', '-d', cullDistance]
+
+        check_call(args, logger=logger)
+    else:
+        logger.info('cullDistance <= 0 in config file. '
+                    'Will not cull by distance to margin. \n')
+
+    if geojson_file is not None:
+        # This step is only necessary because the GeoJSON region
+        # is defined by lat-lon.
+        args = ['set_lat_lon_fields_in_planar_grid.py', '-f',
+                'grid_preCull.nc', '-p', projection]
+
+        check_call(args, logger=logger)
+
+        args = ['MpasMaskCreator.x', 'grid_preCull.nc',
+                'mask.nc', '-f', geojson_file]
+
+        check_call(args, logger=logger)
+
+        logger.info('culling to geojson file')
+
+    dsMesh = xarray.open_dataset('grid_preCull.nc')
+    if geojson_file is not None:
+        mask = xarray.open_dataset('mask.nc')
+    else:
+        mask = None
+
+    dsMesh = cull(dsMesh, dsInverse=mask, logger=logger)
+    write_netcdf(dsMesh, 'culled.nc')
+
+    logger.info('Marking horns for culling')
+    args = ['mark_horns_for_culling.py', '-f', 'culled.nc']
+
+    check_call(args, logger=logger)
+
+    logger.info('culling and converting')
+    dsMesh = xarray.open_dataset('culled.nc')
+    dsMesh = cull(dsMesh, logger=logger)
+    dsMesh = convert(dsMesh, logger=logger)
+    write_netcdf(dsMesh, 'dehorned.nc')
+
+    args = ['create_landice_grid_from_generic_MPAS_grid.py', '-i',
+            'dehorned.nc', '-o',
+            mesh_name, '-l', levels, '-v', 'glimmer',
+            '--beta', '--thermal', '--obs', '--diri']
+
+    check_call(args, logger=logger)
+
+    args = ['interpolate_to_mpasli_grid.py', '-s',
+            gridded_dataset, '-d', mesh_name, '-m', 'b']
+
+    check_call(args, logger=logger)
+
+    logger.info('Marking domain boundaries dirichlet')
+    args = ['mark_domain_boundaries_dirichlet.py',
+            '-f', mesh_name]
+    check_call(args, logger=logger)
+
+    args = ['set_lat_lon_fields_in_planar_grid.py', '-f',
+            mesh_name, '-p', projection]
+    check_call(args, logger=logger)
+
+
+def make_region_masks(self, mesh_filename, mask_filename, cores, tags):
+    """
+    Create masks for ice-sheet subregions based on data
+    in ``MPAS-Dev/geometric_fatures``.
+
+    Parameters
+    ----------
+    mesh_filename : str
+        name of NetCDF mesh file for which to create region masks
+
+    mask_filename : str
+        name of NetCDF file to contain region masks
+
+    cores : int
+        number of processors used to create region masks
+
+    tags : list of str
+        Groups of regions for which masks are to be defined
+    """
+
+    logger = self.logger
+    logger.info('creating region masks')
+    gf = GeometricFeatures()
+    fcMask = FeatureCollection()
+
+    for tag in tags:
+        fc = gf.read(componentName='landice', objectType='region',
+                     tags=[tag])
+        fcMask.merge(fc)
+
+    geojson_filename = 'regionMask.geojson'
+    fcMask.to_geojson(geojson_filename)
+
+    args = ['compute_mpas_region_masks',
+            '-m', mesh_filename,
+            '-g', geojson_filename,
+            '-o', mask_filename,
+            '-t', 'cell',
+            '--process_count', f'{cores}',
+            '--format', mpas_tools.io.default_format,
+            '--engine', mpas_tools.io.default_engine]
+    check_call(args, logger=logger)

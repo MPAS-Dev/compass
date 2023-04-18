@@ -1,8 +1,8 @@
-from compass.testcase import TestCase
 from compass.landice.tests.thwaites.mesh import Mesh
+from compass.testcase import TestCase
 
 
-class HighResMesh(TestCase):
+class MeshGen(TestCase):
     """
     The high resolution test case for the thwaites test
     group simply creates the mesh and initial condition.
@@ -18,7 +18,7 @@ class HighResMesh(TestCase):
         test_group : compass.landice.tests.thwaites.Thwaites
             The test group that this test case belongs to
         """
-        name = 'high_res_mesh'
+        name = 'mesh_gen'
         subdir = name
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)

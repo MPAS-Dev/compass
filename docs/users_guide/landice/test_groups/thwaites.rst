@@ -27,17 +27,17 @@ integration of the model.  There is a not an explicit smoke test, but the
 The ``decomposition_test`` and ``restart_test`` test cases in this test group
 can only be run with the FO velocity solvers. Running with the FO solver requires
 a build of MALI that includes Albany. There is no integration step for the test
-case ``high_res_mesh``.
+case ``mesh_gen``.
 
 config options
 --------------
 
-The ``high_res_mesh`` test case uses the default config options below.
+The ``mesh_gen`` test case uses the default config options below.
 The other test cases do not use config options.
 
 .. code-block:: cfg
 
-    [high_res_mesh]
+    [mesh]
 
     # number of levels in the mesh
     levels = 10
@@ -84,10 +84,10 @@ second begins from a restart file saved by the first. Prognostic variables
 are compared between the "full" and "restart" runs to make sure they are
 bit-for-bit identical.
 
-high_res_mesh
+mesh_gen
 -------------
 
-``landice/thwaites/high_res_mesh`` creates a variable resolution mesh based
+``landice/thwaites/mesh_gen`` creates a variable resolution mesh based
 on the the config options listed above. This will not be the same as the
 pre-generated 4-14km mesh used in ``decomposition_test`` and ``restart_test``
 because it uses a newer version of Jigsaw. Note that the basal friction
