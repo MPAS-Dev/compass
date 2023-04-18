@@ -12,7 +12,7 @@
 
 <immutable_stream name="restart"
                   type="input;output"
-                  filename_template="restarts/restart.$Y-$M-$D_$h.$m.$s.nc"
+                  filename_template="restart.$Y-$M-$D_$h.$m.$s.nc"
                   filename_interval="output_interval"
                   reference_time="0001-01-01_00:00:00"
                   clobber_mode="truncate"
@@ -26,6 +26,13 @@
                   packages="timeVaryingAtmosphericForcingPKG"
                   input_interval="none"/>
 
+<immutable_stream name="land_ice_forcing"
+                  type="input"
+                  filename_template="land_ice_forcing.nc"
+                  filename_interval="none"
+                  packages="timeVaryingLandIceForcingPKG"
+                  input_interval="none"/>
+
 <stream name="pointLocationsInput"
         filename_template="points.nc"
         type="input"
@@ -36,25 +43,45 @@
     <var name="pointCellGlobalID"/>
 </stream>
 
+<stream name="topographic_wave_drag"
+                  type="input"
+                  filename_template="topographic_wave_drag.nc"
+                  filename_interval="none"
+                  packages="topographicWaveDragPKG"
+                  input_interval="initial_only">
+
+    <var name="topographic_wave_drag"/>
+</stream>
+
+<stream name="ltsregion"
+                  type="input"
+                  filename_template="input.nc"
+                  filename_interval="none"
+                  input_interval="initial_only">
+    <var name="LTSRegion"/>
+</stream>
+
 <stream name="output"
         type="output"
         filename_template="output.nc"
-        output_interval="12:00:00"
+        output_interval="24:00:00"
+        precision="double"
         clobber_mode="truncate">
 
     <var name="xtime"/>
-    <var name="layerThickness"/>
-    <var name="atmosphericPressure"/>
-    <var name="windSpeedMagnitude"/>
     <var name="ssh"/>
     <var name="kineticEnergyCell"/>
+    <var name="layerThickness"/>
+    <var name="normalVelocity"/>
+    <var name="daysSinceStartOfSim"/>
+    <var name="LTSRegion"/>
 </stream>
 
 <stream name="pointwiseStatsOutput"
         filename_template="pointwiseStats.nc"
-        type="output"
+        type="none"
         mode="forward;analysis"
-        output_interval="00:30:00"
+        output_interval="none"
         packages="pointwiseStatsAMPKG"
         clobber_mode="truncate"
         io_type="netcdf"
@@ -65,36 +92,24 @@
     <var name="latCell"/>
     <var name="lonCell"/>
     <var name="ssh"/>
+    <var name="layerThickness"/>
 </stream>
 
-<stream name="timeSeriesStatsCustomOutput"
-        type="output"
-        filename_template="maxWaterLevel.nc"
-        filename_interval="00-01-00_00:00:00"
-        reference_time="01-01-01_00:00:00"
+<stream name="globalStatsOutput"
+        type="none"
+        filename_template="globalStats.nc"
+        filename_interval="01-00-00_00:00:00"
         clobber_mode="truncate"
-        io_type="pnetcdf"
-        packages="timeSeriesStatsCustomAMPKG"
-        output_interval="00-00-00_01:00:00">
+        packages="globalStatsAMPKG"
+        output_interval="none" >
 
-    <var name="lonCell"/>
-    <var name="latCell"/>
+    <var_array name="minGlobalStats"/>
+    <var_array name="maxGlobalStats"/>
+    <var_array name="avgGlobalStats"/>
     <var name="xtime"/>
-    <var name="ssh"/>
-    <var name="bottomDepth"/>
+    <var name="daysSinceStartOfSim"/>
+    <var name="volumeCellGlobal"/>
+    <var name="CFLNumberGlobal"/>
 </stream>
-
-<stream name="timeSeriesStatsCustomRestart"
-        type="input;output"
-        filename_template="restarts/mpaso.rst.am.timeSeriesStatsCustom.$Y-$M-$D_$S.nc"
-        filename_interval="output_interval"
-        reference_time="0001-01-01_00:00:00"
-        clobber_mode="truncate"
-        packages="timeSeriesStatsCustomAMPKG"
-        input_interval="initial_only"
-        output_interval="stream:restart:output_interval">
-
-</stream>
-
 
 </streams>

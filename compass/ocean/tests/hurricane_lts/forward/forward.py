@@ -45,9 +45,6 @@ class ForwardStep(Step):
         self.add_streams_file(
             'compass.ocean.tests.hurricane_lts.forward', 'streams.ocean')
 
-        mesh_package = mesh.package
-        self.add_namelist_file(mesh_package, 'namelist.ocean')
-
         initial_state_target = \
             f'{init.path}/initial_state/ocean.nc'
         self.add_input_file(filename='input.nc',
@@ -55,6 +52,9 @@ class ForwardStep(Step):
         self.add_input_file(
             filename='atmospheric_forcing.nc',
             work_dir_target=f'{init.path}/interpolate/atmospheric_forcing.nc')
+        self.add_input_file(
+            filename='topographic_wave_drag.nc',
+            work_dir_target=f'{init.path}/topodrag/topographic_wave_drag.nc')
         self.add_input_file(
             filename='points.nc',
             work_dir_target=f'{init.path}/pointstats/points.nc')
@@ -87,6 +87,6 @@ class ForwardStep(Step):
     def _get_resources(self):
         # get the these properties from the config options
         config = self.config
-        self.ntasks = config.getint('hurricane_lts', 'forward_ntasks')
-        self.min_tasks = config.getint('hurricane_lts', 'forward_min_tasks')
-        self.openmp_threads = config.getint('hurricane_lts', 'forward_threads')
+        self.ntasks = config.getint('hurricane', 'forward_ntasks')
+        self.min_tasks = config.getint('hurricane', 'forward_min_tasks')
+        self.openmp_threads = config.getint('hurricane', 'forward_threads')

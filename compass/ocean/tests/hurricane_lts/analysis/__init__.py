@@ -77,13 +77,13 @@ class Analysis(Step):
                 self.add_input_file(
                     filename=f'{obs}_stations.txt',
                     target=f'{self.storm}_stations/{obs}_stations.txt',
-                    database='hurricane_lts')
+                    database='hurricane')
                 for sta in self.observations[obs]:
                     self.add_input_file(
                         filename=f'{obs}_data/{sta}.txt',
                         target=f'{self.storm}_validation/'
                                f'{obs}_stations/{sta}.txt',
-                        database='hurricane_lts')
+                        database='hurricane')
 
     def read_pointstats(self, pointstats_file):
         """
