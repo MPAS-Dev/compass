@@ -860,7 +860,11 @@
                 <span class="n">download_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">database_root</span><span class="p">,</span> <span class="n">core_path</span><span class="p">,</span>
                                              <span class="n">database</span><span class="p">,</span> <span class="n">download_target</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">download_path</span><span class="p">):</span>
-                    <span class="n">database_subdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">database_root</span><span class="p">,</span> <span class="n">database</span><span class="p">)</span>
+                    <span class="n">databases_with_downloads</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">database_root</span><span class="p">)</span>
+                    <span class="n">core_root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">database_root</span><span class="p">,</span> <span class="n">core_path</span><span class="p">)</span>
+                    <span class="n">databases_with_downloads</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">core_root</span><span class="p">)</span>
+                    <span class="n">database_subdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">database_root</span><span class="p">,</span> <span class="n">core_path</span><span class="p">,</span>
+                                                   <span class="n">database</span><span class="p">)</span>
                     <span class="n">databases_with_downloads</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">database_subdir</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">url</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">download_path</span> <span class="o">=</span> <span class="n">download_target</span>
@@ -1016,10 +1020,7 @@
         <span class="c1"># first the base directories that don&#39;t seem to be included in</span>
         <span class="c1"># os.walk()</span>
         <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="n">databases</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">dir_stat</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
-                <span class="k">continue</span>
+            <span class="n">dir_stat</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
 
             <span class="n">perm</span> <span class="o">=</span> <span class="n">dir_stat</span><span class="o">.</span><span class="n">st_mode</span> <span class="o">&amp;</span> <span class="n">mask</span>
 
