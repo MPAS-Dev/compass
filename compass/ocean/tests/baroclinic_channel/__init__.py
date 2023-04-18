@@ -1,9 +1,9 @@
-from compass.testgroup import TestGroup
 from compass.ocean.tests.baroclinic_channel.decomp_test import DecompTest
 from compass.ocean.tests.baroclinic_channel.default import Default
 from compass.ocean.tests.baroclinic_channel.restart_test import RestartTest
 from compass.ocean.tests.baroclinic_channel.rpe_test import RpeTest
 from compass.ocean.tests.baroclinic_channel.threads_test import ThreadsTest
+from compass.testgroup import TestGroup
 
 
 class BaroclinicChannel(TestGroup):
@@ -44,13 +44,13 @@ def configure(resolution, config):
         Configuration options for this test case
     """
     res_params = {'10km': {'nx': 16,
-                           'ny': 50,
+                           'ny': 58,  # NB. 2/sqrt(3) due to hexagons
                            'dc': 10e3},
                   '4km': {'nx': 40,
-                          'ny': 126,
+                          'ny': 144,
                           'dc': 4e3},
                   '1km': {'nx': 160,
-                          'ny': 500,
+                          'ny': 578,
                           'dc': 1e3}}
 
     comment = {'nx': 'the number of mesh cells in the x direction',
