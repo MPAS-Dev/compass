@@ -8,7 +8,7 @@ import subprocess
 
 def submit_e3sm_tests(submodule, repo_url, ocean_strings, landice_strings,
                       framework_strings, current, new, work_base, mpas_subdir,
-                      make_command, setup_command, load_script):
+                      make_command, setup_command, load_script, skip_prs):
     """
     The driver function for calling ``git bisect`` to find the first "bad"
     commit between a known "good" and "bad" E3SM commit.
@@ -49,23 +49,23 @@ def submit_e3sm_tests(submodule, repo_url, ocean_strings, landice_strings,
         compass environment
     """
     print('\n')
-    print(72*'-')
+    print(72 * '-')
     print(f'Testing to update {submodule} submodule')
-    print(72*'-')
+    print(72 * '-')
 
     load_script = os.path.abspath(load_script)
 
-    commands = f'git submodule update --init'
+    commands = 'git submodule update --init'
     print_and_run(commands)
 
     current_submodule = f'{submodule}-current'
     new_submodule = f'{submodule}-new'
 
-    print(f'Setting up current submodule\n')
+    print('Setting up current submodule\n')
 
     setup_worktree(submodule, worktree=current_submodule, hash=current)
 
-    print(f'\nSetting up new submodule\n')
+    print('\nSetting up new submodule\n')
 
     setup_worktree(submodule, worktree=new_submodule, hash=new)
 
@@ -90,12 +90,13 @@ def submit_e3sm_tests(submodule, repo_url, ocean_strings, landice_strings,
                 hash = line.split(' ')[0]
                 end = line.split('#')[-1].replace('(', ' ').replace(')', ' ')
                 pull_request = end.split()[0]
-                index = len(pull_requests)
-                worktree = f'{index + 1:02d}_{pull_request}'
-                pull_requests.append({'hash': hash,
-                                      'component': component,
-                                      'pull_request': pull_request,
-                                      'worktree': worktree})
+                if pull_request not in skip_prs:
+                    index = len(pull_requests)
+                    worktree = f'{index + 1:02d}_{pull_request}'
+                    pull_requests.append({'hash': hash,
+                                          'component': component,
+                                          'pull_request': pull_request,
+                                          'worktree': worktree})
             else:
                 print(f'Warning: skipping commit with no "#" for PR:\n{line}')
 
@@ -109,14 +110,14 @@ def submit_e3sm_tests(submodule, repo_url, ocean_strings, landice_strings,
     print(f'{len(pull_requests)+1:02d}: {new} {new_submodule} (new)')
     print('\n')
 
-    print(f'Setting up worktrees of all commits of interest\n')
+    print('Setting up worktrees of all commits of interest\n')
 
     for index, data in enumerate(pull_requests):
         hash = data['hash']
         worktree = data['worktree']
         setup_worktree(submodule, worktree=worktree, hash=hash)
 
-    print(f'Building each worktree and submitting comparison tests\n')
+    print('Building each worktree and submitting comparison tests\n')
 
     print('00: current\n')
     baseline = f'{work_base}/00_current'
@@ -178,11 +179,11 @@ def setup_and_submit(load_script, setup_command, worktree, mpas_subdir,
     if ' -t ' in setup_command:
         split = setup_command.split()
         index = split.index('-t')
-        suite = split[index+1]
+        suite = split[index + 1]
     elif '--test_suite' in setup_command:
         split = setup_command.split()
         index = split.index('--test_suite')
-        suite = split[index+1]
+        suite = split[index + 1]
     else:
         suite = 'custom'
 
@@ -215,9 +216,9 @@ def print_and_run(commands, get_output=False):
 
 def print_pr_description(submodule, repo_url, current, new, pull_requests):
     print('')
-    print(72*'-')
-    print(f'Pull Request Description Text')
-    print(72*'-')
+    print(72 * '-')
+    print('Pull Request Description Text')
+    print(72 * '-')
     print('')
 
     print(f'This merge updates the {submodule} submodule from '
@@ -241,8 +242,8 @@ def string_to_list(string):
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Test changes in E3SM before an update to the E3SM-Project '
-                    'submodule')
+        description='Test changes in E3SM before an update to the '
+                    'E3SM-Project submodule')
     parser.add_argument("-f", "--config_file", dest="config_file",
                         required=True,
                         help="Configuration file",
@@ -265,7 +266,8 @@ def main():
         work_base=section['work_base'], mpas_subdir=section['mpas_subdir'],
         make_command=section['make_command'],
         setup_command=section['setup_command'],
-        load_script=section['load_script'])
+        load_script=section['load_script'],
+        skip_prs=string_to_list(section['skip_prs']))
 
 
 if __name__ == '__main__':
