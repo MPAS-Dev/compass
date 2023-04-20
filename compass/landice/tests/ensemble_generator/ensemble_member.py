@@ -92,6 +92,7 @@ class EnsembleMember(Step):
 
         von_mises_threshold : float
             value of von Mises stress threshold to use
+            assumes same value for grounded and floating ice
 
         calv_spd_lim : float
             value of calving speed limit to use

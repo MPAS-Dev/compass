@@ -204,6 +204,10 @@ class Ensemble(TestCase):
                 print("WARNING: ice-shelf area correction is larger than "
                       "20%. Check data consistency before proceeding.")
             meltflux_vec *= iceshelf_area / iceshelf_area_obs
+            # Set up an array of TF values to use for linear interpolation
+            # Make it span a large enough range to capture deltaT what would
+            # be needed for the range of gamma0 values considered.
+            # Not possible to know a priori, so pick a wide range.
             TFs = np.linspace(-5.0, 10.0, num=int(15.0 / 0.01))
             c_melt = (rhosw * cp_seawater / (rhoi * latent_heat_ice))**2
             deltaT_vec = np.zeros(max_samples)
