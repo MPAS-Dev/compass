@@ -91,6 +91,8 @@ if os.path.isfile(ens_cfg_file):
     ens_info = ens_cfg['ensemble']
     if 'basin' in ens_info:
         basin = ens_info['basin']
+        if basin == 'None':
+            basin = None
 if basin is None:
     print("No basin found.  Not using observational data.")
 else:
@@ -111,11 +113,11 @@ if basin is not None:
     qoi_info['GL flux']['obs'] = [obs_discharge, obs_discharge_unc]
     qoi_info['melt flux']['obs'] = [obs_melt, obs_melt_unc]
 else:
-    obs_discharge_yrs = 0.0
-    obs_discharge = 0.0
+    obs_discharge_yrs = np.array([0.0, 0.0])
+    obs_discharge = np.array([0.0, 0.0])
     obs_discharge_unc = 0.0
-    obs_melt_yrs = 0.0
-    obs_melt = 0.0
+    obs_melt_yrs = np.array([0.0, 0.0])
+    obs_melt = np.array([0.0, 0.0])
     obs_melt_unc = 0.0
 
 # --------------
