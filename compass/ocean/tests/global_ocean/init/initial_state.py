@@ -20,7 +20,7 @@ class InitialState(Step):
     mesh : compass.ocean.tests.global_ocean.mesh.mesh.MeshStep
         The step for creating the mesh
 
-    initial_condition : {'PHC', 'EN4_1900'}
+    initial_condition : {'WOA23', 'PHC', 'EN4_1900'}
         The initial condition dataset to use
 
     with_bgc : bool
@@ -38,13 +38,13 @@ class InitialState(Step):
         mesh : compass.ocean.tests.global_ocean.mesh.Mesh
             The test case that creates the mesh used by this test case
 
-        initial_condition : {'PHC', 'EN4_1900'}
+        initial_condition : {'WOA23', 'PHC', 'EN4_1900'}
             The initial condition dataset to use
 
         with_bgc : bool
             Whether to include biogeochemistry (BGC) in the initial condition
         """
-        if initial_condition not in ['PHC', 'EN4_1900']:
+        if initial_condition not in ['WOA23', 'PHC', 'EN4_1900']:
             raise ValueError(f'Unknown initial_condition {initial_condition}')
 
         super().__init__(test_case=test_case, name='initial_state')
@@ -110,7 +110,12 @@ class InitialState(Step):
             target='chlorophyllA_monthly_averages_1deg.151201.nc',
             database='initial_condition_database')
 
-        if initial_condition == 'PHC':
+        if initial_condition == 'WOA23':
+            self.add_input_file(
+                filename='woa23.nc',
+                target='woa23_decav_0.25_extrap.20230416.nc',
+                database='initial_condition_database')
+        elif initial_condition == 'PHC':
             self.add_input_file(
                 filename='temperature.nc',
                 target='PotentialTemperature.01.filled.60levels.PHC.151106.nc',

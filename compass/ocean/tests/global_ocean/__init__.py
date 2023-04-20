@@ -49,6 +49,7 @@ class GlobalOcean(TestGroup):
                         remap_topography=False,
                         include_rk4=True,
                         include_regression=True,
+                        include_phc=True,
                         include_en4_1900=True,
                         include_bgc=True)
 
@@ -77,8 +78,12 @@ class GlobalOcean(TestGroup):
 
     def _add_tests(self, mesh_names, DynamicAdjustment, remap_topography=True,
                    include_rk4=False, include_regression=False,
-                   include_en4_1900=False, include_bgc=False):
+                   include_phc=False, include_en4_1900=False,
+                   include_bgc=False):
         """ Add test cases for the given mesh(es) """
+
+        default_ic = 'WOA23'
+        default_time_int = 'split_explicit'
 
         for mesh_name in mesh_names:
             mesh_test = Mesh(test_group=self, mesh_name=mesh_name,
@@ -86,11 +91,11 @@ class GlobalOcean(TestGroup):
             self.add_test_case(mesh_test)
 
             init_test = Init(test_group=self, mesh=mesh_test,
-                             initial_condition='PHC',
+                             initial_condition=default_ic,
                              with_bgc=False)
             self.add_test_case(init_test)
 
-            time_integrator = 'split_explicit'
+            time_integrator = default_time_int
             self.add_test_case(
                 PerformanceTest(
                     test_group=self, mesh=mesh_test, init=init_test,
@@ -150,11 +155,17 @@ class GlobalOcean(TestGroup):
                         test_group=self, mesh=mesh_test, init=init_test,
                         time_integrator=time_integrator))
 
+            initial_conditions = []
+            if include_phc:
+                initial_conditions.append('PHC')
             if include_en4_1900:
-                # EN4_1900 tests
-                time_integrator = 'split_explicit'
+                initial_conditions.append('EN4_1900')
+
+            for initial_condition in initial_conditions:
+                # additional initial conditions (if any)
+                time_integrator = default_time_int
                 init_test = Init(test_group=self, mesh=mesh_test,
-                                 initial_condition='EN4_1900',
+                                 initial_condition=initial_condition,
                                  with_bgc=False)
                 self.add_test_case(init_test)
 
@@ -176,7 +187,7 @@ class GlobalOcean(TestGroup):
             if include_bgc:
                 # BGC tests
                 init_test = Init(test_group=self, mesh=mesh_test,
-                                 initial_condition='PHC',
+                                 initial_condition=default_ic,
                                  with_bgc=True)
                 self.add_test_case(init_test)
 

@@ -15,7 +15,7 @@ class Init(TestCase):
     mesh : compass.ocean.tests.global_ocean.mesh.Mesh
         The test case that creates the mesh used by this test case
 
-    initial_condition : {'PHC', 'EN4_1900'}
+    initial_condition : {'WOA23', 'PHC', 'EN4_1900'}
         The initial condition dataset to use
 
     with_bgc : bool
@@ -37,7 +37,7 @@ class Init(TestCase):
         mesh : compass.ocean.tests.global_ocean.mesh.Mesh
             The test case that creates the mesh used by this test case
 
-        initial_condition : {'PHC', 'EN4_1900'}
+        initial_condition : {'WOA23', 'PHC', 'EN4_1900'}
             The initial condition dataset to use
 
         with_bgc : bool
@@ -80,10 +80,12 @@ class Init(TestCase):
         self.mesh.configure(config=config)
 
         initial_condition = self.initial_condition
-        descriptions = {'PHC': 'Polar science center Hydrographic '
+        descriptions = {'WOA23': 'World Ocean Atlas 2023 climatology '
+                                 '1991-2020',
+                        'PHC': 'Polar science center Hydrographic '
                                'Climatology (PHC)',
-                        'EN4_1900':
-                            "Met Office Hadley Centre's EN4 dataset from 1900"}
+                        'EN4_1900': "Met Office Hadley Centre's EN4 dataset "
+                                    "from 1900"}
         config.set('global_ocean', 'init_description',
                    descriptions[initial_condition])
 
