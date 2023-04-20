@@ -65,33 +65,32 @@ class Ensemble(TestCase):
         cp_seawater = 3.974e3
         latent_heat_ice = 335.0e3
         sec_in_yr = 3600.0 * 24.0 * 365.0
+        c_melt = (rhosw * cp_seawater / (rhoi * latent_heat_ice))**2
+
+        section = self.config['ensemble']
 
         # Determine start and end run numbers being requested
-        self.start_run = self.config.getint('ensemble', 'start_run')
-        self.end_run = self.config.getint('ensemble', 'end_run')
+        self.start_run = section.getint('start_run')
+        self.end_run = section.getint('end_run')
 
         # Define parameters being sampled and their ranges
+        param_list = ['fric_exp', 'mu_scale', 'stiff_scale',
+                      'von_mises_threshold', 'calv_limit', 'gamma0',
+                      'meltflux']
 
         # Determine how many and which parameters are being used
-        use_fric_exp = self.config.getboolean('ensemble', 'use_fric_exp')
-        use_mu_scale = self.config.getboolean('ensemble', 'use_mu_scale')
-        use_stiff_scale = self.config.getboolean('ensemble',
-                                                 'use_stiff_scale')
-        use_von_mises_threshold = self.config.getboolean(
-            'ensemble', 'use_von_mises_threshold')
-        use_calv_limit = self.config.getboolean('ensemble', 'use_calv_limit')
-        use_gamma0 = self.config.getboolean('ensemble', 'use_gamma0')
-        use_meltflux = self.config.getboolean('ensemble', 'use_meltflux')
-
-        n_params = (use_fric_exp + use_mu_scale + use_stiff_scale +
-                    use_von_mises_threshold + use_calv_limit + use_gamma0 +
-                    use_meltflux)
+        n_params = 0
+        param_dict = {}
+        for param in param_list:
+            param_dict[param] = {}
+            param_dict[param]['active'] = section.getboolean(f'use_{param}')
+            n_params += param_dict[param]['active']
         if n_params == 0:
             sys.exit("ERROR: At least one parameter must be specified.")
 
         # Generate unit parameter vectors - either uniform or Sobol
-        sampling_method = self.config.get('ensemble', 'sampling_method')
-        max_samples = self.config.getint('ensemble', 'max_samples')
+        sampling_method = section.get('sampling_method')
+        max_samples = section.getint('max_samples')
         if max_samples < self.end_run:
             sys.exit("ERROR: max_samples is exceeded by end_run")
         if sampling_method == 'sobol':
@@ -106,96 +105,35 @@ class Ensemble(TestCase):
         else:
             sys.exit("ERROR: Unsupported sampling method specified.")
 
-        # Now define parameter ranges for each param being used
+        # Define parameter vectors for each param being used
         idx = 0
+        for param in param_list:
+            if param_dict[param]['active']:
+                print('Including parameter ' + param)
+                min_val = section.getfloat(f'{param}_min')
+                max_val = section.getfloat(f'{param}_max')
+                param_dict[param]['vec'] = param_unit_values[:, idx] * \
+                    (max_val - min_val) + min_val
+                idx += 1
+            else:
+                param_dict[param]['vec'] = np.full((max_samples,), None)
 
-        # basal fric exp
-        if use_fric_exp:
-            print('Including basal friction exponent')
-            minval = self.config.getfloat('ensemble', 'fric_exp_min')
-            maxval = self.config.getfloat('ensemble', 'fric_exp_max')
-            basal_fric_exp_vec = param_unit_values[:, idx] * \
-                (maxval - minval) + minval
-            idx += 1
-        else:
-            basal_fric_exp_vec = [None] * max_samples
+        # Deal with a few special cases
 
-        # mu scale
-        if use_mu_scale:
-            print('Including scaling of muFriction')
-            minval = self.config.getfloat('ensemble', 'mu_scale_min')
-            maxval = self.config.getfloat('ensemble', 'mu_scale_max')
-            mu_scale_vec = param_unit_values[:, idx] * \
-                (maxval - minval) + minval
-            idx += 1
-        else:
-            mu_scale_vec = [None] * max_samples
+        # change units on calving speed limit from m/yr to s/yr
+        if param_dict['calv_limit']['active']:
+            param_dict['calv_limit']['vec'] = \
+                param_dict['calv_limit']['vec'][:] / sec_in_yr
 
-        # stiff scale
-        if use_stiff_scale:
-            print('Including scaling of stiffnessFactor')
-            minval = self.config.getfloat('ensemble', 'stiff_scale_min')
-            maxval = self.config.getfloat('ensemble', 'stiff_scale_max')
-            stiff_scale_vec = param_unit_values[:, idx] * \
-                (maxval - minval) + minval
-            idx += 1
-        else:
-            stiff_scale_vec = [None] * max_samples
-
-        # von mises threshold stress
-        if use_von_mises_threshold:
-            print('Including von_mises_threshold')
-            minval = self.config.getfloat('ensemble',
-                                          'von_mises_threshold_min')
-            maxval = self.config.getfloat('ensemble',
-                                          'von_mises_threshold_max')
-            von_mises_threshold_vec = param_unit_values[:, idx] * \
-                (maxval - minval) + minval
-            idx += 1
-        else:
-            von_mises_threshold_vec = [None] * max_samples
-
-        # calving speed limit
-        if use_calv_limit:
-            print('Including calving speed limit')
-            minval = self.config.getfloat('ensemble', 'calv_limit_min')
-            maxval = self.config.getfloat('ensemble', 'calv_limit_max')
-            calv_spd_lim_vec = param_unit_values[:, idx] * \
-                (maxval - minval) + minval
-            calv_spd_lim_vec /= sec_in_yr  # convert from m/yr to s/yr
-            idx += 1
-        else:
-            calv_spd_lim_vec = [None] * max_samples
-
-        # gamma0
-        if use_gamma0:
-            print('Including gamma0')
-            # gamma0
-            minval = self.config.getfloat('ensemble', 'gamma0_min')
-            maxval = self.config.getfloat('ensemble', 'gamma0_max')
-            gamma0_vec = param_unit_values[:, idx] * \
-                (maxval - minval) + minval
-            idx += 1
-        else:
-            gamma0_vec = [None] * max_samples
-
-        # melt flux
-        if use_meltflux:
-            # melt flux
-            minval = self.config.getfloat('ensemble', 'meltflux_min')
-            maxval = self.config.getfloat('ensemble', 'meltflux_max')
-            meltflux_vec = param_unit_values[:, idx] * \
-                (maxval - minval) + minval
-            idx += 1
-            iceshelf_area_obs = self.config.getfloat('ensemble',
-                                                     'iceshelf_area_obs')
-
-            # deltaT
-            section = self.config['ensemble']
+        # melt flux needs to be converted to deltaT
+        if param_dict['meltflux']['active']:
+            # First calculate mean TF for this domain
+            iceshelf_area_obs = section.getfloat('iceshelf_area_obs')
             input_file_path = section.get('input_file_path')
             TF_file_path = section.get('TF_file_path')
             mean_TF, iceshelf_area = calc_mean_TF(input_file_path,
                                                   TF_file_path)
+
             # Adjust observed melt flux for ice-shelf area in init. condition
             print(f'IS area: model={iceshelf_area}, Obs={iceshelf_area_obs}')
             area_correction = iceshelf_area / iceshelf_area_obs
@@ -203,21 +141,25 @@ class Ensemble(TestCase):
             if (np.absolute(area_correction - 1.0) > 0.2):
                 print("WARNING: ice-shelf area correction is larger than "
                       "20%. Check data consistency before proceeding.")
-            meltflux_vec *= iceshelf_area / iceshelf_area_obs
+            param_dict['meltflux']['vec'] *= iceshelf_area / iceshelf_area_obs
+
             # Set up an array of TF values to use for linear interpolation
             # Make it span a large enough range to capture deltaT what would
             # be needed for the range of gamma0 values considered.
             # Not possible to know a priori, so pick a wide range.
             TFs = np.linspace(-5.0, 10.0, num=int(15.0 / 0.01))
-            c_melt = (rhosw * cp_seawater / (rhoi * latent_heat_ice))**2
             deltaT_vec = np.zeros(max_samples)
+            # For each run, calculate the deltaT needed to obtain the target
+            # melt flux
             for ii in range(self.start_run, self.end_run + 1):
-                meltfluxes = (gamma0_vec[ii] * c_melt * TFs *
+                # spatially averaged version of ISMIP6 melt param.:
+                meltfluxes = (param_dict['gamma0']['vec'][ii] * c_melt * TFs *
                               np.absolute(TFs) *
                               iceshelf_area) * rhoi / 1.0e12  # Gt/yr
                 # interpolate deltaT value.  Use nan values outside of range
                 # so out of range results get detected
-                deltaT_vec[ii] = np.interp(meltflux_vec[ii], meltfluxes, TFs,
+                deltaT_vec[ii] = np.interp(param_dict['meltflux']['vec'][ii],
+                                           meltfluxes, TFs,
                                            left=np.nan,
                                            right=np.nan) - mean_TF
                 if np.isnan(deltaT_vec[ii]):
@@ -231,19 +173,20 @@ class Ensemble(TestCase):
             sys.exit("Error: end_run specified in config exceeds maximum "
                      "sample size available in param_vector_filename")
         for run_num in range(self.start_run, self.end_run + 1):
-            self.add_step(EnsembleMember(test_case=self, run_num=run_num,
-                          test_resources_location='compass.landice.tests.ensemble_generator.ensemble',  # noqa
-                          basal_fric_exp=basal_fric_exp_vec[run_num],
-                          mu_scale=mu_scale_vec[run_num],
-                          stiff_scale=stiff_scale_vec[run_num],
-                          von_mises_threshold=von_mises_threshold_vec[run_num],
-                          calv_spd_lim=calv_spd_lim_vec[run_num],
-                          gamma0=gamma0_vec[run_num],
-                          deltaT=deltaT_vec[run_num]))
+            self.add_step(EnsembleMember(
+                test_case=self, run_num=run_num,
+                test_resources_location='compass.landice.tests.ensemble_generator.ensemble',  # noqa
+                basal_fric_exp=param_dict['fric_exp']['vec'][run_num],
+                mu_scale=param_dict['mu_scale']['vec'][run_num],
+                stiff_scale=param_dict['stiff_scale']['vec'][run_num],
+                von_mises_threshold=param_dict['von_mises_threshold']['vec'][run_num],  # noqa
+                calv_spd_lim=param_dict['calv_limit']['vec'][run_num],
+                gamma0=param_dict['gamma0']['vec'][run_num],
+                deltaT=deltaT_vec[run_num]))
             # Note: do not add to steps_to_run, because ensemble_manager
             # will handle submitting and running the runs
 
-        # Have compass run only run the run_manager but not any actual runs.
+        # Have 'compass run' only run the run_manager but not any actual runs.
         # This is because the individual runs will be submitted as jobs
         # by the ensemble manager.
         self.steps_to_run = ['ensemble_manager',]

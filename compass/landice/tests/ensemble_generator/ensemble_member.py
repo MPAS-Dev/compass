@@ -128,8 +128,8 @@ class EnsembleMember(Step):
         """
 
         print(f'Setting up run number {self.run_num}')
-        if os.path.isdir(self.work_dir):
-            print(f"WARNING: {self.work_dir} path already exists; skipping.  "
+        if os.path.exists(os.path.join(self.work_dir, 'namelist.landice')):
+            print(f"WARNING: {self.work_dir} already created; skipping.  "
                   "Please remove the directory "
                   f"{self.work_dir} and execute "
                   "'compass setup' again to set this experiment up.")
