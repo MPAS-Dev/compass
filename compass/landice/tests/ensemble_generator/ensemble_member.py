@@ -65,6 +65,7 @@ class EnsembleMember(Step):
                  von_mises_threshold=None,
                  calv_spd_lim=None,
                  gamma0=None,
+                 meltflux=None,
                  deltaT=None):
         """
         Creates a new run within an ensemble
@@ -113,6 +114,7 @@ class EnsembleMember(Step):
         self.von_mises_threshold = von_mises_threshold
         self.calv_spd_lim = calv_spd_lim
         self.gamma0 = gamma0
+        self.meltflux = meltflux
         self.deltaT = deltaT
 
         # define step (run) name
@@ -246,6 +248,7 @@ class EnsembleMember(Step):
         if self.gamma0 is not None:
             run_info_cfg.set('run_info', 'gamma0', f'{self.gamma0}')
         if self.deltaT is not None:
+            run_info_cfg.set('run_info', 'meltflux', f'{self.meltflux}')
             run_info_cfg.set('run_info', 'deltaT', f'{self.deltaT}')
 
         # set up forcing files (unmodified)

@@ -182,6 +182,7 @@ class Ensemble(TestCase):
                 von_mises_threshold=param_dict['von_mises_threshold']['vec'][run_num],  # noqa
                 calv_spd_lim=param_dict['calv_limit']['vec'][run_num],
                 gamma0=param_dict['gamma0']['vec'][run_num],
+                meltflux=param_dict['meltflux']['vec'][run_num],
                 deltaT=deltaT_vec[run_num]))
             # Note: do not add to steps_to_run, because ensemble_manager
             # will handle submitting and running the runs
