@@ -170,8 +170,13 @@ class EnsembleMember(Step):
         self.add_model_as_input()
 
         # modify param values as needed for this ensemble member
-
         options = {}
+
+        # CFL fraction is set from the cfg to force the user to make a
+        # conscious decision about its value
+        self.cfl_fraction = section.getfloat('cfl_fraction')
+        options['config_adaptive_timestep_CFL_fraction'] = \
+            f'{self.cfl_fraction}'
 
         # von Mises stress threshold
         if self.von_mises_threshold is not None:
