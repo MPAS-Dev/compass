@@ -127,6 +127,12 @@ class EnsembleMember(Step):
         """
 
         print(f'Setting up run number {self.run_num}')
+        if os.path.isdir(self.work_dir):
+            print(f"WARNING: {self.work_dir} path already exists; skipping.  "
+                  "Please remove the directory "
+                  f"{self.work_dir} and execute "
+                  "'compass setup' again to set this experiment up.")
+            return
 
         # Get config for info needed for setting up simulation
         config = self.config

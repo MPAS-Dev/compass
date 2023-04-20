@@ -89,12 +89,12 @@ The test-case-specific config options are:
    [ensemble]
 
    # start and end numbers for runs to set up and run
+   # Run numbers should be zero-based.
    # Additional runs can be added and run to an existing ensemble
    # without affecting existing runs, but trying to set up a run
-   # that already exists may result in unexpected behavior.
-   # Run numbers should be zero-based.
+   # that already exists will generate a warning and skip that run.
    # If using uniform sampling, start_run should be 0 and end_run should be
-   # equal to max_samples, otherwise unexpected behavior may result.
+   # equal to (max_samples - 1), otherwise unexpected behavior may result.
    # These values do not affect viz/analysis, which will include any
    # runs it finds.
    start_run = 0
@@ -107,11 +107,13 @@ The test-case-specific config options are:
    # parameter space
    sampling_method = uniform
 
-   # max_samples need to be larger than end_run above.  This might be set larger
-   # than end_run if you plan to add more samples to the ensemble later.  When
-   # using Sobol sequences, max_samples ought to be a factor of 2, but that is
-   # effectively not relevant if your final end_run value is not.
-   # If using uniform sampling, max_samples should equal end_run.
+   # maximum number of sample considered.
+   # max_samples needs to be greater or equal to (end_run + 1)
+   # When using uniform sampling, max_samples should equal (end_run + 1).
+   # When using Sobol sequence, max_samples ought to be a multiple of 2.
+   # max_samples should not be changed after the first set of ensemble.
+   # So, when using Sobol sequence, max_samples might be set larger than
+   # (end_run + 1) if you plan to add more samples to the ensemble later.
    max_samples = 4
 
    # basin for comparing model results with observational estimates in
