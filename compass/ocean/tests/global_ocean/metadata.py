@@ -1,9 +1,10 @@
-import subprocess
-from datetime import datetime
-import numpy
-import xarray
 import os
 import shutil
+import subprocess
+from datetime import datetime
+
+import numpy
+import xarray
 
 
 def get_author_and_email_from_git(config):
@@ -74,12 +75,11 @@ def get_e3sm_mesh_names(config, levels):
     if min_res == max_res:
         res = min_res
     else:
-        res = '{}to{}'.format(min_res, max_res)
+        res = f'{min_res}to{max_res}'
 
-    short_mesh_name = '{}{}E{}r{}'.format(mesh_prefix, res, e3sm_version,
-                                          mesh_revision)
-    long_mesh_name = '{}{}kmL{}E3SMv{}r{}'.format(mesh_prefix, res, levels,
-                                                  e3sm_version, mesh_revision)
+    short_mesh_name = f'{mesh_prefix}{res}E{e3sm_version}r{mesh_revision}'
+    long_mesh_name = \
+        f'{mesh_prefix}{res}kmL{levels}E3SMv{e3sm_version}r{mesh_revision}'
 
     return short_mesh_name, long_mesh_name
 
