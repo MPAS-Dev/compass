@@ -147,12 +147,20 @@ def _get_metadata(dsInit, config):
 
     descriptions = dict()
 
+    replacements = {'<<<levels>>>': f'{levels}',
+                    '<<<max_depth>>>': f'{max_depth:g}',
+                    '<<<creation_date>>>': creation_date}
+
     for prefix in ['mesh', 'init', 'bathy', 'bgc', 'wisc']:
         option = '{}_description'.format(prefix)
         if config.has_option('global_ocean', option):
             description = config.get('global_ocean', option)
             description = ' '.join(
                 [line.strip() for line in description.split('\n')])
+            for placeholder, replacement in replacements.items():
+                if placeholder in description:
+                    description = description.replace(placeholder,
+                                                      replacement)
             descriptions[prefix] = description
 
     prefix = 'MPAS_Mesh_{}'.format(mesh_prefix)
