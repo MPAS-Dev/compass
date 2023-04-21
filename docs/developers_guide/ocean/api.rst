@@ -797,6 +797,28 @@ test cases and steps
    analysis.Analysis.plot
    analysis.Analysis.run
 
+utility
+~~~~~~~
+
+.. currentmodule:: compass.ocean.tests.utility
+
+.. autosummary::
+   :toctree: generated/
+
+   Utility
+
+   extrap_woa.ExtrapWoa
+   extrap_woa.Combine
+   extrap_woa.Combine.setup
+   extrap_woa.Combine.run
+   extrap_woa.ExtrapStep
+   extrap_woa.ExtrapStep.setup
+   extrap_woa.ExtrapStep.run
+   extrap_woa.RemapTopography
+   extrap_woa.RemapTopography.setup
+   extrap_woa.RemapTopography.constrain_resources
+   extrap_woa.RemapTopography.run
+
 ziso
 ~~~~
 

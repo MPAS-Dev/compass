@@ -21,6 +21,7 @@ def package_files(directory, prefixes, extensions):
 install_requires = \
     ['cartopy',
      'cmocean',
+     'gsw',
      'ipython',
      'jigsawpy==0.3.3',
      'jupyter',
