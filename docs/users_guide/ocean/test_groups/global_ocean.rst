@@ -824,7 +824,7 @@ correct.
     mesh_description = MPAS Eddy Closure mesh for E3SM version ${e3sm_version} with
                        enhanced resolution around the equator (30 km), South pole
                        (35 km), Greenland (${min_res} km), ${max_res}-km resolution
-                       at mid latitudes, and ${levels} vertical levels
+                       at mid latitudes, and <<<levels>>> vertical levels
 
     bathy_description = Bathymetry is from GEBCO 2022, combined with BedMachine
                         Antarctica v2 around Antarctica.
