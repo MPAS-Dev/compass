@@ -65,7 +65,7 @@ def get_e3sm_mesh_names(config, levels):
         The long E3SM name of the ocean and sea-ice mesh
     """
 
-    config.set('global_ocean', 'levels', '{}'.format(levels))
+    config.set('global_ocean', 'levels', f'{levels}')
     mesh_prefix = config.get('global_ocean', 'prefix')
     min_res = config.get('global_ocean', 'min_res')
     max_res = config.get('global_ocean', 'max_res')
@@ -110,9 +110,9 @@ def add_mesh_and_init_metadata(output_filenames, config, init_filename):
             if filename.endswith('.nc'):
                 args = ['ncks']
                 for key, value in metadata.items():
-                    args.extend(['--glb_att_add', '{}={}'.format(key, value)])
+                    args.extend(['--glb_att_add', f'{key}={value}'])
                 name, ext = os.path.splitext(filename)
-                new_filename = '{}_with_metadata{}'.format(name, ext)
+                new_filename = f'{name}_with_metadata{ext}'
                 args.extend([filename, new_filename])
                 subprocess.check_call(args)
                 shutil.move(new_filename, filename)
@@ -132,13 +132,13 @@ def _get_metadata(dsInit, config):
     max_depth = dsInit.bottomDepth.max().values
     # round to the nearest 0.1 m
     max_depth = numpy.round(max_depth, 1)
-    config.set('global_ocean', 'max_depth', '{}'.format(max_depth))
+    config.set('global_ocean', 'max_depth', f'{max_depth}')
 
     mesh_prefix = config.get('global_ocean', 'prefix')
     min_res = config.get('global_ocean', 'min_res')
     max_res = config.get('global_ocean', 'max_res')
     levels = dsInit.sizes['nVertLevels']
-    config.set('global_ocean', 'levels', '{}'.format(levels))
+    config.set('global_ocean', 'levels', f'{levels}')
     e3sm_version = config.get('global_ocean', 'e3sm_version')
     mesh_revision = config.get('global_ocean', 'mesh_revision')
     pull_request = config.get('global_ocean', 'pull_request')
@@ -152,7 +152,7 @@ def _get_metadata(dsInit, config):
                     '<<<creation_date>>>': creation_date}
 
     for prefix in ['mesh', 'init', 'bathy', 'bgc', 'wisc']:
-        option = '{}_description'.format(prefix)
+        option = f'{prefix}_description'
         if config.has_option('global_ocean', option):
             description = config.get('global_ocean', option)
             description = ' '.join(
@@ -163,21 +163,21 @@ def _get_metadata(dsInit, config):
                                                       replacement)
             descriptions[prefix] = description
 
-    prefix = 'MPAS_Mesh_{}'.format(mesh_prefix)
+    prefix = f'MPAS_Mesh_{mesh_prefix}'
 
     metadata = {'MPAS_Mesh_Short_Name': short_name,
                 'MPAS_Mesh_Long_Name': long_name,
                 'MPAS_Mesh_Prefix': mesh_prefix,
                 'MPAS_Mesh_E3SM_Version': e3sm_version,
                 'MPAS_Mesh_Pull_Request': pull_request,
-                '{}_Revision'.format(prefix): mesh_revision,
-                '{}_Version_Author'.format(prefix): author,
-                '{}_Version_Author_Email'.format(prefix): email,
-                '{}_Version_Creation_Date'.format(prefix): creation_date,
-                '{}_Minimum_Resolution_km'.format(prefix): min_res,
-                '{}_Maximum_Resolution_km'.format(prefix): max_res,
-                '{}_Maximum_Depth_m'.format(prefix): '{}'.format(max_depth),
-                '{}_Number_of_Levels'.format(prefix): '{}'.format(levels),
+                f'{prefix}_Revision': mesh_revision,
+                f'{prefix}_Version_Author': author,
+                f'{prefix}_Version_Author_Email': email,
+                f'{prefix}_Version_Creation_Date': creation_date,
+                f'{prefix}_Minimum_Resolution_km': min_res,
+                f'{prefix}_Maximum_Resolution_km': max_res,
+                f'{prefix}_Maximum_Depth_m': f'{max_depth}',
+                f'{prefix}_Number_of_Levels': f'{levels}',
                 'MPAS_Mesh_Description': descriptions['mesh'],
                 'MPAS_Mesh_Bathymetry': descriptions['bathy'],
                 'MPAS_Initial_Condition': descriptions['init']}
@@ -196,7 +196,7 @@ def _get_metadata(dsInit, config):
 
     for name in packages:
         package = packages[name]
-        metadata['MPAS_Mesh_{}_Version'.format(name)] = \
+        metadata[f'MPAS_Mesh_{name}_Version'] = \
             _get_conda_package_version(package)
 
     return metadata
