@@ -50,6 +50,8 @@ param_info = {
                     'values': np.zeros((nRuns,)) * np.nan},
     'gamma0': {'units': 'unitless',
                'values': np.zeros((nRuns,)) * np.nan},
+    'meltflux': {'units': 'Gt/yr',
+                 'values': np.zeros((nRuns,)) * np.nan},
     'deltaT': {'units': 'deg C',
                'values': np.zeros((nRuns,)) * np.nan}}
 
