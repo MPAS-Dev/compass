@@ -109,8 +109,6 @@ class Mesh(TestCase):
         """
         if config is None:
             config = self.config
-        config.set('spherical_mesh', 'add_mesh_density', 'True')
-        config.set('spherical_mesh', 'plot_cell_width', 'True')
         config.add_from_package('compass.mesh', 'mesh.cfg', exception=True)
         # a description of the bathymetry
         if 'remap_topography' in self.steps:
@@ -125,6 +123,8 @@ class Mesh(TestCase):
         config.add_from_package(self.package, self.mesh_config_filename,
                                 exception=True)
 
+        config.set('spherical_mesh', 'add_mesh_density', 'True')
+        config.set('spherical_mesh', 'plot_cell_width', 'True')
         if self.with_ice_shelf_cavities:
             prefix = config.get('global_ocean', 'prefix')
             config.set('global_ocean', 'prefix', f'{prefix}wISC')
