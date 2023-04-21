@@ -380,6 +380,10 @@ for count1, param1 in enumerate(param_info):
                     xdata = param_info[param1]['values']
                     ydata = param_info[param2]['values']
                     zdata = qoi_info[qoi]['values']
+                    if np.isfinite(zdata).sum() == 0:
+                        print(f"No valid data for {param1} vs. {param2} "
+                              f"sensitivity plot for {qoi}, skipping")
+                        continue
                     plt.scatter(xdata, ydata, s=markerSize, c=zdata,
                                 plotnonfinite=False)
                     badIdx = np.nonzero(np.isnan(zdata))[0]
