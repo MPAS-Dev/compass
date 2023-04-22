@@ -175,8 +175,8 @@ ensemble_generator
    ensemble_member.EnsembleMember.setup
    ensemble_member.EnsembleMember.run
 
-   thwaites.ThwaitesEnsemble
-   thwaites.ThwaitesEnsemble.configure
+   ensemble.Ensemble
+   ensemble.Ensemble.configure
 
 greenland
 ~~~~~~~~~
@@ -413,7 +413,11 @@ Landice Framework
 .. autosummary::
    :toctree: generated/
 
+   ais_observations
+
    extrapolate.extrapolate_variable
+
+   iceshelf_melt.calc_mean_TF
 
    mesh.gridded_flood_fill
    mesh.set_rectangular_geom_points_and_edges

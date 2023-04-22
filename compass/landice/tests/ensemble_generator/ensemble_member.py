@@ -1,3 +1,4 @@
+import configparser
 import os
 import shutil
 from importlib import resources
@@ -37,6 +38,12 @@ class EnsembleMember(Step):
     basal_fric_exp : float
         value of basal friction exponent to use
 
+    mu_scale : float
+        value to scale muFriction by
+
+    stiff_scale : float
+        value to scale stiffnessFactor by
+
     von_mises_threshold : float
         value of von Mises stress threshold to use
 
@@ -53,9 +60,12 @@ class EnsembleMember(Step):
     def __init__(self, test_case, run_num,
                  test_resources_location,
                  basal_fric_exp=None,
+                 mu_scale=None,
+                 stiff_scale=None,
                  von_mises_threshold=None,
                  calv_spd_lim=None,
                  gamma0=None,
+                 meltflux=None,
                  deltaT=None):
         """
         Creates a new run within an ensemble
@@ -75,8 +85,15 @@ class EnsembleMember(Step):
         basal_fric_exp : float
             value of basal friction exponent to use
 
+        mu_scale : float
+            value to scale muFriction by
+
+        stiff_scale : float
+            value to scale stiffnessFactor by
+
         von_mises_threshold : float
             value of von Mises stress threshold to use
+            assumes same value for grounded and floating ice
 
         calv_spd_lim : float
             value of calving speed limit to use
@@ -92,9 +109,12 @@ class EnsembleMember(Step):
 
         # store assigned param values for this run
         self.basal_fric_exp = basal_fric_exp
+        self.mu_scale = mu_scale
+        self.stiff_scale = stiff_scale
         self.von_mises_threshold = von_mises_threshold
         self.calv_spd_lim = calv_spd_lim
         self.gamma0 = gamma0
+        self.meltflux = meltflux
         self.deltaT = deltaT
 
         # define step (run) name
@@ -110,18 +130,31 @@ class EnsembleMember(Step):
         """
 
         print(f'Setting up run number {self.run_num}')
-        # print(f'    basal_fric_exp={self.basal_fric_exp}, '
-        #       'von_mises_threshold={self.von_mises_threshold}, '
-        #       'calv_spd_lim={self.calv_spd_lim}')
+        if os.path.exists(os.path.join(self.work_dir, 'namelist.landice')):
+            print(f"WARNING: {self.work_dir} already created; skipping.  "
+                  "Please remove the directory "
+                  f"{self.work_dir} and execute "
+                  "'compass setup' again to set this experiment up.")
+            return
 
         # Get config for info needed for setting up simulation
         config = self.config
         section = config['ensemble']
 
+        # Create a python config (not compass config) file
+        # for run-specific info useful for analysis/viz
+        # (Could put these in compass step cfg file, but may be safer to
+        # not mess with it.)
+        run_info_cfg = configparser.ConfigParser()
+        run_info_cfg.add_section('run_info')
+        run_info_cfg.set('run_info', 'run_num', f'{self.run_num}')
+        # Below we set values for each parameter being used in this ensemble
+
         # save number of tasks to use
         # eventually compass could determine this, but for now we want
         # explicit control
         self.ntasks = section.getint('ntasks')
+        self.min_tasks = self.ntasks
 
         # Set up base run configuration
         self.add_namelist_file(self.test_resources_location,
@@ -139,51 +172,92 @@ class EnsembleMember(Step):
         self.add_model_as_input()
 
         # modify param values as needed for this ensemble member
+        options = {}
+
+        # CFL fraction is set from the cfg to force the user to make a
+        # conscious decision about its value
+        self.cfl_fraction = section.getfloat('cfl_fraction')
+        options['config_adaptive_timestep_CFL_fraction'] = \
+            f'{self.cfl_fraction}'
 
         # von Mises stress threshold
-        options = {'config_grounded_von_Mises_threshold_stress':
-                   f'{self.von_mises_threshold}',
-                   'config_floating_von_Mises_threshold_stress':
-                   f'{self.von_mises_threshold}'}
+        if self.von_mises_threshold is not None:
+            options['config_grounded_von_Mises_threshold_stress'] = \
+                f'{self.von_mises_threshold}'
+            options['config_floating_von_Mises_threshold_stress'] = \
+                f'{self.von_mises_threshold}'
+            run_info_cfg.set('run_info', 'von_mises_threshold',
+                             f'{self.von_mises_threshold}')
 
         # calving speed limit
-        options['config_calving_speed_limit'] = \
-            f'{self.calv_spd_lim}'
+        if self.calv_spd_lim is not None:
+            options['config_calving_speed_limit'] = \
+                f'{self.calv_spd_lim}'
+            run_info_cfg.set('run_info', 'calv_spd_limit',
+                             f'{self.calv_spd_lim}')
 
         # adjust basal friction exponent
         # rename and copy base file
         input_file_path = section.get('input_file_path')
         input_file_name = input_file_path.split('/')[-1]
-        input_new_file_name = \
-            f"{input_file_name.split('.')[:-1][0]}_MODIFIED_fricexp{self.basal_fric_exp:.4f}.nc"  # noqa E501
-        self.input_file_name = input_new_file_name
+        base_fname = input_file_name.split('.')[:-1][0]
+        new_input_fname = f'{base_fname}_MODIFIED.nc'
+        self.input_file_name = new_input_fname  # store for run method
         shutil.copy(input_file_path, os.path.join(self.work_dir,
-                                                  input_new_file_name))
-        # adjust mu and exponent
-        orig_fric_exp = section.getfloat('orig_fric_exp')
-        _adjust_friction_exponent(orig_fric_exp, self.basal_fric_exp,
-                                  os.path.join(self.work_dir,
-                                               input_new_file_name),
-                                  os.path.join(self.work_dir,
-                                               'albany_input.yaml'))
+                                                  new_input_fname))
         # set input filename in streams and create streams file
-        stream_replacements = {'input_file_init_cond': input_new_file_name}
+        stream_replacements = {'input_file_init_cond': new_input_fname}
+        if self.basal_fric_exp is not None:
+            # adjust mu and exponent
+            orig_fric_exp = section.getfloat('orig_fric_exp')
+            _adjust_friction_exponent(orig_fric_exp, self.basal_fric_exp,
+                                      os.path.join(self.work_dir,
+                                                   new_input_fname),
+                                      os.path.join(self.work_dir,
+                                                   'albany_input.yaml'))
+            run_info_cfg.set('run_info', 'basal_fric_exp',
+                             f'{self.basal_fric_exp}')
+
+        # mu scale
+        if self.mu_scale is not None:
+            f = netCDF4.Dataset(os.path.join(self.work_dir, new_input_fname),
+                                'r+')
+            f.variables['muFriction'][:] *= self.mu_scale
+            f.close()
+            run_info_cfg.set('run_info', 'mu_scale', f'{self.mu_scale}')
+
+        # stiff scale
+        if self.stiff_scale is not None:
+            f = netCDF4.Dataset(os.path.join(self.work_dir, new_input_fname),
+                                'r+')
+            f.variables['stiffnessFactor'][:] *= self.stiff_scale
+            f.close()
+            run_info_cfg.set('run_info', 'stiff_scale', f'{self.stiff_scale}')
 
         # adjust gamma0 and deltaT
+        # (only need to check one of these params)
         basal_melt_param_file_path = section.get('basal_melt_param_file_path')
         basal_melt_param_file_name = basal_melt_param_file_path.split('/')[-1]
-        basal_melt_param_new_file_name = \
-            f"{basal_melt_param_file_name.split('.')[:-1][0]}_MODIFIED_gamma{self.gamma0:.0f}_dT{self.deltaT:.3f}.nc"  # noqa E501
+        base_fname = basal_melt_param_file_name.split('.')[:-1][0]
+        new_fname = f'{base_fname}_MODIFIED.nc'
         shutil.copy(basal_melt_param_file_path,
-                    os.path.join(self.work_dir,
-                                 basal_melt_param_new_file_name))
-        _adjust_basal_melt_params(os.path.join(self.work_dir,
-                                  basal_melt_param_new_file_name),
+                    os.path.join(self.work_dir, new_fname))
+        _adjust_basal_melt_params(os.path.join(self.work_dir, new_fname),
                                   self.gamma0, self.deltaT)
-        stream_replacements['basal_melt_param_file_name'] = \
-            basal_melt_param_new_file_name
+        stream_replacements['basal_melt_param_file_name'] = new_fname
+        if self.gamma0 is not None:
+            run_info_cfg.set('run_info', 'gamma0', f'{self.gamma0}')
+        if self.deltaT is not None:
+            run_info_cfg.set('run_info', 'meltflux', f'{self.meltflux}')
+            run_info_cfg.set('run_info', 'deltaT', f'{self.deltaT}')
 
-        # store modified namelist and streams options
+        # set up forcing files (unmodified)
+        TF_file_path = section.get('TF_file_path')
+        stream_replacements['TF_file_path'] = TF_file_path
+        SMB_file_path = section.get('SMB_file_path')
+        stream_replacements['SMB_file_path'] = SMB_file_path
+
+        # store accumulated namelist and streams options
         self.add_namelist_options(options=options,
                                   out_name='namelist.landice')
         self.add_streams_file(self.test_resources_location, 'streams.landice',
@@ -205,6 +279,11 @@ class EnsembleMember(Step):
             # make a symlink to the script for loading the compass conda env.
             symlink(script_filename, os.path.join(self.work_dir,
                                                   'load_compass_env.sh'))
+
+        # save run info for analysis/viz
+        with open(os.path.join(self.work_dir, 'run_info.cfg'), 'w') \
+             as run_config_file:
+            run_info_cfg.write(run_config_file)
 
     def run(self):
         """
