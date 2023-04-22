@@ -57,7 +57,8 @@ class OceanMesh(FilesForE3SMStep):
 
             if self.with_ice_shelf_cavities:
                 keep_vars = keep_vars + [
-                    'landIceMask', 'landIceDraft', 'landIceFraction'
+                    'landIceMask', 'landIceDraft', 'landIceFraction',
+                    'landIceFloatingMask', 'landIceFloatingFraction'
                 ]
 
             ds = ds[keep_vars]
