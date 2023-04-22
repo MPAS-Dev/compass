@@ -733,11 +733,18 @@ init test case
 
 The class :py:class:`compass.ocean.tests.global_ocean.init.Init` defines a test
 case for creating a global initial condition using MPAS-Ocean's init mode.
-Currently there are two choices for the potential temperature and salinity
-fields used for initialization: the Polar science center Hydrographic Climatology
-(`PHC <http://psc.apl.washington.edu/nonwp_projects/PHC/Climatology.html>`_)
-or the UK MetOffice's EN4 estimated climatology for the year 1900
-(`EN4_1900 <https://www.metoffice.gov.uk/hadobs/en4/download-en4-2-0.html>`_).
+Currently there are 3 choices for the potential temperature and salinity
+fields used for initialization:
+
+  * the World Ocean Atlas 2023
+    (`WOA23 <https://www.ncei.noaa.gov/products/world-ocean-atlas>`_)
+    climatology from 1991-2020
+
+  * the Polar science center Hydrographic Climatology
+    (`PHC <http://psc.apl.washington.edu/nonwp_projects/PHC/Climatology.html>`_)
+
+  * the UK MetOffice's EN4 estimated climatology for the year 1900
+    (`EN4_1900 <https://www.metoffice.gov.uk/hadobs/en4/download-en4-2-0.html>`_).
 
 In its ``configure()`` method, ``Init`` brings in config options related to
 the mesh (e.g. metadata) by calling
@@ -746,9 +753,9 @@ the mesh (e.g. metadata) by calling
 The test case includes 5 namelist replacement files and 3 streams files.
 ``namelist.init`` and ``streams.init`` modify the namelist options and set up
 the streams needed for the test case, regardless of the particular
-test group.  ``namelist.phc`` and ``namelist.en4_1900`` set namelist options
-specific to those two sets of input files.  ``namelist.wisc`` and
-``streams.wisc`` configure the test case for meshes that include
+test group.  ``namelist.woa23``, ``namelist.phc`` and ``namelist.en4_1900`` set
+namelist options specific to those 3 sets of input files.  ``namelist.wisc``
+and ``streams.wisc`` configure the test case for meshes that include
 :ref:`global_ocean_ice_shelf_cavities`, while ``namelist.bgc`` and
 ``streams.bgc`` are used to configure the test case when
 :ref:`global_ocean_bgc` is included.

@@ -1,7 +1,7 @@
 .. _dev_ocean_isomip_plus:
 
 isomip_plus
-============
+===========
 
 The ``isomip_plus`` test group
 (:py:class:`compass.ocean.tests.isomip_plus.IsomipPlus`) implements variants
@@ -68,7 +68,7 @@ changing ice-shelf topography.  Variables are renamed to those expected by
 MPAS-Ocean.
 
 planar_mesh
-~~~~~~~~~
+~~~~~~~~~~~
 
 The class :py:class:`compass.ocean.tests.isomip_plus.planar_mesh.PlanarMesh`
 defines a step for generating a planar mesh.
@@ -78,7 +78,7 @@ cull_mesh
 
 The class :py:class:`compass.ocean.tests.isomip_plus.cull_mesh.CullMesh`
 defines a step for culling the mesh to include only ocean cells, with or
-without a thin film depending on the test. 
+without a thin film depending on the test.
 
 initial_state
 ~~~~~~~~~~~~~

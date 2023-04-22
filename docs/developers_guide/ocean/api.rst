@@ -442,7 +442,6 @@ isomip_plus
    forward.Forward.setup
    forward.Forward.run
 
-   geom.define_thin_film_mask_step1
    geom.interpolate_ocean_mask
    geom.interpolate_geom
 

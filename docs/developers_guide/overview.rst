@@ -277,7 +277,7 @@ the same conceptual test (e.g. restart) can be defined:
 
   * with or without ice-shelf cavities
 
-  * with the PHC or EN4 1900 initial conditions
+  * with the WOA23, PHC or EN4 1900 initial conditions
 
   * with or without BGC support
 

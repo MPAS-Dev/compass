@@ -504,33 +504,29 @@ in :ref:`global_ocean_meshes`.  Possible grid types are described in
 :ref:`ocean_vertical` and include ``uniform``, ``tanh_dz``, ``index_tanh_dz``,
 ``60layerPHC``, ``80layerE3SMv1``, and ``100layerE3SMv1``.
 
-compass supports two different types of initial conditions.  One is derived
+compass supports 3 different types of initial conditions.  One is the
+World Ocean Atlas 2023
+(`WOA23 <https://www.ncei.noaa.gov/products/world-ocean-atlas>`_)
+climatology from 1991-2020. The second is derived
 from the Polar science center Hydrographic Climatology
 (`PHC <http://psc.apl.washington.edu/nonwp_projects/PHC/Climatology.html>`_).
-The other is the UK MetOffice's EN4 estimated climatology for the year 1900
+The last is the UK MetOffice's EN4 estimated climatology for the year 1900
 (`EN4_1900 <https://www.metoffice.gov.uk/hadobs/en4/download-en4-2-0.html>`_).
 
-Either initial condition can also be combined with ecosystem tracers used in
-simulations with active :ref:`global_ocean_bgc` if ocean biogeochemsitry is
-enabled.  This dataset is from <<<need some help here!!!>>>.
+All subsequent tests (:ref:`global_ocean_performance_test`,
+:ref:`global_ocean_restart_test`, etc.) could potentially start from any of
+these initial conditions, meaning that a performance test starting from WOA23
+should be thought of as a different test from one starting from PHC.
+Therefore, it is convenient to house the ``init`` test case and all subsequent
+test cases that depend on it within a subdirectory with the name of the initial
+condition.  The relative paths associate with each initial condition for a
+given ``<mesh>`` are:
 
-Thus, there are 4 combinations of initial conditions, ``PHC``, ``PHC_BGC``,
-``EN4_1900`` and ``EN4_1900_BGC``.  All subsequent tests
-(:ref:`global_ocean_performance_test`, :ref:`global_ocean_restart_test`, etc.)
-could potentially start from any of these initial conditions, meaning that
-a performance test starting from PHC should be thought of as a different test
-from one starting from EN4_1900.  Therefore, it is convenient to house both
-the ``init`` test case and all subsequent test cases that depend on it within
-a subdirectory with the name of the initial condition.  The relative paths
-associate with each initial condition for a given ``<mesh>`` are:
+* ``ocean/global_ocean/<mesh>/WOA23/init``
 
 * ``ocean/global_ocean/<mesh>/PHC/init``
 
-* ``ocean/global_ocean/<mesh>/PHC_BGC/init``
-
 * ``ocean/global_ocean/<mesh>/EN4_1900/init``
-
-* ``ocean/global_ocean/<mesh>/EN4_1900_BGC/init``
 
 .. _global_ocean_performance_test:
 
