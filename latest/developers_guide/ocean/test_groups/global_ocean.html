@@ -222,7 +222,7 @@ defines:</p>
 <span class="na">mesh_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MPAS Eddy Closure mesh for E3SM version ${e3sm_version} with</span>
 <span class="w">                   </span><span class="na">enhanced resolution around the equator (30 km), South pole</span>
 <span class="w">                   </span><span class="na">(35 km), Greenland (${min_res} km), ${max_res}-km resolution</span>
-<span class="w">                   </span><span class="na">at mid latitudes, and &lt;&lt;&lt;levels&gt;&gt;&gt; vertical levels</span>
+<span class="w">                   </span><span class="na">at mid latitudes, and ${levels} vertical levels</span>
 <span class="c1"># E3SM version that the mesh is intended for</span>
 <span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
 <span class="c1"># The revision number of the mesh, which should be incremented each time the</span>
@@ -236,9 +236,6 @@ defines:</p>
 <span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
 </pre></div>
 </div>
-<p>Note that <code class="docutils literal notranslate"><span class="pre">&lt;&lt;&lt;levels&gt;&gt;&gt;</span></code> is a custom placeholder for the number of vertical
-levels, since this isn’t known until runtime.  There are similar placeholders
-for <code class="docutils literal notranslate"><span class="pre">&lt;&lt;&lt;creation_date&gt;&gt;&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;&lt;&lt;bottom_depth&gt;&gt;&gt;</span></code> for similar reasons.</p>
 <p>In this particular case, the <code class="docutils literal notranslate"><span class="pre">pull_request</span></code> has not yet been defined.  Each
 time the mesh is revised, the <code class="docutils literal notranslate"><span class="pre">mesh_revision</span></code> should be updated and the
 associated pull request to <a class="reference external" href="https://github.com/MPAS-Dev/compass/">https://github.com/MPAS-Dev/compass/</a> should be
@@ -246,9 +243,10 @@ added here.</p>
 <p>The function <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.metadata.get_e3sm_mesh_names.html#compass.ocean.tests.global_ocean.metadata.get_e3sm_mesh_names" title="compass.ocean.tests.global_ocean.metadata.get_e3sm_mesh_names"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.metadata.get_e3sm_mesh_names()</span></code></a>
 is used to construct the “short” and “long” names of the mesh using a
 standard naming convention for E3SM:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">short_mesh_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_prefix</span><span class="si">}{</span><span class="n">res</span><span class="si">}</span><span class="s1">E</span><span class="si">{</span><span class="n">e3sm_version</span><span class="si">}</span><span class="s1">r</span><span class="si">{</span><span class="n">mesh_revision</span><span class="si">}</span><span class="s1">&#39;</span>
-<span class="n">long_mesh_name</span> <span class="o">=</span> \
-    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_prefix</span><span class="si">}{</span><span class="n">res</span><span class="si">}</span><span class="s1">kmL</span><span class="si">{</span><span class="n">levels</span><span class="si">}</span><span class="s1">E3SMv</span><span class="si">{</span><span class="n">e3sm_version</span><span class="si">}</span><span class="s1">r</span><span class="si">{</span><span class="n">mesh_revision</span><span class="si">}</span><span class="s1">&#39;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">short_mesh_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">E</span><span class="si">{}</span><span class="s1">r</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_prefix</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">e3sm_version</span><span class="p">,</span>
+                                      <span class="n">mesh_revision</span><span class="p">)</span>
+<span class="n">long_mesh_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">kmL</span><span class="si">{}</span><span class="s1">E3SMv</span><span class="si">{}</span><span class="s1">r</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_prefix</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span>
+                                              <span class="n">e3sm_version</span><span class="p">,</span> <span class="n">mesh_revision</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>For example, the <code class="docutils literal notranslate"><span class="pre">QU240</span></code> mesh has the E3SM short name <code class="docutils literal notranslate"><span class="pre">QU240E2r1</span></code> and
@@ -429,7 +427,7 @@ duration for short runs with these meshes.</p>
 <span class="na">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">QU</span>
 <span class="c1"># a description of the mesh</span>
 <span class="na">mesh_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MPAS quasi-uniform mesh for E3SM version ${e3sm_version} at</span>
-<span class="w">                   </span><span class="na">${min_res}-km global resolution with &lt;&lt;&lt;levels&gt;&gt;&gt; vertical</span>
+<span class="w">                   </span><span class="na">${min_res}-km global resolution with ${levels} vertical</span>
 <span class="w">                   </span><span class="na">level</span>
 
 <span class="c1"># E3SM version that the mesh is intended for</span>
@@ -519,7 +517,7 @@ step and default run duration for short runs with these meshes.</p>
 <span class="na">mesh_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MPAS Eddy Closure mesh for E3SM version ${e3sm_version} with</span>
 <span class="w">                   </span><span class="na">enhanced resolution around the equator (30 km), South pole</span>
 <span class="w">                   </span><span class="na">(35 km), Greenland (${min_res} km), ${max_res}-km resolution</span>
-<span class="w">                   </span><span class="na">at mid latitudes, and &lt;&lt;&lt;levels&gt;&gt;&gt; vertical levels</span>
+<span class="w">                   </span><span class="na">at mid latitudes, and ${levels} vertical levels</span>
 <span class="c1"># E3SM version that the mesh is intended for</span>
 <span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
 <span class="c1"># The revision number of the mesh, which should be incremented each time the</span>
@@ -589,7 +587,7 @@ module:</p>
 <span class="w">                   </span><span class="na">Kuroshio-Oyashio Extension, 45-km resolution in the mid latitudes,</span>
 <span class="w">                   </span><span class="na">30-km resolution in a 15-degree band around the equator, 60-km</span>
 <span class="w">                   </span><span class="na">resolution in northern mid latitudes, 30 km in the north</span>
-<span class="w">                   </span><span class="na">Atlantic and 35 km in the Arctic.  This mesh has &lt;&lt;&lt;levels&gt;&gt;&gt;</span>
+<span class="w">                   </span><span class="na">Atlantic and 35 km in the Arctic.  This mesh has ${levels}</span>
 <span class="w">                   </span><span class="na">vertical levels.</span>
 <span class="c1"># E3SM version that the mesh is intended for</span>
 <span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
@@ -671,7 +669,7 @@ step and default run duration for short runs with these meshes.</p>
 <span class="w">                   </span><span class="na">Antarctica, 45-km resolution in the mid southern latitudes,</span>
 <span class="w">                   </span><span class="na">30-km resolution in a 15-degree band around the equator, 60-km</span>
 <span class="w">                   </span><span class="na">resolution in northern mid latitudes, 30 km in the north</span>
-<span class="w">                   </span><span class="na">Atlantic and 35 km in the Arctic.  This mesh has &lt;&lt;&lt;levels&gt;&gt;&gt;</span>
+<span class="w">                   </span><span class="na">Atlantic and 35 km in the Arctic.  This mesh has ${levels}</span>
 <span class="w">                   </span><span class="na">vertical levels and includes cavities under the ice shelves</span>
 <span class="w">                   </span><span class="na">around Antarctica.</span>
 <span class="c1"># E3SM version that the mesh is intended for</span>
@@ -761,7 +759,7 @@ short runs with these meshes.</p>
 <span class="c1"># a description of the mesh and initial condition</span>
 <span class="na">mesh_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MPAS North America and Arctic Focused Water Cycle mesh for E3SM version</span>
 <span class="w">                   </span><span class="na">${e3sm_version}, with a focused ${min_res}-km resolution</span>
-<span class="w">                   </span><span class="na">around North America and &lt;&lt;&lt;levels&gt;&gt;&gt; vertical levels</span>
+<span class="w">                   </span><span class="na">around North America and ${levels} vertical levels</span>
 
 <span class="c1"># E3SM version that the mesh is intended for</span>
 <span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
