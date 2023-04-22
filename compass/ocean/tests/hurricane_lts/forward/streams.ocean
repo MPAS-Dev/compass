@@ -12,7 +12,7 @@
 
 <immutable_stream name="restart"
                   type="input;output"
-                  filename_template="restart.$Y-$M-$D_$h.$m.$s.nc"
+                  filename_template="restarts/restart.$Y-$M-$D_$h.$m.$s.nc"
                   filename_interval="output_interval"
                   reference_time="0001-01-01_00:00:00"
                   clobber_mode="truncate"
@@ -24,13 +24,6 @@
                   filename_template="atmospheric_forcing.nc"
                   filename_interval="none"
                   packages="timeVaryingAtmosphericForcingPKG"
-                  input_interval="none"/>
-
-<immutable_stream name="land_ice_forcing"
-                  type="input"
-                  filename_template="land_ice_forcing.nc"
-                  filename_interval="none"
-                  packages="timeVaryingLandIceForcingPKG"
                   input_interval="none"/>
 
 <stream name="pointLocationsInput"
@@ -79,7 +72,7 @@
 
 <stream name="pointwiseStatsOutput"
         filename_template="pointwiseStats.nc"
-        type="none"
+        type="output"
         mode="forward;analysis"
         output_interval="none"
         packages="pointwiseStatsAMPKG"
