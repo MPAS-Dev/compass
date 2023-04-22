@@ -162,6 +162,7 @@
                         <span class="n">remap_topography</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                         <span class="n">include_rk4</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                         <span class="n">include_regression</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">include_phc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                         <span class="n">include_en4_1900</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                         <span class="n">include_bgc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -190,8 +191,12 @@
 
     <span class="k">def</span> <span class="nf">_add_tests</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_names</span><span class="p">,</span> <span class="n">DynamicAdjustment</span><span class="p">,</span> <span class="n">remap_topography</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                    <span class="n">include_rk4</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_regression</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                   <span class="n">include_en4_1900</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_bgc</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                   <span class="n">include_phc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_en4_1900</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                   <span class="n">include_bgc</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Add test cases for the given mesh(es) &quot;&quot;&quot;</span>
+
+        <span class="n">default_ic</span> <span class="o">=</span> <span class="s1">&#39;WOA23&#39;</span>
+        <span class="n">default_time_int</span> <span class="o">=</span> <span class="s1">&#39;split_explicit&#39;</span>
 
         <span class="k">for</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="n">mesh_names</span><span class="p">:</span>
             <span class="n">mesh_test</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">,</span>
@@ -199,11 +204,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">mesh_test</span><span class="p">)</span>
 
             <span class="n">init_test</span> <span class="o">=</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span>
-                             <span class="n">initial_condition</span><span class="o">=</span><span class="s1">&#39;PHC&#39;</span><span class="p">,</span>
+                             <span class="n">initial_condition</span><span class="o">=</span><span class="n">default_ic</span><span class="p">,</span>
                              <span class="n">with_bgc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">init_test</span><span class="p">)</span>
 
-            <span class="n">time_integrator</span> <span class="o">=</span> <span class="s1">&#39;split_explicit&#39;</span>
+            <span class="n">time_integrator</span> <span class="o">=</span> <span class="n">default_time_int</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
                 <span class="n">PerformanceTest</span><span class="p">(</span>
                     <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
@@ -263,11 +268,17 @@
                         <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
                         <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
 
+            <span class="n">initial_conditions</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="n">include_phc</span><span class="p">:</span>
+                <span class="n">initial_conditions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;PHC&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">include_en4_1900</span><span class="p">:</span>
-                <span class="c1"># EN4_1900 tests</span>
-                <span class="n">time_integrator</span> <span class="o">=</span> <span class="s1">&#39;split_explicit&#39;</span>
+                <span class="n">initial_conditions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;EN4_1900&#39;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">initial_condition</span> <span class="ow">in</span> <span class="n">initial_conditions</span><span class="p">:</span>
+                <span class="c1"># additional initial conditions (if any)</span>
+                <span class="n">time_integrator</span> <span class="o">=</span> <span class="n">default_time_int</span>
                 <span class="n">init_test</span> <span class="o">=</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span>
-                                 <span class="n">initial_condition</span><span class="o">=</span><span class="s1">&#39;EN4_1900&#39;</span><span class="p">,</span>
+                                 <span class="n">initial_condition</span><span class="o">=</span><span class="n">initial_condition</span><span class="p">,</span>
                                  <span class="n">with_bgc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">init_test</span><span class="p">)</span>
 
@@ -289,7 +300,7 @@
             <span class="k">if</span> <span class="n">include_bgc</span><span class="p">:</span>
                 <span class="c1"># BGC tests</span>
                 <span class="n">init_test</span> <span class="o">=</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span>
-                                 <span class="n">initial_condition</span><span class="o">=</span><span class="s1">&#39;PHC&#39;</span><span class="p">,</span>
+                                 <span class="n">initial_condition</span><span class="o">=</span><span class="n">default_ic</span><span class="p">,</span>
                                  <span class="n">with_bgc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">init_test</span><span class="p">)</span>
 

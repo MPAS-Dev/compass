@@ -303,7 +303,7 @@ the step whose outputs should be cached:
 .. code-block:: bash
 
     compass cache -i ocean/global_ocean/QU240/mesh/mesh \
-        ocean/global_ocean/QU240/PHC/init/initial_state
+        ocean/global_ocean/QU240/WOA23/init/initial_state
 
 This will:
 
@@ -322,8 +322,8 @@ The resulting ``ocean_cached_files.json`` will look something like:
         "ocean/global_ocean/QU240/mesh/mesh/culled_mesh.nc": "global_ocean/QU240/mesh/mesh/culled_mesh.210803.nc",
         "ocean/global_ocean/QU240/mesh/mesh/culled_graph.info": "global_ocean/QU240/mesh/mesh/culled_graph.210803.info",
         "ocean/global_ocean/QU240/mesh/mesh/critical_passages_mask_final.nc": "global_ocean/QU240/mesh/mesh/critical_passages_mask_final.210803.nc",
-        "ocean/global_ocean/QU240/PHC/init/initial_state/initial_state.nc": "global_ocean/QU240/PHC/init/initial_state/initial_state.210803.nc",
-        "ocean/global_ocean/QU240/PHC/init/initial_state/init_mode_forcing_data.nc": "global_ocean/QU240/PHC/init/initial_state/init_mode_forcing_data.210803.nc"
+        "ocean/global_ocean/QU240/WOA23/init/initial_state/initial_state.nc": "global_ocean/QU240/WOA23/init/initial_state/initial_state.210803.nc",
+        "ocean/global_ocean/QU240/WOA23/init/initial_state/init_mode_forcing_data.nc": "global_ocean/QU240/WOA23/init/initial_state/init_mode_forcing_data.210803.nc"
     }
 
 An optional flag ``--date_string`` lets the developer set the date string to

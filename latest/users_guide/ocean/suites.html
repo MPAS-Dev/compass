@@ -59,6 +59,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Test suites</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#nightly-test-suite">nightly test suite</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#quwisc240-test-suite">quwisc240 test suite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pr-test-suite">pr test suite</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#qu240-for-e3sm-test-suite">qu240_for_e3sm test suite</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#quwisc240-for-e3sm-test-suite">quwisc240_for_e3sm test suite</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ec30to60-test-suite">ec30to60 test suite</a></li>
@@ -128,12 +129,13 @@
              
   <section id="test-suites">
 <span id="ocean-suites"></span><h1>Test suites<a class="headerlink" href="#test-suites" title="Permalink to this heading">¶</a></h1>
-<p>The ocean core currently includes 5 <a class="reference internal" href="../test_suites.html#test-suites"><span class="std std-ref">Test Suites</span></a> that can be used to
+<p>The ocean core currently includes 16 <a class="reference internal" href="../test_suites.html#test-suites"><span class="std std-ref">Test Suites</span></a> that can be used to
 run a series of ocean test cases and optionally compare them against a baseline
-run of the same tests.</p>
+run of the same tests.  Several are described below but several are missing
+from the documentation and should be added.</p>
 <section id="nightly-test-suite">
 <span id="ocean-suite-nightly"></span><h2>nightly test suite<a class="headerlink" href="#nightly-test-suite" title="Permalink to this heading">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass<span class="w"> </span>suite<span class="w"> </span>-c<span class="w"> </span>ocean<span class="w"> </span>-t<span class="w"> </span>nightly<span class="w"> </span>...
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass<span class="w"> </span>suite<span class="w"> </span>-s<span class="w"> </span>-c<span class="w"> </span>ocean<span class="w"> </span>-t<span class="w"> </span>nightly<span class="w"> </span>...
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">nightly</span></code> test suite includes the following test cases:</p>
@@ -143,25 +145,26 @@ ocean/baroclinic_channel/10km/decomp_test
 ocean/baroclinic_channel/10km/restart_test
 
 ocean/global_ocean/QU240/mesh
-ocean/global_ocean/QU240/PHC/init
-ocean/global_ocean/QU240/PHC/performance_test
-ocean/global_ocean/QU240/PHC/restart_test
-ocean/global_ocean/QU240/PHC/decomp_test
-ocean/global_ocean/QU240/PHC/threads_test
-ocean/global_ocean/QU240/PHC/analysis_test
+ocean/global_ocean/QU240/WOA23/init
+ocean/global_ocean/QU240/WOA23/performance_test
+ocean/global_ocean/QU240/WOA23/restart_test
+ocean/global_ocean/QU240/WOA23/decomp_test
+ocean/global_ocean/QU240/WOA23/threads_test
+ocean/global_ocean/QU240/WOA23/analysis_test
 
-ocean/global_ocean/QU240/PHC/RK4/performance_test
-ocean/global_ocean/QU240/PHC/RK4/restart_test
-ocean/global_ocean/QU240/PHC/RK4/decomp_test
-ocean/global_ocean/QU240/PHC/RK4/threads_test
+ocean/global_ocean/QU240/WOA23/RK4/performance_test
+ocean/global_ocean/QU240/WOA23/RK4/restart_test
+ocean/global_ocean/QU240/WOA23/RK4/decomp_test
+ocean/global_ocean/QU240/WOA23/RK4/threads_test
 
-ocean/global_ocean/QU240/EN4_1900/init
-ocean/global_ocean/QU240/EN4_1900/performance_test
+ocean/global_ocean/QUwISC240/mesh
+  cached
+ocean/global_ocean/QUwISC240/WOA23/init
+  cached
+ocean/global_ocean/QUwISC240/WOA23/performance_test
 
-ocean/global_ocean/QU240/PHC_BGC/init
-ocean/global_ocean/QU240/PHC_BGC/performance_test
-
-ocean/ice_shelf_2d/5km/restart_test
+ocean/ice_shelf_2d/5km/z-star/restart_test
+ocean/ice_shelf_2d/5km/z-level/restart_test
 
 ocean/ziso/20km/default
 ocean/ziso/20km/with_frazil
@@ -192,24 +195,24 @@ working properly.</p>
 </section>
 <section id="quwisc240-test-suite">
 <span id="ocean-suite-quwisc240"></span><h2>quwisc240 test suite<a class="headerlink" href="#quwisc240-test-suite" title="Permalink to this heading">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass<span class="w"> </span>suite<span class="w"> </span>-c<span class="w"> </span>ocean<span class="w"> </span>-t<span class="w"> </span>quwisc240<span class="w"> </span>...
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass<span class="w"> </span>suite<span class="w"> </span>-s<span class="w"> </span>-c<span class="w"> </span>ocean<span class="w"> </span>-t<span class="w"> </span>quwisc240<span class="w"> </span>...
 </pre></div>
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ocean/global_ocean/QUwISC240/mesh
-ocean/global_ocean/QUwISC240/PHC/init
-ocean/global_ocean/QUwISC240/PHC/performance_test
-ocean/global_ocean/QUwISC240/PHC/restart_test
-ocean/global_ocean/QUwISC240/PHC/decomp_test
-ocean/global_ocean/QUwISC240/PHC/threads_test
-ocean/global_ocean/QUwISC240/PHC/analysis_test
-ocean/global_ocean/QUwISC240/PHC/RK4/performance_test
-ocean/global_ocean/QUwISC240/PHC/RK4/restart_test
-ocean/global_ocean/QUwISC240/PHC/RK4/decomp_test
-ocean/global_ocean/QUwISC240/PHC/RK4/threads_test
+ocean/global_ocean/QUwISC240/WOA23/init
+ocean/global_ocean/QUwISC240/WOA23/performance_test
+ocean/global_ocean/QUwISC240/WOA23/restart_test
+ocean/global_ocean/QUwISC240/WOA23/decomp_test
+ocean/global_ocean/QUwISC240/WOA23/threads_test
+ocean/global_ocean/QUwISC240/WOA23/analysis_test
+ocean/global_ocean/QUwISC240/WOA23/RK4/performance_test
+ocean/global_ocean/QUwISC240/WOA23/RK4/restart_test
+ocean/global_ocean/QUwISC240/WOA23/RK4/decomp_test
+ocean/global_ocean/QUwISC240/WOA23/RK4/threads_test
 ocean/global_ocean/QUwISC240/EN4_1900/init
 ocean/global_ocean/QUwISC240/EN4_1900/performance_test
-ocean/global_ocean/QUwISC240/PHC_BGC/init
-ocean/global_ocean/QUwISC240/PHC_BGC/performance_test
+ocean/global_ocean/QUwISC240/WOA23_BGC/init
+ocean/global_ocean/QUwISC240/WOA23_BGC/performance_test
 </pre></div>
 </div>
 <p>This test suite performs exactly the same set of tests for the QUwISC240 mesh
@@ -220,15 +223,80 @@ equilibrate (see <a class="reference internal" href="framework/ice_shelf.html#oc
 on a regular basis to ensure no unexpected changes to MPAS-Ocean and E3SM
 configurations with ice-shelf cavities.</p>
 </section>
+<section id="pr-test-suite">
+<span id="ocean-suite-pr"></span><h2>pr test suite<a class="headerlink" href="#pr-test-suite" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass<span class="w"> </span>suite<span class="w"> </span>-s<span class="w"> </span>-c<span class="w"> </span>ocean<span class="w"> </span>-t<span class="w"> </span>pr<span class="w"> </span>...
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">nightly</span></code> test suite includes the following test cases:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ocean/baroclinic_channel/10km/default
+ocean/baroclinic_channel/10km/threads_test
+ocean/baroclinic_channel/10km/decomp_test
+ocean/baroclinic_channel/10km/restart_test
+
+ocean/internal_wave/default
+ocean/internal_wave/vlr/default
+
+ocean/global_convergence/qu/cosine_bell
+  cached: QU60_mesh QU60_init QU90_mesh QU90_init QU120_mesh QU120_init
+  cached: QU150_mesh QU150_init QU180_mesh QU180_init QU210_mesh QU210_init
+  cached: QU240_mesh QU240_init
+
+ocean/global_ocean/QU240/mesh
+ocean/global_ocean/QU240/WOA23/init
+ocean/global_ocean/QU240/WOA23/performance_test
+ocean/global_ocean/QU240/WOA23/restart_test
+ocean/global_ocean/QU240/WOA23/decomp_test
+ocean/global_ocean/QU240/WOA23/threads_test
+ocean/global_ocean/QU240/WOA23/analysis_test
+ocean/global_ocean/QU240/WOA23/dynamic_adjustment
+
+ocean/global_ocean/QU240/WOA23/RK4/performance_test
+ocean/global_ocean/QU240/WOA23/RK4/restart_test
+ocean/global_ocean/QU240/WOA23/RK4/decomp_test
+ocean/global_ocean/QU240/WOA23/RK4/threads_test
+
+ocean/global_ocean/QUwISC240/mesh
+  cached
+ocean/global_ocean/QUwISC240/WOA23/init
+  cached
+ocean/global_ocean/QUwISC240/WOA23/performance_test
+
+ocean/global_ocean/EC30to60/mesh
+  cached
+ocean/global_ocean/EC30to60/WOA23/init
+  cached
+ocean/global_ocean/EC30to60/WOA23/performance_test
+
+ocean/global_ocean/ECwISC30to60/mesh
+  cached
+ocean/global_ocean/ECwISC30to60/WOA23/init
+  cached
+ocean/global_ocean/ECwISC30to60/WOA23/performance_test
+
+ocean/ice_shelf_2d/5km/z-star/restart_test
+ocean/ice_shelf_2d/5km/z-level/restart_test
+
+ocean/isomip_plus/planar/2km/z-star/Ocean0
+
+ocean/ziso/20km/default
+ocean/ziso/20km/with_frazil
+</pre></div>
+</div>
+<p>These are all meant to be slightly more comprehensive tests than <cite>nightly</cite>,
+to be compared to a baseline before a compass or MPAS-Ocean PR gest merged.
+They cover additional features such as convergence, higher resolution meshes,
+and vertical lagrangian remapping.</p>
+</section>
 <section id="qu240-for-e3sm-test-suite">
 <span id="ocean-suite-qu240-for-e3sm"></span><h2>qu240_for_e3sm test suite<a class="headerlink" href="#qu240-for-e3sm-test-suite" title="Permalink to this heading">¶</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass<span class="w"> </span>suite<span class="w"> </span>-c<span class="w"> </span>ocean<span class="w"> </span>-t<span class="w"> </span>qu240_for_e3sm<span class="w"> </span>...
 </pre></div>
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ocean/global_ocean/QU240/mesh
-ocean/global_ocean/QU240/PHC/init
-ocean/global_ocean/QU240/PHC/dynamic_adjustment
-ocean/global_ocean/QU240/PHC/files_for_e3sm
+ocean/global_ocean/QU240/WOA23/init
+ocean/global_ocean/QU240/WOA23/dynamic_adjustment
+ocean/global_ocean/QU240/WOA23/files_for_e3sm
 </pre></div>
 </div>
 <p>This suite includes all the tests needed to spin up an initial condition for
@@ -240,9 +308,9 @@ E3SM on the QU240 mesh.</p>
 </pre></div>
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ocean/global_ocean/QUwISC240/mesh
-ocean/global_ocean/QUwISC240/PHC/init
-ocean/global_ocean/QUwISC240/PHC/dynamic_adjustment
-ocean/global_ocean/QUwISC240/PHC/files_for_e3sm
+ocean/global_ocean/QUwISC240/WOA23/init
+ocean/global_ocean/QUwISC240/WOA23/dynamic_adjustment
+ocean/global_ocean/QUwISC240/WOA23/files_for_e3sm
 </pre></div>
 </div>
 <p>This suite includes all the tests needed to spin up an initial condition for
@@ -254,10 +322,10 @@ E3SM on the QUwISC240 mesh.</p>
 </pre></div>
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ocean/global_ocean/EC30to60/mesh
-ocean/global_ocean/EC30to60/PHC/init
-ocean/global_ocean/EC30to60/PHC/performance_test
-ocean/global_ocean/EC30to60/PHC/dynamic_adjustment
-ocean/global_ocean/EC30to60/PHC/files_for_e3sm
+ocean/global_ocean/EC30to60/WOA23/init
+ocean/global_ocean/EC30to60/WOA23/performance_test
+ocean/global_ocean/EC30to60/WOA23/dynamic_adjustment
+ocean/global_ocean/EC30to60/WOA23/files_for_e3sm
 </pre></div>
 </div>
 <p>This suite is included for convenience so all the tests needed to spin up an
@@ -270,10 +338,10 @@ command.  A short performance test is also included.</p>
 </pre></div>
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ocean/global_ocean/ECwISC30to60/mesh
-ocean/global_ocean/ECwISC30to60/PHC/init
-ocean/global_ocean/ECwISC30to60/PHC/performance_test
-ocean/global_ocean/ECwISC30to60/PHC/dynamic_adjustment
-ocean/global_ocean/ECwISC30to60/PHC/files_for_e3sm
+ocean/global_ocean/ECwISC30to60/WOA23/init
+ocean/global_ocean/ECwISC30to60/WOA23/performance_test
+ocean/global_ocean/ECwISC30to60/WOA23/dynamic_adjustment
+ocean/global_ocean/ECwISC30to60/WOA23/files_for_e3sm
 </pre></div>
 </div>
 <p>Similarly to the previous 3 suites, this suite is included for convenience so

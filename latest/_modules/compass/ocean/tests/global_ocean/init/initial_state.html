@@ -135,7 +135,7 @@
 <span class="sd">    mesh : compass.ocean.tests.global_ocean.mesh.mesh.MeshStep</span>
 <span class="sd">        The step for creating the mesh</span>
 
-<span class="sd">    initial_condition : {&#39;PHC&#39;, &#39;EN4_1900&#39;}</span>
+<span class="sd">    initial_condition : {&#39;WOA23&#39;, &#39;PHC&#39;, &#39;EN4_1900&#39;}</span>
 <span class="sd">        The initial condition dataset to use</span>
 
 <span class="sd">    with_bgc : bool</span>
@@ -153,13 +153,13 @@
 <span class="sd">        mesh : compass.ocean.tests.global_ocean.mesh.Mesh</span>
 <span class="sd">            The test case that creates the mesh used by this test case</span>
 
-<span class="sd">        initial_condition : {&#39;PHC&#39;, &#39;EN4_1900&#39;}</span>
+<span class="sd">        initial_condition : {&#39;WOA23&#39;, &#39;PHC&#39;, &#39;EN4_1900&#39;}</span>
 <span class="sd">            The initial condition dataset to use</span>
 
 <span class="sd">        with_bgc : bool</span>
 <span class="sd">            Whether to include biogeochemistry (BGC) in the initial condition</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">initial_condition</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;PHC&#39;</span><span class="p">,</span> <span class="s1">&#39;EN4_1900&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">initial_condition</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;WOA23&#39;</span><span class="p">,</span> <span class="s1">&#39;PHC&#39;</span><span class="p">,</span> <span class="s1">&#39;EN4_1900&#39;</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unknown initial_condition </span><span class="si">{</span><span class="n">initial_condition</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;initial_state&#39;</span><span class="p">)</span>
@@ -225,7 +225,12 @@
             <span class="n">target</span><span class="o">=</span><span class="s1">&#39;chlorophyllA_monthly_averages_1deg.151201.nc&#39;</span><span class="p">,</span>
             <span class="n">database</span><span class="o">=</span><span class="s1">&#39;initial_condition_database&#39;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">initial_condition</span> <span class="o">==</span> <span class="s1">&#39;PHC&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">initial_condition</span> <span class="o">==</span> <span class="s1">&#39;WOA23&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;woa23.nc&#39;</span><span class="p">,</span>
+                <span class="n">target</span><span class="o">=</span><span class="s1">&#39;woa23_decav_0.25_extrap.20230416.nc&#39;</span><span class="p">,</span>
+                <span class="n">database</span><span class="o">=</span><span class="s1">&#39;initial_condition_database&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">initial_condition</span> <span class="o">==</span> <span class="s1">&#39;PHC&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
                 <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;temperature.nc&#39;</span><span class="p">,</span>
                 <span class="n">target</span><span class="o">=</span><span class="s1">&#39;PotentialTemperature.01.filled.60levels.PHC.151106.nc&#39;</span><span class="p">,</span>

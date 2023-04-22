@@ -565,28 +565,26 @@ vertical mesh and and initial condition.</p>
 in <a class="reference internal" href="#global-ocean-meshes"><span class="std std-ref">Meshes</span></a>.  Possible grid types are described in
 <a class="reference internal" href="../framework/vertical.html#ocean-vertical"><span class="std std-ref">Vertical coordinate</span></a> and include <code class="docutils literal notranslate"><span class="pre">uniform</span></code>, <code class="docutils literal notranslate"><span class="pre">tanh_dz</span></code>, <code class="docutils literal notranslate"><span class="pre">index_tanh_dz</span></code>,
 <code class="docutils literal notranslate"><span class="pre">60layerPHC</span></code>, <code class="docutils literal notranslate"><span class="pre">80layerE3SMv1</span></code>, and <code class="docutils literal notranslate"><span class="pre">100layerE3SMv1</span></code>.</p>
-<p>compass supports two different types of initial conditions.  One is derived
+<p>compass supports 3 different types of initial conditions.  One is the
+World Ocean Atlas 2023
+(<a class="reference external" href="https://www.ncei.noaa.gov/products/world-ocean-atlas">WOA23</a>)
+climatology from 1991-2020. The second is derived
 from the Polar science center Hydrographic Climatology
 (<a class="reference external" href="http://psc.apl.washington.edu/nonwp_projects/PHC/Climatology.html">PHC</a>).
-The other is the UK MetOffice’s EN4 estimated climatology for the year 1900
+The last is the UK MetOffice’s EN4 estimated climatology for the year 1900
 (<a class="reference external" href="https://www.metoffice.gov.uk/hadobs/en4/download-en4-2-0.html">EN4_1900</a>).</p>
-<p>Either initial condition can also be combined with ecosystem tracers used in
-simulations with active <a class="reference internal" href="#global-ocean-bgc"><span class="std std-ref">Biogeochemsitry</span></a> if ocean biogeochemsitry is
-enabled.  This dataset is from &lt;&lt;&lt;need some help here!!!&gt;&gt;&gt;.</p>
-<p>Thus, there are 4 combinations of initial conditions, <code class="docutils literal notranslate"><span class="pre">PHC</span></code>, <code class="docutils literal notranslate"><span class="pre">PHC_BGC</span></code>,
-<code class="docutils literal notranslate"><span class="pre">EN4_1900</span></code> and <code class="docutils literal notranslate"><span class="pre">EN4_1900_BGC</span></code>.  All subsequent tests
-(<a class="reference internal" href="#global-ocean-performance-test"><span class="std std-ref">performance_test test case</span></a>, <a class="reference internal" href="#global-ocean-restart-test"><span class="std std-ref">restart_test test case</span></a>, etc.)
-could potentially start from any of these initial conditions, meaning that
-a performance test starting from PHC should be thought of as a different test
-from one starting from EN4_1900.  Therefore, it is convenient to house both
-the <code class="docutils literal notranslate"><span class="pre">init</span></code> test case and all subsequent test cases that depend on it within
-a subdirectory with the name of the initial condition.  The relative paths
-associate with each initial condition for a given <code class="docutils literal notranslate"><span class="pre">&lt;mesh&gt;</span></code> are:</p>
+<p>All subsequent tests (<a class="reference internal" href="#global-ocean-performance-test"><span class="std std-ref">performance_test test case</span></a>,
+<a class="reference internal" href="#global-ocean-restart-test"><span class="std std-ref">restart_test test case</span></a>, etc.) could potentially start from any of
+these initial conditions, meaning that a performance test starting from WOA23
+should be thought of as a different test from one starting from PHC.
+Therefore, it is convenient to house the <code class="docutils literal notranslate"><span class="pre">init</span></code> test case and all subsequent
+test cases that depend on it within a subdirectory with the name of the initial
+condition.  The relative paths associate with each initial condition for a
+given <code class="docutils literal notranslate"><span class="pre">&lt;mesh&gt;</span></code> are:</p>
 <ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/&lt;mesh&gt;/WOA23/init</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/&lt;mesh&gt;/PHC/init</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/&lt;mesh&gt;/PHC_BGC/init</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/&lt;mesh&gt;/EN4_1900/init</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/&lt;mesh&gt;/EN4_1900_BGC/init</span></code></p></li>
 </ul>
 </section>
 <section id="performance-test-test-case">

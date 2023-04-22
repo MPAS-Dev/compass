@@ -792,20 +792,28 @@ thickness from 10 to 250 m.</p>
 <span id="dev-ocean-global-ocean-init"></span><h3>init test case<a class="headerlink" href="#init-test-case" title="Permalink to this heading">¶</a></h3>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.init.Init.html#compass.ocean.tests.global_ocean.init.Init" title="compass.ocean.tests.global_ocean.init.Init"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.init.Init</span></code></a> defines a test
 case for creating a global initial condition using MPAS-Ocean’s init mode.
-Currently there are two choices for the potential temperature and salinity
-fields used for initialization: the Polar science center Hydrographic Climatology
-(<a class="reference external" href="http://psc.apl.washington.edu/nonwp_projects/PHC/Climatology.html">PHC</a>)
-or the UK MetOffice’s EN4 estimated climatology for the year 1900
-(<a class="reference external" href="https://www.metoffice.gov.uk/hadobs/en4/download-en4-2-0.html">EN4_1900</a>).</p>
+Currently there are 3 choices for the potential temperature and salinity
+fields used for initialization:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the World Ocean Atlas 2023
+(<a class="reference external" href="https://www.ncei.noaa.gov/products/world-ocean-atlas">WOA23</a>)
+climatology from 1991-2020</p></li>
+<li><p>the Polar science center Hydrographic Climatology
+(<a class="reference external" href="http://psc.apl.washington.edu/nonwp_projects/PHC/Climatology.html">PHC</a>)</p></li>
+<li><p>the UK MetOffice’s EN4 estimated climatology for the year 1900
+(<a class="reference external" href="https://www.metoffice.gov.uk/hadobs/en4/download-en4-2-0.html">EN4_1900</a>).</p></li>
+</ul>
+</div></blockquote>
 <p>In its <code class="docutils literal notranslate"><span class="pre">configure()</span></code> method, <code class="docutils literal notranslate"><span class="pre">Init</span></code> brings in config options related to
 the mesh (e.g. metadata) by calling
 <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.Mesh.configure.html#compass.ocean.tests.global_ocean.mesh.Mesh.configure" title="compass.ocean.tests.global_ocean.mesh.Mesh.configure"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.Mesh.configure()</span></code></a>.</p>
 <p>The test case includes 5 namelist replacement files and 3 streams files.
 <code class="docutils literal notranslate"><span class="pre">namelist.init</span></code> and <code class="docutils literal notranslate"><span class="pre">streams.init</span></code> modify the namelist options and set up
 the streams needed for the test case, regardless of the particular
-test group.  <code class="docutils literal notranslate"><span class="pre">namelist.phc</span></code> and <code class="docutils literal notranslate"><span class="pre">namelist.en4_1900</span></code> set namelist options
-specific to those two sets of input files.  <code class="docutils literal notranslate"><span class="pre">namelist.wisc</span></code> and
-<code class="docutils literal notranslate"><span class="pre">streams.wisc</span></code> configure the test case for meshes that include
+test group.  <code class="docutils literal notranslate"><span class="pre">namelist.woa23</span></code>, <code class="docutils literal notranslate"><span class="pre">namelist.phc</span></code> and <code class="docutils literal notranslate"><span class="pre">namelist.en4_1900</span></code> set
+namelist options specific to those 3 sets of input files.  <code class="docutils literal notranslate"><span class="pre">namelist.wisc</span></code>
+and <code class="docutils literal notranslate"><span class="pre">streams.wisc</span></code> configure the test case for meshes that include
 <a class="reference internal" href="../../../users_guide/ocean/test_groups/global_ocean.html#global-ocean-ice-shelf-cavities"><span class="std std-ref">Ice-shelf cavities</span></a>, while <code class="docutils literal notranslate"><span class="pre">namelist.bgc</span></code> and
 <code class="docutils literal notranslate"><span class="pre">streams.bgc</span></code> are used to configure the test case when
 <a class="reference internal" href="../../../users_guide/ocean/test_groups/global_ocean.html#global-ocean-bgc"><span class="std std-ref">Biogeochemsitry</span></a> is included.</p>

@@ -36,6 +36,7 @@ the current set of available test suites is:
       -c ocean -t kuroshio8to60
       -c ocean -t kuroshio12to60
       -c ocean -t nightly
+      -c ocean -t phc
       -c ocean -t pr
       -c ocean -t qu240_for_e3sm
       -c ocean -t quwisc240
@@ -57,23 +58,23 @@ for regression testing of MPAS-Ocean.  Here are the tests included:
     ocean/baroclinic_channel/10km/restart_test
 
     ocean/global_ocean/QU240/mesh
-    ocean/global_ocean/QU240/PHC/init
-    ocean/global_ocean/QU240/PHC/performance_test
-    ocean/global_ocean/QU240/PHC/restart_test
-    ocean/global_ocean/QU240/PHC/decomp_test
-    ocean/global_ocean/QU240/PHC/threads_test
-    ocean/global_ocean/QU240/PHC/analysis_test
+    ocean/global_ocean/QU240/WOA23/init
+    ocean/global_ocean/QU240/WOA23/performance_test
+    ocean/global_ocean/QU240/WOA23/restart_test
+    ocean/global_ocean/QU240/WOA23/decomp_test
+    ocean/global_ocean/QU240/WOA23/threads_test
+    ocean/global_ocean/QU240/WOA23/analysis_test
 
-    ocean/global_ocean/QU240/PHC/RK4/performance_test
-    ocean/global_ocean/QU240/PHC/RK4/restart_test
-    ocean/global_ocean/QU240/PHC/RK4/decomp_test
-    ocean/global_ocean/QU240/PHC/RK4/threads_test
+    ocean/global_ocean/QU240/WOA23/RK4/performance_test
+    ocean/global_ocean/QU240/WOA23/RK4/restart_test
+    ocean/global_ocean/QU240/WOA23/RK4/decomp_test
+    ocean/global_ocean/QU240/WOA23/RK4/threads_test
 
     ocean/global_ocean/QUwISC240/mesh
       cached
-    ocean/global_ocean/QUwISC240/PHC/init
+    ocean/global_ocean/QUwISC240/WOA23/init
       cached
-    ocean/global_ocean/QUwISC240/PHC/performance_test
+    ocean/global_ocean/QUwISC240/WOA23/performance_test
 
     ocean/ice_shelf_2d/5km/z-star/restart_test
     ocean/ice_shelf_2d/5km/z-level/restart_test
@@ -88,7 +89,7 @@ for regression testing of MPAS-Ocean.  Here are the tests included:
     of a previous run are simply downloaded.  This is used to skip steps that
     are prohibitively time consuming during regression testing, but where the
     results are needed to run subsequent tests.  An example above is the
-    ``mesh`` and ``PHC/init`` test cases from the ``ocean/global_ocean/``
+    ``mesh`` and ``WOA23/init`` test cases from the ``ocean/global_ocean/``
     test group on the ``QUwISC240`` mesh.  These tests take several minutes to
     run, which is longer than we wish to take for a quick performance test,
     so they are cached instead.

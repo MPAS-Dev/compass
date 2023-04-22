@@ -129,7 +129,7 @@
 <span class="sd">    mesh : compass.ocean.tests.global_ocean.mesh.Mesh</span>
 <span class="sd">        The test case that creates the mesh used by this test case</span>
 
-<span class="sd">    initial_condition : {&#39;PHC&#39;, &#39;EN4_1900&#39;}</span>
+<span class="sd">    initial_condition : {&#39;WOA23&#39;, &#39;PHC&#39;, &#39;EN4_1900&#39;}</span>
 <span class="sd">        The initial condition dataset to use</span>
 
 <span class="sd">    with_bgc : bool</span>
@@ -151,7 +151,7 @@
 <span class="sd">        mesh : compass.ocean.tests.global_ocean.mesh.Mesh</span>
 <span class="sd">            The test case that creates the mesh used by this test case</span>
 
-<span class="sd">        initial_condition : {&#39;PHC&#39;, &#39;EN4_1900&#39;}</span>
+<span class="sd">        initial_condition : {&#39;WOA23&#39;, &#39;PHC&#39;, &#39;EN4_1900&#39;}</span>
 <span class="sd">            The initial condition dataset to use</span>
 
 <span class="sd">        with_bgc : bool</span>
@@ -194,10 +194,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
 
         <span class="n">initial_condition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_condition</span>
-        <span class="n">descriptions</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;PHC&#39;</span><span class="p">:</span> <span class="s1">&#39;Polar science center Hydrographic &#39;</span>
+        <span class="n">descriptions</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;WOA23&#39;</span><span class="p">:</span> <span class="s1">&#39;World Ocean Atlas 2023 climatology &#39;</span>
+                                 <span class="s1">&#39;1991-2020&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;PHC&#39;</span><span class="p">:</span> <span class="s1">&#39;Polar science center Hydrographic &#39;</span>
                                <span class="s1">&#39;Climatology (PHC)&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;EN4_1900&#39;</span><span class="p">:</span>
-                            <span class="s2">&quot;Met Office Hadley Centre&#39;s EN4 dataset from 1900&quot;</span><span class="p">}</span>
+                        <span class="s1">&#39;EN4_1900&#39;</span><span class="p">:</span> <span class="s2">&quot;Met Office Hadley Centre&#39;s EN4 dataset &quot;</span>
+                                    <span class="s2">&quot;from 1900&quot;</span><span class="p">}</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;init_description&#39;</span><span class="p">,</span>
                    <span class="n">descriptions</span><span class="p">[</span><span class="n">initial_condition</span><span class="p">])</span>
 
