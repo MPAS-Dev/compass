@@ -61,7 +61,7 @@
 <li class="toctree-l3"><a class="reference internal" href="eismint2.html">eismint2</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">ensemble_generator</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#thwaites">thwaites</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ensemble">ensemble</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="enthalpy_benchmark.html">enthalpy_benchmark</a></li>
@@ -146,7 +146,7 @@
 <p>The <code class="docutils literal notranslate"><span class="pre">landice/ensemble_generator</span></code> test group creates ensemble of MALI
 simulations with different parameter values.  The ensemble framework
 sets up a user-defined number of simulations with parameter values selected
-from a space-filling Sobol sequence.</p>
+from either uniform sampling or a space-filling Sobol sequence.</p>
 <p>A test case in this test group consists of a number of ensemble members,
 and one ensemble manager.
 Each ensemble member is a step of the test case, and can be run separately
@@ -160,58 +160,48 @@ allows one to perform a small ensemble (e.g. 2-10 runs) to make sure results
 look as expected before spending time on a larger ensemble. This also allows
 one to add more ensemble members from the Sobol sequence later if UQ analysis
 indicates the original sample size was insufficient.</p>
-<p>Individual test cases will define which parameters are being sampled and
-over what ranges.  Currently these parameters are supported:</p>
+<p>A number of possible parameters are supported and whether they are active and
+what parameter value ranges should be used are specified in a user-supplied
+config file.  Currently these parameters are supported:</p>
 <ul class="simple">
 <li><p>basal friction power law exponent</p></li>
+<li><p>scaling factor on muFriction</p></li>
+<li><p>scaling factor on stiffnessFactor</p></li>
 <li><p>von Mises threshold stress for calving</p></li>
 <li><p>calving rate speed limit</p></li>
 <li><p>gamma0 melt sensitivity parameter in ISMIP6-AIS ice-shelf basal melting
 parameterization</p></li>
-<li><p>deltaT thermal forcing bias adjustment parameter in ISMIP6-AIS ice-shelf
-basal melting parameterization</p></li>
+<li><p>target ice-shelf basal melt rate for ISMIP6-AIS ice-shelf basal melting
+parameterization.  In the model setup, the deltaT thermal forcing bias
+adjustment is adjusted to obtain the target melt rate for a given gamma0</p></li>
 </ul>
-<p>Additional parameters can be easily added in the future.
-The test group currently includes a file of unit parameter values for two
-parameters with 100 samples using a Sobol sequence.  The parameter
-dimensionality or sample size can be increased by modifying this file and
-its usage.  It also would be possible to modify the sampling strategy to
-perform uniform parameter sensitivity tests.</p>
+<p>Additional parameters can be easily added in the future.</p>
 <p><code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code> will set up the simulations and the ensemble manager.
 <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> from the test case work directory will submit each run as a
 separate slurm job.
 Individual runs can be run independently through <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> executed in the
 run directory.  (E.g., if you want to test or debug a run without running the
 entire ensemble.)</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Due to the requirement that <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> is only executed
-on a compute node, this operation has to be submitted via a batch script or
-interactive job, or compass framework code can be modified by an expert user
-to lift this restriction. (This may be addressed in the future.)</p>
-</div>
 <p>Simulation output can be analyzed with the <code class="docutils literal notranslate"><span class="pre">plot_ensemble.py</span></code> visualization
 script, which generates plots of basic quantities of interest as a function
 of parameter values, as well as identifies runs that did not reach the
-target year.</p>
+target year.  The visualization script plots a small number of quantities of
+interest as a function of each active parameter.  It also plots pairwise
+parameter sensitivities for each pair of parameters being varied.  Finally,
+it plots time-series plots for the quantities of interest for all runs in the
+ensemble.</p>
 <p>Future improvements may include:</p>
 <ul class="simple">
 <li><p>enabling the ensemble manager to identify runs that need to be restarted
 so the restarts do not need to be managed manually</p></li>
 <li><p>safety checks or warnings before submitting ensembles that will use large
 amounts of computing resources</p></li>
-<li><p>more flexibility in customizing ensembles without needing to modify test
-case files</p></li>
 </ul>
-<p>The test group includes a single test case that creates an ensemble of Thwaites
-Glacier simulations.</p>
+<p>The test group includes a single test case for creating an ensemble.</p>
 <section id="config-options">
 <h2>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h2>
 <p>Test cases in this test group have the following common config options.</p>
-<p>A config file specifies the location of the input file, the basal friction
-exponent used in the input file, the name of the parameter vector file to
-use, and the start and end run numbers to set up.
-This test group is intended for expert users, and it is expected that it
+<p>This test group is intended for expert users, and it is expected that it
 will typically be run with a customized cfg file.  Note the default run
 numbers create a small ensemble, but uncertainty quantification applications
 will typically need dozens or more simulations.</p>
@@ -220,23 +210,58 @@ will typically need dozens or more simulations.</p>
 <span class="k">[ensemble]</span>
 
 <span class="c1"># start and end numbers for runs to set up and run</span>
+<span class="c1"># Run numbers should be zero-based.</span>
 <span class="c1"># Additional runs can be added and run to an existing ensemble</span>
 <span class="c1"># without affecting existing runs, but trying to set up a run</span>
-<span class="c1"># that already exists may result in unexpected behavior.</span>
-<span class="c1"># Run numbers should be zero-based</span>
+<span class="c1"># that already exists will generate a warning and skip that run.</span>
+<span class="c1"># If using uniform sampling, start_run should be 0 and end_run should be</span>
+<span class="c1"># equal to (max_samples - 1), otherwise unexpected behavior may result.</span>
 <span class="c1"># These values do not affect viz/analysis, which will include any</span>
 <span class="c1"># runs it finds.</span>
 <span class="na">start_run</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
 <span class="na">end_run</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
 
-<span class="c1"># the name of the parameter vector file to use, included in the</span>
-<span class="c1"># compass repository.  Currently there is only one option, but additional</span>
-<span class="c1"># parameter vectors may be added in the future, or entirely replaced with</span>
-<span class="c1"># code to generate parameter vectors as needed.</span>
-<span class="na">param_vector_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Sobol_Initializations_seed_4_samples_100.csv</span>
+<span class="c1"># sampling_method can be either &#39;sobol&#39; for a space-filling Sobol sequence</span>
+<span class="c1"># or &#39;uniform&#39; for uniform sampling.  Uniform sampling is most appropriate</span>
+<span class="c1"># for a single parameter sensitivity study.  It will sample uniformly across</span>
+<span class="c1"># all dimensions simultaneously, thus sampling only a small fraction of</span>
+<span class="c1"># parameter space</span>
+<span class="na">sampling_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">uniform</span>
+
+<span class="c1"># maximum number of sample considered.</span>
+<span class="c1"># max_samples needs to be greater or equal to (end_run + 1)</span>
+<span class="c1"># When using uniform sampling, max_samples should equal (end_run + 1).</span>
+<span class="c1"># When using Sobol sequence, max_samples ought to be a multiple of 2.</span>
+<span class="c1"># max_samples should not be changed after the first set of ensemble.</span>
+<span class="c1"># So, when using Sobol sequence, max_samples might be set larger than</span>
+<span class="c1"># (end_run + 1) if you plan to add more samples to the ensemble later.</span>
+<span class="na">max_samples</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span>
+
+<span class="c1"># basin for comparing model results with observational estimates in</span>
+<span class="c1"># visualization script.</span>
+<span class="c1"># Basin options are defined in compass/landice/ais_observations.py</span>
+<span class="c1"># If desired basin does not exist, it can be added to that dataset.</span>
+<span class="c1"># (They need not be mutually exclusive.)</span>
+<span class="c1"># If a basin is not provided, observational comparisons will not be made.</span>
+<span class="na">basin</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="s">None</span>
+
+<span class="c1"># fraction of CFL-limited time step to be used by the adaptive timestepper</span>
+<span class="c1"># This value is explicitly included here to force the user to consciously</span>
+<span class="c1"># select the value to use.  Model run time tends to be inversely proportional</span>
+<span class="c1"># to scaling this value (e.g., 0.2 will be ~4x more expensive than 0.8).</span>
+<span class="c1"># Value should be less than or equal to 1.0, and values greater than 0.9 are</span>
+<span class="c1"># not recommended.</span>
+<span class="c1"># Values of 0.7-0.9 typically work for most simulations, but some runs may</span>
+<span class="c1"># fail.  Values of 0.2-0.5 are more conservative and will allow more runs</span>
+<span class="c1"># to succeed, but will result in substantially more expensive runs</span>
+<span class="c1"># However, because the range of parameter combinations being simulated</span>
+<span class="c1"># are likely to stress the model, a smaller number than usual may be</span>
+<span class="c1"># necessary to effectively cover parameter space.</span>
+<span class="c1"># A user may want to do a few small ensembles with different values</span>
+<span class="c1"># to inform the choice for a large production ensemble.</span>
+<span class="na">cfl_fraction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.7</span>
 
 <span class="c1"># Path to the initial condition input file.</span>
-<span class="c1"># User has to supply.</span>
 <span class="c1"># Eventually this could be hard-coded to use files on the input data</span>
 <span class="c1"># server, but initially we want flexibility to experiment with different</span>
 <span class="c1"># inputs and forcings</span>
@@ -247,13 +272,78 @@ will typically need dozens or more simulations.</p>
 <span class="na">orig_fric_exp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.2</span>
 
 <span class="c1"># Path to ISMIP6 ice-shelf basal melt parameter input file.</span>
-<span class="c1"># User has to supply.</span>
 <span class="na">basal_melt_param_file_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/MALI_projects/Thwaites_UQ/Thwaites_4to20km_r02_20230126/forcing/basal_melt/parameterizations/Thwaites_4to20km_r02_20230126_basin_and_coeff_gamma0_DeltaT_quadratic_non_local_median.nc</span>
+
+<span class="c1"># Path to thermal forcing file for the mesh to be used</span>
+<span class="na">TF_file_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/MALI_projects/Thwaites_UQ/Thwaites_4to20km_r02_20230126/forcing/ocean_thermal_forcing/obs/Thwaites_4to20km_r02_20230126_obs_TF_1995-2017_8km_x_60m_no_xtime.nc</span>
+
+<span class="c1"># Path to SMB forcing file for the mesh to be used</span>
+<span class="na">SMB_file_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/MALI_projects/Thwaites_UQ/Thwaites_4to20km_r02_20230126/forcing/atmosphere_forcing/RACMO_climatology_1995-2017/Thwaites_4to20km_r02_202</span>
+<span class="na">30126_RACMO2.3p2_ANT27_smb_climatology_1995-2017.nc</span>
 
 <span class="c1"># number of tasks that each ensemble member should be run with</span>
 <span class="c1"># Eventually, compass could determine this, but we want explicit control for now</span>
 <span class="c1"># ntasks=32 for cori</span>
-<span class="na">ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">32</span>
+<span class="na">ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">128</span>
+
+<span class="c1"># whether basal friction exponent is being varied</span>
+<span class="c1"># [unitless]</span>
+<span class="na">use_fric_exp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+<span class="c1"># min value to vary over</span>
+<span class="na">fric_exp_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.1</span>
+<span class="c1"># max value to vary over</span>
+<span class="na">fric_exp_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.33333</span>
+
+<span class="c1"># whether a scaling factor on muFriction is being varied</span>
+<span class="c1"># [unitless: 1.0=no scaling]</span>
+<span class="na">use_mu_scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="c1"># min value to vary over</span>
+<span class="na">mu_scale_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.8</span>
+<span class="c1"># max value to vary over</span>
+<span class="na">mu_scale_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.2</span>
+
+<span class="c1"># whether a scaling factor on stiffnessFactor is being varied</span>
+<span class="c1"># [unitless: 1.0=no scaling]</span>
+<span class="na">use_stiff_scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="c1"># min value to vary over</span>
+<span class="na">stiff_scale_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.5</span>
+<span class="c1"># max value to vary over</span>
+<span class="na">stiff_scale_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.5</span>
+
+<span class="c1"># whether the von Mises threshold stress (sigma_max) is being varied</span>
+<span class="c1"># [units: Pa]</span>
+<span class="na">use_von_mises_threshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+<span class="c1"># min value to vary over</span>
+<span class="na">von_mises_threshold_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100.0e3</span>
+<span class="c1"># max value to vary over</span>
+<span class="na">von_mises_threshold_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">300.0e3</span>
+
+<span class="c1"># whether the calving speed limit is being varied</span>
+<span class="c1"># [units: km/yr]</span>
+<span class="na">use_calv_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+<span class="c1"># min value to vary over</span>
+<span class="na">calv_limit_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5.0</span>
+<span class="c1"># max value to vary over</span>
+<span class="na">calv_limit_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">50.0</span>
+
+<span class="c1"># whether ocean melt parameterization coefficient is being varied</span>
+<span class="c1"># [units: m/yr]</span>
+<span class="na">use_gamma0</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+<span class="c1"># min value to vary over</span>
+<span class="na">gamma0_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">9620.0</span>
+<span class="c1"># max value to vary over</span>
+<span class="na">gamma0_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">471000.0</span>
+
+<span class="c1"># whether target ice-shelf basal melt flux is being varied</span>
+<span class="c1"># [units: Gt/yr]</span>
+<span class="na">use_meltflux</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+<span class="c1"># min value to vary over</span>
+<span class="na">meltflux_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">90.5</span>
+<span class="c1"># max value to vary over</span>
+<span class="na">meltflux_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">114.5</span>
+<span class="c1"># ice-shelf area associated with target melt rates</span>
+<span class="c1"># [units: m^2]</span>
+<span class="na">iceshelf_area_obs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4411.0e6</span>
 </pre></div>
 </div>
 <p>A user should copy the default config file to a user-defined config file
@@ -270,20 +360,14 @@ jobs for each ensemble member.</p>
 </pre></div>
 </div>
 </section>
-<section id="thwaites">
-<h2>thwaites<a class="headerlink" href="#thwaites" title="Permalink to this heading">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">landice/ensemble_generator/thwaites</span></code> uses the ensemble framework to create
-and ensemble of 4 km resolution Thwaites Glacier simulations integrated from
-2000 to 2100 with two parameters varying:</p>
-<ul class="simple">
-<li><p>basal friction power law exponent: range [0.1, 0.333]</p></li>
-<li><p>von Mises threshold stress for calving: range [100, 300] kPa</p></li>
-</ul>
-<p>The initial condition file is specified in the <code class="docutils literal notranslate"><span class="pre">ensemble_generator.cfg</span></code> file
-or a user modification of it.  The forcing files for the simulation are
-hard-coded in the test case streams file  and are located on the NERSC
-filesystem.
-The model configuration uses:</p>
+<section id="ensemble">
+<h2>ensemble<a class="headerlink" href="#ensemble" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">landice/ensemble_generator/ensemble</span></code> uses the ensemble framework to create
+and ensemble of simulations integrated from 2000 to 2100.  The test case
+can be applied to any domain and set of input files.  If the default namelist
+and streams settings are not appropriate, they can be adjusted or a new test
+case can be set up mirroring the existing one.</p>
+<p>The model configuration uses:</p>
 <ul class="simple">
 <li><p>first-order velocity solver</p></li>
 <li><p>power law basal friction</p></li>
@@ -292,27 +376,28 @@ The model configuration uses:</p>
 <li><p>ISMIP6 surface mass balance and sub-ice-shelf melting using climatological
 mean forcing</p></li>
 </ul>
-<section id="steps-for-setting-up-and-running-a-thwaites-ensmble">
-<h3>Steps for setting up and running a Thwaites ensmble<a class="headerlink" href="#steps-for-setting-up-and-running-a-thwaites-ensmble" title="Permalink to this heading">¶</a></h3>
+<p>The initial condition and forcing files are specified in the
+<code class="docutils literal notranslate"><span class="pre">ensemble_generator.cfg</span></code> file or a user modification of it.</p>
+<section id="steps-for-setting-up-and-running-an-ensmble">
+<h3>Steps for setting up and running an ensmble<a class="headerlink" href="#steps-for-setting-up-and-running-an-ensmble" title="Permalink to this heading">¶</a></h3>
 <ol class="arabic simple">
 <li><p>With a compass conda environment set up, run, e.g.,
-<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span> <span class="pre">-t</span> <span class="pre">landice/ensemble_generator/thwaites_ensemble</span> <span class="pre">-w</span> <span class="pre">WORK_DIR_PATH</span> <span class="pre">-f</span> <span class="pre">USER.cfg</span></code>
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span> <span class="pre">-t</span> <span class="pre">landice/ensemble_generator/ensemble</span> <span class="pre">-w</span> <span class="pre">WORK_DIR_PATH</span> <span class="pre">-f</span> <span class="pre">USER.cfg</span></code>
 where <code class="docutils literal notranslate"><span class="pre">WORK_DIR_PATH</span></code> is a location that can store the whole
 ensemble (typically a scratch drive) and <code class="docutils literal notranslate"><span class="pre">USER.cfg</span></code> is the
 user-defined config described in the previous section that includes
 options for <code class="docutils literal notranslate"><span class="pre">[parallel]</span></code> and <code class="docutils literal notranslate"><span class="pre">[job]</span></code>, as well as any required
-modifications to the <code class="docutils literal notranslate"><span class="pre">[ensemble]</span></code> section.  Likely, the only changes
-one would need to make to the <code class="docutils literal notranslate"><span class="pre">[ensemble]</span></code> section are the
-<code class="docutils literal notranslate"><span class="pre">start_run</span></code> and <code class="docutils literal notranslate"><span class="pre">end_run</span></code> values.</p></li>
+modifications to the <code class="docutils literal notranslate"><span class="pre">[ensemble]</span></code> section.  Likely, most or all
+attributes in the <code class="docutils literal notranslate"><span class="pre">[ensemble]</span></code> section need to be customized for a
+given application.</p></li>
 <li><p>After <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code> completes and all runs are set up, go to the
 <code class="docutils literal notranslate"><span class="pre">WORK_DIR_PATH</span></code> and change to the
-<code class="docutils literal notranslate"><span class="pre">landice/ensemble_generator/thwaites-uq</span></code> subdirectory.
+<code class="docutils literal notranslate"><span class="pre">landice/ensemble_generator/ensemble</span></code> subdirectory.
 From there you will see subdirectories for each run, a subdirectory for the
 <code class="docutils literal notranslate"><span class="pre">ensemble_manager</span></code> and symlink to the visualization script.</p></li>
 <li><p>To submit jobs for the entire ensemble, change to the <code class="docutils literal notranslate"><span class="pre">ensemble_manager</span></code>
-subdirectory and execute <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code>.  Note, as stated above, this
-currently will fail on a login node and has to be performed from a
-interactive job or batch script.  This will be addressed in the future.</p></li>
+subdirectory and execute <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code>.  Be careful, as it is possible to
+consume a large number of computing resources quickly with this tool!</p></li>
 <li><p>Each run will have its own batch job that can be monitored with <code class="docutils literal notranslate"><span class="pre">squeue</span></code>
 or similar commands.</p></li>
 <li><p>When the ensemble has completed, you can assess the result through the

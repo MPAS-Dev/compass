@@ -112,7 +112,8 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice.tests.ensemble_generator.ensemble_member</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span> <span class="nn">configparser</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">resources</span>
 
@@ -151,6 +152,12 @@
 <span class="sd">    basal_fric_exp : float</span>
 <span class="sd">        value of basal friction exponent to use</span>
 
+<span class="sd">    mu_scale : float</span>
+<span class="sd">        value to scale muFriction by</span>
+
+<span class="sd">    stiff_scale : float</span>
+<span class="sd">        value to scale stiffnessFactor by</span>
+
 <span class="sd">    von_mises_threshold : float</span>
 <span class="sd">        value of von Mises stress threshold to use</span>
 
@@ -167,9 +174,12 @@
 <div class="viewcode-block" id="EnsembleMember.__init__"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.html#compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">run_num</span><span class="p">,</span>
                  <span class="n">test_resources_location</span><span class="p">,</span>
                  <span class="n">basal_fric_exp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">mu_scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">stiff_scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">von_mises_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">calv_spd_lim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">gamma0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">meltflux</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">deltaT</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a new run within an ensemble</span>
@@ -189,8 +199,15 @@
 <span class="sd">        basal_fric_exp : float</span>
 <span class="sd">            value of basal friction exponent to use</span>
 
+<span class="sd">        mu_scale : float</span>
+<span class="sd">            value to scale muFriction by</span>
+
+<span class="sd">        stiff_scale : float</span>
+<span class="sd">            value to scale stiffnessFactor by</span>
+
 <span class="sd">        von_mises_threshold : float</span>
 <span class="sd">            value of von Mises stress threshold to use</span>
+<span class="sd">            assumes same value for grounded and floating ice</span>
 
 <span class="sd">        calv_spd_lim : float</span>
 <span class="sd">            value of calving speed limit to use</span>
@@ -206,9 +223,12 @@
 
         <span class="c1"># store assigned param values for this run</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">basal_fric_exp</span> <span class="o">=</span> <span class="n">basal_fric_exp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mu_scale</span> <span class="o">=</span> <span class="n">mu_scale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stiff_scale</span> <span class="o">=</span> <span class="n">stiff_scale</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">von_mises_threshold</span> <span class="o">=</span> <span class="n">von_mises_threshold</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">calv_spd_lim</span> <span class="o">=</span> <span class="n">calv_spd_lim</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gamma0</span> <span class="o">=</span> <span class="n">gamma0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meltflux</span> <span class="o">=</span> <span class="n">meltflux</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">deltaT</span> <span class="o">=</span> <span class="n">deltaT</span>
 
         <span class="c1"># define step (run) name</span>
@@ -224,18 +244,31 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Setting up run number </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">run_num</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="c1"># print(f&#39;    basal_fric_exp={self.basal_fric_exp}, &#39;</span>
-        <span class="c1">#       &#39;von_mises_threshold={self.von_mises_threshold}, &#39;</span>
-        <span class="c1">#       &#39;calv_spd_lim={self.calv_spd_lim}&#39;)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;namelist.landice&#39;</span><span class="p">)):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;WARNING: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="si">}</span><span class="s2"> already created; skipping.  &quot;</span>
+                  <span class="s2">&quot;Please remove the directory &quot;</span>
+                  <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="si">}</span><span class="s2"> and execute &quot;</span>
+                  <span class="s2">&quot;&#39;compass setup&#39; again to set this experiment up.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
 
         <span class="c1"># Get config for info needed for setting up simulation</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;ensemble&#39;</span><span class="p">]</span>
 
+        <span class="c1"># Create a python config (not compass config) file</span>
+        <span class="c1"># for run-specific info useful for analysis/viz</span>
+        <span class="c1"># (Could put these in compass step cfg file, but may be safer to</span>
+        <span class="c1"># not mess with it.)</span>
+        <span class="n">run_info_cfg</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+        <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="s1">&#39;run_info&#39;</span><span class="p">)</span>
+        <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;run_info&#39;</span><span class="p">,</span> <span class="s1">&#39;run_num&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">run_num</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="c1"># Below we set values for each parameter being used in this ensemble</span>
+
         <span class="c1"># save number of tasks to use</span>
         <span class="c1"># eventually compass could determine this, but for now we want</span>
         <span class="c1"># explicit control</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ntasks&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span>
 
         <span class="c1"># Set up base run configuration</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_resources_location</span><span class="p">,</span>
@@ -253,51 +286,92 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
 
         <span class="c1"># modify param values as needed for this ensemble member</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># CFL fraction is set from the cfg to force the user to make a</span>
+        <span class="c1"># conscious decision about its value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cfl_fraction</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;cfl_fraction&#39;</span><span class="p">)</span>
+        <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_adaptive_timestep_CFL_fraction&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cfl_fraction</span><span class="si">}</span><span class="s1">&#39;</span>
 
         <span class="c1"># von Mises stress threshold</span>
-        <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_grounded_von_Mises_threshold_stress&#39;</span><span class="p">:</span>
-                   <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">von_mises_threshold</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                   <span class="s1">&#39;config_floating_von_Mises_threshold_stress&#39;</span><span class="p">:</span>
-                   <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">von_mises_threshold</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">von_mises_threshold</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_grounded_von_Mises_threshold_stress&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">von_mises_threshold</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_floating_von_Mises_threshold_stress&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">von_mises_threshold</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;run_info&#39;</span><span class="p">,</span> <span class="s1">&#39;von_mises_threshold&#39;</span><span class="p">,</span>
+                             <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">von_mises_threshold</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="c1"># calving speed limit</span>
-        <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_calving_speed_limit&#39;</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">calv_spd_lim</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">calv_spd_lim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_calving_speed_limit&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">calv_spd_lim</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;run_info&#39;</span><span class="p">,</span> <span class="s1">&#39;calv_spd_limit&#39;</span><span class="p">,</span>
+                             <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">calv_spd_lim</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="c1"># adjust basal friction exponent</span>
         <span class="c1"># rename and copy base file</span>
         <span class="n">input_file_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input_file_path&#39;</span><span class="p">)</span>
         <span class="n">input_file_name</span> <span class="o">=</span> <span class="n">input_file_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">input_new_file_name</span> <span class="o">=</span> \
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">input_file_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">_MODIFIED_fricexp</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">basal_fric_exp</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">.nc&quot;</span>  <span class="c1"># noqa E501</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">input_file_name</span> <span class="o">=</span> <span class="n">input_new_file_name</span>
+        <span class="n">base_fname</span> <span class="o">=</span> <span class="n">input_file_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">new_input_fname</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_fname</span><span class="si">}</span><span class="s1">_MODIFIED.nc&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_file_name</span> <span class="o">=</span> <span class="n">new_input_fname</span>  <span class="c1"># store for run method</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">input_file_path</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
-                                                  <span class="n">input_new_file_name</span><span class="p">))</span>
-        <span class="c1"># adjust mu and exponent</span>
-        <span class="n">orig_fric_exp</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;orig_fric_exp&#39;</span><span class="p">)</span>
-        <span class="n">_adjust_friction_exponent</span><span class="p">(</span><span class="n">orig_fric_exp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">basal_fric_exp</span><span class="p">,</span>
-                                  <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
-                                               <span class="n">input_new_file_name</span><span class="p">),</span>
-                                  <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
-                                               <span class="s1">&#39;albany_input.yaml&#39;</span><span class="p">))</span>
+                                                  <span class="n">new_input_fname</span><span class="p">))</span>
         <span class="c1"># set input filename in streams and create streams file</span>
-        <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;input_file_init_cond&#39;</span><span class="p">:</span> <span class="n">input_new_file_name</span><span class="p">}</span>
+        <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;input_file_init_cond&#39;</span><span class="p">:</span> <span class="n">new_input_fname</span><span class="p">}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">basal_fric_exp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># adjust mu and exponent</span>
+            <span class="n">orig_fric_exp</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;orig_fric_exp&#39;</span><span class="p">)</span>
+            <span class="n">_adjust_friction_exponent</span><span class="p">(</span><span class="n">orig_fric_exp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">basal_fric_exp</span><span class="p">,</span>
+                                      <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
+                                                   <span class="n">new_input_fname</span><span class="p">),</span>
+                                      <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
+                                                   <span class="s1">&#39;albany_input.yaml&#39;</span><span class="p">))</span>
+            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;run_info&#39;</span><span class="p">,</span> <span class="s1">&#39;basal_fric_exp&#39;</span><span class="p">,</span>
+                             <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">basal_fric_exp</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># mu scale</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mu_scale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">new_input_fname</span><span class="p">),</span>
+                                <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;muFriction&#39;</span><span class="p">][:]</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mu_scale</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;run_info&#39;</span><span class="p">,</span> <span class="s1">&#39;mu_scale&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mu_scale</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># stiff scale</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stiff_scale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">new_input_fname</span><span class="p">),</span>
+                                <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;stiffnessFactor&#39;</span><span class="p">][:]</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stiff_scale</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;run_info&#39;</span><span class="p">,</span> <span class="s1">&#39;stiff_scale&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stiff_scale</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="c1"># adjust gamma0 and deltaT</span>
+        <span class="c1"># (only need to check one of these params)</span>
         <span class="n">basal_melt_param_file_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;basal_melt_param_file_path&#39;</span><span class="p">)</span>
         <span class="n">basal_melt_param_file_name</span> <span class="o">=</span> <span class="n">basal_melt_param_file_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">basal_melt_param_new_file_name</span> <span class="o">=</span> \
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">basal_melt_param_file_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">_MODIFIED_gamma</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gamma0</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">_dT</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">deltaT</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">.nc&quot;</span>  <span class="c1"># noqa E501</span>
+        <span class="n">base_fname</span> <span class="o">=</span> <span class="n">basal_melt_param_file_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">new_fname</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_fname</span><span class="si">}</span><span class="s1">_MODIFIED.nc&#39;</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">basal_melt_param_file_path</span><span class="p">,</span>
-                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
-                                 <span class="n">basal_melt_param_new_file_name</span><span class="p">))</span>
-        <span class="n">_adjust_basal_melt_params</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
-                                  <span class="n">basal_melt_param_new_file_name</span><span class="p">),</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">new_fname</span><span class="p">))</span>
+        <span class="n">_adjust_basal_melt_params</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">new_fname</span><span class="p">),</span>
                                   <span class="bp">self</span><span class="o">.</span><span class="n">gamma0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">deltaT</span><span class="p">)</span>
-        <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;basal_melt_param_file_name&#39;</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="n">basal_melt_param_new_file_name</span>
+        <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;basal_melt_param_file_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_fname</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma0</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;run_info&#39;</span><span class="p">,</span> <span class="s1">&#39;gamma0&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gamma0</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">deltaT</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;run_info&#39;</span><span class="p">,</span> <span class="s1">&#39;meltflux&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">meltflux</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;run_info&#39;</span><span class="p">,</span> <span class="s1">&#39;deltaT&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">deltaT</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-        <span class="c1"># store modified namelist and streams options</span>
+        <span class="c1"># set up forcing files (unmodified)</span>
+        <span class="n">TF_file_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;TF_file_path&#39;</span><span class="p">)</span>
+        <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;TF_file_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">TF_file_path</span>
+        <span class="n">SMB_file_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;SMB_file_path&#39;</span><span class="p">)</span>
+        <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;SMB_file_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">SMB_file_path</span>
+
+        <span class="c1"># store accumulated namelist and streams options</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
                                   <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_resources_location</span><span class="p">,</span> <span class="s1">&#39;streams.landice&#39;</span><span class="p">,</span>
@@ -318,7 +392,12 @@
             <span class="n">script_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;LOAD_COMPASS_ENV&#39;</span><span class="p">]</span>
             <span class="c1"># make a symlink to the script for loading the compass conda env.</span>
             <span class="n">symlink</span><span class="p">(</span><span class="n">script_filename</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
-                                                  <span class="s1">&#39;load_compass_env.sh&#39;</span><span class="p">))</span></div>
+                                                  <span class="s1">&#39;load_compass_env.sh&#39;</span><span class="p">))</span>
+
+        <span class="c1"># save run info for analysis/viz</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;run_info.cfg&#39;</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> \
+             <span class="k">as</span> <span class="n">run_config_file</span><span class="p">:</span>
+            <span class="n">run_info_cfg</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">run_config_file</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EnsembleMember.run"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.run.html#compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.landice.mesh.gridded_flood_fill &mdash; compass latest documentation</title>
+  <title>compass.landice.tests.ensemble_generator.ensemble.Ensemble.configure &mdash; compass latest documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,8 +20,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="compass.landice.mesh.set_rectangular_geom_points_and_edges" href="compass.landice.mesh.set_rectangular_geom_points_and_edges.html" />
-    <link rel="prev" title="compass.landice.iceshelf_melt.calc_mean_TF" href="compass.landice.iceshelf_melt.calc_mean_TF.html" /> 
+    <link rel="next" title="compass.landice.tests.greenland.Greenland" href="compass.landice.tests.greenland.Greenland.html" />
+    <link rel="prev" title="compass.landice.tests.ensemble_generator.ensemble.Ensemble" href="compass.landice.tests.ensemble_generator.ensemble.Ensemble.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -74,8 +74,8 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../../api.html#mpas-cores">MPAS Cores</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html">landice</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="compass.landice.Landice.html">compass.landice.Landice</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api.html#test-groups">Test Groups</a></li>
-<li class="toctree-l4 current"><a class="reference internal" href="../api.html#landice-framework">Landice Framework</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../api.html#test-groups">Test Groups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api.html#landice-framework">Landice Framework</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../ocean/api.html">ocean</a></li>
@@ -117,9 +117,9 @@
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../api.html">API reference</a></li>
           <li class="breadcrumb-item"><a href="../api.html">landice</a></li>
-      <li class="breadcrumb-item active">compass.landice.mesh.gridded_flood_fill</li>
+      <li class="breadcrumb-item active">compass.landice.tests.ensemble_generator.ensemble.Ensemble.configure</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/developers_guide/landice/generated/compass.landice.mesh.gridded_flood_fill.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/developers_guide/landice/generated/compass.landice.tests.ensemble_generator.ensemble.Ensemble.configure.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -127,33 +127,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="compass-landice-mesh-gridded-flood-fill">
-<h1>compass.landice.mesh.gridded_flood_fill<a class="headerlink" href="#compass-landice-mesh-gridded-flood-fill" title="Permalink to this heading">¶</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="compass.landice.mesh.gridded_flood_fill">
-<span class="sig-prename descclassname"><span class="pre">compass.landice.mesh.</span></span><span class="sig-name descname"><span class="pre">gridded_flood_fill</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iStart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jStart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/mesh.html#gridded_flood_fill"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.mesh.gridded_flood_fill" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generic flood-fill routine to create mask of connected elements
-in the desired input array (field) from a gridded dataset. This
-is generally used to remove glaciers and ice-fields that are not
-connected to the ice sheet. Note that there may be more efficient
-algorithms.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>field</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a>) – Array from gridded dataset to use for flood-fill.
-Usually ice thickness.</p></li>
-<li><p><strong>iStart</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – x index from which to start flood fill for field.
-Defaults to the center x coordinate.</p></li>
-<li><p><strong>jStart</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – y index from which to start flood fill.
-Defaults to the center y coordinate.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>flood_mask</strong> (<em>numpy.ndarray</em>) – mask calculated by the flood fill routine,
-where cells connected to the ice sheet (or main feature)
-are 1 and everything else is 0.</p>
-</dd>
-</dl>
+  <section id="compass-landice-tests-ensemble-generator-ensemble-ensemble-configure">
+<h1>compass.landice.tests.ensemble_generator.ensemble.Ensemble.configure<a class="headerlink" href="#compass-landice-tests-ensemble-generator-ensemble-ensemble-configure" title="Permalink to this heading">¶</a></h1>
+<dl class="py method">
+<dt class="sig sig-object py" id="compass.landice.tests.ensemble_generator.ensemble.Ensemble.configure">
+<span class="sig-prename descclassname"><span class="pre">Ensemble.</span></span><span class="sig-name descname"><span class="pre">configure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/tests/ensemble_generator/ensemble.html#Ensemble.configure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.tests.ensemble_generator.ensemble.Ensemble.configure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure a parameter ensemble of MALI simulations.</p>
+<p>Start by identifying the start and end run numbers to set up
+from the config.</p>
+<p>Next, read a pre-defined unit parameter vector that can be used
+for assigning parameter values to each ensemble member.</p>
+<p>The main work is using the unit parameter vector to set parameter
+values for each parameter to be varied, over prescribed ranges.</p>
+<p>Then create the ensemble member as a step in the test case by calling
+the EnsembleMember constructor.</p>
+<p>Finally, add this step to the test case’s step_to_run.  This normally
+happens automatically if steps are added to the test case in the test
+case constructor, but because we waited to add these steps until this
+configure phase, we must explicitly add the steps to steps_to_run.</p>
 </dd></dl>
 
 </section>
@@ -162,8 +153,8 @@ are 1 and everything else is 0.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="compass.landice.iceshelf_melt.calc_mean_TF.html" class="btn btn-neutral float-left" title="compass.landice.iceshelf_melt.calc_mean_TF" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="compass.landice.mesh.set_rectangular_geom_points_and_edges.html" class="btn btn-neutral float-right" title="compass.landice.mesh.set_rectangular_geom_points_and_edges" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.landice.tests.ensemble_generator.ensemble.Ensemble.html" class="btn btn-neutral float-left" title="compass.landice.tests.ensemble_generator.ensemble.Ensemble" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.landice.tests.greenland.Greenland.html" class="btn btn-neutral float-right" title="compass.landice.tests.greenland.Greenland" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

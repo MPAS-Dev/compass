@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.landice.mesh.gridded_flood_fill &mdash; compass latest documentation</title>
+  <title>compass.landice.iceshelf_melt.calc_mean_TF &mdash; compass latest documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,8 +20,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="compass.landice.mesh.set_rectangular_geom_points_and_edges" href="compass.landice.mesh.set_rectangular_geom_points_and_edges.html" />
-    <link rel="prev" title="compass.landice.iceshelf_melt.calc_mean_TF" href="compass.landice.iceshelf_melt.calc_mean_TF.html" /> 
+    <link rel="next" title="compass.landice.mesh.gridded_flood_fill" href="compass.landice.mesh.gridded_flood_fill.html" />
+    <link rel="prev" title="compass.landice.extrapolate.extrapolate_variable" href="compass.landice.extrapolate.extrapolate_variable.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -117,9 +117,9 @@
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../api.html">API reference</a></li>
           <li class="breadcrumb-item"><a href="../api.html">landice</a></li>
-      <li class="breadcrumb-item active">compass.landice.mesh.gridded_flood_fill</li>
+      <li class="breadcrumb-item active">compass.landice.iceshelf_melt.calc_mean_TF</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/developers_guide/landice/generated/compass.landice.mesh.gridded_flood_fill.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/developers_guide/landice/generated/compass.landice.iceshelf_melt.calc_mean_TF.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -127,31 +127,19 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="compass-landice-mesh-gridded-flood-fill">
-<h1>compass.landice.mesh.gridded_flood_fill<a class="headerlink" href="#compass-landice-mesh-gridded-flood-fill" title="Permalink to this heading">¶</a></h1>
+  <section id="compass-landice-iceshelf-melt-calc-mean-tf">
+<h1>compass.landice.iceshelf_melt.calc_mean_TF<a class="headerlink" href="#compass-landice-iceshelf-melt-calc-mean-tf" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="compass.landice.mesh.gridded_flood_fill">
-<span class="sig-prename descclassname"><span class="pre">compass.landice.mesh.</span></span><span class="sig-name descname"><span class="pre">gridded_flood_fill</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iStart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jStart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/mesh.html#gridded_flood_fill"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.mesh.gridded_flood_fill" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generic flood-fill routine to create mask of connected elements
-in the desired input array (field) from a gridded dataset. This
-is generally used to remove glaciers and ice-fields that are not
-connected to the ice sheet. Note that there may be more efficient
-algorithms.</p>
+<dt class="sig sig-object py" id="compass.landice.iceshelf_melt.calc_mean_TF">
+<span class="sig-prename descclassname"><span class="pre">compass.landice.iceshelf_melt.</span></span><span class="sig-name descname"><span class="pre">calc_mean_TF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geometry_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forcing_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/iceshelf_melt.html#calc_mean_TF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.iceshelf_melt.calc_mean_TF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to calculate mean thermal forcing across all floating ice in a
+domain.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>field</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a>) – Array from gridded dataset to use for flood-fill.
-Usually ice thickness.</p></li>
-<li><p><strong>iStart</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – x index from which to start flood fill for field.
-Defaults to the center x coordinate.</p></li>
-<li><p><strong>jStart</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – y index from which to start flood fill.
-Defaults to the center y coordinate.</p></li>
+<li><p><strong>geometry_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – name of geometry file that includes thickness and bedTopography fields</p></li>
+<li><p><strong>forcing_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – name of file containing MALI ocean forcing information</p></li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>flood_mask</strong> (<em>numpy.ndarray</em>) – mask calculated by the flood fill routine,
-where cells connected to the ice sheet (or main feature)
-are 1 and everything else is 0.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -162,8 +150,8 @@ are 1 and everything else is 0.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="compass.landice.iceshelf_melt.calc_mean_TF.html" class="btn btn-neutral float-left" title="compass.landice.iceshelf_melt.calc_mean_TF" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="compass.landice.mesh.set_rectangular_geom_points_and_edges.html" class="btn btn-neutral float-right" title="compass.landice.mesh.set_rectangular_geom_points_and_edges" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.landice.extrapolate.extrapolate_variable.html" class="btn btn-neutral float-left" title="compass.landice.extrapolate.extrapolate_variable" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.landice.mesh.gridded_flood_fill.html" class="btn btn-neutral float-right" title="compass.landice.mesh.gridded_flood_fill" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
