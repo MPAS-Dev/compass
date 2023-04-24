@@ -19,7 +19,7 @@ from compass.landice.ais_observations import ais_basin_info
 target_year = 100.0  # model year from start at which to calculate statistics
 label_runs = False
 plot_time_series = True
-plot_single_param_sensitivies = True
+plot_single_param_sensitivies = False
 plot_pairwise_param_sensitivities = False
 plot_maps = False
 lw = 0.5  # linewidth for ensemble plots
@@ -137,41 +137,64 @@ else:
 if plot_time_series:
     # Set up axes for time series plots before reading data.
     # Time series are plotted as they are read.
-    figTS = plt.figure(1, figsize=(8, 12), facecolor='w')
-    nrow = 6
+    fig_ts_mb = plt.figure(1, figsize=(8, 12), facecolor='w')
+    nrow = 5
     ncol = 1
-    axVAFts = figTS.add_subplot(nrow, ncol, 1)
-    plt.ylabel('VAF change\n(mm)')
+
+    ax_ts_vaf = fig_ts_mb.add_subplot(nrow, ncol, 1)
+    plt.ylabel('VAF change\n(Gt)')
     plt.grid()
 
-    axTAts = figTS.add_subplot(nrow, ncol, 2, sharex=axVAFts)
-    plt.ylabel('Total area\nchange (km2)')
+    ax_ts_grvol = fig_ts_mb.add_subplot(nrow, ncol, 2, sharex=ax_ts_vaf)
+    plt.ylabel('Grounded volume\nchange (Gt)')
     plt.grid()
 
-    axGAts = figTS.add_subplot(nrow, ncol, 3, sharex=axVAFts)
-    plt.ylabel('Grounded area\nchange (km2)')
-    plt.grid()
-
-    axFAts = figTS.add_subplot(nrow, ncol, 4, sharex=axVAFts)
-    plt.ylabel('Floating\narea (km2)')
-    plt.grid()
-
-    axBMBts = figTS.add_subplot(nrow, ncol, 5, sharex=axVAFts)
-    plt.ylabel('Ice-shelf\nbasal melt\nflux (Gt/yr)')
-    plt.grid()
-    axBMBts.fill_between(obs_melt_yrs,
-                         obs_melt - obs_melt_unc,
-                         obs_melt + obs_melt_unc,
-                         color='b', alpha=0.2, label='melt obs')
-
-    axGLFts = figTS.add_subplot(nrow, ncol, 6, sharex=axVAFts)
+    ax_ts_glf = fig_ts_mb.add_subplot(nrow, ncol, 3, sharex=ax_ts_vaf)
     plt.xlabel('Year')
     plt.ylabel('GL flux\n(Gt/yr)')
     plt.grid()
-    axGLFts.fill_between(obs_discharge_yrs,
-                         obs_discharge - obs_discharge_unc,
-                         obs_discharge + obs_discharge_unc,
-                         color='b', alpha=0.2, label='D obs')
+    ax_ts_glf.fill_between(obs_discharge_yrs,
+                           obs_discharge - obs_discharge_unc,
+                           obs_discharge + obs_discharge_unc,
+                           color='b', alpha=0.2, label='D obs')
+
+    ax_ts_glf2 = fig_ts_mb.add_subplot(nrow, ncol, 4, sharex=ax_ts_vaf)
+    plt.xlabel('Year')
+    plt.ylabel('GL flux+\nGL mig. flux\n(Gt/yr)')
+    plt.grid()
+    ax_ts_glf2.fill_between(obs_discharge_yrs,
+                            obs_discharge - obs_discharge_unc,
+                            obs_discharge + obs_discharge_unc,
+                            color='b', alpha=0.2, label='D obs')
+
+    ax_ts_smb = fig_ts_mb.add_subplot(nrow, ncol, 5, sharex=ax_ts_vaf)
+    plt.ylabel('Grounded SMB\n(Gt/yr)')
+    plt.grid()
+
+    # second plot to avoid crowding
+    fig_ts_area = plt.figure(2, figsize=(8, 12), facecolor='w')
+    nrow = 4
+    ncol = 1
+
+    ax_ts_ta = fig_ts_area.add_subplot(nrow, ncol, 1, sharex=ax_ts_vaf)
+    plt.ylabel('Total area\nchange (km2)')
+    plt.grid()
+
+    ax_ts_ga = fig_ts_area.add_subplot(nrow, ncol, 2, sharex=ax_ts_vaf)
+    plt.ylabel('Grounded area\nchange (km2)')
+    plt.grid()
+
+    ax_ts_fa = fig_ts_area.add_subplot(nrow, ncol, 3, sharex=ax_ts_vaf)
+    plt.ylabel('Floating\narea (km2)')
+    plt.grid()
+
+    ax_ts_bmb = fig_ts_area.add_subplot(nrow, ncol, 4, sharex=ax_ts_vaf)
+    plt.ylabel('Ice-shelf\nbasal melt\nflux (Gt/yr)')
+    plt.grid()
+    ax_ts_bmb.fill_between(obs_melt_yrs,
+                           obs_melt - obs_melt_unc,
+                           obs_melt + obs_melt_unc,
+                           color='b', alpha=0.2, label='melt obs')
 
 # --------------
 # maps plotting setup
@@ -214,14 +237,15 @@ for idx, run in enumerate(runs):
         f = netCDF4.Dataset(fpath, 'r')
         years = f.variables['daysSinceStart'][:] / 365.0
 
-        VAF = f.variables['volumeAboveFloatation'][:]
+        VAF = f.variables['volumeAboveFloatation'][:] / \
+            (1.0e12 / rhoi)  # in Gt
         totalArea = f.variables['totalIceArea'][:] / 1.0e6  # in km2
         fltArea = f.variables['floatingIceArea'][:] / 1.0e6  # in km2
         grdArea = f.variables['groundedIceArea'][:] / 1.0e6  # in km2
         iceArea = f.variables['totalIceArea'][:] / 1000.0**2  # in km^2
         grdVol = f.variables['groundedIceVolume'][:] / (1.0e12 / rhoi)  # in Gt
         BMB = f.variables['totalFloatingBasalMassBal'][:] / -1.0e12  # in Gt/yr
-        SMB = f.variables['totalGroundedSfcMassBal'][:] / -1.0e12  # in Gt/yr
+        grSMB = f.variables['totalGroundedSfcMassBal'][:] / -1.0e12  # in Gt/yr
         groundingLineFlux = f.variables['groundingLineFlux'][:] \
             / 1.0e12  # Gt/yr
         GLMigFlux = f.variables['groundingLineMigrationFlux'][:] \
@@ -246,19 +270,30 @@ for idx, run in enumerate(runs):
                     alph = 0.7
 
             # plot time series
-            axVAFts.plot(years, VAF - VAF[0], linewidth=lw, color=col,
-                         alpha=alph)
-            axTAts.plot(years, totalArea - totalArea[0], linewidth=lw,
-                        color=col, alpha=alph)
-            axGAts.plot(years, grdArea - grdArea[0], linewidth=lw,
-                        color=col, alpha=alph)
-            axFAts.plot(years, fltArea, linewidth=lw, color=col, alpha=alph)
+            # plot 1
+            ax_ts_vaf.plot(years, VAF - VAF[0], linewidth=lw, color=col,
+                           alpha=alph)
+            ax_ts_grvol.plot(years, grdVol - grdVol[0], linewidth=lw,
+                             color=col, alpha=alph)
             # ignore first entry which is 0
-            axGLFts.plot(years[1:], GLflux2[1:], linewidth=lw,
-                         color=col, alpha=alph)
+            ax_ts_glf.plot(years[1:], groundingLineFlux[1:], linewidth=lw,
+                           color=col, alpha=alph)
             # ignore first entry which is 0
-            axBMBts.plot(years[1:], BMB[1:], linewidth=lw,
-                         color=col, alpha=alph)
+            ax_ts_glf2.plot(years[1:], GLflux2[1:], linewidth=lw,
+                            color=col, alpha=alph)
+            # ignore first entry which is 0
+            ax_ts_smb.plot(years[1:], grSMB[1:], linewidth=lw,
+                           color=col, alpha=alph)
+
+            # plot 2
+            ax_ts_ta.plot(years, totalArea - totalArea[0], linewidth=lw,
+                          color=col, alpha=alph)
+            ax_ts_ga.plot(years, grdArea - grdArea[0], linewidth=lw,
+                          color=col, alpha=alph)
+            ax_ts_fa.plot(years, fltArea, linewidth=lw, color=col, alpha=alph)
+            # ignore first entry which is 0
+            ax_ts_bmb.plot(years[1:], BMB[1:], linewidth=lw,
+                           color=col, alpha=alph)
 
         # Only process runs that have reached target year
         indices = np.nonzero(years >= target_year)[0]
@@ -332,8 +367,10 @@ if plot_maps:
     figMaps.savefig('figure_maps.png')
 
 if plot_time_series:
-    figTS.tight_layout()
-    figTS.savefig('figure_time_series.png')
+    fig_ts_mb.tight_layout()
+    fig_ts_mb.savefig('figure_time_series1.png')
+    fig_ts_area.tight_layout()
+    fig_ts_area.savefig('figure_time_series2.png')
 
 # --------------
 # single parameter plots
