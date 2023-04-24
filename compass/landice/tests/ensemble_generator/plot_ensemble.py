@@ -19,7 +19,7 @@ from compass.landice.ais_observations import ais_basin_info
 target_year = 100.0  # model year from start at which to calculate statistics
 label_runs = False
 plot_time_series = True
-plot_single_param_sensitivies = False
+plot_single_param_sensitivies = True
 plot_pairwise_param_sensitivities = False
 plot_maps = False
 lw = 0.5  # linewidth for ensemble plots
@@ -61,22 +61,22 @@ param_info = {
 # Set up nested dictionary for possible quantities of interest.
 # The values array is 1d array of values from each run
 qoi_info = {
-    'SLR': {
-        'title': f'SLR at year {target_year}',
-        'units': 'mm',
+    'VAF change': {
+        'title': f'VAF change at year {target_year}',
+        'units': 'Gt',
         'values': np.zeros((nRuns,)) * np.nan,
         'obs': None},
-    'total area': {
+    'total area change': {
         'title': f'Total area change at year {target_year}',
         'units': 'km$^2$',
         'values': np.zeros((nRuns,)) * np.nan,
         'obs': None},
-    'grd area': {
+    'grd area change': {
         'title': f'Grounded area change at year {target_year}',
         'units': 'km$^2$',
         'values': np.zeros((nRuns,)) * np.nan,
         'obs': None},
-    'grd vol': {
+    'grd vol change': {
         'title': f'Grounded vol change at year {target_year}',
         'units': 'Gt',
         'values': np.zeros((nRuns,)) * np.nan,
@@ -140,23 +140,23 @@ if plot_time_series:
     figTS = plt.figure(1, figsize=(8, 12), facecolor='w')
     nrow = 6
     ncol = 1
-    axSLRts = figTS.add_subplot(nrow, ncol, 1)
-    plt.ylabel('SLR\ncontribution\n(mm)')
+    axVAFts = figTS.add_subplot(nrow, ncol, 1)
+    plt.ylabel('VAF change\n(mm)')
     plt.grid()
 
-    axTAts = figTS.add_subplot(nrow, ncol, 2, sharex=axSLRts)
+    axTAts = figTS.add_subplot(nrow, ncol, 2, sharex=axVAFts)
     plt.ylabel('Total area\nchange (km2)')
     plt.grid()
 
-    axGAts = figTS.add_subplot(nrow, ncol, 3, sharex=axSLRts)
+    axGAts = figTS.add_subplot(nrow, ncol, 3, sharex=axVAFts)
     plt.ylabel('Grounded area\nchange (km2)')
     plt.grid()
 
-    axFAts = figTS.add_subplot(nrow, ncol, 4, sharex=axSLRts)
+    axFAts = figTS.add_subplot(nrow, ncol, 4, sharex=axVAFts)
     plt.ylabel('Floating\narea (km2)')
     plt.grid()
 
-    axBMBts = figTS.add_subplot(nrow, ncol, 5, sharex=axSLRts)
+    axBMBts = figTS.add_subplot(nrow, ncol, 5, sharex=axVAFts)
     plt.ylabel('Ice-shelf\nbasal melt\nflux (Gt/yr)')
     plt.grid()
     axBMBts.fill_between(obs_melt_yrs,
@@ -164,7 +164,7 @@ if plot_time_series:
                          obs_melt + obs_melt_unc,
                          color='b', alpha=0.2, label='melt obs')
 
-    axGLFts = figTS.add_subplot(nrow, ncol, 6, sharex=axSLRts)
+    axGLFts = figTS.add_subplot(nrow, ncol, 6, sharex=axVAFts)
     plt.xlabel('Year')
     plt.ylabel('GL flux\n(Gt/yr)')
     plt.grid()
@@ -215,7 +215,6 @@ for idx, run in enumerate(runs):
         years = f.variables['daysSinceStart'][:] / 365.0
 
         VAF = f.variables['volumeAboveFloatation'][:]
-        SLR = (VAF[0] - VAF) / 3.62e14 * rhoi / rhosw * 1000.
         totalArea = f.variables['totalIceArea'][:] / 1.0e6  # in km2
         fltArea = f.variables['floatingIceArea'][:] / 1.0e6  # in km2
         grdArea = f.variables['groundedIceArea'][:] / 1.0e6  # in km2
@@ -247,7 +246,8 @@ for idx, run in enumerate(runs):
                     alph = 0.7
 
             # plot time series
-            axSLRts.plot(years, SLR, linewidth=lw, color=col, alpha=alph)
+            axVAFts.plot(years, VAF - VAF[0], linewidth=lw, color=col,
+                         alpha=alph)
             axTAts.plot(years, totalArea - totalArea[0], linewidth=lw,
                         color=col, alpha=alph)
             axGAts.plot(years, grdArea - grdArea[0], linewidth=lw,
@@ -265,16 +265,13 @@ for idx, run in enumerate(runs):
         if len(indices) > 0:
             ii = indices[0]
             print(f'{run} using year {years[ii]}')
-            qoi_info['SLR']['values'][idx] = SLR[ii]
-
-            qoi_info['grd area']['values'][idx] = grdArea[ii] - grdArea[0]
-
-            qoi_info['grd vol']['values'][idx] = grdVol[ii] - grdVol[0]
-
-            qoi_info['total area']['values'][idx] = iceArea[ii] - iceArea[0]
-
+            qoi_info['VAF change']['values'][idx] = VAF[ii] - VAF[0]
+            qoi_info['grd vol change']['values'][idx] = grdVol[ii] - grdVol[0]
+            qoi_info['grd area change']['values'][idx] = (grdArea[ii] -
+                                                          grdArea[0])
+            qoi_info['total area change']['values'][idx] = (iceArea[ii] -
+                                                            iceArea[0])
             qoi_info['GL flux']['values'][idx] = groundingLineFlux[ii]
-
             qoi_info['melt flux']['values'][idx] = BMB[ii]
 
         # plot map
