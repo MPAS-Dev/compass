@@ -16,8 +16,11 @@ from compass.landice.ais_observations import ais_basin_info
 # --------------
 # general settings
 # --------------
-targetYear = 100.0  # model year from start at which to calculate statistics
-labelRuns = False
+target_year = 100.0  # model year from start at which to calculate statistics
+label_runs = False
+plot_time_series = True
+plot_single_param_sensitivies = False
+plot_pairwise_param_sensitivities = False
 plot_maps = False
 lw = 0.5  # linewidth for ensemble plots
 
@@ -59,32 +62,32 @@ param_info = {
 # The values array is 1d array of values from each run
 qoi_info = {
     'SLR': {
-        'title': f'SLR at year {targetYear}',
+        'title': f'SLR at year {target_year}',
         'units': 'mm',
         'values': np.zeros((nRuns,)) * np.nan,
         'obs': None},
     'total area': {
-        'title': f'Total area change at year {targetYear}',
+        'title': f'Total area change at year {target_year}',
         'units': 'km$^2$',
         'values': np.zeros((nRuns,)) * np.nan,
         'obs': None},
     'grd area': {
-        'title': f'Grounded area change at year {targetYear}',
+        'title': f'Grounded area change at year {target_year}',
         'units': 'km$^2$',
         'values': np.zeros((nRuns,)) * np.nan,
         'obs': None},
     'grd vol': {
-        'title': f'Grounded vol change at year {targetYear}',
+        'title': f'Grounded vol change at year {target_year}',
         'units': 'Gt',
         'values': np.zeros((nRuns,)) * np.nan,
         'obs': None},
     'GL flux': {
-        'title': f'Grounding line flux at year {targetYear}',
+        'title': f'Grounding line flux at year {target_year}',
         'units': 'Gt/yr',
         'values': np.zeros((nRuns,)) * np.nan,
         'obs': None},
     'melt flux': {
-        'title': f'Ice-shelf basal melt flux at year {targetYear}',
+        'title': f'Ice-shelf basal melt flux at year {target_year}',
         'units': 'Gt/yr',
         'values': np.zeros((nRuns,)) * np.nan,
         'obs': None}}
@@ -131,43 +134,44 @@ else:
 # Set up time series plots
 # --------------
 
-# Set up axes for time series plots before reading data.
-# Time series are plotted as they are read.
-figTS = plt.figure(1, figsize=(8, 12), facecolor='w')
-nrow = 6
-ncol = 1
-axSLRts = figTS.add_subplot(nrow, ncol, 1)
-plt.ylabel('SLR\ncontribution\n(mm)')
-plt.grid()
+if plot_time_series:
+    # Set up axes for time series plots before reading data.
+    # Time series are plotted as they are read.
+    figTS = plt.figure(1, figsize=(8, 12), facecolor='w')
+    nrow = 6
+    ncol = 1
+    axSLRts = figTS.add_subplot(nrow, ncol, 1)
+    plt.ylabel('SLR\ncontribution\n(mm)')
+    plt.grid()
 
-axTAts = figTS.add_subplot(nrow, ncol, 2, sharex=axSLRts)
-plt.ylabel('Total area\nchange (km2)')
-plt.grid()
+    axTAts = figTS.add_subplot(nrow, ncol, 2, sharex=axSLRts)
+    plt.ylabel('Total area\nchange (km2)')
+    plt.grid()
 
-axGAts = figTS.add_subplot(nrow, ncol, 3, sharex=axSLRts)
-plt.ylabel('Grounded area\nchange (km2)')
-plt.grid()
+    axGAts = figTS.add_subplot(nrow, ncol, 3, sharex=axSLRts)
+    plt.ylabel('Grounded area\nchange (km2)')
+    plt.grid()
 
-axFAts = figTS.add_subplot(nrow, ncol, 4, sharex=axSLRts)
-plt.ylabel('Floating\narea (km2)')
-plt.grid()
+    axFAts = figTS.add_subplot(nrow, ncol, 4, sharex=axSLRts)
+    plt.ylabel('Floating\narea (km2)')
+    plt.grid()
 
-axBMBts = figTS.add_subplot(nrow, ncol, 5, sharex=axSLRts)
-plt.ylabel('Ice-shelf\nbasal melt\nflux (Gt/yr)')
-plt.grid()
-axBMBts.fill_between(obs_melt_yrs,
-                     obs_melt - obs_melt_unc,
-                     obs_melt + obs_melt_unc,
-                     color='b', alpha=0.2, label='melt obs')
+    axBMBts = figTS.add_subplot(nrow, ncol, 5, sharex=axSLRts)
+    plt.ylabel('Ice-shelf\nbasal melt\nflux (Gt/yr)')
+    plt.grid()
+    axBMBts.fill_between(obs_melt_yrs,
+                         obs_melt - obs_melt_unc,
+                         obs_melt + obs_melt_unc,
+                         color='b', alpha=0.2, label='melt obs')
 
-axGLFts = figTS.add_subplot(nrow, ncol, 6, sharex=axSLRts)
-plt.xlabel('Year')
-plt.ylabel('GL flux\n(Gt/yr)')
-plt.grid()
-axGLFts.fill_between(obs_discharge_yrs,
-                     obs_discharge - obs_discharge_unc,
-                     obs_discharge + obs_discharge_unc,
-                     color='b', alpha=0.2, label='D obs')
+    axGLFts = figTS.add_subplot(nrow, ncol, 6, sharex=axSLRts)
+    plt.xlabel('Year')
+    plt.ylabel('GL flux\n(Gt/yr)')
+    plt.grid()
+    axGLFts.fill_between(obs_discharge_yrs,
+                         obs_discharge - obs_discharge_unc,
+                         obs_discharge + obs_discharge_unc,
+                         color='b', alpha=0.2, label='D obs')
 
 # --------------
 # maps plotting setup
@@ -228,35 +232,36 @@ for idx, run in enumerate(runs):
         GLflux2 = groundingLineFlux + GLMigFlux2
 
         # find target year index
-        indices = np.nonzero(years >= targetYear)[0]
+        indices = np.nonzero(years >= target_year)[0]
 
-        # color lines depending on if they match obs or not
-        col = 'k'
-        alph = 0.2
-        GLobs = qoi_info['GL flux']['obs']
-        if GLobs is not None and len(indices) > 0:
-            ii = indices[0]
-            if groundingLineFlux[ii] > (GLobs[0] - GLobs[1]) and \
-               groundingLineFlux[ii] < (GLobs[0] + GLobs[1]):
-                col = 'r'
-                alph = 0.7
+        if plot_time_series:
+            # color lines depending on if they match obs or not
+            col = 'k'
+            alph = 0.2
+            GLobs = qoi_info['GL flux']['obs']
+            if GLobs is not None and len(indices) > 0:
+                ii = indices[0]
+                if groundingLineFlux[ii] > (GLobs[0] - GLobs[1]) and \
+                   groundingLineFlux[ii] < (GLobs[0] + GLobs[1]):
+                    col = 'r'
+                    alph = 0.7
 
-        # plot time series
-        axSLRts.plot(years, SLR, linewidth=lw, color=col, alpha=alph)
-        axTAts.plot(years, totalArea - totalArea[0], linewidth=lw,
-                    color=col, alpha=alph)
-        axGAts.plot(years, grdArea - grdArea[0], linewidth=lw,
-                    color=col, alpha=alph)
-        axFAts.plot(years, fltArea, linewidth=lw, color=col, alpha=alph)
-        # ignore first entry which is 0
-        axGLFts.plot(years[1:], GLflux2[1:], linewidth=lw,
-                     color=col, alpha=alph)
-        # ignore first entry which is 0
-        axBMBts.plot(years[1:], BMB[1:], linewidth=lw,
-                     color=col, alpha=alph)
+            # plot time series
+            axSLRts.plot(years, SLR, linewidth=lw, color=col, alpha=alph)
+            axTAts.plot(years, totalArea - totalArea[0], linewidth=lw,
+                        color=col, alpha=alph)
+            axGAts.plot(years, grdArea - grdArea[0], linewidth=lw,
+                        color=col, alpha=alph)
+            axFAts.plot(years, fltArea, linewidth=lw, color=col, alpha=alph)
+            # ignore first entry which is 0
+            axGLFts.plot(years[1:], GLflux2[1:], linewidth=lw,
+                         color=col, alpha=alph)
+            # ignore first entry which is 0
+            axBMBts.plot(years[1:], BMB[1:], linewidth=lw,
+                         color=col, alpha=alph)
 
         # Only process runs that have reached target year
-        indices = np.nonzero(years >= targetYear)[0]
+        indices = np.nonzero(years >= target_year)[0]
         if len(indices) > 0:
             ii = indices[0]
             print(f'{run} using year {years[ii]}')
@@ -279,7 +284,7 @@ for idx, run in enumerate(runs):
                                    decode_timedelta=False,
                                    chunks={"Time": 10})
             yearsOutput = DS['daysSinceStart'].values[:] / 365.0
-            indices = np.nonzero(yearsOutput >= targetYear)[0]
+            indices = np.nonzero(yearsOutput >= target_year)[0]
             if len(indices) > 0:
                 ii = indices[0]
 
@@ -329,101 +334,109 @@ if plot_maps:
     axMaps2.hist2d(GLX, GLY, (50, 50), cmap=plt.cm.jet)
     figMaps.savefig('figure_maps.png')
 
-figTS.tight_layout()
-figTS.savefig('figure_time_series.png')
+if plot_time_series:
+    figTS.tight_layout()
+    figTS.savefig('figure_time_series.png')
 
 # --------------
 # single parameter plots
 # --------------
 
-fig_num = 0
-fig_offset = 100
-for param in param_info:
-    if param_info[param]['active']:
-        fig = plt.figure(fig_offset + fig_num, figsize=(13, 8), facecolor='w')
-        nrow = 2
-        ncol = 3
-        fig.suptitle(f'{param} sensitivities')
-        # create subplot for each QOI
-        n_sub = 1
-        for qoi in qoi_info:
-            ax = fig.add_subplot(nrow, ncol, n_sub)
-            plt.title(qoi_info[qoi]['title'])
-            plt.xlabel(f'{param} ({param_info[param]["units"]})')
-            plt.ylabel(f'{qoi} ({qoi_info[qoi]["units"]})')
-            pvalues = param_info[param]['values']
-            qvalues = qoi_info[qoi]['values']
-            obs = qoi_info[qoi]['obs']
-            if obs is not None:
-                plt.fill_between([pvalues.min(), pvalues.max()],
-                                 np.array([1., 1.]) * (obs[0] - obs[1]),
-                                 np.array([1., 1.]) * (obs[0] + obs[1]),
-                                 color='k', alpha=0.2, label='melt obs')
-            plt.plot(pvalues, qvalues, '.')
-            if labelRuns:
-                for i in range(nRuns):
-                    plt.annotate(f'{runs[i][3:]}', (pvalues[i], qvalues[i]))
-            n_sub += 1
-        fig.tight_layout()
-        fig.savefig(f'figure_sensitivity_{param}.png')
-        fig_num += 1
+if plot_single_param_sensitivies:
+    fig_num = 0
+    fig_offset = 100
+    for param in param_info:
+        if param_info[param]['active']:
+            fig = plt.figure(fig_offset + fig_num, figsize=(13, 8),
+                             facecolor='w')
+            nrow = 2
+            ncol = 3
+            fig.suptitle(f'{param} sensitivities')
+            # create subplot for each QOI
+            n_sub = 1
+            for qoi in qoi_info:
+                ax = fig.add_subplot(nrow, ncol, n_sub)
+                plt.title(qoi_info[qoi]['title'])
+                plt.xlabel(f'{param} ({param_info[param]["units"]})')
+                plt.ylabel(f'{qoi} ({qoi_info[qoi]["units"]})')
+                pvalues = param_info[param]['values']
+                qvalues = qoi_info[qoi]['values']
+                obs = qoi_info[qoi]['obs']
+                if obs is not None:
+                    plt.fill_between([pvalues.min(), pvalues.max()],
+                                     np.array([1., 1.]) * (obs[0] - obs[1]),
+                                     np.array([1., 1.]) * (obs[0] + obs[1]),
+                                     color='k', alpha=0.2, label='melt obs')
+                plt.plot(pvalues, qvalues, '.')
+                if label_runs:
+                    for i in range(nRuns):
+                        plt.annotate(f'{runs[i][3:]}',
+                                     (pvalues[i], qvalues[i]))
+                n_sub += 1
+            fig.tight_layout()
+            fig.savefig(f'figure_sensitivity_{param}.png')
+            fig_num += 1
 
 # --------------
 # pairwise parameter plots
 # --------------
 
-fig_num = 0
-fig_offset = 200
-markerSize = 100
-for count1, param1 in enumerate(param_info):
-    if param_info[param1]['active']:
-        p1_cnt = count1
-        for count2, param2 in enumerate(param_info):
-            if count2 > count1 and param_info[param2]['active']:
-                fig = plt.figure(fig_offset + fig_num, figsize=(13, 8),
-                                 facecolor='w')
-                nrow = 2
-                ncol = 3
-                fig.suptitle(f'{param1} vs. {param2} sensitivities')
-                # create subplot for each QOI
-                n_sub = 1
-                for qoi in qoi_info:
-                    ax = fig.add_subplot(nrow, ncol, n_sub)
-                    plt.title(f'{qoi_info[qoi]["title"]} '
-                              f'({qoi_info[qoi]["units"]})')
-                    plt.xlabel(f'{param1} ({param_info[param1]["units"]})')
-                    plt.ylabel(f'{param2} ({param_info[param2]["units"]})')
-                    xdata = param_info[param1]['values']
-                    ydata = param_info[param2]['values']
-                    zdata = qoi_info[qoi]['values']
-                    if np.isfinite(zdata).sum() == 0:
-                        print(f"No valid data for {param1} vs. {param2} "
-                              f"sensitivity plot for {qoi}, skipping")
-                        continue
-                    plt.scatter(xdata, ydata, s=markerSize, c=zdata,
-                                plotnonfinite=False)
-                    badIdx = np.nonzero(np.isnan(zdata))[0]
-                    goodIdx = np.nonzero(np.logical_not(np.isnan(zdata)))[0]
-                    plt.plot(xdata[badIdx], ydata[badIdx], 'kx')
-                    obs = qoi_info[qoi]['obs']
-                    plt.colorbar()
-                    if obs is not None:
-                        try:
-                            plt.tricontour(xdata[goodIdx], ydata[goodIdx],
-                                           zdata[goodIdx],
-                                           [obs[0] - obs[1], obs[0] + obs[1]],
-                                           colors='k')
-                        except ValueError:
-                            print(f"Skipping obs contour for {param1} vs. "
-                                  f"{param2}, because outside model range")
-                    if labelRuns:
-                        for i in range(nRuns):
-                            plt.annotate(f'{runs[i][3:]}',
-                                         (xdata[i], ydata[i]))
-                    n_sub += 1
-                fig.tight_layout()
-                fig.savefig(
-                    f'figure_pairwise_sensitivity_{param1}_{param2}.png')
-                fig_num += 1
+if plot_pairwise_param_sensitivities:
+    fig_num = 0
+    fig_offset = 200
+    markerSize = 100
+    for count1, param1 in enumerate(param_info):
+        if param_info[param1]['active']:
+            p1_cnt = count1
+            for count2, param2 in enumerate(param_info):
+                if count2 > count1 and param_info[param2]['active']:
+                    fig = plt.figure(fig_offset + fig_num, figsize=(13, 8),
+                                     facecolor='w')
+                    nrow = 2
+                    ncol = 3
+                    fig.suptitle(f'{param1} vs. {param2} sensitivities')
+                    # create subplot for each QOI
+                    n_sub = 1
+                    for qoi in qoi_info:
+                        ax = fig.add_subplot(nrow, ncol, n_sub)
+                        plt.title(f'{qoi_info[qoi]["title"]} '
+                                  f'({qoi_info[qoi]["units"]})')
+                        plt.xlabel(f'{param1} ({param_info[param1]["units"]})')
+                        plt.ylabel(f'{param2} ({param_info[param2]["units"]})')
+                        xdata = param_info[param1]['values']
+                        ydata = param_info[param2]['values']
+                        zdata = qoi_info[qoi]['values']
+                        if np.isfinite(zdata).sum() == 0:
+                            print(f"No valid data for {param1} vs. {param2} "
+                                  f"sensitivity plot for {qoi}, skipping")
+                            continue
+                        plt.scatter(xdata, ydata, s=markerSize, c=zdata,
+                                    plotnonfinite=False)
+                        badIdx = np.nonzero(np.isnan(zdata))[0]
+                        goodIdx = np.nonzero(np.logical_not(np.isnan(
+                            zdata)))[0]
+                        plt.plot(xdata[badIdx], ydata[badIdx], 'kx')
+                        obs = qoi_info[qoi]['obs']
+                        plt.colorbar()
+                        if obs is not None:
+                            try:
+                                plt.tricontour(xdata[goodIdx], ydata[goodIdx],
+                                               zdata[goodIdx],
+                                               [obs[0] - obs[1],
+                                                obs[0] + obs[1]],
+                                               colors='k')
+                            except ValueError:
+                                print(f"Skipping obs contour for {param1} "
+                                      f"vs. {param2}, because outside model "
+                                      "range")
+                        if label_runs:
+                            for i in range(nRuns):
+                                plt.annotate(f'{runs[i][3:]}',
+                                             (xdata[i], ydata[i]))
+                        n_sub += 1
+                    fig.tight_layout()
+                    fig.savefig(
+                        f'figure_pairwise_sensitivity_{param1}_{param2}.png')
+                    fig_num += 1
 
 plt.show()
