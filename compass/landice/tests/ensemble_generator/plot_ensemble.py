@@ -18,9 +18,10 @@ from compass.landice.ais_observations import ais_basin_info
 # --------------
 target_year = 100.0  # model year from start at which to calculate statistics
 label_runs = False
+filter_runs = True
 plot_time_series = True
-plot_single_param_sensitivies = False
-plot_pairwise_param_sensitivities = False
+plot_single_param_sensitivies = True
+plot_pairwise_param_sensitivities = True
 plot_maps = False
 lw = 0.5  # linewidth for ensemble plots
 
@@ -63,34 +64,26 @@ param_info = {
 qoi_info = {
     'VAF change': {
         'title': f'VAF change at year {target_year}',
-        'units': 'Gt',
-        'values': np.zeros((nRuns,)) * np.nan,
-        'obs': None},
+        'units': 'Gt'},
     'total area change': {
         'title': f'Total area change at year {target_year}',
-        'units': 'km$^2$',
-        'values': np.zeros((nRuns,)) * np.nan,
-        'obs': None},
+        'units': 'km$^2$'},
     'grd area change': {
         'title': f'Grounded area change at year {target_year}',
-        'units': 'km$^2$',
-        'values': np.zeros((nRuns,)) * np.nan,
-        'obs': None},
+        'units': 'km$^2$'},
     'grd vol change': {
         'title': f'Grounded vol change at year {target_year}',
-        'units': 'Gt',
-        'values': np.zeros((nRuns,)) * np.nan,
-        'obs': None},
+        'units': 'Gt'},
     'GL flux': {
         'title': f'Grounding line flux at year {target_year}',
-        'units': 'Gt/yr',
-        'values': np.zeros((nRuns,)) * np.nan,
-        'obs': None},
+        'units': 'Gt/yr'},
     'melt flux': {
         'title': f'Ice-shelf basal melt flux at year {target_year}',
-        'units': 'Gt/yr',
-        'values': np.zeros((nRuns,)) * np.nan,
-        'obs': None}}
+        'units': 'Gt/yr'}}
+# Initialize some common attributes to be set later
+for qoi in qoi_info:
+    qoi_info[qoi]['values'] = np.zeros((nRuns,)) * np.nan
+    qoi_info[qoi]['obs'] = None
 
 # Get ensemble-wide information
 basin = None
@@ -108,6 +101,29 @@ if basin is None:
 else:
     print(f"Using observations from basin {basin} "
           f"({ais_basin_info[basin]['name']}).")
+
+
+def filter_run():
+    valid_run = True
+    if filter_runs is True and 'filter criteria' in ais_basin_info[basin]:
+        for criterion in ais_basin_info[basin]['filter criteria']:
+            # calculate as annual rate
+            qoi_val = qoi_info[criterion]['values'][idx]
+            filter_info = ais_basin_info[basin]['filter criteria'][criterion]
+            min_val = filter_info['values'][0]
+            max_val = filter_info['values'][1]
+            if filter_info['rate'] is True:
+                min_val *= target_year
+                max_val *= target_year
+            if qoi_val < min_val or qoi_val > max_val:
+                valid_run = False
+        # if run marked invalid, set all qoi to nan
+        if valid_run is False:
+            print(f"Marking run {idx} as invalid due to filtering criteria")
+            for qoi in qoi_info:
+                qoi_info[qoi]['values'][idx] = np.nan
+    return valid_run
+
 
 # --------------
 # Observations information
@@ -254,20 +270,32 @@ for idx, run in enumerate(runs):
         GLMigFlux2 = np.convolve(GLMigFlux, np.ones(w), 'same') / w
         GLflux2 = groundingLineFlux + GLMigFlux2
 
-        # find target year index
+        # Only process qois for runs that have reached target year
         indices = np.nonzero(years >= target_year)[0]
+        if len(indices) > 0:
+            ii = indices[0]
+            print(f'{run} using year {years[ii]}')
+            qoi_info['VAF change']['values'][idx] = VAF[ii] - VAF[0]
+            qoi_info['grd vol change']['values'][idx] = grdVol[ii] - grdVol[0]
+            qoi_info['grd area change']['values'][idx] = (grdArea[ii] -
+                                                          grdArea[0])
+            qoi_info['total area change']['values'][idx] = (iceArea[ii] -
+                                                            iceArea[0])
+            qoi_info['GL flux']['values'][idx] = groundingLineFlux[ii]
+            qoi_info['melt flux']['values'][idx] = BMB[ii]
+
+            # filter run
+            valid_run = filter_run()
+        else:
+            valid_run = False
 
         if plot_time_series:
             # color lines depending on if they match obs or not
             col = 'k'
             alph = 0.2
-            GLobs = qoi_info['GL flux']['obs']
-            if GLobs is not None and len(indices) > 0:
-                ii = indices[0]
-                if groundingLineFlux[ii] > (GLobs[0] - GLobs[1]) and \
-                   groundingLineFlux[ii] < (GLobs[0] + GLobs[1]):
-                    col = 'r'
-                    alph = 0.7
+            if valid_run:
+                col = 'r'
+                alph = 0.7
 
             # plot time series
             # plot 1
@@ -294,20 +322,6 @@ for idx, run in enumerate(runs):
             # ignore first entry which is 0
             ax_ts_bmb.plot(years[1:], BMB[1:], linewidth=lw,
                            color=col, alpha=alph)
-
-        # Only process runs that have reached target year
-        indices = np.nonzero(years >= target_year)[0]
-        if len(indices) > 0:
-            ii = indices[0]
-            print(f'{run} using year {years[ii]}')
-            qoi_info['VAF change']['values'][idx] = VAF[ii] - VAF[0]
-            qoi_info['grd vol change']['values'][idx] = grdVol[ii] - grdVol[0]
-            qoi_info['grd area change']['values'][idx] = (grdArea[ii] -
-                                                          grdArea[0])
-            qoi_info['total area change']['values'][idx] = (iceArea[ii] -
-                                                            iceArea[0])
-            qoi_info['GL flux']['values'][idx] = groundingLineFlux[ii]
-            qoi_info['melt flux']['values'][idx] = BMB[ii]
 
         # plot map
         if plot_maps:
@@ -372,6 +386,33 @@ if plot_time_series:
     fig_ts_area.tight_layout()
     fig_ts_area.savefig('figure_time_series2.png')
 
+    # optionally add some filtering indicators on the time series
+    if filter_runs is True and 'filter criteria' in ais_basin_info[basin]:
+        filter_info = ais_basin_info[basin]['filter criteria']
+
+        criterion = 'total area change'
+        if criterion in filter_info:
+            min_val = filter_info[criterion]['values'][0]
+            max_val = filter_info[criterion]['values'][1]
+            ax_ts_ta.plot([0, target_year], [min_val, min_val], 'b:')
+            ax_ts_ta.plot([0, target_year], [max_val, max_val], 'b:')
+
+        criterion = 'grd area change'
+        if criterion in ais_basin_info[basin]['filter criteria']:
+            min_val = filter_info[criterion]['values'][0]
+            max_val = filter_info[criterion]['values'][1]
+            ax_ts_ga.plot([0, target_year], [0, min_val * target_year], 'b:')
+            ax_ts_ga.plot([0, target_year], [0, max_val * target_year], 'b:')
+
+        criterion = 'grd vol change'
+        if criterion in ais_basin_info[basin]['filter criteria']:
+            min_val = filter_info[criterion]['values'][0]
+            max_val = filter_info[criterion]['values'][1]
+            ax_ts_grvol.plot([0, target_year], [0, min_val * target_year],
+                             'b:')
+            ax_ts_grvol.plot([0, target_year], [0, max_val * target_year],
+                             'b:')
+
 # --------------
 # single parameter plots
 # --------------
@@ -402,6 +443,8 @@ if plot_single_param_sensitivies:
                                      np.array([1., 1.]) * (obs[0] + obs[1]),
                                      color='k', alpha=0.2, label='melt obs')
                 plt.plot(pvalues, qvalues, '.')
+                badIdx = np.nonzero(np.isnan(qvalues))[0]
+                plt.plot(pvalues[badIdx], np.zeros(len(badIdx),), 'k.')
                 if label_runs:
                     for i in range(nRuns):
                         plt.annotate(f'{runs[i][3:]}',

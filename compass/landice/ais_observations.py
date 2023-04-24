@@ -43,7 +43,17 @@ ais_basin_info = {
         'input': [73, 10],
         'outflow': [77, 4],
         'net': [-4, 11],
-        'shelf_melt': [35.5, 23.0]},
+        'shelf_melt': [35.5, 23.0],
+        'filter criteria': {
+            'total area change': {
+                'rate': False,
+                'values': [-10000.0, 10000.0]},  # km2
+            'grd area change': {
+                'rate': True,
+                'values': [-15.0, 14.56]},  # km2/yr
+            'grd vol change': {
+                'rate': True,
+                'values': [-18.9, 15.5]}}},  # Gt/yr
     'ISMIP6BasinCCp': {
         'name': 'Phillipi, Denman',
         'input': [81, 13],
