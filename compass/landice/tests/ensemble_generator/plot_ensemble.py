@@ -73,6 +73,11 @@ qoi_info = {
         'units': 'km$^2$',
         'values': np.zeros((nRuns,)) * np.nan,
         'obs': None},
+    'grd vol': {
+        'title': f'Grounded vol change at year {targetYear}',
+        'units': 'Gt',
+        'values': np.zeros((nRuns,)) * np.nan,
+        'obs': None},
     'GL flux': {
         'title': f'Grounding line flux at year {targetYear}',
         'units': 'Gt/yr',
@@ -210,8 +215,17 @@ for idx, run in enumerate(runs):
         totalArea = f.variables['totalIceArea'][:] / 1.0e6  # in km2
         fltArea = f.variables['floatingIceArea'][:] / 1.0e6  # in km2
         grdArea = f.variables['groundedIceArea'][:] / 1.0e6  # in km2
-        groundingLineFlux = f.variables['groundingLineFlux'][:] / 1.0e12  # Gt
-        BMB = f.variables['totalFloatingBasalMassBal'][:] / -1.0e12  # in Gt
+        iceArea = f.variables['totalIceArea'][:] / 1000.0**2  # in km^2
+        grdVol = f.variables['groundedIceVolume'][:] / (1.0e12 / rhoi)  # in Gt
+        BMB = f.variables['totalFloatingBasalMassBal'][:] / -1.0e12  # in Gt/yr
+        SMB = f.variables['totalGroundedSfcMassBal'][:] / -1.0e12  # in Gt/yr
+        groundingLineFlux = f.variables['groundingLineFlux'][:] \
+            / 1.0e12  # Gt/yr
+        GLMigFlux = f.variables['groundingLineMigrationFlux'][:] \
+            / 1.0e12  # Gt/yr
+        w = 50
+        GLMigFlux2 = np.convolve(GLMigFlux, np.ones(w), 'same') / w
+        GLflux2 = groundingLineFlux + GLMigFlux2
 
         # find target year index
         indices = np.nonzero(years >= targetYear)[0]
@@ -235,7 +249,7 @@ for idx, run in enumerate(runs):
                     color=col, alpha=alph)
         axFAts.plot(years, fltArea, linewidth=lw, color=col, alpha=alph)
         # ignore first entry which is 0
-        axGLFts.plot(years[1:], groundingLineFlux[1:], linewidth=lw,
+        axGLFts.plot(years[1:], GLflux2[1:], linewidth=lw,
                      color=col, alpha=alph)
         # ignore first entry which is 0
         axBMBts.plot(years[1:], BMB[1:], linewidth=lw,
@@ -248,10 +262,10 @@ for idx, run in enumerate(runs):
             print(f'{run} using year {years[ii]}')
             qoi_info['SLR']['values'][idx] = SLR[ii]
 
-            grdArea = f.variables['groundedIceArea'][:] / 1000.0**2  # in km^2
             qoi_info['grd area']['values'][idx] = grdArea[ii] - grdArea[0]
 
-            iceArea = f.variables['totalIceArea'][:] / 1000.0**2  # in km^2
+            qoi_info['grd vol']['values'][idx] = grdVol[ii] - grdVol[0]
+
             qoi_info['total area']['values'][idx] = iceArea[ii] - iceArea[0]
 
             qoi_info['GL flux']['values'][idx] = groundingLineFlux[ii]
