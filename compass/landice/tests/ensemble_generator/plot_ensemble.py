@@ -166,7 +166,6 @@ if plot_time_series:
     plt.grid()
 
     ax_ts_glf = fig_ts_mb.add_subplot(nrow, ncol, 3, sharex=ax_ts_vaf)
-    plt.xlabel('Year')
     plt.ylabel('GL flux\n(Gt/yr)')
     plt.grid()
     ax_ts_glf.fill_between(obs_discharge_yrs,
@@ -175,7 +174,6 @@ if plot_time_series:
                            color='b', alpha=0.2, label='D obs')
 
     ax_ts_glf2 = fig_ts_mb.add_subplot(nrow, ncol, 4, sharex=ax_ts_vaf)
-    plt.xlabel('Year')
     plt.ylabel('GL flux+\nGL mig. flux\n(Gt/yr)')
     plt.grid()
     ax_ts_glf2.fill_between(obs_discharge_yrs,
@@ -185,6 +183,7 @@ if plot_time_series:
 
     ax_ts_smb = fig_ts_mb.add_subplot(nrow, ncol, 5, sharex=ax_ts_vaf)
     plt.ylabel('Grounded SMB\n(Gt/yr)')
+    plt.xlabel('Year')
     plt.grid()
 
     # second plot to avoid crowding
@@ -206,6 +205,7 @@ if plot_time_series:
 
     ax_ts_bmb = fig_ts_area.add_subplot(nrow, ncol, 4, sharex=ax_ts_vaf)
     plt.ylabel('Ice-shelf\nbasal melt\nflux (Gt/yr)')
+    plt.xlabel('Year')
     plt.grid()
     ax_ts_bmb.fill_between(obs_melt_yrs,
                            obs_melt - obs_melt_unc,
@@ -233,8 +233,14 @@ if plot_maps:
 # --------------
 # Loop through runs and gather data
 # --------------
+n_dirs = 0
+n_with_output = 0
+n_at_target_yr = 0
+n_filtered = 0
 for idx, run in enumerate(runs):
     print(f'Analyzing {run}')
+    n_dirs += 1
+
     # get param values for this run
     run_cfg = configparser.ConfigParser()
     run_cfg.read(os.path.join(run, 'run_info.cfg'))
@@ -250,6 +256,7 @@ for idx, run in enumerate(runs):
 
     fpath = run + "/output/globalStats.nc"
     if os.path.exists(fpath):
+        n_with_output += 1
         f = netCDF4.Dataset(fpath, 'r')
         years = f.variables['daysSinceStart'][:] / 365.0
 
@@ -273,6 +280,7 @@ for idx, run in enumerate(runs):
         # Only process qois for runs that have reached target year
         indices = np.nonzero(years >= target_year)[0]
         if len(indices) > 0:
+            n_at_target_yr += 1
             ii = indices[0]
             print(f'{run} using year {years[ii]}')
             qoi_info['VAF change']['values'][idx] = VAF[ii] - VAF[0]
@@ -286,6 +294,8 @@ for idx, run in enumerate(runs):
 
             # filter run
             valid_run = filter_run()
+            if valid_run:
+                n_filtered += 1
         else:
             valid_run = False
 
@@ -362,6 +372,12 @@ for idx, run in enumerate(runs):
                 GLY = np.append(GLY, grdcontourset.allsegs[0][0][:, 1])
 
         f.close()
+
+# Print information about runs
+print(f'# runs with directories:     {n_dirs}')
+print(f'# runs with output files:    {n_with_output}')
+print(f'# runs reaching target year: {n_at_target_yr}')
+print(f'# runs passing filter:       {n_filtered}')
 
 # --------------
 # save qoi structure
