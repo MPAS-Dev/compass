@@ -14,7 +14,7 @@ from compass.testcase import TestCase
 from compass.validate import compare_variables
 
 
-class Ensemble(TestCase):
+class ControlEnsemble(TestCase):
     """
     A test case for performing an ensemble of
     simulations for uncertainty quantification studies.
@@ -30,7 +30,7 @@ class Ensemble(TestCase):
             The test group that this test case belongs to
 
         """
-        name = 'ensemble'
+        name = 'control_ensemble'
         super().__init__(test_group=test_group, name=name)
 
         # We don't want to initialize all the individual runs
