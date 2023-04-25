@@ -1,5 +1,6 @@
-from compass.testgroup import TestGroup
 from compass.ocean.tests.dam_break.default import Default
+from compass.ocean.tests.dam_break.ramp import Ramp
+from compass.testgroup import TestGroup
 
 
 class DamBreak(TestGroup):
@@ -15,6 +16,7 @@ class DamBreak(TestGroup):
         super().__init__(mpas_core=mpas_core, name='dam_break')
 
         for resolution in [0.04, 0.12]:
-            for coord_type in ['sigma']:
-                self.add_test_case(
-                    Default(test_group=self, resolution=resolution))
+            self.add_test_case(
+                Default(test_group=self, resolution=resolution))
+            self.add_test_case(
+                Ramp(test_group=self, resolution=resolution))

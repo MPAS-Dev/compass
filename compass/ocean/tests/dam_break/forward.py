@@ -8,7 +8,7 @@ class Forward(Step):
     test cases.
     """
     def __init__(self, test_case, resolution, name='forward', subdir=None,
-                 ntasks=1, min_tasks=None, openmp_threads=1):
+                 ntasks=1, min_tasks=None, openmp_threads=1, ramp=False):
         """
         Create a new test case
 
@@ -50,6 +50,9 @@ class Forward(Step):
 
         self.add_namelist_file('compass.ocean.tests.dam_break',
                                'namelist.forward')
+        if ramp:
+            self.add_namelist_file('compass.ocean.tests.dam_break',
+                                   'namelist.ramp.forward')
         self.add_streams_file('compass.ocean.tests.dam_break',
                               'streams.forward')
 
