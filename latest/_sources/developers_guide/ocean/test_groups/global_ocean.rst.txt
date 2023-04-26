@@ -94,7 +94,7 @@ defines:
     mesh_description = MPAS Eddy Closure mesh for E3SM version ${e3sm_version} with
                        enhanced resolution around the equator (30 km), South pole
                        (35 km), Greenland (${min_res} km), ${max_res}-km resolution
-                       at mid latitudes, and ${levels} vertical levels
+                       at mid latitudes, and <<<levels>>> vertical levels
     # E3SM version that the mesh is intended for
     e3sm_version = 2
     # The revision number of the mesh, which should be incremented each time the
@@ -107,6 +107,10 @@ defines:
     # The URL of the pull request documenting the creation of the mesh
     pull_request = <<<Missing>>>
 
+Note that ``<<<levels>>>`` is a custom placeholder for the number of vertical
+levels, since this isn't known until runtime.  There are similar placeholders
+for ``<<<creation_date>>>`` and ``<<<bottom_depth>>>`` for similar reasons.
+
 In this particular case, the ``pull_request`` has not yet been defined.  Each
 time the mesh is revised, the ``mesh_revision`` should be updated and the
 associated pull request to https://github.com/MPAS-Dev/compass/ should be
@@ -118,10 +122,9 @@ standard naming convention for E3SM:
 
 .. code-block:: python
 
-    short_mesh_name = '{}{}E{}r{}'.format(mesh_prefix, res, e3sm_version,
-                                          mesh_revision)
-    long_mesh_name = '{}{}kmL{}E3SMv{}r{}'.format(mesh_prefix, res, levels,
-                                                  e3sm_version, mesh_revision)
+    short_mesh_name = f'{mesh_prefix}{res}E{e3sm_version}r{mesh_revision}'
+    long_mesh_name = \
+        f'{mesh_prefix}{res}kmL{levels}E3SMv{e3sm_version}r{mesh_revision}'
 
 For example, the ``QU240`` mesh has the E3SM short name ``QU240E2r1`` and
 long name ``QU240kmL16E3SMv2r1``.
@@ -336,7 +339,7 @@ The default config options for these meshes are:
     prefix = QU
     # a description of the mesh
     mesh_description = MPAS quasi-uniform mesh for E3SM version ${e3sm_version} at
-                       ${min_res}-km global resolution with ${levels} vertical
+                       ${min_res}-km global resolution with <<<levels>>> vertical
                        level
 
     # E3SM version that the mesh is intended for
@@ -436,7 +439,7 @@ The default config options for these meshes are:
     mesh_description = MPAS Eddy Closure mesh for E3SM version ${e3sm_version} with
                        enhanced resolution around the equator (30 km), South pole
                        (35 km), Greenland (${min_res} km), ${max_res}-km resolution
-                       at mid latitudes, and ${levels} vertical levels
+                       at mid latitudes, and <<<levels>>> vertical levels
     # E3SM version that the mesh is intended for
     e3sm_version = 2
     # The revision number of the mesh, which should be incremented each time the
@@ -514,7 +517,7 @@ module:
                        Kuroshio-Oyashio Extension, 45-km resolution in the mid latitudes,
                        30-km resolution in a 15-degree band around the equator, 60-km
                        resolution in northern mid latitudes, 30 km in the north
-                       Atlantic and 35 km in the Arctic.  This mesh has ${levels}
+                       Atlantic and 35 km in the Arctic.  This mesh has <<<levels>>>
                        vertical levels.
     # E3SM version that the mesh is intended for
     e3sm_version = 2
@@ -603,7 +606,7 @@ The default config options for these meshes are:
                        Antarctica, 45-km resolution in the mid southern latitudes,
                        30-km resolution in a 15-degree band around the equator, 60-km
                        resolution in northern mid latitudes, 30 km in the north
-                       Atlantic and 35 km in the Arctic.  This mesh has ${levels}
+                       Atlantic and 35 km in the Arctic.  This mesh has <<<levels>>>
                        vertical levels and includes cavities under the ice shelves
                        around Antarctica.
     # E3SM version that the mesh is intended for
@@ -700,7 +703,7 @@ The default config options for these meshes are:
     # a description of the mesh and initial condition
     mesh_description = MPAS North America and Arctic Focused Water Cycle mesh for E3SM version
                        ${e3sm_version}, with a focused ${min_res}-km resolution
-                       around North America and ${levels} vertical levels
+                       around North America and <<<levels>>> vertical levels
 
     # E3SM version that the mesh is intended for
     e3sm_version = 2

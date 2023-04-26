@@ -354,7 +354,7 @@ looks like:
     # a description of the mesh
     # source: /home/xylar/code/compass/customize_config_parser/compass/ocean/tests/global_ocean/mesh/qu240/qu240.cfg
     mesh_description = MPAS quasi-uniform mesh for E3SM version 2 at
-        240-km global resolution with autodetect vertical
+        240-km global resolution with <<<levels>>> vertical
         level
 
     # source: /home/xylar/code/compass/customize_config_parser/compass/ocean/tests/global_ocean/configure.py
