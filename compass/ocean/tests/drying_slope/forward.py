@@ -8,7 +8,7 @@ class Forward(Step):
     test cases.
     """
     def __init__(self, test_case, resolution, name='forward', subdir=None,
-                 ntasks=1, min_tasks=None, openmp_threads=1, ramp=False,
+                 ntasks=1, min_tasks=None, openmp_threads=1,
                  damping_coeff=None, coord_type='sigma'):
         """
         Create a new test case
@@ -39,9 +39,6 @@ class Forward(Step):
         openmp_threads : int, optional
             the number of OpenMP threads the step will use
 
-        ramp: bool, optional
-            Whether to turn the ramp feature for wetting-and-drying on
-
         damping_coeff: float, optional
             the value of the rayleigh damping coefficient
 
@@ -53,7 +50,6 @@ class Forward(Step):
             min_tasks = ntasks
         if damping_coeff is not None:
             name = f'{name}_{damping_coeff}'
-        self.ramp = ramp
 
         super().__init__(test_case=test_case, name=name, subdir=subdir,
                          ntasks=ntasks, min_tasks=min_tasks,
@@ -101,9 +97,4 @@ class Forward(Step):
         Run this step of the test case
         """
 
-        ramp = self.ramp
-
-        if ramp:
-            self.update_namelist_at_runtime(
-                {'config_zero_drying_velocity_ramp': ".true."})
         run_model(self)

@@ -47,8 +47,9 @@ class Ramp(TestCase):
         self.add_step(InitialState(test_case=self))
         forward_step = Forward(test_case=self, resolution=resolution,
                                ntasks=ntasks, min_tasks=min_tasks,
-                               openmp_threads=1, ramp=True)
-        # forward_step.
+                               openmp_threads=1)
+        forward_step.add_namelist_options({'config_zero_drying_velocity_ramp':
+                                           ".true."})
         self.add_step(forward_step)
         self.add_step(Viz(test_case=self))
 
