@@ -127,7 +127,7 @@ class EnsembleMember(Step):
                   "'compass setup' again to set this experiment up.")
             return
 
-        module = self.__module__
+        resource_module = 'compass.landice.tests.ensemble_generator'
 
         # Get config for info needed for setting up simulation
         config = self.config
@@ -149,13 +149,13 @@ class EnsembleMember(Step):
         self.min_tasks = self.ntasks
 
         # Set up base run configuration
-        self.add_namelist_file(module, 'namelist.landice')
+        self.add_namelist_file(resource_module, 'namelist.landice')
 
         # copy over albany yaml file
         # cannot use add_input functionality because need to modify the file
         # in this function, and inputs don't get processed until after this
         # function
-        with resources.path(module,
+        with resources.path(resource_module,
                             'albany_input.yaml') as package_path:
             target = str(package_path)
             shutil.copy(target, self.work_dir)
@@ -251,7 +251,7 @@ class EnsembleMember(Step):
         # store accumulated namelist and streams options
         self.add_namelist_options(options=options,
                                   out_name='namelist.landice')
-        self.add_streams_file(module, 'streams.landice',
+        self.add_streams_file(resource_module, 'streams.landice',
                               out_name='streams.landice',
                               template_replacements=stream_replacements)
 
