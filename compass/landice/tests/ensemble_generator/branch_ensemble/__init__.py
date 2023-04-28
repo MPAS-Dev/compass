@@ -62,8 +62,8 @@ class BranchEnsemble(TestCase):
         branch_year = section.getint('branch_year')
 
         # Determine start and end run numbers being requested
-        self.start_run = config.getint('ensemble', 'start_run')
-        self.end_run = config.getint('ensemble', 'end_run')
+        self.start_run = section.getint('start_run')
+        self.end_run = section.getint('end_run')
 
         for run_num in range(self.start_run, self.end_run + 1):
             run_name = f'run{run_num:03}'
