@@ -1,9 +1,10 @@
-import os
-import xarray
 import glob
+import os
 
-from compass.validate import compare_variables
+import xarray
+
 from compass.ocean.tests.global_ocean.forward import ForwardTestCase
+from compass.validate import compare_variables
 
 
 class DynamicAdjustment(ForwardTestCase):
@@ -57,6 +58,7 @@ class DynamicAdjustment(ForwardTestCase):
         and timers
         """
         config = self.config
+        logger = self.logger
         variables = ['temperature', 'salinity', 'layerThickness',
                      'normalVelocity']
 
@@ -68,7 +70,7 @@ class DynamicAdjustment(ForwardTestCase):
 
         for step_name in self.steps_to_run:
             step = self.steps[step_name]
-            step_path = os.path.join(self.work_dir,  step.subdir)
+            step_path = os.path.join(self.work_dir, step.subdir)
             global_stats_path = os.path.join(step_path, 'analysis_members',
                                              'globalStats.*.nc')
             global_stats_path = glob.glob(global_stats_path)
@@ -81,3 +83,6 @@ class DynamicAdjustment(ForwardTestCase):
                             f'Max of {var} > allowed threshold: '
                             f'{max_in_global_stats} > {max_value} '
                             f'in {filename}')
+                    logger.info(f'As desired, max of {var}: '
+                                f'{max_in_global_stats} <= {max_value} in\n'
+                                f'  {filename}')
