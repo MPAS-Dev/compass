@@ -70,7 +70,7 @@ def submit_e3sm_tests(submodule, repo_url, ocean_strings, landice_strings,
     setup_worktree(submodule, worktree=new_submodule, hash=new)
 
     # get a list of merges between the current and new hashes
-    commands = f'cd {new_submodule}; ' \
+    commands = f'cd {new_submodule} && ' \
                f'git log --oneline --first-parent --ancestry-path ' \
                f'{current}..{new}'
 
@@ -156,20 +156,20 @@ def submit_e3sm_tests(submodule, repo_url, ocean_strings, landice_strings,
 
 def setup_worktree(submodule, worktree, hash):
     if not os.path.exists(worktree):
-        commands = f'cd {submodule}; ' \
+        commands = f'cd {submodule} && ' \
                    f'git worktree add ../{worktree}'
         print_and_run(commands)
 
-    commands = f'cd {worktree}; ' \
-               f'git reset --hard {hash}; ' \
+    commands = f'cd {worktree} && ' \
+               f'git reset --hard {hash} && ' \
                f'git submodule update --init --recursive >& submodule.log'
     print_and_run(commands)
 
 
 def build_model(load_script, worktree, mpas_subdir, make_command):
-    commands = f'export NO_COMPASS_REINSTALL=true; ' \
-               f'source {load_script}; ' \
-               f'cd {worktree}/{mpas_subdir}; ' \
+    commands = f'export NO_COMPASS_REINSTALL=true && ' \
+               f'source {load_script} && ' \
+               f'cd {worktree}/{mpas_subdir} && ' \
                f'{make_command} &> make.log'
     print_and_run(commands)
 
@@ -192,19 +192,19 @@ def setup_and_submit(load_script, setup_command, worktree, mpas_subdir,
     if baseline is not None:
         full_setup = f'{full_setup} -b {baseline}'
 
-    commands = f'export NO_COMPASS_REINSTALL=true; ' \
-               f'source {load_script}; ' \
+    commands = f'export NO_COMPASS_REINSTALL=true && ' \
+               f'source {load_script} && ' \
                f'{full_setup}'
     print_and_run(commands)
 
-    commands = f'cd {workdir}; ' \
+    commands = f'cd {workdir} && ' \
                f'sbatch job_script.{suite}.sh'
     print_and_run(commands)
 
 
 def print_and_run(commands, get_output=False):
     print('\nRunning:')
-    print_commands = commands.replace('; ', '\n  ')
+    print_commands = commands.replace(' && ', '\n  ')
     print(f'  {print_commands}\n\n')
     if get_output:
         output = subprocess.check_output(commands, shell=True)
