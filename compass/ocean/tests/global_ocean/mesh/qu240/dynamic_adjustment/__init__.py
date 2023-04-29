@@ -1,5 +1,6 @@
-from compass.ocean.tests.global_ocean.dynamic_adjustment import \
-    DynamicAdjustment
+from compass.ocean.tests.global_ocean.dynamic_adjustment import (
+    DynamicAdjustment,
+)
 from compass.ocean.tests.global_ocean.forward import ForwardStep
 
 
@@ -52,7 +53,7 @@ class QU240DynamicAdjustment(DynamicAdjustment):
 
         namelist_options = {
             'config_run_duration': "'00-00-01_00:00:00'",
-            'config_Rayleigh_friction': '.true.',
+            'config_implicit_bottom_drag_type': 'constant_and_rayleigh',
             'config_Rayleigh_damping_coeff': '1.0e-4'}
         namelist_options.update(shared_options)
         step.add_namelist_options(namelist_options)
