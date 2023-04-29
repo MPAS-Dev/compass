@@ -167,7 +167,8 @@ def setup_worktree(submodule, worktree, hash):
 
 
 def build_model(load_script, worktree, mpas_subdir, make_command):
-    commands = f'source {load_script}; ' \
+    commands = f'export NO_COMPASS_REINSTALL=true; ' \
+               f'source {load_script}; ' \
                f'cd {worktree}/{mpas_subdir}; ' \
                f'{make_command} &> make.log'
     print_and_run(commands)
@@ -191,7 +192,8 @@ def setup_and_submit(load_script, setup_command, worktree, mpas_subdir,
     if baseline is not None:
         full_setup = f'{full_setup} -b {baseline}'
 
-    commands = f'source {load_script}; ' \
+    commands = f'export NO_COMPASS_REINSTALL=true; ' \
+               f'source {load_script}; ' \
                f'{full_setup}'
     print_and_run(commands)
 
