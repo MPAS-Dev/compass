@@ -49,6 +49,7 @@ class Analysis(Step):
         storm : str
             The name of the storm to be plotted
         """
+
         super().__init__(test_case=test_case, name='analysis')
 
         self.add_input_file(filename='pointwiseStats.nc',
@@ -63,12 +64,12 @@ class Analysis(Step):
         """
         package = self.__module__
 
-        if self.storm == 'sandy':
+        if self.storm == 'sandy' or self.storm == 'sandy_lts':
             self.min_date = '2012 10 24 00 00'
             self.max_date = '2012 11 04 00 00'
             self.pointstats_file = {'MPAS-O': './pointwiseStats.nc'}
 
-            filename = f'{self.storm}_stations.json'
+            filename = 'sandy_stations.json'
             with resources.open_text(package, filename)as stations_file:
                 self.observations = json.load(stations_file)
 
@@ -76,12 +77,12 @@ class Analysis(Step):
                 os.makedirs(f'{self.work_dir}/{obs}_data', exist_ok=True)
                 self.add_input_file(
                     filename=f'{obs}_stations.txt',
-                    target=f'{self.storm}_stations/{obs}_stations.txt',
+                    target=f'sandy_stations/{obs}_stations.txt',
                     database='hurricane')
                 for sta in self.observations[obs]:
                     self.add_input_file(
                         filename=f'{obs}_data/{sta}.txt',
-                        target=f'{self.storm}_validation/'
+                        target=f'sandy_validation/'
                                f'{obs}_stations/{sta}.txt',
                         database='hurricane')
 

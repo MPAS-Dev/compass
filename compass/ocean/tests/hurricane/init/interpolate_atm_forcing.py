@@ -1,15 +1,15 @@
-from compass.step import Step
-from mpas_tools.mesh.interpolation import interp_bilin
-from mpas_tools.logging import check_call
-
-import netCDF4
-import matplotlib.pyplot as plt
-import numpy as np
 import datetime
 import os
-import subprocess
+
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
+import matplotlib.pyplot as plt
+import netCDF4
+import numpy as np
+from mpas_tools.logging import check_call
+from mpas_tools.mesh.interpolation import interp_bilin
+
+from compass.step import Step
 
 
 class InterpolateAtmForcing(Step):
@@ -96,7 +96,7 @@ class InterpolateAtmForcing(Step):
         lon_data = data_nc.variables['lon'][:]
         lon_data = np.append(lon_data, 360.0)
         lat_data = np.flipud(data_nc.variables['lat'][:])
-        lat_data = np.append(lat_data, 180.0-lat_data[-1])
+        lat_data = np.append(lat_data, 180.0 - lat_data[-1])
         time = data_nc.variables['time'][:]
         nsnaps = time.size
         nlon = lon_data.size
@@ -104,8 +104,8 @@ class InterpolateAtmForcing(Step):
         data = np.zeros((nsnaps, nlat, nlon))
 
         # Get grid from grid file
-        lon_grid = grid_nc.variables['lonCell'][:]*180.0/np.pi
-        lat_grid = grid_nc.variables['latCell'][:]*180.0/np.pi
+        lon_grid = grid_nc.variables['lonCell'][:] * 180.0 / np.pi
+        lat_grid = grid_nc.variables['latCell'][:] * 180.0 / np.pi
         ncells = lon_grid.size
         interp_data = np.zeros((nsnaps, ncells))
 
@@ -129,7 +129,7 @@ class InterpolateAtmForcing(Step):
         xtime = []
         for t in time:
             date = ref_date + datetime.timedelta(hours=np.float64(t))
-            xtime.append(date.strftime('%Y-%m-%d_%H:%M:%S'+45*' '))
+            xtime.append(date.strftime('%Y-%m-%d_%H:%M:%S' + 45 * ' '))
         xtime = np.array(xtime, 'S64')
 
         return (lon_grid, lat_grid, interp_data), \
@@ -165,7 +165,7 @@ class InterpolateAtmForcing(Step):
         ax0.add_feature(cfeature.LAND, zorder=100)
         ax0.add_feature(cfeature.LAKES, alpha=0.5, zorder=101)
         ax0.add_feature(cfeature.COASTLINE, zorder=101)
-        ax0.set_title('data '+time.strip().decode())
+        ax0.set_title('data ' + time.strip().decode())
         cbar = fig.colorbar(cf, ax=ax0)
         cbar.set_label(var_label)
 
@@ -178,13 +178,13 @@ class InterpolateAtmForcing(Step):
         ax1.add_feature(cfeature.LAND, zorder=100)
         ax1.add_feature(cfeature.LAKES, alpha=0.5, zorder=101)
         ax1.add_feature(cfeature.COASTLINE, zorder=101)
-        ax1.set_title('interpolated data '+time.strip().decode())
+        ax1.set_title('interpolated data ' + time.strip().decode())
         cbar = fig.colorbar(cf, ax=ax1)
         cbar.set_label(var_label)
 
         # Save figure
         fig.tight_layout()
-        fig.savefig(var_abrev+'_'+str(i).zfill(4)+'.png',
+        fig.savefig(var_abrev + '_' + str(i).zfill(4) + '.png',
                     bbox_inches='tight')
         plt.close()
 
@@ -202,7 +202,6 @@ class InterpolateAtmForcing(Step):
 
             # Find dimesions
             ncells = data.shape[1]
-            nsnaps = data.shape[0]
 
             # Declare dimensions
             data_nc.createDimension('nCells', ncells)
@@ -233,7 +232,7 @@ class InterpolateAtmForcing(Step):
         self.write_to_file(self.forcing_file, u_interp[2],
                            'windSpeedU', xtime)
 
-        v_interp,  v_data, xtime = self.interpolate_data_to_grid(
+        v_interp, v_data, xtime = self.interpolate_data_to_grid(
             self.grid_file,
             self.wind_file,
             'V_GRD_L103')
@@ -266,6 +265,6 @@ class InterpolateAtmForcing(Step):
             if i % self.plot_interval == 0:
                 press_data = (p_data[0], p_data[1], p_data[2][i, :])
                 press_interp = (p_interp[0], p_interp[1], p_interp[2][i, :])
-                self.plot_interp_data(press_data,  press_interp,
+                self.plot_interp_data(press_data, press_interp,
                                       'atmospheric pressure', 'pres',
                                       xtime[i], i)

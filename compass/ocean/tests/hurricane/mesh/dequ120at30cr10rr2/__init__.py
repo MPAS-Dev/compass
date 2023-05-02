@@ -11,15 +11,12 @@ class DEQU120at30cr10rr2BaseMesh(FloodplainMeshStep):
         """
         Create cell width array for this mesh on a regular latitude-longitude
         grid
-
         Returns
         -------
         cellWidth : numpy.array
             m x n array of cell width in km
-
         lon : numpy.array
             longitude in degrees (length n and between -180 and 180)
-
         lat : numpy.array
             longitude in degrees (length m and between -90 and 90)
         """

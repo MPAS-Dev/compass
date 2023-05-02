@@ -1,8 +1,7 @@
-from compass.testgroup import TestGroup
-
-from compass.ocean.tests.hurricane.mesh import Mesh
-from compass.ocean.tests.hurricane.init import Init
 from compass.ocean.tests.hurricane.forward import Forward
+from compass.ocean.tests.hurricane.init import Init
+from compass.ocean.tests.hurricane.mesh import Mesh
+from compass.testgroup import TestGroup
 
 
 class Hurricane(TestGroup):
@@ -19,13 +18,23 @@ class Hurricane(TestGroup):
 
         storm = 'sandy'
         mesh_name = 'DEQU120at30cr10rr2'
-        mesh = Mesh(test_group=self, mesh_name=mesh_name)
-        self.add_test_case(mesh)
 
-        init = Init(test_group=self, mesh=mesh, storm=storm)
-        self.add_test_case(init)
+        for use_lts in [False, True]:
 
-        self.add_test_case(Forward(test_group=self,
-                                   mesh=mesh,
-                                   storm=storm,
-                                   init=init))
+            mesh = Mesh(test_group=self,
+                        mesh_name=mesh_name,
+                        use_lts=use_lts)
+            self.add_test_case(mesh)
+
+            init = Init(test_group=self,
+                        mesh=mesh,
+                        storm=storm,
+                        use_lts=use_lts)
+            self.add_test_case(init)
+
+            forward = Forward(test_group=self,
+                              mesh=mesh,
+                              storm=storm,
+                              init=init,
+                              use_lts=use_lts)
+            self.add_test_case(forward)

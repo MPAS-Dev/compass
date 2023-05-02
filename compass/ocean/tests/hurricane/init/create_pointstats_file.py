@@ -1,9 +1,9 @@
-from compass.step import Step
-
+import matplotlib.pyplot as plt
 import netCDF4
 import numpy as np
 from scipy import spatial
-import matplotlib.pyplot as plt
+
+from compass.step import Step
 
 
 class CreatePointstatsFile(Step):
@@ -81,7 +81,7 @@ class CreatePointstatsFile(Step):
         # Convert station locations
         lon = np.radians(np.array(lon, dtype=np.float32))
         lon_idx, = np.where(lon < 0.0)
-        lon[lon_idx] = lon[lon_idx] + 2.0*np.pi
+        lon[lon_idx] = lon[lon_idx] + 2.0 * np.pi
         lat = np.radians(np.array(lat, dtype=np.float32))
         stations = np.vstack((lon, lat)).T
 
