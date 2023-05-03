@@ -38,8 +38,7 @@ class LTSRegionsStep(Step):
         subdir : str, optional
             the subdirectory for the step.  The default is ``name``
         """
-        super().__init__(test_case, name=name, subdir=subdir,
-                         cpus_per_task=None, min_cpus_per_task=None)
+        super().__init__(test_case, name=name, subdir=subdir)
         self.cull_mesh_step = cull_mesh_step
 
     def setup(self):
@@ -48,12 +47,6 @@ class LTSRegionsStep(Step):
         dependencies.
         """
         super().setup()
-
-        config = self.cull_mesh_step.config
-        self.cpus_per_task = config.getint('spherical_mesh',
-                                           'cull_mesh_cpus_per_task')
-        self.min_cpus_per_task = config.getint('spherical_mesh',
-                                               'cull_mesh_min_cpus_per_task')
 
         self.lts_fine_regions_file = 'hurricane_lts_fine_regions.nc'
 
