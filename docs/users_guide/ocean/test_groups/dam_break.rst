@@ -40,6 +40,14 @@ The config options for this test case are:
 default
 -------
 
-``ocean/dam_break/40cm/default`` is the default version of the dam break
+``ocean/dam_break/${RES}/default`` is the default version of the dam break
 test case for validation of sea surface height through visual inspection
-against experimental data and ROMS solutions.
+against experimental data and ROMS solutions. ``RES`` is either 40cm or 120cm.
+
+ramp
+----
+
+``ocean/dam_break/${RES}/ramp`` is identical to the ``default`` test except
+the factor that scales velocities and velocity tendencies is ramped over a
+given layer thickness range rather than a binary switch at the minimum
+thickness. ``RES`` is either 40cm or 120cm.
