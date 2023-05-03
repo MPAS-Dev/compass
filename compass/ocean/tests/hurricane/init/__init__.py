@@ -44,7 +44,8 @@ class Init(TestCase):
 
         self.mesh = mesh
         self.use_lts = use_lts
-        if use_lts is True:
+
+        if use_lts:
             name = 'init_lts'
         else:
             name = 'init'
@@ -56,7 +57,7 @@ class Init(TestCase):
         self.add_step(InterpolateAtmForcing(test_case=self, mesh=mesh,
                                             storm=storm))
 
-        if use_lts is True:
+        if use_lts:
             topo = ComputeTopographicWaveDrag(test_case=self, mesh=mesh)
             self.add_step(topo)
 

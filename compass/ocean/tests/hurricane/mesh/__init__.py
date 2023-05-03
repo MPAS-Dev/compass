@@ -28,7 +28,8 @@ class Mesh(TestCase):
         """
         self.mesh_name = mesh_name
         self.use_lts = use_lts
-        if use_lts is True:
+
+        if use_lts:
             name = 'mesh_lts'
         else:
             name = 'mesh'
@@ -59,7 +60,7 @@ class Mesh(TestCase):
 
         self.add_step(cull_mesh_step)
 
-        if use_lts is True:
+        if use_lts:
 
             self.add_step(LTSRegionsStep(
                           test_case=self, cull_mesh_step=cull_mesh_step))

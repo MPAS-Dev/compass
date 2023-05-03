@@ -16,7 +16,7 @@ class LTSRegionsStep(Step):
 
     Attributes
     ----------
-    cull_mesh_step : CullMeshStep
+    cull_mesh_step : compass.ocean.mesh.cull.CullMeshStep
         The culled mesh step containing input files to this step
     """
     def __init__(self, test_case, cull_mesh_step,
@@ -26,10 +26,10 @@ class LTSRegionsStep(Step):
 
         Parameters
         ----------
-        test_case : compass.ocean.tests.global_ocean.mesh.Mesh
+        test_case : compass.Testcase
             The test case this step belongs to
 
-        cull_mesh_step : cull_mesh_step
+        cull_mesh_step : compass.ocean.mesh.cull.CullMeshStep
             The culled mesh step containing input files to this step
 
         name : str, optional

@@ -40,8 +40,8 @@ class Forward(TestCase):
             Whether local time-stepping is to be used
         """
         mesh_name = mesh.mesh_name
-        self.use_lts = use_lts
-        if use_lts is True:
+
+        if use_lts:
             storm = storm + '_lts'
         subdir = os.path.join(mesh_name, storm)
         super().__init__(test_group=test_group,

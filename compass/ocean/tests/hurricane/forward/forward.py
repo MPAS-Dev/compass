@@ -49,7 +49,14 @@ class ForwardStep(Step):
 
         super().__init__(test_case=test_case, name=name)
 
-        if use_lts is False:
+        if use_lts:
+
+            self.add_namelist_file(
+                'compass.ocean.tests.hurricane.lts.forward', 'namelist.ocean')
+            self.add_streams_file(
+                'compass.ocean.tests.hurricane.lts.forward', 'streams.ocean')
+
+        else:
 
             self.add_namelist_file(
                 'compass.ocean.tests.hurricane.forward', 'namelist.ocean')
@@ -59,13 +66,6 @@ class ForwardStep(Step):
             mesh_package = mesh.package
             self.add_namelist_file(mesh_package, 'namelist.ocean')
 
-        else:
-
-            self.add_namelist_file(
-                'compass.ocean.tests.hurricane.lts.forward', 'namelist.ocean')
-            self.add_streams_file(
-                'compass.ocean.tests.hurricane.lts.forward', 'streams.ocean')
-
         initial_state_target = \
             f'{init.path}/initial_state/ocean.nc'
         self.add_input_file(filename='input.nc',
@@ -74,7 +74,7 @@ class ForwardStep(Step):
             filename='atmospheric_forcing.nc',
             work_dir_target=f'{init.path}/interpolate/atmospheric_forcing.nc')
 
-        if use_lts is True:
+        if use_lts:
             file_in = 'topographic_wave_drag.nc'
             self.add_input_file(
                 filename='topographic_wave_drag.nc',
