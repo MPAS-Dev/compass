@@ -1,10 +1,8 @@
-from importlib.resources import contents
-
 from compass.ocean.iceshelf import adjust_ssh
-from compass.step import Step
+from compass.ocean.tests.global_ocean.forward import ForwardStep
 
 
-class SshAdjustment(Step):
+class SshAdjustment(ForwardStep):
     """
     A step for iteratively adjusting the pressure from the weight of the ice
     shelf to match the sea-surface height as part of ice-shelf 2D test cases
@@ -18,21 +16,9 @@ class SshAdjustment(Step):
         test_case : compass.ocean.tests.global_ocean.init.Init
             The test case this step belongs to
         """
-        super().__init__(test_case=test_case, name='ssh_adjustment')
-
-        # make sure output is double precision
-        self.add_streams_file('compass.ocean.streams', 'streams.output')
-
-        self.add_namelist_file(
-            'compass.ocean.tests.global_ocean', 'namelist.forward')
-
-        mesh_package = test_case.mesh.package
-        mesh_package_contents = list(contents(mesh_package))
-        mesh_namelists = ['namelist.forward',
-                          'namelist.split_explicit']
-        for mesh_namelist in mesh_namelists:
-            if mesh_namelist in mesh_package_contents:
-                self.add_namelist_file(mesh_package, mesh_namelist)
+        super().__init__(test_case=test_case, mesh=test_case.mesh,
+                         time_integrator='split_explicit',
+                         name='ssh_adjustment')
 
         self.add_namelist_options({'config_AM_globalStats_enable': '.false.'})
         self.add_namelist_file('compass.ocean.namelists',
@@ -55,23 +41,7 @@ class SshAdjustment(Step):
             filename='graph.info',
             work_dir_target=f'{mesh_path}/culled_graph.info')
 
-        self.add_model_as_input()
-
         self.add_output_file(filename='adjusted_init.nc')
-
-    def setup(self):
-        """
-        Set up the test case in the work directory, including downloading any
-        dependencies
-        """
-        self._get_resources()
-
-    def constrain_resources(self, available_resources):
-        """
-        Update resources at runtime from config options
-        """
-        self._get_resources()
-        super().constrain_resources(available_resources)
 
     def run(self):
         """
@@ -81,10 +51,3 @@ class SshAdjustment(Step):
         iteration_count = config.getint('ssh_adjustment', 'iterations')
         adjust_ssh(variable='landIcePressure', iteration_count=iteration_count,
                    step=self)
-
-    def _get_resources(self):
-        # get the these properties from the config options
-        config = self.config
-        self.ntasks = config.getint('global_ocean', 'forward_ntasks')
-        self.min_tasks = config.getint('global_ocean', 'forward_min_tasks')
-        self.openmp_threads = config.getint('global_ocean', 'forward_threads')
