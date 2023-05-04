@@ -49,7 +49,7 @@ class QU240DynamicAdjustment(DynamicAdjustment):
         step_name = 'damped_adjustment_1'
         step = ForwardStep(test_case=self, mesh=mesh, init=init,
                            time_integrator=time_integrator, name=step_name,
-                           subdir=step_name)
+                           subdir=step_name, get_dt_from_min_res=False)
 
         namelist_options = {
             'config_run_duration': "'00-00-01_00:00:00'",
@@ -71,7 +71,7 @@ class QU240DynamicAdjustment(DynamicAdjustment):
         step_name = 'simulation'
         step = ForwardStep(test_case=self, mesh=mesh, init=init,
                            time_integrator=time_integrator, name=step_name,
-                           subdir=step_name)
+                           subdir=step_name, get_dt_from_min_res=False)
 
         namelist_options = {
             'config_run_duration': "'00-00-01_00:00:00'",

@@ -69,7 +69,7 @@ class KuroshioDynamicAdjustment(DynamicAdjustment):
         step_name = 'damped_adjustment_1'
         step = ForwardStep(test_case=self, mesh=mesh, init=init,
                            time_integrator=time_integrator, name=step_name,
-                           subdir=step_name)
+                           subdir=step_name, get_dt_from_min_res=False)
 
         namelist_options = {
             'config_run_duration': "'00-00-02_00:00:00'",
@@ -93,7 +93,7 @@ class KuroshioDynamicAdjustment(DynamicAdjustment):
         step_name = 'damped_adjustment_2'
         step = ForwardStep(test_case=self, mesh=mesh, init=init,
                            time_integrator=time_integrator, name=step_name,
-                           subdir=step_name)
+                           subdir=step_name, get_dt_from_min_res=False)
 
         namelist_options = {
             'config_run_duration': "'00-00-08_00:00:00'",
@@ -119,7 +119,7 @@ class KuroshioDynamicAdjustment(DynamicAdjustment):
         step_name = 'damped_adjustment_3'
         step = ForwardStep(test_case=self, mesh=mesh, init=init,
                            time_integrator=time_integrator, name=step_name,
-                           subdir=step_name)
+                           subdir=step_name, get_dt_from_min_res=False)
 
         namelist_options = {
             'config_run_duration': "'00-00-10_00:00:00'",
@@ -145,7 +145,7 @@ class KuroshioDynamicAdjustment(DynamicAdjustment):
         step_name = 'damped_adjustment_4'
         step = ForwardStep(test_case=self, mesh=mesh, init=init,
                            time_integrator=time_integrator, name=step_name,
-                           subdir=step_name)
+                           subdir=step_name, get_dt_from_min_res=False)
 
         namelist_options = {
             'config_run_duration': "'00-00-20_00:00:00'",
@@ -169,7 +169,7 @@ class KuroshioDynamicAdjustment(DynamicAdjustment):
         step_name = 'simulation'
         step = ForwardStep(test_case=self, mesh=mesh, init=init,
                            time_integrator=time_integrator, name=step_name,
-                           subdir=step_name)
+                           subdir=step_name, get_dt_from_min_res=False)
 
         namelist_options = {
             'config_run_duration': "'00-00-10_00:00:00'",
