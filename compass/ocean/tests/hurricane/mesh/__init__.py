@@ -1,6 +1,6 @@
 from compass.ocean.mesh.cull import CullMeshStep
-from compass.ocean.mesh.lts_regions import LTSRegionsStep
 from compass.ocean.tests.hurricane.configure import configure_hurricane
+from compass.ocean.tests.hurricane.lts.mesh.lts_regions import LTSRegionsStep
 from compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2 import (
     DEQU120at30cr10rr2BaseMesh,
 )

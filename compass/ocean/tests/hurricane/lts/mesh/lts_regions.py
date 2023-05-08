@@ -1,9 +1,11 @@
 import math
+import os
 import subprocess as sp
 
 import netCDF4 as nc
 import numpy as np
-import xarray
+import xarray as xr
+from mpas_tools.io import write_netcdf
 from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
 
@@ -20,7 +22,7 @@ class LTSRegionsStep(Step):
         The culled mesh step containing input files to this step
     """
     def __init__(self, test_case, cull_mesh_step,
-                 name='lts_regions', subdir='cull_mesh'):
+                 name='lts_regions', subdir='lts_regions'):
         """
         Create a new step
 
@@ -39,6 +41,10 @@ class LTSRegionsStep(Step):
             the subdirectory for the step.  The default is ``name``
         """
         super().__init__(test_case, name=name, subdir=subdir)
+
+        for file in ['lts_mesh.nc', 'lts_graph.info']:
+            self.add_output_file(filename=file)
+
         self.cull_mesh_step = cull_mesh_step
 
     def setup(self):
@@ -52,14 +58,21 @@ class LTSRegionsStep(Step):
 
         self.add_input_file(
             filename=self.lts_fine_regions_file,
-            target='hurricane_lts_fine_regions.nc',
+            target=self.lts_fine_regions_file,
             database='hurricane')
+
+        cull_path = self.cull_mesh_step.path
+        tgt1 = os.path.join(cull_path, 'culled_mesh.nc')
+        self.add_input_file(filename='culled_mesh.nc', work_dir_target=tgt1)
+
+        tgt2 = os.path.join(cull_path, 'culled_graph.info')
+        self.add_input_file(filename='culled_graph.info', work_dir_target=tgt2)
 
     def run(self):
         """
         Run this step of the test case
         """
-        file_name = 'hurricane_lts_fine_regions.nc'
+        file_name = self.lts_fine_regions_file
         fine_rgn = nc.Dataset(file_name, 'r', format='NETCDF4_64BIT')
 
         region = 'east_us_coast'
@@ -81,7 +94,7 @@ class LTSRegionsStep(Step):
 def label_mesh(fine_region, mesh, graph_info, num_interface):   # noqa: C901
 
     # read in mesh data
-    ds = xarray.open_dataset(mesh)
+    ds = xr.open_dataset(mesh)
     n_cells = ds['nCells'].size
     n_edges = ds['nEdges'].size
     area_cell = ds['areaCell'].values
@@ -223,10 +236,14 @@ def label_mesh(fine_region, mesh, graph_info, num_interface):   # noqa: C901
 
     # create lts_mesh.nc
 
-    print('Adding LTSRegion to ' + mesh + '...')
+    print('Creating lts_mesh...')
 
-    # open mesh nc file to be appended
-    mshnc = nc.Dataset(mesh, 'a', format='NETCDF4_64BIT_OFFSET')
+    # open mesh nc file to be copied
+
+    ds_ltsmsh = mesh.copy(deep=True)
+    ltsmsh_name = 'lts_mesh.nc'
+    write_netcdf(ds_ltsmsh, ltsmsh_name)
+    mshnc = nc.Dataset(ltsmsh_name, 'a', format='NETCDF4_64BIT_OFFSET')
 
     try:
         # try to get LTSRegion and assign new value
@@ -243,8 +260,8 @@ def label_mesh(fine_region, mesh, graph_info, num_interface):   # noqa: C901
     mshnc.close()
 
     sh_Command = 'paraview_vtk_field_extractor.py --ignore_time \
-                 -d maxEdges=0 -v allOnCells -f ' + mesh + ' \
-                 -o lts_mesh_vtk'
+                  -d maxEdges=0 -v allOnCells -f ' + ltsmsh_name + ' \
+                  -o lts_mesh_vtk'
     sp.call(sh_Command.split())
 
     # label cells in graph.info
@@ -279,7 +296,7 @@ def label_mesh(fine_region, mesh, graph_info, num_interface):   # noqa: C901
                 newf += "0 1 " + lines[icell].strip() + "\n"
                 coarse_cells = coarse_cells + 1
 
-    with open(graph_info, 'w') as f:
+    with open('lts_graph.info', 'w') as f:
         f.write(newf)
 
     max_area = max(area_cell)
