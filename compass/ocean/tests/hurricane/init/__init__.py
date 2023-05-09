@@ -53,7 +53,7 @@ class Init(TestCase):
         subdir = os.path.join(mesh_name, name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
-        self.add_step(InitialState(test_case=self, mesh=mesh))
+        self.add_step(InitialState(test_case=self, mesh=mesh, use_lts=use_lts))
         self.add_step(InterpolateAtmForcing(test_case=self, mesh=mesh,
                                             storm=storm))
 

@@ -13,7 +13,7 @@ class InitialState(Step):
         The step for creating the mesh
 
     """
-    def __init__(self, test_case, mesh):
+    def __init__(self, test_case, mesh, use_lts):
         """
         Create the step
 
@@ -25,10 +25,14 @@ class InitialState(Step):
         mesh : compass.ocean.tests.hurricane.mesh.Mesh
             The test case that creates the mesh used by this test case
 
+        use_lts: bool
+            Whether local time-stepping is used
+
         """
 
         super().__init__(test_case=test_case, name='initial_state')
         self.mesh = mesh
+        self.use_lts = use_lts
 
         package = 'compass.ocean.tests.hurricane.init'
 
@@ -38,15 +42,29 @@ class InitialState(Step):
         # generate the streams file
         self.add_streams_file(package, 'streams.init', mode='init')
 
-        mesh_path = mesh.steps['cull_mesh'].path
+        if not use_lts:
 
-        self.add_input_file(
-            filename='mesh.nc',
-            work_dir_target=f'{mesh_path}/culled_mesh.nc')
+            mesh_path = mesh.steps['cull_mesh'].path
 
-        self.add_input_file(
-            filename='graph.info',
-            work_dir_target=f'{mesh_path}/culled_graph.info')
+            self.add_input_file(
+                filename='mesh.nc',
+                work_dir_target=f'{mesh_path}/culled_mesh.nc')
+
+            self.add_input_file(
+                filename='graph.info',
+                work_dir_target=f'{mesh_path}/culled_graph.info')
+
+        else:
+
+            mesh_path = mesh.steps['lts_regions'].path
+
+            self.add_input_file(
+                filename='mesh.nc',
+                work_dir_target=f'{mesh_path}/lts_mesh.nc')
+
+            self.add_input_file(
+                filename='graph.info',
+                work_dir_target=f'{mesh_path}/lts_graph.info')
 
         self.add_model_as_input()
 

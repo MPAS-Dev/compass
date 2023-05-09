@@ -240,7 +240,8 @@ def label_mesh(fine_region, mesh, graph_info, num_interface):   # noqa: C901
 
     # open mesh nc file to be copied
 
-    ds_ltsmsh = mesh.copy(deep=True)
+    ds_msh = xr.open_dataset(mesh)
+    ds_ltsmsh = ds_msh.copy(deep=True)
     ltsmsh_name = 'lts_mesh.nc'
     write_netcdf(ds_ltsmsh, ltsmsh_name)
     mshnc = nc.Dataset(ltsmsh_name, 'a', format='NETCDF4_64BIT_OFFSET')
