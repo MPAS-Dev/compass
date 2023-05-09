@@ -27,7 +27,15 @@ def get_core_list(ncells, max_cells_per_core=30000, min_cells_per_core=2):
     min_graph_size = max(2, int(ncells / max_cells_per_core))
     max_graph_size = int(ncells / min_cells_per_core)
 
-    cores = []
+    node_sizes = [16, 24, 30, 32, 36, 44, 56, 64, 84, 96, 112, 128, 256]
+    max_nodes = 20
+
+    special_core_counts = [3, 9, 15, 21, 225, 675, 1350]
+
+    max_nodes_approx = 100
+    special_approx_cores = [675, 1350, 2700, 5400]
+
+    cores = set()
     for candidate in range(min_graph_size, max_graph_size):
         factors = _prime_factors(candidate)
         twos = np.count_nonzero(factors == 2)
@@ -35,13 +43,32 @@ def get_core_list(ncells, max_cells_per_core=30000, min_cells_per_core=2):
         gt_five = np.count_nonzero(factors > 5)
         big_factor = factors.max()
         if twos > 0 and fives <= twos and gt_five <= 1 and big_factor <= 7:
-            cores.append(candidate)
+            cores.add(candidate)
         # small odd multiples of 3 and a few that correspond to divisors of the
         # ne30 (30x30x6=5400) size
-        elif candidate in [3, 9, 15, 21, 225, 675, 1350]:
-            cores.append(candidate)
+        elif candidate in special_core_counts:
+            cores.add(candidate)
 
-    return np.array(cores)
+    # add node counts from 1 to max_nodes even if they're weird primes
+    for node_size in node_sizes:
+        for node_count in range(1, max_nodes + 1):
+            core_count = node_size * node_count
+            cores.add(core_count)
+
+    # add even node counts if they are close to some especially desirable
+    # core counts for the ne30 atmosphere mesh (also used for MPAS-Seaice)
+    for node_size in node_sizes:
+        for node_count in range(1, max_nodes_approx + 1):
+            core_count = node_size * node_count
+            for approx in special_approx_cores:
+                lower = approx - 2 * node_size
+                upper = approx + 2 * node_size
+                if lower <= core_count <= upper:
+                    cores.add(core_count)
+
+    cores = np.array(sorted(list(cores)))
+
+    return cores
 
 
 # https://stackoverflow.com/a/22808285
