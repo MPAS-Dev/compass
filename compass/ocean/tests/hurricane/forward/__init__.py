@@ -42,11 +42,13 @@ class Forward(TestCase):
         mesh_name = mesh.mesh_name
 
         if use_lts:
-            storm = storm + '_lts'
-        subdir = os.path.join(mesh_name, storm)
+            name = f'{storm}_lts'
+        else:
+            name = storm
+        subdir = os.path.join(mesh_name, name)
         super().__init__(test_group=test_group,
                          subdir=subdir,
-                         name=storm)
+                         name=name)
         self.mesh = mesh
 
         step = ForwardStep(test_case=self,
