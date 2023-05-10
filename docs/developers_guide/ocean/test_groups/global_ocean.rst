@@ -56,7 +56,7 @@ The values of some of the metadata are given in config options:
     # a description of the mesh with ice-shelf cavities
     init_description = <<<Missing>>>
     # E3SM version that the mesh is intended for
-    e3sm_version = 2
+    e3sm_version = 3
     # The revision number of the mesh, which should be incremented each time the
     # mesh is revised
     mesh_revision = <<Missing>>
@@ -128,6 +128,30 @@ standard naming convention for E3SM:
 
 For example, the ``QU240`` mesh has the E3SM short name ``QU240E2r1`` and
 long name ``QU240kmL16E3SMv2r1``.
+
+.. _dev_ocean_global_ocean_tasks:
+
+tasks
+~~~~~
+
+The function :py:func:`compass.ocean.tests.global_ocean.tasks.get_ntasks_from_cell_count()`
+can be used to compute a good number of MPI tasks (both the target and the
+minimum) for MPAS-Ocean to use based on the ``goal_cells_per_core`` and
+``max_cells_per_core`` config options as well as the number of cells in a mesh.
+The idea is that we want to run MPAS-Ocean with about 200 cells per core
+(the default value of ``goal_cells_per_core``) but that we would be okay
+with as many as 2000 cells per core (the default ``max_cells_per_core``).
+
+A complication of using this function is that the number of cells in a mesh
+is not known at setup time, but we do need to know how many cores and nodes
+we will use at that time.  So the meshes in ``global_ocean`` have a config
+option ``approx_cell_count`` that is used to estimate the number of cells in
+the mesh during setup.  Then, the actual number of cells is used at runtime,
+when it can be known, to determine the core and node counts for MPAS-Ocean runs
+on various meshes.  Some test cases still specify the number of MPI tasks
+explicitly because it is part of their testing protocol.
+
+
 
 .. _dev_ocean_global_ocean_forward_test:
 
@@ -213,6 +237,15 @@ typically read from the corresponding ``forward_<param>`` config options in the
 ``global_ocean`` section of the config file.  This lets users update these
 values as appropriate if the machine and/or mesh defaults aren't quite right
 for them.
+
+There is also a parameter ``get_dt_from_min_res`` that allows the time step
+for a given mesh to be determined automatically based on the finest
+resolution of the mesh and the ``dt_per_km`` or ``btr_dt_per_km`` config
+options.  Unless this parameter is explicitly set to ``False`` (e.g. in
+restart tests or dynamic adjustment), the time step will be the product of
+the minimum resolution and ``dt_per_km`` for split-explicit runs, and
+the barotropic or 4th-order Runge-Kutta time step will be  product of
+the minimum resolution and ``btr_dt_per_km``.
 
 During init, the ``forward``, ``wisc`` and ``bgc`` namelist replacements and
 streams files are added as appropriate based on whether the mesh includes
@@ -315,6 +348,18 @@ The default config options for these meshes are:
     max_layer_thickness = 500.0
 
 
+    # options for spherical meshes
+    [spherical_mesh]
+
+    ## config options related to the step for culling land from the mesh
+    # number of cores to use
+    cull_mesh_cpus_per_task = 18
+    # minimum of cores, below which the step fails
+    cull_mesh_min_cpus_per_task = 1
+    # maximum memory usage allowed (in MB)
+    cull_mesh_max_memory = 1000
+
+
     # options for global ocean testcases
     [global_ocean]
 
@@ -323,16 +368,9 @@ The default config options for these meshes are:
     init_ntasks = 4
     # minimum of cores, below which the step fails
     init_min_tasks = 1
-    # maximum memory usage allowed (in MB)
-    init_max_memory = 1000
 
-    ## config options related to the forward steps
-    # number of cores to use
-    forward_ntasks = 4
-    # minimum of cores, below which the step fails
-    forward_min_tasks = 1
-    # maximum memory usage allowed (in MB)
-    forward_max_memory = 1000
+    # the approximate number of cells in the mesh
+    approx_cell_count = 7400
 
     ## metadata related to the mesh
     # the prefix (e.g. QU, EC, WC, SO)
@@ -343,7 +381,7 @@ The default config options for these meshes are:
                        level
 
     # E3SM version that the mesh is intended for
-    e3sm_version = 2
+    e3sm_version = 3
     # The revision number of the mesh, which should be incremented each time the
     # mesh is revised
     mesh_revision = 1
@@ -416,21 +454,8 @@ The default config options for these meshes are:
     # options for global ocean testcases
     [global_ocean]
 
-    ## config options related to the initial_state step
-    # number of cores to use
-    init_ntasks = 36
-    # minimum of cores, below which the step fails
-    init_min_tasks = 8
-    # maximum memory usage allowed (in MB)
-    init_max_memory = 1000
-
-    ## config options related to the forward steps
-    # number of cores to use
-    forward_ntasks = 128
-    # minimum of cores, below which the step fails
-    forward_min_tasks = 36
-    # maximum memory usage allowed (in MB)
-    forward_max_memory = 1000
+    # the approximate number of cells in the mesh
+    approx_cell_count = 240000
 
     ## metadata related to the mesh
     # the prefix (e.g. QU, EC, WC, SO)
@@ -441,10 +466,10 @@ The default config options for these meshes are:
                        (35 km), Greenland (${min_res} km), ${max_res}-km resolution
                        at mid latitudes, and <<<levels>>> vertical levels
     # E3SM version that the mesh is intended for
-    e3sm_version = 2
+    e3sm_version = 3
     # The revision number of the mesh, which should be incremented each time the
     # mesh is revised
-    mesh_revision = 3
+    mesh_revision = 1
     # the minimum (finest) resolution in the mesh
     min_res = 30
     # the maximum (coarsest) resolution in the mesh, can be the same as min_res
@@ -492,22 +517,6 @@ module:
     # options for global ocean testcases
     [global_ocean]
 
-    ## config options related to the initial_state step
-    # number of cores to use
-    init_ntasks = 36
-    # minimum of cores, below which the step fails
-    init_min_tasks = 8
-    # maximum memory usage allowed (in MB)
-    init_max_memory = 1000
-
-    ## config options related to the forward steps
-    # number of cores to use
-    forward_ntasks = 1296
-    # minimum of cores, below which the step fails
-    forward_min_tasks = 128
-    # maximum memory usage allowed (in MB)
-    forward_max_memory = 1000
-
     ## metadata related to the mesh
     # the prefix (e.g. QU, EC, WC, SO, Kuroshio)
     prefix = Kuroshio
@@ -520,10 +529,10 @@ module:
                        Atlantic and 35 km in the Arctic.  This mesh has <<<levels>>>
                        vertical levels.
     # E3SM version that the mesh is intended for
-    e3sm_version = 2
+    e3sm_version = 3
     # The revision number of the mesh, which should be incremented each time the
     # mesh is revised
-    mesh_revision = 4
+    mesh_revision = 1
     # the maximum (coarsest) resolution in the mesh, can be the same as min_res
     max_res = 60
     # the URL of the pull request documenting the creation of the mesh
@@ -581,21 +590,8 @@ The default config options for these meshes are:
     # options for global ocean testcases
     [global_ocean]
 
-    ## config options related to the initial_state step
-    # number of cores to use
-    init_ntasks = 36
-    # minimum of cores, below which the step fails
-    init_min_tasks = 8
-    # maximum memory usage allowed (in MB)
-    init_max_memory = 1000
-
-    ## config options related to the forward steps
-    # number of cores to use
-    forward_ntasks = 1296
-    # minimum of cores, below which the step fails
-    forward_min_tasks = 128
-    # maximum memory usage allowed (in MB)
-    forward_max_memory = 1000
+    # the approximate number of cells in the mesh
+    approx_cell_count = 570000
 
     ## metadata related to the mesh
     # the prefix (e.g. QU, EC, WC, SO)
@@ -610,10 +606,10 @@ The default config options for these meshes are:
                        vertical levels and includes cavities under the ice shelves
                        around Antarctica.
     # E3SM version that the mesh is intended for
-    e3sm_version = 2
+    e3sm_version = 3
     # The revision number of the mesh, which should be incremented each time the
     # mesh is revised
-    mesh_revision = 5
+    mesh_revision = 1
     # the minimum (finest) resolution in the mesh
     min_res = 12
     # the maximum (coarsest) resolution in the mesh, can be the same as min_res
@@ -681,21 +677,8 @@ The default config options for these meshes are:
     # options for global ocean testcases
     [global_ocean]
 
-    ## config options related to the initial_state step
-    # number of cores to use
-    init_ntasks = 36
-    # minimum of cores, below which the step fails
-    init_min_tasks = 8
-    # maximum memory usage allowed (in MB)
-    init_max_memory = 1000
-
-    ## config options related to the forward steps
-    # number of cores to use
-    forward_ntasks = 720
-    # minimum of cores, below which the step fails
-    forward_min_tasks = 144
-    # maximum memory usage allowed (in MB)
-    forward_max_memory = 1000
+    # the approximate number of cells in the mesh
+    approx_cell_count = 410000
 
     ## metadata related to the mesh
     # the prefix (e.g. QU, EC, WC, SO)
@@ -706,10 +689,10 @@ The default config options for these meshes are:
                        around North America and <<<levels>>> vertical levels
 
     # E3SM version that the mesh is intended for
-    e3sm_version = 2
+    e3sm_version = 3
     # The revision number of the mesh, which should be incremented each time the
     # mesh is revised
-    mesh_revision = 3
+    mesh_revision = 1
     # the minimum (finest) resolution in the mesh
     min_res = 14
     # the maximum (coarsest) resolution in the mesh, can be the same as min_res
