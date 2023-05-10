@@ -3,6 +3,7 @@ import os
 import subprocess
 import warnings
 
+import numpy as np
 from mpas_tools.logging import check_call
 
 
@@ -127,7 +128,12 @@ def run_command(args, cpus_per_task, ntasks, openmp_threads, config, logger):
     command_line_args = parallel_executable.split(' ')
     parallel_system = config.get('parallel', 'system')
     if parallel_system == 'slurm':
-        command_line_args.extend(['-c', f'{cpus_per_task}', '-n', f'{ntasks}'])
+        cores = ntasks * cpus_per_task
+        cores_per_node = config.getint('parallel', 'cores_per_node')
+        nodes = int(np.ceil(cores / cores_per_node))
+        command_line_args.extend(['-c', f'{cpus_per_task}',
+                                  '-N', f'{nodes}',
+                                  '-n', f'{ntasks}'])
     elif parallel_system == 'single_node':
         command_line_args.extend(['-n', f'{ntasks}'])
     else:
