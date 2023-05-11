@@ -132,6 +132,7 @@ closest to them. A file is created that is the input to the
 pointWiseStats analysis member for the forward run.
 
 .. _hurricane_init_lts:
+
 If the LTS option is selected for the init test case, the following
 additional step is carried out:
 
@@ -164,6 +165,7 @@ to compare the modeled and observed data. Both NOAA and USGS station data
 is used for the validation.
 
 .. _hurricane_sandy_lts:
+
 If the LTS option is selected for the sandy test case, the LTS scheme
 is used to advance the solution in time rather than the default RK4 scheme.
 
