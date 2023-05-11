@@ -7,6 +7,10 @@ from compass.ocean.mesh.remap_topography import RemapTopography
 from compass.ocean.tests.global_ocean.mesh.arrm10to60 import ARRM10to60BaseMesh
 from compass.ocean.tests.global_ocean.mesh.ec30to60 import EC30to60BaseMesh
 from compass.ocean.tests.global_ocean.mesh.kuroshio import KuroshioBaseMesh
+from compass.ocean.tests.global_ocean.mesh.qu import (
+    IcosMeshFromConfigStep,
+    QUMeshFromConfigStep,
+)
 from compass.ocean.tests.global_ocean.mesh.so12to60 import SO12to60BaseMesh
 from compass.ocean.tests.global_ocean.mesh.wc14 import WC14BaseMesh
 from compass.ocean.tests.global_ocean.metadata import (
@@ -72,6 +76,12 @@ class Mesh(TestCase):
         elif mesh_name in ['QU240', 'QUwISC240']:
             base_mesh_step = QuasiUniformSphericalMeshStep(
                 self, name=name, subdir=subdir, cell_width=240)
+        elif mesh_name in ['Icos', 'IcoswISC']:
+            base_mesh_step = IcosMeshFromConfigStep(
+                self, name=name, subdir=subdir)
+        elif mesh_name in ['QU', 'QUwISC']:
+            base_mesh_step = QUMeshFromConfigStep(
+                self, name=name, subdir=subdir)
         elif mesh_name in ['EC30to60', 'ECwISC30to60']:
             base_mesh_step = EC30to60BaseMesh(self, name=name, subdir=subdir)
         elif mesh_name in ['ARRM10to60', 'ARRMwISC10to60']:
@@ -122,6 +132,18 @@ class Mesh(TestCase):
                 'kuroshio.cfg', exception=True)
         config.add_from_package(self.package, self.mesh_config_filename,
                                 exception=True)
+        if self.mesh_name in ['Icos', 'IcoswISC']:
+            # add the config options for all kuroshio meshes
+            config.add_from_package(
+                'compass.ocean.tests.global_ocean.mesh.qu',
+                'icos.cfg', exception=True)
+
+        if self.mesh_name in ['QU', 'QUwISC', 'Icos', 'IcoswISC']:
+            res = config.getfloat('global_ocean', 'qu_resolution')
+            # roughly area of the ocean divided by the area of a cell
+            approx_cell_count = int(4e8 / res**2)
+            config.set('global_ocean', 'approx_cell_count',
+                       f'{approx_cell_count}')
 
         config.set('spherical_mesh', 'add_mesh_density', 'True')
         config.set('spherical_mesh', 'plot_cell_width', 'True')
