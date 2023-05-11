@@ -53,7 +53,7 @@ topographic_wave_drag
 The class :py:class:`compass.ocean.tests.hurricane.lts.init.topographic_wave_drag.ComputeTopographicWaveDrag`
 defines a step for interpolating the reciprocal of the ``r_inv`` to the mesh edges.
 This step is needed to include the contribution of the topographic wave drag
-in the model tendencies. 
+in the model momentum tendency. 
 
 forward
 -------
