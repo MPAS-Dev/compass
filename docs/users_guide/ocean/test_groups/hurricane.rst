@@ -20,11 +20,11 @@ wetting and drying scheme.
 
 The time stepping options to run the simulations include the fourth
 order Runge-Kutta scheme (RK4), which is the default, and a local
-time-stepping (LTS) scheme, see `this`_ paper for details. Each test case
+time-stepping (LTS) scheme, see this `paper`_ for details. Each test case
 in the ``ocean/hurricane`` test group has an LTS counterpart which is
 identified by the ``_lts`` appendix in the test case name.
 
-.. _this: https://doi.org/10.1029/2022MS003327
+.. _paper: https://doi.org/10.1029/2022MS003327
 
 Shared config options
 ---------------------
@@ -132,13 +132,16 @@ closest to them. A file is created that is the input to the
 pointWiseStats analysis member for the forward run.
 
 .. _hurricane_init_lts:
-If the LTS option is selected for the init test case, an additional step 
-is carried out.
+If the LTS option is selected for the init test case, the following
+additional step is carried out:
 
 compute topographic wave drag step
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-The reciprocal of e-folding time from the HyCOM model is computed in this 
-step, in order to include the topographic drag tendency in the model.
+The reciprocal of e-folding time, ``r_inv`` from the HyCOM model
+is computed in this  step, in order to include the topographic drag 
+tendency in the model. See this `reference_` for details.
+
+.. _reference: https://doi.org/10.1175/JPO-D-15-0074.1
 
 .. _hurricane_sandy:
 
