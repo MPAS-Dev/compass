@@ -18,6 +18,14 @@ of MPAS-Ocean. Each mesh can optionally be created to contain the floodplain
 which can be used to simulate coastal inundation using MPAS-Ocean's
 wetting and drying scheme.
 
+The time stepping options to run the simulations include the fourth
+order Runge-Kutta scheme (RK4), which is the default, and a local
+time-stepping (LTS) scheme, see `this`_ paper for details. Each test case
+in the ``ocean/hurricane`` test group has an LTS counterpart which is
+identified by the ``_lts`` appendix in the test case name.
+
+.. _this: https://doi.org/10.1029/2022MS003327
+
 Shared config options
 ---------------------
 
@@ -85,6 +93,15 @@ process. The land cells above the ``floodplain_elevation`` are then culled
 from the mesh. Finally, the bathymetry is re-interpolated onto the mesh
 since this data is not carried over from the cell culling process.
 
+.. _hurricane_mesh_lts:
+
+If the LTS option is selected for the mesh test case, an additional step
+is carried out after the mesh culling. This step appropriately flags 
+the cells of the mesh according to a user defined criterion in order to
+use time-steps of different sizes on different regions of the mesh.
+The parallel partitioning is modified accordingly to achieve proper
+load balancing.
+
 .. _hurricane_init:
 
 init test case
@@ -114,6 +131,15 @@ This set reads in the observation station locations and finds the cells
 closest to them. A file is created that is the input to the
 pointWiseStats analysis member for the forward run.
 
+.. _hurricane_init_lts:
+If the LTS option is selected for the init test case, an additional step 
+is carried out.
+
+compute topographic wave drag step
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+The reciprocal of e-folding time from the HyCOM model is computed in this 
+step, in order to include the topographic drag tendency in the model.
+
 .. _hurricane_sandy:
 
 sandy test case
@@ -132,3 +158,8 @@ analysis step
 The analysis step plots the timeseries data at each observation station
 to compare the modeled and observed data. Both NOAA and USGS station data
 is used for the validation.
+
+.. _hurricane_sandy_lts:
+If the LTS option is selected for the sandy test case, the LTS scheme
+is used to advance the solution in time rather than the default RK4 scheme.
+
