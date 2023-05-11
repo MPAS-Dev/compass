@@ -347,6 +347,16 @@ test cases and steps
    analysis.Analysis.read_station_file
    analysis.Analysis.run
 
+   lts.mesh.lts_regions.LTSRegionsStep
+   lts.mesh.lts_regions.LTSRegionsStep.setup
+   lts.mesh.lts_regions.LTSRegionsStep.run
+   lts.mesh.lts_regions.LTSRegionsStep.label_mesh
+
+   lts.init.topographic_wave_drag.ComputeTopographicWaveDrag
+   lts.init.topographic_wave_drag.ComputeTopographicWaveDrag.interpolate_data_to_grid
+   lts.init.topographic_wave_drag.ComputeTopographicWaveDrag.write_to_file
+   lts.init.topographic_wave_drag.ComputeTopographicWaveDrag.run
+
 ice_shelf_2d
 ~~~~~~~~~~~~
 
