@@ -137,9 +137,10 @@ additional step is carried out:
 
 compute topographic wave drag step
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-The reciprocal of e-folding time, ``r_inv`` from the HyCOM model
-is computed in this  step, in order to include the topographic drag 
-tendency in the model. See this `reference_` for details.
+The reciprocal of the e-folding time, ``r_inv``, from the HyCOM model,
+is computed in this step. See this `reference`_ for details on the 
+computation. This coefficient is needed to account for the 
+topographic wave drag tendency in the model.
 
 .. _reference: https://doi.org/10.1175/JPO-D-15-0074.1
 
