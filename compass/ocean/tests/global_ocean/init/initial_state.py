@@ -82,8 +82,7 @@ class InitialState(Step):
 
         if 'remap_topography' in self.mesh.steps:
             options = {
-                'config_global_ocean_topography_source': "'mpas_variable'",
-                'config_global_ocean_land_ice_topo_source': "'mpas_variable'"
+                'config_global_ocean_topography_source': "'mpas_variable'"
             }
             self.add_namelist_options(options, mode='init')
             self.add_streams_file(package, 'streams.topo', mode='init')
