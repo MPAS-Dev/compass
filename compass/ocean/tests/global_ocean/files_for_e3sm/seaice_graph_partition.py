@@ -3,6 +3,7 @@ from glob import glob
 
 import numpy as np
 import xarray as xr
+from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 from pyremap import MpasMeshDescriptor, Remapper
 
@@ -65,8 +66,15 @@ class SeaiceGraphPartition(FilesForE3SMStep):
                                      'plot_seaice_partitions')
         creation_date = self.creation_date
 
-        with xr.open_dataset('restart.nc') as ds:
+        mesh_filename = 'restart.nc'
+        with xr.open_dataset(mesh_filename) as ds:
             ncells = ds.sizes['nCells']
+            # cullCell causes problems when the sea-ice partition tool tries
+            # to add it again
+            if 'cullCell' in ds:
+                ds = ds.drop_vars(['cullCell'])
+                write_netcdf(ds, 'mesh.nc')
+                mesh_filename = 'mesh.nc'
 
         cores = get_core_list(ncells=ncells)
         logger.info(f'Creating graph files between {np.amin(cores)} and '
@@ -75,7 +83,7 @@ class SeaiceGraphPartition(FilesForE3SMStep):
         mapping_filename = _make_mapping_file(
             in_mesh_filename='seaice_QU60km_polar.nc',
             in_mesh_name='QU60km',
-            out_mesh_filename='restart.nc',
+            out_mesh_filename=mesh_filename,
             out_mesh_name=self.mesh_short_name,
             ntasks=self.ntasks,
             config=self.config,
@@ -85,13 +93,13 @@ class SeaiceGraphPartition(FilesForE3SMStep):
         args = ['prepare_seaice_partitions',
                 '-i', 'seaice_QU60km_polar.nc',
                 '-p', 'icePresent_QU60km_polar.nc',
-                '-m', 'restart.nc',
+                '-m', mesh_filename,
                 '-o', '.',
                 '-w', mapping_filename]
         check_call(args, logger)
 
         args = ['create_seaice_partitions',
-                '-m', 'restart.nc',
+                '-m', mesh_filename,
                 '-o', '.',
                 '-p', f'mpas-seaice.graph.info.{creation_date}',
                 '-g', 'gpmetis',
