@@ -350,7 +350,7 @@ test cases and steps
    lts.mesh.lts_regions.LTSRegionsStep
    lts.mesh.lts_regions.LTSRegionsStep.setup
    lts.mesh.lts_regions.LTSRegionsStep.run
-   lts.mesh.lts_regions.LTSRegionsStep.label_mesh
+   lts.mesh.lts_regions.label_mesh
 
    lts.init.topographic_wave_drag.ComputeTopographicWaveDrag
    lts.init.topographic_wave_drag.ComputeTopographicWaveDrag.interpolate_data_to_grid

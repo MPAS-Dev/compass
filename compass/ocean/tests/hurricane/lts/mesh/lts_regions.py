@@ -1,11 +1,11 @@
 import math
 import os
-import subprocess as sp
 
 import netCDF4 as nc
 import numpy as np
 import xarray as xr
 from mpas_tools.io import write_netcdf
+from mpas_tools.viz.paraview_extractor import extract_vtk
 from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
 
@@ -87,11 +87,14 @@ class LTSRegionsStep(Step):
             delaware_coast = fine_rgn.variables['delaware_coast_pts'][:, :]
             fine_region = Polygon(delaware_coast)
 
+        use_progress_bar = self.log_filename is None
         label_mesh(fine_region, mesh='culled_mesh.nc',
-                   graph_info='culled_graph.info', num_interface=2)
+                   graph_info='culled_graph.info', num_interface=2,
+                   logger=self.logger, use_progress_bar=use_progress_bar)
 
 
-def label_mesh(fine_region, mesh, graph_info, num_interface):   # noqa: C901
+def label_mesh(fine_region, mesh, graph_info, num_interface,  # noqa: C901
+               logger, use_progress_bar):
 
     # read in mesh data
     ds = xr.open_dataset(mesh)
@@ -107,7 +110,7 @@ def label_mesh(fine_region, mesh, graph_info, num_interface):   # noqa: C901
     lts_rgn = [2] * n_cells
 
     # check each cell, if in the fine region, label as fine
-    print('Labeling fine cells...')
+    logger.info('Labeling fine cells...')
     for icell in range(0, n_cells):
         cell_pt = Point(lat_cell[icell], lon_cell[icell])
         if fine_region.contains(cell_pt):
@@ -134,7 +137,7 @@ def label_mesh(fine_region, mesh, graph_info, num_interface):   # noqa: C901
     # only looping over cells changed during loop for previous layer
     # at the end of this loop, changed_cells[0] will have the list of cells
     # sharing edegs with the coarse cells
-    print('Labeling interface-adjacent fine cells...')
+    logger.info('Labeling interface-adjacent fine cells...')
     for i in range(0, 2):  # this loop creates 2 layers
         changed_cells[(i + 1) % 2] = []
 
@@ -157,7 +160,7 @@ def label_mesh(fine_region, mesh, graph_info, num_interface):   # noqa: C901
                             changed_cells[(i + 1) % 2].append(cell1)
 
     # n layers of interface region with label 4
-    print('Labeling interface cells...')
+    logger.info('Labeling interface cells...')
     for i in range(0, num_interface):
         changed_cells[(i + 1) % 2] = []
 
@@ -236,7 +239,7 @@ def label_mesh(fine_region, mesh, graph_info, num_interface):   # noqa: C901
 
     # create lts_mesh.nc
 
-    print('Creating lts_mesh...')
+    logger.info('Creating lts_mesh...')
 
     # open mesh nc file to be copied
 
@@ -260,14 +263,15 @@ def label_mesh(fine_region, mesh, graph_info, num_interface):   # noqa: C901
 
     mshnc.close()
 
-    sh_Command = 'paraview_vtk_field_extractor.py --ignore_time \
-                  -d maxEdges=0 -v allOnCells -f ' + ltsmsh_name + ' \
-                  -o lts_mesh_vtk'
-    sp.call(sh_Command.split())
+    extract_vtk(ignore_time=True, lonlat=0,
+                dimension_list=['maxEdges='],
+                variable_list=['allOnCells'],
+                filename_pattern=ltsmsh_name,
+                out_dir='lts_mesh_vtk', use_progress_bar=use_progress_bar)
 
     # label cells in graph.info
 
-    print('Weighting ' + graph_info + '...')
+    logger.info('Weighting ' + graph_info + '...')
 
     fine_cells = 0
     coarse_cells = 0
@@ -315,7 +319,7 @@ def label_mesh(fine_region, mesh, graph_info, num_interface):   # noqa: C901
     txt += 'ratio of largest to smallest cell width = {}\n'.format(width_ratio)
     txt += 'number of interface layers = {}\n'.format(num_interface)
 
-    print(txt)
+    logger.info(txt)
 
     with open('lts_mesh_info.txt', 'w') as f:
         f.write(txt)

@@ -10,16 +10,16 @@ the User's Guide.
 mesh
 ----
 The class
-:py:class:`compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2Mesh`
+:py:class:`compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh`
 defines a step for generating the global regionally refined mesh for the test group. 
-It inherits from the :py:class:`compass.ocean.tests.global_ocean.mesh.mesh.MeshStep`
-and provides the :py:func:`compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2Mesh.build_cell_width_lat_lon()`
+It inherits from the :py:class:`compass.ocean.mesh.floodplain.FloodplainMeshStep`
+and provides the :py:func:`compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh.build_cell_width_lat_lon()`
 method to specify the mesh resolution function using the :py:func:`mpas_tools.ocean.coastal_tools.coastal_refined_mesh()`
 function.
 
 lts_regions
 -----------
-The class :py:class:`compass.ocean.tests.hurricane.lts.mesh.LTSRegionsStep` creates a 
+The class :py:class:`compass.ocean.tests.hurricane.lts.mesh.lts_regions.LTSRegionsStep` creates a 
 copy of the culled mesh file that additionally includes an array called ``LTSRegion``.
 This array has appropriate flags that determine what time-step should be used on
 a certain cell of the mesh, according to the local-time stepping scheme.

@@ -20,11 +20,12 @@ wetting and drying scheme.
 
 The time stepping options to run the simulations include the fourth
 order Runge-Kutta scheme (RK4), which is the default, and a local
-time-stepping (LTS) scheme, see this `paper`_ for details. Each test case
-in the ``ocean/hurricane`` test group has an LTS counterpart which is
-identified by the ``_lts`` appendix in the test case name.
-
-.. _paper: https://doi.org/10.1029/2022MS003327
+time-stepping (LTS) scheme, see 
+`Lilly et al. (2023) <https://doi.org/10.1029/2022MS003327>`_
+for details. Each test case in the ``ocean/hurricane`` test group has an 
+LTS counterpart which is identified by the ``_lts`` appendix in the test case name.
+Note that the executable to be used with LTS has to be compiled with
+the following options: ``USE_LTS=true OPENMP=false``.
 
 Shared config options
 ---------------------
@@ -133,17 +134,15 @@ pointWiseStats analysis member for the forward run.
 
 .. _hurricane_init_lts:
 
-If the LTS option is selected for the init test case, the following
-additional step is carried out:
-
 compute topographic wave drag step
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-The reciprocal of the e-folding time, ``r_inv``, from the HyCOM model,
-is computed in this step. See this `reference`_ for details on the 
-computation. This coefficient is needed to account for the 
-topographic wave drag tendency in the model.
+This step is carried out only if the LTS option is selected for the init test case.
 
-.. _reference: https://doi.org/10.1175/JPO-D-15-0074.1
+The reciprocal of the e-folding time, ``r_inv``, from the HyCOM model,
+is computed in this step. See 
+`Buijsman et al. (2016) <https://doi.org/10.1175/JPO-D-15-0074.1>`_ 
+for details on the computation. This coefficient is needed to account 
+for the topographic wave drag tendency in the model.
 
 .. _hurricane_sandy:
 
