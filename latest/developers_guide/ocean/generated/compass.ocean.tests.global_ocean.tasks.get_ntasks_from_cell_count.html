@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.ocean.tests.global_ocean.forward.ForwardStep.setup &mdash; compass latest documentation</title>
+  <title>compass.ocean.tests.global_ocean.tasks.get_ntasks_from_cell_count &mdash; compass latest documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,8 +20,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="compass.ocean.tests.global_ocean.forward.ForwardStep.run" href="compass.ocean.tests.global_ocean.forward.ForwardStep.run.html" />
-    <link rel="prev" title="compass.ocean.tests.global_ocean.forward.ForwardStep" href="compass.ocean.tests.global_ocean.forward.ForwardStep.html" /> 
+    <link rel="next" title="compass.ocean.tests.gotm.Gotm" href="compass.ocean.tests.gotm.Gotm.html" />
+    <link rel="prev" title="compass.ocean.tests.global_ocean.metadata.add_mesh_and_init_metadata" href="compass.ocean.tests.global_ocean.metadata.add_mesh_and_init_metadata.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -117,9 +117,9 @@
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../api.html">API reference</a></li>
           <li class="breadcrumb-item"><a href="../api.html">ocean</a></li>
-      <li class="breadcrumb-item active">compass.ocean.tests.global_ocean.forward.ForwardStep.setup</li>
+      <li class="breadcrumb-item active">compass.ocean.tests.global_ocean.tasks.get_ntasks_from_cell_count</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/developers_guide/ocean/generated/compass.ocean.tests.global_ocean.forward.ForwardStep.setup.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/developers_guide/ocean/generated/compass.ocean.tests.global_ocean.tasks.get_ntasks_from_cell_count.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -127,12 +127,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="compass-ocean-tests-global-ocean-forward-forwardstep-setup">
-<h1>compass.ocean.tests.global_ocean.forward.ForwardStep.setup<a class="headerlink" href="#compass-ocean-tests-global-ocean-forward-forwardstep-setup" title="Permalink to this heading">¶</a></h1>
-<dl class="py method">
-<dt class="sig sig-object py" id="compass.ocean.tests.global_ocean.forward.ForwardStep.setup">
-<span class="sig-prename descclassname"><span class="pre">ForwardStep.</span></span><span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/global_ocean/forward.html#ForwardStep.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.tests.global_ocean.forward.ForwardStep.setup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the number of MPI tasks and the time step based on config options</p>
+  <section id="compass-ocean-tests-global-ocean-tasks-get-ntasks-from-cell-count">
+<h1>compass.ocean.tests.global_ocean.tasks.get_ntasks_from_cell_count<a class="headerlink" href="#compass-ocean-tests-global-ocean-tasks-get-ntasks-from-cell-count" title="Permalink to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="compass.ocean.tests.global_ocean.tasks.get_ntasks_from_cell_count">
+<span class="sig-prename descclassname"><span class="pre">compass.ocean.tests.global_ocean.tasks.</span></span><span class="sig-name descname"><span class="pre">get_ntasks_from_cell_count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">at_setup</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/global_ocean/tasks.html#get_ntasks_from_cell_count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.tests.global_ocean.tasks.get_ntasks_from_cell_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes <code class="docutils literal notranslate"><span class="pre">ntasks</span></code> and <code class="docutils literal notranslate"><span class="pre">min_tasks</span></code> for a step based on the estimated
+(at setup) or exact (at runtime) mesh size</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<a class="reference internal" href="../../generated/compass.config.CompassConfigParser.html#compass.config.CompassConfigParser" title="compass.config.CompassConfigParser"><em>compass.config.CompassConfigParser</em></a>) – Configuration options for the test case the step belongs to</p></li>
+<li><p><strong>at_setup</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether this method is being run during setup of the step, as
+opposed to at runtime</p></li>
+<li><p><strong>mesh_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – A file containing the MPAS mesh (specifically <code class="docutils literal notranslate"><span class="pre">nCells</span></code>) if
+<code class="docutils literal notranslate"><span class="pre">at_setup</span> <span class="pre">==</span> <span class="pre">False</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>ntasks</strong> (<em>int</em>) – The target number of MPI tasks for the step</p></li>
+<li><p><strong>min_tasks</strong> (<em>int</em>) – The minimum number of tasks for the step</p></li>
+</ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -141,8 +160,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="compass.ocean.tests.global_ocean.forward.ForwardStep.html" class="btn btn-neutral float-left" title="compass.ocean.tests.global_ocean.forward.ForwardStep" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="compass.ocean.tests.global_ocean.forward.ForwardStep.run.html" class="btn btn-neutral float-right" title="compass.ocean.tests.global_ocean.forward.ForwardStep.run" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.ocean.tests.global_ocean.metadata.add_mesh_and_init_metadata.html" class="btn btn-neutral float-left" title="compass.ocean.tests.global_ocean.metadata.add_mesh_and_init_metadata" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.ocean.tests.gotm.Gotm.html" class="btn btn-neutral float-right" title="compass.ocean.tests.gotm.Gotm" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

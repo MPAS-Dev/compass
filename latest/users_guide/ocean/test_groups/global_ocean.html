@@ -178,7 +178,7 @@ Note that meshes and test cases may modify these options, as noted below.</p>
 
 <span class="c1">## config options related to the step for culling land from the mesh</span>
 <span class="c1"># number of cores to use</span>
-<span class="na">cull_mesh_cpus_per_task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">18</span>
+<span class="na">cull_mesh_cpus_per_task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">128</span>
 <span class="c1"># minimum of cores, below which the step fails</span>
 <span class="na">cull_mesh_min_cpus_per_task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
 <span class="c1"># maximum memory usage allowed (in MB)</span>
@@ -190,25 +190,31 @@ Note that meshes and test cases may modify these options, as noted below.</p>
 
 <span class="c1">## each mesh should replace these with appropriate values in its config file</span>
 
+<span class="c1"># the number of cells per core to aim for</span>
+<span class="na">goal_cells_per_core</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">200</span>
+<span class="c1"># the approximate maximum number of cells per core (the test will fail if too</span>
+<span class="c1"># few cores are available)</span>
+<span class="na">max_cells_per_core</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2000</span>
+
+<span class="c1"># the approximate number of cells in the mesh, to be estimated for each mesh</span>
+<span class="na">approx_cell_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
+
+<span class="c1"># time step per resolution (s/km), since dt is proportional to resolution</span>
+<span class="na">dt_per_km</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">30</span>
+<span class="c1"># barotropic time step per resolution (s/km)</span>
+<span class="na">btr_dt_per_km</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.5</span>
+
 <span class="c1">## config options related to the initial_state step</span>
 <span class="c1"># number of cores to use</span>
-<span class="na">init_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span>
+<span class="na">init_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">36</span>
 <span class="c1"># minimum of cores, below which the step fails</span>
-<span class="na">init_min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
-<span class="c1"># maximum memory usage allowed (in MB)</span>
-<span class="na">init_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span>
+<span class="na">init_min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span>
 <span class="c1"># number of threads</span>
 <span class="na">init_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
 
 <span class="c1">## config options related to the forward steps</span>
-<span class="c1"># number of cores to use</span>
-<span class="na">forward_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span>
-<span class="c1"># minimum of cores, below which the step fails</span>
-<span class="na">forward_min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
 <span class="c1"># number of threads</span>
 <span class="na">forward_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
-<span class="c1"># maximum memory usage allowed (in MB)</span>
-<span class="na">forward_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span>
 
 <span class="c1">## metadata related to the mesh</span>
 <span class="c1"># whether to add metadata to output files</span>
@@ -222,7 +228,7 @@ Note that meshes and test cases may modify these options, as noted below.</p>
 <span class="c1"># a description of the mesh with ice-shelf cavities</span>
 <span class="na">init_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
 <span class="c1"># E3SM version that the mesh is intended for</span>
-<span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
+<span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
 <span class="c1"># The revision number of the mesh, which should be incremented each time the</span>
 <span class="c1"># mesh is revised</span>
 <span class="na">mesh_revision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;Missing&gt;&gt;</span>
@@ -320,6 +326,9 @@ Note that meshes and test cases may modify these options, as noted below.</p>
 
 <span class="c1"># whether the mesh has ice-shelf cavities</span>
 <span class="na">with_ice_shelf_cavities</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span>
+
+<span class="c1"># whether to write out sea-ice partition info for plotting in paraview</span>
+<span class="na">plot_seaice_partitions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">cull_mesh_*</span></code>, <code class="docutils literal notranslate"><span class="pre">init_*</span></code> and <code class="docutils literal notranslate"><span class="pre">forward:*</span></code> config options are used to

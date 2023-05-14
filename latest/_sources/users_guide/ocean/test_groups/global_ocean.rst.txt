@@ -38,7 +38,7 @@ Note that meshes and test cases may modify these options, as noted below.
 
     ## config options related to the step for culling land from the mesh
     # number of cores to use
-    cull_mesh_cpus_per_task = 18
+    cull_mesh_cpus_per_task = 128
     # minimum of cores, below which the step fails
     cull_mesh_min_cpus_per_task = 1
     # maximum memory usage allowed (in MB)
@@ -50,25 +50,31 @@ Note that meshes and test cases may modify these options, as noted below.
 
     ## each mesh should replace these with appropriate values in its config file
 
+    # the number of cells per core to aim for
+    goal_cells_per_core = 200
+    # the approximate maximum number of cells per core (the test will fail if too
+    # few cores are available)
+    max_cells_per_core = 2000
+
+    # the approximate number of cells in the mesh, to be estimated for each mesh
+    approx_cell_count = <<<Missing>>>
+
+    # time step per resolution (s/km), since dt is proportional to resolution
+    dt_per_km = 30
+    # barotropic time step per resolution (s/km)
+    btr_dt_per_km = 1.5
+
     ## config options related to the initial_state step
     # number of cores to use
-    init_ntasks = 4
+    init_ntasks = 36
     # minimum of cores, below which the step fails
-    init_min_tasks = 1
-    # maximum memory usage allowed (in MB)
-    init_max_memory = 1000
+    init_min_tasks = 8
     # number of threads
     init_threads = 1
 
     ## config options related to the forward steps
-    # number of cores to use
-    forward_ntasks = 4
-    # minimum of cores, below which the step fails
-    forward_min_tasks = 1
     # number of threads
     forward_threads = 1
-    # maximum memory usage allowed (in MB)
-    forward_max_memory = 1000
 
     ## metadata related to the mesh
     # whether to add metadata to output files
@@ -82,7 +88,7 @@ Note that meshes and test cases may modify these options, as noted below.
     # a description of the mesh with ice-shelf cavities
     init_description = <<<Missing>>>
     # E3SM version that the mesh is intended for
-    e3sm_version = 2
+    e3sm_version = 3
     # The revision number of the mesh, which should be incremented each time the
     # mesh is revised
     mesh_revision = <<Missing>>
@@ -180,6 +186,9 @@ Note that meshes and test cases may modify these options, as noted below.
 
     # whether the mesh has ice-shelf cavities
     with_ice_shelf_cavities = autodetect
+
+    # whether to write out sea-ice partition info for plotting in paraview
+    plot_seaice_partitions = False
 
 The ``cull_mesh_*``, ``init_*`` and ``forward:*`` config options are used to
 specify the resources used in in the ``mesh`` step of the :ref:`global_ocean_mesh`,

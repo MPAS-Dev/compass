@@ -498,7 +498,7 @@
 <td><p>A step for iteratively adjusting the pressure from the weight of the ice shelf to match the sea-surface height as part of ice-shelf 2D test cases</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.setup.html#compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.setup" title="compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init.ssh_adjustment.SshAdjustment.setup</span></code></a>()</p></td>
-<td><p>Set up the test case in the work directory, including downloading any dependencies</p></td>
+<td><p>Set the number of MPI tasks and the time step based on config options</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.run.html#compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.run" title="compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init.ssh_adjustment.SshAdjustment.run</span></code></a>()</p></td>
 <td><p>Run this step of the testcase</p></td>
@@ -608,11 +608,11 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.forward.ForwardTestCase.run.html#compass.ocean.tests.global_ocean.forward.ForwardTestCase.run" title="compass.ocean.tests.global_ocean.forward.ForwardTestCase.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.ForwardTestCase.run</span></code></a>()</p></td>
 <td><p>This method is deprecated.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.forward.ForwardStep.html#compass.ocean.tests.global_ocean.forward.ForwardStep" title="compass.ocean.tests.global_ocean.forward.ForwardStep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.ForwardStep</span></code></a>(test_case, mesh, init, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.forward.ForwardStep.html#compass.ocean.tests.global_ocean.forward.ForwardStep" title="compass.ocean.tests.global_ocean.forward.ForwardStep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.ForwardStep</span></code></a>(test_case, mesh, ...[, ...])</p></td>
 <td><p>A step for performing forward MPAS-Ocean runs as part of global ocean test cases.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.forward.ForwardStep.setup.html#compass.ocean.tests.global_ocean.forward.ForwardStep.setup" title="compass.ocean.tests.global_ocean.forward.ForwardStep.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.ForwardStep.setup</span></code></a>()</p></td>
-<td><p>Set up the test case in the work directory, including downloading any dependencies</p></td>
+<td><p>Set the number of MPI tasks and the time step based on config options</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.forward.ForwardStep.run.html#compass.ocean.tests.global_ocean.forward.ForwardStep.run" title="compass.ocean.tests.global_ocean.forward.ForwardStep.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.ForwardStep.run</span></code></a>()</p></td>
 <td><p>Run this step of the testcase</p></td>
@@ -633,6 +633,9 @@
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.metadata.add_mesh_and_init_metadata.html#compass.ocean.tests.global_ocean.metadata.add_mesh_and_init_metadata" title="compass.ocean.tests.global_ocean.metadata.add_mesh_and_init_metadata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">metadata.add_mesh_and_init_metadata</span></code></a>(...)</p></td>
 <td><p>Add MPAS mesh and initial condition metadata to NetCDF outputs of the given step</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.tasks.get_ntasks_from_cell_count.html#compass.ocean.tests.global_ocean.tasks.get_ntasks_from_cell_count" title="compass.ocean.tests.global_ocean.tasks.get_ntasks_from_cell_count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tasks.get_ntasks_from_cell_count</span></code></a>(config, ...)</p></td>
+<td><p>Computes <code class="docutils literal notranslate"><span class="pre">ntasks</span></code> and <code class="docutils literal notranslate"><span class="pre">min_tasks</span></code> for a step based on the estimated (at setup) or exact (at runtime) mesh size</p></td>
 </tr>
 </tbody>
 </table>
