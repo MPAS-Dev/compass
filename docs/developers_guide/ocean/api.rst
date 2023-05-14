@@ -202,24 +202,22 @@ test cases and steps
    mesh.ec30to60.EC30to60BaseMesh
    mesh.ec30to60.EC30to60BaseMesh.build_cell_width_lat_lon
    mesh.ec30to60.dynamic_adjustment.EC30to60DynamicAdjustment
-   mesh.ec30to60.dynamic_adjustment.EC30to60DynamicAdjustment.configure
-   mesh.ec30to60.dynamic_adjustment.EC30to60DynamicAdjustment.run
+
+   mesh.qu.IcosMeshFromConfigStep
+   mesh.qu.IcosMeshFromConfigStep.setup
+   mesh.qu.QUMeshFromConfigStep
+   mesh.qu.QUMeshFromConfigStep.setup
+   mesh.qu.dynamic_adjustment.QUDynamicAdjustment
 
    mesh.qu240.dynamic_adjustment.QU240DynamicAdjustment
-   mesh.qu240.dynamic_adjustment.QU240DynamicAdjustment.configure
-   mesh.qu240.dynamic_adjustment.QU240DynamicAdjustment.run
 
    mesh.so12to60.SO12to60BaseMesh
    mesh.so12to60.SO12to60BaseMesh.build_cell_width_lat_lon
    mesh.so12to60.dynamic_adjustment.SO12to60DynamicAdjustment
-   mesh.so12to60.dynamic_adjustment.SO12to60DynamicAdjustment.configure
-   mesh.so12to60.dynamic_adjustment.SO12to60DynamicAdjustment.run
 
    mesh.wc14.WC14BaseMesh
    mesh.wc14.WC14BaseMesh.build_cell_width_lat_lon
    mesh.wc14.dynamic_adjustment.WC14DynamicAdjustment
-   mesh.wc14.dynamic_adjustment.WC14DynamicAdjustment.configure
-   mesh.wc14.dynamic_adjustment.WC14DynamicAdjustment.run
 
    performance_test.PerformanceTest
    performance_test.PerformanceTest.configure

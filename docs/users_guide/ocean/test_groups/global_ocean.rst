@@ -281,11 +281,13 @@ The final mesh has resolution focused in the Southern Ocean around Antarctica.
 
 .. _global_ocean_mesh_qu240:
 
-QU240
-^^^^^
+QU240 and Icos240
+^^^^^^^^^^^^^^^^^
 
 The quasi-uniform 240-km (QU240) mesh, is a global mesh with approximately
-240-km horizontal resolution everywhere (as the name implies).
+240-km horizontal resolution everywhere (as the name implies).  The
+Icos240 mesh is similar but based on a subdivided icosahedron, and thus has
+grid cells that are more regular in size and shape.
 :ref:`global_ocean_ice_shelf_cavities` around Antarctica are excluded from the
 mesh.  This mesh is used as part of the :ref:`ocean_suite_nightly` to perform
 regression and performance testing in a coarse but realistic model
@@ -294,11 +296,12 @@ configuration.  This mesh is also being used in studies of
 
 .. _global_ocean_mesh_quwisc240:
 
-QUwISC240
-^^^^^^^^^
+QUwISC240 and IcoswISC240
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The quasi-uniform 240-km mesh with ice-shelf cavities (QUwISC240) is nearly
-identical to the :ref:`global_ocean_mesh_qu240` except that it includes the
+The quasi-uniform 240-km mesh with ice-shelf cavities (QUwISC240) and the
+corresponding icosahedral mesh (IcoswISC240) are nearly identical to the
+:ref:`global_ocean_mesh_qu240` meshes except that they include the
 :ref:`global_ocean_ice_shelf_cavities` around Antarctica in the ocean domain.
 
 MPAS-Ocean's treatment of ice-shelf cavities requires and iterative adjustment
@@ -309,6 +312,33 @@ less efficient for regression and performance testing than QU240.  However,
 it is useful for low-resolution testing that exercises compass and MPAS-Ocean
 functionality related to ice-shelf cavities and sub-ice-shelf freshwater
 fluxes.
+
+.. _global_ocean_mesh_qu_icos:
+
+QU, Icos, QUwISC and IcoswISC
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The quasi-uniform (QU) and icosahedral (Icos) general meshes are global meshes
+with approximately constant horizontal resolution everywhere.  As with all
+global ocean meshes, if ``wISC`` is in the mesh name,
+:ref:`global_ocean_ice_shelf_cavities` around Antarctica are included,
+otherwise they are excluded. The resolution of the mesh is determined by a user
+config file, with a default of 120 km (very low resolution).  In addition to
+config options related to the vertical grid and metadata, the only important
+config option for these meshes is:
+
+.. code-block:: cfg
+
+    # options for global ocean testcases
+    [global_ocean]
+
+    # the resolution of the QU or Icos mesh in km
+    qu_resolution = 120
+
+You can specify ``qu_resolution`` by placing it in a user config file and
+modify it before setting up test cases with the QU mesh.  You could also
+modify the config option in *each* test case after setting them up but this
+is typically too tedious to be practical.
 
 .. _global_ocean_mesh_ec30to60:
 
