@@ -121,6 +121,10 @@
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.arrm10to60</span> <span class="kn">import</span> <span class="n">ARRM10to60BaseMesh</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.ec30to60</span> <span class="kn">import</span> <span class="n">EC30to60BaseMesh</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.kuroshio</span> <span class="kn">import</span> <span class="n">KuroshioBaseMesh</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.qu</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">IcosMeshFromConfigStep</span><span class="p">,</span>
+    <span class="n">QUMeshFromConfigStep</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.so12to60</span> <span class="kn">import</span> <span class="n">SO12to60BaseMesh</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.wc14</span> <span class="kn">import</span> <span class="n">WC14BaseMesh</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.metadata</span> <span class="kn">import</span> <span class="p">(</span>
@@ -186,6 +190,12 @@
         <span class="k">elif</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;QU240&#39;</span><span class="p">,</span> <span class="s1">&#39;QUwISC240&#39;</span><span class="p">]:</span>
             <span class="n">base_mesh_step</span> <span class="o">=</span> <span class="n">QuasiUniformSphericalMeshStep</span><span class="p">(</span>
                 <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">,</span> <span class="n">cell_width</span><span class="o">=</span><span class="mi">240</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Icos&#39;</span><span class="p">,</span> <span class="s1">&#39;IcoswISC&#39;</span><span class="p">]:</span>
+            <span class="n">base_mesh_step</span> <span class="o">=</span> <span class="n">IcosMeshFromConfigStep</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;QU&#39;</span><span class="p">,</span> <span class="s1">&#39;QUwISC&#39;</span><span class="p">]:</span>
+            <span class="n">base_mesh_step</span> <span class="o">=</span> <span class="n">QUMeshFromConfigStep</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;EC30to60&#39;</span><span class="p">,</span> <span class="s1">&#39;ECwISC30to60&#39;</span><span class="p">]:</span>
             <span class="n">base_mesh_step</span> <span class="o">=</span> <span class="n">EC30to60BaseMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ARRM10to60&#39;</span><span class="p">,</span> <span class="s1">&#39;ARRMwISC10to60&#39;</span><span class="p">]:</span>
@@ -236,6 +246,18 @@
                 <span class="s1">&#39;kuroshio.cfg&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">package</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_config_filename</span><span class="p">,</span>
                                 <span class="n">exception</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Icos&#39;</span><span class="p">,</span> <span class="s1">&#39;IcoswISC&#39;</span><span class="p">]:</span>
+            <span class="c1"># add the config options for all kuroshio meshes</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span>
+                <span class="s1">&#39;compass.ocean.tests.global_ocean.mesh.qu&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;icos.cfg&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;QU&#39;</span><span class="p">,</span> <span class="s1">&#39;QUwISC&#39;</span><span class="p">,</span> <span class="s1">&#39;Icos&#39;</span><span class="p">,</span> <span class="s1">&#39;IcoswISC&#39;</span><span class="p">]:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;qu_resolution&#39;</span><span class="p">)</span>
+            <span class="c1"># roughly area of the ocean divided by the area of a cell</span>
+            <span class="n">approx_cell_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">4e8</span> <span class="o">/</span> <span class="n">res</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;approx_cell_count&#39;</span><span class="p">,</span>
+                       <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">approx_cell_count</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;add_mesh_density&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;plot_cell_width&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">)</span>

@@ -155,7 +155,7 @@
 <span id="ocean-global-ocean"></span><h1>global_ocean<a class="headerlink" href="#global-ocean" title="Permalink to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">ocean/global_ocean</span></code> test group defines meshes,
 initial conditions, testing, and spin-up for global, realistic ocean domains.
-Currently, two mesh resolutions—<a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240</span></a> and
+Currently, two mesh resolutions—<a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240 and Icos240</span></a> and
 <a class="reference internal" href="#global-ocean-mesh-ec30to60"><span class="std std-ref">EC30to60</span></a>, along with their variants with
 <a class="reference internal" href="#global-ocean-ice-shelf-cavities"><span class="std std-ref">Ice-shelf cavities</span></a>—have been ported from COMPASS legacy,
 with many more to follow in the coming months.</p>
@@ -407,20 +407,23 @@ testing purposes, not scientific simulations.  Two more meshes, which vary
 in resolution between 30 and 60 km, are used as the lowest resolution meshes
 in E3SM’s <a class="reference external" href="https://e3sm.org/research/science-campaigns/">science campaigns</a>.
 The final mesh has resolution focused in the Southern Ocean around Antarctica.</p>
-<section id="qu240">
-<span id="global-ocean-mesh-qu240"></span><h3>QU240<a class="headerlink" href="#qu240" title="Permalink to this heading">¶</a></h3>
+<section id="qu240-and-icos240">
+<span id="global-ocean-mesh-qu240"></span><h3>QU240 and Icos240<a class="headerlink" href="#qu240-and-icos240" title="Permalink to this heading">¶</a></h3>
 <p>The quasi-uniform 240-km (QU240) mesh, is a global mesh with approximately
-240-km horizontal resolution everywhere (as the name implies).
+240-km horizontal resolution everywhere (as the name implies).  The
+Icos240 mesh is similar but based on a subdivided icosahedron, and thus has
+grid cells that are more regular in size and shape.
 <a class="reference internal" href="#global-ocean-ice-shelf-cavities"><span class="std std-ref">Ice-shelf cavities</span></a> around Antarctica are excluded from the
 mesh.  This mesh is used as part of the <a class="reference internal" href="../suites.html#ocean-suite-nightly"><span class="std std-ref">nightly test suite</span></a> to perform
 regression and performance testing in a coarse but realistic model
 configuration.  This mesh is also being used in studies of
 <a class="reference external" href="https://e3sm.org/can-we-switch-computers-an-application-of-e3sm-climate-reproducibility-tests/">climate reproducibility</a>.</p>
 </section>
-<section id="quwisc240">
-<span id="global-ocean-mesh-quwisc240"></span><h3>QUwISC240<a class="headerlink" href="#quwisc240" title="Permalink to this heading">¶</a></h3>
-<p>The quasi-uniform 240-km mesh with ice-shelf cavities (QUwISC240) is nearly
-identical to the <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240</span></a> except that it includes the
+<section id="quwisc240-and-icoswisc240">
+<span id="global-ocean-mesh-quwisc240"></span><h3>QUwISC240 and IcoswISC240<a class="headerlink" href="#quwisc240-and-icoswisc240" title="Permalink to this heading">¶</a></h3>
+<p>The quasi-uniform 240-km mesh with ice-shelf cavities (QUwISC240) and the
+corresponding icosahedral mesh (IcoswISC240) are nearly identical to the
+<a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240 and Icos240</span></a> meshes except that they include the
 <a class="reference internal" href="#global-ocean-ice-shelf-cavities"><span class="std std-ref">Ice-shelf cavities</span></a> around Antarctica in the ocean domain.</p>
 <p>MPAS-Ocean’s treatment of ice-shelf cavities requires and iterative adjustment
 step to make the <code class="docutils literal notranslate"><span class="pre">landIcePressure</span></code> compatible with the <code class="docutils literal notranslate"><span class="pre">ssh</span></code> (see
@@ -430,6 +433,28 @@ less efficient for regression and performance testing than QU240.  However,
 it is useful for low-resolution testing that exercises compass and MPAS-Ocean
 functionality related to ice-shelf cavities and sub-ice-shelf freshwater
 fluxes.</p>
+</section>
+<section id="qu-icos-quwisc-and-icoswisc">
+<span id="global-ocean-mesh-qu-icos"></span><h3>QU, Icos, QUwISC and IcoswISC<a class="headerlink" href="#qu-icos-quwisc-and-icoswisc" title="Permalink to this heading">¶</a></h3>
+<p>The quasi-uniform (QU) and icosahedral (Icos) general meshes are global meshes
+with approximately constant horizontal resolution everywhere.  As with all
+global ocean meshes, if <code class="docutils literal notranslate"><span class="pre">wISC</span></code> is in the mesh name,
+<a class="reference internal" href="#global-ocean-ice-shelf-cavities"><span class="std std-ref">Ice-shelf cavities</span></a> around Antarctica are included,
+otherwise they are excluded. The resolution of the mesh is determined by a user
+config file, with a default of 120 km (very low resolution).  In addition to
+config options related to the vertical grid and metadata, the only important
+config option for these meshes is:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for global ocean testcases</span>
+<span class="k">[global_ocean]</span>
+
+<span class="c1"># the resolution of the QU or Icos mesh in km</span>
+<span class="na">qu_resolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">120</span>
+</pre></div>
+</div>
+<p>You can specify <code class="docutils literal notranslate"><span class="pre">qu_resolution</span></code> by placing it in a user config file and
+modify it before setting up test cases with the QU mesh.  You could also
+modify the config option in <em>each</em> test case after setting them up but this
+is typically too tedious to be practical.</p>
 </section>
 <section id="ec30to60">
 <span id="global-ocean-mesh-ec30to60"></span><h3>EC30to60<a class="headerlink" href="#ec30to60" title="Permalink to this heading">¶</a></h3>
@@ -538,7 +563,7 @@ for different meshes, initial conditions, time integrators, etc.).</p>
 <section id="mesh-test-case">
 <span id="global-ocean-mesh"></span><h3>mesh test case<a class="headerlink" href="#mesh-test-case" title="Permalink to this heading">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/&lt;mesh&gt;/mesh</span></code> test case (where <code class="docutils literal notranslate"><span class="pre">&lt;mesh&gt;</span></code> is the name
-of a mesh, e.g. <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240</span></a>) creates a “base” horizontal
+of a mesh, e.g. <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240 and Icos240</span></a>) creates a “base” horizontal
 mesh covering the globe with a distribution of resolution according to the
 specifications of the mesh.  The base mesh is created using the
 <a class="reference external" href="https://github.com/dengwirda/jigsaw">JIGSAW</a> and
@@ -626,7 +651,7 @@ the run from the restart file.  Output from the two steps (<code class="docutils
 thickness, velocity, temperature and salinity) are unchanged.</p>
 <p>As with the <a class="reference internal" href="#global-ocean-performance-test"><span class="std std-ref">performance_test test case</span></a>, <code class="docutils literal notranslate"><span class="pre">restart_test</span></code> can
 be run with either or both of the split-explicit or RK4 time integrator. Thus,
-for a the <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240</span></a> or <a class="reference internal" href="#global-ocean-mesh-quwisc240"><span class="std std-ref">QUwISC240</span></a>
+for a the <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240 and Icos240</span></a> or <a class="reference internal" href="#global-ocean-mesh-quwisc240"><span class="std std-ref">QUwISC240 and IcoswISC240</span></a>
 mesh (currently the only supported meshes) and initial condition <code class="docutils literal notranslate"><span class="pre">&lt;ic&gt;</span></code>, one
 or more of these versions of the <code class="docutils literal notranslate"><span class="pre">restart_test</span></code> will be available:</p>
 <ul class="simple">
@@ -644,7 +669,7 @@ or more of these versions of the <code class="docutils literal notranslate"><spa
 salinity) are compared to make sure they are unchanged.</p>
 <p>As with the <a class="reference internal" href="#global-ocean-performance-test"><span class="std std-ref">performance_test test case</span></a>, <code class="docutils literal notranslate"><span class="pre">decomp_test</span></code> can
 be run with either or both of the split-explicit or RK4 time integrator. Thus,
-for a the <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240</span></a> or <a class="reference internal" href="#global-ocean-mesh-quwisc240"><span class="std std-ref">QUwISC240</span></a>
+for a the <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240 and Icos240</span></a> or <a class="reference internal" href="#global-ocean-mesh-quwisc240"><span class="std std-ref">QUwISC240 and IcoswISC240</span></a>
 mesh (currently the only supported meshes) and initial condition <code class="docutils literal notranslate"><span class="pre">&lt;ic&gt;</span></code>, one
 or more of these versions of the <code class="docutils literal notranslate"><span class="pre">decomp_test</span></code> will be available:</p>
 <ul class="simple">
@@ -663,7 +688,7 @@ thickness, velocity, temperature and salinity) are compared to make sure they
 are unchanged.</p>
 <p>As with the <a class="reference internal" href="#global-ocean-performance-test"><span class="std std-ref">performance_test test case</span></a>, <code class="docutils literal notranslate"><span class="pre">threads_test</span></code> can
 be run with either or both of the split-explicit or RK4 time integrator. Thus,
-for a the <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240</span></a> or <a class="reference internal" href="#global-ocean-mesh-quwisc240"><span class="std std-ref">QUwISC240</span></a>
+for a the <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240 and Icos240</span></a> or <a class="reference internal" href="#global-ocean-mesh-quwisc240"><span class="std std-ref">QUwISC240 and IcoswISC240</span></a>
 mesh (currently the only supported meshes) and initial condition <code class="docutils literal notranslate"><span class="pre">&lt;ic&gt;</span></code>, one
 or more of these versions of the <code class="docutils literal notranslate"><span class="pre">threads_test</span></code> will be available:</p>
 <ul class="simple">
@@ -703,7 +728,7 @@ completed, or where storing the required data to disk would be infeasible.</p>
 <a class="reference external" href="https://doi.org/10.5281/zenodo.1246893">MPAS-Ocean user’s guide</a>.</p>
 <p>As with the <a class="reference internal" href="#global-ocean-performance-test"><span class="std std-ref">performance_test test case</span></a>, <code class="docutils literal notranslate"><span class="pre">analysis_test</span></code> can
 be run with either or both of the split-explicit or RK4 time integrator. Thus,
-for a the <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240</span></a> or <a class="reference internal" href="#global-ocean-mesh-quwisc240"><span class="std std-ref">QUwISC240</span></a>
+for a the <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240 and Icos240</span></a> or <a class="reference internal" href="#global-ocean-mesh-quwisc240"><span class="std std-ref">QUwISC240 and IcoswISC240</span></a>
 mesh (currently the only supported meshes) and initial condition <code class="docutils literal notranslate"><span class="pre">&lt;ic&gt;</span></code>, one
 or more of these versions of the <code class="docutils literal notranslate"><span class="pre">analysis_test</span></code> will be available:</p>
 <ul class="simple">
@@ -729,7 +754,7 @@ used in an effort to improve compliance to the
 <cite>CF Conventions &lt;https://cfconventions.org/&gt;</cite> in the output metadata.</p>
 <p>As with the <a class="reference internal" href="#global-ocean-performance-test"><span class="std std-ref">performance_test test case</span></a>, <code class="docutils literal notranslate"><span class="pre">daily_output_test</span></code> can
 be run with either or both of the split-explicit or RK4 time integrator. Thus,
-for a the <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240</span></a> or <a class="reference internal" href="#global-ocean-mesh-quwisc240"><span class="std std-ref">QUwISC240</span></a>
+for a the <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240 and Icos240</span></a> or <a class="reference internal" href="#global-ocean-mesh-quwisc240"><span class="std std-ref">QUwISC240 and IcoswISC240</span></a>
 mesh (currently the only supported meshes) and initial condition <code class="docutils literal notranslate"><span class="pre">&lt;ic&gt;</span></code>, one
 or more of these versions of the <code class="docutils literal notranslate"><span class="pre">daily_output_test</span></code> will be available:</p>
 <ul class="simple">
@@ -748,7 +773,7 @@ waves with fast time scales and large amplitude must be damped (by applying
 Rayleigh friction), first aggressively, then more gently, before damping is
 disabled.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">dynamic_adjustment</span></code> test case is implemented differently for each of the
-<a class="reference internal" href="#global-ocean-meshes"><span class="std std-ref">Meshes</span></a>.  For example, for the <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240</span></a>
+<a class="reference internal" href="#global-ocean-meshes"><span class="std std-ref">Meshes</span></a>.  For example, for the <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240 and Icos240</span></a>
 and ref:<cite>global_ocean_mesh_quwisc240</cite> meshes, we perform only 1 day of damping
 (and even this is likely unnecessary), followed by a 1-day simulation without
 damping.  In contrast, for the <a class="reference internal" href="#global-ocean-mesh-ec30to60"><span class="std std-ref">EC30to60</span></a>

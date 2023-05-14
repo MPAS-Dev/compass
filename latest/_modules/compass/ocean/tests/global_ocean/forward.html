@@ -240,6 +240,11 @@
             <span class="k">if</span> <span class="n">mesh_stream</span> <span class="ow">in</span> <span class="n">mesh_package_contents</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">mesh_package</span><span class="p">,</span> <span class="n">mesh_stream</span><span class="p">)</span>
 
+        <span class="n">mesh_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">get_cull_mesh_path</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc&#39;</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">init</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
                 <span class="n">initial_state_target</span> <span class="o">=</span> \
@@ -288,7 +293,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_ntasks</span><span class="p">:</span>
-            <span class="n">mesh_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;init.nc&#39;</span><span class="p">)</span>
+            <span class="n">mesh_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;mesh.nc&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">get_ntasks_from_cell_count</span><span class="p">(</span>
                 <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">at_setup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="o">=</span><span class="n">mesh_filename</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">openmp_threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span>

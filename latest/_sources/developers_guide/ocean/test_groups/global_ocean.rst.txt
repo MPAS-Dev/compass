@@ -406,6 +406,102 @@ using the :py:class:`compass.mesh.IcosahedralMeshStep` class. The
 ice shelves in the ocean domain. Aside from the base mesh, these are identical
 to :ref:`dev_ocean_global_ocean_qu240`.
 
+.. _dev_ocean_global_ocean_qu_icos:
+
+QU, QUwISC, Icos and IcoswISC
++++++++++++++++++++++++++++++
+
+The generalized ``QU`` and ``Icos`` meshes are quasi-uniform meshes with
+user-defined resolutions (120 km by default). The ``QUwISC`` and ``IcoswISC``
+meshes are identical except that they include the cavities below ice shelves in
+the ocean domain. The classes
+:py:class:`compass.ocean.tests.global_ocean.mesh.qu.QUMeshFromConfigStep` and
+:py:class:`compass.ocean.tests.global_ocean.mesh.qu.IcosMeshFromConfigStep`
+create the ``QU`` and ``Icos`` base meshes, respectively (with or without
+ice-shelf cavities). The ``compass.ocean.tests.global_ocean.mesh.qu``
+module includes config and namelist options appropriate for initialization and
+forward simulations with split-explicit (but not RK4) time integration on these
+meshes.  The number of target and minimum number of MPI tasks, and also the
+baroclinic and barotropic time steps are set algorithmically based on the
+number of cells in the mesh and its resolution.
+
+The default config options for these meshes are:
+
+.. code-block:: cfg
+
+    # Options related to the vertical grid
+    [vertical_grid]
+
+    # the type of vertical grid
+    grid_type = index_tanh_dz
+
+    # Number of vertical levels
+    vert_levels = 64
+
+    # Depth of the bottom of the ocean
+    bottom_depth = 5500.0
+
+    # The minimum layer thickness
+    min_layer_thickness = 10.0
+
+    # The maximum layer thickness
+    max_layer_thickness = 250.0
+
+    # The characteristic number of levels over which the transition between
+    # the min and max occurs
+    transition_levels = 28
+
+
+    # options for global ocean testcases
+    [global_ocean]
+
+    ## metadata related to the mesh
+    # the prefix (e.g. QU, EC, WC, SO)
+    prefix = QU
+
+    # a description of the mesh
+    mesh_description = MPAS quasi-uniform mesh for E3SM version ${e3sm_version} at
+                       ${min_res}-km global resolution with <<<levels>>> vertical
+                       level
+
+    # E3SM version that the mesh is intended for
+    e3sm_version = 3
+    # The revision number of the mesh, which should be incremented each time the
+    # mesh is revised
+    mesh_revision = <<<Missing>>>
+    # the minimum (finest) resolution in the mesh
+    min_res = ${qu_resolution}
+    # the maximum (coarsest) resolution in the mesh, can be the same as min_res
+    max_res = ${qu_resolution}
+    # The URL of the pull request documenting the creation of the mesh
+    pull_request = <<<Missing>>>
+
+    # the resolution of the QU or Icos mesh in km
+    qu_resolution = 120
+
+The Icos and IcoswISC meshes have these config options that replace the
+corresponding QU config options above:
+
+.. code-block:: cfg
+
+    # options for global ocean testcases
+    [global_ocean]
+
+    ## metadata related to the mesh
+    # the prefix (e.g. QU, EC, WC, SO)
+    prefix = Icos
+
+    # a description of the mesh
+    mesh_description = MPAS subdivided icosahedral mesh for E3SM version
+                       ${e3sm_version} at ${min_res}-km global resolution with
+                       <<<levels>>> vertical level
+
+The vertical grid is an ``index_tanh_dz`` profile (see
+:ref:`dev_ocean_framework_vertical`) with 64 vertical levels ranging in
+thickness from 10 to 250 m.
+
+The resolution of the mesh is controlled by ``qu_resolution``.
+
 .. _dev_ocean_global_ocean_ec30to60:
 
 EC30to60 and ECwISC30to60

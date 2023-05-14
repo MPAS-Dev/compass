@@ -487,6 +487,93 @@ using the <a class="reference internal" href="../../generated/compass.mesh.Icosa
 ice shelves in the ocean domain. Aside from the base mesh, these are identical
 to <a class="reference internal" href="#dev-ocean-global-ocean-qu240"><span class="std std-ref">QU240 and QUwISC240</span></a>.</p>
 </section>
+<section id="qu-quwisc-icos-and-icoswisc">
+<span id="dev-ocean-global-ocean-qu-icos"></span><h5>QU, QUwISC, Icos and IcoswISC<a class="headerlink" href="#qu-quwisc-icos-and-icoswisc" title="Permalink to this heading">¶</a></h5>
+<p>The generalized <code class="docutils literal notranslate"><span class="pre">QU</span></code> and <code class="docutils literal notranslate"><span class="pre">Icos</span></code> meshes are quasi-uniform meshes with
+user-defined resolutions (120 km by default). The <code class="docutils literal notranslate"><span class="pre">QUwISC</span></code> and <code class="docutils literal notranslate"><span class="pre">IcoswISC</span></code>
+meshes are identical except that they include the cavities below ice shelves in
+the ocean domain. The classes
+<a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.qu.QUMeshFromConfigStep.html#compass.ocean.tests.global_ocean.mesh.qu.QUMeshFromConfigStep" title="compass.ocean.tests.global_ocean.mesh.qu.QUMeshFromConfigStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.qu.QUMeshFromConfigStep</span></code></a> and
+<a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.qu.IcosMeshFromConfigStep.html#compass.ocean.tests.global_ocean.mesh.qu.IcosMeshFromConfigStep" title="compass.ocean.tests.global_ocean.mesh.qu.IcosMeshFromConfigStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.qu.IcosMeshFromConfigStep</span></code></a>
+create the <code class="docutils literal notranslate"><span class="pre">QU</span></code> and <code class="docutils literal notranslate"><span class="pre">Icos</span></code> base meshes, respectively (with or without
+ice-shelf cavities). The <code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.qu</span></code>
+module includes config and namelist options appropriate for initialization and
+forward simulations with split-explicit (but not RK4) time integration on these
+meshes.  The number of target and minimum number of MPI tasks, and also the
+baroclinic and barotropic time steps are set algorithmically based on the
+number of cells in the mesh and its resolution.</p>
+<p>The default config options for these meshes are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
+<span class="k">[vertical_grid]</span>
+
+<span class="c1"># the type of vertical grid</span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">index_tanh_dz</span>
+
+<span class="c1"># Number of vertical levels</span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">64</span>
+
+<span class="c1"># Depth of the bottom of the ocean</span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5500.0</span>
+
+<span class="c1"># The minimum layer thickness</span>
+<span class="na">min_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span>
+
+<span class="c1"># The maximum layer thickness</span>
+<span class="na">max_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">250.0</span>
+
+<span class="c1"># The characteristic number of levels over which the transition between</span>
+<span class="c1"># the min and max occurs</span>
+<span class="na">transition_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">28</span>
+
+
+<span class="c1"># options for global ocean testcases</span>
+<span class="k">[global_ocean]</span>
+
+<span class="c1">## metadata related to the mesh</span>
+<span class="c1"># the prefix (e.g. QU, EC, WC, SO)</span>
+<span class="na">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">QU</span>
+
+<span class="c1"># a description of the mesh</span>
+<span class="na">mesh_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MPAS quasi-uniform mesh for E3SM version ${e3sm_version} at</span>
+<span class="w">                   </span><span class="na">${min_res}-km global resolution with &lt;&lt;&lt;levels&gt;&gt;&gt; vertical</span>
+<span class="w">                   </span><span class="na">level</span>
+
+<span class="c1"># E3SM version that the mesh is intended for</span>
+<span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
+<span class="c1"># The revision number of the mesh, which should be incremented each time the</span>
+<span class="c1"># mesh is revised</span>
+<span class="na">mesh_revision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
+<span class="c1"># the minimum (finest) resolution in the mesh</span>
+<span class="na">min_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">${qu_resolution}</span>
+<span class="c1"># the maximum (coarsest) resolution in the mesh, can be the same as min_res</span>
+<span class="na">max_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">${qu_resolution}</span>
+<span class="c1"># The URL of the pull request documenting the creation of the mesh</span>
+<span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
+
+<span class="c1"># the resolution of the QU or Icos mesh in km</span>
+<span class="na">qu_resolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">120</span>
+</pre></div>
+</div>
+<p>The Icos and IcoswISC meshes have these config options that replace the
+corresponding QU config options above:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for global ocean testcases</span>
+<span class="k">[global_ocean]</span>
+
+<span class="c1">## metadata related to the mesh</span>
+<span class="c1"># the prefix (e.g. QU, EC, WC, SO)</span>
+<span class="na">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Icos</span>
+
+<span class="c1"># a description of the mesh</span>
+<span class="na">mesh_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MPAS subdivided icosahedral mesh for E3SM version</span>
+<span class="w">                   </span><span class="na">${e3sm_version} at ${min_res}-km global resolution with</span>
+<span class="w">                   </span><span class="na">&lt;&lt;&lt;levels&gt;&gt;&gt; vertical level</span>
+</pre></div>
+</div>
+<p>The vertical grid is an <code class="docutils literal notranslate"><span class="pre">index_tanh_dz</span></code> profile (see
+<a class="reference internal" href="../framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a>) with 64 vertical levels ranging in
+thickness from 10 to 250 m.</p>
+<p>The resolution of the mesh is controlled by <code class="docutils literal notranslate"><span class="pre">qu_resolution</span></code>.</p>
+</section>
 <section id="ec30to60-and-ecwisc30to60">
 <span id="dev-ocean-global-ocean-ec30to60"></span><h5>EC30to60 and ECwISC30to60<a class="headerlink" href="#ec30to60-and-ecwisc30to60" title="Permalink to this heading">¶</a></h5>
 <p>The <code class="docutils literal notranslate"><span class="pre">EC30to60</span></code> mesh is an “eddy-closure” mesh with 30-km resolution at the
