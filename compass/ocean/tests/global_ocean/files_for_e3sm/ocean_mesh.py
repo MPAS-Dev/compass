@@ -56,10 +56,16 @@ class OceanMesh(FilesForE3SMStep):
                 keep_vars.append('minLevelCell')
 
             if self.with_ice_shelf_cavities:
-                keep_vars = keep_vars + [
+                ice_shelf_keep_vars = [
                     'landIceMask', 'landIceDraft', 'landIceFraction',
                     'landIceFloatingMask', 'landIceFloatingFraction'
                 ]
+                for var in ice_shelf_keep_vars:
+                    if var in ds:
+                        keep_vars.append(var)
+                    else:
+                        self.logger.warn(f'Warning: {var} not present in '
+                                         f'ocean mesh file.')
 
             ds = ds[keep_vars]
             ds.load()
