@@ -47,23 +47,23 @@ class Step:
         ``mpas_core``, ``test_group``, the test case's ``subdir`` and the
         step's ``subdir``
 
-    cpus_per_task : int, optional
+    cpus_per_task : int
         the number of cores per task the step would ideally use.  If
         fewer cores per node are available on the system, the step will
         run on all available cores as long as this is not below
         ``min_cpus_per_task``
 
-    min_cpus_per_task : int, optional
+    min_cpus_per_task : int
         the number of cores per task the step requires.  If the system
         has fewer than this number of cores per node, the step will fail
 
-    ntasks : int, optional
+    ntasks : int
         the number of tasks the step would ideally use.  If too few
         cores are available on the system to accommodate the number of
         tasks and the number of cores per task, the step will run on
         fewer tasks as long as as this is not below ``min_tasks``
 
-    min_tasks : int, optional
+    min_tasks : int
         the number of tasks the step requires.  If the system has too
         few cores to accommodate the number of tasks and cores per task,
         the step will fail

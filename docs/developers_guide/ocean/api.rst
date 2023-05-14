@@ -256,6 +256,8 @@ global_ocean framework
    metadata.get_e3sm_mesh_names
    metadata.add_mesh_and_init_metadata
 
+   tasks.get_ntasks_from_cell_count
+
 
 gotm
 ~~~~

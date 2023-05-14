@@ -1,10 +1,12 @@
 import os
+import time
 from importlib.resources import contents
 
 from compass.model import run_model
 from compass.ocean.tests.global_ocean.metadata import (
     add_mesh_and_init_metadata,
 )
+from compass.ocean.tests.global_ocean.tasks import get_ntasks_from_cell_count
 from compass.step import Step
 from compass.testcase import TestCase
 
@@ -25,13 +27,18 @@ class ForwardStep(Step):
     time_integrator : {'split_explicit', 'RK4'}
         The time integrator to use for the forward run
 
-    resources_from_config : bool
-        Whether to get ``ntasks``, ``min_tasks`` and ``openmp_threads`` from
-        config options
+    dynamic_ntasks : bool
+        Whether the target and minimum number of MPI tasks (``ntasks`` and
+        ``min_tasks``) are computed dynamically from the number of cells
+        in the mesh
+
+    get_dt_from_min_res : bool
+        Whether to automatically compute `config_dt` and `config_btr_dt`
+        namelist options from the minimum resolution of the mesh
     """
-    def __init__(self, test_case, mesh, init, time_integrator, name='forward',
-                 subdir=None, ntasks=None, min_tasks=None,
-                 openmp_threads=None):
+    def __init__(self, test_case, mesh, time_integrator, init=None,
+                 name='forward', subdir=None, ntasks=None, min_tasks=None,
+                 openmp_threads=None, get_dt_from_min_res=True):
         """
         Create a new step
 
@@ -43,11 +50,11 @@ class ForwardStep(Step):
         mesh : compass.ocean.tests.global_ocean.mesh.Mesh
             The test case that produces the mesh for this run
 
-        init : compass.ocean.tests.global_ocean.init.Init
-            The test case that produces the initial condition for this run
-
         time_integrator : {'split_explicit', 'RK4'}
             The time integrator to use for the forward run
+
+        init : compass.ocean.tests.global_ocean.init.Init, optional
+            The test case that produces the initial condition for this run
 
         name : str, optional
             the name of the step
@@ -66,6 +73,10 @@ class ForwardStep(Step):
 
         openmp_threads : int, optional
             the number of OpenMP threads the step will use
+
+        get_dt_from_min_res : bool
+            Whether to automatically compute `config_dt` and `config_btr_dt`
+            namelist options from the minimum resolution of the mesh
         """
         self.mesh = mesh
         self.init = init
@@ -79,7 +90,9 @@ class ForwardStep(Step):
         if (ntasks is None) != (openmp_threads is None):
             raise ValueError('You must specify both ntasks and openmp_threads '
                              'or neither.')
-        self.resources_from_config = ntasks is None
+
+        self.dynamic_ntasks = (ntasks is None and min_tasks is None)
+        self.get_dt_from_min_res = get_dt_from_min_res
 
         # make sure output is double precision
         self.add_streams_file('compass.ocean.streams', 'streams.output')
@@ -93,7 +106,7 @@ class ForwardStep(Step):
             self.add_namelist_file(
                 'compass.ocean.tests.global_ocean', 'namelist.wisc')
 
-        if init.with_bgc:
+        if init is not None and init.with_bgc:
             self.add_namelist_file(
                 'compass.ocean.tests.global_ocean', 'namelist.bgc')
             self.add_streams_file(
@@ -113,37 +126,74 @@ class ForwardStep(Step):
             if mesh_stream in mesh_package_contents:
                 self.add_streams_file(mesh_package, mesh_stream)
 
-        if mesh.with_ice_shelf_cavities:
-            initial_state_target = \
-                f'{init.path}/ssh_adjustment/adjusted_init.nc'
-        else:
-            initial_state_target = \
-                f'{init.path}/initial_state/initial_state.nc'
-        self.add_input_file(filename='init.nc',
-                            work_dir_target=initial_state_target)
-        self.add_input_file(
-            filename='forcing_data.nc',
-            work_dir_target=f'{init.path}/initial_state/'
-                            f'init_mode_forcing_data.nc')
-        self.add_input_file(
-            filename='graph.info',
-            work_dir_target=f'{init.path}/initial_state/graph.info')
+        if init is not None:
+            if mesh.with_ice_shelf_cavities:
+                initial_state_target = \
+                    f'{init.path}/ssh_adjustment/adjusted_init.nc'
+            else:
+                initial_state_target = \
+                    f'{init.path}/initial_state/initial_state.nc'
+            self.add_input_file(filename='init.nc',
+                                work_dir_target=initial_state_target)
+            self.add_input_file(
+                filename='forcing_data.nc',
+                work_dir_target=f'{init.path}/initial_state/'
+                                f'init_mode_forcing_data.nc')
+            self.add_input_file(
+                filename='graph.info',
+                work_dir_target=f'{init.path}/initial_state/graph.info')
 
         self.add_model_as_input()
 
     def setup(self):
         """
-        Set up the test case in the work directory, including downloading any
-        dependencies
+        Set the number of MPI tasks and the time step based on config options
         """
-        self._get_resources()
+        config = self.config
+        self.dynamic_ntasks = (self.ntasks is None and self.min_tasks is None)
+
+        if self.dynamic_ntasks:
+            mesh_filename = os.path.join(self.work_dir, 'init.nc')
+            self.ntasks, self.min_tasks = get_ntasks_from_cell_count(
+                config=config, at_setup=True, mesh_filename=mesh_filename)
+            self.openmp_threads = config.getint('global_ocean',
+                                                'forward_threads')
+
+        if self.get_dt_from_min_res:
+            dt, btr_dt = self._get_dts()
+            if self.time_integrator == 'split_explicit':
+                self.add_namelist_options({'config_dt': dt,
+                                           'config_btr_dt': btr_dt})
+            else:
+                # RK4, so use the smaller time step
+                self.add_namelist_options({'config_dt': btr_dt})
 
     def constrain_resources(self, available_resources):
         """
         Update resources at runtime from config options
         """
-        self._get_resources()
+        config = self.config
+        if self.dynamic_ntasks:
+            mesh_filename = os.path.join(self.work_dir, 'init.nc')
+            self.ntasks, self.min_tasks = get_ntasks_from_cell_count(
+                config=config, at_setup=False, mesh_filename=mesh_filename)
+            self.openmp_threads = config.getint('global_ocean',
+                                                'forward_threads')
         super().constrain_resources(available_resources)
+
+    def runtime_setup(self):
+        """
+        Update the time step based on config options that a user might have
+        changed
+        """
+        if self.get_dt_from_min_res:
+            dt, btr_dt = self._get_dts()
+            if self.time_integrator == 'split_explicit':
+                self.update_namelist_at_runtime({'config_dt': dt,
+                                                 'config_btr_dt': btr_dt})
+            else:
+                # RK4, so use the smaller time step
+                self.update_namelist_at_runtime({'config_dt': btr_dt})
 
     def run(self):
         """
@@ -153,16 +203,24 @@ class ForwardStep(Step):
         add_mesh_and_init_metadata(self.outputs, self.config,
                                    init_filename='init.nc')
 
-    def _get_resources(self):
-        # get the these properties from the config options
-        if self.resources_from_config:
-            config = self.config
-            self.ntasks = config.getint(
-                'global_ocean', 'forward_ntasks')
-            self.min_tasks = config.getint(
-                'global_ocean', 'forward_min_tasks')
-            self.openmp_threads = config.getint(
-                'global_ocean', 'forward_threads')
+    def _get_dts(self):
+        """
+        Get the time step and barotropic time steps
+        """
+        config = self.config
+        # dt is proportional to resolution: default 30 seconds per km
+        dt_per_km = config.getfloat('global_ocean', 'dt_per_km')
+        btr_dt_per_km = config.getfloat('global_ocean', 'btr_dt_per_km')
+        min_res = config.getfloat('global_ocean', 'min_res')
+
+        dt = dt_per_km * min_res
+        # https://stackoverflow.com/a/1384565/7728169
+        dt = time.strftime('%H:%M:%S', time.gmtime(dt))
+
+        btr_dt = btr_dt_per_km * min_res
+        btr_dt = time.strftime('%H:%M:%S', time.gmtime(btr_dt))
+
+        return dt, btr_dt
 
 
 class ForwardTestCase(TestCase):

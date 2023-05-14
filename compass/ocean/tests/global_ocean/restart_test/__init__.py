@@ -1,6 +1,8 @@
+from compass.ocean.tests.global_ocean.forward import (
+    ForwardStep,
+    ForwardTestCase,
+)
 from compass.validate import compare_variables
-from compass.ocean.tests.global_ocean.forward import ForwardTestCase, \
-    ForwardStep
 
 
 class RestartTest(ForwardTestCase):
@@ -42,7 +44,8 @@ class RestartTest(ForwardTestCase):
             name = '{}_run'.format(part)
             step = ForwardStep(test_case=self, mesh=mesh, init=init,
                                time_integrator=time_integrator, name=name,
-                               subdir=name, ntasks=4, openmp_threads=1)
+                               subdir=name, ntasks=4, openmp_threads=1,
+                               get_dt_from_min_res=False)
 
             suffix = '{}.{}'.format(time_integrator.lower(), part)
             step.add_namelist_file(module, 'namelist.{}'.format(suffix))
