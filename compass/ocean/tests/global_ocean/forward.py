@@ -126,6 +126,11 @@ class ForwardStep(Step):
             if mesh_stream in mesh_package_contents:
                 self.add_streams_file(mesh_package, mesh_stream)
 
+        mesh_path = self.mesh.get_cull_mesh_path()
+        self.add_input_file(
+            filename='mesh.nc',
+            work_dir_target=f'{mesh_path}/culled_mesh.nc')
+
         if init is not None:
             if mesh.with_ice_shelf_cavities:
                 initial_state_target = \
@@ -174,7 +179,7 @@ class ForwardStep(Step):
         """
         config = self.config
         if self.dynamic_ntasks:
-            mesh_filename = os.path.join(self.work_dir, 'init.nc')
+            mesh_filename = os.path.join(self.work_dir, 'mesh.nc')
             self.ntasks, self.min_tasks = get_ntasks_from_cell_count(
                 config=config, at_setup=False, mesh_filename=mesh_filename)
             self.openmp_threads = config.getint('global_ocean',
