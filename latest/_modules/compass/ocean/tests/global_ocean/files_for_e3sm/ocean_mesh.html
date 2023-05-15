@@ -171,10 +171,16 @@
                 <span class="n">keep_vars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;minLevelCell&#39;</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
-                <span class="n">keep_vars</span> <span class="o">=</span> <span class="n">keep_vars</span> <span class="o">+</span> <span class="p">[</span>
+                <span class="n">ice_shelf_keep_vars</span> <span class="o">=</span> <span class="p">[</span>
                     <span class="s1">&#39;landIceMask&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceDraft&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceFraction&#39;</span><span class="p">,</span>
                     <span class="s1">&#39;landIceFloatingMask&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceFloatingFraction&#39;</span>
                 <span class="p">]</span>
+                <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">ice_shelf_keep_vars</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
+                        <span class="n">keep_vars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Warning: </span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1"> not present in &#39;</span>
+                                         <span class="sa">f</span><span class="s1">&#39;ocean mesh file.&#39;</span><span class="p">)</span>
 
             <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">keep_vars</span><span class="p">]</span>
             <span class="n">ds</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
