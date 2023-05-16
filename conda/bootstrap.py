@@ -440,13 +440,21 @@ def build_spack_env(config, update_spack, machine, compiler, mpi,  # noqa: C901
     yaml_template = f'{spack_template_path}/{machine}_{compiler}_{mpi}.yaml'
     if not os.path.exists(yaml_template):
         yaml_template = None
+
+    if machine is not None:
+        here = os.path.abspath(os.path.dirname(__file__))
+        machine_config = os.path.join(here, '..', 'compass', 'machines',
+                                      f'{machine}.cfg')
+    else:
+        machine_config = None
+
     if update_spack:
         home_dir = os.path.expanduser('~')
         log_message(logger, 'Removing ~/.spack for safety')
         safe_rmtree(os.path.join(home_dir, '.spack'))
         make_spack_env(spack_path=spack_branch_base, env_name=spack_env,
                        spack_specs=specs, compiler=compiler, mpi=mpi,
-                       machine=machine,
+                       machine=machine, config_file=machine_config,
                        include_e3sm_lapack=include_e3sm_lapack,
                        include_e3sm_hdf5_netcdf=e3sm_hdf5_netcdf,
                        yaml_template=yaml_template, tmpdir=tmpdir)
@@ -462,7 +470,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi,  # noqa: C901
 
     spack_script = get_spack_script(
         spack_path=spack_branch_base, env_name=spack_env, compiler=compiler,
-        mpi=mpi, shell='sh', machine=machine,
+        mpi=mpi, shell='sh', machine=machine, config_file=machine_config,
         include_e3sm_lapack=include_e3sm_lapack,
         include_e3sm_hdf5_netcdf=e3sm_hdf5_netcdf,
         yaml_template=yaml_template)
