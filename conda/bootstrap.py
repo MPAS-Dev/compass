@@ -14,7 +14,6 @@ import progressbar
 from jinja2 import Template
 from mache import MachineInfo, discover_machine
 from mache.spack import get_spack_script, make_spack_env
-from mache.version import __version__ as mache_version
 from shared import (
     check_call,
     get_conda_base,
@@ -394,7 +393,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
     petsc = config.get('deploy', 'petsc')
     scorpio = config.get('deploy', 'scorpio')
 
-    spack_branch_base = f'{spack_base}/spack_for_mache_{mache_version}'
+    spack_branch_base = f'{spack_base}/{spack_env}'
 
     specs = list()
 
