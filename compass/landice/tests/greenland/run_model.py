@@ -89,9 +89,6 @@ class RunModel(Step):
             self.add_input_file(filename='albany_input.yaml',
                                 package='compass.landice.tests.greenland',
                                 copy=True)
-            self.add_input_file(filename='albany_schoof_input.yaml',
-                                package='compass.landice.tests.greenland',
-                                copy=True)
 
         self.add_model_as_input()
 

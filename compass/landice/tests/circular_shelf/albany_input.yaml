@@ -8,6 +8,8 @@ ANONYMOUS:
       Type: 'Glen''s Law'
       Flow Rate Type: Uniform
 
+    Cubature Degree: 4
+
 # Discretization Description
   Discretization:
     #Exodus Output File Name: albany_output.exo
@@ -56,7 +58,7 @@ ANONYMOUS:
           Rescue Bad Newton Solve: true
           Linear Solver:
             Write Linear System: false
-            Tolerance: 1.0e-8
+            Tolerance: 1.0e-9
 
           Stratimikos Linear Solver:
             Stratimikos:
@@ -64,14 +66,6 @@ ANONYMOUS:
 #             Linear Solver Information
               Linear Solver Type: Belos
               Linear Solver Types:
-                AztecOO:
-                  Forward Solve:
-                    AztecOO Settings:
-                      Aztec Solver: GMRES
-                      Convergence Test: r0
-                      Size of Krylov Subspace: 200
-                      Output Frequency: 20
-                    Max Iterations: 200
                 Belos:
                   Solver Type: Block GMRES
                   Solver Types:

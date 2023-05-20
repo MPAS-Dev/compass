@@ -12,7 +12,6 @@ ANONYMOUS:
         Regularization Value: 1.0e-4
     LandIce BCs:
       BC 0:
-        Cubature Degree: 8
         Basal Friction Coefficient:
           Type: Power Law
           Power Exponent: 0.2
@@ -21,6 +20,9 @@ ANONYMOUS:
           Effective Pressure: 1.0
           # Zero Effective Pressure On Floating Ice At Nodes: true
           Zero Beta On Floating Ice: true
+    
+    Cubature Degree: 4
+    Basal Cubature Degree: 8
 
 # Discretization Description
   Discretization:
@@ -77,14 +79,6 @@ ANONYMOUS:
 #             Linear Solver Information
               Linear Solver Type: Belos
               Linear Solver Types:
-                AztecOO:
-                  Forward Solve:
-                    AztecOO Settings:
-                      Aztec Solver: GMRES
-                      Convergence Test: r0
-                      Size of Krylov Subspace: 200
-                      Output Frequency: 20
-                    Max Iterations: 200
                 Belos:
                   Solver Type: Block GMRES
                   Solver Types:
