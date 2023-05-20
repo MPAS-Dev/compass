@@ -51,6 +51,25 @@ class Humboldt(TestGroup):
                                 mesh_type=mesh_type,
                                 damage='threshold',
                                 face_melt=True))
+                    
+        for velo_solver in ['FO']:
+            self.add_test_case(
+                    DecompositionTest(test_group=self,
+                                      velo_solver=velo_solver,
+                                      calving_law='von_Mises_stress',
+                                      mesh_type=mesh_type,
+                                      damage='threshold',
+                                      face_melt=True,
+                                      depth_integrated=True))
+
+            self.add_test_case(
+                    RestartTest(test_group=self,
+                                velo_solver=velo_solver,
+                                calving_law='von_Mises_stress',
+                                mesh_type=mesh_type,
+                                damage='threshold',
+                                face_melt=True,
+                                depth_integrated=True))
 
         # Create decomp and restart tests for all calving laws.
         # Note that FO velo solver is NOT BFB across decompositions

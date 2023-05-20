@@ -10,7 +10,7 @@ class DecompositionTest(TestCase):
     results of the two runs are identical.
     """
 
-    def __init__(self, test_group):
+    def __init__(self, test_group, depth_integrated=False):
         """
         Create the test case
 
@@ -18,9 +18,16 @@ class DecompositionTest(TestCase):
         ----------
         test_group : compass.landice.tests.thwaites.Thwaites
             The test group that this test case belongs to
+        
+        depth_integrated  : bool
+            Whether the (FO) velocity model is depth integrated
 
         """
-        name = 'decomposition_test'
+        if depth_integrated is True:
+            name = 'fo-depthInt_decomposition_test'
+        else:
+            name = 'fo_decomposition_test'
+        
         super().__init__(test_group=test_group, name=name)
 
         self.cores_set = [16, 32]
@@ -28,8 +35,8 @@ class DecompositionTest(TestCase):
         for procs in self.cores_set:
             name = '{}proc_run'.format(procs)
             self.add_step(
-                RunModel(test_case=self, name=name, ntasks=procs,
-                         min_tasks=procs, openmp_threads=1))
+                RunModel(test_case=self, name=name, depth_integrated=depth_integrated, 
+                         ntasks=procs, min_tasks=procs, openmp_threads=1))
 
     # no configure() method is needed
 

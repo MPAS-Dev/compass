@@ -27,6 +27,9 @@ class DecompositionTest(TestCase):
 
     face_melt : bool
         Whether to include face melting
+    
+    depth_integrated  : bool
+        Whether the (FO) velocity model is depth integrated
 
     proc_list : list
         The pair of processor count values to test over.
@@ -34,7 +37,7 @@ class DecompositionTest(TestCase):
     """
 
     def __init__(self, test_group, velo_solver, calving_law, mesh_type,
-                 damage=None, face_melt=False):
+                 damage=None, face_melt=False, depth_integrated=False):
         """
         Create the test case
 
@@ -57,6 +60,9 @@ class DecompositionTest(TestCase):
 
         face_melt : bool
             Whether to include face melting
+        
+        depth_integrated  : bool
+            Whether the (FO) velocity model is depth integrated
         """
         name = 'decomposition_test'
         self.mesh_type = mesh_type
@@ -68,8 +74,11 @@ class DecompositionTest(TestCase):
         self.face_melt = face_melt
 
         # build dir name.  always include velo solver and calving law
-        subdir = 'mesh-{}_decomposition_test/velo-{}_calving-{}'.format(
-                 mesh_type, velo_solver.lower(), calving_law.lower())
+        subdir = 'mesh-{}_decomposition_test/velo-{}'.format(
+                 mesh_type, velo_solver.lower())
+        if velo_solver == 'FO' and depth_integrated is True:
+                 subdir += '-depthInt'
+        subdir += '_calving-{}'.format(calving_law.lower())
         # append damage and facemelt if provided
         if damage is not None:
             subdir += '_damage-{}'.format(damage)
@@ -90,6 +99,7 @@ class DecompositionTest(TestCase):
                          calving_law=self.calving_law,
                          damage=self.damage,
                          face_melt=self.face_melt,
+                         depth_integrated=depth_integrated,
                          mesh_type=mesh_type))
 
     # no configure() method is needed

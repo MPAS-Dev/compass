@@ -37,6 +37,7 @@ class RunModel(Step):
                  calving_law=None,
                  damage=None,
                  face_melt=False,
+                 depth_integrated=False,
                  subdir=None, ntasks=1,
                  min_tasks=None, openmp_threads=1, suffixes=None):
         """
@@ -56,11 +57,14 @@ class RunModel(Step):
             'floating', 'eigencalving', 'specified_calving_velocity',
             'von_Mises_stress', 'damagecalving', 'ismip6_retreat'
 
-        damage : str
+        damage : str, optional
             The damage method used for the test case
 
-        face_melt : bool
+        face_melt : bool, optional
             Whether to include face melting
+        
+        depth_integrated : bool, optional
+            Whether the (FO) velocity model is depth integrated
 
         mesh_type : {'1km', '3km'}
             The resolution or mesh type of the test case
@@ -133,7 +137,14 @@ class RunModel(Step):
                             database='')
 
         if velo_solver == 'FO':
-            self.add_input_file(filename='albany_input.yaml',
+
+            if depth_integrated:
+                self.add_input_file(filename='albany_input.yaml',
+                                target='albany_input_depthInt.yaml',
+                                package='compass.landice.tests.humboldt',
+                                copy=True)
+            else:
+                self.add_input_file(filename='albany_input.yaml',
                                 package='compass.landice.tests.humboldt',
                                 copy=True)
 

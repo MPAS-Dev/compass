@@ -16,8 +16,10 @@ class Thwaites(TestGroup):
         """
         super().__init__(mpas_core=mpas_core, name='thwaites')
 
-        self.add_test_case(DecompositionTest(test_group=self))
+        self.add_test_case(DecompositionTest(test_group=self, depth_integrated=False))
+        self.add_test_case(DecompositionTest(test_group=self, depth_integrated=True))
 
-        self.add_test_case(RestartTest(test_group=self))
+        self.add_test_case(RestartTest(test_group=self, depth_integrated=False))
+        self.add_test_case(RestartTest(test_group=self, depth_integrated=True))
 
         self.add_test_case(MeshGen(test_group=self))

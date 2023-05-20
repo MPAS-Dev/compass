@@ -22,10 +22,13 @@ class RestartTest(TestCase):
 
     face_melt : bool
         Whether to include face melting
+    
+    depth_integrated  : bool
+        Whether the (FO) velocity model is depth integrated
     """
 
     def __init__(self, test_group, velo_solver, calving_law, mesh_type,
-                 damage=None, face_melt=False):
+                 damage=None, face_melt=False, depth_integrated=False):
         """
         Create the test case
 
@@ -48,6 +51,9 @@ class RestartTest(TestCase):
 
         face_melt : bool
             Whether to include face melting
+        
+        depth_integrated  : bool
+            Whether the (FO) velocity model is depth integrated
         """
         name = 'restart_test'
         self.mesh_type = mesh_type
@@ -59,8 +65,11 @@ class RestartTest(TestCase):
         self.face_melt = face_melt
 
         # build dir name.  always include velo solver and calving law
-        subdir = 'mesh-{}_restart_test/velo-{}_calving-{}'.format(
-                 mesh_type, velo_solver.lower(), calving_law.lower())
+        subdir = 'mesh-{}_restart_test/velo-{}'.format(
+                 mesh_type, velo_solver.lower())
+        if velo_solver == 'FO' and depth_integrated is True:
+                 subdir += '-depthInt'
+        subdir += '_calving-{}'.format(calving_law.lower())
         # append damage and facemelt if provided
         if damage is not None:
             subdir += '_damage-{}'.format(damage)
@@ -75,6 +84,7 @@ class RestartTest(TestCase):
                         calving_law=self.calving_law,
                         damage=self.damage,
                         face_melt=self.face_melt,
+                        depth_integrated=depth_integrated,
                         mesh_type=mesh_type)
         # modify the namelist options and streams file
         step.add_namelist_file(
@@ -92,6 +102,7 @@ class RestartTest(TestCase):
                         damage=self.damage,
                         face_melt=self.face_melt,
                         mesh_type=mesh_type,
+                        depth_integrated=depth_integrated,
                         suffixes=['landice', 'landice.rst'])
 
         # modify the namelist options and streams file
