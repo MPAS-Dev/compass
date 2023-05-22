@@ -192,7 +192,7 @@ class RunModel(Step):
             if hydro is True:
                 streams_template_name = 'streams.landice.hydro.template'
             else:
-                streams_template_name = 'streams.landice.hydro.template'
+                streams_template_name = 'streams.landice.template'
             self.add_streams_file(
                 'compass.landice.tests.humboldt', streams_template_name,
                 out_name='streams.{}'.format(suffix),
