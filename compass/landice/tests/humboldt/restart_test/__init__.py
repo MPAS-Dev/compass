@@ -100,10 +100,17 @@ class RestartTest(TestCase):
                         depth_integrated=depth_integrated,
                         hydro=self.hydro,
                         mesh_type=mesh_type)
+        # Hydro model restart tests should be shorter duration to keep the
+        # tests to a reasonable runtime.  Different nl templates have been
+        # set up for that
+        if self.hydro is True:
+            nl1 = 'namelist.full.hydro'
+        else:
+            nl1 = 'namelist.full'
         # modify the namelist options and streams file
         step.add_namelist_file(
             'compass.landice.tests.humboldt.restart_test',
-            'namelist.full', out_name='namelist.landice')
+            nl1, out_name='namelist.landice')
         step.add_streams_file(
             'compass.landice.tests.humboldt.restart_test',
             'streams.full', out_name='streams.landice')
@@ -120,17 +127,26 @@ class RestartTest(TestCase):
                         depth_integrated=depth_integrated,
                         suffixes=['landice', 'landice.rst'])
 
+        # Hydro model restart tests should be shorter duration to keep the
+        # tests to a reasonable runtime.  Different nl templates have been
+        # set up for that
+        if self.hydro is True:
+            nl1 = 'namelist.restart.hydro'
+            nl2 = 'namelist.restart.rst.hydro'
+        else:
+            nl1 = 'namelist.restart'
+            nl2 = 'namelist.restart.rst'
         # modify the namelist options and streams file
         step.add_namelist_file(
             'compass.landice.tests.humboldt.restart_test',
-            'namelist.restart', out_name='namelist.landice')
+            nl1, out_name='namelist.landice')
         step.add_streams_file(
             'compass.landice.tests.humboldt.restart_test',
             'streams.restart', out_name='streams.landice')
 
         step.add_namelist_file(
             'compass.landice.tests.humboldt.restart_test',
-            'namelist.restart.rst', out_name='namelist.landice.rst')
+            nl2, out_name='namelist.landice.rst')
         step.add_streams_file(
             'compass.landice.tests.humboldt.restart_test',
             'streams.restart.rst', out_name='streams.landice.rst')
