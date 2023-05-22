@@ -132,7 +132,7 @@ class RunModel(Step):
             self.mesh_file = 'Humboldt_1to10km_r04_20210615.nc'
             self.forcing_file = 'Humboldt_1to10km_MIROC5-rcp85_ismip-gis.nc'
         elif self.mesh_type == '3km':
-            self.mesh_file = 'Humboldt_3to30km_r04_20210615.nc'
+            self.mesh_file = 'Humboldt_3to30km_r04_20230522.nc'
             self.forcing_file = 'Humboldt_3to30km_MIROC5-rcp85_ismip6-gis.nc'
         self.add_input_file(filename=self.mesh_file, target=self.mesh_file,
                             database='')
@@ -165,8 +165,9 @@ class RunModel(Step):
                 self.add_namelist_file(
                     'compass.landice.tests.humboldt', 'namelist.landice',
                     out_name='namelist.{}'.format(suffix))
-                options = {'config_velocity_solver': "'{}'".format(velo_solver),
-                           'config_calving': "'{}'".format(calving_law)}
+                options = {
+                    'config_velocity_solver': "'{}'".format(velo_solver),
+                    'config_calving': "'{}'".format(calving_law)}
                 # optionally add damage and facemelt options if included
                 if damage == 'threshold':
                     options['config_calculate_damage'] = '.true.'
@@ -175,15 +176,16 @@ class RunModel(Step):
                 if face_melt is True:
                     options['config_front_mass_bal_grounded'] = "'ismip6'"
                     # Assuming that if have this on, this is a 'full physics'
-                    # run and we want to keep it cheaper to allow it to be run in
-                    # the full integration suite, so we increase the dt if a
-                    # 3km run.
+                    # run and we want to keep it cheaper to allow it to be run
+                    # in the full integration suite, so we increase the dt if
+                    # a 3km run.
                     # NOTE: This could lead to confusion!
                     if self.mesh_type == '3km':
                         options['config_dt'] = "'0000-06-00_00:00:00'"
                 # now add accumulated options to namelist
-                self.add_namelist_options(options=options,
-                                          out_name='namelist.{}'.format(suffix))
+                self.add_namelist_options(
+                    options=options,
+                    out_name='namelist.{}'.format(suffix))
 
             stream_replacements = {'HUMBOLDT_INPUT_FILE': self.mesh_file,
                                    'HUMBOLDT_FORCING_FILE': self.forcing_file}
