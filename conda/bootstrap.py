@@ -383,8 +383,9 @@ def get_env_vars(machine, compiler, mpilib):
     return env_vars
 
 
-def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
-                    spack_base, spack_template_path, env_vars, tmpdir, logger):
+def build_spack_env(config, update_spack, machine, compiler, mpi,  # noqa: C901
+                    spack_env, spack_base, spack_template_path, env_vars,
+                    tmpdir, logger):
 
     albany = config.get('deploy', 'albany')
     cmake = config.get('deploy', 'cmake')
@@ -392,6 +393,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
     lapack = config.get('deploy', 'lapack')
     petsc = config.get('deploy', 'petsc')
     scorpio = config.get('deploy', 'scorpio')
+    parallelio = config.get('deploy', 'parallelio')
 
     spack_branch_base = f'{spack_base}/{spack_env}'
 
@@ -413,7 +415,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
             f'"parallel-netcdf@{pnetcdf}+cxx+fortran"'])
 
     if esmf != 'None':
-        specs.append(f'"esmf@{esmf}+mpi+netcdf+pnetcdf"')
+        specs.append(f'"esmf@{esmf}+mpi+netcdf+pnetcdf+external-parallelio"')
     if lapack != 'None':
         specs.append(f'"netlib-lapack@{lapack}"')
         include_e3sm_lapack = False
@@ -426,6 +428,11 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
         specs.append(
             f'"scorpio'
             f'@{scorpio}+pnetcdf~timing+internal-timing~tools+malloc"')
+
+    if parallelio != 'None':
+        specs.append(
+            f'"parallelio'
+            f'@{parallelio}+pnetcdf~timing"')
 
     if albany != 'None':
         specs.append(f'"albany@{albany}+mpas"')
@@ -464,6 +471,10 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
                  f'{spack_env}/.spack-env/view'
     env_vars = f'{env_vars}' \
                f'export PIO={spack_view}\n'
+    if parallelio != 'None':
+        env_vars = \
+            f'{env_vars}' \
+            f'export HAVE_ADIOS=false\n'
     if albany != 'None':
         albany_flag_filename = f'{spack_view}/export_albany.in'
         if not os.path.exists(albany_flag_filename):
