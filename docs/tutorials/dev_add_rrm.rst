@@ -421,3 +421,74 @@ can look at the the culled mesh in ParaVeiw by copying
 
 Here, we have placed a white sphere inside the mesh so the land regions are
 easier to see.  After culling, the land just appears as holes in the mesh.
+
+.. _dev_tutorial_add_rrm_ec_base_mesh:
+
+Switching to an EC30to60 base resolution
+----------------------------------------
+
+Returning to the terminal where we are developing the code, let's make the mesh
+more interesting.
+
+So far, all E3SM ocean and sea-ice RRMs start with the EC30to60 (eddy-closure
+30 to 60 km) mesh as their base resolution.  Let's do the same here. Starting
+from the base of your development branch:
+
+.. code-block:: bash
+
+    cd compass/ocean/tests/global_ocean/mesh/yam10to60
+    vim __init__.py
+
+We will replace the constant 60-km mesh resolution with a latitude-dependent
+function from the
+`mesh_definition_tools <http://mpas-dev.github.io/MPAS-Tools/stable/mesh_creation.html#mesh-definition-tools>`_
+module from MPAS-Tools. The default EC mesh has resolutions of 35 km at the
+poles, 60 km at mid-latitudes and 30 km at the equator.
+
+.. code-block:: python
+    :emphasize-lines: 1, 17-18
+
+    import mpas_tools.mesh.creation.mesh_definition_tools as mdt
+    import numpy as np
+
+    from compass.mesh import QuasiUniformSphericalMeshStep
+
+
+    class YAM10to60BaseMesh(QuasiUniformSphericalMeshStep):
+
+        ...
+
+        def build_cell_width_lat_lon(self):
+
+            ...
+
+            lat = np.linspace(-90., 90., nlat)
+
+            cell_width_vs_lat = mdt.EC_CellWidthVsLat(lat)
+            cell_width = np.outer(cell_width_vs_lat, np.ones([1, lon.size]))
+
+            return cell_width, lon, lat
+
+At this point, you can set up and test again like you did in
+:ref:`dev_tutorial_add_rrm_test_mesh`, but this time you will want to use
+a different work directory name, e.g.:
+
+.. code-block:: bash
+
+    compass setup -n 254 \
+        -p E3SM-Project/components/mpas-ocean/ \
+        -w /lcrc/group/e3sm/${USER}/compass_tests/tests_20230527/yam10to60_ec
+
+Switch back to your other terminal to submit the job and look at the results.
+The map of resolution in ``base_mesh/cellWidthGlobal.png`` should look like:
+
+.. image:: images/ec30to60.png
+   :width: 500 px
+   :align: center
+
+After culling, the mesh in ``culled_mesh/culled_mesh_vtk/staticFieldsOnCells.vtp``
+should look like:
+
+.. image:: images/ec30to60_culled_paraview.png
+   :width: 500 px
+   :align: center
