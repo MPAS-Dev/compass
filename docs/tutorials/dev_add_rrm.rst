@@ -1250,3 +1250,244 @@ You should see something a lot like this:
 If these tests aren't successful, you'll probably need some expert help from
 the E3SM Ocean Team, but you can take a look at the log files and see if you
 can diagnose any issues yourself.
+
+.. _dev_tutorial_add_rrm_add_dyn_adj:
+
+Adding a dynamic adjustment test
+--------------------------------
+
+The initial condition we generated in the last section starts with the ocean
+at rest.  This state is not consistent with the density profile, so there
+will be a period of a few months of rapid adjustment involving dissipation of
+energetic wave dissipation and acceleration of currents.  We call this period
+"dynamic adjustment" because the term "spin up" is reserved in Earth system
+modeling for reaching a quasi-equilibrium over many centuries.
+
+Dynamic adjustment is something of an art, and requires some trial and error
+in many cases.  The basic idea is that we begin with a shorter time step than
+we hope to be able to use in production simulations and also with some fairly
+strong momentum dissipation.  We run forward in time, monitoring the CFL
+number and the kinetic energy, which can each tell us if things are going
+awry. After several days of simulation, waves have hopefully dissipated to
+the point that we can increase the time step and/or decrease the level of
+damping.
+
+We need to create a new subdirectory and add a new class for the dynamic
+adjustment test case.  From the branch root:
+
+.. code-block:: bash
+
+    cd compass/ocean/tests/global_ocean/mesh/yam10to60
+    mkdir dynamic_adjustment
+    cd dynamic_adjustment
+    vim __init__.py
+
+.. code-block:: python
+
+    from compass.ocean.tests.global_ocean.dynamic_adjustment import (
+        DynamicAdjustment,
+    )
+    from compass.ocean.tests.global_ocean.forward import ForwardStep
+
+
+    class YAM10to60DynamicAdjustment(DynamicAdjustment):
+        """
+        A test case performing dynamic adjustment (dissipating fast-moving waves)
+        from an initial condition on the YAM10to60 MPAS-Ocean mesh
+
+        Attributes
+        ----------
+        restart_filenames : list of str
+            A list of restart files from each dynamic-adjustment step
+        """
+
+        def __init__(self, test_group, mesh, init, time_integrator):
+            """
+            Create the test case
+
+            Parameters
+            ----------
+            test_group : compass.ocean.tests.global_ocean.GlobalOcean
+                The global ocean test group that this test case belongs to
+
+            mesh : compass.ocean.tests.global_ocean.mesh.Mesh
+                The test case that produces the mesh for this run
+
+            init : compass.ocean.tests.global_ocean.init.Init
+                The test case that produces the initial condition for this run
+
+            time_integrator : {'split_explicit', 'RK4'}
+                The time integrator to use for the forward run
+            """
+            if time_integrator != 'split_explicit':
+                raise ValueError(f'{mesh.mesh_name} dynamic adjustment not '
+                                 f'defined for {time_integrator}')
+
+            restart_times = ['0001-01-03_00:00:00']
+            restart_filenames = [
+                f'restarts/rst.{restart_time.replace(":", ".")}.nc'
+                for restart_time in restart_times]
+
+            super().__init__(test_group=test_group, mesh=mesh, init=init,
+                             time_integrator=time_integrator,
+                             restart_filenames=restart_filenames)
+
+            module = self.__module__
+
+            shared_options = \
+                {'config_AM_globalStats_enable': '.true.',
+                 'config_AM_globalStats_compute_on_startup': '.true.',
+                 'config_AM_globalStats_write_on_startup': '.true.',
+                 'config_use_activeTracers_surface_restoring': '.true.'}
+
+            # first step
+            step_name = 'damped_adjustment_1'
+            step = ForwardStep(test_case=self, mesh=mesh, init=init,
+                               time_integrator=time_integrator, name=step_name,
+                               subdir=step_name, get_dt_from_min_res=False)
+
+            namelist_options = {
+                'config_run_duration': "'00-00-02_00:00:00'",
+                'config_dt': "'00:03:00'",
+                'config_btr_dt': "'00:00:06'",
+                'config_implicit_bottom_drag_type': "'constant_and_rayleigh'",
+                'config_Rayleigh_damping_coeff': '1.0e-4'}
+            namelist_options.update(shared_options)
+            step.add_namelist_options(namelist_options)
+
+            stream_replacements = {
+                'output_interval': '00-00-10_00:00:00',
+                'restart_interval': '00-00-02_00:00:00'}
+            step.add_streams_file(module, 'streams.template',
+                                  template_replacements=stream_replacements)
+
+            step.add_output_file(filename=f'../{restart_filenames[0]}')
+            self.add_step(step)
+
+This sets up one step called ``damped_adjustment_1`` that runs for 2 days
+with 3-minute time steps (we hope to run with a 5 or 6 minute time steps once
+we're fully adjusted, given the 10-km minimum resolution), 6-second
+subcycling (barotropic or ``btr``) time step, and a strong Rayleigh damping
+of 1e-4.  Since we're running for 2 days, we set the restart interval to 2
+days.
+
+We have enabled global stats (``config_AM_globalStats_enable = .true.``) so
+we can monitor the progress more easily.
+
+We have also set up a set of streams for writing out data as we go.  The
+``streams.template`` file that we will modify looks something like this:
+
+.. code-block:: bash
+
+    vim streams.template
+
+.. code-block:: xml
+
+    <streams>
+
+    <stream name="output"
+            output_interval="{{ output_interval }}"/>
+    <immutable_stream name="restart"
+                      filename_template="../restarts/rst.$Y-$M-$D_$h.$m.$s.nc"
+                      output_interval="{{ restart_interval }}"/>
+
+    <stream name="globalStatsOutput"
+            output_interval="0000_00:00:01"/>
+
+    </streams>
+
+The ``output_interval`` and ``restart_interval`` will get replaced with
+different values in different steps as we add them.
+
+We need to add the dynamic adjustment test case to the ``global_ocean`` test
+group:
+
+.. code-block:: bash
+
+    cd ../../../
+    vim __init__.py
+
+.. code-block:: python
+    :emphasize-lines: 6-8, 38-42
+
+    ...
+
+    from compass.ocean.tests.global_ocean.mesh.wc14.dynamic_adjustment import (
+        WC14DynamicAdjustment,
+    )
+    from compass.ocean.tests.global_ocean.mesh.yam10to60.dynamic_adjustment import ( # noqa: E501
+        YAM10to60DynamicAdjustment,
+    )
+    from compass.ocean.tests.global_ocean.monthly_output_test import (
+        MonthlyOutputTest,
+    )
+
+    ...
+
+    class GlobalOcean(TestGroup):
+
+        ...
+
+        def __init__(self, mpas_core):
+
+            ...
+
+            for mesh_name in ['YAM10to60', 'YAMwISC10to60']:
+                mesh_test = Mesh(test_group=self, mesh_name=mesh_name,
+                                 remap_topography=True)
+                self.add_test_case(mesh_test)
+
+                init_test = Init(test_group=self, mesh=mesh_test,
+                                 initial_condition='WOA23',
+                                 with_bgc=False)
+                self.add_test_case(init_test)
+
+                self.add_test_case(
+                    PerformanceTest(
+                        test_group=self, mesh=mesh_test, init=init_test,
+                        time_integrator='split_explicit'))
+
+                dynamic_adjustment_test = YAM10to60DynamicAdjustment(
+                    test_group=self, mesh=mesh_test, init=init_test,
+                    time_integrator='split_explicit')
+                self.add_test_case(dynamic_adjustment_test)
+
+            # A test case for making E3SM support files from an existing mesh
+            self.add_test_case(FilesForE3SM(test_group=self))
+
+        ...
+
+Let's see if the test cases show up:
+
+.. code-block:: bash
+
+    compass list | grep YAM
+
+You should see something like:
+
+.. code-block::
+
+     254: ocean/global_ocean/YAM10to60/mesh
+     255: ocean/global_ocean/YAM10to60/WOA23/init
+     256: ocean/global_ocean/YAM10to60/WOA23/performance_test
+     257: ocean/global_ocean/YAM10to60/WOA23/dynamic_adjustment
+     258: ocean/global_ocean/YAMwISC10to60/mesh
+     259: ocean/global_ocean/YAMwISC10to60/WOA23/init
+     260: ocean/global_ocean/YAMwISC10to60/WOA23/performance_test
+     261: ocean/global_ocean/YAMwISC10to60/WOA23/dynamic_adjustment
+
+Okay, everything looks good. Let's set up and run the ``dynamic_adjustment`` test:
+
+.. code-block:: bash
+
+    compass setup -n 257 \
+        -p E3SM-Project/components/mpas-ocean/ \
+        -w /lcrc/group/e3sm/${USER}/compass_tests/tests_20230527/yam10to60_final
+
+Switch back to your other terminal to submit the job.
+
+.. code-block:: bash
+
+    cd /lcrc/group/e3sm/${USER}/compass_tests/tests_20230527/yam10to60_final
+    sbatch job_script.custom.sh
+    tail -f compass.o*
