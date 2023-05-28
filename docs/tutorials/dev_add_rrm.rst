@@ -1484,3 +1484,332 @@ Switch back to your other terminal to submit the job.
     cd /lcrc/group/e3sm/${USER}/compass_tests/tests_20230527/yam10to60_final
     sbatch job_script.custom.sh
     tail -f compass.o*
+
+This time, the output should look like:
+
+.. code-block::
+
+    Loading conda environment
+    Done.
+
+    Loading Spack environment...
+    Done.
+
+    ocean/global_ocean/YAM10to60/WOA23/dynamic_adjustment
+      * step: damped_adjustment_1
+      test execution:      SUCCESS
+      test runtime:        10:07
+    Test Runtimes:
+    01:07 PASS ocean_global_ocean_YAM10to60_WOA23_dynamic_adjustment
+    Total runtime 10:07
+    PASS: All passed successfully!
+
+You can also monitor the result by looking at the global statistics:
+
+.. code-block::
+
+    $ cd ocean/global_ocean/YAM10to60/WOA23/dynamic_adjustment/damped_adjustment_1
+    source load_compass_env.sh
+    ncdump -v keCell analysis_members/globalStats*.nc
+    ncdump -v CFLNumberGlobal analysis_members/globalStats*.nc
+
+
+If the ``damped_adjustment_1`` step is successful, it's time to add more steps
+in which we will ramp down damping and then increase the time step. Let's add a
+second step that runs longer (8 days) with less damping:
+
+.. code-block:: bash
+
+    vim __init__.py
+
+.. code-block:: python
+    :emphasize-lines: 11, 18-43
+
+    ...
+
+    class YAM10to60DynamicAdjustment(DynamicAdjustment):
+
+        ...
+
+        def __init__(self, test_group, mesh, init, time_integrator):
+
+            ...
+
+            restart_times = ['0001-01-03_00:00:00', '0001-01-11_00:00:00']
+
+            ...
+
+            step.add_output_file(filename=f'../{restart_filenames[0]}')
+            self.add_step(step)
+
+             # second step
+            step_name = 'damped_adjustment_2'
+            step = ForwardStep(test_case=self, mesh=mesh, init=init,
+                               time_integrator=time_integrator, name=step_name,
+                               subdir=step_name, get_dt_from_min_res=False)
+
+            namelist_options = {
+                'config_run_duration': "'00-00-08_00:00:00'",
+                'config_dt': "'00:03:00'",
+                'config_btr_dt': "'00:00:05'",
+                'config_implicit_bottom_drag_type': "'constant_and_rayleigh'",
+                'config_Rayleigh_damping_coeff': '1.0e-5',
+                'config_do_restart': '.true.',
+                'config_start_time': f"'{restart_times[0]}'"}
+            namelist_options.update(shared_options)
+            step.add_namelist_options(namelist_options)
+
+            stream_replacements = {
+                'output_interval': '00-00-10_00:00:00',
+                'restart_interval': '00-00-02_00:00:00'}
+            step.add_streams_file(module, 'streams.template',
+                                  template_replacements=stream_replacements)
+
+            step.add_input_file(filename=f'../{restart_filenames[0]}')
+            step.add_output_file(filename=f'../{restart_filenames[1]}')
+            self.add_step(step)
+
+You can set up again and test the second step.  In your coding terminal:
+
+.. code-block:: bash
+
+    compass setup -n 257 \
+        -p E3SM-Project/components/mpas-ocean/ \
+        -w /lcrc/group/e3sm/${USER}/compass_tests/tests_20230527/yam10to60_final
+
+Back in your terminal in the work directory:
+
+.. code-block:: bash
+
+    cd /lcrc/group/e3sm/${USER}/compass_tests/tests_20230527/yam10to60_final
+    cd ocean/global_ocean/YAM10to60/WOA23/dynamic_adjustment/damped_adjustment_2
+    sbatch job_script.sh
+    tail -f compass.o*
+
+If that goes okay, let's add a third step that runs for 10 days with even less
+damping.  We can also write out less frequent restarts (every 10 days).  In
+the coding terminal, which should still be in the ``dynamic_adjustment``
+subdirectory:
+
+.. code-block:: bash
+
+    vim __init__.py
+
+.. code-block:: python
+    :emphasize-lines: 11-12, 19-43
+
+    ...
+
+    class YAM10to60DynamicAdjustment(DynamicAdjustment):
+
+        ...
+
+        def __init__(self, test_group, mesh, init, time_integrator):
+
+            ...
+
+            restart_times = ['0001-01-03_00:00:00', '0001-01-11_00:00:00',
+                             '0001-01-21_00:00:00']
+
+            ...
+
+            step.add_input_file(filename=f'../{restart_filenames[0]}')
+            step.add_output_file(filename=f'../{restart_filenames[1]}')
+            self.add_step(step)
+
+            # third step
+            step_name = 'damped_adjustment_3'
+            step = ForwardStep(test_case=self, mesh=mesh, init=init,
+                               time_integrator=time_integrator, name=step_name,
+                               subdir=step_name, get_dt_from_min_res=False)
+
+            namelist_options = {
+                'config_run_duration': "'00-00-10_00:00:00'",
+                'config_dt': "'00:03:00'",
+                'config_btr_dt': "'00:00:06'",
+                'config_implicit_bottom_drag_type': "'constant_and_rayleigh'",
+                'config_Rayleigh_damping_coeff': '1.0e-6',
+                'config_do_restart': '.true.',
+                'config_start_time': f"'{restart_times[1]}'"}
+            namelist_options.update(shared_options)
+            step.add_namelist_options(namelist_options)
+
+            stream_replacements = {
+                'output_interval': '00-00-10_00:00:00',
+                'restart_interval': '00-00-10_00:00:00'}
+            step.add_streams_file(module, 'streams.template',
+                                  template_replacements=stream_replacements)
+
+            step.add_input_file(filename=f'../{restart_filenames[1]}')
+            step.add_output_file(filename=f'../{restart_filenames[2]}')
+            self.add_step(step)
+
+Set up again in the coding terminal:
+
+.. code-block:: bash
+
+    compass setup -n 257 \
+        -p E3SM-Project/components/mpas-ocean/ \
+        -w /lcrc/group/e3sm/${USER}/compass_tests/tests_20230527/yam10to60_final
+
+And run this step in the work-directory terminal:
+
+.. code-block:: bash
+
+    cd /lcrc/group/e3sm/${USER}/compass_tests/tests_20230527/yam10to60_final
+    cd ocean/global_ocean/YAM10to60/WOA23/dynamic_adjustment/damped_adjustment_3
+    sbatch job_script.sh
+    tail -f compass.o*
+
+Now, we add a fourth that runs for 20 days without any damping, back in the
+coding terminal:
+
+.. code-block:: bash
+
+    vim __init__.py
+
+.. code-block:: python
+    :emphasize-lines: 11-12, 19-45
+
+    ...
+
+    class YAM10to60DynamicAdjustment(DynamicAdjustment):
+
+        ...
+
+        def __init__(self, test_group, mesh, init, time_integrator):
+
+            ...
+
+            restart_times = ['0001-01-03_00:00:00', '0001-01-11_00:00:00',
+                             '0001-01-21_00:00:00', '0001-02-10_00:00:00']
+
+            ...
+
+            step.add_input_file(filename=f'../{restart_filenames[1]}')
+            step.add_output_file(filename=f'../{restart_filenames[2]}')
+            self.add_step(step)
+
+            # fourth step
+            step_name = 'damped_adjustment_4'
+            step = ForwardStep(test_case=self, mesh=mesh, init=init,
+                               time_integrator=time_integrator, name=step_name,
+                               subdir=step_name, get_dt_from_min_res=False)
+
+            namelist_options = {
+                'config_run_duration': "'00-00-20_00:00:00'",
+                'config_dt': "'00:03:00'",
+                'config_btr_dt': "'00:00:06'",
+                'config_do_restart': '.true.',
+                'config_start_time': f"'{restart_times[2]}'"}
+            namelist_options.update(shared_options)
+            step.add_namelist_options(namelist_options)
+
+            stream_replacements = {
+                'output_interval': '00-00-10_00:00:00',
+                'restart_interval': '00-00-10_00:00:00'}
+            step.add_streams_file(module, 'streams.template',
+                                  template_replacements=stream_replacements)
+
+            step.add_input_file(filename=f'../{restart_filenames[2]}')
+            step.add_output_file(filename=f'../{restart_filenames[3]}')
+            self.add_step(step)
+
+
+Set up again in the coding terminal:
+
+.. code-block:: bash
+
+    compass setup -n 257 \
+        -p E3SM-Project/components/mpas-ocean/ \
+        -w /lcrc/group/e3sm/${USER}/compass_tests/tests_20230527/yam10to60_final
+
+And run this step in the work-directory terminal:
+
+.. code-block:: bash
+
+    cd /lcrc/group/e3sm/${USER}/compass_tests/tests_20230527/yam10to60_final
+    cd ocean/global_ocean/YAM10to60/WOA23/dynamic_adjustment/damped_adjustment_4
+    sbatch job_script.sh
+    tail -f compass.o*
+
+Finally, we add one more step where we run for 10 more days with a longer
+time step:
+
+.. code-block:: bash
+
+    vim __init__.py
+
+.. code-block:: python
+    :emphasize-lines: 11-13, 20-45
+
+    ...
+
+    class YAM10to60DynamicAdjustment(DynamicAdjustment):
+
+        ...
+
+        def __init__(self, test_group, mesh, init, time_integrator):
+
+            ...
+
+            restart_times = ['0001-01-03_00:00:00', '0001-01-11_00:00:00',
+                             '0001-01-21_00:00:00', '0001-02-10_00:00:00',
+                             '0001-02-20_00:00:00']
+
+            ...
+
+            step.add_input_file(filename=f'../{restart_filenames[2]}')
+            step.add_output_file(filename=f'../{restart_filenames[3]}')
+            self.add_step(step)
+
+            # final step
+            step_name = 'simulation'
+            step = ForwardStep(test_case=self, mesh=mesh, init=init,
+                               time_integrator=time_integrator, name=step_name,
+                               subdir=step_name, get_dt_from_min_res=False)
+
+            namelist_options = {
+                'config_run_duration': "'00-00-10_00:00:00'",
+                'config_dt': "'00:08:00'",
+                'config_btr_dt': "'00:00:15'",
+                'config_do_restart': '.true.',
+                'config_start_time': f"'{restart_times[3]}'"}
+            namelist_options.update(shared_options)
+            step.add_namelist_options(namelist_options)
+
+            stream_replacements = {
+                'output_interval': '00-00-10_00:00:00',
+                'restart_interval': '00-00-10_00:00:00'}
+            step.add_streams_file(module, 'streams.template',
+                                  template_replacements=stream_replacements)
+
+            step.add_input_file(filename=f'../{restart_filenames[3]}')
+            step.add_output_file(filename=f'../{restart_filenames[4]}')
+            step.add_output_file(filename='output.nc')
+            self.add_step(step)
+
+            self.restart_filenames = restart_filenames
+
+Set up again in the coding terminal:
+
+.. code-block:: bash
+
+    compass setup -n 257 \
+        -p E3SM-Project/components/mpas-ocean/ \
+        -w /lcrc/group/e3sm/${USER}/compass_tests/tests_20230527/yam10to60_final
+
+And run this step in the work-directory terminal:
+
+.. code-block:: bash
+
+    cd /lcrc/group/e3sm/${USER}/compass_tests/tests_20230527/yam10to60_final
+    cd ocean/global_ocean/YAM10to60/WOA23/dynamic_adjustment/simulation
+    sbatch job_script.sh
+    tail -f compass.o*
+
+The art of this process goes into how you choose to adjust the time step,
+duration of each of these runs, and the amount of damping.  You may add more
+steps or remove some if 5 doesn't work well for your mesh.  Make sure that
+the restart file that is an output of the previous step is the input to the
+next one.
