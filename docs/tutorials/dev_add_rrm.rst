@@ -520,3 +520,438 @@ should look like:
 .. image:: images/ec30to60_culled_paraview.png
    :width: 500 px
    :align: center
+
+.. _dev_tutorial_add_rrm_add_high_res:
+
+Adding regions of higher resolution
+-----------------------------------
+
+Now, let's add some regions of higher resolution to the mesh.
+
+We typically define these regions using `geojson <https://geojson.org/>`_
+files.  The easiest way to create them is to go to `geojson.io <https://geojson.io/>`_.
+There, you can find your way to the part of the globe you want to refine
+and use the polygon tool to make a shape that will act as the boundary for your
+high resolution region.
+
+
+.. image:: images/geojson_io_south_atl.png
+   :width: 800 px
+   :align: center
+
+In my case, I have defined a region across the south Atlantic ocean with its
+western side centered around the outlet of the Amazon river.  My plan is to
+define a region of moderately higher resolution across a fairly broad region
+first, then define a region of higher resolution close to the Amazon delta
+in a subsequent step.
+
+Let's make an actual ``geojson`` file with this contents.  In your terminal for
+editing code, from the root of the branch where we're developing:
+
+.. code-block:: bash
+
+    cd compass/ocean/tests/global_ocean/mesh/yam10to60
+    vim northern_south_atlantic.geojson
+
+Copy the contents of the json code on the right-hand side of the geojson.io
+window and paste it into the file:
+
+.. code-block:: json
+
+    {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "coordinates": [
+              [
+                [
+                  -42.7022201869903,
+                  28.229943571814303
+                ],
+                [
+                  -63.8408547092003,
+                  9.565520467643694
+                ],
+                [
+                  -54.35184148160458,
+                  -3.0088254981339873
+                ],
+                [
+                  -37.52116934686214,
+                  -8.341138860925426
+                ],
+                [
+                  -12.947354056832182,
+                  10.997433207836309
+                ],
+                [
+                  -11.493517385995887,
+                  27.701423680235493
+                ],
+                [
+                  -42.7022201869903,
+                  28.229943571814303
+                ]
+              ]
+            ],
+            "type": "Polygon"
+          }
+        }
+      ]
+    }
+
+Then, modify the ``properties`` dictionary similarly to this example:
+
+.. code-block::
+    :emphasize-lines: 6-11
+
+    {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "Northern South Atlantic",
+            "component": "ocean",
+            "object": "region",
+            "author": "Xylar Asay-Davis"
+          },
+
+          ...
+
+These 4 fields are required for compass to be able to use the file.  The
+``name`` and ``author`` are entirely up to you and are intended to help
+document the file in some useful way.  The ``component`` must be ``"ocean"``
+and the ``object`` must be ``"region"``.
+
+Next, let's make the shape available in the code so we can use it later to make
+a higher resolution region:
+
+.. code-block:: bash
+
+    vim __init__.py
+
+.. code-block:: python
+    :emphasize-lines: 3, 11-20, 29
+
+    import mpas_tools.mesh.creation.mesh_definition_tools as mdt
+    import numpy as np
+    from geometric_features import read_feature_collection
+
+    from compass.mesh import QuasiUniformSphericalMeshStep
+
+
+    class YAM10to60BaseMesh(QuasiUniformSphericalMeshStep):
+        """
+        A step for creating YAM10to60 meshes
+        """
+        def setup(self):
+            """
+            Add some input files
+            """
+            package = 'compass.ocean.tests.global_ocean.mesh.yam10to60'
+            self.add_input_file(filename='northern_south_atlantic.geojson',
+                                package=package)
+            super().setup()
+
+        def build_cell_width_lat_lon(self):
+
+            ...
+
+            cell_width_vs_lat = mdt.EC_CellWidthVsLat(lat)
+            cell_width = np.outer(cell_width_vs_lat, np.ones([1, lon.size]))
+
+            # read the shape
+            fc = read_feature_collection('northern_south_atlantic.geojson')
+
+            return cell_width, lon, lat
+
+In the ``setup()`` method above, we add the geojson file as an input to the
+step that creates the base mesh.  This is how compass finds the geojson file
+when it's setting up the work directory where we will build the base mesh.
+
+In the ``build_cell_width_lat_lon()`` method, we read in a the geojson file
+into a "feature collection" (``fc``) object that we will use below to define
+the higher resolution region.
+
+Now, let's make further changes to the same file to use the shape to add a
+higher resolution region:
+
+.. code-block:: bash
+
+    vim __init__.py
+
+.. code-block:: python
+    :emphasize-lines: 4-7, 24-46
+
+    import mpas_tools.mesh.creation.mesh_definition_tools as mdt
+    import numpy as np
+    from geometric_features import read_feature_collection
+    from mpas_tools.cime.constants import constants
+    from mpas_tools.mesh.creation.signed_distance import (
+        signed_distance_from_geojson,
+    )
+
+    from compass.mesh import QuasiUniformSphericalMeshStep
+
+
+    class YAM10to60BaseMesh(QuasiUniformSphericalMeshStep):
+
+        def build_cell_width_lat_lon(self):
+
+            ...
+
+            cell_width_vs_lat = mdt.EC_CellWidthVsLat(lat)
+            cell_width = np.outer(cell_width_vs_lat, np.ones([1, lon.size]))
+
+            # read the shape
+            fc = read_feature_collection('northern_south_atlantic.geojson')
+
+            # How wide in meters the smooth transition between the background
+            #   resolution and the finer resolution regions should be.
+            # 1200 km is equivalent to about 10 degrees latitude
+            trans_width = 1200e3
+
+            # The resolution in km of the finer resolution region
+            fine_cell_width = 20.
+
+            # the radius of the earth defined in E3SM's shared constants
+            earth_radius = constants['SHR_CONST_REARTH']
+
+            # A field defined on the lat-long grid with the signed distance away
+            # from the boundary of the shape (positive outside and negative inside)
+            atlantic_signed_distance = signed_distance_from_geojson(
+                fc, lon, lat, earth_radius, max_length=0.25)
+
+            # A field that goes smoothly from zero inside the shape to one outside
+            # the shape over the given transition width.
+            weights = 0.5 * (1 + np.tanh(atlantic_signed_distance / trans_width))
+
+            # The cell width in km becomes a blend of the background cell width
+            # and the finer cell width using the weights
+            cell_width = fine_cell_width * (1 - weights) + cell_width * weights
+
+            return cell_width, lon, lat
+
+The function ``signed_distance_from_geojson()`` creates a functon on the
+lat-lon grid that is the distance from any given point on the globe to the
+boundary of the shape defined by the geojson file.  The distance is positive
+outside the shape and negative inside it.  For better accuracy in computing the
+distance, we subdivide the shape into segments of ``max_length=0.25`` degrees
+latitude or longitude.  We use the ``earth_radius`` defined in E3SM's shared
+constants.
+
+Using the signed distance, we create a blending function ``weights`` that goes
+from zero inside the shape smoothly to one outside the shape over a distance of
+``trans_width`` meters.  Then, we use the weights to blend from the fine
+resolution inside the shape to the EC30to60 background resolution outside the
+shape.
+
+Once, again, let's set up and run the mesh test case like we did in
+:ref:`dev_tutorial_add_rrm_test_mesh`:
+
+.. code-block:: bash
+
+    compass setup -n 254 \
+        -p E3SM-Project/components/mpas-ocean/ \
+        -w /lcrc/group/e3sm/${USER}/compass_tests/tests_20230527/yam10to60_alt20km
+
+As before, switch back to your other terminal to submit the job and look at the
+results.
+
+.. code-block:: bash
+
+    cd /lcrc/group/e3sm/${USER}/compass_tests/tests_20230527/yam10to60_alt20km
+    sbatch job_script.custom.sh
+    tail -f compass.o*
+
+The map of resolution in ``base_mesh/cellWidthGlobal.png`` should look
+like:
+
+.. image:: images/atl20km.png
+   :width: 500 px
+   :align: center
+
+After culling, the mesh in ``culled_mesh/culled_mesh_vtk/staticFieldsOnCells.vtp``
+should look like:
+
+.. image:: images/atl20km_culled_paraview.png
+   :width: 500 px
+   :align: center
+
+.. _dev_tutorial_add_rrm_add_very_high_res:
+
+Adding a very high resolution region
+------------------------------------
+
+Using the same approach as in the previous section, we can define another
+region where we will increase the resolution to 10 km.
+
+I used geojson.io to create a region around the Amazon River delta:
+
+.. image:: images/geojson_io_amazon_delta.png
+   :width: 800 px
+   :align: center
+
+Then, I copied the code and pasted it into a file:
+
+.. code-block:: bash
+
+    cd compass/ocean/tests/global_ocean/mesh/yam10to60
+    vim amazon_delta.geojson
+
+I added the ``properties`` dictionary like in the previous example.
+
+.. code-block:: json
+
+    {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "Amazon Delta",
+            "component": "ocean",
+            "object": "region",
+            "author": "Xylar Asay-Davis"
+          },
+          "geometry": {
+            "coordinates": [
+              [
+                [
+                  -33.27493467565196,
+                  9.398029362516667
+                ],
+                [
+                  -44.499833304073974,
+                  11.7502737267192
+                ],
+                [
+                  -54.422618869265236,
+                  8.655607226691274
+                ],
+                [
+                  -60.654712683354944,
+                  0.9780614705966428
+                ],
+                [
+                  -54.56296235335806,
+                  -9.767487562476404
+                ],
+                [
+                  -41.34251704331987,
+                  -9.500764493003032
+                ],
+                [
+                  -36.85005485733731,
+                  -3.655530642645047
+                ],
+                [
+                  -33.03465151175149,
+                  4.644399816423899
+                ],
+                [
+                  -33.27493467565196,
+                  9.398029362516667
+                ]
+              ]
+            ],
+            "type": "Polygon"
+          }
+        }
+      ]
+    }
+
+Using this feature, I added a 10-km region:
+
+.. code-block:: bash
+
+    vim __init__.py
+
+.. code-block:: python
+    :emphasize-lines: 11-12, 27-48
+
+    ...
+
+    class YAM10to60BaseMesh(QuasiUniformSphericalMeshStep):
+        def setup(self):
+            """
+            Add some input files
+            """
+            package = 'compass.ocean.tests.global_ocean.mesh.yam10to60'
+            self.add_input_file(filename='northern_south_atlantic.geojson',
+                                package=package)
+            self.add_input_file(filename='amazon_delta.geojson',
+                                package=package)
+            super().setup()
+
+        def build_cell_width_lat_lon(self):
+
+            ...
+
+            # A field that goes smoothly from zero inside the shape to one outside
+            # the shape over the given transition width.
+            weights = 0.5 * (1 + np.tanh(atlantic_signed_distance / trans_width))
+
+            # The cell width in km becomes a blend of the background cell width
+            # and the finer cell width using the weights
+            cell_width = fine_cell_width * (1 - weights) + cell_width * weights
+
+            # read the shape
+            fc = read_feature_collection('amazon_delta.geojson')
+
+            # 400 km is equivalent to about 3 degrees latitude
+            trans_width = 400e3
+
+            # The resolution in km of the finer resolution region
+            fine_cell_width = 10.
+
+            # A field defined on the lat-long grid with the signed distance away
+            # from the boundary of the shape (positive outside and negative inside)
+            amazon_delta_signed_distance = signed_distance_from_geojson(
+                fc, lon, lat, earth_radius, max_length=0.25)
+
+            # A field that goes smoothly from zero inside the shape to one outside
+            # the shape over the given transition width.
+            weights = 0.5 * (1 + np.tanh(
+                amazon_delta_signed_distance / trans_width))
+
+            # The cell width in km becomes a blend of the background cell width
+            # and the finer cell width using the weights
+            cell_width = fine_cell_width * (1 - weights) + cell_width * weights
+
+            return cell_width, lon, lat
+
+Same procedure as before, set up the test case:
+
+.. code-block:: bash
+
+    compass setup -n 254 \
+        -p E3SM-Project/components/mpas-ocean/ \
+        -w /lcrc/group/e3sm/${USER}/compass_tests/tests_20230527/yam10to60_final
+
+Switch back to your other terminal to submit the job and look at the results.
+
+.. code-block:: bash
+
+    cd /lcrc/group/e3sm/${USER}/compass_tests/tests_20230527/yam10to60_final
+    sbatch job_script.custom.sh
+    tail -f compass.o*
+
+The map of resolution in ``base_mesh/cellWidthGlobal.png`` should look
+like:
+
+.. image:: images/yam10to60.png
+   :width: 500 px
+   :align: center
+
+After culling, the mesh in ``culled_mesh/culled_mesh_vtk/staticFieldsOnCells.vtp``
+should look like:
+
+.. image:: images/yam10to60_culled_paraview.png
+   :width: 500 px
+   :align: center
+
