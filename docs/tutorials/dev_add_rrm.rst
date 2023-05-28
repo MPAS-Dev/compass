@@ -265,7 +265,9 @@ You should see something like:
      ...
 
 On one of the supported HPC machines, let's try setting up and running the mesh
-step.  Here's an example that should work on Chrysalis or Anvil:
+step.  We will concentrate on the mesh without ice-shelf cavities ``YAM10to60``
+for now because it is a little simpler.  Here's an example that should work on
+Chrysalis or Anvil:
 
 .. code-block:: bash
 
