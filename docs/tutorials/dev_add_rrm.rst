@@ -1226,12 +1226,6 @@ You should see something a lot like this:
     Loading Spack environment...
     Done.
 
-    ocean/global_ocean/YAM10to60/mesh
-      * step: base_mesh
-      * step: remap_topography
-      * step: cull_mesh
-      test execution:      SUCCESS
-      test runtime:        22:15
     ocean/global_ocean/YAM10to60/WOA23/init
       * step: initial_state
       test execution:      SUCCESS
@@ -1241,10 +1235,9 @@ You should see something a lot like this:
       test execution:      SUCCESS
       test runtime:        01:35
     Test Runtimes:
-    22:15 PASS ocean_global_ocean_YAM10to60_mesh
     01:07 PASS ocean_global_ocean_YAM10to60_WOA23_init
     01:35 PASS ocean_global_ocean_YAM10to60_WOA23_performance_test
-    Total runtime 24:58
+    Total runtime 02:42
     PASS: All passed successfully!
 
 If these tests aren't successful, you'll probably need some expert help from
