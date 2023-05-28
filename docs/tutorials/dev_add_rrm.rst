@@ -752,6 +752,11 @@ from zero inside the shape smoothly to one outside the shape over a distance of
 resolution inside the shape to the EC30to60 background resolution outside the
 shape.
 
+There are also fancier ways to define gradients in resolution, for example
+using the relative distance between the boundaries of 2 shapes.  These are not
+covered in the tutorial but you can get in touch with the E3SM Ocean Team to
+discuss ways to define more complex maps of mesh resolution.
+
 Once, again, let's set up and run the mesh test case like we did in
 :ref:`dev_tutorial_add_rrm_test_mesh`:
 
@@ -1366,6 +1371,12 @@ subcycling (barotropic or ``btr``) time step, and a strong Rayleigh damping
 of 1e-4.  Since we're running for 2 days, we set the restart interval to 2
 days.
 
+You should be able to pick a time step in proprotion to the highest resolution
+in your mesh.  If a 3-minute time steps works well for a 10 km mesh (and that's
+a little on the safe side), the time step for a 1 km mesh would need to be on
+the order of 20 seconds.  The barotropic time step needs to be 20-30 times
+shorter than the full time step.
+
 We have enabled global stats (``config_AM_globalStats_enable = .true.``) so
 we can monitor the progress more easily.
 
@@ -1499,22 +1510,58 @@ This time, the output should look like:
 
     ocean/global_ocean/YAM10to60/WOA23/dynamic_adjustment
       * step: damped_adjustment_1
-      test execution:      SUCCESS
-      test runtime:        10:07
+      test execution:      ERROR
+      see: case_outputs/ocean_global_ocean_YAM10to60_WOA23_dynamic_adjustment.log
+      test runtime:        06:03
     Test Runtimes:
-    01:07 PASS ocean_global_ocean_YAM10to60_WOA23_dynamic_adjustment
-    Total runtime 10:07
-    PASS: All passed successfully!
+    06:03 FAIL ocean_global_ocean_YAM10to60_WOA23_dynamic_adjustment
+    Total runtime 06:03
+    FAIL: 1 test failed, see above.
 
-You can also monitor the result by looking at the global statistics:
+This error isn't a big deal.  It's related to the fact that we're not done
+implementing the test case and it's expecting a step called ``simulation`` that
+we haven't added yet:
 
 .. code-block::
 
-    $ cd ocean/global_ocean/YAM10to60/WOA23/dynamic_adjustment/damped_adjustment_1
+    $ tail -n 20 case_outputs/ocean_global_ocean_YAM10to60_WOA23_dynamic_adjustment.log
+
+    Running: srun -c 1 -N 6 -n 768 ./ocean_model -n namelist.ocean -s streams.ocean
+
+    compass calling: compass.ocean.tests.global_ocean.mesh.yam10to60.dynamic_adjustment.YAM10to60DynamicAdjustment.validate()
+      inherited from: compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment.validate()
+      in /gpfs/fs1/home/ac.xylar/compass/add-rrm-tutorial/compass/ocean/tests/global_ocean/dynamic_adjustment.py
+
+    Exception raised in the test case's validate() method
+    Traceback (most recent call last):
+      File "/gpfs/fs1/home/ac.xylar/compass/add-rrm-tutorial/compass/run/serial.py", line 335, in _log_and_run_test
+        test_case.validate()
+      File "/gpfs/fs1/home/ac.xylar/compass/add-rrm-tutorial/compass/ocean/tests/global_ocean/dynamic_adjustment.py", line 63, in validate
+        compare_variables(test_case=self, variables=variables,
+      File "/gpfs/fs1/home/ac.xylar/compass/add-rrm-tutorial/compass/validate.py", line 94, in compare_variables
+        raise ValueError('{} does not appear to be an output of any step '
+    ValueError: simulation/output.nc does not appear to be an output of any step in this test case.
+
+You can also monitor the result by looking at the global statistics:
+
+.. code-block:: bash
+
+    cd ocean/global_ocean/YAM10to60/WOA23/dynamic_adjustment/damped_adjustment_1
     source load_compass_env.sh
-    ncdump -v keCell analysis_members/globalStats*.nc
+    ncdump -v kineticEnergyCellMax analysis_members/globalStats*.nc
     ncdump -v CFLNumberGlobal analysis_members/globalStats*.nc
 
+The kinetic energy should increase gradually (and then likely decrease because
+of the damping) but shouldn't spike up during a damped adjustment step.  The
+CFL number ideally shouldn't exceed about 0.1 during damped adjustment, though
+we tend to push it a bit higher during the simulation phase to see how large
+we can make it while maintaining stability.
+
+You can also monitor the MPAS-Ocean progress (e.g. the time stepping) with:
+
+.. code-block:: bash
+
+    tail log.ocean.0000.out
 
 If the ``damped_adjustment_1`` step is successful, it's time to add more steps
 in which we will ramp down damping and then increase the time step. Let's add a
@@ -1587,6 +1634,9 @@ Back in your terminal in the work directory:
     cd ocean/global_ocean/YAM10to60/WOA23/dynamic_adjustment/damped_adjustment_2
     sbatch job_script.sh
     tail -f compass.o*
+
+Again, you will get errors about the missing ``simulation/output.nc`` file,
+but don't worry about those.
 
 If that goes okay, let's add a third step that runs for 10 days with even less
 damping.  We can also write out less frequent restarts (every 10 days).  In
