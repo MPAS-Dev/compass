@@ -114,6 +114,9 @@ latitude-longitude grid.
 
 
     class YAM10to60BaseMesh(QuasiUniformSphericalMeshStep):
+        """
+        A step for creating YAM10to60 meshes
+        """
 
         def build_cell_width_lat_lon(self):
             """
@@ -302,7 +305,7 @@ in the job script:
 Assuming you submitted the job script as above, you can monitor the output
 file:
 
-.. code-block:: bash
+.. code-block::
 
     $ tail -f compass.o*
 
@@ -322,6 +325,31 @@ file:
     11:31 PASS ocean_global_ocean_YAM10to60_mesh
     Total runtime 11:32
     PASS: All passed successfully!
+
+If things don't go well, you might see something like:
+
+.. code-block::
+
+    Loading conda environment
+    Done.
+
+    Loading Spack environment...
+    Done.
+
+    ocean/global_ocean/YAM10to60/mesh
+      * step: base_mesh
+          Failed
+      test execution:      ERROR
+      see: case_outputs/ocean_global_ocean_YAM10to60_mesh.log
+      test runtime:        00:00
+    Test Runtimes:
+    00:00 FAIL ocean_global_ocean_YAM10to60_mesh
+    Total runtime 00:01
+    FAIL: 1 test failed, see above.
+
+Hopefully, the contents of the log file, in this case
+``case_outputs/ocean_global_ocean_YAM10to60_mesh.log``, can help you debug
+what went wrong.
 
 
 Once the ``base_mesh`` step has completed, you should see:
