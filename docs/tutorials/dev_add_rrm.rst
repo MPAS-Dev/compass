@@ -1815,3 +1815,93 @@ duration of each of these runs, and the amount of damping.  You may add more
 steps or remove some if 5 doesn't work well for your mesh.  Make sure that
 the restart file that is an output of the previous step is the input to the
 next one.
+
+.. _dev_tutorial_add_rrm_add_files_for_e3sm:
+
+Adding a files for E3SM test
+----------------------------
+
+The final test case to add for a new RRM mesh is ``files_for_e3sm``.  This test
+case creates a number of important files in the format they are needed for
+E3SM or diagnostic software used to analysis E3SM simulations.  No additional
+customization should be needed for this mesh beyond the config options we
+already set up earlier in the tutorial.  We just need to add the test case
+itself for this mesh to the ``global_ocean`` test group.
+
+Starting from the root of our development branch:
+
+.. code-block:: bash
+
+    cd compass/ocean/tests/global_ocean
+    vim __init__.py
+
+.. code-block:: python
+    :emphasize-lines: 15-16
+
+    ...
+
+    class GlobalOcean(TestGroup):
+
+        ...
+
+        def __init__(self, mpas_core):
+
+            ...
+
+            # Kuroshio meshes without ice-shelf cavities
+            self._add_tests(mesh_names=['Kuroshio12to60', 'Kuroshio8to60'],
+                            DynamicAdjustment=KuroshioDynamicAdjustment)
+
+            self._add_tests(mesh_names=['YAM10to60', 'YAMwISC10to60'],
+                            DynamicAdjustment=YAM10to60DynamicAdjustment)
+
+            # A test case for making E3SM support files from an existing mesh
+            self.add_test_case(FilesForE3SM(test_group=self))
+
+        ...
+
+We delete the whole ``for`` loop over ``mesh_name`` and instead take advantage
+of the fact that the ``_add_tests()`` method of ``GlobalOcean`` will
+add the 5 test cases we want by default.  (We added them manually, one by one
+before so we could test them one or two at a time.)
+
+Now, when you list the tests, you should see:
+
+.. code-block::
+
+    $ compass list | grep YAM
+     254: ocean/global_ocean/YAM10to60/mesh
+     255: ocean/global_ocean/YAM10to60/WOA23/init
+     256: ocean/global_ocean/YAM10to60/WOA23/performance_test
+     257: ocean/global_ocean/YAM10to60/WOA23/dynamic_adjustment
+     258: ocean/global_ocean/YAM10to60/WOA23/files_for_e3sm
+     259: ocean/global_ocean/YAMwISC10to60/mesh
+     260: ocean/global_ocean/YAMwISC10to60/WOA23/init
+     261: ocean/global_ocean/YAMwISC10to60/WOA23/performance_test
+     262: ocean/global_ocean/YAMwISC10to60/WOA23/dynamic_adjustment
+     263: ocean/global_ocean/YAMwISC10to60/WOA23/files_for_e3sm
+
+Once again, you can take advantage of the test cases you've already run,
+setting up just the new ``files_for_e3sm`` test from the coding terminal:
+
+.. code-block:: bash
+
+    compass setup -n 258 \
+        -p E3SM-Project/components/mpas-ocean/ \
+        -w /lcrc/group/e3sm/${USER}/compass_tests/tests_20230527/yam10to60_final
+
+And run this test case in the work-directory terminal:
+
+.. code-block:: bash
+
+    cd /lcrc/group/e3sm/${USER}/compass_tests/tests_20230527/yam10to60_final
+    cd ocean/global_ocean/YAM10to60/WOA23/files_for_e3sm
+    sbatch job_script.sh
+    tail -f compass.o*
+
+If this goes well, you are ready to ask for help from members of the E3SM
+Ocean Team to add support for your mesh to E3SM itself, including uploading
+the files produced by the ``files_for_e3sm`` test case to the E3SM
+``inputdata`` and ``diagnostics`` directories on our data server.  This is
+beyond the scope of this tutorial and is not typically something a non-expert
+can take on on their own.
