@@ -955,3 +955,298 @@ should look like:
    :width: 500 px
    :align: center
 
+.. _dev_tutorial_add_rrm_add_init:
+
+Adding an initial condition and performance test
+------------------------------------------------
+
+We now have a horizontal ocean mesh, but there are several more steps in
+compass before we can start to integrate the new mesh into E3SM.
+
+First, we need to add an ``init`` test case that will create the vertical
+coordinate and the initial condition.  Most of what we need to define for the
+initial condition is set with config options:
+
+.. code-block:: bash
+
+    cd compass/ocean/tests/global_ocean/mesh/yam10to60
+    vim yam10to60.cfg
+
+.. code-block:: ini
+
+    # Options related to the vertical grid
+    [vertical_grid]
+
+    # the type of vertical grid
+    grid_type = index_tanh_dz
+
+    # Number of vertical levels
+    vert_levels = 64
+
+    # Depth of the bottom of the ocean
+    bottom_depth = 5500.0
+
+    # The minimum layer thickness
+    min_layer_thickness = 10.0
+
+    # The maximum layer thickness
+    max_layer_thickness = 250.0
+
+    # The characteristic number of levels over which the transition between
+    # the min and max occurs
+    transition_levels = 28
+
+The standard E3SM v3 vertical grid is defined with these parameters.  It
+transitions from 10 m resolution at the surface to 250 m resolution at a depth
+of 5500 m over 64 vertical levels.  The transition is centered around the 28th
+vertical level.  You can modify these parameters or use a different vertical
+coordinate (at your own risk).
+
+Next, we add a section with some required config options including some
+metadata:
+
+.. code-block:: bash
+
+    vim yam10to60.cfg
+
+.. code-block:: ini
+    :emphasize-lines: 8-43
+
+    ...
+
+    # The characteristic number of levels over which the transition between
+    # the min and max occurs
+    transition_levels = 28
+
+
+    # options for global ocean testcases
+    [global_ocean]
+
+    # the approximate number of cells in the mesh
+    approx_cell_count = 270000
+
+    ## metadata related to the mesh
+    # the prefix (e.g. QU, EC, WC, SO)
+    prefix = YAM
+    # a description of the mesh and initial condition
+    mesh_description = Yet Another Mesh (YAM) is regionally refined around the Amazon
+                       River delta.  It is used in E3SM version ${e3sm_version} for
+                       studies of blah, blah.  It has Enhanced resolution (${min_res} km)
+                       around the Amazon delta, 20-km resolution in the northern South
+                       Atlantic, 35-km resolution at the poles, 60-km at mid
+                       latitudes, and 30-km at the equator.  This mesh has <<<levels>>>
+                       vertical levels.
+    # E3SM version that the mesh is intended for
+    e3sm_version = 3
+    # The revision number of the mesh, which should be incremented each time the
+    # mesh is revised
+    mesh_revision = 1
+    # the minimum (finest) resolution in the mesh
+    min_res = 10
+    # the maximum (coarsest) resolution in the mesh, can be the same as min_res
+    max_res = 60
+    # The URL of the pull request documenting the creation of the mesh
+    pull_request = https://github.com/MPAS-Dev/compass/pull/XXX
+
+
+    # config options related to initial condition and diagnostics support files
+    # for E3SM
+    [files_for_e3sm]
+
+    # CMIP6 grid resolution
+    cmip6_grid_res = 180x360
+
+The ``approx_cell_count`` is something you can only determine after you've
+made the mesh.  In your terminal where you've been running tests:
+
+.. code-block:: bash
+
+    cd /lcrc/group/e3sm/${USER}/compass_tests/tests_20230527/yam10to60_final
+    cd ocean/global_ocean/YAM10to60/mesh/cull_mesh
+    source load_compass_env.sh
+    ncdump -h culled_mesh.nc | more
+
+This will tell you the numer of cells (``nCells``).  Round this to 2
+significant digits and put this in ``approx_cell_count``.  This will be used
+to determine an appropriate number of MPI tasks and nodes needed to perform
+forward runs with this mesh.
+
+The ``prefix`` should match the beginning fo the mesh name we have been using
+all along, ``YAM`` in this case.
+
+The ``description`` is used in the metadata of files produced by compass for
+this mesh. It should be a fairly detailed description of how resolution is
+distributed and what the intended purpose of the mesh is.
+
+The ``e3sm_version`` is what E3SM version the mesh is intended to be used in.
+Presumably, this is 3 for the time being, since no new meshes will be added
+to v2 and we don't know much about v4 yet.
+
+The ``mesh_revision`` should be 1 to begin with but should be incremented to
+give each version of the mesh a unique number.  Typically, it is time to
+increase the revision number if you are altering the mesh and the current
+revision number has already been used in a simulation that might be published
+or put to some other broader scientific or technical use.  If you are still at
+the stage of tinkering with the mesh, it may be preferable not to increment the
+revision number with each modification.
+
+``min_res`` *must* be the minimum resolution of the mesh in km, and ``max_res``
+should be the maximum.  (``min_res`` is used to determine the time step for
+forward runs, so that is why it is required to be correct; ``max_res`` is only
+used for metadata and in the mesh name.)
+
+``pull_request`` points to a pull request (if there is one) where the mesh
+was added to compass.  This is a useful piece of metadata so folks know where
+to look for a discussion of the mesh.
+
+``cmip6_grid_res`` is the CMIP6 (and presumably 7) resolution to which data
+will be remapped for publication.  Typically, this is ``180x360`` (i.e. a
+1 degree grid) for RRMs because a lot of space is otherwise wasted on
+coarse-resolution regions.
+
+We also need to override some default namelist options with values appropriate
+for the mesh.  Many of these choices will depend on the details of the mesh
+you are making.  However, here are some common ones:
+
+.. code-block:: bash
+
+    vim namelist.split_explicit
+
+.. code-block::
+
+    config_time_integrator = 'split_explicit'
+    config_run_duration = '0000_01:00:00'
+    config_use_mom_del2 = .true.
+    config_mom_del2 = 10.0
+    config_use_mom_del4 = .true.
+    config_mom_del4 = 1.5e10
+    config_hmix_scaleWithMesh = .true.
+    config_use_GM = .true.
+    config_GM_closure = 'constant'
+    config_GM_constant_kappa = 600.0
+
+The ``config_run_duration`` is the length of a performance test run, and should
+only be a few time steps.
+
+The ``config_mom_del2`` and ``config_mom_del4`` are the eddy viscosity and
+eddy hyperviscosity, and typically scale in proportion to the cell size and
+the cell size cubed, respectively.  These are appropriate values for a minimum
+resolution of 10 km as in this example.  We scale these coefficients with the
+cell resolution when ``config_hmix_scaleWithMesh = .true.``.
+
+The GM coefficients can probably be left as they are here for a typical RRM.
+
+Next, we will add the ``init`` and ``performance_tests`` test cases for the
+new mesh:
+
+.. code-block:: bash
+
+    cd ../..
+    vim __init__.py
+
+.. code-block:: python
+    :emphasize-lines: 16-24
+
+    ...
+
+    class GlobalOcean(TestGroup):
+
+        ...
+
+        def __init__(self, mpas_core):
+
+            ...
+
+            for mesh_name in ['YAM10to60', 'YAMwISC10to60']:
+                mesh_test = Mesh(test_group=self, mesh_name=mesh_name,
+                                 remap_topography=True)
+                self.add_test_case(mesh_test)
+
+                init_test = Init(test_group=self, mesh=mesh_test,
+                                 initial_condition='WOA23',
+                                 with_bgc=False)
+                self.add_test_case(init_test)
+
+                self.add_test_case(
+                    PerformanceTest(
+                        test_group=self, mesh=mesh_test, init=init_test,
+                        time_integrator='split_explicit'))
+
+            # A test case for making E3SM support files from an existing mesh
+            self.add_test_case(FilesForE3SM(test_group=self))
+
+We have indicated that we want an initial condition interpolated from the
+World Ocean Atlas 2023 (WOA23) data set, that we do not want to include
+BGC tracers, and that we want to use the split-explicit time integrator
+(the E3SM default) in our performance test.
+
+Let's see if the test cases show up:
+
+.. code-block:: bash
+
+    compass list | grep YAM
+
+You should see something like:
+
+.. code-block::
+
+     254: ocean/global_ocean/YAM10to60/mesh
+     255: ocean/global_ocean/YAM10to60/WOA23/init
+     256: ocean/global_ocean/YAM10to60/WOA23/performance_test
+     257: ocean/global_ocean/YAMwISC10to60/mesh
+     258: ocean/global_ocean/YAMwISC10to60/WOA23/init
+     259: ocean/global_ocean/YAMwISC10to60/WOA23/performance_test
+
+Okay, everything looks good. Let's set up and run the 2 remaining tests:
+
+.. code-block:: bash
+
+    compass setup -n 255 256 \
+        -p E3SM-Project/components/mpas-ocean/ \
+        -w /lcrc/group/e3sm/${USER}/compass_tests/tests_20230527/yam10to60_final
+
+We can save the time of rerunning the ``mesh`` test by setting up in the same
+work directory as our final mesh run with 10-km finest resolution.
+
+Switch back to your other terminal to alter the job script and submit the job.
+
+.. code-block:: bash
+
+    cd /lcrc/group/e3sm/${USER}/compass_tests/tests_20230527/yam10to60_final
+    sbatch job_script.custom.sh
+    tail -f compass.o*
+
+You should see something a lot like this:
+
+.. code-block::
+
+    Loading conda environment
+    Done.
+
+    Loading Spack environment...
+    Done.
+
+    ocean/global_ocean/YAM10to60/mesh
+      * step: base_mesh
+      * step: remap_topography
+      * step: cull_mesh
+      test execution:      SUCCESS
+      test runtime:        22:15
+    ocean/global_ocean/YAM10to60/WOA23/init
+      * step: initial_state
+      test execution:      SUCCESS
+      test runtime:        01:07
+    ocean/global_ocean/YAM10to60/WOA23/performance_test
+      * step: forward
+      test execution:      SUCCESS
+      test runtime:        01:35
+    Test Runtimes:
+    22:15 PASS ocean_global_ocean_YAM10to60_mesh
+    01:07 PASS ocean_global_ocean_YAM10to60_WOA23_init
+    01:35 PASS ocean_global_ocean_YAM10to60_WOA23_performance_test
+    Total runtime 24:58
+    PASS: All passed successfully!
+
+If these tests aren't successful, you'll probably need some expert help from
+the E3SM Ocean Team, but you can take a look at the log files and see if you
+can diagnose any issues yourself.
