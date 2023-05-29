@@ -1721,7 +1721,7 @@ coding terminal:
     vim __init__.py
 
 .. code-block:: python
-    :emphasize-lines: 11-12, 19-45
+    :emphasize-lines: 11-12, 19-43
 
     ...
 
@@ -1865,6 +1865,36 @@ duration of each of these runs, and the amount of damping.  You may add more
 steps or remove some if 5 doesn't work well for your mesh.  Make sure that
 the restart file that is an output of the previous step is the input to the
 next one.
+
+It's also a good idea to take a look at a few output fields in ParaVeiw. First,
+run:
+
+.. code-block:: bash
+
+    paraview_vtk_field_extractor.py -m init.nc \
+        -f output.nc -v normalVelocity,temperature,salinity \
+        -d nVertLevels=0
+
+Then, transfer the contents of ``vtk_files`` to your laptop or desktop and open
+the file ``fieldsOnCells.pvd`` or ``fieldsOnEdges.pvd`` in ParaView.
+
+.. image:: images/simulation_sst.png
+   :width: 500 px
+   :align: center
+
+Note that ``normalVelocity`` is a pretty noisy field because its orientation
+differs by on the order of 60 degrees between adjacent edges.  It helps to take
+the absolute value as shown below, in which case it it can indicate where
+strong currents are present.
+
+.. image:: images/simulation_norm_vel_mag.png
+   :width: 500 px
+   :align: center
+
+Alternatively, you can add fields like ``kineticEnergyCell`` to the ``output``
+stream in ``streams.ocean`` before running the step, and then you will have
+this field available to visualize.
+
 
 .. _dev_tutorial_add_rrm_add_files_for_e3sm:
 
