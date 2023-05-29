@@ -1,0 +1,1836 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM) &mdash; compass latest documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Developer Tutorial: Adding a parameter study" href="dev_add_param_study.html" />
+    <link rel="prev" title="Developer Tutorial: Adding a new test group" href="dev_add_test_group.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            compass
+          </a>
+              <div class="version">
+                latest
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-a-new-mesh">Adding a new mesh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-the-mesh-test-case">Running the mesh test case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#switching-to-an-ec30to60-base-resolution">Switching to an EC30to60 base resolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-regions-of-higher-resolution">Adding regions of higher resolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-a-very-high-resolution-region">Adding a very high resolution region</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-an-initial-condition-and-performance-test">Adding an initial condition and performance test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-a-dynamic-adjustment-test">Adding a dynamic adjustment test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-a-files-for-e3sm-test">Adding a files for E3SM test</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/dev_add_rrm.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="developer-tutorial-adding-a-new-ocean-sea-ice-regionally-refined-mesh-rrm">
+<span id="dev-tutorial-add-rrm"></span><h1>Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)<a class="headerlink" href="#developer-tutorial-adding-a-new-ocean-sea-ice-regionally-refined-mesh-rrm" title="Permalink to this heading">¶</a></h1>
+<p>This tutorial presents a step-by-step guide to adding a new mesh to the
+<code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> test group in <code class="docutils literal notranslate"><span class="pre">compass</span></code> (see the <a class="reference internal" href="../glossary.html#glossary"><span class="std std-ref">Glossary</span></a> for
+definitions of some relevant terms).  In this tutorial, I will add a new
+mesh called YAM (“yet another mesh”) that is based on techniques used to build
+the existing <a class="reference internal" href="../developers_guide/ocean/test_groups/global_ocean.html#dev-ocean-global-ocean-sowisc12to60"><span class="std std-ref">SO12to60 and SOwISC12to60</span></a> as well as
+<a class="reference internal" href="../developers_guide/ocean/test_groups/global_ocean.html#dev-ocean-global-ocean-wc14"><span class="std std-ref">WC14 and WCwISC14</span></a> meshes.</p>
+<section id="getting-started">
+<span id="dev-tutorial-add-rrm-getting-started"></span><h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h2>
+<p>To begin with, you will need to check out the compass repo and create a new
+branch from <code class="docutils literal notranslate"><span class="pre">main</span></code> for developing the new mesh.  For this purpose, we
+will stick with the simpler approach in <a class="reference internal" href="../developers_guide/quick_start.html#dev-compass-repo"><span class="std std-ref">Set up a compass repository: for beginners</span></a> here, but feel
+free to use the <code class="docutils literal notranslate"><span class="pre">worktree</span></code> approach instead if you are comfortable with it.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:MPAS-Dev/compass.git<span class="w"> </span>add-yet-another-mesh
+<span class="nb">cd</span><span class="w"> </span>add-yet-another-mesh
+git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>add-yet-another-mesh
+</pre></div>
+</div>
+<p>Now, you will need to create a conda environment for developing compass, as
+described in <a class="reference internal" href="../developers_guide/quick_start.html#dev-conda-env"><span class="std std-ref">compass conda environment, compilers and system modules</span></a>.  We will assume a simple situation where
+you are working on a “supported” machine and using the default compilers and
+MPI libraries, but consult the documentation to make an environment to suit
+your needs.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># this one will take a while the first time</span>
+./conda/configure_compass_env.py<span class="w"> </span>--conda<span class="w"> </span><span class="nv">$HOME</span>/mambaforge<span class="w"> </span>--env_name<span class="w"> </span>compass_yam
+</pre></div>
+</div>
+<p>If you don’t already have Mambaforge installed in the directory pointed to by
+<code class="docutils literal notranslate"><span class="pre">--conda</span></code>, it will be installed automatically for you.  If all goes well, you
+will have a file named <code class="docutils literal notranslate"><span class="pre">load_compass_yam*.sh</span></code>, where the details of the
+<code class="docutils literal notranslate"><span class="pre">*</span></code> depend on your specific machine and compilers.  For example, on
+Chrysalis, you will have <code class="docutils literal notranslate"><span class="pre">load_compass_yam_chrysalis_intel_openmpi.sh</span></code>,
+which will be the example used here:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>load_compass_yam_chrysalis_intel_openmpi.sh
+</pre></div>
+</div>
+<p>Now, we’re ready to get the MPAS-Ocean source code from the E3SM repository:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the E3SM code -- this one takes a while every time</span>
+git<span class="w"> </span>submodule<span class="w"> </span>update<span class="w"> </span>--init<span class="w"> </span>--recursive
+</pre></div>
+</div>
+<p>Next, we’re ready to build the MPAS-Ocean executable:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>E3SM-Project/components/mpas-ocean/
+make<span class="w"> </span>ifort
+<span class="nb">cd</span><span class="w"> </span>../../..
+</pre></div>
+</div>
+<p>The make target will be different depending on the machine and compilers, see
+<a class="reference internal" href="../developers_guide/machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a> or <a class="reference internal" href="../developers_guide/machines/index.html#dev-other-machines"><span class="std std-ref">Other Machines</span></a> for the right one
+for your machine.</p>
+<p>Now, we’re ready to start developing!</p>
+</section>
+<section id="adding-a-new-mesh">
+<span id="dev-tutorial-add-rrm-add-mesh"></span><h2>Adding a new mesh<a class="headerlink" href="#adding-a-new-mesh" title="Permalink to this heading">¶</a></h2>
+<p>Use any method you like for editing code.  If you haven’t settled on a method
+and are working on your own laptop or desktop, you may want to try an
+integrated development environment (<a class="reference external" href="https://www.jetbrains.com/pycharm/">PyCharm</a>
+is a really nice one).  They have features to make sure your code adheres to
+the style required for compass (see <a class="reference internal" href="../developers_guide/overview.html#dev-style"><span class="std std-ref">Code Style</span></a>).  <code class="docutils literal notranslate"><span class="pre">vim</span></code>, <code class="docutils literal notranslate"><span class="pre">emacs</span></code> or
+a similar tool will work fine on supercomputers.  Keep in mind that you can
+edit code on your laptop or desktop but you will need to use a high-performance
+computing (HPC) machine to generate a mesh.  One step requires &gt;=360 cores to
+remap a high resolution topography dataset to the MPAS mesh.</p>
+<p>Your new mesh will be defined in a directory within the <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> test
+group’s <code class="docutils literal notranslate"><span class="pre">mesh</span></code> package.  For this example, we create a new <code class="docutils literal notranslate"><span class="pre">yam10to60</span></code>
+directory in <code class="docutils literal notranslate"><span class="pre">compass/ocean/tests/global_ocean/mesh</span></code>.  The directory name
+should be all lowercase with no underscores.  The convention is to give your
+mesh a short prefix (<code class="docutils literal notranslate"><span class="pre">yam</span></code> for “yet another mesh” in our case) and then
+the finest and coarsest resolutions in km.  In that directory, we
+will make a new file called <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>.  In that file, we will start to
+define a <code class="docutils literal notranslate"><span class="pre">YAM10to60BaseMesh</span></code> class.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>compass/ocean/tests/global_ocean/mesh
+mkdir<span class="w"> </span>yam10to60
+<span class="nb">cd</span><span class="w"> </span>yam10to60
+vim<span class="w"> </span>__init__.py
+</pre></div>
+</div>
+<p>We define the resolution as a function of space using a regular
+latitude-longitude map of the distance between cell centers in km.  To begin
+with , we will start out with something really simple: a quasi-uniform 60 km
+mesh.  We will make a 2D field called <code class="docutils literal notranslate"><span class="pre">cellWidth</span></code> on a 0.1 degree, regular
+latitude-longitude grid.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">compass.mesh</span> <span class="kn">import</span> <span class="n">QuasiUniformSphericalMeshStep</span>
+
+
+<span class="k">class</span> <span class="nc">YAM10to60BaseMesh</span><span class="p">(</span><span class="n">QuasiUniformSphericalMeshStep</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A step for creating YAM10to60 meshes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create cell width array for this mesh on a regular latitude-longitude</span>
+<span class="sd">        grid</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        cellWidth : numpy.array</span>
+<span class="sd">            m x n array of cell width in km</span>
+
+<span class="sd">        lon : numpy.array</span>
+<span class="sd">            longitude in degrees (length n and between -180 and 180)</span>
+
+<span class="sd">        lat : numpy.array</span>
+<span class="sd">            longitude in degrees (length m and between -90 and 90)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">dlon</span> <span class="o">=</span> <span class="mf">0.1</span>
+        <span class="n">dlat</span> <span class="o">=</span> <span class="n">dlon</span>
+        <span class="n">nlon</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">360.</span> <span class="o">/</span> <span class="n">dlon</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">nlat</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">180.</span> <span class="o">/</span> <span class="n">dlat</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">lon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">180.</span><span class="p">,</span> <span class="mf">180.</span><span class="p">,</span> <span class="n">nlon</span><span class="p">)</span>
+        <span class="n">lat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">90.</span><span class="p">,</span> <span class="mf">90.</span><span class="p">,</span> <span class="n">nlat</span><span class="p">)</span>
+
+        <span class="n">cell_width</span> <span class="o">=</span> <span class="mf">60.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">nlat</span><span class="p">,</span> <span class="n">nlon</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">cell_width</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span>
+</pre></div>
+</div>
+<p>We also need a config file for the mesh.  For now, it can just be empty:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>touch<span class="w"> </span>yam10to60.cfg
+</pre></div>
+</div>
+<p>Next, we need to add this mesh to the list of known meshes:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>..
+vim<span class="w"> </span>__init__.py
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.so12to60</span> <span class="kn">import</span> <span class="n">SO12to60BaseMesh</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.wc14</span> <span class="kn">import</span> <span class="n">WC14BaseMesh</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.yam10to60</span> <span class="kn">import</span> <span class="n">YAM10to60BaseMesh</span>
+</span><span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.metadata</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">get_author_and_email_from_git</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="o">...</span>
+
+<span class="k">class</span> <span class="nc">Mesh</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+
+<span class="o">...</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">remap_topography</span><span class="p">):</span>
+
+    <span class="o">...</span>
+
+        <span class="k">elif</span> <span class="n">mesh_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Kuroshio&#39;</span><span class="p">):</span>
+            <span class="n">base_mesh_step</span> <span class="o">=</span> <span class="n">KuroshioBaseMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;WC14&#39;</span><span class="p">,</span> <span class="s1">&#39;WCwISC14&#39;</span><span class="p">]:</span>
+            <span class="n">base_mesh_step</span> <span class="o">=</span> <span class="n">WC14BaseMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
+<span class="hll">        <span class="k">elif</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;YAM10to60&#39;</span><span class="p">,</span> <span class="s1">&#39;YAMwISC10to60&#39;</span><span class="p">]:</span>
+</span><span class="hll">            <span class="n">base_mesh_step</span> <span class="o">=</span> <span class="n">YAM10to60BaseMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
+</span>        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unknown mesh name </span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In compass, we support 2 versions of nearly every mesh, 1 where everything
+south of the Antarctic coast is treated as land and 1 where we include the
+ocean cavities below Antarctic ice shelves (<code class="docutils literal notranslate"><span class="pre">wISC</span></code>, meaning “with ice-shelf
+cavities”)</p>
+<p>Next, we add a test case for making this mesh to the <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> test
+group:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>..
+vim<span class="w"> </span>__init__.py
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+
+<span class="k">class</span> <span class="nc">GlobalOcean</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
+
+    <span class="o">...</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
+
+        <span class="o">...</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;WC14&#39;</span><span class="p">,</span> <span class="s1">&#39;WCwISC14&#39;</span><span class="p">],</span>
+                        <span class="n">DynamicAdjustment</span><span class="o">=</span><span class="n">WC14DynamicAdjustment</span><span class="p">)</span>
+
+        <span class="c1"># Kuroshio meshes without ice-shelf cavities</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Kuroshio12to60&#39;</span><span class="p">,</span> <span class="s1">&#39;Kuroshio8to60&#39;</span><span class="p">],</span>
+                        <span class="n">DynamicAdjustment</span><span class="o">=</span><span class="n">KuroshioDynamicAdjustment</span><span class="p">)</span>
+
+<span class="hll">        <span class="k">for</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;YAM10to60&#39;</span><span class="p">,</span> <span class="s1">&#39;YAMwISC10to60&#39;</span><span class="p">]:</span>
+</span><span class="hll">            <span class="n">mesh_test</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">,</span>
+</span><span class="hll">                             <span class="n">remap_topography</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span class="hll">            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">mesh_test</span><span class="p">)</span>
+</span><span class="hll">
+</span>        <span class="c1"># A test case for making E3SM support files from an existing mesh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">FilesForE3SM</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Okay, great!  We’re ready to test this out!</p>
+</section>
+<section id="running-the-mesh-test-case">
+<span id="dev-tutorial-add-rrm-test-mesh"></span><h2>Running the mesh test case<a class="headerlink" href="#running-the-mesh-test-case" title="Permalink to this heading">¶</a></h2>
+<p>First, let’s make sure the mesh exists when we list the available test cases
+in compass:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass<span class="w"> </span>list
+</pre></div>
+</div>
+<p>You should see something like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="o">...</span>
+
+ <span class="mi">250</span><span class="p">:</span> <span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">Kuroshio8to60</span><span class="o">/</span><span class="n">WOA23</span><span class="o">/</span><span class="n">init</span>
+ <span class="mi">251</span><span class="p">:</span> <span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">Kuroshio8to60</span><span class="o">/</span><span class="n">WOA23</span><span class="o">/</span><span class="n">performance_test</span>
+ <span class="mi">252</span><span class="p">:</span> <span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">Kuroshio8to60</span><span class="o">/</span><span class="n">WOA23</span><span class="o">/</span><span class="n">dynamic_adjustment</span>
+ <span class="mi">253</span><span class="p">:</span> <span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">Kuroshio8to60</span><span class="o">/</span><span class="n">WOA23</span><span class="o">/</span><span class="n">files_for_e3sm</span>
+<span class="hll"> <span class="mi">254</span><span class="p">:</span> <span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">YAM10to60</span><span class="o">/</span><span class="n">mesh</span>
+</span><span class="hll"> <span class="mi">255</span><span class="p">:</span> <span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">YAMwISC10to60</span><span class="o">/</span><span class="n">mesh</span>
+</span> <span class="mi">256</span><span class="p">:</span> <span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">files_for_e3sm</span>
+ <span class="mi">257</span><span class="p">:</span> <span class="n">ocean</span><span class="o">/</span><span class="n">gotm</span><span class="o">/</span><span class="n">default</span>
+
+ <span class="o">...</span>
+</pre></div>
+</div>
+<p>On one of the supported HPC machines, let’s try setting up and running the mesh
+step.  We will concentrate on the mesh without ice-shelf cavities <code class="docutils literal notranslate"><span class="pre">YAM10to60</span></code>
+for now because it is a little simpler.  Here’s an example that should work on
+Chrysalis or Anvil:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass<span class="w"> </span>setup<span class="w"> </span>-n<span class="w"> </span><span class="m">254</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p<span class="w"> </span>E3SM-Project/components/mpas-ocean/<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-w<span class="w"> </span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/compass_tests/tests_20230527/yam10to60_uniform60km
+</pre></div>
+</div>
+<p>The number provided (e.g. <code class="docutils literal notranslate"><span class="pre">254</span></code>) is the number of the test case in
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">list</span></code> above.  Since these numbers change frequently, you should
+check each time you check out or rebase the code with something like
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">list</span> <span class="pre">|</span> <span class="pre">grep</span> <span class="pre">YAM</span></code></p>
+<p>The directory you point to with <code class="docutils literal notranslate"><span class="pre">-p</span></code> is where you build MPAS-Ocean.  We don’t
+actually need that quite yet but we will soon when we add an initial condition
+on the mesh.  The base work directory you point to with <code class="docutils literal notranslate"><span class="pre">-w</span></code> should be a
+location in a scratch space where you can set up temporary tests.  We recommend
+including a date somewhere in the path just to keep things organized but that
+is up to you.</p>
+<p>For simplicity, it is a good idea to open a new terminal for running the test.
+In the new terminal window:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/compass_tests/tests_20230527/yam10to60_uniform60km
+vim<span class="w"> </span>job_script.custom.sh
+sbatch<span class="w"> </span>job_script.custom.sh
+</pre></div>
+</div>
+<p>If you prefer, you can get an interactive node and run the same commands as
+in the job script:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>load_compass_env.sh
+compass<span class="w"> </span>run<span class="w"> </span>custom
+</pre></div>
+</div>
+<p>Assuming you submitted the job script as above, you can monitor the output
+file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ tail -f compass.o*
+
+Loading conda environment
+Done.
+
+Loading Spack environment...
+Done.
+
+ocean/global_ocean/YAM10to60/mesh
+  * step: base_mesh
+  * step: remap_topography
+  * step: cull_mesh
+  test execution:      SUCCESS
+  test runtime:        11:31
+Test Runtimes:
+11:31 PASS ocean_global_ocean_YAM10to60_mesh
+Total runtime 11:32
+PASS: All passed successfully!
+</pre></div>
+</div>
+<p>If things don’t go well, you might see something like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Loading</span> <span class="n">conda</span> <span class="n">environment</span>
+<span class="n">Done</span><span class="o">.</span>
+
+<span class="n">Loading</span> <span class="n">Spack</span> <span class="n">environment</span><span class="o">...</span>
+<span class="n">Done</span><span class="o">.</span>
+
+<span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">YAM10to60</span><span class="o">/</span><span class="n">mesh</span>
+  <span class="o">*</span> <span class="n">step</span><span class="p">:</span> <span class="n">base_mesh</span>
+      <span class="n">Failed</span>
+  <span class="n">test</span> <span class="n">execution</span><span class="p">:</span>      <span class="n">ERROR</span>
+  <span class="n">see</span><span class="p">:</span> <span class="n">case_outputs</span><span class="o">/</span><span class="n">ocean_global_ocean_YAM10to60_mesh</span><span class="o">.</span><span class="n">log</span>
+  <span class="n">test</span> <span class="n">runtime</span><span class="p">:</span>        <span class="mi">00</span><span class="p">:</span><span class="mi">00</span>
+<span class="n">Test</span> <span class="n">Runtimes</span><span class="p">:</span>
+<span class="mi">00</span><span class="p">:</span><span class="mi">00</span> <span class="n">FAIL</span> <span class="n">ocean_global_ocean_YAM10to60_mesh</span>
+<span class="n">Total</span> <span class="n">runtime</span> <span class="mi">00</span><span class="p">:</span><span class="mi">01</span>
+<span class="n">FAIL</span><span class="p">:</span> <span class="mi">1</span> <span class="n">test</span> <span class="n">failed</span><span class="p">,</span> <span class="n">see</span> <span class="n">above</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Hopefully, the contents of the log file, in this case
+<code class="docutils literal notranslate"><span class="pre">case_outputs/ocean_global_ocean_YAM10to60_mesh.log</span></code>, can help you debug
+what went wrong.</p>
+<p>Once the <code class="docutils literal notranslate"><span class="pre">base_mesh</span></code> step has completed, you should see:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>ls<span class="w"> </span>ocean/global_ocean/YAM10to60/mesh/base_mesh/
+base_mesh.nc<span class="w">          </span>geom.msh<span class="w">             </span>mesh.cfg<span class="w">           </span>opts.log
+base_mesh_vtk<span class="w">         </span>graph.info<span class="w">           </span>mesh.msh<span class="w">           </span>spac.msh
+cellWidthGlobal.png<span class="w">   </span>job_script.sh<span class="w">        </span>mesh_triangles.nc<span class="w">  </span>step.pickle
+cellWidthVsLatLon.nc<span class="w">  </span>load_compass_env.sh<span class="w">  </span>opts.jig
+</pre></div>
+</div>
+<p>The main result is the file <code class="docutils literal notranslate"><span class="pre">base_mesh.nc</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>ocean/global_ocean/YAM10to60/mesh/base_mesh/
+$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>load_compass_env.sh
+$<span class="w"> </span>ncdump<span class="w"> </span>-h<span class="w"> </span>base_mesh.nc
+
+netcdf<span class="w"> </span>base_mesh<span class="w"> </span><span class="o">{</span>
+dimensions:
+<span class="w">    </span><span class="nv">Time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>UNLIMITED<span class="w"> </span><span class="p">;</span><span class="w"> </span>//<span class="w"> </span><span class="o">(</span><span class="m">0</span><span class="w"> </span>currently<span class="o">)</span>
+<span class="w">    </span><span class="nv">nCells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">165049</span><span class="w"> </span><span class="p">;</span>
+<span class="w">    </span><span class="nv">nEdges</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">495141</span><span class="w"> </span><span class="p">;</span>
+<span class="w">    </span><span class="nv">nVertices</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">330094</span><span class="w"> </span><span class="p">;</span>
+<span class="w">    </span><span class="nv">maxEdges</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="p">;</span>
+<span class="w">    </span><span class="nv">maxEdges2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">16</span><span class="w"> </span><span class="p">;</span>
+<span class="w">    </span><span class="nv">TWO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="p">;</span>
+<span class="w">    </span><span class="nv">vertexDegree</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="p">;</span>
+variables:
+<span class="w">    </span>int<span class="w"> </span>edgesOnEdge<span class="o">(</span>nEdges,<span class="w"> </span>maxEdges2<span class="o">)</span><span class="w"> </span><span class="p">;</span>
+
+...
+</pre></div>
+</div>
+<p>You can get take a look at the map of resolution in <code class="docutils literal notranslate"><span class="pre">cellWidthGlobal.png</span></code>:</p>
+<a class="reference internal image-reference" href="../_images/qu60.png"><img alt="../_images/qu60.png" class="align-center" src="../_images/qu60.png" style="width: 500px;" /></a>
+<p>Not very interesting so far but it will be informative once we start to
+vary the resolution later.</p>
+<p>If you want to view the mesh, you can copy the file
+<code class="docutils literal notranslate"><span class="pre">base_mesh_vtk/staticFieldsOnCells.vtp</span></code> over to your laptop or desktop and
+open it in ParaView.  See
+<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/visualization.html#paraview-vtk-extractor">ParaView VTK Extractor</a>
+for more details on the tool used to extract the mesh VTK file.</p>
+<a class="reference internal image-reference" href="../_images/qu60_base_paraview.png"><img alt="../_images/qu60_base_paraview.png" class="align-center" src="../_images/qu60_base_paraview.png" style="width: 500px;" /></a>
+<p>The <code class="docutils literal notranslate"><span class="pre">remap_topography</span></code> step will produce:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>../remap_topography/
+$<span class="w"> </span>ls
+base_mesh.nc<span class="w">                                    </span>src_mesh.nc
+dst_mesh.nc<span class="w">                                     </span>step.pickle
+job_script.sh<span class="w">                                   </span>topography.nc
+load_compass_env.sh<span class="w">                             </span>topography_ncremap.nc
+map_0.013x0.013degree_to_YAM10to60_conserve.nc<span class="w">  </span>topography_remapped.nc
+mesh.cfg
+</pre></div>
+</div>
+<p>Here, the main result is <code class="docutils literal notranslate"><span class="pre">topography_remapped.nc</span></code>, the ocean bathymetry and
+Antarctic ice topography remapped to the mesh defined in <code class="docutils literal notranslate"><span class="pre">base_mesh.nc</span></code>.</p>
+<p>Finally, the <code class="docutils literal notranslate"><span class="pre">cull_mesh</span></code> step will remove land cells from the mesh:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">remap_topography</span></code> step will produce:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>../cull_mesh/
+$<span class="w"> </span>ls
+base_mesh.nc<span class="w">                     </span>job_script.sh
+critical_blockages.geojson<span class="w">       </span>land_mask.nc
+critical_blockages.nc<span class="w">            </span>land_mask_with_land_locked_cells.nc
+critical_passages.geojson<span class="w">        </span>load_compass_env.sh
+critical_passages_mask_final.nc<span class="w">  </span>mesh.cfg
+critical_passages.nc<span class="w">             </span>step.pickle
+culled_graph.info<span class="w">                </span>topography_culled.nc
+culled_mesh.nc<span class="w">                   </span>topography.nc
+culled_mesh_vtk
+</pre></div>
+</div>
+<p>Here, the main output is <code class="docutils literal notranslate"><span class="pre">culled_mesh.nc</span></code>.  Similarly to the base mesh, you
+can look at the the culled mesh in ParaVeiw by copying
+<code class="docutils literal notranslate"><span class="pre">culled_mesh_vtk/staticFieldsOnCells.vtp</span></code> to your laptop or desktop.</p>
+<a class="reference internal image-reference" href="../_images/qu60_culled_paraview.png"><img alt="../_images/qu60_culled_paraview.png" class="align-center" src="../_images/qu60_culled_paraview.png" style="width: 500px;" /></a>
+<p>Here, we have placed a white sphere inside the mesh so the land regions are
+easier to see.  After culling, the land just appears as holes in the mesh.</p>
+</section>
+<section id="switching-to-an-ec30to60-base-resolution">
+<span id="dev-tutorial-add-rrm-ec-base-mesh"></span><h2>Switching to an EC30to60 base resolution<a class="headerlink" href="#switching-to-an-ec30to60-base-resolution" title="Permalink to this heading">¶</a></h2>
+<p>Returning to the terminal where we are developing the code, let’s make the mesh
+more interesting.</p>
+<p>So far, all E3SM ocean and sea-ice RRMs start with the EC30to60 (eddy-closure
+30 to 60 km) mesh as their base resolution.  Let’s do the same here. Starting
+from the base of your development branch:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>compass/ocean/tests/global_ocean/mesh/yam10to60
+vim<span class="w"> </span>__init__.py
+</pre></div>
+</div>
+<p>We will replace the constant 60-km mesh resolution with a latitude-dependent
+function from the
+<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/mesh_creation.html#mesh-definition-tools">mesh_definition_tools</a>
+module from MPAS-Tools. The default EC mesh has resolutions of 35 km at the
+poles, 60 km at mid-latitudes and 30 km at the equator.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="hll"><span class="kn">import</span> <span class="nn">mpas_tools.mesh.creation.mesh_definition_tools</span> <span class="k">as</span> <span class="nn">mdt</span>
+</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">compass.mesh</span> <span class="kn">import</span> <span class="n">QuasiUniformSphericalMeshStep</span>
+
+
+<span class="k">class</span> <span class="nc">YAM10to60BaseMesh</span><span class="p">(</span><span class="n">QuasiUniformSphericalMeshStep</span><span class="p">):</span>
+
+    <span class="o">...</span>
+
+    <span class="k">def</span> <span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="o">...</span>
+
+        <span class="n">lat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">90.</span><span class="p">,</span> <span class="mf">90.</span><span class="p">,</span> <span class="n">nlat</span><span class="p">)</span>
+
+<span class="hll">        <span class="n">cell_width_vs_lat</span> <span class="o">=</span> <span class="n">mdt</span><span class="o">.</span><span class="n">EC_CellWidthVsLat</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span>
+</span><span class="hll">        <span class="n">cell_width</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">cell_width_vs_lat</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="n">lon</span><span class="o">.</span><span class="n">size</span><span class="p">]))</span>
+</span>
+        <span class="k">return</span> <span class="n">cell_width</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span>
+</pre></div>
+</div>
+<p>At this point, you can set up and test again like you did in
+<a class="reference internal" href="#dev-tutorial-add-rrm-test-mesh"><span class="std std-ref">Running the mesh test case</span></a>, but this time you will want to use
+a different work directory name, e.g.:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass<span class="w"> </span>setup<span class="w"> </span>-n<span class="w"> </span><span class="m">254</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p<span class="w"> </span>E3SM-Project/components/mpas-ocean/<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-w<span class="w"> </span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/compass_tests/tests_20230527/yam10to60_ec
+</pre></div>
+</div>
+<p>Switch back to your other terminal to submit the job and look at the results.
+The map of resolution in <code class="docutils literal notranslate"><span class="pre">base_mesh/cellWidthGlobal.png</span></code> should look like:</p>
+<a class="reference internal image-reference" href="../_images/ec30to60.png"><img alt="../_images/ec30to60.png" class="align-center" src="../_images/ec30to60.png" style="width: 500px;" /></a>
+<p>After culling, the mesh in <code class="docutils literal notranslate"><span class="pre">culled_mesh/culled_mesh_vtk/staticFieldsOnCells.vtp</span></code>
+should look like:</p>
+<a class="reference internal image-reference" href="../_images/ec30to60_culled_paraview.png"><img alt="../_images/ec30to60_culled_paraview.png" class="align-center" src="../_images/ec30to60_culled_paraview.png" style="width: 500px;" /></a>
+</section>
+<section id="adding-regions-of-higher-resolution">
+<span id="dev-tutorial-add-rrm-add-high-res"></span><h2>Adding regions of higher resolution<a class="headerlink" href="#adding-regions-of-higher-resolution" title="Permalink to this heading">¶</a></h2>
+<p>Now, let’s add some regions of higher resolution to the mesh.</p>
+<p>We typically define these regions using <a class="reference external" href="https://geojson.org/">geojson</a>
+files.  The easiest way to create them is to go to <a class="reference external" href="https://geojson.io/">geojson.io</a>.
+There, you can find your way to the part of the globe you want to refine
+and use the polygon tool to make a shape that will act as the boundary for your
+high resolution region.</p>
+<a class="reference internal image-reference" href="../_images/geojson_io_south_atl.png"><img alt="../_images/geojson_io_south_atl.png" class="align-center" src="../_images/geojson_io_south_atl.png" style="width: 800px;" /></a>
+<p>In my case, I have defined a region across the south Atlantic ocean with its
+western side centered around the outlet of the Amazon river.  My plan is to
+define a region of moderately higher resolution across a fairly broad region
+first, then define a region of higher resolution close to the Amazon delta
+in a subsequent step.</p>
+<p>Let’s make an actual <code class="docutils literal notranslate"><span class="pre">geojson</span></code> file with this contents.  In your terminal for
+editing code, from the root of the branch where we’re developing:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>compass/ocean/tests/global_ocean/mesh/yam10to60
+vim<span class="w"> </span>northern_south_atlantic.geojson
+</pre></div>
+</div>
+<p>Copy the contents of the json code on the right-hand side of the geojson.io
+window and paste it into the file:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FeatureCollection&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;features&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="w">      </span><span class="nt">&quot;geometry&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;coordinates&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">[</span>
+<span class="w">            </span><span class="p">[</span>
+<span class="w">              </span><span class="mf">-42.7022201869903</span><span class="p">,</span>
+<span class="w">              </span><span class="mf">28.229943571814303</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="p">[</span>
+<span class="w">              </span><span class="mf">-63.8408547092003</span><span class="p">,</span>
+<span class="w">              </span><span class="mf">9.565520467643694</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="p">[</span>
+<span class="w">              </span><span class="mf">-54.35184148160458</span><span class="p">,</span>
+<span class="w">              </span><span class="mf">-3.0088254981339873</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="p">[</span>
+<span class="w">              </span><span class="mf">-37.52116934686214</span><span class="p">,</span>
+<span class="w">              </span><span class="mf">-8.341138860925426</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="p">[</span>
+<span class="w">              </span><span class="mf">-12.947354056832182</span><span class="p">,</span>
+<span class="w">              </span><span class="mf">10.997433207836309</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="p">[</span>
+<span class="w">              </span><span class="mf">-11.493517385995887</span><span class="p">,</span>
+<span class="w">              </span><span class="mf">27.701423680235493</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="p">[</span>
+<span class="w">              </span><span class="mf">-42.7022201869903</span><span class="p">,</span>
+<span class="w">              </span><span class="mf">28.229943571814303</span>
+<span class="w">            </span><span class="p">]</span>
+<span class="w">          </span><span class="p">]</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Polygon&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Then, modify the <code class="docutils literal notranslate"><span class="pre">properties</span></code> dictionary similarly to this example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;FeatureCollection&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Feature&quot;</span><span class="p">,</span>
+<span class="hll">      <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class="hll">        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Northern South Atlantic&quot;</span><span class="p">,</span>
+</span><span class="hll">        <span class="s2">&quot;component&quot;</span><span class="p">:</span> <span class="s2">&quot;ocean&quot;</span><span class="p">,</span>
+</span><span class="hll">        <span class="s2">&quot;object&quot;</span><span class="p">:</span> <span class="s2">&quot;region&quot;</span><span class="p">,</span>
+</span><span class="hll">        <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Xylar Asay-Davis&quot;</span>
+</span><span class="hll">      <span class="p">},</span>
+</span>
+      <span class="o">...</span>
+</pre></div>
+</div>
+<p>These 4 fields are required for compass to be able to use the file.  The
+<code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">author</span></code> are entirely up to you and are intended to help
+document the file in some useful way.  The <code class="docutils literal notranslate"><span class="pre">component</span></code> must be <code class="docutils literal notranslate"><span class="pre">&quot;ocean&quot;</span></code>
+and the <code class="docutils literal notranslate"><span class="pre">object</span></code> must be <code class="docutils literal notranslate"><span class="pre">&quot;region&quot;</span></code>.</p>
+<p>Next, let’s make the shape available in the code so we can use it later to make
+a higher resolution region:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vim<span class="w"> </span>__init__.py
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mpas_tools.mesh.creation.mesh_definition_tools</span> <span class="k">as</span> <span class="nn">mdt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">read_feature_collection</span>
+</span>
+<span class="kn">from</span> <span class="nn">compass.mesh</span> <span class="kn">import</span> <span class="n">QuasiUniformSphericalMeshStep</span>
+
+
+<span class="k">class</span> <span class="nc">YAM10to60BaseMesh</span><span class="p">(</span><span class="n">QuasiUniformSphericalMeshStep</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A step for creating YAM10to60 meshes</span>
+<span class="hll"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span class="hll">    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class="hll"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span class="hll"><span class="sd">        Add some input files</span>
+</span><span class="hll"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span class="hll">        <span class="n">package</span> <span class="o">=</span> <span class="s1">&#39;compass.ocean.tests.global_ocean.mesh.yam10to60&#39;</span>
+</span><span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;northern_south_atlantic.geojson&#39;</span><span class="p">,</span>
+</span><span class="hll">                            <span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">)</span>
+</span><span class="hll">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+</span><span class="hll">
+</span>    <span class="k">def</span> <span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="o">...</span>
+
+        <span class="n">cell_width_vs_lat</span> <span class="o">=</span> <span class="n">mdt</span><span class="o">.</span><span class="n">EC_CellWidthVsLat</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span>
+        <span class="n">cell_width</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">cell_width_vs_lat</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="n">lon</span><span class="o">.</span><span class="n">size</span><span class="p">]))</span>
+
+        <span class="c1"># read the shape</span>
+<span class="hll">        <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">&#39;northern_south_atlantic.geojson&#39;</span><span class="p">)</span>
+</span>
+        <span class="k">return</span> <span class="n">cell_width</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span>
+</pre></div>
+</div>
+<p>In the <code class="docutils literal notranslate"><span class="pre">setup()</span></code> method above, we add the geojson file as an input to the
+step that creates the base mesh.  This is how compass finds the geojson file
+when it’s setting up the work directory where we will build the base mesh.</p>
+<p>In the <code class="docutils literal notranslate"><span class="pre">build_cell_width_lat_lon()</span></code> method, we read in a the geojson file
+into a “feature collection” (<code class="docutils literal notranslate"><span class="pre">fc</span></code>) object that we will use below to define
+the higher resolution region.</p>
+<p>Now, let’s make further changes to the same file to use the shape to add a
+higher resolution region:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vim<span class="w"> </span>__init__.py
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mpas_tools.mesh.creation.mesh_definition_tools</span> <span class="k">as</span> <span class="nn">mdt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">read_feature_collection</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span>
+</span><span class="hll"><span class="kn">from</span> <span class="nn">mpas_tools.mesh.creation.signed_distance</span> <span class="kn">import</span> <span class="p">(</span>
+</span><span class="hll">    <span class="n">signed_distance_from_geojson</span><span class="p">,</span>
+</span><span class="hll"><span class="p">)</span>
+</span>
+<span class="kn">from</span> <span class="nn">compass.mesh</span> <span class="kn">import</span> <span class="n">QuasiUniformSphericalMeshStep</span>
+
+
+<span class="k">class</span> <span class="nc">YAM10to60BaseMesh</span><span class="p">(</span><span class="n">QuasiUniformSphericalMeshStep</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="o">...</span>
+
+        <span class="n">cell_width_vs_lat</span> <span class="o">=</span> <span class="n">mdt</span><span class="o">.</span><span class="n">EC_CellWidthVsLat</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span>
+        <span class="n">cell_width</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">cell_width_vs_lat</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="n">lon</span><span class="o">.</span><span class="n">size</span><span class="p">]))</span>
+
+        <span class="c1"># read the shape</span>
+        <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">&#39;northern_south_atlantic.geojson&#39;</span><span class="p">)</span>
+
+<span class="hll">        <span class="c1"># How wide in meters the smooth transition between the background</span>
+</span><span class="hll">        <span class="c1">#   resolution and the finer resolution regions should be.</span>
+</span><span class="hll">        <span class="c1"># 1200 km is equivalent to about 10 degrees latitude</span>
+</span><span class="hll">        <span class="n">trans_width</span> <span class="o">=</span> <span class="mf">1200e3</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="c1"># The resolution in km of the finer resolution region</span>
+</span><span class="hll">        <span class="n">fine_cell_width</span> <span class="o">=</span> <span class="mf">20.</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="c1"># the radius of the earth defined in E3SM&#39;s shared constants</span>
+</span><span class="hll">        <span class="n">earth_radius</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_REARTH&#39;</span><span class="p">]</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="c1"># A field defined on the lat-long grid with the signed distance away</span>
+</span><span class="hll">        <span class="c1"># from the boundary of the shape (positive outside and negative inside)</span>
+</span><span class="hll">        <span class="n">atlantic_signed_distance</span> <span class="o">=</span> <span class="n">signed_distance_from_geojson</span><span class="p">(</span>
+</span><span class="hll">            <span class="n">fc</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">earth_radius</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="c1"># A field that goes smoothly from zero inside the shape to one outside</span>
+</span><span class="hll">        <span class="c1"># the shape over the given transition width.</span>
+</span><span class="hll">        <span class="n">weights</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">atlantic_signed_distance</span> <span class="o">/</span> <span class="n">trans_width</span><span class="p">))</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="c1"># The cell width in km becomes a blend of the background cell width</span>
+</span><span class="hll">        <span class="c1"># and the finer cell width using the weights</span>
+</span><span class="hll">        <span class="n">cell_width</span> <span class="o">=</span> <span class="n">fine_cell_width</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">weights</span><span class="p">)</span> <span class="o">+</span> <span class="n">cell_width</span> <span class="o">*</span> <span class="n">weights</span>
+</span>
+        <span class="k">return</span> <span class="n">cell_width</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span>
+</pre></div>
+</div>
+<p>The function <code class="docutils literal notranslate"><span class="pre">signed_distance_from_geojson()</span></code> creates a functon on the
+lat-lon grid that is the distance from any given point on the globe to the
+boundary of the shape defined by the geojson file.  The distance is positive
+outside the shape and negative inside it.  For better accuracy in computing the
+distance, we subdivide the shape into segments of <code class="docutils literal notranslate"><span class="pre">max_length=0.25</span></code> degrees
+latitude or longitude.  We use the <code class="docutils literal notranslate"><span class="pre">earth_radius</span></code> defined in E3SM’s shared
+constants.</p>
+<p>Using the signed distance, we create a blending function <code class="docutils literal notranslate"><span class="pre">weights</span></code> that goes
+from zero inside the shape smoothly to one outside the shape over a distance of
+<code class="docutils literal notranslate"><span class="pre">trans_width</span></code> meters.  Then, we use the weights to blend from the fine
+resolution inside the shape to the EC30to60 background resolution outside the
+shape.</p>
+<p>There are also fancier ways to define gradients in resolution, for example
+using the relative distance between the boundaries of 2 shapes.  These are not
+covered in the tutorial but you can get in touch with the E3SM Ocean Team to
+discuss ways to define more complex maps of mesh resolution.</p>
+<p>Once, again, let’s set up and run the mesh test case like we did in
+<a class="reference internal" href="#dev-tutorial-add-rrm-test-mesh"><span class="std std-ref">Running the mesh test case</span></a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass<span class="w"> </span>setup<span class="w"> </span>-n<span class="w"> </span><span class="m">254</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p<span class="w"> </span>E3SM-Project/components/mpas-ocean/<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-w<span class="w"> </span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/compass_tests/tests_20230527/yam10to60_alt20km
+</pre></div>
+</div>
+<p>As before, switch back to your other terminal to submit the job and look at the
+results.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/compass_tests/tests_20230527/yam10to60_alt20km
+sbatch<span class="w"> </span>job_script.custom.sh
+tail<span class="w"> </span>-f<span class="w"> </span>compass.o*
+</pre></div>
+</div>
+<p>The map of resolution in <code class="docutils literal notranslate"><span class="pre">base_mesh/cellWidthGlobal.png</span></code> should look
+like:</p>
+<a class="reference internal image-reference" href="../_images/atl20km.png"><img alt="../_images/atl20km.png" class="align-center" src="../_images/atl20km.png" style="width: 500px;" /></a>
+<p>After culling, the mesh in <code class="docutils literal notranslate"><span class="pre">culled_mesh/culled_mesh_vtk/staticFieldsOnCells.vtp</span></code>
+should look like:</p>
+<a class="reference internal image-reference" href="../_images/atl20km_culled_paraview.png"><img alt="../_images/atl20km_culled_paraview.png" class="align-center" src="../_images/atl20km_culled_paraview.png" style="width: 500px;" /></a>
+</section>
+<section id="adding-a-very-high-resolution-region">
+<span id="dev-tutorial-add-rrm-add-very-high-res"></span><h2>Adding a very high resolution region<a class="headerlink" href="#adding-a-very-high-resolution-region" title="Permalink to this heading">¶</a></h2>
+<p>Using the same approach as in the previous section, we can define another
+region where we will increase the resolution to 10 km.</p>
+<p>I used geojson.io to create a region around the Amazon River delta:</p>
+<a class="reference internal image-reference" href="../_images/geojson_io_amazon_delta.png"><img alt="../_images/geojson_io_amazon_delta.png" class="align-center" src="../_images/geojson_io_amazon_delta.png" style="width: 800px;" /></a>
+<p>Then, I copied the code and pasted it into a file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>compass/ocean/tests/global_ocean/mesh/yam10to60
+vim<span class="w"> </span>amazon_delta.geojson
+</pre></div>
+</div>
+<p>I added the <code class="docutils literal notranslate"><span class="pre">properties</span></code> dictionary like in the previous example.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FeatureCollection&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;features&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Amazon Delta&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;component&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ocean&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;object&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;region&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;author&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Xylar Asay-Davis&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;geometry&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;coordinates&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">[</span>
+<span class="w">            </span><span class="p">[</span>
+<span class="w">              </span><span class="mf">-33.27493467565196</span><span class="p">,</span>
+<span class="w">              </span><span class="mf">9.398029362516667</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="p">[</span>
+<span class="w">              </span><span class="mf">-44.499833304073974</span><span class="p">,</span>
+<span class="w">              </span><span class="mf">11.7502737267192</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="p">[</span>
+<span class="w">              </span><span class="mf">-54.422618869265236</span><span class="p">,</span>
+<span class="w">              </span><span class="mf">8.655607226691274</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="p">[</span>
+<span class="w">              </span><span class="mf">-60.654712683354944</span><span class="p">,</span>
+<span class="w">              </span><span class="mf">0.9780614705966428</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="p">[</span>
+<span class="w">              </span><span class="mf">-54.56296235335806</span><span class="p">,</span>
+<span class="w">              </span><span class="mf">-9.767487562476404</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="p">[</span>
+<span class="w">              </span><span class="mf">-41.34251704331987</span><span class="p">,</span>
+<span class="w">              </span><span class="mf">-9.500764493003032</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="p">[</span>
+<span class="w">              </span><span class="mf">-36.85005485733731</span><span class="p">,</span>
+<span class="w">              </span><span class="mf">-3.655530642645047</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="p">[</span>
+<span class="w">              </span><span class="mf">-33.03465151175149</span><span class="p">,</span>
+<span class="w">              </span><span class="mf">4.644399816423899</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="p">[</span>
+<span class="w">              </span><span class="mf">-33.27493467565196</span><span class="p">,</span>
+<span class="w">              </span><span class="mf">9.398029362516667</span>
+<span class="w">            </span><span class="p">]</span>
+<span class="w">          </span><span class="p">]</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Polygon&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Using this feature, I added a 10-km region:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vim<span class="w"> </span>__init__.py
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+
+<span class="k">class</span> <span class="nc">YAM10to60BaseMesh</span><span class="p">(</span><span class="n">QuasiUniformSphericalMeshStep</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add some input files</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">package</span> <span class="o">=</span> <span class="s1">&#39;compass.ocean.tests.global_ocean.mesh.yam10to60&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;northern_south_atlantic.geojson&#39;</span><span class="p">,</span>
+                            <span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">)</span>
+<span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;amazon_delta.geojson&#39;</span><span class="p">,</span>
+</span><span class="hll">                            <span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">)</span>
+</span>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="o">...</span>
+
+        <span class="c1"># A field that goes smoothly from zero inside the shape to one outside</span>
+        <span class="c1"># the shape over the given transition width.</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">atlantic_signed_distance</span> <span class="o">/</span> <span class="n">trans_width</span><span class="p">))</span>
+
+        <span class="c1"># The cell width in km becomes a blend of the background cell width</span>
+        <span class="c1"># and the finer cell width using the weights</span>
+        <span class="n">cell_width</span> <span class="o">=</span> <span class="n">fine_cell_width</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">weights</span><span class="p">)</span> <span class="o">+</span> <span class="n">cell_width</span> <span class="o">*</span> <span class="n">weights</span>
+
+<span class="hll">        <span class="c1"># read the shape</span>
+</span><span class="hll">        <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">&#39;amazon_delta.geojson&#39;</span><span class="p">)</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="c1"># 400 km is equivalent to about 3 degrees latitude</span>
+</span><span class="hll">        <span class="n">trans_width</span> <span class="o">=</span> <span class="mf">400e3</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="c1"># The resolution in km of the finer resolution region</span>
+</span><span class="hll">        <span class="n">fine_cell_width</span> <span class="o">=</span> <span class="mf">10.</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="c1"># A field defined on the lat-long grid with the signed distance away</span>
+</span><span class="hll">        <span class="c1"># from the boundary of the shape (positive outside and negative inside)</span>
+</span><span class="hll">        <span class="n">amazon_delta_signed_distance</span> <span class="o">=</span> <span class="n">signed_distance_from_geojson</span><span class="p">(</span>
+</span><span class="hll">            <span class="n">fc</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">earth_radius</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="c1"># A field that goes smoothly from zero inside the shape to one outside</span>
+</span><span class="hll">        <span class="c1"># the shape over the given transition width.</span>
+</span><span class="hll">        <span class="n">weights</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span>
+</span><span class="hll">            <span class="n">amazon_delta_signed_distance</span> <span class="o">/</span> <span class="n">trans_width</span><span class="p">))</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="c1"># The cell width in km becomes a blend of the background cell width</span>
+</span><span class="hll">        <span class="c1"># and the finer cell width using the weights</span>
+</span><span class="hll">        <span class="n">cell_width</span> <span class="o">=</span> <span class="n">fine_cell_width</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">weights</span><span class="p">)</span> <span class="o">+</span> <span class="n">cell_width</span> <span class="o">*</span> <span class="n">weights</span>
+</span>
+        <span class="k">return</span> <span class="n">cell_width</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span>
+</pre></div>
+</div>
+<p>Same procedure as before, set up the test case:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass<span class="w"> </span>setup<span class="w"> </span>-n<span class="w"> </span><span class="m">254</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p<span class="w"> </span>E3SM-Project/components/mpas-ocean/<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-w<span class="w"> </span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/compass_tests/tests_20230527/yam10to60_final
+</pre></div>
+</div>
+<p>Switch back to your other terminal to submit the job and look at the results.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/compass_tests/tests_20230527/yam10to60_final
+sbatch<span class="w"> </span>job_script.custom.sh
+tail<span class="w"> </span>-f<span class="w"> </span>compass.o*
+</pre></div>
+</div>
+<p>The map of resolution in <code class="docutils literal notranslate"><span class="pre">base_mesh/cellWidthGlobal.png</span></code> should look
+like:</p>
+<a class="reference internal image-reference" href="../_images/yam10to60.png"><img alt="../_images/yam10to60.png" class="align-center" src="../_images/yam10to60.png" style="width: 500px;" /></a>
+<p>After culling, the mesh in <code class="docutils literal notranslate"><span class="pre">culled_mesh/culled_mesh_vtk/staticFieldsOnCells.vtp</span></code>
+should look like:</p>
+<a class="reference internal image-reference" href="../_images/yam10to60_culled_paraview.png"><img alt="../_images/yam10to60_culled_paraview.png" class="align-center" src="../_images/yam10to60_culled_paraview.png" style="width: 500px;" /></a>
+</section>
+<section id="adding-an-initial-condition-and-performance-test">
+<span id="dev-tutorial-add-rrm-add-init"></span><h2>Adding an initial condition and performance test<a class="headerlink" href="#adding-an-initial-condition-and-performance-test" title="Permalink to this heading">¶</a></h2>
+<p>We now have a horizontal ocean mesh, but there are several more steps in
+compass before we can start to integrate the new mesh into E3SM.</p>
+<p>First, we need to add an <code class="docutils literal notranslate"><span class="pre">init</span></code> test case that will create the vertical
+coordinate and the initial condition.  Most of what we need to define for the
+initial condition is set with config options:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>compass/ocean/tests/global_ocean/mesh/yam10to60
+vim<span class="w"> </span>yam10to60.cfg
+</pre></div>
+</div>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
+<span class="k">[vertical_grid]</span>
+
+<span class="c1"># the type of vertical grid</span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">index_tanh_dz</span>
+
+<span class="c1"># Number of vertical levels</span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">64</span>
+
+<span class="c1"># Depth of the bottom of the ocean</span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5500.0</span>
+
+<span class="c1"># The minimum layer thickness</span>
+<span class="na">min_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span>
+
+<span class="c1"># The maximum layer thickness</span>
+<span class="na">max_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">250.0</span>
+
+<span class="c1"># The characteristic number of levels over which the transition between</span>
+<span class="c1"># the min and max occurs</span>
+<span class="na">transition_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">28</span>
+</pre></div>
+</div>
+<p>The standard E3SM v3 vertical grid is defined with these parameters.  It
+transitions from 10 m resolution at the surface to 250 m resolution at a depth
+of 5500 m over 64 vertical levels.  The transition is centered around the 28th
+vertical level.  You can modify these parameters or use a different vertical
+coordinate (at your own risk).</p>
+<p>Next, we add a section with some required config options including some
+metadata:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vim<span class="w"> </span>yam10to60.cfg
+</pre></div>
+</div>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">...</span>
+
+<span class="c1"># The characteristic number of levels over which the transition between</span>
+<span class="c1"># the min and max occurs</span>
+<span class="na">transition_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">28</span>
+
+
+<span class="hll"><span class="c1"># options for global ocean testcases</span>
+</span><span class="hll"><span class="k">[global_ocean]</span>
+</span><span class="hll">
+</span><span class="hll"><span class="c1"># the approximate number of cells in the mesh</span>
+</span><span class="hll"><span class="na">approx_cell_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">270000</span>
+</span><span class="hll">
+</span><span class="hll"><span class="c1">## metadata related to the mesh</span>
+</span><span class="hll"><span class="c1"># the prefix (e.g. QU, EC, WC, SO)</span>
+</span><span class="hll"><span class="na">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">YAM</span>
+</span><span class="hll"><span class="c1"># a description of the mesh and initial condition</span>
+</span><span class="hll"><span class="na">mesh_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Yet Another Mesh (YAM) is regionally refined around the Amazon</span>
+</span><span class="hll"><span class="w">                   </span><span class="na">River delta.  It is used in E3SM version ${e3sm_version} for</span>
+</span><span class="hll"><span class="w">                   </span><span class="na">studies of blah, blah.  It has Enhanced resolution (${min_res} km)</span>
+</span><span class="hll"><span class="w">                   </span><span class="na">around the Amazon delta, 20-km resolution in the northern South</span>
+</span><span class="hll"><span class="w">                   </span><span class="na">Atlantic, 35-km resolution at the poles, 60-km at mid</span>
+</span><span class="hll"><span class="w">                   </span><span class="na">latitudes, and 30-km at the equator.  This mesh has &lt;&lt;&lt;levels&gt;&gt;&gt;</span>
+</span><span class="hll"><span class="w">                   </span><span class="na">vertical levels.</span>
+</span><span class="hll"><span class="c1"># E3SM version that the mesh is intended for</span>
+</span><span class="hll"><span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
+</span><span class="hll"><span class="c1"># The revision number of the mesh, which should be incremented each time the</span>
+</span><span class="hll"><span class="c1"># mesh is revised</span>
+</span><span class="hll"><span class="na">mesh_revision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+</span><span class="hll"><span class="c1"># the minimum (finest) resolution in the mesh</span>
+</span><span class="hll"><span class="na">min_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span>
+</span><span class="hll"><span class="c1"># the maximum (coarsest) resolution in the mesh, can be the same as min_res</span>
+</span><span class="hll"><span class="na">max_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">60</span>
+</span><span class="hll"><span class="c1"># The URL of the pull request documenting the creation of the mesh</span>
+</span><span class="hll"><span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">https://github.com/MPAS-Dev/compass/pull/XXX</span>
+</span><span class="hll">
+</span><span class="hll">
+</span><span class="hll"><span class="c1"># config options related to initial condition and diagnostics support files</span>
+</span><span class="hll"><span class="c1"># for E3SM</span>
+</span><span class="hll"><span class="k">[files_for_e3sm]</span>
+</span><span class="hll">
+</span><span class="hll"><span class="c1"># CMIP6 grid resolution</span>
+</span><span class="hll"><span class="na">cmip6_grid_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">180x360</span>
+</span></pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">approx_cell_count</span></code> is something you can only determine after you’ve
+made the mesh.  In your terminal where you’ve been running tests:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/compass_tests/tests_20230527/yam10to60_final
+<span class="nb">cd</span><span class="w"> </span>ocean/global_ocean/YAM10to60/mesh/cull_mesh
+<span class="nb">source</span><span class="w"> </span>load_compass_env.sh
+ncdump<span class="w"> </span>-h<span class="w"> </span>culled_mesh.nc<span class="w"> </span><span class="p">|</span><span class="w"> </span>more
+</pre></div>
+</div>
+<p>This will tell you the numer of cells (<code class="docutils literal notranslate"><span class="pre">nCells</span></code>).  Round this to 2
+significant digits and put this in <code class="docutils literal notranslate"><span class="pre">approx_cell_count</span></code>.  This will be used
+to determine an appropriate number of MPI tasks and nodes needed to perform
+forward runs with this mesh.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">prefix</span></code> should match the beginning fo the mesh name we have been using
+all along, <code class="docutils literal notranslate"><span class="pre">YAM</span></code> in this case.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">description</span></code> is used in the metadata of files produced by compass for
+this mesh. It should be a fairly detailed description of how resolution is
+distributed and what the intended purpose of the mesh is.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">e3sm_version</span></code> is what E3SM version the mesh is intended to be used in.
+Presumably, this is 3 for the time being, since no new meshes will be added
+to v2 and we don’t know much about v4 yet.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">mesh_revision</span></code> should be 1 to begin with but should be incremented to
+give each version of the mesh a unique number.  Typically, it is time to
+increase the revision number if you are altering the mesh and the current
+revision number has already been used in a simulation that might be published
+or put to some other broader scientific or technical use.  If you are still at
+the stage of tinkering with the mesh, it may be preferable not to increment the
+revision number with each modification.</p>
+<p><code class="docutils literal notranslate"><span class="pre">min_res</span></code> <em>must</em> be the minimum resolution of the mesh in km, and <code class="docutils literal notranslate"><span class="pre">max_res</span></code>
+should be the maximum.  (<code class="docutils literal notranslate"><span class="pre">min_res</span></code> is used to determine the time step for
+forward runs, so that is why it is required to be correct; <code class="docutils literal notranslate"><span class="pre">max_res</span></code> is only
+used for metadata and in the mesh name.)</p>
+<p><code class="docutils literal notranslate"><span class="pre">pull_request</span></code> points to a pull request (if there is one) where the mesh
+was added to compass.  This is a useful piece of metadata so folks know where
+to look for a discussion of the mesh.</p>
+<p><code class="docutils literal notranslate"><span class="pre">cmip6_grid_res</span></code> is the CMIP6 (and presumably 7) resolution to which data
+will be remapped for publication.  Typically, this is <code class="docutils literal notranslate"><span class="pre">180x360</span></code> (i.e. a
+1 degree grid) for RRMs because a lot of space is otherwise wasted on
+coarse-resolution regions.</p>
+<p>We also need to override some default namelist options with values appropriate
+for the mesh.  Many of these choices will depend on the details of the mesh
+you are making.  However, here are some common ones:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vim<span class="w"> </span>namelist.split_explicit
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">config_time_integrator</span> <span class="o">=</span> <span class="s1">&#39;split_explicit&#39;</span>
+<span class="n">config_run_duration</span> <span class="o">=</span> <span class="s1">&#39;0000_01:00:00&#39;</span>
+<span class="n">config_use_mom_del2</span> <span class="o">=</span> <span class="o">.</span><span class="n">true</span><span class="o">.</span>
+<span class="n">config_mom_del2</span> <span class="o">=</span> <span class="mf">10.0</span>
+<span class="n">config_use_mom_del4</span> <span class="o">=</span> <span class="o">.</span><span class="n">true</span><span class="o">.</span>
+<span class="n">config_mom_del4</span> <span class="o">=</span> <span class="mf">1.5e10</span>
+<span class="n">config_hmix_scaleWithMesh</span> <span class="o">=</span> <span class="o">.</span><span class="n">true</span><span class="o">.</span>
+<span class="n">config_use_GM</span> <span class="o">=</span> <span class="o">.</span><span class="n">true</span><span class="o">.</span>
+<span class="n">config_GM_closure</span> <span class="o">=</span> <span class="s1">&#39;constant&#39;</span>
+<span class="n">config_GM_constant_kappa</span> <span class="o">=</span> <span class="mf">600.0</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">config_run_duration</span></code> is the length of a performance test run, and should
+only be a few time steps.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">config_mom_del2</span></code> and <code class="docutils literal notranslate"><span class="pre">config_mom_del4</span></code> are the eddy viscosity and
+eddy hyperviscosity, and typically scale in proportion to the cell size and
+the cell size cubed, respectively.  These are appropriate values for a minimum
+resolution of 10 km as in this example.  We scale these coefficients with the
+cell resolution when <code class="docutils literal notranslate"><span class="pre">config_hmix_scaleWithMesh</span> <span class="pre">=</span> <span class="pre">.true.</span></code>.</p>
+<p>The GM coefficients can probably be left as they are here for a typical RRM.</p>
+<p>Next, we will add the <code class="docutils literal notranslate"><span class="pre">init</span></code> and <code class="docutils literal notranslate"><span class="pre">performance_tests</span></code> test cases for the
+new mesh:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>../..
+vim<span class="w"> </span>__init__.py
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+
+<span class="k">class</span> <span class="nc">GlobalOcean</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
+
+    <span class="o">...</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
+
+        <span class="o">...</span>
+
+        <span class="k">for</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;YAM10to60&#39;</span><span class="p">,</span> <span class="s1">&#39;YAMwISC10to60&#39;</span><span class="p">]:</span>
+            <span class="n">mesh_test</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">,</span>
+                             <span class="n">remap_topography</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">mesh_test</span><span class="p">)</span>
+
+<span class="hll">            <span class="n">init_test</span> <span class="o">=</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span>
+</span><span class="hll">                             <span class="n">initial_condition</span><span class="o">=</span><span class="s1">&#39;WOA23&#39;</span><span class="p">,</span>
+</span><span class="hll">                             <span class="n">with_bgc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span class="hll">            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">init_test</span><span class="p">)</span>
+</span><span class="hll">
+</span><span class="hll">            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+</span><span class="hll">                <span class="n">PerformanceTest</span><span class="p">(</span>
+</span><span class="hll">                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
+</span><span class="hll">                    <span class="n">time_integrator</span><span class="o">=</span><span class="s1">&#39;split_explicit&#39;</span><span class="p">))</span>
+</span>
+        <span class="c1"># A test case for making E3SM support files from an existing mesh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">FilesForE3SM</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>We have indicated that we want an initial condition interpolated from the
+World Ocean Atlas 2023 (WOA23) data set, that we do not want to include
+BGC tracers, and that we want to use the split-explicit time integrator
+(the E3SM default) in our performance test.</p>
+<p>Let’s see if the test cases show up:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>YAM
+</pre></div>
+</div>
+<p>You should see something like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">254</span><span class="p">:</span> <span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">YAM10to60</span><span class="o">/</span><span class="n">mesh</span>
+<span class="mi">255</span><span class="p">:</span> <span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">YAM10to60</span><span class="o">/</span><span class="n">WOA23</span><span class="o">/</span><span class="n">init</span>
+<span class="mi">256</span><span class="p">:</span> <span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">YAM10to60</span><span class="o">/</span><span class="n">WOA23</span><span class="o">/</span><span class="n">performance_test</span>
+<span class="mi">257</span><span class="p">:</span> <span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">YAMwISC10to60</span><span class="o">/</span><span class="n">mesh</span>
+<span class="mi">258</span><span class="p">:</span> <span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">YAMwISC10to60</span><span class="o">/</span><span class="n">WOA23</span><span class="o">/</span><span class="n">init</span>
+<span class="mi">259</span><span class="p">:</span> <span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">YAMwISC10to60</span><span class="o">/</span><span class="n">WOA23</span><span class="o">/</span><span class="n">performance_test</span>
+</pre></div>
+</div>
+<p>Okay, everything looks good. Let’s set up and run the 2 remaining tests:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass<span class="w"> </span>setup<span class="w"> </span>-n<span class="w"> </span><span class="m">255</span><span class="w"> </span><span class="m">256</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p<span class="w"> </span>E3SM-Project/components/mpas-ocean/<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-w<span class="w"> </span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/compass_tests/tests_20230527/yam10to60_final
+</pre></div>
+</div>
+<p>We can save the time of rerunning the <code class="docutils literal notranslate"><span class="pre">mesh</span></code> test by setting up in the same
+work directory as our final mesh run with 10-km finest resolution.</p>
+<p>Switch back to your other terminal to alter the job script and submit the job.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/compass_tests/tests_20230527/yam10to60_final
+sbatch<span class="w"> </span>job_script.custom.sh
+tail<span class="w"> </span>-f<span class="w"> </span>compass.o*
+</pre></div>
+</div>
+<p>You should see something a lot like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Loading conda environment
+Done.
+
+Loading Spack environment...
+Done.
+
+ocean/global_ocean/YAM10to60/WOA23/init
+  * step: initial_state
+  test execution:      SUCCESS
+  test runtime:        01:07
+ocean/global_ocean/YAM10to60/WOA23/performance_test
+  * step: forward
+  test execution:      SUCCESS
+  test runtime:        01:35
+Test Runtimes:
+01:07 PASS ocean_global_ocean_YAM10to60_WOA23_init
+01:35 PASS ocean_global_ocean_YAM10to60_WOA23_performance_test
+Total runtime 02:42
+PASS: All passed successfully!
+</pre></div>
+</div>
+<p>If these tests aren’t successful, you’ll probably need some expert help from
+the E3SM Ocean Team, but you can take a look at the log files and see if you
+can diagnose any issues yourself.</p>
+</section>
+<section id="adding-a-dynamic-adjustment-test">
+<span id="dev-tutorial-add-rrm-add-dyn-adj"></span><h2>Adding a dynamic adjustment test<a class="headerlink" href="#adding-a-dynamic-adjustment-test" title="Permalink to this heading">¶</a></h2>
+<p>The initial condition we generated in the last section starts with the ocean
+at rest.  This state is not consistent with the density profile, so there
+will be a period of a few months of rapid adjustment involving dissipation of
+energetic wave dissipation and acceleration of currents.  We call this period
+“dynamic adjustment” because the term “spin up” is reserved in Earth system
+modeling for reaching a quasi-equilibrium over many centuries.</p>
+<p>Dynamic adjustment is something of an art, and requires some trial and error
+in many cases.  The basic idea is that we begin with a shorter time step than
+we hope to be able to use in production simulations and also with some fairly
+strong momentum dissipation.  We run forward in time, monitoring the CFL
+number and the kinetic energy, which can each tell us if things are going
+awry. After several days of simulation, waves have hopefully dissipated to
+the point that we can increase the time step and/or decrease the level of
+damping.</p>
+<p>We need to create a new subdirectory and add a new class for the dynamic
+adjustment test case.  From the branch root:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>compass/ocean/tests/global_ocean/mesh/yam10to60
+mkdir<span class="w"> </span>dynamic_adjustment
+<span class="nb">cd</span><span class="w"> </span>dynamic_adjustment
+vim<span class="w"> </span>__init__.py
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.dynamic_adjustment</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DynamicAdjustment</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.forward</span> <span class="kn">import</span> <span class="n">ForwardStep</span>
+
+
+<span class="k">class</span> <span class="nc">YAM10to60DynamicAdjustment</span><span class="p">(</span><span class="n">DynamicAdjustment</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A test case performing dynamic adjustment (dissipating fast-moving waves)</span>
+<span class="sd">    from an initial condition on the YAM10to60 MPAS-Ocean mesh</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    restart_filenames : list of str</span>
+<span class="sd">        A list of restart files from each dynamic-adjustment step</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the test case</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_group : compass.ocean.tests.global_ocean.GlobalOcean</span>
+<span class="sd">            The global ocean test group that this test case belongs to</span>
+
+<span class="sd">        mesh : compass.ocean.tests.global_ocean.mesh.Mesh</span>
+<span class="sd">            The test case that produces the mesh for this run</span>
+
+<span class="sd">        init : compass.ocean.tests.global_ocean.init.Init</span>
+<span class="sd">            The test case that produces the initial condition for this run</span>
+
+<span class="sd">        time_integrator : {&#39;split_explicit&#39;, &#39;RK4&#39;}</span>
+<span class="sd">            The time integrator to use for the forward run</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">time_integrator</span> <span class="o">!=</span> <span class="s1">&#39;split_explicit&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh</span><span class="o">.</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1"> dynamic adjustment not &#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39;defined for </span><span class="si">{</span><span class="n">time_integrator</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">restart_times</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0001-01-03_00:00:00&#39;</span><span class="p">]</span>
+        <span class="n">restart_filenames</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="sa">f</span><span class="s1">&#39;restarts/rst.</span><span class="si">{</span><span class="n">restart_time</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;.&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+            <span class="k">for</span> <span class="n">restart_time</span> <span class="ow">in</span> <span class="n">restart_times</span><span class="p">]</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
+                         <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">,</span>
+                         <span class="n">restart_filenames</span><span class="o">=</span><span class="n">restart_filenames</span><span class="p">)</span>
+
+        <span class="n">module</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span>
+
+        <span class="n">shared_options</span> <span class="o">=</span> \
+            <span class="p">{</span><span class="s1">&#39;config_AM_globalStats_enable&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;config_AM_globalStats_compute_on_startup&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;config_AM_globalStats_write_on_startup&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;config_use_activeTracers_surface_restoring&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">}</span>
+
+        <span class="c1"># first step</span>
+        <span class="n">step_name</span> <span class="o">=</span> <span class="s1">&#39;damped_adjustment_1&#39;</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="n">ForwardStep</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
+                           <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">step_name</span><span class="p">,</span>
+                           <span class="n">subdir</span><span class="o">=</span><span class="n">step_name</span><span class="p">,</span> <span class="n">get_dt_from_min_res</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">namelist_options</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;config_run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00-00-02_00:00:00&#39;&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;config_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:03:00&#39;&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;config_btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:00:06&#39;&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;config_implicit_bottom_drag_type&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;constant_and_rayleigh&#39;&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;config_Rayleigh_damping_coeff&#39;</span><span class="p">:</span> <span class="s1">&#39;1.0e-4&#39;</span><span class="p">}</span>
+        <span class="n">namelist_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">shared_options</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">namelist_options</span><span class="p">)</span>
+
+        <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;output_interval&#39;</span><span class="p">:</span> <span class="s1">&#39;00-00-10_00:00:00&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;restart_interval&#39;</span><span class="p">:</span> <span class="s1">&#39;00-00-02_00:00:00&#39;</span><span class="p">}</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;streams.template&#39;</span><span class="p">,</span>
+                              <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">)</span>
+
+        <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../</span><span class="si">{</span><span class="n">restart_filenames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This sets up one step called <code class="docutils literal notranslate"><span class="pre">damped_adjustment_1</span></code> that runs for 2 days
+with 3-minute time steps (we hope to run with a 5 or 6 minute time steps once
+we’re fully adjusted, given the 10-km minimum resolution), 6-second
+subcycling (barotropic or <code class="docutils literal notranslate"><span class="pre">btr</span></code>) time step, and a strong Rayleigh damping
+of 1e-4.  Since we’re running for 2 days, we set the restart interval to 2
+days.</p>
+<p>You should be able to pick a time step in proprotion to the highest resolution
+in your mesh.  If a 3-minute time steps works well for a 10 km mesh (and that’s
+a little on the safe side), the time step for a 1 km mesh would need to be on
+the order of 20 seconds.  The barotropic time step needs to be 20-30 times
+shorter than the full time step.</p>
+<p>We have enabled global stats (<code class="docutils literal notranslate"><span class="pre">config_AM_globalStats_enable</span> <span class="pre">=</span> <span class="pre">.true.</span></code>) so
+we can monitor the progress more easily.</p>
+<p>We have also set up a set of streams for writing out data as we go.  The
+<code class="docutils literal notranslate"><span class="pre">streams.template</span></code> file that we will modify looks something like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vim<span class="w"> </span>streams.template
+</pre></div>
+</div>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;streams&gt;</span>
+
+<span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;output&quot;</span>
+<span class="w">        </span><span class="na">output_interval=</span><span class="s">&quot;{{ output_interval }}&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;restart&quot;</span>
+<span class="w">                  </span><span class="na">filename_template=</span><span class="s">&quot;../restarts/rst.$Y-$M-$D_$h.$m.$s.nc&quot;</span>
+<span class="w">                  </span><span class="na">output_interval=</span><span class="s">&quot;{{ restart_interval }}&quot;</span><span class="nt">/&gt;</span>
+
+<span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;globalStatsOutput&quot;</span>
+<span class="w">        </span><span class="na">output_interval=</span><span class="s">&quot;0000_00:00:01&quot;</span><span class="nt">/&gt;</span>
+
+<span class="nt">&lt;/streams&gt;</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">output_interval</span></code> and <code class="docutils literal notranslate"><span class="pre">restart_interval</span></code> will get replaced with
+different values in different steps as we add them.</p>
+<p>We need to add the dynamic adjustment test case to the <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> test
+group:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>../../../
+vim<span class="w"> </span>__init__.py
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.wc14.dynamic_adjustment</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">WC14DynamicAdjustment</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.yam10to60.dynamic_adjustment</span> <span class="kn">import</span> <span class="p">(</span> <span class="c1"># noqa: E501</span>
+</span><span class="hll">    <span class="n">YAM10to60DynamicAdjustment</span><span class="p">,</span>
+</span><span class="hll"><span class="p">)</span>
+</span><span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.monthly_output_test</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">MonthlyOutputTest</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="o">...</span>
+
+<span class="k">class</span> <span class="nc">GlobalOcean</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
+
+    <span class="o">...</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
+
+        <span class="o">...</span>
+
+        <span class="k">for</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;YAM10to60&#39;</span><span class="p">,</span> <span class="s1">&#39;YAMwISC10to60&#39;</span><span class="p">]:</span>
+            <span class="n">mesh_test</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">,</span>
+                             <span class="n">remap_topography</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">mesh_test</span><span class="p">)</span>
+
+            <span class="n">init_test</span> <span class="o">=</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span>
+                             <span class="n">initial_condition</span><span class="o">=</span><span class="s1">&#39;WOA23&#39;</span><span class="p">,</span>
+                             <span class="n">with_bgc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">init_test</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                <span class="n">PerformanceTest</span><span class="p">(</span>
+                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
+                    <span class="n">time_integrator</span><span class="o">=</span><span class="s1">&#39;split_explicit&#39;</span><span class="p">))</span>
+
+<span class="hll">            <span class="n">dynamic_adjustment_test</span> <span class="o">=</span> <span class="n">YAM10to60DynamicAdjustment</span><span class="p">(</span>
+</span><span class="hll">                <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
+</span><span class="hll">                <span class="n">time_integrator</span><span class="o">=</span><span class="s1">&#39;split_explicit&#39;</span><span class="p">)</span>
+</span><span class="hll">            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">dynamic_adjustment_test</span><span class="p">)</span>
+</span><span class="hll">
+</span>        <span class="c1"># A test case for making E3SM support files from an existing mesh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">FilesForE3SM</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>Let’s see if the test cases show up:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>YAM
+</pre></div>
+</div>
+<p>You should see something like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">254</span><span class="p">:</span> <span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">YAM10to60</span><span class="o">/</span><span class="n">mesh</span>
+<span class="mi">255</span><span class="p">:</span> <span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">YAM10to60</span><span class="o">/</span><span class="n">WOA23</span><span class="o">/</span><span class="n">init</span>
+<span class="mi">256</span><span class="p">:</span> <span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">YAM10to60</span><span class="o">/</span><span class="n">WOA23</span><span class="o">/</span><span class="n">performance_test</span>
+<span class="mi">257</span><span class="p">:</span> <span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">YAM10to60</span><span class="o">/</span><span class="n">WOA23</span><span class="o">/</span><span class="n">dynamic_adjustment</span>
+<span class="mi">258</span><span class="p">:</span> <span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">YAMwISC10to60</span><span class="o">/</span><span class="n">mesh</span>
+<span class="mi">259</span><span class="p">:</span> <span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">YAMwISC10to60</span><span class="o">/</span><span class="n">WOA23</span><span class="o">/</span><span class="n">init</span>
+<span class="mi">260</span><span class="p">:</span> <span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">YAMwISC10to60</span><span class="o">/</span><span class="n">WOA23</span><span class="o">/</span><span class="n">performance_test</span>
+<span class="mi">261</span><span class="p">:</span> <span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">YAMwISC10to60</span><span class="o">/</span><span class="n">WOA23</span><span class="o">/</span><span class="n">dynamic_adjustment</span>
+</pre></div>
+</div>
+<p>Okay, everything looks good. Let’s set up and run the <code class="docutils literal notranslate"><span class="pre">dynamic_adjustment</span></code> test:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass<span class="w"> </span>setup<span class="w"> </span>-n<span class="w"> </span><span class="m">257</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p<span class="w"> </span>E3SM-Project/components/mpas-ocean/<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-w<span class="w"> </span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/compass_tests/tests_20230527/yam10to60_final
+</pre></div>
+</div>
+<p>Switch back to your other terminal to submit the job.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/compass_tests/tests_20230527/yam10to60_final
+sbatch<span class="w"> </span>job_script.custom.sh
+tail<span class="w"> </span>-f<span class="w"> </span>compass.o*
+</pre></div>
+</div>
+<p>This time, the output should look like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Loading</span> <span class="n">conda</span> <span class="n">environment</span>
+<span class="n">Done</span><span class="o">.</span>
+
+<span class="n">Loading</span> <span class="n">Spack</span> <span class="n">environment</span><span class="o">...</span>
+<span class="n">Done</span><span class="o">.</span>
+
+<span class="n">ocean</span><span class="o">/</span><span class="n">global_ocean</span><span class="o">/</span><span class="n">YAM10to60</span><span class="o">/</span><span class="n">WOA23</span><span class="o">/</span><span class="n">dynamic_adjustment</span>
+  <span class="o">*</span> <span class="n">step</span><span class="p">:</span> <span class="n">damped_adjustment_1</span>
+  <span class="n">test</span> <span class="n">execution</span><span class="p">:</span>      <span class="n">ERROR</span>
+  <span class="n">see</span><span class="p">:</span> <span class="n">case_outputs</span><span class="o">/</span><span class="n">ocean_global_ocean_YAM10to60_WOA23_dynamic_adjustment</span><span class="o">.</span><span class="n">log</span>
+  <span class="n">test</span> <span class="n">runtime</span><span class="p">:</span>        <span class="mi">06</span><span class="p">:</span><span class="mi">03</span>
+<span class="n">Test</span> <span class="n">Runtimes</span><span class="p">:</span>
+<span class="mi">06</span><span class="p">:</span><span class="mi">03</span> <span class="n">FAIL</span> <span class="n">ocean_global_ocean_YAM10to60_WOA23_dynamic_adjustment</span>
+<span class="n">Total</span> <span class="n">runtime</span> <span class="mi">06</span><span class="p">:</span><span class="mi">03</span>
+<span class="n">FAIL</span><span class="p">:</span> <span class="mi">1</span> <span class="n">test</span> <span class="n">failed</span><span class="p">,</span> <span class="n">see</span> <span class="n">above</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>This error isn’t a big deal.  It’s related to the fact that we’re not done
+implementing the test case and it’s expecting a step called <code class="docutils literal notranslate"><span class="pre">simulation</span></code> that
+we haven’t added yet:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ tail -n 20 case_outputs/ocean_global_ocean_YAM10to60_WOA23_dynamic_adjustment.log
+
+Running: srun -c 1 -N 6 -n 768 ./ocean_model -n namelist.ocean -s streams.ocean
+
+compass calling: compass.ocean.tests.global_ocean.mesh.yam10to60.dynamic_adjustment.YAM10to60DynamicAdjustment.validate()
+  inherited from: compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment.validate()
+  in /gpfs/fs1/home/ac.xylar/compass/add-rrm-tutorial/compass/ocean/tests/global_ocean/dynamic_adjustment.py
+
+Exception raised in the test case&#39;s validate() method
+Traceback (most recent call last):
+  File &quot;/gpfs/fs1/home/ac.xylar/compass/add-rrm-tutorial/compass/run/serial.py&quot;, line 335, in _log_and_run_test
+    test_case.validate()
+  File &quot;/gpfs/fs1/home/ac.xylar/compass/add-rrm-tutorial/compass/ocean/tests/global_ocean/dynamic_adjustment.py&quot;, line 63, in validate
+    compare_variables(test_case=self, variables=variables,
+  File &quot;/gpfs/fs1/home/ac.xylar/compass/add-rrm-tutorial/compass/validate.py&quot;, line 94, in compare_variables
+    raise ValueError(&#39;{} does not appear to be an output of any step &#39;
+ValueError: simulation/output.nc does not appear to be an output of any step in this test case.
+</pre></div>
+</div>
+<p>You can also monitor the result by looking at the global statistics:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>ocean/global_ocean/YAM10to60/WOA23/dynamic_adjustment/damped_adjustment_1
+<span class="nb">source</span><span class="w"> </span>load_compass_env.sh
+ncdump<span class="w"> </span>-v<span class="w"> </span>kineticEnergyCellMax<span class="w"> </span>analysis_members/globalStats*.nc
+ncdump<span class="w"> </span>-v<span class="w"> </span>CFLNumberGlobal<span class="w"> </span>analysis_members/globalStats*.nc
+</pre></div>
+</div>
+<p>The kinetic energy should increase gradually (and then likely decrease because
+of the damping) but shouldn’t spike up during a damped adjustment step.  The
+CFL number ideally shouldn’t exceed about 0.1 during damped adjustment, though
+we tend to push it a bit higher during the simulation phase to see how large
+we can make it while maintaining stability.</p>
+<p>You can also monitor the MPAS-Ocean progress (e.g. the time stepping) with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tail<span class="w"> </span>log.ocean.0000.out
+</pre></div>
+</div>
+<p>If the <code class="docutils literal notranslate"><span class="pre">damped_adjustment_1</span></code> step is successful, it’s time to add more steps
+in which we will ramp down damping and then increase the time step. Let’s add a
+second step that runs longer (8 days) with less damping:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vim<span class="w"> </span>__init__.py
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+
+<span class="k">class</span> <span class="nc">YAM10to60DynamicAdjustment</span><span class="p">(</span><span class="n">DynamicAdjustment</span><span class="p">):</span>
+
+    <span class="o">...</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">):</span>
+
+        <span class="o">...</span>
+
+<span class="hll">        <span class="n">restart_times</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0001-01-03_00:00:00&#39;</span><span class="p">,</span> <span class="s1">&#39;0001-01-11_00:00:00&#39;</span><span class="p">]</span>
+</span>
+        <span class="o">...</span>
+
+        <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../</span><span class="si">{</span><span class="n">restart_filenames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+
+<span class="hll">         <span class="c1"># second step</span>
+</span><span class="hll">        <span class="n">step_name</span> <span class="o">=</span> <span class="s1">&#39;damped_adjustment_2&#39;</span>
+</span><span class="hll">        <span class="n">step</span> <span class="o">=</span> <span class="n">ForwardStep</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
+</span><span class="hll">                           <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">step_name</span><span class="p">,</span>
+</span><span class="hll">                           <span class="n">subdir</span><span class="o">=</span><span class="n">step_name</span><span class="p">,</span> <span class="n">get_dt_from_min_res</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="n">namelist_options</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class="hll">            <span class="s1">&#39;config_run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00-00-08_00:00:00&#39;&quot;</span><span class="p">,</span>
+</span><span class="hll">            <span class="s1">&#39;config_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:03:00&#39;&quot;</span><span class="p">,</span>
+</span><span class="hll">            <span class="s1">&#39;config_btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:00:05&#39;&quot;</span><span class="p">,</span>
+</span><span class="hll">            <span class="s1">&#39;config_implicit_bottom_drag_type&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;constant_and_rayleigh&#39;&quot;</span><span class="p">,</span>
+</span><span class="hll">            <span class="s1">&#39;config_Rayleigh_damping_coeff&#39;</span><span class="p">:</span> <span class="s1">&#39;1.0e-5&#39;</span><span class="p">,</span>
+</span><span class="hll">            <span class="s1">&#39;config_do_restart&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
+</span><span class="hll">            <span class="s1">&#39;config_start_time&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">restart_times</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">}</span>
+</span><span class="hll">        <span class="n">namelist_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">shared_options</span><span class="p">)</span>
+</span><span class="hll">        <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">namelist_options</span><span class="p">)</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class="hll">            <span class="s1">&#39;output_interval&#39;</span><span class="p">:</span> <span class="s1">&#39;00-00-10_00:00:00&#39;</span><span class="p">,</span>
+</span><span class="hll">            <span class="s1">&#39;restart_interval&#39;</span><span class="p">:</span> <span class="s1">&#39;00-00-02_00:00:00&#39;</span><span class="p">}</span>
+</span><span class="hll">        <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;streams.template&#39;</span><span class="p">,</span>
+</span><span class="hll">                              <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">)</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="n">step</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../</span><span class="si">{</span><span class="n">restart_filenames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</span><span class="hll">        <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../</span><span class="si">{</span><span class="n">restart_filenames</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</span><span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>You can set up again and test the second step.  In your coding terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass<span class="w"> </span>setup<span class="w"> </span>-n<span class="w"> </span><span class="m">257</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p<span class="w"> </span>E3SM-Project/components/mpas-ocean/<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-w<span class="w"> </span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/compass_tests/tests_20230527/yam10to60_final
+</pre></div>
+</div>
+<p>Back in your terminal in the work directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/compass_tests/tests_20230527/yam10to60_final
+<span class="nb">cd</span><span class="w"> </span>ocean/global_ocean/YAM10to60/WOA23/dynamic_adjustment/damped_adjustment_2
+sbatch<span class="w"> </span>job_script.sh
+tail<span class="w"> </span>-f<span class="w"> </span>compass.o*
+</pre></div>
+</div>
+<p>Again, you will get errors about the missing <code class="docutils literal notranslate"><span class="pre">simulation/output.nc</span></code> file,
+but don’t worry about those.</p>
+<p>If that goes okay, let’s add a third step that runs for 10 days with even less
+damping.  We can also write out less frequent restarts (every 10 days).  In
+the coding terminal, which should still be in the <code class="docutils literal notranslate"><span class="pre">dynamic_adjustment</span></code>
+subdirectory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vim<span class="w"> </span>__init__.py
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+
+<span class="k">class</span> <span class="nc">YAM10to60DynamicAdjustment</span><span class="p">(</span><span class="n">DynamicAdjustment</span><span class="p">):</span>
+
+    <span class="o">...</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">):</span>
+
+        <span class="o">...</span>
+
+<span class="hll">        <span class="n">restart_times</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0001-01-03_00:00:00&#39;</span><span class="p">,</span> <span class="s1">&#39;0001-01-11_00:00:00&#39;</span><span class="p">,</span>
+</span><span class="hll">                         <span class="s1">&#39;0001-01-21_00:00:00&#39;</span><span class="p">]</span>
+</span>
+        <span class="o">...</span>
+
+        <span class="n">step</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../</span><span class="si">{</span><span class="n">restart_filenames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../</span><span class="si">{</span><span class="n">restart_filenames</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+<span class="hll">
+</span><span class="hll">        <span class="c1"># third step</span>
+</span><span class="hll">        <span class="n">step_name</span> <span class="o">=</span> <span class="s1">&#39;damped_adjustment_3&#39;</span>
+</span><span class="hll">        <span class="n">step</span> <span class="o">=</span> <span class="n">ForwardStep</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
+</span><span class="hll">                           <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">step_name</span><span class="p">,</span>
+</span><span class="hll">                           <span class="n">subdir</span><span class="o">=</span><span class="n">step_name</span><span class="p">,</span> <span class="n">get_dt_from_min_res</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="n">namelist_options</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class="hll">            <span class="s1">&#39;config_run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00-00-10_00:00:00&#39;&quot;</span><span class="p">,</span>
+</span><span class="hll">            <span class="s1">&#39;config_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:03:00&#39;&quot;</span><span class="p">,</span>
+</span><span class="hll">            <span class="s1">&#39;config_btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:00:06&#39;&quot;</span><span class="p">,</span>
+</span><span class="hll">            <span class="s1">&#39;config_implicit_bottom_drag_type&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;constant_and_rayleigh&#39;&quot;</span><span class="p">,</span>
+</span><span class="hll">            <span class="s1">&#39;config_Rayleigh_damping_coeff&#39;</span><span class="p">:</span> <span class="s1">&#39;1.0e-6&#39;</span><span class="p">,</span>
+</span><span class="hll">            <span class="s1">&#39;config_do_restart&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
+</span><span class="hll">            <span class="s1">&#39;config_start_time&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">restart_times</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">}</span>
+</span><span class="hll">        <span class="n">namelist_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">shared_options</span><span class="p">)</span>
+</span><span class="hll">        <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">namelist_options</span><span class="p">)</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class="hll">            <span class="s1">&#39;output_interval&#39;</span><span class="p">:</span> <span class="s1">&#39;00-00-10_00:00:00&#39;</span><span class="p">,</span>
+</span><span class="hll">            <span class="s1">&#39;restart_interval&#39;</span><span class="p">:</span> <span class="s1">&#39;00-00-10_00:00:00&#39;</span><span class="p">}</span>
+</span><span class="hll">        <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;streams.template&#39;</span><span class="p">,</span>
+</span><span class="hll">                              <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">)</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="n">step</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../</span><span class="si">{</span><span class="n">restart_filenames</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</span>        <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../</span><span class="si">{</span><span class="n">restart_filenames</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Set up again in the coding terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass<span class="w"> </span>setup<span class="w"> </span>-n<span class="w"> </span><span class="m">257</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p<span class="w"> </span>E3SM-Project/components/mpas-ocean/<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-w<span class="w"> </span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/compass_tests/tests_20230527/yam10to60_final
+</pre></div>
+</div>
+<p>And run this step in the work-directory terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/compass_tests/tests_20230527/yam10to60_final
+<span class="nb">cd</span><span class="w"> </span>ocean/global_ocean/YAM10to60/WOA23/dynamic_adjustment/damped_adjustment_3
+sbatch<span class="w"> </span>job_script.sh
+tail<span class="w"> </span>-f<span class="w"> </span>compass.o*
+</pre></div>
+</div>
+<p>Now, we add a fourth that runs for 20 days without any damping, back in the
+coding terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vim<span class="w"> </span>__init__.py
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+
+<span class="k">class</span> <span class="nc">YAM10to60DynamicAdjustment</span><span class="p">(</span><span class="n">DynamicAdjustment</span><span class="p">):</span>
+
+    <span class="o">...</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">):</span>
+
+        <span class="o">...</span>
+
+<span class="hll">        <span class="n">restart_times</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0001-01-03_00:00:00&#39;</span><span class="p">,</span> <span class="s1">&#39;0001-01-11_00:00:00&#39;</span><span class="p">,</span>
+</span><span class="hll">                         <span class="s1">&#39;0001-01-21_00:00:00&#39;</span><span class="p">,</span> <span class="s1">&#39;0001-02-10_00:00:00&#39;</span><span class="p">]</span>
+</span>
+        <span class="o">...</span>
+
+        <span class="n">step</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../</span><span class="si">{</span><span class="n">restart_filenames</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../</span><span class="si">{</span><span class="n">restart_filenames</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+<span class="hll">
+</span><span class="hll">        <span class="c1"># fourth step</span>
+</span><span class="hll">        <span class="n">step_name</span> <span class="o">=</span> <span class="s1">&#39;damped_adjustment_4&#39;</span>
+</span><span class="hll">        <span class="n">step</span> <span class="o">=</span> <span class="n">ForwardStep</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
+</span><span class="hll">                           <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">step_name</span><span class="p">,</span>
+</span><span class="hll">                           <span class="n">subdir</span><span class="o">=</span><span class="n">step_name</span><span class="p">,</span> <span class="n">get_dt_from_min_res</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="n">namelist_options</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class="hll">            <span class="s1">&#39;config_run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00-00-20_00:00:00&#39;&quot;</span><span class="p">,</span>
+</span><span class="hll">            <span class="s1">&#39;config_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:03:00&#39;&quot;</span><span class="p">,</span>
+</span><span class="hll">            <span class="s1">&#39;config_btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:00:06&#39;&quot;</span><span class="p">,</span>
+</span><span class="hll">            <span class="s1">&#39;config_do_restart&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
+</span><span class="hll">            <span class="s1">&#39;config_start_time&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">restart_times</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">}</span>
+</span><span class="hll">        <span class="n">namelist_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">shared_options</span><span class="p">)</span>
+</span><span class="hll">        <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">namelist_options</span><span class="p">)</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class="hll">            <span class="s1">&#39;output_interval&#39;</span><span class="p">:</span> <span class="s1">&#39;00-00-10_00:00:00&#39;</span><span class="p">,</span>
+</span><span class="hll">            <span class="s1">&#39;restart_interval&#39;</span><span class="p">:</span> <span class="s1">&#39;00-00-10_00:00:00&#39;</span><span class="p">}</span>
+</span><span class="hll">        <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;streams.template&#39;</span><span class="p">,</span>
+</span><span class="hll">                              <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">)</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="n">step</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../</span><span class="si">{</span><span class="n">restart_filenames</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</span><span class="hll">        <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../</span><span class="si">{</span><span class="n">restart_filenames</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</span><span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>Set up again in the coding terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass<span class="w"> </span>setup<span class="w"> </span>-n<span class="w"> </span><span class="m">257</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p<span class="w"> </span>E3SM-Project/components/mpas-ocean/<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-w<span class="w"> </span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/compass_tests/tests_20230527/yam10to60_final
+</pre></div>
+</div>
+<p>And run this step in the work-directory terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/compass_tests/tests_20230527/yam10to60_final
+<span class="nb">cd</span><span class="w"> </span>ocean/global_ocean/YAM10to60/WOA23/dynamic_adjustment/damped_adjustment_4
+sbatch<span class="w"> </span>job_script.sh
+tail<span class="w"> </span>-f<span class="w"> </span>compass.o*
+</pre></div>
+</div>
+<p>Finally, we add one more step where we run for 10 more days with a longer
+time step:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vim<span class="w"> </span>__init__.py
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+
+<span class="k">class</span> <span class="nc">YAM10to60DynamicAdjustment</span><span class="p">(</span><span class="n">DynamicAdjustment</span><span class="p">):</span>
+
+    <span class="o">...</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">):</span>
+
+        <span class="o">...</span>
+
+<span class="hll">        <span class="n">restart_times</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0001-01-03_00:00:00&#39;</span><span class="p">,</span> <span class="s1">&#39;0001-01-11_00:00:00&#39;</span><span class="p">,</span>
+</span><span class="hll">                         <span class="s1">&#39;0001-01-21_00:00:00&#39;</span><span class="p">,</span> <span class="s1">&#39;0001-02-10_00:00:00&#39;</span><span class="p">,</span>
+</span><span class="hll">                         <span class="s1">&#39;0001-02-20_00:00:00&#39;</span><span class="p">]</span>
+</span>
+        <span class="o">...</span>
+
+        <span class="n">step</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../</span><span class="si">{</span><span class="n">restart_filenames</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../</span><span class="si">{</span><span class="n">restart_filenames</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+<span class="hll">
+</span><span class="hll">        <span class="c1"># final step</span>
+</span><span class="hll">        <span class="n">step_name</span> <span class="o">=</span> <span class="s1">&#39;simulation&#39;</span>
+</span><span class="hll">        <span class="n">step</span> <span class="o">=</span> <span class="n">ForwardStep</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
+</span><span class="hll">                           <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">step_name</span><span class="p">,</span>
+</span><span class="hll">                           <span class="n">subdir</span><span class="o">=</span><span class="n">step_name</span><span class="p">,</span> <span class="n">get_dt_from_min_res</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="n">namelist_options</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class="hll">            <span class="s1">&#39;config_run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00-00-10_00:00:00&#39;&quot;</span><span class="p">,</span>
+</span><span class="hll">            <span class="s1">&#39;config_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:08:00&#39;&quot;</span><span class="p">,</span>
+</span><span class="hll">            <span class="s1">&#39;config_btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:00:15&#39;&quot;</span><span class="p">,</span>
+</span><span class="hll">            <span class="s1">&#39;config_do_restart&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
+</span><span class="hll">            <span class="s1">&#39;config_start_time&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">restart_times</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">}</span>
+</span><span class="hll">        <span class="n">namelist_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">shared_options</span><span class="p">)</span>
+</span><span class="hll">        <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">namelist_options</span><span class="p">)</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class="hll">            <span class="s1">&#39;output_interval&#39;</span><span class="p">:</span> <span class="s1">&#39;00-00-10_00:00:00&#39;</span><span class="p">,</span>
+</span><span class="hll">            <span class="s1">&#39;restart_interval&#39;</span><span class="p">:</span> <span class="s1">&#39;00-00-10_00:00:00&#39;</span><span class="p">}</span>
+</span><span class="hll">        <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;streams.template&#39;</span><span class="p">,</span>
+</span><span class="hll">                              <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">)</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="n">step</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../</span><span class="si">{</span><span class="n">restart_filenames</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</span><span class="hll">        <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../</span><span class="si">{</span><span class="n">restart_filenames</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</span><span class="hll">        <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span>
+</span><span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">restart_filenames</span> <span class="o">=</span> <span class="n">restart_filenames</span>
+</pre></div>
+</div>
+<p>Set up again in the coding terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass<span class="w"> </span>setup<span class="w"> </span>-n<span class="w"> </span><span class="m">257</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p<span class="w"> </span>E3SM-Project/components/mpas-ocean/<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-w<span class="w"> </span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/compass_tests/tests_20230527/yam10to60_final
+</pre></div>
+</div>
+<p>And run this step in the work-directory terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/compass_tests/tests_20230527/yam10to60_final
+<span class="nb">cd</span><span class="w"> </span>ocean/global_ocean/YAM10to60/WOA23/dynamic_adjustment/simulation
+sbatch<span class="w"> </span>job_script.sh
+tail<span class="w"> </span>-f<span class="w"> </span>compass.o*
+</pre></div>
+</div>
+<p>The art of this process goes into how you choose to adjust the time step,
+duration of each of these runs, and the amount of damping.  You may add more
+steps or remove some if 5 doesn’t work well for your mesh.  Make sure that
+the restart file that is an output of the previous step is the input to the
+next one.</p>
+<p>It’s also a good idea to take a look at a few output fields in ParaVeiw. First,
+run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>paraview_vtk_field_extractor.py<span class="w"> </span>-m<span class="w"> </span>init.nc<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-f<span class="w"> </span>output.nc<span class="w"> </span>-v<span class="w"> </span>normalVelocity,temperature,salinity<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-d<span class="w"> </span><span class="nv">nVertLevels</span><span class="o">=</span><span class="m">0</span>
+</pre></div>
+</div>
+<p>Then, transfer the contents of <code class="docutils literal notranslate"><span class="pre">vtk_files</span></code> to your laptop or desktop and open
+the file <code class="docutils literal notranslate"><span class="pre">fieldsOnCells.pvd</span></code> or <code class="docutils literal notranslate"><span class="pre">fieldsOnEdges.pvd</span></code> in ParaView.</p>
+<a class="reference internal image-reference" href="../_images/simulation_sst.png"><img alt="../_images/simulation_sst.png" class="align-center" src="../_images/simulation_sst.png" style="width: 500px;" /></a>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">normalVelocity</span></code> is a pretty noisy field because its orientation
+differs by on the order of 60 degrees between adjacent edges.  It helps to take
+the absolute value as shown below, in which case it it can indicate where
+strong currents are present.</p>
+<a class="reference internal image-reference" href="../_images/simulation_norm_vel_mag.png"><img alt="../_images/simulation_norm_vel_mag.png" class="align-center" src="../_images/simulation_norm_vel_mag.png" style="width: 500px;" /></a>
+<p>Alternatively, you can add fields like <code class="docutils literal notranslate"><span class="pre">kineticEnergyCell</span></code> to the <code class="docutils literal notranslate"><span class="pre">output</span></code>
+stream in <code class="docutils literal notranslate"><span class="pre">streams.ocean</span></code> before running the step, and then you will have
+this field available to visualize.</p>
+</section>
+<section id="adding-a-files-for-e3sm-test">
+<span id="dev-tutorial-add-rrm-add-files-for-e3sm"></span><h2>Adding a files for E3SM test<a class="headerlink" href="#adding-a-files-for-e3sm-test" title="Permalink to this heading">¶</a></h2>
+<p>The final test case to add for a new RRM mesh is <code class="docutils literal notranslate"><span class="pre">files_for_e3sm</span></code>.  This test
+case creates a number of important files in the format they are needed for
+E3SM or diagnostic software used to analysis E3SM simulations.  No additional
+customization should be needed for this mesh beyond the config options we
+already set up earlier in the tutorial.  We just need to add the test case
+itself for this mesh to the <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> test group.</p>
+<p>Starting from the root of our development branch:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>compass/ocean/tests/global_ocean
+vim<span class="w"> </span>__init__.py
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+
+<span class="k">class</span> <span class="nc">GlobalOcean</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
+
+    <span class="o">...</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
+
+        <span class="o">...</span>
+
+        <span class="c1"># Kuroshio meshes without ice-shelf cavities</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Kuroshio12to60&#39;</span><span class="p">,</span> <span class="s1">&#39;Kuroshio8to60&#39;</span><span class="p">],</span>
+                        <span class="n">DynamicAdjustment</span><span class="o">=</span><span class="n">KuroshioDynamicAdjustment</span><span class="p">)</span>
+
+<span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;YAM10to60&#39;</span><span class="p">,</span> <span class="s1">&#39;YAMwISC10to60&#39;</span><span class="p">],</span>
+</span><span class="hll">                        <span class="n">DynamicAdjustment</span><span class="o">=</span><span class="n">YAM10to60DynamicAdjustment</span><span class="p">)</span>
+</span>
+        <span class="c1"># A test case for making E3SM support files from an existing mesh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">FilesForE3SM</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>We delete the whole <code class="docutils literal notranslate"><span class="pre">for</span></code> loop over <code class="docutils literal notranslate"><span class="pre">mesh_name</span></code> and instead take advantage
+of the fact that the <code class="docutils literal notranslate"><span class="pre">_add_tests()</span></code> method of <code class="docutils literal notranslate"><span class="pre">GlobalOcean</span></code> will
+add the 5 test cases we want by default.  (We added them manually, one by one
+before so we could test them one or two at a time.)</p>
+<p>Now, when you list the tests, you should see:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ compass list | grep YAM
+ 254: ocean/global_ocean/YAM10to60/mesh
+ 255: ocean/global_ocean/YAM10to60/WOA23/init
+ 256: ocean/global_ocean/YAM10to60/WOA23/performance_test
+ 257: ocean/global_ocean/YAM10to60/WOA23/dynamic_adjustment
+ 258: ocean/global_ocean/YAM10to60/WOA23/files_for_e3sm
+ 259: ocean/global_ocean/YAMwISC10to60/mesh
+ 260: ocean/global_ocean/YAMwISC10to60/WOA23/init
+ 261: ocean/global_ocean/YAMwISC10to60/WOA23/performance_test
+ 262: ocean/global_ocean/YAMwISC10to60/WOA23/dynamic_adjustment
+ 263: ocean/global_ocean/YAMwISC10to60/WOA23/files_for_e3sm
+</pre></div>
+</div>
+<p>Once again, you can take advantage of the test cases you’ve already run,
+setting up just the new <code class="docutils literal notranslate"><span class="pre">files_for_e3sm</span></code> test from the coding terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass<span class="w"> </span>setup<span class="w"> </span>-n<span class="w"> </span><span class="m">258</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p<span class="w"> </span>E3SM-Project/components/mpas-ocean/<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-w<span class="w"> </span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/compass_tests/tests_20230527/yam10to60_final
+</pre></div>
+</div>
+<p>And run this test case in the work-directory terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/compass_tests/tests_20230527/yam10to60_final
+<span class="nb">cd</span><span class="w"> </span>ocean/global_ocean/YAM10to60/WOA23/files_for_e3sm
+sbatch<span class="w"> </span>job_script.sh
+tail<span class="w"> </span>-f<span class="w"> </span>compass.o*
+</pre></div>
+</div>
+<p>If this goes well, you are ready to ask for help from members of the E3SM
+Ocean Team to add support for your mesh to E3SM itself, including uploading
+the files produced by the <code class="docutils literal notranslate"><span class="pre">files_for_e3sm</span></code> test case to the E3SM
+<code class="docutils literal notranslate"><span class="pre">inputdata</span></code> and <code class="docutils literal notranslate"><span class="pre">diagnostics</span></code> directories on our data server.  This is
+beyond the scope of this tutorial and is not typically something a non-expert
+can take on on their own.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="dev_add_test_group.html" class="btn btn-neutral float-left" title="Developer Tutorial: Adding a new test group" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dev_add_param_study.html" class="btn btn-neutral float-right" title="Developer Tutorial: Adding a parameter study" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
