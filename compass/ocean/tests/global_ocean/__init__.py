@@ -50,6 +50,7 @@ class GlobalOcean(TestGroup):
         self._add_tests(mesh_names=['QU240', 'Icos240', 'QUwISC240'],
                         DynamicAdjustment=QU240DynamicAdjustment,
                         remap_topography=False,
+                        include_monthly=True,
                         include_rk4=True,
                         include_regression=True,
                         include_phc=True,
@@ -80,9 +81,9 @@ class GlobalOcean(TestGroup):
         self.add_test_case(FilesForE3SM(test_group=self))
 
     def _add_tests(self, mesh_names, DynamicAdjustment, remap_topography=True,
-                   include_rk4=False, include_regression=False,
-                   include_phc=False, include_en4_1900=False,
-                   include_bgc=False):
+                   include_monthly=True, include_rk4=False,
+                   include_regression=False, include_phc=False,
+                   include_en4_1900=False, include_bgc=False):
         """ Add test cases for the given mesh(es) """
 
         default_ic = 'WOA23'
@@ -124,6 +125,7 @@ class GlobalOcean(TestGroup):
                     DailyOutputTest(
                         test_group=self, mesh=mesh_test, init=init_test,
                         time_integrator=time_integrator))
+            if include_monthly:
                 self.add_test_case(
                     MonthlyOutputTest(
                         test_group=self, mesh=mesh_test, init=init_test,
