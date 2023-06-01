@@ -80,3 +80,13 @@ types are supported. For ``sigma`` coordinates, this case is hard-coded to run
 two cases at different values of ``config_Rayleigh_damping_coeff``, 0.0025 and
 0.01, for which there is comparison data. The ``single_layer`` case runs at one
 value of the explicit bottom drag coefficient. 
+
+
+.. _dev_ocean_drying_slope_ramp:
+
+ramp
+----
+
+The :py:class:`compass.ocean.tests.drying_slope.ramp.Ramp` is identical to the
+default class except it sets ``ramp`` to ``True`` for the forward step to enable
+the ramp feature for wetting and drying.

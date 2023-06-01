@@ -67,3 +67,13 @@ test performs one 10-minute run on 40 cores. It doesn't contain any
 is configured to have a 1 m by 1 m dammed region matching the experimental
 setup and a ~12 m by ~12 m flood plain to minimize reflections off the
 boundaries.
+
+
+.. _dev_ocean_dam_break_ramp:
+
+ramp
+----
+
+The :py:class:`compass.ocean.tests.dam_break.ramp.Ramp` is identical to the
+default class except it sets ``ramp`` to ``True`` for the forward step to enable
+the ramp feature for wetting and drying.

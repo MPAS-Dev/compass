@@ -81,7 +81,16 @@ All units are mks.
 default
 -------
 
-``ocean/drying_slope/1km/default`` is the default version of the drying slope
-test case for two short (12h) test runs with two different drag coefficients
-and validation of sea surface height through visual inspection against analytic
-and ROMS solutions.
+``ocean/drying_slope/${RES}/${COORD}/default`` is the default version of the
+drying slope test case for two short (12h) test runs with two different drag
+coefficients and validation of sea surface height through visual inspection
+against analytic and ROMS solutions. ``RES`` is either 250m or 1km. ``COORD`` is either ``single_layer`` or ``sigma``.
+
+ramp
+----
+
+``ocean/drying_slope/${RES}/${COORD}/ramp`` is identical to the ``default``
+test except the factor that scales velocities and velocity tendencies is
+ramped over a given layer thickness range rather than a binary switch at the
+minimum thickness. ``RES`` is either 250m or 1km. ``COORD`` is either
+``single_layer`` or ``sigma``.

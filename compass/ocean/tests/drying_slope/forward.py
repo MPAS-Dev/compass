@@ -42,6 +42,9 @@ class Forward(Step):
         damping_coeff: float, optional
             the value of the rayleigh damping coefficient
 
+        coord_type: string, optional
+            the coordinate type
+
         """
         if min_tasks is None:
             min_tasks = ntasks
