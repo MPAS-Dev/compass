@@ -63,7 +63,7 @@ class EC30to60DynamicAdjustment(DynamicAdjustment):
 
         namelist_options = {
             'config_run_duration': "'00-00-10_00:00:00'",
-            'config_dt': "'00:15:00'",
+            'config_dt': "'00:05:00'",
             'config_btr_dt': "'00:00:10'",
             'config_implicit_bottom_drag_type': "'constant_and_rayleigh'",
             'config_Rayleigh_damping_coeff': '1.0e-4'}
@@ -87,10 +87,12 @@ class EC30to60DynamicAdjustment(DynamicAdjustment):
 
         namelist_options = {
             'config_run_duration': "'00-00-20_00:00:00'",
-            'config_dt': "'00:15:00'",
+            'config_dt': "'00:05:00'",
             'config_btr_dt': "'00:00:10'",
             'config_do_restart': '.true.',
-            'config_start_time': "'{}'".format(restart_times[0])}
+            'config_start_time': "'{}'".format(restart_times[0]),
+            'config_implicit_bottom_drag_type': "'constant_and_rayleigh'",
+            'config_Rayleigh_damping_coeff': '1.0e-5'}
         namelist_options.update(shared_options)
         step.add_namelist_options(namelist_options)
 
@@ -113,7 +115,7 @@ class EC30to60DynamicAdjustment(DynamicAdjustment):
         namelist_options = {
             'config_run_duration': "'00-00-10_00:00:00'",
             'config_dt': "'00:30:00'",
-            'config_btr_dt': "'00:00:10'",
+            'config_btr_dt': "'00:01:00'",
             'config_do_restart': '.true.',
             'config_start_time': "'{}'".format(restart_times[1])}
         namelist_options.update(shared_options)
