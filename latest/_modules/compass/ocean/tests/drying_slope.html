@@ -112,8 +112,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.drying_slope</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.drying_slope.default</span> <span class="kn">import</span> <span class="n">Default</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests.drying_slope.default</span> <span class="kn">import</span> <span class="n">Default</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.drying_slope.ramp</span> <span class="kn">import</span> <span class="n">Ramp</span>
+<span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
 
 
 <div class="viewcode-block" id="DryingSlope"><a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.tests.drying_slope.DryingSlope.html#compass.ocean.tests.drying_slope.DryingSlope">[docs]</a><span class="k">class</span> <span class="nc">DryingSlope</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
@@ -128,11 +129,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;drying_slope&#39;</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]:</span>
             <span class="k">for</span> <span class="n">coord_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;sigma&#39;</span><span class="p">,</span> <span class="s1">&#39;single_layer&#39;</span><span class="p">]:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
                     <span class="n">Default</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
-                            <span class="n">coord_type</span><span class="o">=</span><span class="n">coord_type</span><span class="p">))</span></div></div>
+                            <span class="n">coord_type</span><span class="o">=</span><span class="n">coord_type</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                    <span class="n">Ramp</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                         <span class="n">coord_type</span><span class="o">=</span><span class="n">coord_type</span><span class="p">))</span></div></div>
 </pre></div>
 
            </div>

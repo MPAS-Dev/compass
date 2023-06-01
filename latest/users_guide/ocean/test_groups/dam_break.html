@@ -59,6 +59,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">dam_break</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#default">default</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ramp">ramp</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="drying_slope.html">drying_slope</a></li>
@@ -175,9 +176,16 @@ solution from the ROMS model.</p>
 </section>
 <section id="default">
 <h2>default<a class="headerlink" href="#default" title="Permalink to this heading">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">ocean/dam_break/40cm/default</span></code> is the default version of the dam break
+<p><code class="docutils literal notranslate"><span class="pre">ocean/dam_break/${RES}/default</span></code> is the default version of the dam break
 test case for validation of sea surface height through visual inspection
-against experimental data and ROMS solutions.</p>
+against experimental data and ROMS solutions. <code class="docutils literal notranslate"><span class="pre">RES</span></code> is either 40cm or 120cm.</p>
+</section>
+<section id="ramp">
+<h2>ramp<a class="headerlink" href="#ramp" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ocean/dam_break/${RES}/ramp</span></code> is identical to the <code class="docutils literal notranslate"><span class="pre">default</span></code> test except
+the factor that scales velocities and velocity tendencies is ramped over a
+given layer thickness range rather than a binary switch at the minimum
+thickness. <code class="docutils literal notranslate"><span class="pre">RES</span></code> is either 40cm or 120cm.</p>
 </section>
 </section>
 

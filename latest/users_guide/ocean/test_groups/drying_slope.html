@@ -61,6 +61,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">drying_slope</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#default">default</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ramp">ramp</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="global_convergence.html">global_convergence</a></li>
@@ -210,10 +211,18 @@ well as the solution from the ROMS model.</p>
 </section>
 <section id="default">
 <h2>default<a class="headerlink" href="#default" title="Permalink to this heading">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">ocean/drying_slope/1km/default</span></code> is the default version of the drying slope
-test case for two short (12h) test runs with two different drag coefficients
-and validation of sea surface height through visual inspection against analytic
-and ROMS solutions.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ocean/drying_slope/${RES}/${COORD}/default</span></code> is the default version of the
+drying slope test case for two short (12h) test runs with two different drag
+coefficients and validation of sea surface height through visual inspection
+against analytic and ROMS solutions. <code class="docutils literal notranslate"><span class="pre">RES</span></code> is either 250m or 1km. <code class="docutils literal notranslate"><span class="pre">COORD</span></code> is either <code class="docutils literal notranslate"><span class="pre">single_layer</span></code> or <code class="docutils literal notranslate"><span class="pre">sigma</span></code>.</p>
+</section>
+<section id="ramp">
+<h2>ramp<a class="headerlink" href="#ramp" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ocean/drying_slope/${RES}/${COORD}/ramp</span></code> is identical to the <code class="docutils literal notranslate"><span class="pre">default</span></code>
+test except the factor that scales velocities and velocity tendencies is
+ramped over a given layer thickness range rather than a binary switch at the
+minimum thickness. <code class="docutils literal notranslate"><span class="pre">RES</span></code> is either 250m or 1km. <code class="docutils literal notranslate"><span class="pre">COORD</span></code> is either
+<code class="docutils literal notranslate"><span class="pre">single_layer</span></code> or <code class="docutils literal notranslate"><span class="pre">sigma</span></code>.</p>
 </section>
 </section>
 
