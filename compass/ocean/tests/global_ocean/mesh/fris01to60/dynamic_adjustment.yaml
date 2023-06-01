@@ -1,0 +1,44 @@
+dynamic_adjustment:
+  land_ice_flux_mode: pressure_only
+  get_dt_from_min_res: False
+
+  steps:
+    damped_adjustment_1:
+      run_duration: 02_00:00:00
+      output_interval: 01_00:00:00
+      restart_interval: 02_00:00:00
+      dt: 00:00:30
+      btr_dt: 00:00:01
+      Rayleigh_damping_coeff: 1.0e-4
+
+    damped_adjustment_2:
+      run_duration: 08_00:00:00
+      output_interval: 10_00:00:00
+      restart_interval: 02_00:00:00
+      dt: 00:00:30
+      btr_dt: 00:00:01
+      Rayleigh_damping_coeff: 1.0e-5
+
+    damped_adjustment_3:
+      run_duration: 10_00:00:00
+      output_interval: 10_00:00:00
+      restart_interval: 10_00:00:00
+      dt: 00:00:30
+      btr_dt: 00:00:01
+      Rayleigh_damping_coeff: 1.0e-6
+
+    damped_adjustment_4:
+      run_duration: 20_00:00:00
+      output_interval: 10_00:00:00
+      restart_interval: 10_00:00:00
+      dt: 00:00:30
+      btr_dt: 00:00:01
+      Rayleigh_damping_coeff: None
+
+    simulation:
+      run_duration: 10_00:00:00
+      output_interval: 10_00:00:00
+      restart_interval: 10_00:00:00
+      dt: 00:00:50
+      btr_dt: 00:00:01.7
+      Rayleigh_damping_coeff: None
