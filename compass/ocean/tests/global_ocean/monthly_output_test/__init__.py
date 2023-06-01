@@ -1,6 +1,8 @@
+from compass.ocean.tests.global_ocean.forward import (
+    ForwardStep,
+    ForwardTestCase,
+)
 from compass.validate import compare_variables
-from compass.ocean.tests.global_ocean.forward import ForwardTestCase, \
-    ForwardStep
 
 
 class MonthlyOutputTest(ForwardTestCase):
@@ -32,8 +34,7 @@ class MonthlyOutputTest(ForwardTestCase):
                          name='monthly_output_test')
 
         step = ForwardStep(test_case=self, mesh=mesh, init=init,
-                           time_integrator=time_integrator, ntasks=4,
-                           openmp_threads=1)
+                           time_integrator=time_integrator)
 
         module = self.__module__
         step.add_output_file(filename='output.nc')
