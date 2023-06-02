@@ -9,7 +9,8 @@ matplotlib.use('Agg')
 
 class Visualize(Step):
     """
-    A step for visualizing a cross-section through the solitary wave
+    A step for visualizing a cross-section through the density
+    in the lock exchange test group
     """
     def __init__(self, test_case):
         """

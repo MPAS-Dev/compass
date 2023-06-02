@@ -6,10 +6,10 @@ from compass.testcase import TestCase
 
 class Nonhydro(TestCase):
     """
-    The default test case for the solitary wave test simply creates the
-    mesh and initial condition, then performs two forward runs, one with
-    the standard hydrostatic version of MPAS-O, and the second with the
-    nonhydrostatic version.
+    The nonhydro test case for the lock exchange group simply creates the
+    mesh and initial condition, then performs a forward runs with
+    the nonhydrostatic version of MPAS-O, and then plots the density
+    profile.
 
     """
 
@@ -19,7 +19,7 @@ class Nonhydro(TestCase):
 
         Parameters
         ----------
-        test_group : compass.ocean.tests.nonhydro.Nonhydro
+        test_group : compass.ocean.tests.lock_exchange.Nonhydro
             The test group that this test case belongs to
         """
         name = 'nonhydro'

@@ -5,12 +5,10 @@ from compass.step import Step
 class Forward(Step):
     """
     A step for performing forward MPAS-Ocean runs as part of the
-    solitary wave test case.
+    lock exchange test case.
 
     Attributes
     ----------
-    nonhydro_mode : bool
-        The resolution of the test case
     """
     def __init__(self, test_case, name, ntasks=16,
                  min_tasks=1, openmp_threads=1):
