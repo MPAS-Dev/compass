@@ -9,6 +9,7 @@ from compass.ocean.tests.hurricane import Hurricane
 from compass.ocean.tests.ice_shelf_2d import IceShelf2d
 from compass.ocean.tests.internal_wave import InternalWave
 from compass.ocean.tests.isomip_plus import IsomipPlus
+from compass.ocean.tests.lock_exchange import LockExchange
 from compass.ocean.tests.merry_go_round import MerryGoRound
 from compass.ocean.tests.nonhydro import Nonhydro
 from compass.ocean.tests.overflow import Overflow
@@ -44,6 +45,7 @@ class Ocean(MpasCore):
         self.add_test_group(InternalWave(mpas_core=self))
         self.add_test_group(IceShelf2d(mpas_core=self))
         self.add_test_group(IsomipPlus(mpas_core=self))
+        self.add_test_group(LockExchange(mpas_core=self))
         self.add_test_group(MerryGoRound(mpas_core=self))
         self.add_test_group(Nonhydro(mpas_core=self))
         self.add_test_group(Overflow(mpas_core=self))
