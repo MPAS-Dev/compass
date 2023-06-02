@@ -98,6 +98,8 @@ class RemapTopography(Step):
         lon_var = config.get('remap_topography', 'lon_var')
         lat_var = config.get('remap_topography', 'lat_var')
         method = config.get('remap_topography', 'method')
+        min_water_column = config.getfloat('remap_topography',
+                                           'min_water_column')
 
         in_descriptor = LatLonGridDescriptor.read(fileName='topography.nc',
                                                   lonVarName=lon_var,
@@ -135,5 +137,16 @@ class RemapTopography(Step):
             in_var = config.get('remap_topography', option)
             out_var = rename[option]
             ds_out[out_var] = ds_in[in_var]
+
+        if min_water_column > 0:
+            # deepen the bathymetry where needed to maintain the minimum
+            # water-column thickness
+            ice_draft = ds_out.landIceDraftObserved
+            bed_elevation = ds_out.bed_elevation
+            water_column = ice_draft - bed_elevation
+            mask = water_column >= min_water_column
+            bed_elevation = xr.where(
+                mask, bed_elevation, ice_draft - min_water_column)
+            ds_out['bed_elevation'] = bed_elevation
 
         write_netcdf(ds_out, 'topography_remapped.nc')
