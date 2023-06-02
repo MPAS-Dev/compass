@@ -34,16 +34,21 @@ class Visualize(Step):
         """
         Run this step of the test case
         """
+        config = self.config
+
+        section = config['visualize']
+        L0 = section.getfloat('L0')
+        a0 = section.getfloat('a0')
+        time = section.getint('plotTime')
+
         plt.figure(1, figsize=(11.0, 4.0))
 
         ncfileIC = Dataset('init.nc', 'r')
         ncfile = Dataset('output.nc', 'r')
-        temp = ncfile.variables['density'][5, 0:500, :]
+        temp = ncfile.variables['density'][time, 0:500, :]
         temp = temp - 1000
         xCell = ncfileIC.variables['xCell'][0:500]
-        zMid = ncfile.variables['zMid'][5, 0, :]
-        L0 = 0.5
-        a0 = 0.1
+        zMid = ncfile.variables['zMid'][time, 0, :]
         x = xCell / L0
         z = zMid / a0
         plt.contour(x, z, temp.T, levels=[23, 23.25, 23.5, 23.75, 24,

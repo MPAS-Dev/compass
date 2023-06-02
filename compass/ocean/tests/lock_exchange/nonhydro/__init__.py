@@ -1,8 +1,7 @@
 from compass.ocean.tests.lock_exchange.forward import Forward
 from compass.ocean.tests.lock_exchange.initial_state import InitialState
+from compass.ocean.tests.lock_exchange.visualize import Visualize
 from compass.testcase import TestCase
-
-# from compass.ocean.tests.lock_exchange.hydro.visualize import Visualize
 
 
 class Nonhydro(TestCase):
@@ -40,7 +39,7 @@ class Nonhydro(TestCase):
             'streams.forward')
         self.add_step(step)
 
-        # self.add_step(
-        #    Visualize(test_case=self))
+        self.add_step(
+            Visualize(test_case=self))
 
     # no run() is needed because we're doing the default: running all steps
