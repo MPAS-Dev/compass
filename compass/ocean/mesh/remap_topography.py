@@ -1,5 +1,6 @@
 import os
 
+import numpy as np
 import xarray as xr
 from mpas_tools.io import write_netcdf
 from pyremap import LatLonGridDescriptor, MpasMeshDescriptor, Remapper
@@ -100,6 +101,8 @@ class RemapTopography(Step):
         method = config.get('remap_topography', 'method')
         min_water_column = config.getfloat('remap_topography',
                                            'min_water_column')
+        renorm_threshold = config.getfloat('remap_topography',
+                                           'renorm_threshold')
 
         in_descriptor = LatLonGridDescriptor.read(fileName='topography.nc',
                                                   lonVarName=lon_var,
@@ -138,15 +141,23 @@ class RemapTopography(Step):
             out_var = rename[option]
             ds_out[out_var] = ds_in[in_var]
 
+        # renormalize elevation variables
+        norm = ds_out.oceanFracObserved
+        valid = norm > renorm_threshold
+        for var in ['bed_elevation', 'landIceDraftObserved',
+                    'landIceThkObserved']:
+            ds_out[var] = xr.where(valid, ds_out[var] / norm, 0.)
+
         if min_water_column > 0:
             # deepen the bathymetry where needed to maintain the minimum
             # water-column thickness
             ice_draft = ds_out.landIceDraftObserved
             bed_elevation = ds_out.bed_elevation
             water_column = ice_draft - bed_elevation
-            mask = water_column >= min_water_column
+            dig_mask = np.logical_or(np.logical_not(valid),
+                                     water_column >= min_water_column)
             bed_elevation = xr.where(
-                mask, bed_elevation, ice_draft - min_water_column)
+                dig_mask, bed_elevation, ice_draft - min_water_column)
             ds_out['bed_elevation'] = bed_elevation
 
         write_netcdf(ds_out, 'topography_remapped.nc')
