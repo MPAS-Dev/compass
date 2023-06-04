@@ -106,12 +106,6 @@ class ForwardStep(Step):
             self.add_namelist_file(
                 'compass.ocean.tests.global_ocean', 'namelist.wisc')
 
-        if init is not None and init.with_bgc:
-            self.add_namelist_file(
-                'compass.ocean.tests.global_ocean', 'namelist.bgc')
-            self.add_streams_file(
-                'compass.ocean.tests.global_ocean', 'streams.bgc')
-
         mesh_package = mesh.package
         mesh_package_contents = list(contents(mesh_package))
         mesh_namelists = ['namelist.forward',

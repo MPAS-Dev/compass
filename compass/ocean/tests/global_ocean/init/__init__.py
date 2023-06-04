@@ -18,14 +18,11 @@ class Init(TestCase):
     initial_condition : {'WOA23', 'PHC', 'EN4_1900'}
         The initial condition dataset to use
 
-    with_bgc : bool
-        Whether to include biogeochemistry (BGC) in the initial condition
-
     init_subdir : str
         The subdirectory within the test group for all test cases with this
         initial condition
     """
-    def __init__(self, test_group, mesh, initial_condition, with_bgc):
+    def __init__(self, test_group, mesh, initial_condition):
         """
         Create the test case
 
@@ -39,28 +36,21 @@ class Init(TestCase):
 
         initial_condition : {'WOA23', 'PHC', 'EN4_1900'}
             The initial condition dataset to use
-
-        with_bgc : bool
-            Whether to include biogeochemistry (BGC) in the initial condition
         """
         name = 'init'
         mesh_name = mesh.mesh_name
-        if with_bgc:
-            ic_dir = '{}_BGC'.format(initial_condition)
-        else:
-            ic_dir = initial_condition
+        ic_dir = initial_condition
         self.init_subdir = os.path.join(mesh_name, ic_dir)
         subdir = os.path.join(self.init_subdir, name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
         self.mesh = mesh
         self.initial_condition = initial_condition
-        self.with_bgc = with_bgc
 
         self.add_step(
             InitialState(
                 test_case=self, mesh=mesh,
-                initial_condition=initial_condition, with_bgc=with_bgc))
+                initial_condition=initial_condition))
 
         if mesh.with_ice_shelf_cavities:
             self.add_step(
@@ -89,11 +79,6 @@ class Init(TestCase):
         config.set('global_ocean', 'init_description',
                    descriptions[initial_condition])
 
-        if self.with_bgc:
-            # todo: this needs to be filled in!
-            config.set('global_ocean', 'bgc_description',
-                       '<<<Missing>>>')
-
     def validate(self):
         """
         Test cases can override this method to perform validation of variables
@@ -102,18 +87,6 @@ class Init(TestCase):
         variables = ['temperature', 'salinity', 'layerThickness']
         compare_variables(test_case=self, variables=variables,
                           filename1='initial_state/initial_state.nc')
-
-        if self.with_bgc:
-            variables = [
-                'temperature', 'salinity', 'layerThickness', 'PO4', 'NO3',
-                'SiO3', 'NH4', 'Fe', 'O2', 'DIC', 'DIC_ALT_CO2', 'ALK',
-                'DOC', 'DON', 'DOFe', 'DOP', 'DOPr', 'DONr', 'zooC',
-                'spChl', 'spC', 'spFe', 'spCaCO3', 'diatChl', 'diatC',
-                'diatFe', 'diatSi', 'diazChl', 'diazC', 'diazFe',
-                'phaeoChl', 'phaeoC', 'phaeoFe', 'DMS', 'DMSP', 'PROT',
-                'POLY', 'LIP']
-            compare_variables(test_case=self, variables=variables,
-                              filename1='initial_state/initial_state.nc')
 
         if self.mesh.with_ice_shelf_cavities:
             variables = ['ssh', 'landIcePressure']
