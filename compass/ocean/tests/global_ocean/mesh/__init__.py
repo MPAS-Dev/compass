@@ -34,8 +34,12 @@ class Mesh(TestCase):
 
     with_ice_shelf_cavities : bool
         Whether the mesh includes ice-shelf cavities
+
+    high_res_topography : bool
+        Whether to remap a high resolution topography data set.  A lower
+        res data set is used for low resolution meshes.
     """
-    def __init__(self, test_group, mesh_name, remap_topography):
+    def __init__(self, test_group, mesh_name, high_res_topography):
         """
         Create test case for creating a global MPAS-Ocean mesh
 
@@ -47,9 +51,9 @@ class Mesh(TestCase):
         mesh_name : str
             The name of the mesh
 
-        remap_topography : bool
-            Whether to remap topography as a separate step (as opposed to in
-            MPAS-Ocean init mode)
+        high_res_topography : bool
+            Whether to remap a high resolution topography data set.  A lower
+            res data set is used for low resolution meshes.
         """
         name = 'mesh'
         subdir = f'{mesh_name}/{name}'
@@ -67,6 +71,7 @@ class Mesh(TestCase):
 
         self.mesh_name = mesh_name
         self.with_ice_shelf_cavities = with_ice_shelf_cavities
+        self.high_res_topography = high_res_topography
 
         name = 'base_mesh'
         subdir = None
@@ -97,13 +102,10 @@ class Mesh(TestCase):
 
         self.add_step(base_mesh_step)
 
-        if remap_topography:
-            remap_step = RemapTopography(test_case=self,
-                                         base_mesh_step=base_mesh_step,
-                                         mesh_name=mesh_name)
-            self.add_step(remap_step)
-        else:
-            remap_step = None
+        remap_step = RemapTopography(test_case=self,
+                                     base_mesh_step=base_mesh_step,
+                                     mesh_name=mesh_name)
+        self.add_step(remap_step)
 
         self.add_step(CullMeshStep(
             test_case=self, base_mesh_step=base_mesh_step,
@@ -124,6 +126,15 @@ class Mesh(TestCase):
         if 'remap_topography' in self.steps:
             config.add_from_package('compass.ocean.mesh',
                                     'remap_topography.cfg', exception=True)
+
+        if not self.high_res_topography:
+            filename = 'BedMachineAntarctica_v2_and_GEBCO_2022_0.05_degree_20220729.nc'  # noqa: E501
+            description = 'Bathymetry is from GEBCO 2022, combined with ' \
+                          'BedMachine Antarctica v2 around Antarctica.'
+            config.set('remap_topography', 'topo_filename', filename)
+            config.set('remap_topography', 'description', description)
+            config.set('remap_topography', 'ntasks', '64')
+            config.set('remap_topography', 'min_tasks', '4')
 
         if self.mesh_name.startswith('Kuroshio'):
             # add the config options for all kuroshio meshes
