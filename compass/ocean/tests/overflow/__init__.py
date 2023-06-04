@@ -1,6 +1,7 @@
-from compass.testgroup import TestGroup
 from compass.ocean.tests.overflow.default import Default
+from compass.ocean.tests.overflow.hydro_vs_nonhydro import HydroVSNonhydro
 from compass.ocean.tests.overflow.rpe_test import RpeTest
+from compass.testgroup import TestGroup
 
 
 class Overflow(TestGroup):
@@ -17,6 +18,7 @@ class Overflow(TestGroup):
 
         self.add_test_case(Default(test_group=self, resolution='10km'))
         self.add_test_case(RpeTest(test_group=self, resolution='2km'))
+        self.add_test_case(HydroVSNonhydro(test_group=self))
 
 
 def configure(resolution, config):
@@ -35,12 +37,12 @@ def configure(resolution, config):
     length = config.getint('overflow', 'length')
 
     dc = float(resolution[:-2])
-    nx = int(width/dc)
-    ny = int(length/dc)
+    nx = int(width / dc)
+    ny = int(length / dc)
 
     config.set('overflow', 'nx', str(nx),
                comment='the number of mesh cells in the x direction')
     config.set('overflow', 'ny', str(ny),
                comment='the number of mesh cells in the y direction')
-    config.set('overflow', 'dc', str(dc*1e3),
+    config.set('overflow', 'dc', str(dc * 1e3),
                comment='the distance between adjacent cell centers')
