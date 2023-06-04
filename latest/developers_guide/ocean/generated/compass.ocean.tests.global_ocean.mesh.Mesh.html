@@ -132,7 +132,7 @@
 <h1>compass.ocean.tests.global_ocean.mesh.Mesh<a class="headerlink" href="#compass-ocean-tests-global-ocean-mesh-mesh" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="compass.ocean.tests.global_ocean.mesh.Mesh">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compass.ocean.tests.global_ocean.mesh.</span></span><span class="sig-name descname"><span class="pre">Mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remap_topography</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/global_ocean/mesh.html#Mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.tests.global_ocean.mesh.Mesh" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compass.ocean.tests.global_ocean.mesh.</span></span><span class="sig-name descname"><span class="pre">Mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high_res_topography</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/global_ocean/mesh.html#Mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.tests.global_ocean.mesh.Mesh" title="Permalink to this definition">¶</a></dt>
 <dd><p>A test case for creating a global MPAS-Ocean mesh</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
@@ -140,20 +140,22 @@
 <li><p><strong>package</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The python package for the mesh</p></li>
 <li><p><strong>mesh_config_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the mesh config file</p></li>
 <li><p><strong>with_ice_shelf_cavities</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether the mesh includes ice-shelf cavities</p></li>
+<li><p><strong>high_res_topography</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether to remap a high resolution topography data set.  A lower
+res data set is used for low resolution meshes.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="compass.ocean.tests.global_ocean.mesh.Mesh.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remap_topography</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/global_ocean/mesh.html#Mesh.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.tests.global_ocean.mesh.Mesh.__init__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high_res_topography</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/global_ocean/mesh.html#Mesh.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.tests.global_ocean.mesh.Mesh.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create test case for creating a global MPAS-Ocean mesh</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>test_group</strong> (<a class="reference internal" href="compass.ocean.tests.global_ocean.GlobalOcean.html#compass.ocean.tests.global_ocean.GlobalOcean" title="compass.ocean.tests.global_ocean.GlobalOcean"><em>compass.ocean.tests.global_ocean.GlobalOcean</em></a>) – The global ocean test group that this test case belongs to</p></li>
 <li><p><strong>mesh_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the mesh</p></li>
-<li><p><strong>remap_topography</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether to remap topography as a separate step (as opposed to in
-MPAS-Ocean init mode)</p></li>
+<li><p><strong>high_res_topography</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether to remap a high resolution topography data set.  A lower
+res data set is used for low resolution meshes.</p></li>
 </ul>
 </dd>
 </dl>
@@ -166,7 +168,7 @@ MPAS-Ocean init mode)</p></li>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#compass.ocean.tests.global_ocean.mesh.Mesh.__init__" title="compass.ocean.tests.global_ocean.mesh.Mesh.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(test_group, mesh_name, remap_topography)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#compass.ocean.tests.global_ocean.mesh.Mesh.__init__" title="compass.ocean.tests.global_ocean.mesh.Mesh.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(test_group, mesh_name, ...)</p></td>
 <td><p>Create test case for creating a global MPAS-Ocean mesh</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_step</span></code>(step[, run_by_default])</p></td>
