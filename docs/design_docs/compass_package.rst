@@ -1762,8 +1762,6 @@ the same conceptual test (e.g. restart) can be defined:
 
   * with the PHC or EN4 1900 initial conditions
 
-  * with or without BGC support
-
   * with the RK4 or split-explicit time integrators
 
 In practice, this is overkill and many of these variants will never be used so
@@ -1884,11 +1882,6 @@ where ``configure_global_ocean()`` is:
         config.set('global_ocean', 'bathy_description',
                    'Bathymetry is from GEBCO 2019, combined with BedMachine '
                    'Antarctica around Antarctica.')
-
-        if init is not None and init.with_bgc:
-            # todo: this needs to be filled in!
-            config.set('global_ocean', 'bgc_description',
-                       '<<<Missing>>>')
 
         if mesh.with_ice_shelf_cavities:
             config.set('global_ocean', 'wisc_description',
@@ -2267,19 +2260,17 @@ flexibility.  Here are the directories for test cases using the QU240 mesh:
   42: ocean/global_ocean/QU240/EN4_1900/performance_test
   43: ocean/global_ocean/QU240/EN4_1900/dynamic_adjustment
   44: ocean/global_ocean/QU240/EN4_1900/files_for_e3sm
-  45: ocean/global_ocean/QU240/PHC_BGC/init
-  46: ocean/global_ocean/QU240/PHC_BGC/performance_test
 
 As in legacy COMPASS, there is a subdirectory for the mesh.  In the proposed
 design, there is a ``mesh`` test case with a single ``mesh`` step within that
 subdirectory.  The mesh constructed and culled within that test case serves
 as the starting point for all other test cases using the mesh.
 
-Then, there are 4 different subdirectories for variants of the initial
-condition: either PHC or EN4_1900, and either with or without BGC.  Each of
-these subdirectories has an ``init`` test case that creates the initial
-condition.  The results of this test case are then used in all other steps
-within the subdirectory for that initial condition.
+Then, there are 3 different subdirectories for variants of the initial
+condition: WOA23, PHC or EN4_1900.  Each of these subdirectories has own
+``init`` test case that creates the initial condition.  The results of this
+test case are then used in all other steps within the subdirectory for that
+initial condition.
 
 Each remaining test case includes one or more forward model runs, or uses the
 results of such a run.  Since the forward model can be run with either the

@@ -20,9 +20,8 @@ are described in :ref:`ocean_global_ocean` in the User's Guide.
 
 Additionally, the test group has several shared namelist and streams files,
 some for shared parameters and streams for forward runs (``namelist.forward``
-and ``streams.forward``), one specific to meshes with ice-shelf cavities
-(``namelist.wisc``), and some related to simulations with biogeochemistry
-(``namelist.bgc`` and ``streams.bgc``).
+and ``streams.forward``), and one specific to meshes with ice-shelf cavities
+(``namelist.wisc``).
 
 .. _dev_ocean_global_ocean_metadata:
 
@@ -247,11 +246,10 @@ the minimum resolution and ``dt_per_km`` for split-explicit runs, and
 the barotropic or 4th-order Runge-Kutta time step will be  product of
 the minimum resolution and ``btr_dt_per_km``.
 
-During init, the ``forward``, ``wisc`` and ``bgc`` namelist replacements and
-streams files are added as appropriate based on whether the mesh includes
-ice-shelf cavities and the initial condition includes biogeochemistry. Further
-namelist replacements and streams files can be added in the test case
-before adding the step, as in the example above.
+During init, the ``forward`` and ``wisc`` namelist replacements and streams
+files are added as appropriate based on whether the mesh includes ice-shelf
+cavities. Further namelist replacements and streams files can be added in the
+test case before adding the step, as in the example above.
 
 The MPAS model is linked in as in input to the step in the ``setup()`` method,
 which also updates the ``self.ntasks``, ``self.min_tasks`` and
@@ -838,9 +836,7 @@ the streams needed for the test case, regardless of the particular
 test group.  ``namelist.woa23``, ``namelist.phc`` and ``namelist.en4_1900`` set
 namelist options specific to those 3 sets of input files.  ``namelist.wisc``
 and ``streams.wisc`` configure the test case for meshes that include
-:ref:`global_ocean_ice_shelf_cavities`, while ``namelist.bgc`` and
-``streams.bgc`` are used to configure the test case when
-:ref:`global_ocean_bgc` is included.
+:ref:`global_ocean_ice_shelf_cavities`.
 
 The class :py:class:`compass.ocean.tests.global_ocean.init.initial_state.InitialState`
 defines the step for creating the initial state, including defining the
@@ -854,9 +850,8 @@ dynamical balance with the sea-surface height (SSH) in configurations with
 
 If the test case is being compared with a baseline, the potential temperature,
 salinity, and layerThickness are compared with those in the baseline initial
-condition to make sure they are identical.  In runs with BGC, a large number
-of ecosystem tracers are compared, and in simulations with ice-shelf cavities,
-the SSH and land-ice pressure are compared against the baseline.
+condition to make sure they are identical.  In simulations with ice-shelf
+cavities, the SSH and land-ice pressure are compared against the baseline.
 
 .. _dev_ocean_global_ocean_performance_test:
 
@@ -871,10 +866,9 @@ The module includes ``namelist.wisc`` and ``streams.wisc``, which enable melt
 fluxes below ice shelves and write out related fields if the mesh includes
 :ref:`dev_ocean_framework_iceshelf`.
 
-If a baseline is provided, prognostic variables as well as ecosystem tracers
-(if BGC is active) and ice-shelf melt fluxes (if ice-shelf cavities are
-included in the mesh) are compared with a baseline, and the
-``time integration`` timer is compared with that of the baseline.
+If a baseline is provided, prognostic variables and ice-shelf melt fluxes (if
+ice-shelf cavities are included in the mesh) are compared with a baseline, and
+the ``time integration`` timer is compared with that of the baseline.
 
 .. _dev_ocean_global_ocean_restart_test:
 

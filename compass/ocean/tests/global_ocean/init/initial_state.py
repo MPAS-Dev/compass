@@ -22,11 +22,8 @@ class InitialState(Step):
 
     initial_condition : {'WOA23', 'PHC', 'EN4_1900'}
         The initial condition dataset to use
-
-    with_bgc : bool
-        Whether to include biogeochemistry (BGC) in the initial condition
     """
-    def __init__(self, test_case, mesh, initial_condition, with_bgc):
+    def __init__(self, test_case, mesh, initial_condition):
         """
         Create the step
 
@@ -40,9 +37,6 @@ class InitialState(Step):
 
         initial_condition : {'WOA23', 'PHC', 'EN4_1900'}
             The initial condition dataset to use
-
-        with_bgc : bool
-            Whether to include biogeochemistry (BGC) in the initial condition
         """
         if initial_condition not in ['WOA23', 'PHC', 'EN4_1900']:
             raise ValueError(f'Unknown initial_condition {initial_condition}')
@@ -50,7 +44,6 @@ class InitialState(Step):
         super().__init__(test_case=test_case, name='initial_state')
         self.mesh = mesh
         self.initial_condition = initial_condition
-        self.with_bgc = with_bgc
 
         package = 'compass.ocean.tests.global_ocean.init'
 
@@ -61,8 +54,6 @@ class InitialState(Step):
             mode='init')
         if mesh.with_ice_shelf_cavities:
             self.add_namelist_file(package, 'namelist.wisc', mode='init')
-        if with_bgc:
-            self.add_namelist_file(package, 'namelist.bgc', mode='init')
 
         # generate the streams file
         self.add_streams_file(package, 'streams.init', mode='init')
@@ -104,11 +95,6 @@ class InitialState(Step):
             target='windStress.ncep_1958-2000avg.interp3600x2431.151106.nc',
             database='initial_condition_database')
 
-        self.add_input_file(
-            filename='swData.nc',
-            target='chlorophyllA_monthly_averages_1deg.151201.nc',
-            database='initial_condition_database')
-
         if initial_condition == 'WOA23':
             self.add_input_file(
                 filename='woa23.nc',
@@ -133,17 +119,6 @@ class InitialState(Step):
             self.add_input_file(
                 filename='salinity.nc',
                 target='Salinity.100levels.Levitus.EN4_1900estimate.200813.nc',
-                database='initial_condition_database')
-
-        if with_bgc:
-            self.add_input_file(
-                filename='ecosys.nc',
-                target='ecosys_jan_IC_360x180x60_corrO2_Dec2014phaeo.nc',
-                database='initial_condition_database')
-            self.add_input_file(
-                filename='ecosys_forcing.nc',
-                target='ecoForcingAllSurface.forMPASO.interp360x180.'
-                       '1timeLevel.nc',
                 database='initial_condition_database')
 
         mesh_path = self.mesh.get_cull_mesh_path()

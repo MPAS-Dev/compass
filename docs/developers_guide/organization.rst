@@ -735,18 +735,6 @@ examples of validation of variables from output files:
         compare_variables(test_case=self, variables=variables,
                           filename1='initial_state/initial_state.nc')
 
-        if self.with_bgc:
-            variables = [
-                'temperature', 'salinity', 'layerThickness', 'PO4', 'NO3',
-                'SiO3', 'NH4', 'Fe', 'O2', 'DIC', 'DIC_ALT_CO2', 'ALK',
-                'DOC', 'DON', 'DOFe', 'DOP', 'DOPr', 'DONr', 'zooC',
-                'spChl', 'spC', 'spFe', 'spCaCO3', 'diatChl', 'diatC',
-                'diatFe', 'diatSi', 'diazChl', 'diazC', 'diazFe',
-                'phaeoChl', 'phaeoC', 'phaeoFe', 'DMS', 'DMSP', 'PROT',
-                'POLY', 'LIP']
-            compare_variables(test_case=self, variables=variables,
-                              filename1='initial_state/initial_state.nc')
-
         if self.mesh.with_ice_shelf_cavities:
             variables = ['ssh', 'landIcePressure']
             compare_variables(test_case=self, variables=variables,

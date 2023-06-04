@@ -53,8 +53,7 @@ class GlobalOcean(TestGroup):
                         include_rk4=True,
                         include_regression=True,
                         include_phc=True,
-                        include_en4_1900=True,
-                        include_bgc=True)
+                        include_en4_1900=True)
 
         # for other meshes, we do fewer tests
         self._add_tests(mesh_names=['QU', 'Icos', 'QUwISC', 'IcoswISC'],
@@ -81,8 +80,7 @@ class GlobalOcean(TestGroup):
 
     def _add_tests(self, mesh_names, DynamicAdjustment, remap_topography=True,
                    include_rk4=False, include_regression=False,
-                   include_phc=False, include_en4_1900=False,
-                   include_bgc=False):
+                   include_phc=False, include_en4_1900=False):
         """ Add test cases for the given mesh(es) """
 
         default_ic = 'WOA23'
@@ -94,8 +92,7 @@ class GlobalOcean(TestGroup):
             self.add_test_case(mesh_test)
 
             init_test = Init(test_group=self, mesh=mesh_test,
-                             initial_condition=default_ic,
-                             with_bgc=False)
+                             initial_condition=default_ic)
             self.add_test_case(init_test)
 
             time_integrator = default_time_int
@@ -168,8 +165,7 @@ class GlobalOcean(TestGroup):
                 # additional initial conditions (if any)
                 time_integrator = default_time_int
                 init_test = Init(test_group=self, mesh=mesh_test,
-                                 initial_condition=initial_condition,
-                                 with_bgc=False)
+                                 initial_condition=initial_condition)
                 self.add_test_case(init_test)
 
                 self.add_test_case(
@@ -186,15 +182,3 @@ class GlobalOcean(TestGroup):
                     FilesForE3SM(
                         test_group=self, mesh=mesh_test, init=init_test,
                         dynamic_adjustment=dynamic_adjustment_test))
-
-            if include_bgc:
-                # BGC tests
-                init_test = Init(test_group=self, mesh=mesh_test,
-                                 initial_condition=default_ic,
-                                 with_bgc=True)
-                self.add_test_case(init_test)
-
-                self.add_test_case(
-                    PerformanceTest(
-                        test_group=self, mesh=mesh_test, init=init_test,
-                        time_integrator=time_integrator))

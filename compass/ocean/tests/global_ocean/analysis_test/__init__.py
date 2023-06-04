@@ -1,9 +1,11 @@
-import traceback
 import os
+import traceback
 
-from compass.validate import compare_variables, compare_timers
-from compass.ocean.tests.global_ocean.forward import ForwardTestCase, \
-    ForwardStep
+from compass.ocean.tests.global_ocean.forward import (
+    ForwardStep,
+    ForwardTestCase,
+)
+from compass.validate import compare_timers, compare_variables
 
 
 class AnalysisTest(ForwardTestCase):
@@ -101,9 +103,6 @@ class AnalysisTest(ForwardTestCase):
         Test cases can override this method to perform validation of variables
         and timers
         """
-        config = self.config
-        work_dir = self.work_dir
-
         failed = list()
         for filename, variables in self.variables.items():
             try:
@@ -138,13 +137,6 @@ class AnalysisTest(ForwardTestCase):
 
         variables = ['temperature', 'salinity', 'layerThickness',
                      'normalVelocity']
-        if self.init.with_bgc:
-            variables.extend(
-                ['PO4', 'NO3', 'SiO3', 'NH4', 'Fe', 'O2', 'DIC', 'DIC_ALT_CO2',
-                 'ALK', 'DOC', 'DON', 'DOFe', 'DOP', 'DOPr', 'DONr', 'zooC',
-                 'spChl', 'spC', 'spFe', 'spCaCO3', 'diatChl', 'diatC',
-                 'diatFe', 'diatSi', 'diazChl', 'diazC', 'diazFe', 'phaeoChl',
-                 'phaeoC', 'phaeoFe'])
 
         compare_variables(test_case=self, variables=variables,
                           filename1='forward/output.nc')
