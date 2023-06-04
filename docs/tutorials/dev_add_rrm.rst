@@ -1170,8 +1170,7 @@ new mesh:
                 self.add_test_case(mesh_test)
 
                 init_test = Init(test_group=self, mesh=mesh_test,
-                                 initial_condition='WOA23',
-                                 with_bgc=False)
+                                 initial_condition='WOA23')
                 self.add_test_case(init_test)
 
                 self.add_test_case(
@@ -1183,9 +1182,8 @@ new mesh:
             self.add_test_case(FilesForE3SM(test_group=self))
 
 We have indicated that we want an initial condition interpolated from the
-World Ocean Atlas 2023 (WOA23) data set, that we do not want to include
-BGC tracers, and that we want to use the split-explicit time integrator
-(the E3SM default) in our performance test.
+World Ocean Atlas 2023 (WOA23) data set and that we want to use the
+split-explicit time integrator (the E3SM default) in our performance test.
 
 Let's see if the test cases show up:
 
@@ -1444,8 +1442,7 @@ group:
                 self.add_test_case(mesh_test)
 
                 init_test = Init(test_group=self, mesh=mesh_test,
-                                 initial_condition='WOA23',
-                                 with_bgc=False)
+                                 initial_condition='WOA23')
                 self.add_test_case(init_test)
 
                 self.add_test_case(

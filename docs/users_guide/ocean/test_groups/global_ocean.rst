@@ -458,13 +458,6 @@ overlying ice shelf, we use the method for :ref:`ocean_ssh_adjustment` to
 update the pressure from the ice shelf to be in dynamic balance with the ice
 draft.
 
-.. _global_ocean_bgc:
-
-Biogeochemsitry
----------------
-
-<<<I need help here!!!>>>
-
 .. _global_ocean_forward:
 
 Forward step
@@ -575,8 +568,8 @@ performance_test test case
 The ``performance_test`` test case runs a short forward integration, then
 performs validation of prognostic variables (layer thickness, velocity,
 temperature and salinity) and, if applicable, variables related to fluxes
-below ice shelves and those associated with :ref:`global_ocean_bgc`. The
-duration of the forward run depends on the mesh and the time integrator.
+below ice shelves. The duration of the forward run depends on the mesh and the
+time integrator.
 
 Depending on the mesh, versions of the test may exist with both or either of
 the split-explict (base on `Higdon 2005 <https://doi.org/10.1016/j.jcp.2004.12.011>`_)

@@ -279,8 +279,6 @@ the same conceptual test (e.g. restart) can be defined:
 
   * with the WOA23, PHC or EN4 1900 initial conditions
 
-  * with or without BGC support
-
   * with the RK4 or split-explicit time integrators
 
 Within a test case
