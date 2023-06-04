@@ -133,14 +133,11 @@
 <span class="sd">    initial_condition : {&#39;WOA23&#39;, &#39;PHC&#39;, &#39;EN4_1900&#39;}</span>
 <span class="sd">        The initial condition dataset to use</span>
 
-<span class="sd">    with_bgc : bool</span>
-<span class="sd">        Whether to include biogeochemistry (BGC) in the initial condition</span>
-
 <span class="sd">    init_subdir : str</span>
 <span class="sd">        The subdirectory within the test group for all test cases with this</span>
 <span class="sd">        initial condition</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="Init.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.Init.html#compass.ocean.tests.global_ocean.init.Init.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">initial_condition</span><span class="p">,</span> <span class="n">with_bgc</span><span class="p">):</span>
+<div class="viewcode-block" id="Init.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.Init.html#compass.ocean.tests.global_ocean.init.Init.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">initial_condition</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the test case</span>
 
@@ -154,28 +151,21 @@
 
 <span class="sd">        initial_condition : {&#39;WOA23&#39;, &#39;PHC&#39;, &#39;EN4_1900&#39;}</span>
 <span class="sd">            The initial condition dataset to use</span>
-
-<span class="sd">        with_bgc : bool</span>
-<span class="sd">            Whether to include biogeochemistry (BGC) in the initial condition</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;init&#39;</span>
         <span class="n">mesh_name</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">mesh_name</span>
-        <span class="k">if</span> <span class="n">with_bgc</span><span class="p">:</span>
-            <span class="n">ic_dir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_BGC&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">initial_condition</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">ic_dir</span> <span class="o">=</span> <span class="n">initial_condition</span>
+        <span class="n">ic_dir</span> <span class="o">=</span> <span class="n">initial_condition</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init_subdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">ic_dir</span><span class="p">)</span>
         <span class="n">subdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">init_subdir</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initial_condition</span> <span class="o">=</span> <span class="n">initial_condition</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">with_bgc</span> <span class="o">=</span> <span class="n">with_bgc</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
             <span class="n">InitialState</span><span class="p">(</span>
                 <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
-                <span class="n">initial_condition</span><span class="o">=</span><span class="n">initial_condition</span><span class="p">,</span> <span class="n">with_bgc</span><span class="o">=</span><span class="n">with_bgc</span><span class="p">))</span>
+                <span class="n">initial_condition</span><span class="o">=</span><span class="n">initial_condition</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
@@ -202,12 +192,7 @@
                         <span class="s1">&#39;EN4_1900&#39;</span><span class="p">:</span> <span class="s2">&quot;Met Office Hadley Centre&#39;s EN4 dataset &quot;</span>
                                     <span class="s2">&quot;from 1900&quot;</span><span class="p">}</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;init_description&#39;</span><span class="p">,</span>
-                   <span class="n">descriptions</span><span class="p">[</span><span class="n">initial_condition</span><span class="p">])</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_bgc</span><span class="p">:</span>
-            <span class="c1"># todo: this needs to be filled in!</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;bgc_description&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;&lt;&lt;&lt;Missing&gt;&gt;&gt;&#39;</span><span class="p">)</span></div>
+                   <span class="n">descriptions</span><span class="p">[</span><span class="n">initial_condition</span><span class="p">])</span></div>
 
     <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -217,18 +202,6 @@
         <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">]</span>
         <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
                           <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;initial_state/initial_state.nc&#39;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_bgc</span><span class="p">:</span>
-            <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span> <span class="s1">&#39;PO4&#39;</span><span class="p">,</span> <span class="s1">&#39;NO3&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;SiO3&#39;</span><span class="p">,</span> <span class="s1">&#39;NH4&#39;</span><span class="p">,</span> <span class="s1">&#39;Fe&#39;</span><span class="p">,</span> <span class="s1">&#39;O2&#39;</span><span class="p">,</span> <span class="s1">&#39;DIC&#39;</span><span class="p">,</span> <span class="s1">&#39;DIC_ALT_CO2&#39;</span><span class="p">,</span> <span class="s1">&#39;ALK&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;DOC&#39;</span><span class="p">,</span> <span class="s1">&#39;DON&#39;</span><span class="p">,</span> <span class="s1">&#39;DOFe&#39;</span><span class="p">,</span> <span class="s1">&#39;DOP&#39;</span><span class="p">,</span> <span class="s1">&#39;DOPr&#39;</span><span class="p">,</span> <span class="s1">&#39;DONr&#39;</span><span class="p">,</span> <span class="s1">&#39;zooC&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;spChl&#39;</span><span class="p">,</span> <span class="s1">&#39;spC&#39;</span><span class="p">,</span> <span class="s1">&#39;spFe&#39;</span><span class="p">,</span> <span class="s1">&#39;spCaCO3&#39;</span><span class="p">,</span> <span class="s1">&#39;diatChl&#39;</span><span class="p">,</span> <span class="s1">&#39;diatC&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;diatFe&#39;</span><span class="p">,</span> <span class="s1">&#39;diatSi&#39;</span><span class="p">,</span> <span class="s1">&#39;diazChl&#39;</span><span class="p">,</span> <span class="s1">&#39;diazC&#39;</span><span class="p">,</span> <span class="s1">&#39;diazFe&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;phaeoChl&#39;</span><span class="p">,</span> <span class="s1">&#39;phaeoC&#39;</span><span class="p">,</span> <span class="s1">&#39;phaeoFe&#39;</span><span class="p">,</span> <span class="s1">&#39;DMS&#39;</span><span class="p">,</span> <span class="s1">&#39;DMSP&#39;</span><span class="p">,</span> <span class="s1">&#39;PROT&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;POLY&#39;</span><span class="p">,</span> <span class="s1">&#39;LIP&#39;</span><span class="p">]</span>
-            <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-                              <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;initial_state/initial_state.nc&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
             <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">,</span> <span class="s1">&#39;landIcePressure&#39;</span><span class="p">]</span>

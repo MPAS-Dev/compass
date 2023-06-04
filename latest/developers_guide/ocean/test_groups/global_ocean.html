@@ -159,9 +159,8 @@ be added in the near future.</p>
 are described in <a class="reference internal" href="../../../users_guide/ocean/test_groups/global_ocean.html#ocean-global-ocean"><span class="std std-ref">global_ocean</span></a> in the User’s Guide.</p>
 <p>Additionally, the test group has several shared namelist and streams files,
 some for shared parameters and streams for forward runs (<code class="docutils literal notranslate"><span class="pre">namelist.forward</span></code>
-and <code class="docutils literal notranslate"><span class="pre">streams.forward</span></code>), one specific to meshes with ice-shelf cavities
-(<code class="docutils literal notranslate"><span class="pre">namelist.wisc</span></code>), and some related to simulations with biogeochemistry
-(<code class="docutils literal notranslate"><span class="pre">namelist.bgc</span></code> and <code class="docutils literal notranslate"><span class="pre">streams.bgc</span></code>).</p>
+and <code class="docutils literal notranslate"><span class="pre">streams.forward</span></code>), and one specific to meshes with ice-shelf cavities
+(<code class="docutils literal notranslate"><span class="pre">namelist.wisc</span></code>).</p>
 <section id="metadata">
 <span id="dev-ocean-global-ocean-metadata"></span><h3>metadata<a class="headerlink" href="#metadata" title="Permalink to this heading">¶</a></h3>
 <p>The module <code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.metadata</span></code> determines the values
@@ -354,11 +353,10 @@ restart tests or dynamic adjustment), the time step will be the product of
 the minimum resolution and <code class="docutils literal notranslate"><span class="pre">dt_per_km</span></code> for split-explicit runs, and
 the barotropic or 4th-order Runge-Kutta time step will be  product of
 the minimum resolution and <code class="docutils literal notranslate"><span class="pre">btr_dt_per_km</span></code>.</p>
-<p>During init, the <code class="docutils literal notranslate"><span class="pre">forward</span></code>, <code class="docutils literal notranslate"><span class="pre">wisc</span></code> and <code class="docutils literal notranslate"><span class="pre">bgc</span></code> namelist replacements and
-streams files are added as appropriate based on whether the mesh includes
-ice-shelf cavities and the initial condition includes biogeochemistry. Further
-namelist replacements and streams files can be added in the test case
-before adding the step, as in the example above.</p>
+<p>During init, the <code class="docutils literal notranslate"><span class="pre">forward</span></code> and <code class="docutils literal notranslate"><span class="pre">wisc</span></code> namelist replacements and streams
+files are added as appropriate based on whether the mesh includes ice-shelf
+cavities. Further namelist replacements and streams files can be added in the
+test case before adding the step, as in the example above.</p>
 <p>The MPAS model is linked in as in input to the step in the <code class="docutils literal notranslate"><span class="pre">setup()</span></code> method,
 which also updates the <code class="docutils literal notranslate"><span class="pre">self.ntasks</span></code>, <code class="docutils literal notranslate"><span class="pre">self.min_tasks</span></code> and
 <code class="docutils literal notranslate"><span class="pre">self.openmp_threads</span></code> attributes from config options if they have not been
@@ -880,9 +878,7 @@ the streams needed for the test case, regardless of the particular
 test group.  <code class="docutils literal notranslate"><span class="pre">namelist.woa23</span></code>, <code class="docutils literal notranslate"><span class="pre">namelist.phc</span></code> and <code class="docutils literal notranslate"><span class="pre">namelist.en4_1900</span></code> set
 namelist options specific to those 3 sets of input files.  <code class="docutils literal notranslate"><span class="pre">namelist.wisc</span></code>
 and <code class="docutils literal notranslate"><span class="pre">streams.wisc</span></code> configure the test case for meshes that include
-<a class="reference internal" href="../../../users_guide/ocean/test_groups/global_ocean.html#global-ocean-ice-shelf-cavities"><span class="std std-ref">Ice-shelf cavities</span></a>, while <code class="docutils literal notranslate"><span class="pre">namelist.bgc</span></code> and
-<code class="docutils literal notranslate"><span class="pre">streams.bgc</span></code> are used to configure the test case when
-<a class="reference internal" href="../../../users_guide/ocean/test_groups/global_ocean.html#global-ocean-bgc"><span class="std std-ref">Biogeochemsitry</span></a> is included.</p>
+<a class="reference internal" href="../../../users_guide/ocean/test_groups/global_ocean.html#global-ocean-ice-shelf-cavities"><span class="std std-ref">Ice-shelf cavities</span></a>.</p>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.init.initial_state.InitialState.html#compass.ocean.tests.global_ocean.init.initial_state.InitialState" title="compass.ocean.tests.global_ocean.init.initial_state.InitialState"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.init.initial_state.InitialState</span></code></a>
 defines the step for creating the initial state, including defining the
 topography, wind stress, shortwave, potential temperature, salinity, and
@@ -893,9 +889,8 @@ dynamical balance with the sea-surface height (SSH) in configurations with
 <a class="reference internal" href="../framework.html#dev-ocean-framework-iceshelf"><span class="std std-ref">Ice-shelf cavities</span></a>.</p>
 <p>If the test case is being compared with a baseline, the potential temperature,
 salinity, and layerThickness are compared with those in the baseline initial
-condition to make sure they are identical.  In runs with BGC, a large number
-of ecosystem tracers are compared, and in simulations with ice-shelf cavities,
-the SSH and land-ice pressure are compared against the baseline.</p>
+condition to make sure they are identical.  In simulations with ice-shelf
+cavities, the SSH and land-ice pressure are compared against the baseline.</p>
 </section>
 <section id="performance-test-test-case">
 <span id="dev-ocean-global-ocean-performance-test"></span><h3>performance_test test case<a class="headerlink" href="#performance-test-test-case" title="Permalink to this heading">¶</a></h3>
@@ -905,10 +900,9 @@ test” to make sure nothing is clearly wrong with the configuration.</p>
 <p>The module includes <code class="docutils literal notranslate"><span class="pre">namelist.wisc</span></code> and <code class="docutils literal notranslate"><span class="pre">streams.wisc</span></code>, which enable melt
 fluxes below ice shelves and write out related fields if the mesh includes
 <a class="reference internal" href="../framework.html#dev-ocean-framework-iceshelf"><span class="std std-ref">Ice-shelf cavities</span></a>.</p>
-<p>If a baseline is provided, prognostic variables as well as ecosystem tracers
-(if BGC is active) and ice-shelf melt fluxes (if ice-shelf cavities are
-included in the mesh) are compared with a baseline, and the
-<code class="docutils literal notranslate"><span class="pre">time</span> <span class="pre">integration</span></code> timer is compared with that of the baseline.</p>
+<p>If a baseline is provided, prognostic variables and ice-shelf melt fluxes (if
+ice-shelf cavities are included in the mesh) are compared with a baseline, and
+the <code class="docutils literal notranslate"><span class="pre">time</span> <span class="pre">integration</span></code> timer is compared with that of the baseline.</p>
 </section>
 <section id="restart-test-test-case">
 <span id="dev-ocean-global-ocean-restart-test"></span><h3>restart_test test case<a class="headerlink" href="#restart-test-test-case" title="Permalink to this heading">¶</a></h3>

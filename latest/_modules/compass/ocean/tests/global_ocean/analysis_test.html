@@ -113,12 +113,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.global_ocean.analysis_test</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">traceback</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
 
-<span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span><span class="p">,</span> <span class="n">compare_timers</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.forward</span> <span class="kn">import</span> <span class="n">ForwardTestCase</span><span class="p">,</span> \
-    <span class="n">ForwardStep</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.forward</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ForwardStep</span><span class="p">,</span>
+    <span class="n">ForwardTestCase</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_timers</span><span class="p">,</span> <span class="n">compare_variables</span>
 
 
 <div class="viewcode-block" id="AnalysisTest"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.analysis_test.AnalysisTest.html#compass.ocean.tests.global_ocean.analysis_test.AnalysisTest">[docs]</a><span class="k">class</span> <span class="nc">AnalysisTest</span><span class="p">(</span><span class="n">ForwardTestCase</span><span class="p">):</span>
@@ -216,9 +218,6 @@
 <span class="sd">        Test cases can override this method to perform validation of variables</span>
 <span class="sd">        and timers</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">work_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span>
-
         <span class="n">failed</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">filename</span><span class="p">,</span> <span class="n">variables</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">try</span><span class="p">:</span>
@@ -253,13 +252,6 @@
 
         <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span>
                      <span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">with_bgc</span><span class="p">:</span>
-            <span class="n">variables</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
-                <span class="p">[</span><span class="s1">&#39;PO4&#39;</span><span class="p">,</span> <span class="s1">&#39;NO3&#39;</span><span class="p">,</span> <span class="s1">&#39;SiO3&#39;</span><span class="p">,</span> <span class="s1">&#39;NH4&#39;</span><span class="p">,</span> <span class="s1">&#39;Fe&#39;</span><span class="p">,</span> <span class="s1">&#39;O2&#39;</span><span class="p">,</span> <span class="s1">&#39;DIC&#39;</span><span class="p">,</span> <span class="s1">&#39;DIC_ALT_CO2&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;ALK&#39;</span><span class="p">,</span> <span class="s1">&#39;DOC&#39;</span><span class="p">,</span> <span class="s1">&#39;DON&#39;</span><span class="p">,</span> <span class="s1">&#39;DOFe&#39;</span><span class="p">,</span> <span class="s1">&#39;DOP&#39;</span><span class="p">,</span> <span class="s1">&#39;DOPr&#39;</span><span class="p">,</span> <span class="s1">&#39;DONr&#39;</span><span class="p">,</span> <span class="s1">&#39;zooC&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;spChl&#39;</span><span class="p">,</span> <span class="s1">&#39;spC&#39;</span><span class="p">,</span> <span class="s1">&#39;spFe&#39;</span><span class="p">,</span> <span class="s1">&#39;spCaCO3&#39;</span><span class="p">,</span> <span class="s1">&#39;diatChl&#39;</span><span class="p">,</span> <span class="s1">&#39;diatC&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;diatFe&#39;</span><span class="p">,</span> <span class="s1">&#39;diatSi&#39;</span><span class="p">,</span> <span class="s1">&#39;diazChl&#39;</span><span class="p">,</span> <span class="s1">&#39;diazC&#39;</span><span class="p">,</span> <span class="s1">&#39;diazFe&#39;</span><span class="p">,</span> <span class="s1">&#39;phaeoChl&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;phaeoC&#39;</span><span class="p">,</span> <span class="s1">&#39;phaeoFe&#39;</span><span class="p">])</span>
 
         <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
                           <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;forward/output.nc&#39;</span><span class="p">)</span>

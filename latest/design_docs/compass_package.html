@@ -1670,7 +1670,6 @@ the same conceptual test (e.g. restart) can be defined:</p>
 <div><ul class="simple">
 <li><p>with or without ice-shelf cavities</p></li>
 <li><p>with the PHC or EN4 1900 initial conditions</p></li>
-<li><p>with or without BGC support</p></li>
 <li><p>with the RK4 or split-explicit time integrators</p></li>
 </ul>
 </div></blockquote>
@@ -1777,11 +1776,6 @@ the test group level, e.g.:</p>
     <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;bathy_description&#39;</span><span class="p">,</span>
                <span class="s1">&#39;Bathymetry is from GEBCO 2019, combined with BedMachine &#39;</span>
                <span class="s1">&#39;Antarctica around Antarctica.&#39;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">init</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">init</span><span class="o">.</span><span class="n">with_bgc</span><span class="p">:</span>
-        <span class="c1"># todo: this needs to be filled in!</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;bgc_description&#39;</span><span class="p">,</span>
-                   <span class="s1">&#39;&lt;&lt;&lt;Missing&gt;&gt;&gt;&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;wisc_description&#39;</span><span class="p">,</span>
@@ -2114,19 +2108,17 @@ flexibility.  Here are the directories for test cases using the QU240 mesh:</p>
 42: ocean/global_ocean/QU240/EN4_1900/performance_test
 43: ocean/global_ocean/QU240/EN4_1900/dynamic_adjustment
 44: ocean/global_ocean/QU240/EN4_1900/files_for_e3sm
-45: ocean/global_ocean/QU240/PHC_BGC/init
-46: ocean/global_ocean/QU240/PHC_BGC/performance_test
 </pre></div>
 </div>
 <p>As in legacy COMPASS, there is a subdirectory for the mesh.  In the proposed
 design, there is a <code class="docutils literal notranslate"><span class="pre">mesh</span></code> test case with a single <code class="docutils literal notranslate"><span class="pre">mesh</span></code> step within that
 subdirectory.  The mesh constructed and culled within that test case serves
 as the starting point for all other test cases using the mesh.</p>
-<p>Then, there are 4 different subdirectories for variants of the initial
-condition: either PHC or EN4_1900, and either with or without BGC.  Each of
-these subdirectories has an <code class="docutils literal notranslate"><span class="pre">init</span></code> test case that creates the initial
-condition.  The results of this test case are then used in all other steps
-within the subdirectory for that initial condition.</p>
+<p>Then, there are 3 different subdirectories for variants of the initial
+condition: WOA23, PHC or EN4_1900.  Each of these subdirectories has own
+<code class="docutils literal notranslate"><span class="pre">init</span></code> test case that creates the initial condition.  The results of this
+test case are then used in all other steps within the subdirectory for that
+initial condition.</p>
 <p>Each remaining test case includes one or more forward model runs, or uses the
 results of such a run.  Since the forward model can be run with either the
 split-explicit or the RK4 time integrator, variants of many test cases are

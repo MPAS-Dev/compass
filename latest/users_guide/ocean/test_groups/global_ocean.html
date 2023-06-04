@@ -65,7 +65,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#metadata">Metadata</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#meshes">Meshes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ice-shelf-cavities">Ice-shelf cavities</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#biogeochemsitry">Biogeochemsitry</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#forward-step">Forward step</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#test-cases">Test cases</a></li>
 </ul>
@@ -536,10 +535,6 @@ overlying ice shelf, we use the method for <a class="reference internal" href=".
 update the pressure from the ice shelf to be in dynamic balance with the ice
 draft.</p>
 </section>
-<section id="biogeochemsitry">
-<span id="global-ocean-bgc"></span><h2>Biogeochemsitry<a class="headerlink" href="#biogeochemsitry" title="Permalink to this heading">¶</a></h2>
-<p>&lt;&lt;&lt;I need help here!!!&gt;&gt;&gt;</p>
-</section>
 <section id="forward-step">
 <span id="global-ocean-forward"></span><h2>Forward step<a class="headerlink" href="#forward-step" title="Permalink to this heading">¶</a></h2>
 <p>The only step shared across many <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> test cases is <code class="docutils literal notranslate"><span class="pre">forward</span></code>
@@ -627,8 +622,8 @@ given <code class="docutils literal notranslate"><span class="pre">&lt;mesh&gt;<
 <p>The <code class="docutils literal notranslate"><span class="pre">performance_test</span></code> test case runs a short forward integration, then
 performs validation of prognostic variables (layer thickness, velocity,
 temperature and salinity) and, if applicable, variables related to fluxes
-below ice shelves and those associated with <a class="reference internal" href="#global-ocean-bgc"><span class="std std-ref">Biogeochemsitry</span></a>. The
-duration of the forward run depends on the mesh and the time integrator.</p>
+below ice shelves. The duration of the forward run depends on the mesh and the
+time integrator.</p>
 <p>Depending on the mesh, versions of the test may exist with both or either of
 the split-explict (base on <a class="reference external" href="https://doi.org/10.1016/j.jcp.2004.12.011">Higdon 2005</a>)
 or the 4th-order Runge-Kutta

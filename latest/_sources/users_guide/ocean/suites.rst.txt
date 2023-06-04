@@ -103,8 +103,6 @@ quwisc240 test suite
     ocean/global_ocean/QUwISC240/WOA23/RK4/threads_test
     ocean/global_ocean/QUwISC240/EN4_1900/init
     ocean/global_ocean/QUwISC240/EN4_1900/performance_test
-    ocean/global_ocean/QUwISC240/WOA23_BGC/init
-    ocean/global_ocean/QUwISC240/WOA23_BGC/performance_test
 
 This test suite performs exactly the same set of tests for the QUwISC240 mesh
 that are performed on the QU240 mesh in the :ref:`ocean_suite_nightly`.  Since

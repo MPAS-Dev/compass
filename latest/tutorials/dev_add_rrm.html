@@ -1092,23 +1092,21 @@ vim<span class="w"> </span>__init__.py
             <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">mesh_test</span><span class="p">)</span>
 
 <span class="hll">            <span class="n">init_test</span> <span class="o">=</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span>
-</span><span class="hll">                             <span class="n">initial_condition</span><span class="o">=</span><span class="s1">&#39;WOA23&#39;</span><span class="p">,</span>
-</span><span class="hll">                             <span class="n">with_bgc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span class="hll">                             <span class="n">initial_condition</span><span class="o">=</span><span class="s1">&#39;WOA23&#39;</span><span class="p">)</span>
 </span><span class="hll">            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">init_test</span><span class="p">)</span>
 </span><span class="hll">
 </span><span class="hll">            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
 </span><span class="hll">                <span class="n">PerformanceTest</span><span class="p">(</span>
 </span><span class="hll">                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
 </span><span class="hll">                    <span class="n">time_integrator</span><span class="o">=</span><span class="s1">&#39;split_explicit&#39;</span><span class="p">))</span>
-</span>
-        <span class="c1"># A test case for making E3SM support files from an existing mesh</span>
+</span><span class="hll">
+</span>        <span class="c1"># A test case for making E3SM support files from an existing mesh</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">FilesForE3SM</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>We have indicated that we want an initial condition interpolated from the
-World Ocean Atlas 2023 (WOA23) data set, that we do not want to include
-BGC tracers, and that we want to use the split-explicit time integrator
-(the E3SM default) in our performance test.</p>
+World Ocean Atlas 2023 (WOA23) data set and that we want to use the
+split-explicit time integrator (the E3SM default) in our performance test.</p>
 <p>Let’s see if the test cases show up:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>YAM
 </pre></div>
@@ -1335,8 +1333,7 @@ vim<span class="w"> </span>__init__.py
             <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">mesh_test</span><span class="p">)</span>
 
             <span class="n">init_test</span> <span class="o">=</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span>
-                             <span class="n">initial_condition</span><span class="o">=</span><span class="s1">&#39;WOA23&#39;</span><span class="p">,</span>
-                             <span class="n">with_bgc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                             <span class="n">initial_condition</span><span class="o">=</span><span class="s1">&#39;WOA23&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">init_test</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
@@ -1344,13 +1341,13 @@ vim<span class="w"> </span>__init__.py
                     <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
                     <span class="n">time_integrator</span><span class="o">=</span><span class="s1">&#39;split_explicit&#39;</span><span class="p">))</span>
 
-<span class="hll">            <span class="n">dynamic_adjustment_test</span> <span class="o">=</span> <span class="n">YAM10to60DynamicAdjustment</span><span class="p">(</span>
-</span><span class="hll">                <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
+            <span class="n">dynamic_adjustment_test</span> <span class="o">=</span> <span class="n">YAM10to60DynamicAdjustment</span><span class="p">(</span>
+<span class="hll">                <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
 </span><span class="hll">                <span class="n">time_integrator</span><span class="o">=</span><span class="s1">&#39;split_explicit&#39;</span><span class="p">)</span>
 </span><span class="hll">            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">dynamic_adjustment_test</span><span class="p">)</span>
 </span><span class="hll">
-</span>        <span class="c1"># A test case for making E3SM support files from an existing mesh</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">FilesForE3SM</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+</span><span class="hll">        <span class="c1"># A test case for making E3SM support files from an existing mesh</span>
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">FilesForE3SM</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
 
     <span class="o">...</span>
 </pre></div>

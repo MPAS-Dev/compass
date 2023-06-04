@@ -138,11 +138,8 @@
 
 <span class="sd">    initial_condition : {&#39;WOA23&#39;, &#39;PHC&#39;, &#39;EN4_1900&#39;}</span>
 <span class="sd">        The initial condition dataset to use</span>
-
-<span class="sd">    with_bgc : bool</span>
-<span class="sd">        Whether to include biogeochemistry (BGC) in the initial condition</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="InitialState.__init__"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.initial_state.InitialState.html#compass.ocean.tests.global_ocean.init.initial_state.InitialState.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">initial_condition</span><span class="p">,</span> <span class="n">with_bgc</span><span class="p">):</span>
+<div class="viewcode-block" id="InitialState.__init__"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.initial_state.InitialState.html#compass.ocean.tests.global_ocean.init.initial_state.InitialState.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">initial_condition</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the step</span>
 
@@ -156,9 +153,6 @@
 
 <span class="sd">        initial_condition : {&#39;WOA23&#39;, &#39;PHC&#39;, &#39;EN4_1900&#39;}</span>
 <span class="sd">            The initial condition dataset to use</span>
-
-<span class="sd">        with_bgc : bool</span>
-<span class="sd">            Whether to include biogeochemistry (BGC) in the initial condition</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">initial_condition</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;WOA23&#39;</span><span class="p">,</span> <span class="s1">&#39;PHC&#39;</span><span class="p">,</span> <span class="s1">&#39;EN4_1900&#39;</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unknown initial_condition </span><span class="si">{</span><span class="n">initial_condition</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -166,7 +160,6 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;initial_state&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initial_condition</span> <span class="o">=</span> <span class="n">initial_condition</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">with_bgc</span> <span class="o">=</span> <span class="n">with_bgc</span>
 
         <span class="n">package</span> <span class="o">=</span> <span class="s1">&#39;compass.ocean.tests.global_ocean.init&#39;</span>
 
@@ -177,8 +170,6 @@
             <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;namelist.wisc&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">with_bgc</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;namelist.bgc&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
 
         <span class="c1"># generate the streams file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;streams.init&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
@@ -220,11 +211,6 @@
             <span class="n">target</span><span class="o">=</span><span class="s1">&#39;windStress.ncep_1958-2000avg.interp3600x2431.151106.nc&#39;</span><span class="p">,</span>
             <span class="n">database</span><span class="o">=</span><span class="s1">&#39;initial_condition_database&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;swData.nc&#39;</span><span class="p">,</span>
-            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;chlorophyllA_monthly_averages_1deg.151201.nc&#39;</span><span class="p">,</span>
-            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;initial_condition_database&#39;</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="n">initial_condition</span> <span class="o">==</span> <span class="s1">&#39;WOA23&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
                 <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;woa23.nc&#39;</span><span class="p">,</span>
@@ -249,17 +235,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
                 <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;salinity.nc&#39;</span><span class="p">,</span>
                 <span class="n">target</span><span class="o">=</span><span class="s1">&#39;Salinity.100levels.Levitus.EN4_1900estimate.200813.nc&#39;</span><span class="p">,</span>
-                <span class="n">database</span><span class="o">=</span><span class="s1">&#39;initial_condition_database&#39;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">with_bgc</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;ecosys.nc&#39;</span><span class="p">,</span>
-                <span class="n">target</span><span class="o">=</span><span class="s1">&#39;ecosys_jan_IC_360x180x60_corrO2_Dec2014phaeo.nc&#39;</span><span class="p">,</span>
-                <span class="n">database</span><span class="o">=</span><span class="s1">&#39;initial_condition_database&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;ecosys_forcing.nc&#39;</span><span class="p">,</span>
-                <span class="n">target</span><span class="o">=</span><span class="s1">&#39;ecoForcingAllSurface.forMPASO.interp360x180.&#39;</span>
-                       <span class="s1">&#39;1timeLevel.nc&#39;</span><span class="p">,</span>
                 <span class="n">database</span><span class="o">=</span><span class="s1">&#39;initial_condition_database&#39;</span><span class="p">)</span>
 
         <span class="n">mesh_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">get_cull_mesh_path</span><span class="p">()</span>
