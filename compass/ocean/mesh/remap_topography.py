@@ -98,6 +98,8 @@ class RemapTopography(Step):
         lon_var = config.get('remap_topography', 'lon_var')
         lat_var = config.get('remap_topography', 'lat_var')
         method = config.get('remap_topography', 'method')
+        renorm_threshold = config.getfloat('remap_topography',
+                                           'renorm_threshold')
 
         in_descriptor = LatLonGridDescriptor.read(fileName='topography.nc',
                                                   lonVarName=lon_var,
@@ -135,5 +137,12 @@ class RemapTopography(Step):
             in_var = config.get('remap_topography', option)
             out_var = rename[option]
             ds_out[out_var] = ds_in[in_var]
+
+        # renormalize elevation variables
+        norm = ds_out.oceanFracObserved
+        valid = norm > renorm_threshold
+        for var in ['bed_elevation', 'landIceDraftObserved',
+                    'landIceThkObserved']:
+            ds_out[var] = xr.where(valid, ds_out[var] / norm, 0.)
 
         write_netcdf(ds_out, 'topography_remapped.nc')
