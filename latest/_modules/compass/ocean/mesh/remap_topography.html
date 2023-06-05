@@ -212,6 +212,8 @@
         <span class="n">lon_var</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;lon_var&#39;</span><span class="p">)</span>
         <span class="n">lat_var</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;lat_var&#39;</span><span class="p">)</span>
         <span class="n">method</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;method&#39;</span><span class="p">)</span>
+        <span class="n">renorm_threshold</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span>
+                                           <span class="s1">&#39;renorm_threshold&#39;</span><span class="p">)</span>
 
         <span class="n">in_descriptor</span> <span class="o">=</span> <span class="n">LatLonGridDescriptor</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">,</span>
                                                   <span class="n">lonVarName</span><span class="o">=</span><span class="n">lon_var</span><span class="p">,</span>
@@ -249,6 +251,13 @@
             <span class="n">in_var</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
             <span class="n">out_var</span> <span class="o">=</span> <span class="n">rename</span><span class="p">[</span><span class="n">option</span><span class="p">]</span>
             <span class="n">ds_out</span><span class="p">[</span><span class="n">out_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_in</span><span class="p">[</span><span class="n">in_var</span><span class="p">]</span>
+
+        <span class="c1"># renormalize elevation variables</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">oceanFracObserved</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="n">norm</span> <span class="o">&gt;</span> <span class="n">renorm_threshold</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bed_elevation&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceDraftObserved&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;landIceThkObserved&#39;</span><span class="p">]:</span>
+            <span class="n">ds_out</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">valid</span><span class="p">,</span> <span class="n">ds_out</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">/</span> <span class="n">norm</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
 
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="s1">&#39;topography_remapped.nc&#39;</span><span class="p">)</span></div></div>
 </pre></div>
