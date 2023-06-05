@@ -6,13 +6,15 @@ import importlib.resources
 import os
 import platform
 import shutil
+import socket
 import stat
 import subprocess
 from configparser import ConfigParser
 
 import progressbar
 from jinja2 import Template
-from mache import MachineInfo, discover_machine
+from mache import MachineInfo
+from mache import discover_machine as mache_discover_machine
 from mache.spack import get_spack_script, make_spack_env
 from shared import (
     check_call,
@@ -824,6 +826,50 @@ def safe_rmtree(path):
         pass
 
 
+def discover_machine(quiet=False):
+    """
+    Figure out the machine from the host name
+
+    Parameters
+    ----------
+    quiet : bool, optional
+        Whether to print warnings if the machine name is ambiguous
+
+    Returns
+    -------
+    machine : str
+        The name of the current machine
+    """
+    machine = mache_discover_machine(quiet=quiet)
+    if machine is None:
+        possible_hosts = get_possible_hosts()
+        hostname = socket.gethostname()
+        for possible_machine, hostname_contains in possible_hosts.items():
+            if hostname_contains in hostname:
+                machine = possible_machine
+                break
+    return machine
+
+
+def get_possible_hosts():
+    here = os.path.abspath(os.path.dirname(__file__))
+    files = sorted(glob.glob(os.path.join(
+        here, '..', 'compass', 'machines', '*.cfg')))
+
+    possible_hosts = dict()
+    for filename in files:
+        machine = os.path.splitext(os.path.split(filename)[1])[0]
+        config = ConfigParser()
+        config.read(filename)
+        if config.has_section('discovery') and \
+                config.has_option('discovery', 'hostname_contains'):
+            hostname_contains = config.get('discovery',
+                                           'hostname_contains')
+            possible_hosts[machine] = hostname_contains
+
+    return possible_hosts
+
+
 def main():  # noqa: C901
     args = parse_args(bootstrap=True)
 
@@ -848,7 +894,7 @@ def main():  # noqa: C901
         else:
             machine = args.machine
 
-    e3sm_machine = machine is not None
+    known_machine = machine is not None
 
     if machine is None and not args.env_only:
         if platform.system() == 'Linux':
@@ -913,7 +959,7 @@ def main():  # noqa: C901
 
         if args.spack_base is not None:
             spack_base = args.spack_base
-        elif e3sm_machine and compiler is not None:
+        elif known_machine and compiler is not None:
             spack_base = get_spack_base(args.spack_base, config)
         else:
             spack_base = None
