@@ -53,7 +53,8 @@ def get_core_list(ncells, max_cells_per_core=30000, min_cells_per_core=2):
     for node_size in node_sizes:
         for node_count in range(1, max_nodes + 1):
             core_count = node_size * node_count
-            cores.add(core_count)
+            if min_graph_size <= core_count <= max_graph_size:
+                cores.add(core_count)
 
     # add even node counts if they are close to some especially desirable
     # core counts for the ne30 atmosphere mesh (also used for MPAS-Seaice)
@@ -61,8 +62,8 @@ def get_core_list(ncells, max_cells_per_core=30000, min_cells_per_core=2):
         for node_count in range(1, max_nodes_approx + 1):
             core_count = node_size * node_count
             for approx in special_approx_cores:
-                lower = approx - 2 * node_size
-                upper = approx + 2 * node_size
+                lower = max(approx - 2 * node_size, min_graph_size)
+                upper = min(approx + 2 * node_size, max_graph_size)
                 if lower <= core_count <= upper:
                     cores.add(core_count)
 
