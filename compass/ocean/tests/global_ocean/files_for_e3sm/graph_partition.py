@@ -36,6 +36,9 @@ def get_core_list(ncells, max_cells_per_core=30000, min_cells_per_core=2):
     special_approx_cores = [675, 1350, 2700, 5400]
 
     cores = set()
+    if ncells < max_cells_per_core:
+        cores.add(1)
+
     for candidate in range(min_graph_size, max_graph_size):
         factors = _prime_factors(candidate)
         twos = np.count_nonzero(factors == 2)
