@@ -73,8 +73,14 @@ class OceanGraphPartition(FilesForE3SMStep):
         logger.info(f'Creating graph files between {np.amin(cores)} and '
                     f'{np.amax(cores)}')
         for ncores in cores:
-            args = ['gpmetis', f'mpas-o.graph.info.{creation_date}',
-                    f'{ncores}']
+            if ncores > ncells:
+                raise ValueError('Can\t have more tasks than cells in a '
+                                 'partition file.')
+            if ncores == 1:
+                args = ['touch', f'mpas-o.graph.info.{creation_date}.part.1']
+            else:
+                args = ['gpmetis', f'mpas-o.graph.info.{creation_date}',
+                        f'{ncores}']
             check_call(args, logger)
 
         # create link in assembled files directory
