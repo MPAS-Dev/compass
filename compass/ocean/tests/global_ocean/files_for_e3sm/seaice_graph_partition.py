@@ -80,6 +80,10 @@ class SeaiceGraphPartition(FilesForE3SMStep):
         logger.info(f'Creating graph files between {np.amin(cores)} and '
                     f'{np.amax(cores)}')
 
+        if 1 in cores:
+            args = ['touch', f'mpas-seaice.graph.info.{creation_date}.part.1']
+            check_call(args, logger)
+
         mapping_filename = _make_mapping_file(
             in_mesh_filename='seaice_QU60km_polar.nc',
             in_mesh_name='QU60km',
@@ -107,7 +111,14 @@ class SeaiceGraphPartition(FilesForE3SMStep):
 
         if plotting:
             args.append('--plotting')
-        args = args + [f'{ncores}' for ncores in cores]
+
+        for ncores in cores:
+            if ncores > ncells:
+                raise ValueError('Can\t have more tasks than cells in a '
+                                 'partition file.')
+            if ncores > 1:
+                args.append(f'{ncores}')
+
         check_call(args, logger)
 
         # create link in assembled files directory
