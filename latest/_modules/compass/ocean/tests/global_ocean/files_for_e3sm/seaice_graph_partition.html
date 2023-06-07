@@ -196,6 +196,10 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Creating graph files between </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">cores</span><span class="p">)</span><span class="si">}</span><span class="s1"> and &#39;</span>
                     <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">cores</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="mi">1</span> <span class="ow">in</span> <span class="n">cores</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;touch&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;mpas-seaice.graph.info.</span><span class="si">{</span><span class="n">creation_date</span><span class="si">}</span><span class="s1">.part.1&#39;</span><span class="p">]</span>
+            <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+
         <span class="n">mapping_filename</span> <span class="o">=</span> <span class="n">_make_mapping_file</span><span class="p">(</span>
             <span class="n">in_mesh_filename</span><span class="o">=</span><span class="s1">&#39;seaice_QU60km_polar.nc&#39;</span><span class="p">,</span>
             <span class="n">in_mesh_name</span><span class="o">=</span><span class="s1">&#39;QU60km&#39;</span><span class="p">,</span>
@@ -223,7 +227,14 @@
 
         <span class="k">if</span> <span class="n">plotting</span><span class="p">:</span>
             <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;--plotting&#39;</span><span class="p">)</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="n">args</span> <span class="o">+</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ncores</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">ncores</span> <span class="ow">in</span> <span class="n">cores</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">ncores</span> <span class="ow">in</span> <span class="n">cores</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ncores</span> <span class="o">&gt;</span> <span class="n">ncells</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Can</span><span class="se">\t</span><span class="s1"> have more tasks than cells in a &#39;</span>
+                                 <span class="s1">&#39;partition file.&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ncores</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ncores</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
         <span class="c1"># create link in assembled files directory</span>
