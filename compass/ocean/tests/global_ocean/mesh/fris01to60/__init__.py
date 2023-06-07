@@ -128,7 +128,7 @@ class FRIS01to60BaseMesh(QuasiUniformSphericalMeshStep):
         # Equivalent to 20 degrees latitude
         trans_width = 1600e3
         trans_start = 0
-        dx_min = 1.
+        dx_min = 4.
 
         weights = 0.5 * (1 + np.tanh((so_signed_distance - trans_start) /
                                      trans_width))
