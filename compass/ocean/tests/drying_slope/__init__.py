@@ -1,4 +1,5 @@
 from compass.ocean.tests.drying_slope.default import Default
+from compass.ocean.tests.drying_slope.loglaw import LogLaw
 from compass.ocean.tests.drying_slope.ramp import Ramp
 from compass.testgroup import TestGroup
 
@@ -23,3 +24,6 @@ class DryingSlope(TestGroup):
                 self.add_test_case(
                     Ramp(test_group=self, resolution=resolution,
                          coord_type=coord_type))
+                self.add_test_case(
+                    LogLaw(test_group=self, resolution=resolution,
+                           coord_type=coord_type))
