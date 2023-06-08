@@ -19,7 +19,7 @@ class Nonhydro(TestCase):
 
         Parameters
         ----------
-        test_group : compass.ocean.tests.lock_exchange.Nonhydro
+        test_group : compass.ocean.tests.lock_exchange.LockExchange
             The test group that this test case belongs to
         """
         name = 'nonhydro'

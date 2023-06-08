@@ -19,7 +19,7 @@ class Hydro(TestCase):
 
         Parameters
         ----------
-        test_group : compass.ocean.tests.lock_exchange.Hydro
+        test_group : compass.ocean.tests.lock_exchange.LockExchange
             The test group that this test case belongs to
         """
         name = 'hydro'

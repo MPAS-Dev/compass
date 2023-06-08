@@ -64,3 +64,4 @@ class Visualize(Step):
         ncfileIC.close()
         ncfile.close()
         plt.savefig('plotTemp.png')
+        plt.close()

@@ -1,7 +1,7 @@
 .. _dev_ocean_lock_exchange:
 
 lock_exchange
-========
+=============
 
 The ``lock_exchange`` test group
 (:py:class:`compass.ocean.tests.lock_exchange.LockExchange`)
@@ -63,7 +63,7 @@ makes a plot of the densitiy profile at time t = 5s.
 .. _dev_ocean_lock_exchange_hydro:
 
 hydro
-_________________
+_____
 
 This test uses the standard hydrostatic model to describe the interaction 
 over time of two basins of water with different densities. After the creation 
@@ -75,7 +75,7 @@ prevents the generation of the Kelvin-Helmholtz instability.
 .. _dev_ocean_lock_exchange_nonhydro:
 
 nonhydro
-_____________
+________
 
 This test uses the nonhydrostatic model to describe the interaction
 over time of two basins of water with different densities. After the creation

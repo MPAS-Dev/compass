@@ -79,10 +79,6 @@ class InitialState(Step):
         # comment('create and initialize variables')
         time1 = time.time()
 
-        surfaceStress = np.nan * np.ones(nCells)
-        atmosphericPressure = np.nan * np.ones(nCells)
-        boundaryLayerDepth = np.nan * np.ones(nCells)
-
         ds['bottomDepth'] = maxDepth * xarray.ones_like(xCell)
         ds['ssh'] = xarray.zeros_like(xCell)
 
@@ -116,10 +112,6 @@ class InitialState(Step):
         ds['fVertex'] = (('nVertices', 'nVertLevels',),
                          np.zeros([nVertices, nVertLevels]))
 
-        # surface fields
-        surfaceStress[:] = 0.0
-        atmosphericPressure[:] = 0.0
-        boundaryLayerDepth[:] = 0.0
         print(f'   time: {time.time() - time1}')
 
         # comment('finalize and write file')
