@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lock_exchange &mdash; compass latest documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="merry_go_round" href="merry_go_round.html" />
+    <link rel="prev" title="isomip_plus" href="isomip_plus.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            compass
+          </a>
+              <div class="version">
+                latest
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../landice/index.html">Landice core</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Ocean core</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Test groups</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="baroclinic_channel.html">baroclinic_channel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dam_break.html">dam_break</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drying_slope.html">drying_slope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="global_convergence.html">global_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="global_ocean.html">global_ocean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gotm.html">gotm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hurricane.html">hurricane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ice_shelf_2d.html">ice_shelf_2d</a></li>
+<li class="toctree-l3"><a class="reference internal" href="internal_wave.html">internal_wave</a></li>
+<li class="toctree-l3"><a class="reference internal" href="isomip_plus.html">isomip_plus</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">lock_exchange</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hydro">hydro</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nonhydro">nonhydro</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="merry_go_round.html">merry_go_round</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nonhydro.html">nonhydro</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overflow.html">overflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="planar_convergence.html">planar_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soma.html">soma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sphere_transport.html">sphere_transport</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spherical_harmonic_transform.html">spherical_harmonic_transform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tides.html">tides</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utility.html">utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ziso.html">ziso</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../framework/index.html">Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../suites.html">Test suites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Ocean core</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Test groups</a></li>
+      <li class="breadcrumb-item active">lock_exchange</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/users_guide/ocean/test_groups/lock_exchange.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="lock-exchange">
+<span id="ocean-lock-exchange"></span><h1>lock_exchange<a class="headerlink" href="#lock-exchange" title="Permalink to this heading">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">ocean/lock_exchange</span></code> test group implements the test case from
+<a class="reference external" href="https://doi.org/10.5194/gmd-16-109-2023">Huang, Hao, et al. (2023)</a>
+to describe a lock-exchange scenario in which two fluids with
+different densities are separated by a vertical board in a rectangular
+tank. At time t=0, the central board is disengaged and the gravitational
+adjustment will proceed.</p>
+<p>The domain is a rectangular tank periodic y with a horizontal length of
+50 cm and a static water height of 10 cm without the topographic change
+in the tank. The horizontal and vertical resolution are both 0.001 m.
+Salinity is constant throughout the domain (at 35 PSU) and the initial
+velocity in zero. The initial density is bimodal with the lower density
+of 1023.05 kg m<sup>-3</sup> on the left side of the domain and the higher
+density of 1026.95 kg m<sup>-3</sup> on the right side.
+By default, the z-star vertical coordinate is used.</p>
+<p>The test group includes two test cases. The first one uses the standard
+hydrostaic model to obtain the density profile after 5s, whereas the
+second test uses the nonhydrostatic model. All test cases have 3 steps:
+<code class="docutils literal notranslate"><span class="pre">initial_state</span></code>, which defines the mesh and initial conditions for the model,
+<code class="docutils literal notranslate"><span class="pre">forward</span></code>, which performs time integration of the model, and <code class="docutils literal notranslate"><span class="pre">visualize</span></code>,
+which plots the density profile obtained with the model (hydrostatic or
+nonhydrostatic). Both test cases use the RK4 time-stepping scheme with a
+time-step of 0.001s.</p>
+<section id="config-options">
+<h2>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h2>
+<p>Both test cases share the same set of config options:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for the horizontal grid</span>
+<span class="k">[horizontal_grid]</span>
+
+<span class="c1">#Number of cells in the x-direction</span>
+<span class="na">nx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">500</span>
+
+<span class="c1">#Number of cells in the y-direction</span>
+<span class="na">ny</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span>
+
+<span class="c1">#Distance from two cell centers (m)</span>
+<span class="na">dc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.001</span>
+
+<span class="c1"># Options related to the vertical grid</span>
+<span class="k">[vertical_grid]</span>
+
+<span class="c1">#Depth of the bottom of the ocean (m)</span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.1</span>
+
+<span class="c1">#Number of vertical levels</span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100</span>
+
+<span class="c1"># the type of vertical grid</span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">uniform</span>
+
+<span class="c1"># The type of vertical coordinate (e.g. z-level, z-star)</span>
+<span class="na">coord_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">z-star</span>
+
+<span class="c1"># Whether to use &quot;partial&quot; or &quot;full&quot;, or &quot;None&quot; to not alter the topography</span>
+<span class="na">partial_cell_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
+
+<span class="c1"># config options for the solitary wave testcase</span>
+<span class="k">[lock_exchange]</span>
+
+<span class="c1">#Alpha in eos</span>
+<span class="na">eos_linear_alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.2</span>
+
+<span class="c1">#Beta in eos</span>
+<span class="na">eos_linear_beta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.8</span>
+
+<span class="c1">#Reference temperature (degC)</span>
+<span class="na">eos_linear_Tref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span>
+
+<span class="c1">#Reference salinity (PSU)</span>
+<span class="na">eos_linear_Sref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">35.0</span>
+
+<span class="c1">#Reference density (kg m^{-3})</span>
+<span class="na">eos_linear_densityref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000.0</span>
+
+<span class="c1">#Half of the domain (m)</span>
+<span class="na">middle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.25</span>
+
+<span class="c1">#Lower density (kg m^{-3})</span>
+<span class="na">lower_density</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1023.05</span>
+
+<span class="c1">#Higher density (kg m^{-3})</span>
+<span class="na">higher_density</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1026.95</span>
+
+<span class="c1"># config options for the solitary wave testcase</span>
+<span class="k">[visualize]</span>
+
+<span class="c1">#Reference length (m)</span>
+<span class="na">L0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.5</span>
+
+<span class="c1">#Reference height (m)</span>
+<span class="na">a0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.1</span>
+
+<span class="c1">#Time (s) at which plotting the variables</span>
+<span class="na">plotTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5</span>
+</pre></div>
+</div>
+</section>
+<section id="hydro">
+<h2>hydro<a class="headerlink" href="#hydro" title="Permalink to this heading">¶</a></h2>
+<p>The hydrostatic test case uses the standard hydrostatic model
+to run the lock-exchange test. The density plot shows that
+the density fronts cannot develop in the upper and lower layer.
+This happens because of the hydrostatic assumption, which
+prevents the generation of the Kelvin-Helmholtz instability.</p>
+<img alt="../../../_images/LE_hydro.png" class="align-center" src="../../../_images/LE_hydro.png" />
+</section>
+<section id="nonhydro">
+<h2>nonhydro<a class="headerlink" href="#nonhydro" title="Permalink to this heading">¶</a></h2>
+<p>The hydrostatic test case uses the nonhydrostatic model
+to run the lock-exchange test. Compared to the hydrostatic
+formulation, an additional vertical momentum
+equation is solved and to compute the contribution of the
+nonhydrostatic pressure a three-dimensional elliptic equation
+is solved at every time-step. The density plot at t=5s
+shows that the Kelvin-Helmholtz instability process develops
+rapidly in this configuration, causing vigorous turbulent
+mixing to develop on the interface between high and
+low-density water.</p>
+<img alt="../../../_images/LE_nonhydro.png" class="align-center" src="../../../_images/LE_nonhydro.png" />
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="isomip_plus.html" class="btn btn-neutral float-left" title="isomip_plus" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="merry_go_round.html" class="btn btn-neutral float-right" title="merry_go_round" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

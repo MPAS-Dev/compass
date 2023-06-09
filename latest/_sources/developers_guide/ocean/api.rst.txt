@@ -461,6 +461,29 @@ isomip_plus
    streamfunction.Streamfunction
    streamfunction.Streamfunction.run
 
+lock_exchange
+~~~~~~~~~~~~~
+
+.. currentmodule:: compass.ocean.tests.lock_exchange
+
+.. autosummary::
+   :toctree: generated/
+
+   LockExchange
+
+   hydro.Hydro
+
+   nonhydro.Nonhydro
+
+   forward.Forward
+   forward.Forward.run
+
+   initial_state.InitialState
+   initial_state.InitialState.run
+
+   visualize.Visualize
+   visualize.Visualize.run
+
 merry_go_round
 ~~~~~~~~~~~~~~
 
