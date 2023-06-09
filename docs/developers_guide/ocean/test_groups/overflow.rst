@@ -5,8 +5,16 @@ overflow
 
 The ``overflow`` test group
 (:py:class:`compass.ocean.tests.overflow.Overflow`)
-implements variants of the continental shelf overflow test case.  Here,
-we describe the shared framework for this test group and the 2 test cases.
+implements variants of the continental shelf overflow test case.
+It is composed of four test cases. The first two, ``default``
+and ``rpe_test``, have a shared framework and use the standard
+hydrostatic model to investigate the impact on the solution of
+different values of the viscosity. The remaining two tests,
+``nonhydro`` and ``hydro_vs_nonhydro``, use a different mesh
+and initial conditions to explore the impact of a 
+nonhydrostatic formulation in an overflow scenario.
+Here, we describe the four test cases starting with the 
+shared framework for the first two.
 
 .. _dev_ocean_overflow_framework:
 
@@ -77,3 +85,85 @@ makes plots of the final results with each value of the viscosity.
 
 This test is resource intensive enough that it is not used in regression
 testing.
+
+nonhydro
+--------
+
+This test represents the flow of dense fluid down a slope using the
+nonhydrostatic model. After the creation of the mesh and initial conditions, 
+a nonhydrostatic simulation is run for 30min. The ``namelist.forward`` file has 
+namelist options related to run duration, time-stepping scheme, horizontal 
+and vertical momentum viscosities, and defines the PETSc solver, 
+preconditioner and tolerances used for the solution of the nonhydrostatic 
+elliptic problem.
+
+initial_state
+~~~~~~~~~~~~~
+
+The class :py:class:`compass.ocean.tests.overflow.hydro_vs_nonhydro.initial_state.InitialState`
+sets up the initial state for the ``nonhydro`` test.
+
+First, a planar mesh is generated using :py:func:`mpas_tools.planar_hex.make_planar_hex_mesh()`.
+Then, the mesh is culled to remove periodicity in the x direction. The domain is 
+200m deep and 6.4 km across. After the topography is specified, a vertical grid is generated 
+with 60 layers.  Finally, the initial density and temperature profiles are computed along with
+uniform salinity and zero initial velocity.
+
+forward
+~~~~~~~
+
+The class :py:class:`compass.ocean.tests.overflow.nonhydro.forward.Forward`
+defines a step for running MPAS-Ocean from the initial condition produced in
+the ``initial_state`` step.  A nonhydrostatic simulation is run on 8 cores 
+for a run duration of 30min.
+
+hydro_vs_nonhydro
+-----------------
+
+This test represents the flow of dense fluid down a slope and compares the 
+solutions obtained with the hydrostatic and  nonhydrostatic model. After 
+the creation of the mesh and initial conditions, an hydrostatic and a 
+nonhydrostatic simulation are run. The ``namelist.forward`` file has a few 
+common namelist options for the two models related to run duration, 
+time-stepping scheme, and tracer advection. The files ``namelist.hydro`` and
+``namelist.nonhydro`` specify the different momentum viscosities for the two
+models, and the latter defines the PETSc solver, preconditioner and tolerances
+used for the solution of the nonhydrostatic elliptic problem. The hydrostatic and
+nonhydrostatic run share the same ``streams.forward`` file that defines
+``mesh``, ``input``, ``restart``, and ``output`` streams.
+
+initial_state
+~~~~~~~~~~~~~
+
+The class :py:class:`compass.ocean.tests.overflow.hydro_vs_nonhydro.initial_state.InitialState`
+sets up the initial state for the comparion between the hydrostatic and nonhydrostatic model.
+
+First, a planar mesh is generated using :py:func:`mpas_tools.planar_hex.make_planar_hex_mesh()`.
+Then, the mesh is culled to remove periodicity in the x direction. The domain is 
+200m deep and 6.4 km across. After the topography is specified, a vertical grid is generated 
+with 60 layers.  Finally, the initial density and temperature profiles are computed along with
+uniform salinity and zero initial velocity.
+
+forward
+~~~~~~~
+
+The class :py:class:`compass.ocean.tests.overflow.hydro_vs_nonhydro.forward.Forward`
+defines a step for running MPAS-Ocean from the initial condition produced in
+the ``initial_state`` step.  The ``nonhydro_mode`` argument is a boolean that
+determines if the hydrostatic or the nonhydrostatic model is run.
+Namelist and streams files are generate during ``setup()`` and
+MPAS-Ocean is run (including updating PIO namelist options and generating a
+graph partition) in ``run()``. Both the hydrostatic and nonhydrostatic
+simulation are run on 8 cores and have a run duration of 3h, the time at
+which the dense fluid has descended the slope.
+
+visualize
+~~~~~~~~~
+
+The ``visualize`` step defined by
+:py:class:`compass.ocean.tests.overflow.hydro_vs_nonhydro.visualize.Visualize`
+makes plots of the temperature profile at 3h for the hydrostatic
+and nonhydrostatic case. The plot shows that a Kelvin-Helmholtz instability 
+develops in the nonhydrostatic case, leading to entrainment of
+ambient fluid into plumes, whereas the hydrostatic model fails to 
+capture the correct physics.
