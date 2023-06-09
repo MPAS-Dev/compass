@@ -27,7 +27,7 @@ def get_core_list(ncells, max_cells_per_core=30000, min_cells_per_core=2):
     min_graph_size = max(2, int(ncells / max_cells_per_core))
     max_graph_size = int(ncells / min_cells_per_core)
 
-    node_sizes = [16, 24, 30, 32, 36, 44, 56, 64, 84, 96, 112, 128, 256]
+    node_sizes = [16, 24, 30, 32, 36, 44, 52, 56, 64, 84, 96, 112, 128, 256]
     max_nodes = 20
 
     special_core_counts = [3, 9, 15, 21, 225, 675, 1350]
