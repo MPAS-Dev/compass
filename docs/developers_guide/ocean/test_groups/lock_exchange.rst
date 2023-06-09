@@ -27,7 +27,7 @@ and drag, as well as a shared ``streams.forward`` file that defines ``mesh``,
 ``input``, and ``output`` streams.
 
 initial_state
-~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 The class :py:class:`compass.ocean.tests.lock_exchange.initial_state.InitialState`
 sets up the initial state for the two test case.
@@ -39,7 +39,7 @@ density profile is computed along with temperature, uniform salinity and zero in
 velocity.
 
 forward
-~~~~~
+~~~~~~~
 
 The class :py:class:`compass.ocean.tests.lock_exchange.forward.Forward`
 defines a step for running MPAS-Ocean from the initial condition produced in
@@ -54,7 +54,7 @@ The two cases have a shared ``streams.forward`` file that defines
 ``mesh``, ``input``, and ``output`` streams.
 
 visualize
-~~~~~~~
+~~~~~~~~~
 
 The ``visualize`` step defined by
 :py:class:`compass.ocean.tests.lock_exchange.visualize.Visualize`

@@ -113,6 +113,9 @@ the density fronts cannot develop in the upper and lower layer.
 This happens because of the hydrostatic assumption, which 
 prevents the generation of the Kelvin-Helmholtz instability.
 
+.. image:: images/LE_hydro.png
+   :align: center
+
 nonhydro
 --------
 
@@ -126,3 +129,6 @@ shows that the Kelvin-Helmholtz instability process develops
 rapidly in this configuration, causing vigorous turbulent 
 mixing to develop on the interface between high and 
 low-density water.
+
+.. image:: images/LE_nonhydro.png
+   :align: center

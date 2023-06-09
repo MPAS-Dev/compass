@@ -17,6 +17,7 @@ Test groups
    ice_shelf_2d
    internal_wave
    isomip_plus
+   lock_exchange
    merry_go_round
    nonhydro
    overflow
