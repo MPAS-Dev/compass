@@ -5,7 +5,7 @@ from compass.step import Step
 class Forward(Step):
     """
     A step for performing forward MPAS-Ocean runs as part of the
-    solitary wave test case.
+    hydro vs nonhydro test case.
 
     Attributes
     ----------

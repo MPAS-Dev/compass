@@ -5,12 +5,8 @@ from compass.step import Step
 class Forward(Step):
     """
     A step for performing forward MPAS-Ocean runs as part of the
-    solitary wave test case.
+    nonhydro test case.
 
-    Attributes
-    ----------
-    nonhydro_mode : bool
-        The resolution of the test case
     """
     def __init__(self, test_case, name, ntasks=8,
                  min_tasks=1, openmp_threads=1):

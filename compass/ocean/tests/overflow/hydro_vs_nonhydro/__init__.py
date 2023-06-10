@@ -8,10 +8,11 @@ from compass.testcase import TestCase
 
 class HydroVSNonhydro(TestCase):
     """
-    The default test case for the solitary wave test simply creates the
+    The hydro vs nonhydro test case for the overflow group creates the
     mesh and initial condition, then performs two forward runs, one with
     the standard hydrostatic version of MPAS-O, and the second with the
-    nonhydrostatic version.
+    nonhydrostatic version. Finally, it produces a plot comparing the
+    temperature profiles for the two models.
 
     """
 
@@ -21,7 +22,7 @@ class HydroVSNonhydro(TestCase):
 
         Parameters
         ----------
-        test_group : compass.ocean.tests.nonhydro.Nonhydro
+        test_group : compass.ocean.tests.hydro_vs_nonhydro.HydroVSNonhydro
             The test group that this test case belongs to
         """
         name = 'hydro_vs_nonhydro'

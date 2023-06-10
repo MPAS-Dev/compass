@@ -5,10 +5,9 @@ from compass.testcase import TestCase
 
 class Nonhydro(TestCase):
     """
-    The default test case for the solitary wave test simply creates the
-    mesh and initial condition, then performs two forward runs, one with
-    the standard hydrostatic version of MPAS-O, and the second with the
-    nonhydrostatic version.
+    The nonhydro test case for the overflow test group creates the mesh
+    and initial condition, then performs a forward runs with the
+    nonhydrostatic version of MPAS-O.
 
     """
 

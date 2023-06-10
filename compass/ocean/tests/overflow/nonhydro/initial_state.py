@@ -12,7 +12,7 @@ from compass.step import Step
 
 class InitialState(Step):
     """
-    A step for creating a mesh and initial condition for solitary wave
+    A step for creating a mesh and initial condition for the nonhydro
     test case
     """
     def __init__(self, test_case):
@@ -78,10 +78,6 @@ class InitialState(Step):
         # comment('create and initialize variables')
         time1 = time.time()
 
-        surfaceStress = np.nan * np.ones(nCells)
-        atmosphericPressure = np.nan * np.ones(nCells)
-        boundaryLayerDepth = np.nan * np.ones(nCells)
-
         # bottom depth
         # ds['bottomDepth'] = maxDepth * xarray.ones_like(xCell)
         ds['bottomDepth'] = - (- 200.0 + 0.5 * (200.0 - 40.0) *
@@ -120,10 +116,6 @@ class InitialState(Step):
         ds['fVertex'] = (('nVertices', 'nVertLevels',),
                          np.zeros([nVertices, nVertLevels]))
 
-        # surface fields
-        surfaceStress[:] = 0.0
-        atmosphericPressure[:] = 0.0
-        boundaryLayerDepth[:] = 0.0
         print(f'   time: {time.time() - time1}')
 
         # comment('finalize and write file')
