@@ -543,6 +543,20 @@ overflow
    initial_state.InitialState
    initial_state.InitialState.run
 
+   nonhydro.Nonhydro
+   nonhydro.initial_state.InitialState
+   nonhydro.initial_state.InitialState.run
+   nonhydro.forward.Forward
+   nonhydro.forward.Forward.run
+
+   hydro_vs_nonhydro.HydroVSNonhydro
+   hydro_vs_nonhydro.initial_state.InitialState
+   hydro_vs_nonhydro.initial_state.InitialState.run
+   hydro_vs_nonhydro.forward.Forward
+   hydro_vs_nonhydro.forward.Forward.run
+   hydro_vs_nonhydro.visualize.Visualize
+   hydro_vs_nonhydro.visualize.Visualize.run
+
 
 planar_convergence
 ~~~~~~~~~~~~~~~~~~
