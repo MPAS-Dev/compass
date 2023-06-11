@@ -60,7 +60,7 @@ class Visualize(Step):
             plt.yticks([0, 30, 60], [0, -100, -200])
             plt.xlabel('x, km')
             plt.ylabel('z, m')
-            plt.title('temperature at 3hr - ', grid)
+            plt.title(f'temperature at 3hr - {grid}')
             ncfileIC.close()
             ncfile.close()
 
