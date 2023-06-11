@@ -44,7 +44,7 @@ class Visualize(Step):
         section = config['horizontal_grid']
         nx = section.getint('nx')
         section = config['visualize']
-        time = section.getint('plotTime')
+        time = section.getint('plot_time')
 
         for j in range(nGrids):
             grid = grids[j]
