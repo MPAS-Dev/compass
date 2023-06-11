@@ -54,8 +54,10 @@ class InitialState(Step):
 
         section = config['vertical_grid']
         nVertLevels = section.getint('vert_levels')
+        bottom_depth = section.getfloat('bottom_depth')
 
         section = config['hydro_vs_nonhydro']
+        shelf_depth = section.getfloat('shelf_depth')
         xs = section.getfloat('xs')
         Ls = section.getfloat('Ls')
         config_eos_linear_Sref = section.getfloat('eos_linear_Sref')
@@ -65,7 +67,7 @@ class InitialState(Step):
         lower_temperature = section.getfloat('lower_temperature')
         higher_temperature = section.getfloat('higher_temperature')
 
-        # comment('obtain dimensions and mesh variables')
+        # obtain dimensions and mesh variables
         # vertical_coordinate = 'uniform'
 
         ds = dsMesh.copy()
@@ -75,12 +77,12 @@ class InitialState(Step):
 
         xCell = ds.xCell
 
-        # comment('create and initialize variables')
+        # create and initialize variables
         time1 = time.time()
 
         # bottom depth
-        # ds['bottomDepth'] = maxDepth * xarray.ones_like(xCell)
-        ds['bottomDepth'] = - (- 200.0 + 0.5 * (200.0 - 40.0) *
+        ds['bottomDepth'] = - (- bottom_depth + 0.5 *
+                               (bottom_depth - shelf_depth) *
                                (1.0 + np.tanh((6400.0 -
                                 ds.xCell - xs) / Ls)))
         # ssh
@@ -118,7 +120,7 @@ class InitialState(Step):
 
         print(f'   time: {time.time() - time1}')
 
-        # comment('finalize and write file')
+        # finalize and write file
         time1 = time.time()
 
         # If you prefer not to have NaN as the fill value, you should consider

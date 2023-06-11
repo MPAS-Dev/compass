@@ -1,5 +1,5 @@
 from compass.ocean.tests.overflow.default import Default
-from compass.ocean.tests.overflow.hydro_vs_nonhydro import HydroVSNonhydro
+from compass.ocean.tests.overflow.hydro_vs_nonhydro import HydroVsNonhydro
 from compass.ocean.tests.overflow.nonhydro import Nonhydro
 from compass.ocean.tests.overflow.rpe_test import RpeTest
 from compass.testgroup import TestGroup
@@ -20,7 +20,7 @@ class Overflow(TestGroup):
         self.add_test_case(Default(test_group=self, resolution='10km'))
         self.add_test_case(RpeTest(test_group=self, resolution='2km'))
         self.add_test_case(Nonhydro(test_group=self))
-        self.add_test_case(HydroVSNonhydro(test_group=self))
+        self.add_test_case(HydroVsNonhydro(test_group=self))
 
 
 def configure(resolution, config):

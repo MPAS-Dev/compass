@@ -100,7 +100,7 @@ elliptic problem.
 initial_state
 ~~~~~~~~~~~~~
 
-The class :py:class:`compass.ocean.tests.overflow.hydro_vs_nonhydro.initial_state.InitialState`
+The class :py:class:`compass.ocean.tests.overflow.nonhydro.initial_state.InitialState`
 sets up the initial state for the ``nonhydro`` test.
 
 First, a planar mesh is generated using :py:func:`mpas_tools.planar_hex.make_planar_hex_mesh()`.

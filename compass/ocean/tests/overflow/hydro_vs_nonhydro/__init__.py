@@ -6,7 +6,7 @@ from compass.ocean.tests.overflow.hydro_vs_nonhydro.visualize import Visualize
 from compass.testcase import TestCase
 
 
-class HydroVSNonhydro(TestCase):
+class HydroVsNonhydro(TestCase):
     """
     The hydro vs nonhydro test case for the overflow group creates the
     mesh and initial condition, then performs two forward runs, one with
