@@ -18,7 +18,7 @@ from compass.landice.ais_observations import ais_basin_info
 # --------------
 target_year = 100.0  # model year from start at which to calculate statistics
 label_runs = False
-filter_runs = True
+filter_runs = False
 plot_time_series = True
 plot_single_param_sensitivies = True
 plot_pairwise_param_sensitivities = True
@@ -79,7 +79,12 @@ qoi_info = {
         'units': 'Gt/yr'},
     'melt flux': {
         'title': f'Ice-shelf basal melt flux at year {target_year}',
-        'units': 'Gt/yr'}}
+        'units': 'Gt/yr'},
+    'speed error': {
+        'title': f'Normalized error in modeled ice surface speed at '
+                 f'year {target_year}',
+        'units': 'std. devs.'}}
+
 # Initialize some common attributes to be set later
 for qoi in qoi_info:
     qoi_info[qoi]['values'] = np.zeros((nRuns,)) * np.nan
@@ -96,6 +101,7 @@ if os.path.isfile(ens_cfg_file):
         basin = ens_info['basin']
         if basin == 'None':
             basin = None
+    input_file_path = ens_info['input_file_path']
 if basin is None:
     print("No basin found.  Not using observational data.")
 else:
@@ -231,6 +237,17 @@ if plot_maps:
     GLY = np.array([])
 
 # --------------
+# Get needed fields from input file
+# --------------
+
+DSinput = xr.open_dataset(input_file_path)
+observedSurfaceVelocityX = DSinput['observedSurfaceVelocityX'].values
+observedSurfaceVelocityY = DSinput['observedSurfaceVelocityY'].values
+obsSpdUnc = DSinput['observedSurfaceVelocityUncertainty'].values
+obsSpd = (observedSurfaceVelocityX**2 + observedSurfaceVelocityY**2)**0.5
+DSinput.close()
+
+# --------------
 # Loop through runs and gather data
 # --------------
 n_dirs = 0
@@ -298,6 +315,28 @@ for idx, run in enumerate(runs):
                 n_filtered += 1
         else:
             valid_run = False
+
+        # calculate qoi's requiring spatial output
+        DS = xr.open_mfdataset(run + '/output/' + 'output_*.nc',
+                               combine='nested', concat_dim='Time',
+                               decode_timedelta=False,
+                               chunks={"Time": 10})
+        yearsOutput = DS['daysSinceStart'].values[:] / 365.0
+        indices = np.nonzero(yearsOutput >= target_year)[0]
+        if len(indices) > 0:
+            ii = indices[0]
+
+            surfaceSpeed = DS['surfaceSpeed'].values[ii, :]
+            thickness = DS['thickness'].values[ii, :]
+            areaCell = DS['areaCell'].values[0, :]
+
+            spdError = (surfaceSpeed - obsSpd) / obsSpdUnc
+            # only evaluate where modeled ice exists and observed speed
+            # uncertainy is a reasonable value (<~1e6 m/yr)
+            mask = (thickness > 0.0) * (obsSpdUnc < 0.1)
+            qoi_info['speed error']['values'][idx] = \
+                (spdError * mask * areaCell).sum() / (mask * areaCell).sum()
+        DS.close()
 
         if plot_time_series:
             # color lines depending on if they match obs or not
@@ -440,7 +479,7 @@ if plot_single_param_sensitivies:
         if param_info[param]['active']:
             fig = plt.figure(fig_offset + fig_num, figsize=(13, 8),
                              facecolor='w')
-            nrow = 2
+            nrow = 3
             ncol = 3
             fig.suptitle(f'{param} sensitivities')
             # create subplot for each QOI
@@ -485,7 +524,7 @@ if plot_pairwise_param_sensitivities:
                 if count2 > count1 and param_info[param2]['active']:
                     fig = plt.figure(fig_offset + fig_num, figsize=(13, 8),
                                      facecolor='w')
-                    nrow = 2
+                    nrow = 3
                     ncol = 3
                     fig.suptitle(f'{param1} vs. {param2} sensitivities')
                     # create subplot for each QOI
