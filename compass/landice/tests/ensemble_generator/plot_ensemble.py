@@ -16,7 +16,7 @@ from compass.landice.ais_observations import ais_basin_info
 # --------------
 # general settings
 # --------------
-target_year = 100.0  # model year from start at which to calculate statistics
+target_year = 50.0  # model year from start at which to calculate statistics
 label_runs = False
 filter_runs = False
 plot_time_series = True
@@ -330,7 +330,8 @@ for idx, run in enumerate(runs):
             thickness = DS['thickness'].values[ii, :]
             areaCell = DS['areaCell'].values[0, :]
 
-            spdError = (surfaceSpeed - obsSpd) / obsSpdUnc
+            spdError = ((np.log10(surfaceSpeed) - np.log10(obsSpd)) /
+                        np.log10(obsSpdUnc))
             # only evaluate where modeled ice exists and observed speed
             # uncertainy is a reasonable value (<~1e6 m/yr)
             mask = (thickness > 0.0) * (obsSpdUnc < 0.1)
@@ -499,7 +500,7 @@ if plot_single_param_sensitivies:
                                      color='k', alpha=0.2, label='melt obs')
                 plt.plot(pvalues, qvalues, '.')
                 badIdx = np.nonzero(np.isnan(qvalues))[0]
-                plt.plot(pvalues[badIdx], np.zeros(len(badIdx),), 'k.')
+                plt.plot(pvalues[badIdx], np.zeros(len(badIdx),), 'kx')
                 if label_runs:
                     for i in range(nRuns):
                         plt.annotate(f'{runs[i][3:]}',
