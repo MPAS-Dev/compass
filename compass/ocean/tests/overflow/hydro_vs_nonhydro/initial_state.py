@@ -1,5 +1,3 @@
-import time
-
 import numpy as np
 import xarray
 from mpas_tools.io import write_netcdf
@@ -36,8 +34,6 @@ class InitialState(Step):
         config = self.config
         logger = self.logger
 
-        timeStart = time.time()
-
         section = config['horizontal_grid']
         nx = section.getint('nx')
         ny = section.getint('ny')
@@ -57,13 +53,11 @@ class InitialState(Step):
         bottom_depth = section.getfloat('bottom_depth')
 
         section = config['hydro_vs_nonhydro']
+        cold_water_range = section.getfloat('cold_water_range')
         shelf_depth = section.getfloat('shelf_depth')
         xs = section.getfloat('xs')
         Ls = section.getfloat('Ls')
         config_eos_linear_Sref = section.getfloat('eos_linear_Sref')
-        config_eos_linear_densityref = section.getfloat(
-            'eos_linear_densityref')
-        rhoz = section.getfloat('rhoz')
         lower_temperature = section.getfloat('lower_temperature')
         higher_temperature = section.getfloat('higher_temperature')
 
@@ -78,30 +72,26 @@ class InitialState(Step):
         xCell = ds.xCell
 
         # create and initialize variables
-        time1 = time.time()
-
         # bottom depth
         ds['bottomDepth'] = - (- bottom_depth + 0.5 *
                                (bottom_depth - shelf_depth) *
-                               (1.0 + np.tanh((6400.0 -
+                               (1.0 + np.tanh((nx * dc -
                                 ds.xCell - xs) / Ls)))
         # ssh
         ds['ssh'] = xarray.zeros_like(xCell)
 
         init_vertical_coord(config, ds)
 
-        # initial salinity, density, temperature
+        # initial salinity and temperature
         ds['salinity'] = (config_eos_linear_Sref *
                           xarray.ones_like(ds.zMid)).where(ds.cellMask)
-        ds['density'] = (config_eos_linear_densityref +
-                         rhoz * ds.zMid).where(ds.cellMask)
         # T = Tref - (rho - rhoRef)/alpha
         ds['temperature'] = xarray.ones_like(ds.zMid).where(ds.cellMask)
         temperature = ds['temperature']
         for iCell in range(0, nCells):
             temperature[0, iCell, :] = -1.0
             for k in range(0, nVertLevels):
-                if (xCell[iCell] < 990.0):
+                if (xCell[iCell] < cold_water_range):
                     temperature[0, iCell, k] = lower_temperature
                 else:
                     temperature[0, iCell, k] = higher_temperature
@@ -118,13 +108,7 @@ class InitialState(Step):
         ds['fVertex'] = (('nVertices', 'nVertLevels',),
                          np.zeros([nVertices, nVertLevels]))
 
-        print(f'   time: {time.time() - time1}')
-
         # finalize and write file
-        time1 = time.time()
-
         # If you prefer not to have NaN as the fill value, you should consider
         # using mpas_tools.io.write_netcdf() instead
         write_netcdf(ds, 'initial_state.nc')
-        print(f'   time: {time.time() - time1}')
-        print(f'Total time: {time.time() - timeStart}')
