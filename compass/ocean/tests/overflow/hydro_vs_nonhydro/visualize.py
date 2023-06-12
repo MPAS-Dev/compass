@@ -44,7 +44,7 @@ class Visualize(Step):
 
         section = config['horizontal_grid']
         nx = section.getint('nx')
-        dc = section.getifloat('dc')
+        dc = section.getfloat('dc')
         section = config['visualize']
         time = section.getint('plot_time')
 
