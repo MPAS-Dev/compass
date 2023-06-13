@@ -540,18 +540,17 @@ overflow
    forward.Forward
    forward.Forward.run
 
+   initial_state_from_init_mode.InitialStateFromInitMode
+   initial_state_from_init_mode.InitialStateFromInitMode.run
+
    initial_state.InitialState
    initial_state.InitialState.run
 
    nonhydro.Nonhydro
-   nonhydro.initial_state.InitialState
-   nonhydro.initial_state.InitialState.run
    nonhydro.forward.Forward
    nonhydro.forward.Forward.run
 
    hydro_vs_nonhydro.HydroVSNonhydro
-   hydro_vs_nonhydro.initial_state.InitialState
-   hydro_vs_nonhydro.initial_state.InitialState.run
    hydro_vs_nonhydro.forward.Forward
    hydro_vs_nonhydro.forward.Forward.run
    hydro_vs_nonhydro.visualize.Visualize

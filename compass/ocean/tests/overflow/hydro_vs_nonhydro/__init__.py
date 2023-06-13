@@ -1,8 +1,6 @@
 from compass.ocean.tests.overflow.hydro_vs_nonhydro.forward import Forward
-from compass.ocean.tests.overflow.hydro_vs_nonhydro.initial_state import (
-    InitialState,
-)
 from compass.ocean.tests.overflow.hydro_vs_nonhydro.visualize import Visualize
+from compass.ocean.tests.overflow.initial_state import InitialState
 from compass.testcase import TestCase
 
 

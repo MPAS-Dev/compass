@@ -1,7 +1,9 @@
-from compass.testcase import TestCase
-from compass.ocean.tests.overflow.initial_state import InitialState
-from compass.ocean.tests.overflow.forward import Forward
 from compass.ocean.tests import overflow
+from compass.ocean.tests.overflow.forward import Forward
+from compass.ocean.tests.overflow.initial_state_from_init_mode import (
+    InitialStateFromInitMode,
+)
+from compass.testcase import TestCase
 from compass.validate import compare_variables
 
 
@@ -27,7 +29,7 @@ class Default(TestCase):
         super().__init__(test_group=test_group, name='default',
                          subdir=f'{resolution}/default')
         self.resolution = resolution
-        self.add_step(InitialState(test_case=self))
+        self.add_step(InitialStateFromInitMode(test_case=self))
         self.add_step(Forward(test_case=self, ntasks=4, openmp_threads=1))
 
     def configure(self):

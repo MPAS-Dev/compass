@@ -62,7 +62,7 @@ The ``default`` and ``rpe_test`` test cases share the same set of config options
     # Viscosity values to test for rpe test case
     viscosities = 1, 5, 10, 100, 1000
 
-The ``nonhydro`` and ``hydro_vs_nonhydro`` tetss share different config options:
+The ``nonhydro`` and ``hydro_vs_nonhydro`` tests share different config options:
 
 .. code-block:: cfg
 

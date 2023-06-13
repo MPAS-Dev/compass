@@ -1,8 +1,10 @@
-from compass.testcase import TestCase
-from compass.ocean.tests.overflow.initial_state import InitialState
-from compass.ocean.tests.overflow.forward import Forward
-from compass.ocean.tests.overflow.rpe_test.analysis import Analysis
 from compass.ocean.tests import overflow
+from compass.ocean.tests.overflow.forward import Forward
+from compass.ocean.tests.overflow.initial_state_from_init_mode import (
+    InitialStateFromInitMode,
+)
+from compass.ocean.tests.overflow.rpe_test.analysis import Analysis
+from compass.testcase import TestCase
 
 
 class RpeTest(TestCase):
@@ -35,7 +37,6 @@ class RpeTest(TestCase):
         self.resolution = resolution
         self.nus = None
 
-
     def configure(self):
         """
         Modify the configuration options for this test case.
@@ -49,7 +50,7 @@ class RpeTest(TestCase):
         self.nus = nus
 
         self.add_step(
-            InitialState(test_case=self))
+            InitialStateFromInitMode(test_case=self))
 
         for index, nu in enumerate(nus):
             name = f'rpe_test_{index + 1}_nu_{int(nu)}'

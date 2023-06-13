@@ -68,3 +68,4 @@ class Visualize(Step):
             ncfile.close()
 
         plt.savefig('section_overflow.png')
+        plt.close()
