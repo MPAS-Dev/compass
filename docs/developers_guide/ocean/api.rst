@@ -550,7 +550,7 @@ overflow
    nonhydro.forward.Forward
    nonhydro.forward.Forward.run
 
-   hydro_vs_nonhydro.HydroVSNonhydro
+   hydro_vs_nonhydro.HydroVsNonhydro
    hydro_vs_nonhydro.forward.Forward
    hydro_vs_nonhydro.forward.Forward.run
    hydro_vs_nonhydro.visualize.Visualize

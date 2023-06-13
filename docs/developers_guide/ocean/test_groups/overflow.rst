@@ -29,27 +29,39 @@ a few common namelist options related to time step, run duration, viscosity,
 and drag, as well as a shared ``streams.forward`` file that defines ``mesh``,
 ``input``, and ``output`` streams.
 
-initial_state
-~~~~~~~~~~~~~
+initial_state_from_init_mode
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The class :py:class:`compass.ocean.tests.overflow.initial_state.InitialState`
+The class :py:class:`compass.ocean.tests.overflow.initial_state_from_init_mode.InitialStateFromInitMode`
 defines a step for setting up the initial state for each test case.
 
 First, a mesh appropriate for the resolution is generated using
 :py:func:`mpas_tools.planar_hex.make_planar_hex_mesh()`.  Then, the mesh is
 culled to remove periodicity in the y direction. The ocean model is then run
 in ``init`` mode to generate the vertical grid and populate initial conditions.
+
+initial_state
+~~~~~~~~~~~~~
+
+The class :py:class:`compass.ocean.tests.overflow.initial_state.InitialState`
+sets up the initial state for the ``nonhydro`` and ``hydro_vs_nonhydro`` test cases.
+
+First, a planar mesh is generated using :py:func:`mpas_tools.planar_hex.make_planar_hex_mesh()`.
+Then, the mesh is culled to remove periodicity in the x direction. The domain is
+200m deep and 6.4 km across. After the topography is specified, a vertical grid is generated
+with 60 layers.  Finally, the initial density and temperature profiles are computed along with
+uniform salinity and zero initial velocity.
  
 forward
 ~~~~~~~
 
 The class :py:class:`compass.ocean.tests.overflow.forward.Forward`
 defines a step for running MPAS-Ocean from the initial condition produced in
-the ``initial_state`` step. If ``nu`` is provided as an argument to the
-constructor, the associate namelist option (``config_mom_del2``) will be given
-this value. Namelist and streams files are also generated. MPAS-Ocean is run
-(including updating PIO namelist options and generating a graph partition) in
-``run()``.
+the ``initial_state_from_init_mode`` step. If ``nu`` is provided as an argument 
+to the constructor, the associate namelist option (``config_mom_del2``) will be
+given this value. Namelist and streams files are also generated. MPAS-Ocean is 
+run (including updating PIO namelist options and generating a graph partition) 
+in ``run()``.
 
 .. _dev_ocean_overflow_default:
 
@@ -97,18 +109,6 @@ and vertical momentum viscosities, and defines the PETSc solver,
 preconditioner and tolerances used for the solution of the nonhydrostatic 
 elliptic problem.
 
-initial_state
-~~~~~~~~~~~~~
-
-The class :py:class:`compass.ocean.tests.overflow.nonhydro.initial_state.InitialState`
-sets up the initial state for the ``nonhydro`` test.
-
-First, a planar mesh is generated using :py:func:`mpas_tools.planar_hex.make_planar_hex_mesh()`.
-Then, the mesh is culled to remove periodicity in the x direction. The domain is 
-200m deep and 6.4 km across. After the topography is specified, a vertical grid is generated 
-with 60 layers.  Finally, the initial density and temperature profiles are computed along with
-uniform salinity and zero initial velocity.
-
 forward
 ~~~~~~~
 
@@ -131,18 +131,6 @@ models, and the latter defines the PETSc solver, preconditioner and tolerances
 used for the solution of the nonhydrostatic elliptic problem. The hydrostatic and
 nonhydrostatic run share the same ``streams.forward`` file that defines
 ``mesh``, ``input``, ``restart``, and ``output`` streams.
-
-initial_state
-~~~~~~~~~~~~~
-
-The class :py:class:`compass.ocean.tests.overflow.hydro_vs_nonhydro.initial_state.InitialState`
-sets up the initial state for the comparion between the hydrostatic and nonhydrostatic model.
-
-First, a planar mesh is generated using :py:func:`mpas_tools.planar_hex.make_planar_hex_mesh()`.
-Then, the mesh is culled to remove periodicity in the x direction. The domain is 
-200m deep and 6.4 km across. After the topography is specified, a vertical grid is generated 
-with 60 layers.  Finally, the initial density and temperature profiles are computed along with
-uniform salinity and zero initial velocity.
 
 forward
 ~~~~~~~

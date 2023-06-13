@@ -46,7 +46,7 @@ hydrostatic and nonhydrostatic model after 3h.
 config options
 --------------
 
-The ``default`` and ``rpe_test`` test cases share the same set of config options:
+The ``default`` and ``rpe_test`` test cases share this set of config options:
 
 .. code-block:: cfg
 
