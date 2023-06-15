@@ -974,6 +974,15 @@ ensures that the time average of the prognostic variables as well as the
 sea-surface height are identical to those from the baseline if one is provided
 when calling <a class="reference internal" href="../../command_line.html#dev-compass-setup"><span class="std std-ref">compass setup</span></a>.</p>
 </section>
+<section id="data-ice-shelf-melt-test-case">
+<span id="dev-ocean-global-ocean-data-ice-shelf-melt"></span><h3>data_ice_shelf_melt test case<a class="headerlink" href="#data-ice-shelf-melt-test-case" title="Permalink to this heading">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt.html#compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt" title="compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt</span></code></a>
+defines a test case that remaps melt rates from the satellite-derived dataset
+from <a class="reference external" href="https://doi.org/10.1038/s41561-020-0616-z">Adusumilli et al. (2020)</a>
+and then performs a performs a short forward run similar to
+<a class="reference internal" href="#dev-ocean-global-ocean-performance-test"><span class="std std-ref">performance_test test case</span></a> but with data ice-shelf melt
+fluxes enables.</p>
+</section>
 <section id="dynamic-adjustment-test-case">
 <span id="dev-ocean-global-ocean-dynamic-adjustment"></span><h3>dynamic_adjustment test case<a class="headerlink" href="#dynamic-adjustment-test-case" title="Permalink to this heading">¶</a></h3>
 <p>The parent class
@@ -1174,6 +1183,11 @@ and named <code class="docutils literal notranslate"><span class="pre">&lt;mesh_
 basins and the transects representing their southern boundaries.
 The resulting region mask is in the same directory as above, and named
 <code class="docutils literal notranslate"><span class="pre">&lt;mesh_short_name&gt;_moc_masks_and_transects.nc</span></code></p>
+</dd>
+<dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.remap_ice_shelf_melt.RemapIceShelfMelt.html#compass.ocean.tests.global_ocean.files_for_e3sm.remap_ice_shelf_melt.RemapIceShelfMelt" title="compass.ocean.tests.global_ocean.files_for_e3sm.remap_ice_shelf_melt.RemapIceShelfMelt"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.remap_ice_shelf_melt.RemapIceShelfMelt</span></code></a></dt><dd><p>is used to remap ice-shelf melt rates from the dataset of
+<a class="reference external" href="https://doi.org/10.1038/s41561-020-0616-z">Adusumilli et al. (2020)</a>
+to the MPAS mesh.  This dataset is used in E3SM for <code class="docutils literal notranslate"><span class="pre">DISMF</span></code> (data
+ice-shelf melt flux) compsets.</p>
 </dd>
 </dl>
 </section>

@@ -761,6 +761,18 @@ or more of these versions of the <code class="docutils literal notranslate"><spa
 <li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/QUwISC240/&lt;ic&gt;/daily_output_test/RK4</span></code></p></li>
 </ul>
 </section>
+<section id="data-ice-shelf-melt">
+<span id="global-ocean-data-ice-shelf-melt"></span><h3>data_ice_shelf_melt<a class="headerlink" href="#data-ice-shelf-melt" title="Permalink to this heading">¶</a></h3>
+<p>For meshes with ice-shelf cavities, the <code class="docutils literal notranslate"><span class="pre">data_ice_shelf_melt</span></code> test case
+interpolates the
+<a class="reference external" href="https://doi.org/10.1038/s41561-020-0616-z">Adusumilli et al. (2020)</a>
+annual mean Antarctic melt rates to the MPAS mesh for use in subsequent test
+cases and possible incorporation as a forcing dataset in E3SM.  It performs
+a short forward test equivalent to <a class="reference internal" href="#global-ocean-performance-test"><span class="std std-ref">performance_test test case</span></a> but
+with data ice-shelf melt fluxes enabled.  If a baseline is provided, the test
+case will compare a large number of variables related to ice-shelf fluxes to
+ensure that they are identical.</p>
+</section>
 <section id="dynamic-adjustment-test-case">
 <span id="global-ocean-dynamic-adjustment"></span><h3>dynamic_adjustment test case<a class="headerlink" href="#dynamic-adjustment-test-case" title="Permalink to this heading">¶</a></h3>
 <p>One of the main purposes of compass is to provide a way of spinning up
@@ -805,8 +817,10 @@ files include: MPAS-Ocean and MPAS-Seaice initial conditions (including
 partition files, created with
 <a class="reference external" href="http://glaros.dtc.umn.edu/gkhome/metis/metis/overview">gpmetis</a>, for
 splitting the mesh across a number of possible core counts; a mask file for
-MPAS-Ocean’s <code class="docutils literal notranslate"><span class="pre">mocStreamfunction</span></code> analysis member; and mask and mapping files
-for <a class="reference external" href="https://mpas-dev.github.io/MPAS-Analysis/stable/">MPAS-Analysis</a>.</p>
+MPAS-Ocean’s <code class="docutils literal notranslate"><span class="pre">mocStreamfunction</span></code> analysis member; mask and mapping files
+for <a class="reference external" href="https://mpas-dev.github.io/MPAS-Analysis/stable/">MPAS-Analysis</a>; and
+a file containing data ice-shelf melt rates for running <code class="docutils literal notranslate"><span class="pre">DISMF</span></code> (data
+ice-shelf melt flux) compsets in E3SM.</p>
 <p>The resulting files are symlinked in a subdirectory of the test case called
 <code class="docutils literal notranslate"><span class="pre">assembled_files</span></code>.  This directory contains subdirectories with the same
 structure as the <a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/">E3SM data server</a>.

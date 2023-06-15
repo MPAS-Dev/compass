@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.ocean.tests.global_ocean.decomp_test.DecompTest &mdash; compass latest documentation</title>
+  <title>compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt &mdash; compass latest documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,8 +20,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="compass.ocean.tests.global_ocean.decomp_test.DecompTest.configure" href="compass.ocean.tests.global_ocean.decomp_test.DecompTest.configure.html" />
-    <link rel="prev" title="compass.ocean.tests.global_ocean.data_ice_shelf_melt.remap_ice_shelf_melt.remap_adusumilli" href="compass.ocean.tests.global_ocean.data_ice_shelf_melt.remap_ice_shelf_melt.remap_adusumilli.html" /> 
+    <link rel="next" title="compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt.configure" href="compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt.configure.html" />
+    <link rel="prev" title="compass.ocean.tests.global_ocean.daily_output_test.DailyOutputTest.run" href="compass.ocean.tests.global_ocean.daily_output_test.DailyOutputTest.run.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -118,9 +118,9 @@
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../api.html">API reference</a></li>
           <li class="breadcrumb-item"><a href="../api.html">ocean</a></li>
-      <li class="breadcrumb-item active">compass.ocean.tests.global_ocean.decomp_test.DecompTest</li>
+      <li class="breadcrumb-item active">compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/developers_guide/ocean/generated/compass.ocean.tests.global_ocean.decomp_test.DecompTest.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/developers_guide/ocean/generated/compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -128,16 +128,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="compass-ocean-tests-global-ocean-decomp-test-decomptest">
-<h1>compass.ocean.tests.global_ocean.decomp_test.DecompTest<a class="headerlink" href="#compass-ocean-tests-global-ocean-decomp-test-decomptest" title="Permalink to this heading">¶</a></h1>
+  <section id="compass-ocean-tests-global-ocean-data-ice-shelf-melt-dataiceshelfmelt">
+<h1>compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt<a class="headerlink" href="#compass-ocean-tests-global-ocean-data-ice-shelf-melt-dataiceshelfmelt" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="compass.ocean.tests.global_ocean.decomp_test.DecompTest">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compass.ocean.tests.global_ocean.decomp_test.</span></span><span class="sig-name descname"><span class="pre">DecompTest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_integrator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/global_ocean/decomp_test.html#DecompTest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.tests.global_ocean.decomp_test.DecompTest" title="Permalink to this definition">¶</a></dt>
-<dd><p>A test case for performing two short forward runs to make sure the results
-are identical with 4 and 8 cores</p>
+<dt class="sig sig-object py" id="compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compass.ocean.tests.global_ocean.data_ice_shelf_melt.</span></span><span class="sig-name descname"><span class="pre">DataIceShelfMelt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_integrator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/global_ocean/data_ice_shelf_melt.html#DataIceShelfMelt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt" title="Permalink to this definition">¶</a></dt>
+<dd><p>A test case for remapping observed melt rates to the MPAS grid and then
+performing a short forward run with these data (prescribed) melt rates</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesh</strong> (<a class="reference internal" href="compass.ocean.tests.global_ocean.mesh.Mesh.html#compass.ocean.tests.global_ocean.mesh.Mesh" title="compass.ocean.tests.global_ocean.mesh.Mesh"><em>compass.ocean.tests.global_ocean.mesh.Mesh</em></a>) – The test case that produces the mesh for this run</p></li>
+<li><p><strong>init</strong> (<a class="reference internal" href="compass.ocean.tests.global_ocean.init.Init.html#compass.ocean.tests.global_ocean.init.Init" title="compass.ocean.tests.global_ocean.init.Init"><em>compass.ocean.tests.global_ocean.init.Init</em></a>) – The test case that produces the initial condition for this run</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="compass.ocean.tests.global_ocean.decomp_test.DecompTest.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_integrator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/global_ocean/decomp_test.html#DecompTest.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.tests.global_ocean.decomp_test.DecompTest.__init__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_integrator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/global_ocean/data_ice_shelf_melt.html#DataIceShelfMelt.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create test case</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -158,7 +166,7 @@ are identical with 4 and 8 cores</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#compass.ocean.tests.global_ocean.decomp_test.DecompTest.__init__" title="compass.ocean.tests.global_ocean.decomp_test.DecompTest.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(test_group, mesh, init, time_integrator)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt.__init__" title="compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(test_group, mesh, init, time_integrator)</p></td>
 <td><p>Create test case</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_step</span></code>(step[, run_by_default])</p></td>
@@ -167,13 +175,13 @@ are identical with 4 and 8 cores</p>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_validation</span></code>()</p></td>
 <td><p>Check the test case's &quot;validation&quot; dictionary to see if validation failed.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compass.ocean.tests.global_ocean.decomp_test.DecompTest.configure.html#compass.ocean.tests.global_ocean.decomp_test.DecompTest.configure" title="compass.ocean.tests.global_ocean.decomp_test.DecompTest.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt.configure.html#compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt.configure" title="compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure</span></code></a>()</p></td>
 <td><p>Modify the configuration options for this test case</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compass.ocean.tests.global_ocean.decomp_test.DecompTest.run.html#compass.ocean.tests.global_ocean.decomp_test.DecompTest.run" title="compass.ocean.tests.global_ocean.decomp_test.DecompTest.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>()</p></td>
 <td><p>This method is deprecated.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate</span></code>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt.validate.html#compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt.validate" title="compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt.validate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate</span></code></a>()</p></td>
 <td><p>Test cases can override this method to perform validation of variables and timers</p></td>
 </tr>
 </tbody>
@@ -186,8 +194,8 @@ are identical with 4 and 8 cores</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="compass.ocean.tests.global_ocean.data_ice_shelf_melt.remap_ice_shelf_melt.remap_adusumilli.html" class="btn btn-neutral float-left" title="compass.ocean.tests.global_ocean.data_ice_shelf_melt.remap_ice_shelf_melt.remap_adusumilli" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="compass.ocean.tests.global_ocean.decomp_test.DecompTest.configure.html" class="btn btn-neutral float-right" title="compass.ocean.tests.global_ocean.decomp_test.DecompTest.configure" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.ocean.tests.global_ocean.daily_output_test.DailyOutputTest.run.html" class="btn btn-neutral float-left" title="compass.ocean.tests.global_ocean.daily_output_test.DailyOutputTest.run" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt.configure.html" class="btn btn-neutral float-right" title="compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt.configure" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
