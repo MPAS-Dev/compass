@@ -157,6 +157,14 @@ test cases and steps
    daily_output_test.DailyOutputTest.configure
    daily_output_test.DailyOutputTest.run
 
+   data_ice_shelf_melt.DataIceShelfMelt
+   data_ice_shelf_melt.DataIceShelfMelt.configure
+   data_ice_shelf_melt.DataIceShelfMelt.validate
+
+   data_ice_shelf_melt.remap_ice_shelf_melt.RemapIceShelfMelt
+   data_ice_shelf_melt.remap_ice_shelf_melt.RemapIceShelfMelt.run
+   data_ice_shelf_melt.remap_ice_shelf_melt.remap_adusumilli
+
    decomp_test.DecompTest
    decomp_test.DecompTest.configure
    decomp_test.DecompTest.run
@@ -184,6 +192,8 @@ test cases and steps
    files_for_e3sm.diagnostic_maps.DiagnosticMaps.run
    files_for_e3sm.diagnostic_masks.DiagnosticMasks
    files_for_e3sm.diagnostic_masks.DiagnosticMasks.run
+   files_for_e3sm.remap_ice_shelf_melt.RemapIceShelfMelt
+   files_for_e3sm.remap_ice_shelf_melt.RemapIceShelfMelt.run
 
    init.Init
    init.Init.configure

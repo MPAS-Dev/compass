@@ -753,6 +753,22 @@ or more of these versions of the ``daily_output_test`` will be available:
 
 * ``ocean/global_ocean/QUwISC240/<ic>/daily_output_test/RK4``
 
+
+.. _global_ocean_data_ice_shelf_melt:
+
+data_ice_shelf_melt
+^^^^^^^^^^^^^^^^^^^
+
+For meshes with ice-shelf cavities, the ``data_ice_shelf_melt`` test case
+interpolates the
+`Adusumilli et al. (2020) <https://doi.org/10.1038/s41561-020-0616-z>`_
+annual mean Antarctic melt rates to the MPAS mesh for use in subsequent test
+cases and possible incorporation as a forcing dataset in E3SM.  It performs
+a short forward test equivalent to :ref:`global_ocean_performance_test` but
+with data ice-shelf melt fluxes enabled.  If a baseline is provided, the test
+case will compare a large number of variables related to ice-shelf fluxes to
+ensure that they are identical.
+
 .. _global_ocean_dynamic_adjustment:
 
 dynamic_adjustment test case
@@ -807,8 +823,10 @@ files include: MPAS-Ocean and MPAS-Seaice initial conditions (including
 partition files, created with
 `gpmetis <http://glaros.dtc.umn.edu/gkhome/metis/metis/overview>`_, for
 splitting the mesh across a number of possible core counts; a mask file for
-MPAS-Ocean's ``mocStreamfunction`` analysis member; and mask and mapping files
-for `MPAS-Analysis <https://mpas-dev.github.io/MPAS-Analysis/stable/>`_.
+MPAS-Ocean's ``mocStreamfunction`` analysis member; mask and mapping files
+for `MPAS-Analysis <https://mpas-dev.github.io/MPAS-Analysis/stable/>`_; and
+a file containing data ice-shelf melt rates for running ``DISMF`` (data
+ice-shelf melt flux) compsets in E3SM.
 
 The resulting files are symlinked in a subdirectory of the test case called
 ``assembled_files``.  This directory contains subdirectories with the same
