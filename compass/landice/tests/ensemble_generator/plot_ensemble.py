@@ -16,7 +16,7 @@ from compass.landice.ais_observations import ais_basin_info
 # --------------
 # general settings
 # --------------
-target_year = 50.0  # model year from start at which to calculate statistics
+target_year = 1.0  # model year from start at which to calculate statistics
 label_runs = False
 filter_runs = False
 plot_time_series = True
@@ -81,8 +81,16 @@ qoi_info = {
         'title': f'Ice-shelf basal melt flux at year {target_year}',
         'units': 'Gt/yr'},
     'speed error': {
-        'title': f'Normalized error in modeled ice surface speed at '
+        'title': f'Speed error at '
                  f'year {target_year}',
+        'units': 'std. devs.'},
+    'flt speed error': {
+        'title': f'Speed error over '
+                 f'floating ice at year {target_year}',
+        'units': 'std. devs.'},
+    'grd speed error': {
+        'title': f'Speed error over '
+                 f'grounded ice at year {target_year}',
         'units': 'std. devs.'}}
 
 # Initialize some common attributes to be set later
@@ -241,10 +249,11 @@ if plot_maps:
 # --------------
 
 DSinput = xr.open_dataset(input_file_path)
-observedSurfaceVelocityX = DSinput['observedSurfaceVelocityX'].values
-observedSurfaceVelocityY = DSinput['observedSurfaceVelocityY'].values
-obsSpdUnc = DSinput['observedSurfaceVelocityUncertainty'].values
+observedSurfaceVelocityX = DSinput['observedSurfaceVelocityX'].values[0, :]
+observedSurfaceVelocityY = DSinput['observedSurfaceVelocityY'].values[0, :]
+obsSpdUnc = DSinput['observedSurfaceVelocityUncertainty'].values[0, :]
 obsSpd = (observedSurfaceVelocityX**2 + observedSurfaceVelocityY**2)**0.5
+obsSpdUnc += obsSpd * 0.25
 DSinput.close()
 
 # --------------
@@ -328,15 +337,29 @@ for idx, run in enumerate(runs):
 
             surfaceSpeed = DS['surfaceSpeed'].values[ii, :]
             thickness = DS['thickness'].values[ii, :]
+            cellMask = DS['cellMask'].values[ii, :]
             areaCell = DS['areaCell'].values[0, :]
 
-            spdError = ((np.log10(surfaceSpeed) - np.log10(obsSpd)) /
-                        np.log10(obsSpdUnc))
             # only evaluate where modeled ice exists and observed speed
             # uncertainy is a reasonable value (<~1e6 m/yr)
-            mask = (thickness > 0.0) * (obsSpdUnc < 0.1)
+            mask = ((thickness > 0.0) *
+                    (obsSpdUnc < 0.1) *
+                    (obsSpdUnc > 0.0))
+            ind = np.nonzero(mask)[0]
             qoi_info['speed error']['values'][idx] = \
-                (spdError * mask * areaCell).sum() / (mask * areaCell).sum()
+                ((areaCell[ind] * (surfaceSpeed[ind] - obsSpd[ind])**2 /
+                  obsSpdUnc[ind]**2).sum() / areaCell[ind].sum())**0.5
+            # float speed error
+            floatMask = (cellMask & 4) // 4
+            ind = np.nonzero(mask * floatMask)[0]
+            qoi_info['flt speed error']['values'][idx] = \
+                ((areaCell[ind] * (surfaceSpeed[ind] - obsSpd[ind])**2 /
+                  obsSpdUnc[ind]**2).sum() / areaCell[ind].sum())**0.5
+            # grd speed error
+            ind = np.nonzero(mask * np.logical_not(floatMask))[0]
+            qoi_info['grd speed error']['values'][idx] = \
+                ((areaCell[ind] * (surfaceSpeed[ind] - obsSpd[ind])**2 /
+                  obsSpdUnc[ind]**2).sum() / areaCell[ind].sum())**0.5
         DS.close()
 
         if plot_time_series:
