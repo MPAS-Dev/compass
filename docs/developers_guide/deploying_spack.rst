@@ -285,7 +285,7 @@ Troubleshooting spack
 If you encounter an error like:
 .. code-block:: none
 
-    ==>   spack env activate dev_compass_1_2_0-alpha_4_gnu_mpich
+    ==>   spack env activate dev_compass_1_2_0-alpha_6_gnu_mpich
     ==> Error: Package 'armpl' not found.
     You may need to run 'spack clean -m'.
 
@@ -295,7 +295,7 @@ get the ``spack`` command, e.g.:
 
 .. code-block:: bash
 
-    source ${PSCRATCH}/spack_test/spack_for_mache_1.12.0/share/spack/setup-env.sh
+    source ${PSCRATCH}/spack_test/dev_compass_1_2_0-alpha_6_gnu_mpich/share/spack/setup-env.sh
 
 Then run the suggested command:
 
@@ -323,7 +323,7 @@ and serves as kind of a baseline for other testing.
     source load_dev_compass_1.2.0-alpha.5_chrysalis_intel_openmpi.sh
     git submodule update --init --recursive
     cd E3SM-Project/components/mpas-ocean
-    # this will build with scorpio and openmp
+    # this will build with PIO and OpenMP
     make ifort
     compass suite -s -c ocean -t pr -p . \
         -w /lcrc/group/e3sm/ac.xylar/compass/test_20230202/ocean_pr_chrys_intel_openmpi
@@ -392,7 +392,7 @@ branch.
     cd ../nonhydro_chrys_intel_openmpi
     git submodule update --init --recursive
     cd components/mpas-ocean
-    # this will build with scorpio, Netlib LAPACK and PETSc
+    # this will build with PIO, Netlib LAPACK and PETSc
     make ifort
     compass list | grep nonhydro
     # update these numbers for the 2 nonhydro test cases

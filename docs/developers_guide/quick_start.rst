@@ -181,8 +181,8 @@ you, this script will also:
   ``--spack`` flag can be used to point to a location for the spack repo to be
   checked out.  Without this flag, a default location is used. Spack is used to
   build several libraries with system compilers and MPI library, including:
-  `SCORPIO <https://github.com/E3SM-Project/scorpio>`_ (parallel i/o for MPAS
-  components) `ESMF <https://earthsystemmodeling.org/>`_ (making mapping files
+  `ParallelIO <https://github.com/NCAR/ParallelIO>`_ (parallel i/o in NetCDF
+  format) `ESMF <https://earthsystemmodeling.org/>`_ (making mapping files
   in parallel), `Trilinos <https://trilinos.github.io/>`_,
   `Albany <https://github.com/sandialabs/Albany>`_,
   `Netlib-LAPACK <http://www.netlib.org/lapack/>`_ and
@@ -385,8 +385,8 @@ Creating/updating only the compass environment
 
 For some workflows (e.g. for MALI development with the Albany library when the
 MALI build environment has been created outside of ``compass``, for example,
-on an unsupported machine), you may
-only want to create the conda environment and not build SCORPIO, ESMF or
+on an unsupported machine), you may only want to create the conda environment
+and not build PIO, ESMF or other packages with system compilers, or
 include any system modules or environment variables in your activation script.
 In such cases, run with the ``--env_only`` flag:
 
@@ -529,7 +529,7 @@ Code style for compass
 guidelines, the easiest way to stay in compliance as a developer writing new
 code or modifying existing code is to use a PEP8 style checker. One option is
 to use an IDE with a PEP8 style checker built in, such as
-`PyCharm <https://www.jetbrains.com/pycharm/>`_. See 
+`PyCharm <https://www.jetbrains.com/pycharm/>`_. See
 `this tutorial <https://www.jetbrains.com/help/pycharm/tutorial-code-quality-assistance-tips-and-tricks.html>`_
 for some tips on checking code style in PyCharm.
 
