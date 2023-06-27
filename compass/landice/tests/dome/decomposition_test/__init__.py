@@ -1,8 +1,8 @@
-from compass.validate import compare_variables
-from compass.testcase import TestCase
-from compass.landice.tests.dome.setup_mesh import SetupMesh
 from compass.landice.tests.dome.run_model import RunModel
+from compass.landice.tests.dome.setup_mesh import SetupMesh
 from compass.landice.tests.dome.visualize import Visualize
+from compass.testcase import TestCase
+from compass.validate import compare_variables
 
 
 class DecompositionTest(TestCase):
@@ -15,9 +15,12 @@ class DecompositionTest(TestCase):
     ----------
     mesh_type : str
         The resolution or type of mesh of the test case
+
+    advection_type : {'fo', 'fct'}
+        The type of advection to use for thickness and tracers
     """
 
-    def __init__(self, test_group, velo_solver, mesh_type):
+    def __init__(self, test_group, velo_solver, mesh_type, advection_type):
         """
         Create the test case
 
@@ -31,11 +34,16 @@ class DecompositionTest(TestCase):
 
         mesh_type : str
             The resolution or type of mesh of the test case
+
+        advection_type : {'fo', 'fct'}
+            The type of advection to use for thickness and tracers
         """
         name = 'decomposition_test'
         self.mesh_type = mesh_type
         self.velo_solver = velo_solver
-        subdir = '{}/{}_{}'.format(mesh_type, velo_solver.lower(), name)
+        self.advection_type = advection_type
+        subdir = '{}/{}_{}_{}'.format(mesh_type, velo_solver.lower(),
+                                      advection_type, name)
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
@@ -53,6 +61,11 @@ class DecompositionTest(TestCase):
             name = 'visualize_{}'.format(name)
             step = Visualize(test_case=self, mesh_type=mesh_type, name=name,
                              subdir=name, input_dir=input_dir)
+            if advection_type == 'fct':
+                step.add_namelist_options(
+                    {'config_thickness_advection': "'fct'",
+                     'config_tracer_advection': "'fct'"},
+                    out_name='namelist.landice')
             self.add_step(step, run_by_default=False)
 
     # no configure() method is needed
