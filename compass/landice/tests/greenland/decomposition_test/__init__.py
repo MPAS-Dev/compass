@@ -1,6 +1,6 @@
-from compass.validate import compare_variables
-from compass.testcase import TestCase
 from compass.landice.tests.greenland.run_model import RunModel
+from compass.testcase import TestCase
+from compass.validate import compare_variables
 
 
 class DecompositionTest(TestCase):
@@ -10,7 +10,7 @@ class DecompositionTest(TestCase):
     results of the two runs are identical.
     """
 
-    def __init__(self, test_group, velo_solver):
+    def __init__(self, test_group, velo_solver, advection_type):
         """
         Create the test case
 
@@ -21,10 +21,13 @@ class DecompositionTest(TestCase):
 
         velo_solver : {'sia', 'FO'}
             The velocity solver to use for the test case
+
+        advection_type : {'fo', 'fct'}
+            The type of advection to use for thickness and tracers
         """
         name = 'decomposition_test'
         self.velo_solver = velo_solver
-        subdir = '{}_{}'.format(velo_solver.lower(), name)
+        subdir = '{}_{}_{}'.format(velo_solver.lower(), advection_type, name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
         if velo_solver == 'sia':
@@ -36,10 +39,15 @@ class DecompositionTest(TestCase):
 
         for procs in self.cores_set:
             name = '{}proc_run'.format(procs)
-            self.add_step(
-                RunModel(test_case=self, velo_solver=velo_solver, name=name,
-                         subdir=name, ntasks=procs, min_tasks=procs,
-                         openmp_threads=1))
+            step = RunModel(test_case=self, velo_solver=velo_solver, name=name,
+                            subdir=name, ntasks=procs, min_tasks=procs,
+                            openmp_threads=1)
+            if advection_type == 'fct':
+                step.add_namelist_options(
+                    {'config_thickness_advection': "'fct'",
+                     'config_tracer_advection': "'fct'"},
+                    out_name='namelist.landice')
+            self.add_step(step)
 
     # no configure() method is needed
 
