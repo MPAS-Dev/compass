@@ -24,7 +24,7 @@ class DecompositionTest(TestCase):
         The names of the subdirectories for the two decomposition runs
     """
 
-    def __init__(self, test_group, depth_integrated=False):
+    def __init__(self, test_group, advection_type, depth_integrated=False):
         """
         Create the test case
 
@@ -38,10 +38,12 @@ class DecompositionTest(TestCase):
 
         """
         if depth_integrated is True:
-            name = 'fo-depthInt_decomposition_test'
+            name_tmp = 'fo-depthInt_decomposition_test'
         else:
-            name = 'fo_decomposition_test'
+            name_tmp = 'fo_decomposition_test'
 
+        name = f'{advection_type}_{name_tmp}'
+        self.advection_type = advection_type
         self.depth_integrated = depth_integrated
         self.proc_list = None
         self.run_dirs = None
@@ -66,10 +68,15 @@ class DecompositionTest(TestCase):
             if name in self.run_dirs:
                 name = '{}_{}'.format(name, len(self.run_dirs) + 1)
             self.run_dirs.append(name)
-            self.add_step(
-                RunModel(test_case=self, name=name,
-                         depth_integrated=self.depth_integrated,
-                         ntasks=procs, min_tasks=procs, openmp_threads=1))
+            step = RunModel(test_case=self, name=name,
+                            depth_integrated=self.depth_integrated,
+                            ntasks=procs, min_tasks=procs, openmp_threads=1)
+            if self.advection_type == 'fct':
+                step.add_namelist_options(
+                    {'config_thickness_advection': "'fct'",
+                     'config_tracer_advection': "'fct'"},
+                    out_name='namelist.landice')
+            self.add_step(step)
 
     # no run() method is needed
 
