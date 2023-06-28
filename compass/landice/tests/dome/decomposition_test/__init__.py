@@ -52,20 +52,21 @@ class DecompositionTest(TestCase):
 
         for procs in [1, 4]:
             name = '{}proc_run'.format(procs)
-            self.add_step(
-                RunModel(test_case=self, name=name, subdir=name, ntasks=procs,
-                         openmp_threads=1, velo_solver=velo_solver,
-                         mesh_type=mesh_type))
+            step = RunModel(test_case=self, name=name, subdir=name,
+                            ntasks=procs, openmp_threads=1,
+                            velo_solver=velo_solver, mesh_type=mesh_type)
 
-            input_dir = name
-            name = 'visualize_{}'.format(name)
-            step = Visualize(test_case=self, mesh_type=mesh_type, name=name,
-                             subdir=name, input_dir=input_dir)
             if advection_type == 'fct':
                 step.add_namelist_options(
                     {'config_thickness_advection': "'fct'",
                      'config_tracer_advection': "'fct'"},
                     out_name='namelist.landice')
+            self.add_step(step)
+
+            input_dir = name
+            name = 'visualize_{}'.format(name)
+            step = Visualize(test_case=self, mesh_type=mesh_type, name=name,
+                             subdir=name, input_dir=input_dir)
             self.add_step(step, run_by_default=False)
 
     # no configure() method is needed
