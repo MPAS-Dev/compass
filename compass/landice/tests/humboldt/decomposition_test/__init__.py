@@ -39,8 +39,8 @@ class DecompositionTest(TestCase):
     """
 
     def __init__(self, test_group, velo_solver, calving_law, mesh_type,
-                 damage=None, face_melt=False, depth_integrated=False,
-                 hydro=False):
+                 advection_type, damage=None, face_melt=False,
+                 depth_integrated=False, hydro=False):
         """
         Create the test case
 
@@ -58,6 +58,9 @@ class DecompositionTest(TestCase):
         mesh_type : {'1km', '3km'}
             The resolution or type of mesh of the test case
 
+        advection_type : {'fo', 'fct'}
+            The type of advection to use for thickness and tracers
+
         damage : str
             The damage method used for the test case
 
@@ -73,6 +76,7 @@ class DecompositionTest(TestCase):
         name = 'decomposition_test'
         self.mesh_type = mesh_type
         self.velo_solver = velo_solver
+        self.advection_type = advection_type
         assert self.velo_solver in {'sia', 'FO', 'none'}, \
             "Value of velo_solver must be one of {'sia', 'FO', 'none'}"
         self.calving_law = calving_law
@@ -84,8 +88,8 @@ class DecompositionTest(TestCase):
             self.hydro = False
 
         # build dir name.  always include velo solver and calving law
-        subdir = 'mesh-{}_decomposition_test/velo-{}'.format(
-                 mesh_type, velo_solver.lower())
+        subdir = 'mesh-{}_decomposition_test/velo-{}_advec-{}'.format(
+                 mesh_type, velo_solver.lower(), advection_type)
         if velo_solver == 'FO' and depth_integrated is True:
             subdir += '-depthInt'
         subdir += '_calving-{}'.format(calving_law.lower())
@@ -105,15 +109,20 @@ class DecompositionTest(TestCase):
             self.proc_list = [1, 32]
         for procs in self.proc_list:
             name = '{}proc_run'.format(procs)
-            self.add_step(
-                RunModel(test_case=self, name=name, subdir=name, ntasks=procs,
+            step = RunModel(test_case=self, name=name, subdir=name, ntasks=procs,
                          openmp_threads=1, velo_solver=self.velo_solver,
                          calving_law=self.calving_law,
                          damage=self.damage,
                          face_melt=self.face_melt,
                          depth_integrated=depth_integrated,
                          hydro=self.hydro,
-                         mesh_type=mesh_type))
+                         mesh_type=mesh_type)
+            if advection_type == 'fct':
+                step.add_namelist_options(
+                    {'config_thickness_advection': "'fct'",
+                     'config_tracer_advection': "'fct'"},
+                    out_name='namelist.landice')
+            self.add_step(step)
 
     # no configure() method is needed
 
