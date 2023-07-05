@@ -7,9 +7,7 @@ import xarray
 import xarray.plot
 from jigsawpy.savejig import savejig
 from mpas_tools.cime.constants import constants
-from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
-from mpas_tools.mesh.conversion import convert
 from mpas_tools.mesh.creation.jigsaw_to_netcdf import jigsaw_to_netcdf
 from mpas_tools.ocean.inject_meshDensity import inject_spherical_meshDensity
 from mpas_tools.viz.colormaps import register_sci_viz_colormaps
@@ -102,9 +100,10 @@ class SphericalBaseStep(Step):
                          sphere_radius=earth_radius)
 
         logger.info('Convert from triangles to MPAS mesh')
-        write_netcdf(convert(xarray.open_dataset('mesh_triangles.nc'),
-                             dir='.', logger=logger),
-                     mpas_mesh_filename)
+        args = ['MpasMeshConverter.x',
+                'mesh_triangles.nc',
+                mpas_mesh_filename]
+        check_call(args=args, logger=logger)
 
         if section.getboolean('add_mesh_density'):
             logger.info('Add meshDensity into the mesh file')
