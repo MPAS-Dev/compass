@@ -1,23 +1,22 @@
+import cartopy
+import cartopy.crs as ccrs
+import jigsawpy
+import matplotlib.pyplot as plt
+import numpy as np
 import xarray
 import xarray.plot
-import numpy as np
-import matplotlib.pyplot as plt
-import cartopy.crs as ccrs
-import cartopy
-import jigsawpy
 from jigsawpy.savejig import savejig
-
 from mpas_tools.cime.constants import constants
+from mpas_tools.io import write_netcdf
+from mpas_tools.logging import check_call
 from mpas_tools.mesh.conversion import convert
 from mpas_tools.mesh.creation.jigsaw_to_netcdf import jigsaw_to_netcdf
 from mpas_tools.ocean.inject_meshDensity import inject_spherical_meshDensity
-from mpas_tools.io import write_netcdf
-from mpas_tools.logging import check_call
 from mpas_tools.viz.colormaps import register_sci_viz_colormaps
 from mpas_tools.viz.paraview_extractor import extract_vtk
 
-from compass.step import Step
 from compass.model import make_graph_file
+from compass.step import Step
 
 
 class SphericalBaseStep(Step):
@@ -108,7 +107,7 @@ class SphericalBaseStep(Step):
                      mpas_mesh_filename)
 
         if section.getboolean('add_mesh_density'):
-            logger.info(f'Add meshDensity into the mesh file')
+            logger.info('Add meshDensity into the mesh file')
             ds = xarray.open_dataset('cellWidthVsLatLon.nc')
             inject_spherical_meshDensity(
                 ds.cellWidth.values, ds.lon.values, ds.lat.values,
@@ -268,8 +267,8 @@ class QuasiUniformSphericalMeshStep(SphericalBaseStep):
         # save the constant approximate resolution on a 10 degree grid
         dlon = 10.
         dlat = dlon
-        nlon = int(360./dlon) + 1
-        nlat = int(180./dlat) + 1
+        nlon = int(360. / dlon) + 1
+        nlat = int(180. / dlat) + 1
         lon = np.linspace(-180., 180., nlon)
         lat = np.linspace(-90., 90., nlat)
         cell_width = cell_width * np.ones((nlat, nlon))
@@ -304,7 +303,7 @@ class QuasiUniformSphericalMeshStep(SphericalBaseStep):
         # define JIGSAW geometry
         geom = jigsawpy.jigsaw_msh_t()
         geom.mshID = 'ELLIPSOID-MESH'
-        geom.radii = earth_radius*1e-3*np.ones(3, float)
+        geom.radii = earth_radius * 1e-3 * np.ones(3, float)
         jigsawpy.savemsh(opts.geom_file, geom)
 
         savejig(opts.jcfg_file, opts)
@@ -402,7 +401,7 @@ class IcosahedralMeshStep(SphericalBaseStep):
 
         geom = jigsawpy.jigsaw_msh_t()
         geom.mshID = 'ellipsoid-mesh'
-        geom.radii = earth_radius*1e-3*np.ones(3, float)
+        geom.radii = earth_radius * 1e-3 * np.ones(3, float)
         jigsawpy.savemsh(opts.geom_file, geom)
 
         icos = jigsawpy.jigsaw_msh_t()
@@ -478,9 +477,9 @@ class IcosahedralMeshStep(SphericalBaseStep):
 
         # Using Euclidean, not spherical area, so not accurate for large cell
         # widths
-        triangle_area = np.sqrt(3)/4.*(cell_width*1e3)**2
-        triangle_count = earth_area/triangle_area
-        subdivisions = 0.5*np.log2(triangle_count/20)
+        triangle_area = np.sqrt(3) / 4. * (cell_width * 1e3)**2
+        triangle_count = earth_area / triangle_area
+        subdivisions = 0.5 * np.log2(triangle_count / 20)
         subdivisions = max(0, int(np.round(subdivisions)))
 
         return subdivisions
@@ -520,7 +519,7 @@ class IcosahedralMeshStep(SphericalBaseStep):
 
         # compute and save the cell widths for later use in computing mesh
         # density
-        triangle_count = 20*2**(2*subdivisions)
-        triangle_area = earth_area/triangle_count
-        cell_width = 1e-3*np.sqrt(triangle_area*4./np.sqrt(3))
+        triangle_count = 20 * 2**(2 * subdivisions)
+        triangle_area = earth_area / triangle_count
+        cell_width = 1e-3 * np.sqrt(triangle_area * 4. / np.sqrt(3))
         return cell_width
