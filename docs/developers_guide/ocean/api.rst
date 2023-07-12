@@ -87,6 +87,10 @@ drying_slope
 
    DryingSlope
 
+   decomp.Decomp
+   decomp.Decomp.configure
+   decomp.Decomp.validate
+
    default.Default
    default.Default.configure
    default.Default.validate

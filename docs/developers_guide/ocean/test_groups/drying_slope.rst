@@ -82,6 +82,21 @@ two cases at different values of ``config_Rayleigh_damping_coeff``, 0.0025 and
 value of the implicit bottom drag coefficient. 
 
 
+.. _dev_ocean_drying_slope_decomp:
+
+decomp
+------
+
+The :py:class:`compass.ocean.tests.drying_slope.decomp.Decomp`
+test performs two 12-hour runs on 1 and 12 cores, respectively.
+:ref:`dev_validation` is performed by comparing the output of the two runs.
+This class accepts resolution and coordinate type ``coord_type`` as arguments.
+Both ``sigma`` and ``single_layer`` coordinate types are supported. For
+``sigma`` coordinates, this case is hard-coded to run with
+ ``config_Rayleigh_damping_coeff`` equal to 0.01. The ``single_layer`` case
+runs at one value of the implicit bottom drag coefficient. 
+
+
 .. _dev_ocean_drying_slope_ramp:
 
 ramp
