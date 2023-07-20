@@ -1,17 +1,18 @@
-from compass.step import Step
-
-import netCDF4
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
-import matplotlib.gridspec as gridspec
-import numpy as np
 import datetime
-import cartopy.crs as ccrs
-import cartopy.feature as cfeature
-from importlib import resources
-from scipy import spatial
 import json
 import os
+from importlib import resources
+
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
+import matplotlib.dates as mdates
+import matplotlib.gridspec as gridspec
+import matplotlib.pyplot as plt
+import netCDF4
+import numpy as np
+from scipy import spatial
+
+from compass.step import Step
 
 
 class Analysis(Step):
@@ -101,7 +102,7 @@ class Analysis(Step):
         data['datetime'] = np.asarray(data['datetime'], dtype='O')
         data['lon'] = np.degrees(
             pointstats_nc.variables['lonCellPointStats'][:])
-        data['lon'] = np.mod(data['lon']+180.0, 360.0) - 180.0
+        data['lon'] = np.mod(data['lon'] + 180.0, 360.0) - 180.0
         data['lat'] = np.degrees(
             pointstats_nc.variables['latCellPointStats'][:])
         data['ssh'] = pointstats_nc.variables['sshPointStats'][:]
@@ -147,7 +148,7 @@ class Analysis(Step):
 
         # Convert observation data and replace fill values with nan
         obs_data['ssh'] = np.asarray(obs_data['ssh'])
-        obs_data['ssh'] = obs_data['ssh'].astype(np.float)*convert
+        obs_data['ssh'] = obs_data['ssh'].astype(float) * convert
         fill_val = 99.0
         obs_data['ssh'][obs_data['ssh'] >= fill_val] = np.nan
 
@@ -214,8 +215,8 @@ class Analysis(Step):
 
                 # Plot observation station location
                 ax1 = fig.add_subplot(gs[0, 0], projection=ccrs.PlateCarree())
-                ax1.set_extent([sta_lon-10.0, sta_lon+10.00,
-                               sta_lat-7.0, sta_lat+7.0],
+                ax1.set_extent([sta_lon - 10.0, sta_lon + 10.00,
+                               sta_lat - 7.0, sta_lat + 7.0],
                                crs=ccrs.PlateCarree())
                 ax1.add_feature(cfeature.LAND, zorder=100)
                 ax1.add_feature(cfeature.LAKES, alpha=0.5, zorder=101)
@@ -224,8 +225,8 @@ class Analysis(Step):
 
                 # Plot local observation station location
                 ax2 = fig.add_subplot(gs[0, 1], projection=ccrs.PlateCarree())
-                ax2.set_extent([sta_lon-2.5, sta_lon+2.5,
-                               sta_lat-1.75, sta_lat+1.75],
+                ax2.set_extent([sta_lon - 2.5, sta_lon + 2.5,
+                               sta_lat - 1.75, sta_lat + 1.75],
                                crs=ccrs.PlateCarree())
                 ax2.add_feature(cfeature.LAND, zorder=100)
                 ax2.add_feature(cfeature.LAKES, alpha=0.5, zorder=101)
@@ -246,15 +247,15 @@ class Analysis(Step):
                     # Plot output point location
                     ax1.plot(data[run]['lon'][idx],
                              data[run]['lat'][idx],
-                             'C'+str(i+1)+'o')
+                             'C' + str(i + 1) + 'o')
                     ax2.plot(data[run]['lon'][idx],
                              data[run]['lat'][idx],
-                             'C'+str(i+1)+'o')
+                             'C' + str(i + 1) + 'o')
 
                     # Plot modelled data
                     l2, = ax3.plot(data[run]['datetime'],
                                    data[run]['ssh'][:, idx],
-                                   'C'+str(i+1)+'-')
+                                   'C' + str(i + 1) + '-')
                     labels.append(run)
                     lines.append(l2)
 
@@ -268,7 +269,7 @@ class Analysis(Step):
                 lgd = plt.legend(lines, labels, loc=9,
                                  bbox_to_anchor=(0.5, -0.5),
                                  ncol=3, fancybox=False, edgecolor='k')
-                st = plt.suptitle('Station '+sta, y=1.025, fontsize=16)
+                st = plt.suptitle('Station ' + sta, y=1.025, fontsize=16)
                 fig.tight_layout()
                 fig.savefig(f'{obs}_plots/{sta}.png', bbox_inches='tight',
                             bbox_extra_artists=(lgd, st,))
