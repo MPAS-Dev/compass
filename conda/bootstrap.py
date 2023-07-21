@@ -426,10 +426,19 @@ def build_spack_env(config, update_spack, machine, compiler, mpi,  # noqa: C901
     if petsc != 'None':
         specs.append(f'"petsc@{petsc}+mpi+batch"')
 
+    custom_spack = ''
     if scorpio != 'None':
         specs.append(
             f'"scorpio'
             f'@{scorpio}+pnetcdf~timing+internal-timing~tools+malloc"')
+        # make sure scorpio, not esmf, libraries are linked
+        lib_path = f'{spack_branch_base}/var/spack/environments/' \
+                   f'{spack_env}/.spack-env/view/lib'
+        scorpio_lib_path = '$(spack find --format "{prefix}" scorpio)'
+        custom_spack = \
+            f'{custom_spack}' \
+            f'ln -sfn {scorpio_lib_path}/lib/libpioc.a {lib_path}\n' \
+            f'ln -sfn {scorpio_lib_path}/lib/libpiof.a {lib_path}\n'
 
     if parallelio != 'None':
         specs.append(
@@ -459,7 +468,8 @@ def build_spack_env(config, update_spack, machine, compiler, mpi,  # noqa: C901
                        machine=machine, config_file=machine_config,
                        include_e3sm_lapack=include_e3sm_lapack,
                        include_e3sm_hdf5_netcdf=e3sm_hdf5_netcdf,
-                       yaml_template=yaml_template, tmpdir=tmpdir)
+                       yaml_template=yaml_template, tmpdir=tmpdir,
+                       custom_spack=custom_spack)
 
         # remove ESMC/ESMF include files that interfere with MPAS time keeping
         include_path = f'{spack_branch_base}/var/spack/environments/' \
