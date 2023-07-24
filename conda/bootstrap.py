@@ -185,11 +185,6 @@ def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
     else:
         config.set('deploy', 'albany', 'None')
 
-    if args.with_netlib_lapack:
-        lib_suffix = f'{lib_suffix}_netlib_lapack'
-    else:
-        config.set('deploy', 'lapack', 'None')
-
     if args.with_petsc:
         lib_suffix = f'{lib_suffix}_petsc'
         log_message(
@@ -198,6 +193,7 @@ def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
         args.without_openmp = True
     else:
         config.set('deploy', 'petsc', 'None')
+        config.set('deploy', 'lapack', 'None')
 
     activ_suffix = f'{activ_suffix}{lib_suffix}'
 
@@ -1039,7 +1035,6 @@ def main():  # noqa: C901
             check_env(script_filename, conda_env_name, logger)
 
         if env_type == 'release' and not (args.with_albany or
-                                          args.with_netlib_lapack or
                                           args.with_petsc):
             # make a symlink to the activation script
             link = os.path.join(activ_path,

@@ -89,7 +89,7 @@ If you are on one of the :ref:`dev_supported_machines`, run:
 
     ./conda/configure_compass_env.py --conda <base_path_to_install_or_update_conda> \
         -c <compiler> [--mpi <mpi>] [-m <machine>] [--with_albany] \
-        [--with_netlib_lapack] [--with_petsc]
+        [--with_petsc]
 
 The ``<base_path_to_install_or_update_conda>`` is typically ``~/mambaforge``.
 This is the location where you would like to install Mambaforge or where it is
@@ -125,8 +125,8 @@ will be linked in to MPAS-Ocean.
 Environments with PETSc and Netlib-LAPACK
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you are working with MPAS-Ocean test cases that need PETSC and
-Netlib-LAPACK, you should specify ``--with_petsc --with_netlib_lapack`` to
+If you are working with MPAS-Ocean test cases that need PETSc and
+Netlib-LAPACK, you should specify ``--with_petsc`` to
 point to Spack environments where these libraries are included.  Appropriate
 environment variables for pointing to these libraries will be build into the
 resulting load script (see below).
@@ -192,7 +192,7 @@ you, this script will also:
 * with the ``--with_albany`` flag, creates or uses an existing Spack
   environment that includes Albany and Trilinos.
 
-* with the ``--with_petsc --with_netlib_lapack`` flags, creates or uses an
+* with the ``--with_petsc`` flag, creates or uses an
   existing Spack environment that includes PETSc and Netlib-LAPACK.
 
 * make an activation script called ``load_*.sh``, where the details of the

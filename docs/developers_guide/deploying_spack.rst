@@ -229,8 +229,8 @@ discussed below.
 Testing spack with PETSc (and Netlib LAPACK)
 --------------------------------------------
 
-If you want to build PETSc (and Netlib LAPACK), use the ``--with_petsc`` and
-``--with_netlib_lapack`` flags.  Currently, this only works with some
+If you want to build PETSc (and Netlib LAPACK), use the ``--with_petsc`` flag.
+Currently, this only works with some
 compilers, but that may be more that I was trying to limit the amount of work
 for the compass support team.  There is a file,
 `petsc_supported.txt <https://github.com/MPAS-Dev/compass/blob/main/conda/petsc_supported.txt>`_,
@@ -249,10 +249,10 @@ Here is an example:
         --spack /lcrc/group/e3sm/${USER}/spack_test \
         --tmpdir ${TMPDIR} \
         --compiler intel gnu \
-        --mpi openmpi openmpi \
-        --with_netlib_lapack \
+        --mpi openmpi \
         --with_petsc \
-        --recreate
+        --recreate \
+        --verbose
 
 Testing spack with Albany
 -------------------------
@@ -383,7 +383,7 @@ branch.
 .. code-block:: bash
 
     # source whichever load script is appropriate
-    source load_dev_compass_1.2.0-alpha.5_chrysalis_intel_openmpi_netlib_lapack_petsc.sh
+    source load_dev_compass_1.2.0-alpha.5_chrysalis_intel_openmpi_petsc.sh
     git submodule update --init
     cd E3SM-Project
     git remote add scalandr/E3SM git@github.com:scalandr/E3SM.git
@@ -473,7 +473,7 @@ Deploying spack with PETSc (and Netlib LAPACK)
         --update_spack \
         --tmpdir ${TMPDIR} \
         --compiler intel gnu \
-        --mpi openmpi openmpi \
-        --with_netlib_lapack \
+        --mpi openmpi \
         --with_petsc \
-        --recreate
+        --recreate \
+        --verbose
