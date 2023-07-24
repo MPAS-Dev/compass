@@ -357,7 +357,7 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
 
     # cull the mesh based on the land mask
     dsCulledMesh = cull(dsBaseMesh, dsMask=dsLandMask,
-                        dsPreserve=dsPreserve, logger=logger)
+                        dsPreserve=dsPreserve, logger=logger, dir='.')
 
     # create a mask for the flood fill seed points
     dsSeedMask = compute_mpas_flood_fill_mask(dsMesh=dsCulledMesh,
@@ -366,7 +366,8 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
 
     # cull the mesh a second time using a flood fill from the seed points
     dsCulledMesh = cull(dsCulledMesh, dsInverse=dsSeedMask,
-                        graphInfoFileName='culled_graph.info', logger=logger)
+                        graphInfoFileName='culled_graph.info', logger=logger,
+                        dir='.')
     write_netcdf(dsCulledMesh, 'culled_mesh.nc')
 
     if critical_passages:
@@ -408,7 +409,8 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
 
         write_netcdf(dsLandIceMask, 'land_ice_mask.nc')
 
-        dsLandIceCulledMesh = cull(dsCulledMesh, dsMask=dsMask, logger=logger)
+        dsLandIceCulledMesh = cull(dsCulledMesh, dsMask=dsMask, logger=logger,
+                                   dir='.')
         write_netcdf(dsLandIceCulledMesh, 'no_ISC_culled_mesh.nc')
 
     extract_vtk(ignore_time=True, dimension_list=['maxEdges='],
