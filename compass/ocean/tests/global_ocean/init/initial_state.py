@@ -139,7 +139,7 @@ class InitialState(Step):
         Get resources at setup from config options
         """
         self._get_resources()
-        rx1_max = self.config.get_float('global_ocean', 'rx1_max')
+        rx1_max = self.config.getfloat('global_ocean', 'rx1_max')
         self.add_namelist_options({'config_rx1_max': f'{rx1_max}'},
                                   mode='init')
 
@@ -154,7 +154,7 @@ class InitialState(Step):
         """
         Update the Haney number at runtime based on the config option.
         """
-        rx1_max = self.config.get_float('global_ocean', 'rx1_max')
+        rx1_max = self.config.getfloat('global_ocean', 'rx1_max')
         self.update_namelist_at_runtime({'config_rx1_max': f'{rx1_max}'})
 
     def run(self):
