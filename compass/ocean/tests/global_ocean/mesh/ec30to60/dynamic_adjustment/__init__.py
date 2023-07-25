@@ -34,13 +34,13 @@ class EC30to60DynamicAdjustment(DynamicAdjustment):
             The time integrator to use for the forward run
         """
         if time_integrator != 'split_explicit':
-            raise ValueError('{} dynamic adjustment not defined for {}'.format(
-                mesh.mesh_name, time_integrator))
+            raise ValueError(f'{mesh.mesh_name} dynamic adjustment not '
+                             f'defined for {time_integrator}')
 
         restart_times = ['0001-01-11_00:00:00', '0001-01-31_00:00:00',
                          '0001-02-10_00:00:00']
         restart_filenames = [
-            'restarts/rst.{}.nc'.format(restart_time.replace(':', '.'))
+            f'restarts/rst.{restart_time.replace(":", ".")}.nc'
             for restart_time in restart_times]
 
         super().__init__(test_group=test_group, mesh=mesh, init=init,
@@ -76,7 +76,7 @@ class EC30to60DynamicAdjustment(DynamicAdjustment):
         step.add_streams_file(module, 'streams.template',
                               template_replacements=stream_replacements)
 
-        step.add_output_file(filename='../{}'.format(restart_filenames[0]))
+        step.add_output_file(filename=f'../{restart_filenames[0]}')
         self.add_step(step)
 
         # second step
@@ -90,7 +90,7 @@ class EC30to60DynamicAdjustment(DynamicAdjustment):
             'config_dt': "'00:15:00'",
             'config_btr_dt': "'00:00:10'",
             'config_do_restart': '.true.',
-            'config_start_time': "'{}'".format(restart_times[0])}
+            'config_start_time': f"'{restart_times[0]}'"}
         namelist_options.update(shared_options)
         step.add_namelist_options(namelist_options)
 
@@ -100,8 +100,8 @@ class EC30to60DynamicAdjustment(DynamicAdjustment):
         step.add_streams_file(module, 'streams.template',
                               template_replacements=stream_replacements)
 
-        step.add_input_file(filename='../{}'.format(restart_filenames[0]))
-        step.add_output_file(filename='../{}'.format(restart_filenames[1]))
+        step.add_input_file(filename=f'../{restart_filenames[0]}')
+        step.add_output_file(filename=f'../{restart_filenames[1]}')
         self.add_step(step)
 
         # final step
@@ -115,7 +115,7 @@ class EC30to60DynamicAdjustment(DynamicAdjustment):
             'config_dt': "'00:30:00'",
             'config_btr_dt': "'00:00:10'",
             'config_do_restart': '.true.',
-            'config_start_time': "'{}'".format(restart_times[1])}
+            'config_start_time': f"'{restart_times[1]}'"}
         namelist_options.update(shared_options)
         step.add_namelist_options(namelist_options)
 
@@ -125,8 +125,8 @@ class EC30to60DynamicAdjustment(DynamicAdjustment):
         step.add_streams_file(module, 'streams.template',
                               template_replacements=stream_replacements)
 
-        step.add_input_file(filename='../{}'.format(restart_filenames[1]))
-        step.add_output_file(filename='../{}'.format(restart_filenames[2]))
+        step.add_input_file(filename=f'../{restart_filenames[1]}')
+        step.add_output_file(filename=f'../{restart_filenames[2]}')
         step.add_output_file(filename='output.nc')
         self.add_step(step)
 
