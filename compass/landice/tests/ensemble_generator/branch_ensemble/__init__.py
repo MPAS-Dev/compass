@@ -1,5 +1,8 @@
 import os
+import pickle
 import sys
+
+import numpy as np
 
 from compass.landice.tests.ensemble_generator.branch_ensemble.branch_run import (  # noqa
     BranchRun,
@@ -65,10 +68,21 @@ class BranchEnsemble(TestCase):
         self.start_run = section.getint('start_run')
         self.end_run = section.getint('end_run')
 
+        # Determine whether to only set up filtered runs
+        self.set_up_filtered_only = section.getboolean('set_up_filtered_only')
+        self.ensemble_pickle_file = section.get('ensemble_pickle_file')
+        if self.set_up_filtered_only:
+            with open(self.ensemble_pickle_file, 'rb') as f:
+                [param_info, qoi_info] = pickle.load(f)
+            filtered_runs = np.isfinite(qoi_info['VAF change']['values'])
+        else:
+            filtered_runs = np.ones((self.end_run + 1,))
+
         for run_num in range(self.start_run, self.end_run + 1):
             run_name = f'run{run_num:03}'
-            if os.path.isfile(os.path.join(control_test_dir, run_name,
-                                           f'rst.{branch_year}-01-01.nc')):
+            if (filtered_runs[run_num] and
+                os.path.isfile(os.path.join(control_test_dir, run_name,
+                                            f'rst.{branch_year}-01-01.nc'))):
                 print(f"Adding {run_name}")
                 # use this run
                 self.add_step(BranchRun(test_case=self, run_num=run_num))
