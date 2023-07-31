@@ -112,11 +112,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.hurricane</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
-
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.hurricane.mesh</span> <span class="kn">import</span> <span class="n">Mesh</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests.hurricane.forward</span> <span class="kn">import</span> <span class="n">Forward</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.hurricane.init</span> <span class="kn">import</span> <span class="n">Init</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.hurricane.forward</span> <span class="kn">import</span> <span class="n">Forward</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.hurricane.mesh</span> <span class="kn">import</span> <span class="n">Mesh</span>
+<span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
 
 
 <div class="viewcode-block" id="Hurricane"><a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.Hurricane.html#compass.ocean.tests.hurricane.Hurricane">[docs]</a><span class="k">class</span> <span class="nc">Hurricane</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
@@ -133,16 +132,26 @@
 
         <span class="n">storm</span> <span class="o">=</span> <span class="s1">&#39;sandy&#39;</span>
         <span class="n">mesh_name</span> <span class="o">=</span> <span class="s1">&#39;DEQU120at30cr10rr2&#39;</span>
-        <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
 
-        <span class="n">init</span> <span class="o">=</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">storm</span><span class="o">=</span><span class="n">storm</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">use_lts</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">]:</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">Forward</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                                   <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
-                                   <span class="n">storm</span><span class="o">=</span><span class="n">storm</span><span class="p">,</span>
-                                   <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">))</span></div></div>
+            <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                        <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">,</span>
+                        <span class="n">use_lts</span><span class="o">=</span><span class="n">use_lts</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+
+            <span class="n">init</span> <span class="o">=</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                        <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
+                        <span class="n">storm</span><span class="o">=</span><span class="n">storm</span><span class="p">,</span>
+                        <span class="n">use_lts</span><span class="o">=</span><span class="n">use_lts</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+
+            <span class="n">forward</span> <span class="o">=</span> <span class="n">Forward</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                              <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
+                              <span class="n">storm</span><span class="o">=</span><span class="n">storm</span><span class="p">,</span>
+                              <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
+                              <span class="n">use_lts</span><span class="o">=</span><span class="n">use_lts</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">forward</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

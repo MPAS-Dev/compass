@@ -10,12 +10,22 @@ the User's Guide.
 mesh
 ----
 The class
-:py:class:`compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2Mesh`
+:py:class:`compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh`
 defines a step for generating the global regionally refined mesh for the test group. 
-It inherits from the :py:class:`compass.ocean.tests.global_ocean.mesh.mesh.MeshStep`
-and provides the :py:func:`compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2Mesh.build_cell_width_lat_lon()`
+It inherits from the :py:class:`compass.ocean.mesh.floodplain.FloodplainMeshStep`
+and provides the :py:func:`compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh.build_cell_width_lat_lon()`
 method to specify the mesh resolution function using the :py:func:`mpas_tools.ocean.coastal_tools.coastal_refined_mesh()`
 function.
+
+lts_regions
+-----------
+The class :py:class:`compass.ocean.tests.hurricane.lts.mesh.lts_regions.LTSRegionsStep` creates a 
+copy of the culled mesh file that additionally includes an array called ``LTSRegion``.
+This array has appropriate flags that determine what time-step should be used on
+a certain cell of the mesh, according to the local-time stepping scheme.
+The ``graph.info`` file is also copied and modified to address proper load balancing.
+The aforementioned class receives the
+:py:class:`compass.ocean.mesh.cull.CullMeshStep` as input.
 
 initial_state
 -------------
@@ -37,6 +47,13 @@ create_pointstats_file
 The class :py:class:`compass.ocean.tests.hurricane.init.create_pointstats_file.CreatePointstatsFile`
 defines a step to create the input file for the MPAS-Ocean pointWiseStats
 analysis member based on station locations which have observed data.
+
+topographic_wave_drag
+---------------------
+The class :py:class:`compass.ocean.tests.hurricane.lts.init.topographic_wave_drag.ComputeTopographicWaveDrag`
+defines a step for interpolating the reciprocal of the ``r_inv`` to the mesh edges.
+This step is needed to include the contribution of the topographic wave drag
+in the model momentum tendency. 
 
 forward
 -------

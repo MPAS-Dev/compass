@@ -113,18 +113,20 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.hurricane.mesh</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2</span> \
-    <span class="kn">import</span> <span class="nn">DEQU120at30cr10rr2BaseMesh</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.ocean.mesh.cull</span> <span class="kn">import</span> <span class="n">CullMeshStep</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.hurricane.configure</span> <span class="kn">import</span> <span class="n">configure_hurricane</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.mesh.cull</span> <span class="kn">import</span> <span class="n">CullMeshStep</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.hurricane.lts.mesh.lts_regions</span> <span class="kn">import</span> <span class="n">LTSRegionsStep</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DEQU120at30cr10rr2BaseMesh</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
 
 
 <div class="viewcode-block" id="Mesh"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.mesh.Mesh.html#compass.ocean.tests.hurricane.mesh.Mesh">[docs]</a><span class="k">class</span> <span class="nc">Mesh</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A test case for creating a global MPAS-Ocean mesh</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="Mesh.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.mesh.Mesh.html#compass.ocean.tests.hurricane.mesh.Mesh.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">):</span>
+<div class="viewcode-block" id="Mesh.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.mesh.Mesh.html#compass.ocean.tests.hurricane.mesh.Mesh.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">use_lts</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create test case for creating a global MPAS-Ocean mesh</span>
 
@@ -135,9 +137,17 @@
 
 <span class="sd">        mesh_name : str</span>
 <span class="sd">            The name of the mesh</span>
+
+<span class="sd">        use_lts: bool</span>
+<span class="sd">            Whether local time-stepping is used</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh_name</span> <span class="o">=</span> <span class="n">mesh_name</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;mesh&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_lts</span> <span class="o">=</span> <span class="n">use_lts</span>
+
+        <span class="k">if</span> <span class="n">use_lts</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;mesh_lts&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;mesh&#39;</span>
         <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
@@ -158,10 +168,17 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">base_mesh_step</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">CullMeshStep</span><span class="p">(</span>
+        <span class="n">cull_mesh_step</span> <span class="o">=</span> <span class="n">CullMeshStep</span><span class="p">(</span>
             <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_mesh_step</span><span class="o">=</span><span class="n">base_mesh_step</span><span class="p">,</span>
             <span class="n">with_ice_shelf_cavities</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">do_inject_bathymetry</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">preserve_floodplain</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span></div>
+            <span class="n">preserve_floodplain</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">cull_mesh_step</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">use_lts</span><span class="p">:</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">LTSRegionsStep</span><span class="p">(</span>
+                          <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">cull_mesh_step</span><span class="o">=</span><span class="n">cull_mesh_step</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Mesh.configure"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.mesh.Mesh.configure.html#compass.ocean.tests.hurricane.mesh.Mesh.configure">[docs]</a>    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>

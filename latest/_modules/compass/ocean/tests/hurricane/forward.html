@@ -113,11 +113,12 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.hurricane.forward</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.hurricane.forward.forward</span> <span class="kn">import</span> <span class="n">ForwardStep</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.hurricane.analysis</span> <span class="kn">import</span> <span class="n">Analysis</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.hurricane.configure</span> <span class="kn">import</span> <span class="n">configure_hurricane</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.hurricane.forward.forward</span> <span class="kn">import</span> <span class="n">ForwardStep</span>
+<span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
 
 
 <div class="viewcode-block" id="Forward"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.forward.Forward.html#compass.ocean.tests.hurricane.forward.Forward">[docs]</a><span class="k">class</span> <span class="nc">Forward</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
@@ -132,7 +133,7 @@
 <span class="sd">    init : compass.ocean.tests.hurricane.init.Init</span>
 <span class="sd">        The test case that produces the initial condition for this run</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="Forward.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.forward.Forward.html#compass.ocean.tests.hurricane.forward.Forward.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">storm</span><span class="p">,</span> <span class="n">init</span><span class="p">):</span>
+<div class="viewcode-block" id="Forward.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.forward.Forward.html#compass.ocean.tests.hurricane.forward.Forward.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">storm</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">use_lts</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create test case</span>
 
@@ -149,15 +150,26 @@
 
 <span class="sd">        init : compass.ocean.tests.hurricane.init.Init</span>
 <span class="sd">            The test case that produces the initial condition for this run</span>
+
+<span class="sd">        use_lts : bool</span>
+<span class="sd">            Whether local time-stepping is to be used</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">mesh_name</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">mesh_name</span>
-        <span class="n">subdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">storm</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">use_lts</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">storm</span><span class="si">}</span><span class="s1">_lts&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">storm</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">,</span>
-                         <span class="n">name</span><span class="o">=</span><span class="n">storm</span><span class="p">)</span>
+                         <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh</span>
 
-        <span class="n">step</span> <span class="o">=</span> <span class="n">ForwardStep</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">)</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="n">ForwardStep</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                           <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
+                           <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
+                           <span class="n">use_lts</span><span class="o">=</span><span class="n">use_lts</span><span class="p">)</span>
 
         <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;pointwiseStats.nc&#39;</span><span class="p">)</span>

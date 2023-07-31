@@ -164,6 +164,7 @@
 <span class="sd">        storm : str</span>
 <span class="sd">            The name of the storm to be plotted</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;analysis&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;pointwiseStats.nc&#39;</span><span class="p">,</span>
@@ -183,7 +184,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">max_date</span> <span class="o">=</span> <span class="s1">&#39;2012 11 04 00 00&#39;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pointstats_file</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;MPAS-O&#39;</span><span class="p">:</span> <span class="s1">&#39;./pointwiseStats.nc&#39;</span><span class="p">}</span>
 
-            <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">storm</span><span class="si">}</span><span class="s1">_stations.json&#39;</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;sandy_stations.json&#39;</span>
             <span class="k">with</span> <span class="n">resources</span><span class="o">.</span><span class="n">open_text</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span><span class="k">as</span> <span class="n">stations_file</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">observations</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stations_file</span><span class="p">)</span>
 
@@ -191,12 +192,12 @@
                 <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_data&#39;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
                     <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_stations.txt&#39;</span><span class="p">,</span>
-                    <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">storm</span><span class="si">}</span><span class="s1">_stations/</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_stations.txt&#39;</span><span class="p">,</span>
+                    <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;sandy_stations/</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_stations.txt&#39;</span><span class="p">,</span>
                     <span class="n">database</span><span class="o">=</span><span class="s1">&#39;hurricane&#39;</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">sta</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="p">[</span><span class="n">obs</span><span class="p">]:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
                         <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_data/</span><span class="si">{</span><span class="n">sta</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">,</span>
-                        <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">storm</span><span class="si">}</span><span class="s1">_validation/&#39;</span>
+                        <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;sandy_validation/&#39;</span>
                                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_stations/</span><span class="si">{</span><span class="n">sta</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">,</span>
                         <span class="n">database</span><span class="o">=</span><span class="s1">&#39;hurricane&#39;</span><span class="p">)</span></div>
 

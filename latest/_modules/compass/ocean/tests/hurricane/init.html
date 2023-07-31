@@ -115,13 +115,18 @@
   <h1>Source code for compass.ocean.tests.hurricane.init</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 
-<span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.hurricane.init.initial_state</span> <span class="kn">import</span> <span class="n">InitialState</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.hurricane.init.create_pointstats_file</span> \
-    <span class="kn">import</span> <span class="nn">CreatePointstatsFile</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.hurricane.init.interpolate_atm_forcing</span> \
-    <span class="kn">import</span> <span class="nn">InterpolateAtmForcing</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.hurricane.configure</span> <span class="kn">import</span> <span class="n">configure_hurricane</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.hurricane.init.create_pointstats_file</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CreatePointstatsFile</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.hurricane.init.initial_state</span> <span class="kn">import</span> <span class="n">InitialState</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.hurricane.init.interpolate_atm_forcing</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">InterpolateAtmForcing</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.hurricane.lts.init.topographic_wave_drag</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ComputeTopographicWaveDrag</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
 
 
 <div class="viewcode-block" id="Init"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.init.Init.html#compass.ocean.tests.hurricane.init.Init">[docs]</a><span class="k">class</span> <span class="nc">Init</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
@@ -133,7 +138,7 @@
 <span class="sd">    mesh : compass.ocean.tests.hurricane.mesh.Mesh</span>
 <span class="sd">        The test case that creates the mesh used by this test case</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="Init.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.init.Init.html#compass.ocean.tests.hurricane.init.Init.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">storm</span><span class="p">):</span>
+<div class="viewcode-block" id="Init.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.init.Init.html#compass.ocean.tests.hurricane.init.Init.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">storm</span><span class="p">,</span> <span class="n">use_lts</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the test case</span>
 
@@ -147,17 +152,30 @@
 
 <span class="sd">        storm : str</span>
 <span class="sd">            The name of the storm to be run</span>
+
+<span class="sd">        use_lts : bool</span>
+<span class="sd">            Whether local time-stepping is used</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;init&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_lts</span> <span class="o">=</span> <span class="n">use_lts</span>
+
+        <span class="k">if</span> <span class="n">use_lts</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;init_lts&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;init&#39;</span>
         <span class="n">mesh_name</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">mesh_name</span>
         <span class="n">subdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">InitialState</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">InitialState</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">use_lts</span><span class="o">=</span><span class="n">use_lts</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">InterpolateAtmForcing</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
                                             <span class="n">storm</span><span class="o">=</span><span class="n">storm</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">use_lts</span><span class="p">:</span>
+            <span class="n">topo</span> <span class="o">=</span> <span class="n">ComputeTopographicWaveDrag</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">topo</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">CreatePointstatsFile</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
                                            <span class="n">storm</span><span class="o">=</span><span class="n">storm</span><span class="p">))</span></div>
 

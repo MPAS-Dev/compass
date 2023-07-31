@@ -130,8 +130,12 @@
 
 <span class="sd">    init : compass.ocean.tests.hurricane.init.Init</span>
 <span class="sd">        The test case that produces the initial condition for this run</span>
+
+<span class="sd">    use_lts: bool</span>
+<span class="sd">        Whether local time-stepping is used</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="ForwardStep.__init__"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.forward.forward.ForwardStep.html#compass.ocean.tests.hurricane.forward.forward.ForwardStep.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ForwardStep.__init__"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.forward.forward.ForwardStep.html#compass.ocean.tests.hurricane.forward.forward.ForwardStep.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">use_lts</span><span class="p">,</span>
+                 <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new step</span>
 
@@ -146,6 +150,9 @@
 <span class="sd">        init : compass.ocean.tests.hurricane.init.Init</span>
 <span class="sd">            The test case that produces the initial condition for this run</span>
 
+<span class="sd">        use_lts : bool</span>
+<span class="sd">            Whether local time-stepping is to be used</span>
+
 <span class="sd">        name : str, optional</span>
 <span class="sd">            the name of the step</span>
 
@@ -154,15 +161,26 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init</span> <span class="o">=</span> <span class="n">init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_lts</span> <span class="o">=</span> <span class="n">use_lts</span>
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
-            <span class="s1">&#39;compass.ocean.tests.hurricane.forward&#39;</span><span class="p">,</span> <span class="s1">&#39;namelist.ocean&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
-            <span class="s1">&#39;compass.ocean.tests.hurricane.forward&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.ocean&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">use_lts</span><span class="p">:</span>
 
-        <span class="n">mesh_package</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">package</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">mesh_package</span><span class="p">,</span> <span class="s1">&#39;namelist.ocean&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
+                <span class="s1">&#39;compass.ocean.tests.hurricane.lts.forward&#39;</span><span class="p">,</span> <span class="s1">&#39;namelist.ocean&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
+                <span class="s1">&#39;compass.ocean.tests.hurricane.lts.forward&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.ocean&#39;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
+                <span class="s1">&#39;compass.ocean.tests.hurricane.forward&#39;</span><span class="p">,</span> <span class="s1">&#39;namelist.ocean&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
+                <span class="s1">&#39;compass.ocean.tests.hurricane.forward&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.ocean&#39;</span><span class="p">)</span>
+
+            <span class="n">mesh_package</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">package</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">mesh_package</span><span class="p">,</span> <span class="s1">&#39;namelist.ocean&#39;</span><span class="p">)</span>
 
         <span class="n">initial_state_target</span> <span class="o">=</span> \
             <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/initial_state/ocean.nc&#39;</span>
@@ -171,6 +189,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;atmospheric_forcing.nc&#39;</span><span class="p">,</span>
             <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/interpolate/atmospheric_forcing.nc&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">use_lts</span><span class="p">:</span>
+            <span class="n">file_in</span> <span class="o">=</span> <span class="s1">&#39;topographic_wave_drag.nc&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;topographic_wave_drag.nc&#39;</span><span class="p">,</span>
+                <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/topodrag/</span><span class="si">{</span><span class="n">file_in</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;points.nc&#39;</span><span class="p">,</span>
             <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/pointstats/points.nc&#39;</span><span class="p">)</span>

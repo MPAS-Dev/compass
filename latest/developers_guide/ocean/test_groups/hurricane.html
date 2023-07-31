@@ -73,9 +73,11 @@
 <li class="toctree-l3"><a class="reference internal" href="gotm.html">gotm</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">hurricane</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#mesh">mesh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lts-regions">lts_regions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#initial-state">initial_state</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#interpolate-atm-forcing">interpolate_atm_forcing</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#create-pointstats-file">create_pointstats_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#topographic-wave-drag">topographic_wave_drag</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#forward">forward</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#analysis">analysis</a></li>
 </ul>
@@ -158,12 +160,22 @@ the User’s Guide.</p>
 <section id="mesh">
 <h2>mesh<a class="headerlink" href="#mesh" title="Permalink to this heading">¶</a></h2>
 <p>The class
-<code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2Mesh</span></code>
+<a class="reference internal" href="../generated/compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh.html#compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh" title="compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh</span></code></a>
 defines a step for generating the global regionally refined mesh for the test group.
-It inherits from the <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.mesh.MeshStep</span></code>
-and provides the <code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2Mesh.build_cell_width_lat_lon()</span></code>
+It inherits from the <a class="reference internal" href="../generated/compass.ocean.mesh.floodplain.FloodplainMeshStep.html#compass.ocean.mesh.floodplain.FloodplainMeshStep" title="compass.ocean.mesh.floodplain.FloodplainMeshStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.mesh.floodplain.FloodplainMeshStep</span></code></a>
+and provides the <a class="reference internal" href="../generated/compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh.build_cell_width_lat_lon.html#compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh.build_cell_width_lat_lon" title="compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh.build_cell_width_lat_lon"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh.build_cell_width_lat_lon()</span></code></a>
 method to specify the mesh resolution function using the <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.ocean.coastal_tools.coastal_refined_mesh.html#mpas_tools.ocean.coastal_tools.coastal_refined_mesh" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.ocean.coastal_tools.coastal_refined_mesh()</span></code></a>
 function.</p>
+</section>
+<section id="lts-regions">
+<h2>lts_regions<a class="headerlink" href="#lts-regions" title="Permalink to this heading">¶</a></h2>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.hurricane.lts.mesh.lts_regions.LTSRegionsStep.html#compass.ocean.tests.hurricane.lts.mesh.lts_regions.LTSRegionsStep" title="compass.ocean.tests.hurricane.lts.mesh.lts_regions.LTSRegionsStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.hurricane.lts.mesh.lts_regions.LTSRegionsStep</span></code></a> creates a
+copy of the culled mesh file that additionally includes an array called <code class="docutils literal notranslate"><span class="pre">LTSRegion</span></code>.
+This array has appropriate flags that determine what time-step should be used on
+a certain cell of the mesh, according to the local-time stepping scheme.
+The <code class="docutils literal notranslate"><span class="pre">graph.info</span></code> file is also copied and modified to address proper load balancing.
+The aforementioned class receives the
+<a class="reference internal" href="../generated/compass.ocean.mesh.cull.CullMeshStep.html#compass.ocean.mesh.cull.CullMeshStep" title="compass.ocean.mesh.cull.CullMeshStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.mesh.cull.CullMeshStep</span></code></a> as input.</p>
 </section>
 <section id="initial-state">
 <h2>initial_state<a class="headerlink" href="#initial-state" title="Permalink to this heading">¶</a></h2>
@@ -183,6 +195,13 @@ run uses this as input to update the time varying atmospheric forcing.</p>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.hurricane.init.create_pointstats_file.CreatePointstatsFile.html#compass.ocean.tests.hurricane.init.create_pointstats_file.CreatePointstatsFile" title="compass.ocean.tests.hurricane.init.create_pointstats_file.CreatePointstatsFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.hurricane.init.create_pointstats_file.CreatePointstatsFile</span></code></a>
 defines a step to create the input file for the MPAS-Ocean pointWiseStats
 analysis member based on station locations which have observed data.</p>
+</section>
+<section id="topographic-wave-drag">
+<h2>topographic_wave_drag<a class="headerlink" href="#topographic-wave-drag" title="Permalink to this heading">¶</a></h2>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.hurricane.lts.init.topographic_wave_drag.ComputeTopographicWaveDrag.html#compass.ocean.tests.hurricane.lts.init.topographic_wave_drag.ComputeTopographicWaveDrag" title="compass.ocean.tests.hurricane.lts.init.topographic_wave_drag.ComputeTopographicWaveDrag"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.hurricane.lts.init.topographic_wave_drag.ComputeTopographicWaveDrag</span></code></a>
+defines a step for interpolating the reciprocal of the <code class="docutils literal notranslate"><span class="pre">r_inv</span></code> to the mesh edges.
+This step is needed to include the contribution of the topographic wave drag
+in the model momentum tendency.</p>
 </section>
 <section id="forward">
 <h2>forward<a class="headerlink" href="#forward" title="Permalink to this heading">¶</a></h2>
