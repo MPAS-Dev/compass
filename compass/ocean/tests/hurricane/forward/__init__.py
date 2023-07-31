@@ -1,8 +1,9 @@
-from compass.testcase import TestCase
-from compass.ocean.tests.hurricane.forward.forward import ForwardStep
+import os
+
 from compass.ocean.tests.hurricane.analysis import Analysis
 from compass.ocean.tests.hurricane.configure import configure_hurricane
-import os
+from compass.ocean.tests.hurricane.forward.forward import ForwardStep
+from compass.testcase import TestCase
 
 
 class Forward(TestCase):
@@ -17,7 +18,7 @@ class Forward(TestCase):
     init : compass.ocean.tests.hurricane.init.Init
         The test case that produces the initial condition for this run
     """
-    def __init__(self, test_group, mesh, storm, init):
+    def __init__(self, test_group, mesh, storm, init, use_lts):
         """
         Create test case
 
@@ -34,15 +35,26 @@ class Forward(TestCase):
 
         init : compass.ocean.tests.hurricane.init.Init
             The test case that produces the initial condition for this run
+
+        use_lts : bool
+            Whether local time-stepping is to be used
         """
         mesh_name = mesh.mesh_name
-        subdir = os.path.join(mesh_name, storm)
+
+        if use_lts:
+            name = f'{storm}_lts'
+        else:
+            name = storm
+        subdir = os.path.join(mesh_name, name)
         super().__init__(test_group=test_group,
                          subdir=subdir,
-                         name=storm)
+                         name=name)
         self.mesh = mesh
 
-        step = ForwardStep(test_case=self, mesh=mesh, init=init)
+        step = ForwardStep(test_case=self,
+                           mesh=mesh,
+                           init=init,
+                           use_lts=use_lts)
 
         step.add_output_file(filename='output.nc')
         step.add_output_file(filename='pointwiseStats.nc')

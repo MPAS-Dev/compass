@@ -1,15 +1,17 @@
-from compass.testcase import TestCase
-from compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2 \
-    import DEQU120at30cr10rr2BaseMesh
-from compass.ocean.tests.hurricane.configure import configure_hurricane
 from compass.ocean.mesh.cull import CullMeshStep
+from compass.ocean.tests.hurricane.configure import configure_hurricane
+from compass.ocean.tests.hurricane.lts.mesh.lts_regions import LTSRegionsStep
+from compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2 import (
+    DEQU120at30cr10rr2BaseMesh,
+)
+from compass.testcase import TestCase
 
 
 class Mesh(TestCase):
     """
     A test case for creating a global MPAS-Ocean mesh
     """
-    def __init__(self, test_group, mesh_name):
+    def __init__(self, test_group, mesh_name, use_lts):
         """
         Create test case for creating a global MPAS-Ocean mesh
 
@@ -20,9 +22,17 @@ class Mesh(TestCase):
 
         mesh_name : str
             The name of the mesh
+
+        use_lts: bool
+            Whether local time-stepping is used
         """
         self.mesh_name = mesh_name
-        name = 'mesh'
+        self.use_lts = use_lts
+
+        if use_lts:
+            name = 'mesh_lts'
+        else:
+            name = 'mesh'
         subdir = '{}/{}'.format(mesh_name, name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
@@ -43,10 +53,17 @@ class Mesh(TestCase):
 
         self.add_step(base_mesh_step)
 
-        self.add_step(CullMeshStep(
+        cull_mesh_step = CullMeshStep(
             test_case=self, base_mesh_step=base_mesh_step,
             with_ice_shelf_cavities=False, do_inject_bathymetry=True,
-            preserve_floodplain=True))
+            preserve_floodplain=True)
+
+        self.add_step(cull_mesh_step)
+
+        if use_lts:
+
+            self.add_step(LTSRegionsStep(
+                          test_case=self, cull_mesh_step=cull_mesh_step))
 
     def configure(self):
         """

@@ -14,8 +14,12 @@ class ForwardStep(Step):
 
     init : compass.ocean.tests.hurricane.init.Init
         The test case that produces the initial condition for this run
+
+    use_lts: bool
+        Whether local time-stepping is used
     """
-    def __init__(self, test_case, mesh, init, name='forward', subdir=None):
+    def __init__(self, test_case, mesh, init, use_lts,
+                 name='forward', subdir=None):
         """
         Create a new step
 
@@ -30,6 +34,9 @@ class ForwardStep(Step):
         init : compass.ocean.tests.hurricane.init.Init
             The test case that produces the initial condition for this run
 
+        use_lts : bool
+            Whether local time-stepping is to be used
+
         name : str, optional
             the name of the step
 
@@ -38,15 +45,26 @@ class ForwardStep(Step):
         """
         self.mesh = mesh
         self.init = init
+        self.use_lts = use_lts
+
         super().__init__(test_case=test_case, name=name)
 
-        self.add_namelist_file(
-            'compass.ocean.tests.hurricane.forward', 'namelist.ocean')
-        self.add_streams_file(
-            'compass.ocean.tests.hurricane.forward', 'streams.ocean')
+        if use_lts:
 
-        mesh_package = mesh.package
-        self.add_namelist_file(mesh_package, 'namelist.ocean')
+            self.add_namelist_file(
+                'compass.ocean.tests.hurricane.lts.forward', 'namelist.ocean')
+            self.add_streams_file(
+                'compass.ocean.tests.hurricane.lts.forward', 'streams.ocean')
+
+        else:
+
+            self.add_namelist_file(
+                'compass.ocean.tests.hurricane.forward', 'namelist.ocean')
+            self.add_streams_file(
+                'compass.ocean.tests.hurricane.forward', 'streams.ocean')
+
+            mesh_package = mesh.package
+            self.add_namelist_file(mesh_package, 'namelist.ocean')
 
         initial_state_target = \
             f'{init.path}/initial_state/ocean.nc'
@@ -55,6 +73,13 @@ class ForwardStep(Step):
         self.add_input_file(
             filename='atmospheric_forcing.nc',
             work_dir_target=f'{init.path}/interpolate/atmospheric_forcing.nc')
+
+        if use_lts:
+            file_in = 'topographic_wave_drag.nc'
+            self.add_input_file(
+                filename='topographic_wave_drag.nc',
+                work_dir_target=f'{init.path}/topodrag/{file_in}')
+
         self.add_input_file(
             filename='points.nc',
             work_dir_target=f'{init.path}/pointstats/points.nc')
