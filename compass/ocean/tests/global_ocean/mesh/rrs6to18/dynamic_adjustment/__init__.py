@@ -68,7 +68,7 @@ class RRS6to18DynamicAdjustment(DynamicAdjustment):
             'config_run_duration': "'00-00-00_06:00:00'",
             'config_dt': "'00:00:30'",
             'config_btr_dt': "'00:00:01'",
-            'config_Rayleigh_friction': '.true.',
+            'config_implicit_bottom_drag_type': "'constant_and_rayleigh'",
             'config_Rayleigh_damping_coeff': '1.0e-3'}
         namelist_options.update(shared_options)
         step.add_namelist_options(namelist_options)
@@ -92,7 +92,7 @@ class RRS6to18DynamicAdjustment(DynamicAdjustment):
             'config_run_duration': "'00-00-00_06:00:00'",
             'config_dt': "'00:01:00'",
             'config_btr_dt': "'00:00:02'",
-            'config_Rayleigh_friction': '.true.',
+            'config_implicit_bottom_drag_type': "'constant_and_rayleigh'",
             'config_Rayleigh_damping_coeff': '4.0e-4',
             'config_do_restart': '.true.',
             'config_start_time': f"'{restart_times[0]}'"}
@@ -119,7 +119,7 @@ class RRS6to18DynamicAdjustment(DynamicAdjustment):
             'config_run_duration': "'00-00-00_12:00:00'",
             'config_dt': "'00:02:00'",
             'config_btr_dt': "'00:00:04'",
-            'config_Rayleigh_friction': '.true.',
+            'config_implicit_bottom_drag_type': "'constant_and_rayleigh'",
             'config_Rayleigh_damping_coeff': '1.0e-4',
             'config_do_restart': '.true.',
             'config_start_time': f"'{restart_times[1]}'"}
@@ -146,7 +146,7 @@ class RRS6to18DynamicAdjustment(DynamicAdjustment):
             'config_run_duration': "'00-00-01_00:00:00'",
             'config_dt': "'00:03:00'",
             'config_btr_dt': "'00:00:06'",
-            'config_Rayleigh_friction': '.true.',
+            'config_implicit_bottom_drag_type': "'constant_and_rayleigh'",
             'config_Rayleigh_damping_coeff': '4.0e-5',
             'config_do_restart': '.true.',
             'config_start_time': f"'{restart_times[2]}'"}
@@ -173,7 +173,7 @@ class RRS6to18DynamicAdjustment(DynamicAdjustment):
             'config_run_duration': "'00-00-01_00:00:00'",
             'config_dt': "'00:04:00'",
             'config_btr_dt': "'00:00:08'",
-            'config_Rayleigh_friction': '.true.',
+            'config_implicit_bottom_drag_type': "'constant_and_rayleigh'",
             'config_Rayleigh_damping_coeff': '2.0e-5',
             'config_do_restart': '.true.',
             'config_start_time': f"'{restart_times[3]}'"}
