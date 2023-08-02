@@ -1,12 +1,11 @@
-from compass.testcase import TestCase
 from compass.landice.tests.humboldt.mesh import Mesh
+from compass.testcase import TestCase
 
 
 class MeshGen(TestCase):
     """
     The MeshGen test case for the humboldt test group simply creates the
     mesh and initial condition.
-
     """
 
     def __init__(self, test_group):
@@ -17,7 +16,6 @@ class MeshGen(TestCase):
         ----------
         test_group : compass.landice.tests.humboldt.Humboldt
             The test group that this test case belongs to
-
         """
         name = 'mesh_gen'
         subdir = name

@@ -13,6 +13,7 @@ class MeshGen(TestCase):
     def __init__(self, test_group):
         """
         Create the test case
+
         Parameters
         ----------
         test_group : compass.landice.tests.thwaites.Thwaites
