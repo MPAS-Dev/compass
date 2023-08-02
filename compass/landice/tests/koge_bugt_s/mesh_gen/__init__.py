@@ -1,5 +1,6 @@
 from compass.landice.tests.koge_bugt_s.mesh import Mesh
 from compass.testcase import TestCase
+from compass.validate import compare_variables
 
 
 class MeshGen(TestCase):
@@ -24,3 +25,13 @@ class MeshGen(TestCase):
 
         self.add_step(
             Mesh(test_case=self))
+
+    def validate(self):
+        """
+        Compare ``thickness``, ``bedTopography``, ``iceMask`` and
+        ``beta`` with a baseline if one was provided.
+        """
+        variables = ['thickness', 'bedTopography', 'iceMask',
+                     'beta']
+        compare_variables(test_case=self, variables=variables,
+                          filename1='mesh/Koge_Bugt_S.nc')
