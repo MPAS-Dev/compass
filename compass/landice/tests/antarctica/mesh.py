@@ -31,7 +31,7 @@ class Mesh(Step):
             The test case this step belongs to
 
         """
-        super().__init__(test_case=test_case, name='mesh', cpus_per_task=64,
+        super().__init__(test_case=test_case, name='mesh', cpus_per_task=128,
                          min_cpus_per_task=1)
 
         self.mesh_filename = 'Antarctica.nc'

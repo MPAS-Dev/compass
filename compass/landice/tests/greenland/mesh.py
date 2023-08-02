@@ -28,7 +28,8 @@ class Mesh(Step):
         mesh_type : str
             The resolution or mesh type of the test case
         """
-        super().__init__(test_case=test_case, name='mesh')
+        super().__init__(test_case=test_case, name='mesh', cpus_per_task=128,
+                         min_cpus_per_task=1)
 
         self.add_output_file(filename='graph.info')
         self.add_output_file(filename='GIS.nc')
