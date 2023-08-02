@@ -554,7 +554,8 @@ def build_cell_width(self, section_name, gridded_dataset,
 
 def build_mali_mesh(self, cell_width, x1, y1, geom_points,
                     geom_edges, mesh_name, section_name,
-                    gridded_dataset, projection, geojson_file=None):
+                    gridded_dataset, projection, geojson_file=None,
+                    cores=1):
     """
     Create the MALI mesh based on final cell widths determined by
     :py:func:`compass.landice.mesh.build_cell_width()`, using Jigsaw and
@@ -603,8 +604,11 @@ def build_mali_mesh(self, cell_width, x1, y1, geom_points,
         Projection to be used for setting lat-long fields.
         Likely ``'gis-gimp'`` or ``'ais-bedmap2'``
 
-    geojson_file : str
+    geojson_file : str, optional
         Name of geojson file that defines regional domain extent.
+
+    cores : int, optional
+        The number of cores to use for mask creation
     """
 
     logger = self.logger
@@ -653,8 +657,13 @@ def build_mali_mesh(self, cell_width, x1, y1, geom_points,
 
         check_call(args, logger=logger)
 
-        args = ['MpasMaskCreator.x', 'grid_preCull.nc',
-                'mask.nc', '-f', geojson_file]
+        args = ['compute_mpas_region_masks',
+                '-m', 'grid_preCull.nc',
+                '-o', 'mask.nc',
+                '-g', geojson_file,
+                '--process_count', f'{cores}',
+                '--format', mpas_tools.io.default_format,
+                '--engine', mpas_tools.io.default_engine]
 
         check_call(args, logger=logger)
 
