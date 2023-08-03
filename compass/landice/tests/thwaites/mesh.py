@@ -15,7 +15,8 @@ class Mesh(Step):
         test_case : compass.TestCase
             The test case this step belongs to
         """
-        super().__init__(test_case=test_case, name='mesh')
+        super().__init__(test_case=test_case, name='mesh', cpus_per_task=128,
+                         min_cpus_per_task=1)
 
         self.add_output_file(filename='graph.info')
         self.add_output_file(filename='Thwaites.nc')
@@ -50,7 +51,8 @@ class Mesh(Step):
             self, cell_width, x1, y1, geom_points, geom_edges,
             mesh_name=mesh_name, section_name=section_name,
             gridded_dataset='antarctica_1km_2020_10_20_ASE.nc',
-            projection='ais-bedmap2', geojson_file='thwaites_minimal.geojson')
+            projection='ais-bedmap2', geojson_file='thwaites_minimal.geojson',
+            cores=self.cpus_per_task)
 
         logger.info('creating graph.info')
         make_graph_file(mesh_filename=mesh_name,

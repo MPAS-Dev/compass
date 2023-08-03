@@ -1,5 +1,6 @@
 from compass.landice.tests.greenland.mesh import Mesh
 from compass.testcase import TestCase
+from compass.validate import compare_variables
 
 
 class MeshGen(TestCase):
@@ -13,6 +14,7 @@ class MeshGen(TestCase):
     def __init__(self, test_group):
         """
         Create the test case
+
         Parameters
         ----------
         test_group : compass.landice.tests.greenland.Greenland
@@ -25,3 +27,13 @@ class MeshGen(TestCase):
 
         self.add_step(
             Mesh(test_case=self))
+
+    def validate(self):
+        """
+        Compare ``thickness``, ``bedTopography``, ``iceMask`` and
+        ``beta`` with a baseline if one was provided.
+        """
+        variables = ['thickness', 'bedTopography', 'iceMask',
+                     'beta']
+        compare_variables(test_case=self, variables=variables,
+                          filename1='mesh/GIS.nc')

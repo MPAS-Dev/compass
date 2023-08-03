@@ -24,7 +24,8 @@ class Mesh(Step):
         mesh_type : str
             The resolution or mesh type of the test case
         """
-        super().__init__(test_case=test_case, name='mesh')
+        super().__init__(test_case=test_case, name='mesh', cpus_per_task=128,
+                         min_cpus_per_task=1)
 
         self.add_output_file(filename='graph.info')
         self.add_output_file(filename='Humboldt.nc')
@@ -60,7 +61,8 @@ class Mesh(Step):
             self, cell_width, x1, y1, geom_points, geom_edges,
             mesh_name=mesh_name, section_name=section_name,
             gridded_dataset='humboldt_1km_2020_04_20.epsg3413.icesheetonly.nc',
-            projection='gis-gimp', geojson_file='Humboldt.geojson')
+            projection='gis-gimp', geojson_file='Humboldt.geojson',
+            cores=self.cpus_per_task)
 
         logger.info('creating graph.info')
         make_graph_file(mesh_filename=mesh_name,
