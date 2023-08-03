@@ -668,7 +668,8 @@
 
 <div class="viewcode-block" id="build_mali_mesh"><a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.mesh.build_mali_mesh.html#compass.landice.mesh.build_mali_mesh">[docs]</a><span class="k">def</span> <span class="nf">build_mali_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell_width</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">geom_points</span><span class="p">,</span>
                     <span class="n">geom_edges</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">section_name</span><span class="p">,</span>
-                    <span class="n">gridded_dataset</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">geojson_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                    <span class="n">gridded_dataset</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">geojson_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create the MALI mesh based on final cell widths determined by</span>
 <span class="sd">    :py:func:`compass.landice.mesh.build_cell_width()`, using Jigsaw and</span>
@@ -717,8 +718,11 @@
 <span class="sd">        Projection to be used for setting lat-long fields.</span>
 <span class="sd">        Likely ``&#39;gis-gimp&#39;`` or ``&#39;ais-bedmap2&#39;``</span>
 
-<span class="sd">    geojson_file : str</span>
+<span class="sd">    geojson_file : str, optional</span>
 <span class="sd">        Name of geojson file that defines regional domain extent.</span>
+
+<span class="sd">    cores : int, optional</span>
+<span class="sd">        The number of cores to use for mask creation</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
@@ -767,8 +771,13 @@
 
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;MpasMaskCreator.x&#39;</span><span class="p">,</span> <span class="s1">&#39;grid_preCull.nc&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;mask.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="n">geojson_file</span><span class="p">]</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;compute_mpas_region_masks&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;grid_preCull.nc&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;mask.nc&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="n">geojson_file</span><span class="p">,</span>
+                <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cores</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_format</span><span class="p">,</span>
+                <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_engine</span><span class="p">]</span>
 
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 

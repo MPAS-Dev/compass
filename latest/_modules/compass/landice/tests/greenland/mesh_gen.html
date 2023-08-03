@@ -115,6 +115,7 @@
   <h1>Source code for compass.landice.tests.greenland.mesh_gen</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">compass.landice.tests.greenland.mesh</span> <span class="kn">import</span> <span class="n">Mesh</span>
 <span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
+<span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
 
 
 <div class="viewcode-block" id="MeshGen"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.greenland.mesh_gen.MeshGen.html#compass.landice.tests.greenland.mesh_gen.MeshGen">[docs]</a><span class="k">class</span> <span class="nc">MeshGen</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
@@ -128,6 +129,7 @@
 <div class="viewcode-block" id="MeshGen.__init__"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.greenland.mesh_gen.MeshGen.html#compass.landice.tests.greenland.mesh_gen.MeshGen.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the test case</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        test_group : compass.landice.tests.greenland.Greenland</span>
@@ -139,7 +141,17 @@
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
-            <span class="n">Mesh</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span></div></div>
+            <span class="n">Mesh</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span></div>
+
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compare ``thickness``, ``bedTopography``, ``iceMask`` and</span>
+<span class="sd">        ``beta`` with a baseline if one was provided.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">,</span> <span class="s1">&#39;bedTopography&#39;</span><span class="p">,</span> <span class="s1">&#39;iceMask&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;beta&#39;</span><span class="p">]</span>
+        <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
+                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;mesh/GIS.nc&#39;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

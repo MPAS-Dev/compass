@@ -140,7 +140,8 @@
 <span class="sd">        mesh_type : str</span>
 <span class="sd">            The resolution or mesh type of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;mesh&#39;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;mesh&#39;</span><span class="p">,</span> <span class="n">cpus_per_task</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+                         <span class="n">min_cpus_per_task</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;Koge_Bugt_S.nc&#39;</span><span class="p">)</span>
@@ -176,7 +177,8 @@
             <span class="bp">self</span><span class="p">,</span> <span class="n">cell_width</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">geom_points</span><span class="p">,</span> <span class="n">geom_edges</span><span class="p">,</span>
             <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">section_name</span><span class="o">=</span><span class="n">section_name</span><span class="p">,</span>
             <span class="n">gridded_dataset</span><span class="o">=</span><span class="s1">&#39;greenland_1km_2020_04_20.epsg3413.icesheetonly.nc&#39;</span><span class="p">,</span>  <span class="c1"># noqa</span>
-            <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;gis-gimp&#39;</span><span class="p">,</span> <span class="n">geojson_file</span><span class="o">=</span><span class="s1">&#39;Koge_Bugt_S.geojson&#39;</span><span class="p">)</span>
+            <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;gis-gimp&#39;</span><span class="p">,</span> <span class="n">geojson_file</span><span class="o">=</span><span class="s1">&#39;Koge_Bugt_S.geojson&#39;</span><span class="p">,</span>
+            <span class="n">cores</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span><span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;creating graph.info&#39;</span><span class="p">)</span>
         <span class="n">make_graph_file</span><span class="p">(</span><span class="n">mesh_filename</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">,</span>

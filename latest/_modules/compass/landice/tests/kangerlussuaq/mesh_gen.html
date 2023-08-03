@@ -113,15 +113,15 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice.tests.kangerlussuaq.mesh_gen</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.kangerlussuaq.mesh</span> <span class="kn">import</span> <span class="n">Mesh</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.landice.tests.kangerlussuaq.mesh</span> <span class="kn">import</span> <span class="n">Mesh</span>
+<span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
+<span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
 
 
 <div class="viewcode-block" id="MeshGen"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.kangerlussuaq.mesh_gen.MeshGen.html#compass.landice.tests.kangerlussuaq.mesh_gen.MeshGen">[docs]</a><span class="k">class</span> <span class="nc">MeshGen</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The default test case for the Kangerlussuaq test group simply creates the</span>
 <span class="sd">    mesh and initial condition.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="MeshGen.__init__"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.kangerlussuaq.mesh_gen.MeshGen.html#compass.landice.tests.kangerlussuaq.mesh_gen.MeshGen.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
@@ -132,7 +132,6 @@
 <span class="sd">        ----------</span>
 <span class="sd">        test_group : compass.landice.tests.kangerlussuaq.Kangerlussuaq</span>
 <span class="sd">            The test group that this test case belongs to</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;mesh_gen&#39;</span>
         <span class="n">subdir</span> <span class="o">=</span> <span class="n">name</span>
@@ -140,7 +139,17 @@
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
-            <span class="n">Mesh</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span></div></div>
+            <span class="n">Mesh</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span></div>
+
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compare ``thickness``, ``bedTopography``, ``iceMask`` and</span>
+<span class="sd">        ``beta`` with a baseline if one was provided.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">,</span> <span class="s1">&#39;bedTopography&#39;</span><span class="p">,</span> <span class="s1">&#39;iceMask&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;beta&#39;</span><span class="p">]</span>
+        <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
+                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;mesh/Kangerlussuaq.nc&#39;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
