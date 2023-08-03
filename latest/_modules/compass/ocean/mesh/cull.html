@@ -471,7 +471,7 @@
 
     <span class="c1"># cull the mesh based on the land mask</span>
     <span class="n">dsCulledMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsBaseMesh</span><span class="p">,</span> <span class="n">dsMask</span><span class="o">=</span><span class="n">dsLandMask</span><span class="p">,</span>
-                        <span class="n">dsPreserve</span><span class="o">=</span><span class="n">dsPreserve</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+                        <span class="n">dsPreserve</span><span class="o">=</span><span class="n">dsPreserve</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
 
     <span class="c1"># create a mask for the flood fill seed points</span>
     <span class="n">dsSeedMask</span> <span class="o">=</span> <span class="n">compute_mpas_flood_fill_mask</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">=</span><span class="n">dsCulledMesh</span><span class="p">,</span>
@@ -480,7 +480,8 @@
 
     <span class="c1"># cull the mesh a second time using a flood fill from the seed points</span>
     <span class="n">dsCulledMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsCulledMesh</span><span class="p">,</span> <span class="n">dsInverse</span><span class="o">=</span><span class="n">dsSeedMask</span><span class="p">,</span>
-                        <span class="n">graphInfoFileName</span><span class="o">=</span><span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+                        <span class="n">graphInfoFileName</span><span class="o">=</span><span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
+                        <span class="nb">dir</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
     <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsCulledMesh</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">critical_passages</span><span class="p">:</span>
@@ -522,7 +523,8 @@
 
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsLandIceMask</span><span class="p">,</span> <span class="s1">&#39;land_ice_mask.nc&#39;</span><span class="p">)</span>
 
-        <span class="n">dsLandIceCulledMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsCulledMesh</span><span class="p">,</span> <span class="n">dsMask</span><span class="o">=</span><span class="n">dsMask</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">dsLandIceCulledMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsCulledMesh</span><span class="p">,</span> <span class="n">dsMask</span><span class="o">=</span><span class="n">dsMask</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
+                                   <span class="nb">dir</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsLandIceCulledMesh</span><span class="p">,</span> <span class="s1">&#39;no_ISC_culled_mesh.nc&#39;</span><span class="p">)</span>
 
     <span class="n">extract_vtk</span><span class="p">(</span><span class="n">ignore_time</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dimension_list</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;maxEdges=&#39;</span><span class="p">],</span>

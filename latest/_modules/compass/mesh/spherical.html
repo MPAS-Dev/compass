@@ -111,26 +111,23 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.mesh.spherical</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">xarray</span>
-<span class="kn">import</span> <span class="nn">xarray.plot</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span></span><span class="kn">import</span> <span class="nn">cartopy</span>
 <span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
-<span class="kn">import</span> <span class="nn">cartopy</span>
 <span class="kn">import</span> <span class="nn">jigsawpy</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">xarray</span>
+<span class="kn">import</span> <span class="nn">xarray.plot</span>
 <span class="kn">from</span> <span class="nn">jigsawpy.savejig</span> <span class="kn">import</span> <span class="n">savejig</span>
-
 <span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.mesh.conversion</span> <span class="kn">import</span> <span class="n">convert</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.mesh.creation.jigsaw_to_netcdf</span> <span class="kn">import</span> <span class="n">jigsaw_to_netcdf</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.ocean.inject_meshDensity</span> <span class="kn">import</span> <span class="n">inject_spherical_meshDensity</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.viz.colormaps</span> <span class="kn">import</span> <span class="n">register_sci_viz_colormaps</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.viz.paraview_extractor</span> <span class="kn">import</span> <span class="n">extract_vtk</span>
 
-<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 <span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">make_graph_file</span>
+<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
 
 <div class="viewcode-block" id="SphericalBaseStep"><a class="viewcode-back" href="../../../developers_guide/generated/compass.mesh.spherical.SphericalBaseStep.html#compass.mesh.SphericalBaseStep">[docs]</a><span class="k">class</span> <span class="nc">SphericalBaseStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
@@ -216,12 +213,13 @@
                          <span class="n">sphere_radius</span><span class="o">=</span><span class="n">earth_radius</span><span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Convert from triangles to MPAS mesh&#39;</span><span class="p">)</span>
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">convert</span><span class="p">(</span><span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;mesh_triangles.nc&#39;</span><span class="p">),</span>
-                             <span class="nb">dir</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">),</span>
-                     <span class="n">mpas_mesh_filename</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;MpasMeshConverter.x&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;mesh_triangles.nc&#39;</span><span class="p">,</span>
+                <span class="n">mpas_mesh_filename</span><span class="p">]</span>
+        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;add_mesh_density&#39;</span><span class="p">):</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Add meshDensity into the mesh file&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Add meshDensity into the mesh file&#39;</span><span class="p">)</span>
             <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;cellWidthVsLatLon.nc&#39;</span><span class="p">)</span>
             <span class="n">inject_spherical_meshDensity</span><span class="p">(</span>
                 <span class="n">ds</span><span class="o">.</span><span class="n">cellWidth</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">lon</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">lat</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
@@ -381,8 +379,8 @@
         <span class="c1"># save the constant approximate resolution on a 10 degree grid</span>
         <span class="n">dlon</span> <span class="o">=</span> <span class="mf">10.</span>
         <span class="n">dlat</span> <span class="o">=</span> <span class="n">dlon</span>
-        <span class="n">nlon</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">360.</span><span class="o">/</span><span class="n">dlon</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="n">nlat</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">180.</span><span class="o">/</span><span class="n">dlat</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">nlon</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">360.</span> <span class="o">/</span> <span class="n">dlon</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">nlat</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">180.</span> <span class="o">/</span> <span class="n">dlat</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="n">lon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">180.</span><span class="p">,</span> <span class="mf">180.</span><span class="p">,</span> <span class="n">nlon</span><span class="p">)</span>
         <span class="n">lat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">90.</span><span class="p">,</span> <span class="mf">90.</span><span class="p">,</span> <span class="n">nlat</span><span class="p">)</span>
         <span class="n">cell_width</span> <span class="o">=</span> <span class="n">cell_width</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">nlat</span><span class="p">,</span> <span class="n">nlon</span><span class="p">))</span>
@@ -417,7 +415,7 @@
         <span class="c1"># define JIGSAW geometry</span>
         <span class="n">geom</span> <span class="o">=</span> <span class="n">jigsawpy</span><span class="o">.</span><span class="n">jigsaw_msh_t</span><span class="p">()</span>
         <span class="n">geom</span><span class="o">.</span><span class="n">mshID</span> <span class="o">=</span> <span class="s1">&#39;ELLIPSOID-MESH&#39;</span>
-        <span class="n">geom</span><span class="o">.</span><span class="n">radii</span> <span class="o">=</span> <span class="n">earth_radius</span><span class="o">*</span><span class="mf">1e-3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="n">geom</span><span class="o">.</span><span class="n">radii</span> <span class="o">=</span> <span class="n">earth_radius</span> <span class="o">*</span> <span class="mf">1e-3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
         <span class="n">jigsawpy</span><span class="o">.</span><span class="n">savemsh</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">geom_file</span><span class="p">,</span> <span class="n">geom</span><span class="p">)</span>
 
         <span class="n">savejig</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">jcfg_file</span><span class="p">,</span> <span class="n">opts</span><span class="p">)</span>
@@ -515,7 +513,7 @@
 
         <span class="n">geom</span> <span class="o">=</span> <span class="n">jigsawpy</span><span class="o">.</span><span class="n">jigsaw_msh_t</span><span class="p">()</span>
         <span class="n">geom</span><span class="o">.</span><span class="n">mshID</span> <span class="o">=</span> <span class="s1">&#39;ellipsoid-mesh&#39;</span>
-        <span class="n">geom</span><span class="o">.</span><span class="n">radii</span> <span class="o">=</span> <span class="n">earth_radius</span><span class="o">*</span><span class="mf">1e-3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="n">geom</span><span class="o">.</span><span class="n">radii</span> <span class="o">=</span> <span class="n">earth_radius</span> <span class="o">*</span> <span class="mf">1e-3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
         <span class="n">jigsawpy</span><span class="o">.</span><span class="n">savemsh</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">geom_file</span><span class="p">,</span> <span class="n">geom</span><span class="p">)</span>
 
         <span class="n">icos</span> <span class="o">=</span> <span class="n">jigsawpy</span><span class="o">.</span><span class="n">jigsaw_msh_t</span><span class="p">()</span>
@@ -591,9 +589,9 @@
 
         <span class="c1"># Using Euclidean, not spherical area, so not accurate for large cell</span>
         <span class="c1"># widths</span>
-        <span class="n">triangle_area</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="mf">4.</span><span class="o">*</span><span class="p">(</span><span class="n">cell_width</span><span class="o">*</span><span class="mf">1e3</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
-        <span class="n">triangle_count</span> <span class="o">=</span> <span class="n">earth_area</span><span class="o">/</span><span class="n">triangle_area</span>
-        <span class="n">subdivisions</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">triangle_count</span><span class="o">/</span><span class="mi">20</span><span class="p">)</span>
+        <span class="n">triangle_area</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="mf">4.</span> <span class="o">*</span> <span class="p">(</span><span class="n">cell_width</span> <span class="o">*</span> <span class="mf">1e3</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">triangle_count</span> <span class="o">=</span> <span class="n">earth_area</span> <span class="o">/</span> <span class="n">triangle_area</span>
+        <span class="n">subdivisions</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">triangle_count</span> <span class="o">/</span> <span class="mi">20</span><span class="p">)</span>
         <span class="n">subdivisions</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">subdivisions</span><span class="p">)))</span>
 
         <span class="k">return</span> <span class="n">subdivisions</span></div>
@@ -633,9 +631,9 @@
 
         <span class="c1"># compute and save the cell widths for later use in computing mesh</span>
         <span class="c1"># density</span>
-        <span class="n">triangle_count</span> <span class="o">=</span> <span class="mi">20</span><span class="o">*</span><span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">subdivisions</span><span class="p">)</span>
-        <span class="n">triangle_area</span> <span class="o">=</span> <span class="n">earth_area</span><span class="o">/</span><span class="n">triangle_count</span>
-        <span class="n">cell_width</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">triangle_area</span><span class="o">*</span><span class="mf">4.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+        <span class="n">triangle_count</span> <span class="o">=</span> <span class="mi">20</span> <span class="o">*</span> <span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">subdivisions</span><span class="p">)</span>
+        <span class="n">triangle_area</span> <span class="o">=</span> <span class="n">earth_area</span> <span class="o">/</span> <span class="n">triangle_count</span>
+        <span class="n">cell_width</span> <span class="o">=</span> <span class="mf">1e-3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">triangle_area</span> <span class="o">*</span> <span class="mf">4.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">cell_width</span></div></div>
 </pre></div>
 
