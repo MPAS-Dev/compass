@@ -1,6 +1,6 @@
-from compass.validate import compare_variables
-from compass.testcase import TestCase
 from compass.landice.tests.thwaites.run_model import RunModel
+from compass.testcase import TestCase
+from compass.validate import compare_variables
 
 
 class DecompositionTest(TestCase):
@@ -18,7 +18,7 @@ class DecompositionTest(TestCase):
         ----------
         test_group : compass.landice.tests.thwaites.Thwaites
             The test group that this test case belongs to
-        
+
         depth_integrated  : bool
             Whether the (FO) velocity model is depth integrated
 
@@ -27,7 +27,7 @@ class DecompositionTest(TestCase):
             name = 'fo-depthInt_decomposition_test'
         else:
             name = 'fo_decomposition_test'
-        
+
         super().__init__(test_group=test_group, name=name)
 
         self.cores_set = [16, 32]
@@ -35,7 +35,8 @@ class DecompositionTest(TestCase):
         for procs in self.cores_set:
             name = '{}proc_run'.format(procs)
             self.add_step(
-                RunModel(test_case=self, name=name, depth_integrated=depth_integrated, 
+                RunModel(test_case=self, name=name,
+                         depth_integrated=depth_integrated,
                          ntasks=procs, min_tasks=procs, openmp_threads=1))
 
     # no configure() method is needed

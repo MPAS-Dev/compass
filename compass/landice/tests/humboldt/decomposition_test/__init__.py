@@ -27,7 +27,7 @@ class DecompositionTest(TestCase):
 
     face_melt : bool
         Whether to include face melting
-    
+
     depth_integrated  : bool
         Whether the (FO) velocity model is depth integrated
 
@@ -60,7 +60,7 @@ class DecompositionTest(TestCase):
 
         face_melt : bool
             Whether to include face melting
-        
+
         depth_integrated  : bool
             Whether the (FO) velocity model is depth integrated
         """
@@ -77,7 +77,7 @@ class DecompositionTest(TestCase):
         subdir = 'mesh-{}_decomposition_test/velo-{}'.format(
                  mesh_type, velo_solver.lower())
         if velo_solver == 'FO' and depth_integrated is True:
-                 subdir += '-depthInt'
+            subdir += '-depthInt'
         subdir += '_calving-{}'.format(calving_law.lower())
         # append damage and facemelt if provided
         if damage is not None:

@@ -1,4 +1,4 @@
-from compass.model import run_model, make_graph_file
+from compass.model import make_graph_file, run_model
 from compass.step import Step
 
 
@@ -62,7 +62,7 @@ class RunModel(Step):
 
         face_melt : bool, optional
             Whether to include face melting
-        
+
         depth_integrated : bool, optional
             Whether the (FO) velocity model is depth integrated
 
@@ -140,13 +140,13 @@ class RunModel(Step):
 
             if depth_integrated:
                 self.add_input_file(filename='albany_input.yaml',
-                                target='albany_input_depthInt.yaml',
-                                package='compass.landice.tests.humboldt',
-                                copy=True)
+                                    target='albany_input_depthInt.yaml',
+                                    package='compass.landice.tests.humboldt',
+                                    copy=True)
             else:
                 self.add_input_file(filename='albany_input.yaml',
-                                package='compass.landice.tests.humboldt',
-                                copy=True)
+                                    package='compass.landice.tests.humboldt',
+                                    copy=True)
 
         self.add_model_as_input()
 

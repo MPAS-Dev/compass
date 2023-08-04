@@ -1,6 +1,6 @@
-from compass.validate import compare_variables
-from compass.testcase import TestCase
 from compass.landice.tests.humboldt.run_model import RunModel
+from compass.testcase import TestCase
+from compass.validate import compare_variables
 
 
 class RestartTest(TestCase):
@@ -22,7 +22,7 @@ class RestartTest(TestCase):
 
     face_melt : bool
         Whether to include face melting
-    
+
     depth_integrated  : bool
         Whether the (FO) velocity model is depth integrated
     """
@@ -51,7 +51,7 @@ class RestartTest(TestCase):
 
         face_melt : bool
             Whether to include face melting
-        
+
         depth_integrated  : bool
             Whether the (FO) velocity model is depth integrated
         """
@@ -68,7 +68,7 @@ class RestartTest(TestCase):
         subdir = 'mesh-{}_restart_test/velo-{}'.format(
                  mesh_type, velo_solver.lower())
         if velo_solver == 'FO' and depth_integrated is True:
-                 subdir += '-depthInt'
+            subdir += '-depthInt'
         subdir += '_calving-{}'.format(calving_law.lower())
         # append damage and facemelt if provided
         if damage is not None:
