@@ -330,8 +330,8 @@ supported on each machine, take a look at <a class="reference internal" href="ma
 discussed below.</p>
 <section id="testing-spack-with-petsc-and-netlib-lapack">
 <h3>Testing spack with PETSc (and Netlib LAPACK)<a class="headerlink" href="#testing-spack-with-petsc-and-netlib-lapack" title="Permalink to this heading">¶</a></h3>
-<p>If you want to build PETSc (and Netlib LAPACK), use the <code class="docutils literal notranslate"><span class="pre">--with_petsc</span></code> and
-<code class="docutils literal notranslate"><span class="pre">--with_netlib_lapack</span></code> flags.  Currently, this only works with some
+<p>If you want to build PETSc (and Netlib LAPACK), use the <code class="docutils literal notranslate"><span class="pre">--with_petsc</span></code> flag.
+Currently, this only works with some
 compilers, but that may be more that I was trying to limit the amount of work
 for the compass support team.  There is a file,
 <a class="reference external" href="https://github.com/MPAS-Dev/compass/blob/main/conda/petsc_supported.txt">petsc_supported.txt</a>,
@@ -346,10 +346,10 @@ that lists supported compilers and MPI libraries on each machine.</p>
 <span class="w">    </span>--spack<span class="w"> </span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/spack_test<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--tmpdir<span class="w"> </span><span class="si">${</span><span class="nv">TMPDIR</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--compiler<span class="w"> </span>intel<span class="w"> </span>gnu<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--mpi<span class="w"> </span>openmpi<span class="w"> </span>openmpi<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--with_netlib_lapack<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--mpi<span class="w"> </span>openmpi<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--with_petsc<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--recreate
+<span class="w">    </span>--recreate<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--verbose
 </pre></div>
 </div>
 </section>
@@ -380,14 +380,14 @@ that lists supported compilers and MPI libraries on each machine.</p>
 <p>If you encounter an error like:
 .. code-block:: none</p>
 <blockquote>
-<div><p>==&gt;   spack env activate dev_compass_1_2_0-alpha_4_gnu_mpich
+<div><p>==&gt;   spack env activate dev_compass_1_2_0-alpha_6_gnu_mpich
 ==&gt; Error: Package ‘armpl’ not found.
 You may need to run ‘spack clean -m’.</p>
 </div></blockquote>
 <p>during the attempt to build spack, you will first need to find the path to
 <code class="docutils literal notranslate"><span class="pre">setup-env.sh</span></code> (see <code class="docutils literal notranslate"><span class="pre">compass/build_*/build*.sh</span></code>) and source that script to
 get the <code class="docutils literal notranslate"><span class="pre">spack</span></code> command, e.g.:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span><span class="si">${</span><span class="nv">PSCRATCH</span><span class="si">}</span>/spack_test/spack_for_mache_1.12.0/share/spack/setup-env.sh
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span><span class="si">${</span><span class="nv">PSCRATCH</span><span class="si">}</span>/spack_test/dev_compass_1_2_0-alpha_6_gnu_mpich/share/spack/setup-env.sh
 </pre></div>
 </div>
 <p>Then run the suggested command:</p>
@@ -409,7 +409,7 @@ and serves as kind of a baseline for other testing.</p>
 <span class="nb">source</span><span class="w"> </span>load_dev_compass_1.2.0-alpha.5_chrysalis_intel_openmpi.sh
 git<span class="w"> </span>submodule<span class="w"> </span>update<span class="w"> </span>--init<span class="w"> </span>--recursive
 <span class="nb">cd</span><span class="w"> </span>E3SM-Project/components/mpas-ocean
-<span class="c1"># this will build with scorpio and openmp</span>
+<span class="c1"># this will build with PIO and OpenMP</span>
 make<span class="w"> </span>ifort
 compass<span class="w"> </span>suite<span class="w"> </span>-s<span class="w"> </span>-c<span class="w"> </span>ocean<span class="w"> </span>-t<span class="w"> </span>pr<span class="w"> </span>-p<span class="w"> </span>.<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-w<span class="w"> </span>/lcrc/group/e3sm/ac.xylar/compass/test_20230202/ocean_pr_chrys_intel_openmpi
@@ -462,7 +462,7 @@ E3SM.  So you can’t use the E3SM-Project submodule.  You need to use Sara
 Calandrini’s <a class="reference external" href="https://github.com/scalandr/E3SM/tree/ocean/nonhydro">nonhydro</a>
 branch.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># source whichever load script is appropriate</span>
-<span class="nb">source</span><span class="w"> </span>load_dev_compass_1.2.0-alpha.5_chrysalis_intel_openmpi_netlib_lapack_petsc.sh
+<span class="nb">source</span><span class="w"> </span>load_dev_compass_1.2.0-alpha.5_chrysalis_intel_openmpi_petsc.sh
 git<span class="w"> </span>submodule<span class="w"> </span>update<span class="w"> </span>--init
 <span class="nb">cd</span><span class="w"> </span>E3SM-Project
 git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>scalandr/E3SM<span class="w"> </span>git@github.com:scalandr/E3SM.git
@@ -471,7 +471,7 @@ git<span class="w"> </span>worktree<span class="w"> </span>add<span class="w"> <
 <span class="nb">cd</span><span class="w"> </span>../nonhydro_chrys_intel_openmpi
 git<span class="w"> </span>submodule<span class="w"> </span>update<span class="w"> </span>--init<span class="w"> </span>--recursive
 <span class="nb">cd</span><span class="w"> </span>components/mpas-ocean
-<span class="c1"># this will build with scorpio, Netlib LAPACK and PETSc</span>
+<span class="c1"># this will build with PIO, Netlib LAPACK and PETSc</span>
 make<span class="w"> </span>ifort
 compass<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>nonhydro
 <span class="c1"># update these numbers for the 2 nonhydro test cases</span>
@@ -544,10 +544,10 @@ git<span class="w"> </span>reset<span class="w"> </span>–hard<span class="w"> 
 <span class="w">    </span>--update_spack<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--tmpdir<span class="w"> </span><span class="si">${</span><span class="nv">TMPDIR</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--compiler<span class="w"> </span>intel<span class="w"> </span>gnu<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--mpi<span class="w"> </span>openmpi<span class="w"> </span>openmpi<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--with_netlib_lapack<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--mpi<span class="w"> </span>openmpi<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--with_petsc<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--recreate
+<span class="w">    </span>--recreate<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--verbose
 </pre></div>
 </div>
 </section>

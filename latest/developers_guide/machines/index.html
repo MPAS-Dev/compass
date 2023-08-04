@@ -75,6 +75,12 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#other-machines">Other Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-a-new-supported-machine">Adding a New Supported Machine</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#adding-a-machine-config-file">Adding a Machine Config File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#describing-a-spack-environment">Describing a Spack Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#building-the-spack-environment">Building the Spack Environment</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">Troubleshooting</a></li>
@@ -190,26 +196,19 @@ supported for those configurations with <code class="docutils literal notranslat
 <td><p>mpich</p></td>
 <td><p>gnu-cray</p></td>
 </tr>
-<tr class="row-odd"><td rowspan="3"><p>chrysalis</p></td>
-<td rowspan="2"><p>intel</p></td>
+<tr class="row-odd"><td rowspan="2"><p>chrysalis</p></td>
+<td><p>intel</p></td>
 <td><p>openmpi</p></td>
 <td><p>ifort</p></td>
 </tr>
-<tr class="row-even"><td><p>impi</p></td>
-<td><p>intel-mpi</p></td>
-</tr>
-<tr class="row-odd"><td><p>gnu</p></td>
+<tr class="row-even"><td><p>gnu</p></td>
 <td><p>openmpi</p></td>
 <td><p>gfortran</p></td>
 </tr>
-<tr class="row-even"><td rowspan="2"><p>compy</p></td>
+<tr class="row-odd"><td><p>compy</p></td>
 <td><p>intel</p></td>
 <td><p>impi</p></td>
 <td><p>intel-mpi</p></td>
-</tr>
-<tr class="row-odd"><td><p>gnu</p></td>
-<td><p>openmpi</p></td>
-<td><p>gfortran</p></td>
 </tr>
 <tr class="row-even"><td><p>pm-cpu</p></td>
 <td><p>gnu</p></td>
@@ -256,6 +255,253 @@ variables.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>gfortran-clang
 </pre></div>
 </div>
+</section>
+<section id="adding-a-new-supported-machine">
+<span id="dev-add-supported-machine"></span><h2>Adding a New Supported Machine<a class="headerlink" href="#adding-a-new-supported-machine" title="Permalink to this heading">¶</a></h2>
+<p>If you want to add a new supported machine, you need to add both a config file
+and a yaml file describing your machine, as detailed below.</p>
+<section id="adding-a-machine-config-file">
+<h3>Adding a Machine Config File<a class="headerlink" href="#adding-a-machine-config-file" title="Permalink to this heading">¶</a></h3>
+<p>The first step in adding a new supported machine to add a config file in
+<code class="docutils literal notranslate"><span class="pre">compass/machines</span></code>.  The config file needs to describe the parallel
+environment and some paths where shared Spack environments will be installed
+and shared data will be downloaded.  The easiest place to start is one of the
+examples provided (machines <code class="docutils literal notranslate"><span class="pre">morpheus</span></code> and <code class="docutils literal notranslate"><span class="pre">eligos</span></code> for now, but more
+will be added soon.)</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The parallel section describes options related to running jobs in parallel</span>
+<span class="k">[parallel]</span>
+
+<span class="c1"># parallel system of execution: slurm, cobalt or single_node</span>
+<span class="na">system</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">single_node</span>
+
+<span class="c1"># whether to use mpirun or srun to run a task</span>
+<span class="na">parallel_executable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpirun</span>
+
+<span class="c1"># cores per node on the machine</span>
+<span class="na">cores_per_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span>
+
+
+<span class="c1"># Config options related to spack environments</span>
+<span class="k">[spack]</span>
+
+<span class="c1"># whether to load modules from the spack yaml file before loading the spack</span>
+<span class="c1"># environment</span>
+<span class="na">modules_before</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+
+<span class="c1"># whether to load modules from the spack yaml file after loading the spack</span>
+<span class="c1"># environment</span>
+<span class="na">modules_after</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+
+
+<span class="c1"># The paths section describes paths that are used within the ocean core test</span>
+<span class="c1"># cases.</span>
+<span class="k">[paths]</span>
+
+<span class="c1"># A shared root directory where MPAS standalone data can be found</span>
+<span class="na">database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/data/mpas/mpas_standalonedata</span>
+
+<span class="c1"># the path to the base conda environment where compass environments have</span>
+<span class="c1"># been created</span>
+<span class="na">compass_envs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/data/mpas/compass_envs</span>
+
+
+<span class="c1"># Options related to deploying a compass conda environment on supported</span>
+<span class="c1"># machines</span>
+<span class="k">[deploy]</span>
+
+<span class="c1"># the compiler set to use for system libraries and MPAS builds</span>
+<span class="na">compiler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">gnu</span>
+
+<span class="c1"># the system MPI library to use for gnu compiler</span>
+<span class="na">mpi_gnu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">openmpi</span>
+
+<span class="c1"># the base path for spack environments used by compass</span>
+<span class="na">spack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/data/mpas/spack</span>
+
+<span class="c1"># whether to use the same modules for hdf5, netcdf-c, netcdf-fortran and</span>
+<span class="c1"># pnetcdf as E3SM (spack modules are used otherwise)</span>
+<span class="na">use_e3sm_hdf5_netcdf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+
+
+<span class="c1"># Options related to machine discovery</span>
+<span class="k">[discovery]</span>
+
+<span class="c1"># a substring used to identify this machine from its hostname</span>
+<span class="na">hostname_contains</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">morpheus</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">[parallel]</span></code> section should describe the type of parallel queuing
+system (currently only <code class="docutils literal notranslate"><span class="pre">slurm</span></code> or <code class="docutils literal notranslate"><span class="pre">single_node</span></code> are supported), the number
+of cores per node and the command for running an MPI executable (typically
+<code class="docutils literal notranslate"><span class="pre">srun</span></code> for Slurm and <code class="docutils literal notranslate"><span class="pre">mpirun</span></code> for a “single node” machine like a laptop or
+workstation.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">[spack]</span></code> section has some config options to do with loading system
+modules before or after loading a Spack environment.  On a “single node”
+machine, you typically don’t have modules so both <code class="docutils literal notranslate"><span class="pre">modules_before</span></code> and
+<code class="docutils literal notranslate"><span class="pre">modules_after</span></code> can be set to <code class="docutils literal notranslate"><span class="pre">False</span></code>.  On a high-performance computing
+(HPC) machine, you may find it is safest to load modules after the Spack
+environment to ensure that certain paths and environment variables are set the
+way the modules have them, rather than the way that Spack would have them.
+The recommended starting point would be <code class="docutils literal notranslate"><span class="pre">modules_before</span> <span class="pre">=</span> <span class="pre">False</span></code> and
+<code class="docutils literal notranslate"><span class="pre">modules_after</span> <span class="pre">=</span> <span class="pre">True</span></code>, but could be adjusted as needed if the right shared
+libraries aren’t being found when you try to build an MPAS component.</p>
+<p>In the <code class="docutils literal notranslate"><span class="pre">[paths]</span></code> section, you will first give a path where you would like
+to store shared data files used in compass test cases in <code class="docutils literal notranslate"><span class="pre">database_root</span></code>.
+Compass will create this directory if it doesn’t exist.  Then, you can specify
+<code class="docutils literal notranslate"><span class="pre">compass_envs</span></code> as a path where shared conda environments will be installed
+for compass releases.  If developers always create their own conda
+environments, this path will never be used.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">[deploy]</span></code>, you will specify config options used in setting up conda
+and Spack environments for developers.  The <code class="docutils literal notranslate"><span class="pre">compiler</span></code> is the default
+compiler to use for your system.  You must supply a corresponding
+<code class="docutils literal notranslate"><span class="pre">mpi_&lt;compiler&gt;</span></code> for each supported compiler (not just the default compiler)
+that specifies the default MPI library for that compiler.  If you only support
+one compiler and MPI library, that’s pretty simple: <code class="docutils literal notranslate"><span class="pre">compiler</span></code> is the name
+of the compiler (e.g. <code class="docutils literal notranslate"><span class="pre">intel</span></code> or <code class="docutils literal notranslate"><span class="pre">gnu</span></code>) and <code class="docutils literal notranslate"><span class="pre">mpi_&lt;compiler&gt;</span></code> is the
+MPI library (e.g. <code class="docutils literal notranslate"><span class="pre">compiler_gnu</span> <span class="pre">=</span> <span class="pre">mpich</span></code> or <code class="docutils literal notranslate"><span class="pre">compiler_intel</span> <span class="pre">=</span> <span class="pre">openmpi</span></code>).
+The <code class="docutils literal notranslate"><span class="pre">spack</span></code> option specifies a path where Spack environment will be created.
+The option <code class="docutils literal notranslate"><span class="pre">use_e3sm_hdf5_netcdf</span> <span class="pre">=</span> <span class="pre">False</span></code> indicates that you will not use
+the E3SM default modules for HDF5 and NetCDF libraries (which are not available
+for machines installed in the way described here).</p>
+<p>Finally, <code class="docutils literal notranslate"><span class="pre">[discovery]</span></code> allows you to add a <code class="docutils literal notranslate"><span class="pre">hostname_contains</span></code> that is used
+to automatically identify your machine based on its hostname.  If your machine
+has multiple login nodes with different hostnames, hopefully, a string common
+to all login nodes can be used here.  If your machine has a unique hostname,
+simply give that.  This option saves developers from having to specify
+<code class="docutils literal notranslate"><span class="pre">--machine</span> <span class="pre">&lt;machine&gt;</span></code> each time they setup compass environments or test
+cases.</p>
+</section>
+<section id="describing-a-spack-environment">
+<h3>Describing a Spack Environment<a class="headerlink" href="#describing-a-spack-environment" title="Permalink to this heading">¶</a></h3>
+<p>The next step is to create a template YAML file that can be used to create
+<a class="reference external" href="https://spack-tutorial.readthedocs.io/en/latest/tutorial_environments.html">Spack environments</a>
+for your machine. Compass uses Spack environments to build packages that need
+MPI support or which should be build for some other reason with system
+compilers rather than coming from pre-built conda packages. Using a Spack
+environment allows these packages to be built together in a consistent way that
+is not guaranteed if you try to install dependencies one-by-one.  In Spack
+parlance, this is known as
+<a class="reference external" href="https://spack.readthedocs.io/en/latest/environments.html#spec-concretization">unified concretization</a>.</p>
+<p>To do this, you will create a file <code class="docutils literal notranslate"><span class="pre">conda/spack/&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.yaml</span></code>
+similar to the following example for an Ubuntu laptop:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spack</span><span class="p">:</span>
+  <span class="n">specs</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">gcc</span>
+  <span class="o">-</span> <span class="n">openmpi</span>
+<span class="p">{{</span> <span class="n">specs</span> <span class="p">}}</span>
+  <span class="n">concretizer</span><span class="p">:</span>
+    <span class="n">unify</span><span class="p">:</span> <span class="n">true</span>
+  <span class="n">packages</span><span class="p">:</span>
+    <span class="nb">all</span><span class="p">:</span>
+      <span class="n">compiler</span><span class="p">:</span> <span class="p">[</span><span class="n">gcc</span><span class="o">@</span><span class="mf">11.3.0</span><span class="p">]</span>
+      <span class="n">providers</span><span class="p">:</span>
+        <span class="n">mpi</span><span class="p">:</span> <span class="p">[</span><span class="n">openmpi</span><span class="p">]</span>
+    <span class="n">curl</span><span class="p">:</span>
+      <span class="n">externals</span><span class="p">:</span>
+      <span class="o">-</span> <span class="n">spec</span><span class="p">:</span>  <span class="n">curl</span><span class="o">@</span><span class="mf">7.81.0</span>
+        <span class="n">prefix</span><span class="p">:</span> <span class="o">/</span><span class="n">usr</span>
+      <span class="n">buildable</span><span class="p">:</span> <span class="n">false</span>
+    <span class="n">gcc</span><span class="p">:</span>
+      <span class="n">externals</span><span class="p">:</span>
+      <span class="o">-</span> <span class="n">spec</span><span class="p">:</span> <span class="n">gcc</span><span class="o">@</span><span class="mf">11.3.0</span>
+        <span class="n">prefix</span><span class="p">:</span> <span class="o">/</span><span class="n">usr</span>
+      <span class="n">buildable</span><span class="p">:</span> <span class="n">false</span>
+  <span class="n">config</span><span class="p">:</span>
+    <span class="n">install_missing_compilers</span><span class="p">:</span> <span class="n">false</span>
+  <span class="n">compilers</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">compiler</span><span class="p">:</span>
+      <span class="n">spec</span><span class="p">:</span> <span class="n">gcc</span><span class="o">@</span><span class="mf">11.3.0</span>
+      <span class="n">paths</span><span class="p">:</span>
+        <span class="n">cc</span><span class="p">:</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">gcc</span>
+        <span class="n">cxx</span><span class="p">:</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">g</span><span class="o">++</span>
+        <span class="n">f77</span><span class="p">:</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">gfortran</span>
+        <span class="n">fc</span><span class="p">:</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">gfortran</span>
+      <span class="n">flags</span><span class="p">:</span> <span class="p">{}</span>
+      <span class="n">operating_system</span><span class="p">:</span> <span class="n">ubuntu22</span><span class="mf">.04</span>
+      <span class="n">target</span><span class="p">:</span> <span class="n">x86_64</span>
+      <span class="n">modules</span><span class="p">:</span> <span class="p">[]</span>
+      <span class="n">environment</span><span class="p">:</span> <span class="p">{}</span>
+      <span class="n">extra_rpaths</span><span class="p">:</span> <span class="p">[]</span>
+</pre></div>
+</div>
+<p>Typically your system will already have compilers if nothing else, and this is
+what we assume here.  Give the appropriate path (replace <code class="docutils literal notranslate"><span class="pre">/usr</span></code> with the
+appropriate path on your system).  We have had better luck with <code class="docutils literal notranslate"><span class="pre">gcc</span></code> than
+other compilers like Intel so far so for new supported machines so that’s our
+recommendation.  Use <code class="docutils literal notranslate"><span class="pre">gcc</span> <span class="pre">--version</span></code> to determine the version and replace
+<code class="docutils literal notranslate"><span class="pre">11.3.0</span></code> with this number.</p>
+<p>Finally, you might need to update the <code class="docutils literal notranslate"><span class="pre">target</span></code> and <code class="docutils literal notranslate"><span class="pre">operating_system</span></code>.
+This is a bit of a “catch 22” in that you can use Spack to find this out but
+compass is designed to clone and set up Spack for you so we assume you don’t
+have it yet.  For now, make your best guess using the info on
+<a href="#id1"><span class="problematic" id="id2">`this page&lt;https://spack.readthedocs.io/en/latest/basic_usage.html#architecture-specifiers&gt;`_</span></a>
+and correct it later if necessary.</p>
+<p>You may need to load a system module to get the compilers and potentially other
+libraries such as MPI, HDF5, and NetCDF-C if you prefer to use system modules
+rather than having Spack build them.  If this is the case, the best way to do
+this is to add a file
+<code class="docutils literal notranslate"><span class="pre">conda/spack/&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh</span></code> along these lines:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module<span class="w"> </span>purge
+module<span class="w"> </span>load<span class="w"> </span>perl/5.32.0-bsnc6lt
+module<span class="w"> </span>load<span class="w"> </span>gcc/9.2.0-ugetvbp
+module<span class="w"> </span>load<span class="w"> </span>openmpi/4.1.3-sxfyy4k
+module<span class="w"> </span>load<span class="w"> </span>intel-mkl/2020.4.304-n3b5fye
+module<span class="w"> </span>load<span class="w"> </span>hdf5/1.10.7-j3zxncu
+module<span class="w"> </span>load<span class="w"> </span>netcdf-c/4.4.1-7ohuiwq
+module<span class="w"> </span>load<span class="w"> </span>netcdf-fortran/4.4.4-k2zu3y5
+module<span class="w"> </span>load<span class="w"> </span>parallel-netcdf/1.11.0-mirrcz7
+</pre></div>
+</div>
+<p>These modules will be loaded either before or after the spack environment,
+depending on the <code class="docutils literal notranslate"><span class="pre">modules_before</span></code> and <code class="docutils literal notranslate"><span class="pre">modules_after</span></code> config options above.
+You can also add modules in your YAML file but this shouldn’t be necessary.</p>
+<p>For examples from various supported machines, compilers and MPI libraries, see the
+<a class="reference external" href="https://github.com/E3SM-Project/mache/tree/main/mache/spack">mache spack directory</a>.</p>
+</section>
+<section id="building-the-spack-environment">
+<h3>Building the Spack Environment<a class="headerlink" href="#building-the-spack-environment" title="Permalink to this heading">¶</a></h3>
+<p>The next step is to try setting up compass and asking it to build the Spack
+environment with a command something like:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./conda/configure_compass_env.py<span class="w"> </span>--verbose<span class="w"> </span>--update_spack<span class="w"> </span>--conda<span class="w"> </span>&lt;conda_path&gt;<span class="w"> </span>-c<span class="w"> </span>gnu<span class="w"> </span>-i<span class="w"> </span>openmpi<span class="w"> </span>...
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">--update_spack</span></code> flag tells compass to create (or update) a Spack
+environment.  You can specify a directory for testing Spack with the
+<code class="docutils literal notranslate"><span class="pre">--spack</span></code> flag.  You can specify a temporary directory for building spack
+packages with <code class="docutils literal notranslate"><span class="pre">--tmpdir</span></code> (this directory must already exist).  This is useful
+if your <code class="docutils literal notranslate"><span class="pre">/tmp</span></code> space is small (Spack will use several GB of temporary space).</p>
+<p>Creating the Spack environment may take anywhere from minutes to hours,
+depending on your system.</p>
+<p>If dependencies don’t build as expected, you may get an error message
+suggesting that your <code class="docutils literal notranslate"><span class="pre">operating_system</span></code> or <code class="docutils literal notranslate"><span class="pre">target</span></code> aren’t right. Here’s
+an example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">==&gt;</span> <span class="n">Error</span><span class="p">:</span> <span class="n">concretization</span> <span class="n">failed</span> <span class="k">for</span> <span class="n">the</span> <span class="n">following</span> <span class="n">reasons</span><span class="p">:</span>
+
+   <span class="mf">1.</span> <span class="n">zlib</span> <span class="n">compiler</span> <span class="s1">&#39;</span><span class="si">%g</span><span class="s1">cc@9.4.0&#39;</span> <span class="n">incompatible</span> <span class="k">with</span> <span class="s1">&#39;os=ubuntu20.04&#39;</span>
+   <span class="mf">2.</span> <span class="n">readline</span> <span class="n">compiler</span> <span class="s1">&#39;</span><span class="si">%g</span><span class="s1">cc@9.4.0&#39;</span> <span class="n">incompatible</span> <span class="k">with</span> <span class="s1">&#39;os=ubuntu20.04&#39;</span>
+   <span class="mf">3.</span> <span class="n">pkgconf</span> <span class="n">compiler</span> <span class="s1">&#39;</span><span class="si">%g</span><span class="s1">cc@9.4.0&#39;</span> <span class="n">incompatible</span> <span class="k">with</span> <span class="s1">&#39;os=ubuntu20.04&#39;</span>
+</pre></div>
+</div>
+<p>In this example, I had specified <code class="docutils literal notranslate"><span class="pre">operating_system:</span> <span class="pre">ubuntu22.04</span></code> in the YAML
+file but in fact my operating system is <code class="docutils literal notranslate"><span class="pre">ubuntu20.04</span></code> as shown in the error
+message.</p>
+<p>You can run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span><span class="nv">$SPACKDIR</span>/share/spack/setup-env.sh
+spack<span class="w"> </span>arch<span class="w"> </span>-o
+spack<span class="w"> </span>arch<span class="w"> </span>-g
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">$SPACKDIR</span></code> is the directory where the Spack repository was cloned
+by compass (you should see <code class="docutils literal notranslate"><span class="pre">Cloning</span> <span class="pre">into</span> <span class="pre">&lt;$SPACKDIR&gt;</span></code> in the terminal, which
+will hopefully help you find the right directory).  This should hopefully give
+you something close to what Spack wants.  If you get something like
+<code class="docutils literal notranslate"><span class="pre">x86_64_v4</span></code> for the target, use <code class="docutils literal notranslate"><span class="pre">x86_64</span></code> instead.</p>
+<p>If you are getting other error messages, do your best to debug them but also
+feel free to get in touch with the compass development team and we’ll help if
+we can.</p>
+<p>If you get everything working well, please feel free to make a pull request
+into the compass main repo to add your supported machine.</p>
+</section>
 </section>
 </section>
 

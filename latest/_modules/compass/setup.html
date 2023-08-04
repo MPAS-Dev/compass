@@ -117,12 +117,11 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
-<span class="kn">from</span> <span class="nn">mache</span> <span class="kn">import</span> <span class="n">discover_machine</span>
-
 <span class="kn">from</span> <span class="nn">compass</span> <span class="kn">import</span> <span class="n">provenance</span>
 <span class="kn">from</span> <span class="nn">compass.config</span> <span class="kn">import</span> <span class="n">CompassConfigParser</span>
 <span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span>
 <span class="kn">from</span> <span class="nn">compass.job</span> <span class="kn">import</span> <span class="n">write_job_script</span>
+<span class="kn">from</span> <span class="nn">compass.machines</span> <span class="kn">import</span> <span class="n">discover_machine</span>
 <span class="kn">from</span> <span class="nn">compass.mpas_cores</span> <span class="kn">import</span> <span class="n">get_mpas_cores</span>
 
 
@@ -545,7 +544,8 @@
 
     <span class="c1"># add the E3SM config options from mache</span>
     <span class="k">if</span> <span class="n">machine</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;mache.machines&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;mache.machines&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">,</span>
+                                <span class="n">exception</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="c1"># add the compass machine config file</span>
     <span class="k">if</span> <span class="n">machine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
