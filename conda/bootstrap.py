@@ -6,15 +6,16 @@ import importlib.resources
 import os
 import platform
 import shutil
+import socket
 import stat
 import subprocess
 from configparser import ConfigParser
 
 import progressbar
 from jinja2 import Template
-from mache import MachineInfo, discover_machine
+from mache import MachineInfo
+from mache import discover_machine as mache_discover_machine
 from mache.spack import get_spack_script, make_spack_env
-from mache.version import __version__ as mache_version
 from shared import (
     check_call,
     get_conda_base,
@@ -184,11 +185,6 @@ def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
     else:
         config.set('deploy', 'albany', 'None')
 
-    if args.with_netlib_lapack:
-        lib_suffix = f'{lib_suffix}_netlib_lapack'
-    else:
-        config.set('deploy', 'lapack', 'None')
-
     if args.with_petsc:
         lib_suffix = f'{lib_suffix}_petsc'
         log_message(
@@ -197,6 +193,7 @@ def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
         args.without_openmp = True
     else:
         config.set('deploy', 'petsc', 'None')
+        config.set('deploy', 'lapack', 'None')
 
     activ_suffix = f'{activ_suffix}{lib_suffix}'
 
@@ -384,8 +381,9 @@ def get_env_vars(machine, compiler, mpilib):
     return env_vars
 
 
-def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
-                    spack_base, spack_template_path, env_vars, tmpdir, logger):
+def build_spack_env(config, update_spack, machine, compiler, mpi,  # noqa: C901
+                    spack_env, spack_base, spack_template_path, env_vars,
+                    tmpdir, logger):
 
     albany = config.get('deploy', 'albany')
     cmake = config.get('deploy', 'cmake')
@@ -393,13 +391,14 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
     lapack = config.get('deploy', 'lapack')
     petsc = config.get('deploy', 'petsc')
     scorpio = config.get('deploy', 'scorpio')
+    parallelio = config.get('deploy', 'parallelio')
 
-    spack_branch_base = f'{spack_base}/spack_for_mache_{mache_version}'
+    spack_branch_base = f'{spack_base}/{spack_env}'
 
     specs = list()
 
     if cmake != 'None':
-        specs.append(f'cmake "@{cmake}"')
+        specs.append(f'"cmake@{cmake}"')
 
     e3sm_hdf5_netcdf = config.getboolean('deploy', 'use_e3sm_hdf5_netcdf')
     if not e3sm_hdf5_netcdf:
@@ -408,42 +407,65 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
         netcdf_fortran = config.get('deploy', 'netcdf_fortran')
         pnetcdf = config.get('deploy', 'pnetcdf')
         specs.extend([
-            f'hdf5 "@{hdf5}+cxx+fortran+hl+mpi+shared"',
-            f'netcdf-c "@{netcdf_c}+mpi~parallel-netcdf"',
-            f'netcdf-fortran "@{netcdf_fortran}"',
-            f'parallel-netcdf "@{pnetcdf}+cxx+fortran"'])
+            f'"hdf5@{hdf5}+cxx+fortran+hl+mpi+shared"',
+            f'"netcdf-c@{netcdf_c}+mpi~parallel-netcdf"',
+            f'"netcdf-fortran@{netcdf_fortran}"',
+            f'"parallel-netcdf@{pnetcdf}+cxx+fortran"'])
 
     if esmf != 'None':
-        specs.append(f'esmf "@{esmf}+mpi+netcdf~pio+pnetcdf"')
+        specs.append(f'"esmf@{esmf}+mpi+netcdf~pnetcdf~external-parallelio"')
     if lapack != 'None':
-        specs.append(f'netlib-lapack "@{lapack}"')
+        specs.append(f'"netlib-lapack@{lapack}"')
         include_e3sm_lapack = False
     else:
         include_e3sm_lapack = True
     if petsc != 'None':
-        specs.append(f'petsc "@{petsc}+mpi+batch"')
+        specs.append(f'"petsc@{petsc}+mpi+batch"')
 
+    custom_spack = ''
     if scorpio != 'None':
         specs.append(
-            f'scorpio '
-            f'"@{scorpio}+pnetcdf~timing+internal-timing~tools+malloc"')
+            f'"scorpio'
+            f'@{scorpio}+pnetcdf~timing+internal-timing~tools+malloc"')
+        # make sure scorpio, not esmf, libraries are linked
+        lib_path = f'{spack_branch_base}/var/spack/environments/' \
+                   f'{spack_env}/.spack-env/view/lib'
+        scorpio_lib_path = '$(spack find --format "{prefix}" scorpio)'
+        custom_spack = \
+            f'{custom_spack}' \
+            f'ln -sfn {scorpio_lib_path}/lib/libpioc.a {lib_path}\n' \
+            f'ln -sfn {scorpio_lib_path}/lib/libpiof.a {lib_path}\n'
+
+    if parallelio != 'None':
+        specs.append(
+            f'"parallelio'
+            f'@{parallelio}+pnetcdf~timing"')
 
     if albany != 'None':
-        specs.append(f'albany "@{albany}+mpas"')
+        specs.append(f'"albany@{albany}+mpas"')
 
     yaml_template = f'{spack_template_path}/{machine}_{compiler}_{mpi}.yaml'
     if not os.path.exists(yaml_template):
         yaml_template = None
+
+    if machine is not None:
+        here = os.path.abspath(os.path.dirname(__file__))
+        machine_config = os.path.join(here, '..', 'compass', 'machines',
+                                      f'{machine}.cfg')
+    else:
+        machine_config = None
+
     if update_spack:
         home_dir = os.path.expanduser('~')
         log_message(logger, 'Removing ~/.spack for safety')
         safe_rmtree(os.path.join(home_dir, '.spack'))
         make_spack_env(spack_path=spack_branch_base, env_name=spack_env,
                        spack_specs=specs, compiler=compiler, mpi=mpi,
-                       machine=machine,
+                       machine=machine, config_file=machine_config,
                        include_e3sm_lapack=include_e3sm_lapack,
                        include_e3sm_hdf5_netcdf=e3sm_hdf5_netcdf,
-                       yaml_template=yaml_template, tmpdir=tmpdir)
+                       yaml_template=yaml_template, tmpdir=tmpdir,
+                       custom_spack=custom_spack)
 
         # remove ESMC/ESMF include files that interfere with MPAS time keeping
         include_path = f'{spack_branch_base}/var/spack/environments/' \
@@ -456,7 +478,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
 
     spack_script = get_spack_script(
         spack_path=spack_branch_base, env_name=spack_env, compiler=compiler,
-        mpi=mpi, shell='sh', machine=machine,
+        mpi=mpi, shell='sh', machine=machine, config_file=machine_config,
         include_e3sm_lapack=include_e3sm_lapack,
         include_e3sm_hdf5_netcdf=e3sm_hdf5_netcdf,
         yaml_template=yaml_template)
@@ -465,6 +487,10 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
                  f'{spack_env}/.spack-env/view'
     env_vars = f'{env_vars}' \
                f'export PIO={spack_view}\n'
+    if parallelio != 'None':
+        env_vars = \
+            f'{env_vars}' \
+            f'export HAVE_ADIOS=false\n'
     if albany != 'None':
         albany_flag_filename = f'{spack_view}/export_albany.in'
         if not os.path.exists(albany_flag_filename):
@@ -806,6 +832,50 @@ def safe_rmtree(path):
         pass
 
 
+def discover_machine(quiet=False):
+    """
+    Figure out the machine from the host name
+
+    Parameters
+    ----------
+    quiet : bool, optional
+        Whether to print warnings if the machine name is ambiguous
+
+    Returns
+    -------
+    machine : str
+        The name of the current machine
+    """
+    machine = mache_discover_machine(quiet=quiet)
+    if machine is None:
+        possible_hosts = get_possible_hosts()
+        hostname = socket.gethostname()
+        for possible_machine, hostname_contains in possible_hosts.items():
+            if hostname_contains in hostname:
+                machine = possible_machine
+                break
+    return machine
+
+
+def get_possible_hosts():
+    here = os.path.abspath(os.path.dirname(__file__))
+    files = sorted(glob.glob(os.path.join(
+        here, '..', 'compass', 'machines', '*.cfg')))
+
+    possible_hosts = dict()
+    for filename in files:
+        machine = os.path.splitext(os.path.split(filename)[1])[0]
+        config = ConfigParser()
+        config.read(filename)
+        if config.has_section('discovery') and \
+                config.has_option('discovery', 'hostname_contains'):
+            hostname_contains = config.get('discovery',
+                                           'hostname_contains')
+            possible_hosts[machine] = hostname_contains
+
+    return possible_hosts
+
+
 def main():  # noqa: C901
     args = parse_args(bootstrap=True)
 
@@ -830,7 +900,7 @@ def main():  # noqa: C901
         else:
             machine = args.machine
 
-    e3sm_machine = machine is not None
+    known_machine = machine is not None
 
     if machine is None and not args.env_only:
         if platform.system() == 'Linux':
@@ -895,7 +965,7 @@ def main():  # noqa: C901
 
         if args.spack_base is not None:
             spack_base = args.spack_base
-        elif e3sm_machine and compiler is not None:
+        elif known_machine and compiler is not None:
             spack_base = get_spack_base(args.spack_base, config)
         else:
             spack_base = None
@@ -965,7 +1035,6 @@ def main():  # noqa: C901
             check_env(script_filename, conda_env_name, logger)
 
         if env_type == 'release' and not (args.with_albany or
-                                          args.with_netlib_lapack or
                                           args.with_petsc):
             # make a symlink to the activation script
             link = os.path.join(activ_path,

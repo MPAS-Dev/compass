@@ -4,12 +4,11 @@ import pickle
 import sys
 import warnings
 
-from mache import discover_machine
-
 from compass import provenance
 from compass.config import CompassConfigParser
 from compass.io import symlink
 from compass.job import write_job_script
+from compass.machines import discover_machine
 from compass.mpas_cores import get_mpas_cores
 
 
@@ -432,7 +431,8 @@ def _get_basic_config(config_file, machine, mpas_model_path, mpas_core):
 
     # add the E3SM config options from mache
     if machine is not None:
-        config.add_from_package('mache.machines', f'{machine}.cfg')
+        config.add_from_package('mache.machines', f'{machine}.cfg',
+                                exception=False)
 
     # add the compass machine config file
     if machine is None:
