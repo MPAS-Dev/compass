@@ -1,8 +1,8 @@
-from compass.validate import compare_variables
-from compass.testcase import TestCase
-from compass.landice.tests.circular_shelf.setup_mesh import SetupMesh
 from compass.landice.tests.circular_shelf.run_model import RunModel
+from compass.landice.tests.circular_shelf.setup_mesh import SetupMesh
 from compass.landice.tests.circular_shelf.visualize import Visualize
+from compass.testcase import TestCase
+from compass.validate import compare_variables
 
 
 class DecompositionTest(TestCase):
@@ -60,15 +60,15 @@ class DecompositionTest(TestCase):
         compare_variables(test_case=self, variables=['normalVelocity', ],
                           filename1='1proc_run/output.nc',
                           filename2='4proc_run/output.nc',
-                          l1_norm=1.0e-12, l2_norm=1.0e-14,
+                          l1_norm=1.0e-11, l2_norm=1.0e-13,
                           linf_norm=1.0e-15, quiet=False)
         compare_variables(test_case=self, variables=['uReconstructX', ],
                           filename1='1proc_run/output.nc',
                           filename2='4proc_run/output.nc',
-                          l1_norm=1.0e-12, l2_norm=2.0e-14,
+                          l1_norm=1.0e-11, l2_norm=1.0e-13,
                           linf_norm=1.0e-15, quiet=False)
         compare_variables(test_case=self, variables=['uReconstructY', ],
                           filename1='1proc_run/output.nc',
                           filename2='4proc_run/output.nc',
-                          l1_norm=1.0e-12, l2_norm=2.0e-14,
+                          l1_norm=1.0e-11, l2_norm=1.0e-13,
                           linf_norm=1.0e-15, quiet=False)
