@@ -41,8 +41,6 @@ class RemapIceShelfMelt(FilesForE3SMStep):
                 target='Adusumilli_2020_iceshelf_melt_rates_2010-2018_v0.h5',
                 database='initial_condition_database',
                 url='http://library.ucsd.edu/dc/object/bb0448974g/_3_1.h5')
-
-            self.add_output_file(filename=filename)
         else:
             melt_path = \
                 data_ice_shelf_melt.steps['remap_ice_shelf_melt'].path
@@ -51,10 +49,22 @@ class RemapIceShelfMelt(FilesForE3SMStep):
                 filename=filename,
                 work_dir_target=f'{melt_path}/{filename}')
 
+    def setup(self):
+        """
+        setup input files based on config options
+        """
+        super().setup()
+        filename = 'prescribed_ismf_adusumilli2020.nc'
+        if self.with_ice_shelf_cavities:
+            self.add_output_file(filename=filename)
+
     def run(self):
         """
         Run this step of the test case
         """
+        if not self.with_ice_shelf_cavities:
+            return
+
         super().run()
 
         data_ice_shelf_melt = self.data_ice_shelf_melt
