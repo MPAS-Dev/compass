@@ -119,7 +119,7 @@ class FRIS01to60BaseMesh(QuasiUniformSphericalMeshStep):
         cellWidth = dx_min * (1 - weights) + cellWidth * weights
 
         # Add high res FRIS region
-        fc = read_feature_collection('high_res_region.geojson')
+        fc = read_feature_collection('fris_v1.geojson')
 
         so_signed_distance = signed_distance_from_geojson(fc, lon, lat,
                                                           earth_radius,
