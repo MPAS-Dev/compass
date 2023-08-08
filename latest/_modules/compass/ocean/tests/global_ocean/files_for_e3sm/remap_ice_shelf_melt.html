@@ -157,8 +157,6 @@
                 <span class="n">target</span><span class="o">=</span><span class="s1">&#39;Adusumilli_2020_iceshelf_melt_rates_2010-2018_v0.h5&#39;</span><span class="p">,</span>
                 <span class="n">database</span><span class="o">=</span><span class="s1">&#39;initial_condition_database&#39;</span><span class="p">,</span>
                 <span class="n">url</span><span class="o">=</span><span class="s1">&#39;http://library.ucsd.edu/dc/object/bb0448974g/_3_1.h5&#39;</span><span class="p">)</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">melt_path</span> <span class="o">=</span> \
                 <span class="n">data_ice_shelf_melt</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;remap_ice_shelf_melt&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
@@ -167,10 +165,22 @@
                 <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
                 <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">melt_path</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        setup input files based on config options</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;prescribed_ismf_adusumilli2020.nc&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
+
 <div class="viewcode-block" id="RemapIceShelfMelt.run"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.remap_ice_shelf_melt.RemapIceShelfMelt.run.html#compass.ocean.tests.global_ocean.files_for_e3sm.remap_ice_shelf_melt.RemapIceShelfMelt.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
+            <span class="k">return</span>
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 
         <span class="n">data_ice_shelf_melt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_ice_shelf_melt</span>
