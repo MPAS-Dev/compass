@@ -124,6 +124,7 @@
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">LoggingContext</span><span class="p">,</span> <span class="n">check_call</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.mesh.conversion</span> <span class="kn">import</span> <span class="n">cull</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.mesh.creation.sort_mesh</span> <span class="kn">import</span> <span class="n">sort_mesh</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.mesh.mask</span> <span class="kn">import</span> <span class="n">compute_mpas_flood_fill_mask</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.ocean</span> <span class="kn">import</span> <span class="n">inject_bathymetry</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.ocean.coastline_alteration</span> <span class="kn">import</span> <span class="p">(</span>
@@ -133,6 +134,7 @@
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.viz.paraview_extractor</span> <span class="kn">import</span> <span class="n">extract_vtk</span>
 
+<span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">make_graph_file</span>
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
 
@@ -479,10 +481,17 @@
                                               <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
     <span class="c1"># cull the mesh a second time using a flood fill from the seed points</span>
-    <span class="n">dsCulledMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsCulledMesh</span><span class="p">,</span> <span class="n">dsInverse</span><span class="o">=</span><span class="n">dsSeedMask</span><span class="p">,</span>
-                        <span class="n">graphInfoFileName</span><span class="o">=</span><span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
+    <span class="n">dsCulledMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsCulledMesh</span><span class="p">,</span> <span class="n">dsInverse</span><span class="o">=</span><span class="n">dsSeedMask</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
                         <span class="nb">dir</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># sort the cell, edge and vertex indices for better performances</span>
+    <span class="n">dsCulledMesh</span> <span class="o">=</span> <span class="n">sort_mesh</span><span class="p">(</span><span class="n">dsCulledMesh</span><span class="p">)</span>
+
     <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsCulledMesh</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">)</span>
+
+    <span class="c1"># we need to make the graph file after sorting</span>
+    <span class="n">make_graph_file</span><span class="p">(</span><span class="n">mesh_filename</span><span class="o">=</span><span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">,</span>
+                    <span class="n">graph_filename</span><span class="o">=</span><span class="s1">&#39;culled_graph.info&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">critical_passages</span><span class="p">:</span>
         <span class="c1"># make a new version of the critical passages mask on the culled mesh</span>
