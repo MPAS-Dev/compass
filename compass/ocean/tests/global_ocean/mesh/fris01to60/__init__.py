@@ -24,6 +24,12 @@ class FRIS01to60BaseMesh(QuasiUniformSphericalMeshStep):
         self.add_input_file(filename='high_res_region.geojson',
                             package=self.__module__)
 
+        self.add_input_file(filename='fris_v1_transition.geojson',
+                            package=self.__module__)
+
+        self.add_input_file(filename='fris_v1_correction_peninsula.geojson',
+                            package=self.__module__)
+
         self.add_input_file(filename='fris_v1.geojson',
                             package=self.__module__)
 
@@ -119,16 +125,33 @@ class FRIS01to60BaseMesh(QuasiUniformSphericalMeshStep):
         cellWidth = dx_min * (1 - weights) + cellWidth * weights
 
         # Add high res FRIS region transition
-        fc = read_feature_collection('fris_v1.geojson')
+        fc = read_feature_collection('fris_v1_transition.geojson')
 
         so_signed_distance = signed_distance_from_geojson(fc, lon, lat,
                                                           earth_radius,
                                                           max_length=0.25)
 
-        # Equivalent to 20 degrees latitude
-        trans_width = 1600e3
+        # Equivalent to 600 km
+        trans_width = 600e3
         trans_start = 0
         dx_min = 4.
+
+        weights = 0.5 * (1 + np.tanh((so_signed_distance - trans_start) /
+                                     trans_width))
+
+        cellWidth = dx_min * (1 - weights) + cellWidth * weights
+
+        # Add lower res correction west of the peninsula
+        fc = read_feature_collection('fris_v1_correction_peninsula.geojson')
+
+        so_signed_distance = signed_distance_from_geojson(fc, lon, lat,
+                                                          earth_radius,
+                                                          max_length=0.25)
+
+        # Equivalent to 80 km
+        trans_width = 80e3
+        trans_start = 0
+        dx_min = 12.
 
         weights = 0.5 * (1 + np.tanh((so_signed_distance - trans_start) /
                                      trans_width))
@@ -142,8 +165,8 @@ class FRIS01to60BaseMesh(QuasiUniformSphericalMeshStep):
                                                           earth_radius,
                                                           max_length=0.25)
 
-        # Equivalent to 20 degrees latitude
-        trans_width = 100
+        # Equivalent to 80 km (0 should be enough given the setup but to be safe)
+        trans_width = 80e3
         trans_start = 0
         dx_min = 4.
 
