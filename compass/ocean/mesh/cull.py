@@ -10,6 +10,7 @@ from geometric_features import (
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import LoggingContext, check_call
 from mpas_tools.mesh.conversion import cull
+from mpas_tools.mesh.creation.sort_mesh import sort_mesh
 from mpas_tools.mesh.mask import compute_mpas_flood_fill_mask
 from mpas_tools.ocean import inject_bathymetry
 from mpas_tools.ocean.coastline_alteration import (
@@ -19,6 +20,7 @@ from mpas_tools.ocean.coastline_alteration import (
 )
 from mpas_tools.viz.paraview_extractor import extract_vtk
 
+from compass.model import make_graph_file
 from compass.step import Step
 
 
@@ -365,10 +367,17 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
                                               logger=logger)
 
     # cull the mesh a second time using a flood fill from the seed points
-    dsCulledMesh = cull(dsCulledMesh, dsInverse=dsSeedMask,
-                        graphInfoFileName='culled_graph.info', logger=logger,
+    dsCulledMesh = cull(dsCulledMesh, dsInverse=dsSeedMask, logger=logger,
                         dir='.')
+
+    # sort the cell, edge and vertex indices for better performances
+    dsCulledMesh = sort_mesh(dsCulledMesh)
+
     write_netcdf(dsCulledMesh, 'culled_mesh.nc')
+
+    # we need to make the graph file after sorting
+    make_graph_file(mesh_filename='culled_mesh.nc',
+                    graph_filename='culled_graph.info')
 
     if critical_passages:
         # make a new version of the critical passages mask on the culled mesh
