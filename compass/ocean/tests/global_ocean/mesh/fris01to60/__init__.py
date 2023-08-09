@@ -27,7 +27,7 @@ class FRIS01to60BaseMesh(QuasiUniformSphericalMeshStep):
         self.add_input_file(filename='fris_v1_transition.geojson',
                             package=self.__module__)
 
-        self.add_input_file(filename='fris_v1_correction_peninsula.geojson',
+        self.add_input_file(filename='fris_v1_correction_peninsula_v2.geojson',
                             package=self.__module__)
 
         self.add_input_file(filename='fris_v1.geojson',
@@ -131,8 +131,8 @@ class FRIS01to60BaseMesh(QuasiUniformSphericalMeshStep):
                                                           earth_radius,
                                                           max_length=0.25)
 
-        # Equivalent to 600 km
-        trans_width = 600e3
+        # Equivalent to 550 km
+        trans_width = 550e3
         trans_start = 0
         dx_min = 4.
 
@@ -142,14 +142,14 @@ class FRIS01to60BaseMesh(QuasiUniformSphericalMeshStep):
         cellWidth = dx_min * (1 - weights) + cellWidth * weights
 
         # Add lower res correction west of the peninsula
-        fc = read_feature_collection('fris_v1_correction_peninsula.geojson')
+        fc = read_feature_collection('fris_v1_correction_peninsula_v2.geojson')
 
         so_signed_distance = signed_distance_from_geojson(fc, lon, lat,
                                                           earth_radius,
                                                           max_length=0.25)
 
-        # Equivalent to 80 km
-        trans_width = 80e3
+        # Equivalent to 100 km
+        trans_width = 100e3
         trans_start = 0
         dx_min = 12.
 
@@ -165,8 +165,8 @@ class FRIS01to60BaseMesh(QuasiUniformSphericalMeshStep):
                                                           earth_radius,
                                                           max_length=0.25)
 
-        # Equivalent to 80 km (0 should be enough given the setup but to be safe)
-        trans_width = 80e3
+        # Equivalent to 100 km (0 should be enough given the setup but to be safe)
+        trans_width = 100e3
         trans_start = 0
         dx_min = 4.
 
