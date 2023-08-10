@@ -1,4 +1,6 @@
+import os
 import shutil
+import subprocess
 
 import numpy
 import xarray
@@ -39,7 +41,8 @@ def compute_land_ice_pressure_and_draft(ssh, modify_mask, ref_density):
     return landIcePressure, landIceDraft
 
 
-def adjust_ssh(variable, iteration_count, step, update_pio=True):
+def adjust_ssh(variable, iteration_count, step, update_pio=True,
+               convert_to_cdf5=False):
     """
     Adjust the sea surface height or land-ice pressure to be dynamically
     consistent with one another.  A series of short model runs are performed,
@@ -58,6 +61,11 @@ def adjust_ssh(variable, iteration_count, step, update_pio=True):
 
     update_pio : bool, optional
         Whether to update PIO tasks and stride
+
+    convert_to_cdf5 : bool, optional
+        Whether to convert files to CDF5 format with ncks after writing them
+        out.  This is intended to improve MPAS-Ocean performance, since reading
+        in NETCDF4 format files can be very slow.
     """
     ntasks = step.ntasks
     config = step.config
@@ -142,7 +150,15 @@ def adjust_ssh(variable, iteration_count, step, update_pio=True):
 
                 finalSSH = initSSH
 
-            write_netcdf(ds_out, out_filename)
+            if convert_to_cdf5:
+                name, ext = os.path.splitext(out_filename)
+                write_filename = f'{name}_before_cdf5{ext}'
+            else:
+                write_filename = out_filename
+            write_netcdf(ds_out, write_filename)
+            if convert_to_cdf5:
+                args = ['ncks', '-5', write_filename, out_filename]
+                subprocess.check_call(args)
 
             # Write the largest change in SSH and its lon/lat to a file
             with open(f'maxDeltaSSH_{iterIndex:03d}.log', 'w') as \
