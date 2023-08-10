@@ -161,6 +161,30 @@ class FRIS01to60BaseMesh(QuasiUniformSphericalMeshStep):
 
         cellWidth = dx_min * (1 - weights) + cellWidth * weights
 
+        # Add 12 km sharp correction west of the peninsula
+        fc = read_feature_collection('fris_v1_peninsula_12km_transition.geojson')
+
+        so_signed_distance = signed_distance_from_geojson(fc, lon, lat,
+                                                          earth_radius,
+                                                          max_length=0.25)
+
+        # Equivalent to 10 km
+        trans_width = 10e3
+        trans_start = 0
+        dx_min = 12.
+
+        weights = 0.5 * (1 + np.tanh((so_signed_distance - trans_start) /
+                                     trans_width))
+
+        cellWidth = dx_min * (1 - weights) + cellWidth * weights
+
+        # Add high res FRIS region inner
+        fc = read_feature_collection('fris_v1.geojson')
+
+        so_signed_distance = signed_distance_from_geojson(fc, lon, lat,
+                                                          earth_radius,
+                                                          max_length=0.25)
+
         # Add 12 km transition correction west of the peninsula
         fc = read_feature_collection('fris_v1_peninsula_12km_transition.geojson')
 
@@ -168,8 +192,8 @@ class FRIS01to60BaseMesh(QuasiUniformSphericalMeshStep):
                                                           earth_radius,
                                                           max_length=0.25)
 
-        # Equivalent to 150 km
-        trans_width = 150e3
+        # Equivalent to 200 km
+        trans_width = 200e3
         trans_start = 0
         dx_min = 12.
 
