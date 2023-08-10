@@ -27,7 +27,10 @@ class FRIS01to60BaseMesh(QuasiUniformSphericalMeshStep):
         self.add_input_file(filename='fris_v1_transition.geojson',
                             package=self.__module__)
 
-        self.add_input_file(filename='fris_v1_correction_peninsula_v3.geojson',
+        self.add_input_file(filename='fris_v1_peninsula_12km.geojson',
+                            package=self.__module__)
+
+        self.add_input_file(filename='fris_v1_peninsula_12km_transition.geojson',
                             package=self.__module__)
 
         self.add_input_file(filename='fris_v1.geojson',
@@ -141,15 +144,32 @@ class FRIS01to60BaseMesh(QuasiUniformSphericalMeshStep):
 
         cellWidth = dx_min * (1 - weights) + cellWidth * weights
 
-        # Add lower res correction west of the peninsula
-        fc = read_feature_collection('fris_v1_correction_peninsula_v3.geojson')
+        # Add 12 km sharp correction west of the peninsula
+        fc = read_feature_collection('fris_v1_peninsula_12km.geojson')
 
         so_signed_distance = signed_distance_from_geojson(fc, lon, lat,
                                                           earth_radius,
                                                           max_length=0.25)
 
-        # Equivalent to 50 km
-        trans_width = 50e3
+        # Equivalent to 10 km
+        trans_width = 10e3
+        trans_start = 0
+        dx_min = 12.
+
+        weights = 0.5 * (1 + np.tanh((so_signed_distance - trans_start) /
+                                     trans_width))
+
+        cellWidth = dx_min * (1 - weights) + cellWidth * weights
+
+        # Add 12 km transition correction west of the peninsula
+        fc = read_feature_collection('fris_v1_peninsula_12km_transition.geojson')
+
+        so_signed_distance = signed_distance_from_geojson(fc, lon, lat,
+                                                          earth_radius,
+                                                          max_length=0.25)
+
+        # Equivalent to 150 km
+        trans_width = 150e3
         trans_start = 0
         dx_min = 12.
 
