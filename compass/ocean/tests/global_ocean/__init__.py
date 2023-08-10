@@ -54,6 +54,9 @@ class GlobalOcean(TestGroup):
         self._add_tests(mesh_names=['Kuroshio12to60', 'Kuroshio8to60'])
 
         self._add_tests(mesh_names=['FRIS01to60', 'FRISwISC01to60'])
+        self._add_tests(mesh_names=['FRIS02to60', 'FRISwISC02to60'])
+        self._add_tests(mesh_names=['FRIS04to60', 'FRISwISC04to60'])
+        self._add_tests(mesh_names=['FRIS08to60', 'FRISwISC08to60'])
 
         # A test case for making E3SM support files from an existing mesh
         self.add_test_case(FilesForE3SM(test_group=self))
