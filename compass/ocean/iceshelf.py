@@ -1,7 +1,7 @@
-import numpy
-import xarray
 import shutil
 
+import numpy
+import xarray
 from mpas_tools.cime.constants import constants
 from mpas_tools.io import write_netcdf
 
@@ -34,12 +34,12 @@ def compute_land_ice_pressure_and_draft(ssh, modify_mask, ref_density):
     """
     gravity = constants['SHR_CONST_G']
     landIcePressure = \
-        modify_mask*numpy.maximum(-ref_density * gravity * ssh, 0.)
+        modify_mask * numpy.maximum(-ref_density * gravity * ssh, 0.)
     landIceDraft = ssh
     return landIcePressure, landIceDraft
 
 
-def adjust_ssh(variable, iteration_count, step):
+def adjust_ssh(variable, iteration_count, step, update_pio=True):
     """
     Adjust the sea surface height or land-ice pressure to be dynamically
     consistent with one another.  A series of short model runs are performed,
@@ -55,6 +55,9 @@ def adjust_ssh(variable, iteration_count, step):
 
     step : compass.Step
         the step for performing SSH or land-ice pressure adjustment
+
+    update_pio : bool, optional
+        Whether to update PIO tasks and stride
     """
     ntasks = step.ntasks
     config = step.config
@@ -62,17 +65,17 @@ def adjust_ssh(variable, iteration_count, step):
     out_filename = None
 
     if variable not in ['ssh', 'landIcePressure']:
-        raise ValueError("Unknown variable to modify: {}".format(variable))
+        raise ValueError(f"Unknown variable to modify: {variable}")
 
-    step.update_namelist_pio('namelist.ocean')
+    if update_pio:
+        step.update_namelist_pio('namelist.ocean')
     partition(ntasks, config, logger)
 
     for iterIndex in range(iteration_count):
-        logger.info(" * Iteration {}/{}".format(iterIndex + 1,
-                                                iteration_count))
+        logger.info(f" * Iteration {iterIndex + 1}/{iteration_count}")
 
-        in_filename = 'adjusting_init{}.nc'.format(iterIndex)
-        out_filename = 'adjusting_init{}.nc'.format(iterIndex+1)
+        in_filename = f'adjusting_init{iterIndex}.nc'
+        out_filename = f'adjusting_init{iterIndex + 1}.nc'
         symlink(in_filename, 'adjusting_init.nc')
 
         logger.info("   * Running forward model")
@@ -92,7 +95,7 @@ def adjust_ssh(variable, iteration_count, step):
 
             initSSH = ds.ssh
             if 'minLevelCell' in ds:
-                minLevelCell = ds.minLevelCell-1
+                minLevelCell = ds.minLevelCell - 1
             else:
                 minLevelCell = xarray.zeros_like(ds.maxLevelCell)
 
@@ -142,7 +145,7 @@ def adjust_ssh(variable, iteration_count, step):
             write_netcdf(ds_out, out_filename)
 
             # Write the largest change in SSH and its lon/lat to a file
-            with open('maxDeltaSSH_{:03d}.log'.format(iterIndex), 'w') as \
+            with open(f'maxDeltaSSH_{iterIndex:03d}.log', 'w') as \
                     log_file:
 
                 mask = landIcePressure > 0.
@@ -151,22 +154,21 @@ def adjust_ssh(variable, iteration_count, step):
                 ds_cell = ds.isel(nCells=iCell)
 
                 if on_a_sphere:
-                    coords = 'lon/lat: {:f} {:f}'.format(
-                        numpy.rad2deg(ds_cell.lonCell.values),
-                        numpy.rad2deg(ds_cell.latCell.values))
+                    coords = (f'lon/lat: '
+                              f'{numpy.rad2deg(ds_cell.lonCell.values):f} '
+                              f'{numpy.rad2deg(ds_cell.latCell.values):f}')
                 else:
-                    coords = 'x/y: {:f} {:f}'.format(
-                        1e-3 * ds_cell.xCell.values,
-                        1e-3 * ds_cell.yCell.values)
-                string = 'deltaSSHMax: {:g}, {}'.format(
-                    deltaSSH.isel(nCells=iCell).values, coords)
-                logger.info('     {}'.format(string))
-                log_file.write('{}\n'.format(string))
-                string = 'ssh: {:g}, landIcePressure: {:g}'.format(
-                    finalSSH.isel(nCells=iCell).values,
-                    landIcePressure.isel(nCells=iCell).values)
-                logger.info('     {}'.format(string))
-                log_file.write('{}\n'.format(string))
+                    coords = (f'x/y: {1e-3 * ds_cell.xCell.values:f} '
+                              f'{1e-3 * ds_cell.yCell.values:f}')
+                string = (f'deltaSSHMax: '
+                          f'{deltaSSH.isel(nCells=iCell).values:g}, {coords}')
+                logger.info(f'     {string}')
+                log_file.write(f'{string}\n')
+                string = (f'ssh: {finalSSH.isel(nCells=iCell).values:g}, '
+                          f'landIcePressure: '
+                          f'{landIcePressure.isel(nCells=iCell).values:g}')
+                logger.info(f'     {string}')
+                log_file.write(f'{string}\n')
 
         logger.info("   - Complete\n")
 

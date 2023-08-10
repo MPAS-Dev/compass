@@ -61,5 +61,6 @@ class SshAdjustment(ForwardStep):
         """
         config = self.config
         iteration_count = config.getint('ssh_adjustment', 'iterations')
+        update_pio = config.getboolean('global_ocean', 'forward_update_pio')
         adjust_ssh(variable='landIcePressure', iteration_count=iteration_count,
-                   step=self)
+                   step=self, update_pio=update_pio)
