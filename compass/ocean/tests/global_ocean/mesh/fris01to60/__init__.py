@@ -128,6 +128,8 @@ class FRIS01to60BaseMesh(QuasiUniformSphericalMeshStep):
         cellWidth = dx_min * (1 - weights) + cellWidth * weights
 
         # Add high res FRIS region transition
+        dx_min_fris = 1.  # minimum resolution within the FRIS cavity
+
         fc = read_feature_collection('fris_v1_transition.geojson')
 
         so_signed_distance = signed_distance_from_geojson(fc, lon, lat,
@@ -137,7 +139,7 @@ class FRIS01to60BaseMesh(QuasiUniformSphericalMeshStep):
         # Equivalent to 600 km
         trans_width = 600e3
         trans_start = 0
-        dx_min = 4.
+        dx_min = dx_min_fris
 
         weights = 0.5 * (1 + np.tanh((so_signed_distance - trans_start) /
                                      trans_width))
@@ -188,7 +190,7 @@ class FRIS01to60BaseMesh(QuasiUniformSphericalMeshStep):
         # Equivalent to 100 km (0 should be enough given the setup but to be safe)
         trans_width = 100e3
         trans_start = 0
-        dx_min = 4.
+        dx_min = dx_min_fris
 
         weights = 0.5 * (1 + np.tanh((so_signed_distance - trans_start) /
                                      trans_width))
