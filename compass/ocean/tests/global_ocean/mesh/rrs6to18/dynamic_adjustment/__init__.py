@@ -40,7 +40,7 @@ class RRS6to18DynamicAdjustment(DynamicAdjustment):
         restart_times = ['0001-01-01_06:00:00', '0001-01-01_12:00:00',
                          '0001-01-02_00:00:00', '0001-01-03_00:00:00',
                          '0001-01-04_00:00:00', '0001-01-07_00:00:00',
-                         '0001-01-31_00:00:00']
+                         '0001-01-13_00:00:00', '0001-01-31_00:00:00']
 
         restart_filenames = [
             f'restarts/rst.{restart_time.replace(":", ".")}.nc'
@@ -198,8 +198,10 @@ class RRS6to18DynamicAdjustment(DynamicAdjustment):
 
         namelist_options = {
             'config_run_duration': "'00-00-03_00:00:00'",
-            'config_dt': "'00:06:00'",
-            'config_btr_dt': "'00:00:12'",
+            'config_dt': "'00:04:00'",
+            'config_btr_dt': "'00:00:08'",
+            'config_implicit_bottom_drag_type': "'constant_and_rayleigh'",
+            'config_Rayleigh_damping_coeff': '5.0e-6',
             'config_do_restart': '.true.',
             'config_start_time': f"'{restart_times[4]}'"}
         namelist_options.update(shared_options)
@@ -215,16 +217,18 @@ class RRS6to18DynamicAdjustment(DynamicAdjustment):
         step.add_output_file(filename=f'../{restart_filenames[5]}')
         self.add_step(step)
 
-        # final step
-        step_name = 'simulation'
+        # seventh step
+        step_name = 'damped_adjustment_7'
         step = ForwardStep(test_case=self, mesh=mesh, init=init,
                            time_integrator=time_integrator, name=step_name,
                            subdir=step_name, get_dt_from_min_res=False)
 
         namelist_options = {
-            'config_run_duration': "'00-00-24_00:00:00'",
-            'config_dt': "'00:06:00'",
-            'config_btr_dt': "'00:00:12'",
+            'config_run_duration': "'00-00-06_00:00:00'",
+            'config_dt': "'00:05:00'",
+            'config_btr_dt': "'00:00:10'",
+            'config_implicit_bottom_drag_type': "'constant_and_rayleigh'",
+            'config_Rayleigh_damping_coeff': '5.0e-6',
             'config_do_restart': '.true.',
             'config_start_time': f"'{restart_times[5]}'"}
         namelist_options.update(shared_options)
@@ -238,6 +242,31 @@ class RRS6to18DynamicAdjustment(DynamicAdjustment):
 
         step.add_input_file(filename=f'../{restart_filenames[5]}')
         step.add_output_file(filename=f'../{restart_filenames[6]}')
+        self.add_step(step)
+
+        # final step
+        step_name = 'simulation'
+        step = ForwardStep(test_case=self, mesh=mesh, init=init,
+                           time_integrator=time_integrator, name=step_name,
+                           subdir=step_name, get_dt_from_min_res=False)
+
+        namelist_options = {
+            'config_run_duration': "'00-00-18_00:00:00'",
+            'config_dt': "'00:05:00'",
+            'config_btr_dt': "'00:00:10'",
+            'config_do_restart': '.true.',
+            'config_start_time': f"'{restart_times[6]}'"}
+        namelist_options.update(shared_options)
+        step.add_namelist_options(namelist_options)
+
+        stream_replacements = {
+            'output_interval': '00-00-10_00:00:00',
+            'restart_interval': '00-00-06_00:00:00'}
+        step.add_streams_file(module, 'streams.template',
+                              template_replacements=stream_replacements)
+
+        step.add_input_file(filename=f'../{restart_filenames[6]}')
+        step.add_output_file(filename=f'../{restart_filenames[7]}')
         step.add_output_file(filename='output.nc')
         self.add_step(step)
 
