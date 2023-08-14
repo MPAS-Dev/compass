@@ -198,7 +198,9 @@ class ForwardStep(Step):
         """
         Run this step of the testcase
         """
-        run_model(self)
+        update_pio = self.config.getboolean('global_ocean',
+                                            'forward_update_pio')
+        run_model(self, update_pio=update_pio)
         add_mesh_and_init_metadata(self.outputs, self.config,
                                    init_filename='init.nc')
 

@@ -45,6 +45,18 @@ Note that meshes and test cases may modify these options, as noted below.
     cull_mesh_max_memory = 1000
 
 
+    # Options relate to adjusting the sea-surface height or land-ice pressure
+    # below ice shelves to they are dynamically consistent with one another
+    [ssh_adjustment]
+
+    # the number of iterations of ssh adjustment to perform
+    iterations = 10
+
+    # Whether to convert adjusted initial condition files to CDF5 format during
+    # ssh adjustment under ice shelves
+    convert_to_cdf5 = False
+
+
     # options for global ocean testcases
     [global_ocean]
 
@@ -65,16 +77,27 @@ Note that meshes and test cases may modify these options, as noted below.
     btr_dt_per_km = 1.5
 
     ## config options related to the initial_state step
+
+    # Maximum allowed Haney number for configurations with ice-shelf cavities
+    rx1_max = 20
+
     # number of cores to use
     init_ntasks = 36
     # minimum of cores, below which the step fails
     init_min_tasks = 8
     # number of threads
     init_threads = 1
+    # The number of cores per task in init mode -- used to avoid running out of
+    # memory where needed
+    init_cpus_per_task = 1
+    # whether to update PIO tasks and stride
+    init_update_pio = True
 
     ## config options related to the forward steps
     # number of threads
     forward_threads = 1
+    # whether to update PIO tasks and stride
+    forward_update_pio = True
 
     ## metadata related to the mesh
     # whether to add metadata to output files

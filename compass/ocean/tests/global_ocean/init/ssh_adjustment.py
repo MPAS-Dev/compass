@@ -1,3 +1,5 @@
+from importlib.resources import contents
+
 from compass.ocean.iceshelf import adjust_ssh
 from compass.ocean.tests.global_ocean.forward import ForwardStep
 
@@ -28,6 +30,16 @@ class SshAdjustment(ForwardStep):
         self.add_streams_file('compass.ocean.tests.global_ocean.init',
                               'streams.ssh_adjust')
 
+        mesh_package = test_case.mesh.package
+        mesh_package_contents = list(contents(mesh_package))
+        mesh_namelist = 'namelist.ssh_adjust'
+        if mesh_namelist in mesh_package_contents:
+            self.add_namelist_file(mesh_package, mesh_namelist)
+
+        mesh_streams = 'streams.ssh_adjust'
+        if mesh_streams in mesh_package_contents:
+            self.add_streams_file(mesh_package, mesh_streams)
+
         mesh_path = test_case.mesh.get_cull_mesh_path()
         init_path = test_case.steps['initial_state'].path
 
@@ -49,5 +61,9 @@ class SshAdjustment(ForwardStep):
         """
         config = self.config
         iteration_count = config.getint('ssh_adjustment', 'iterations')
+        update_pio = config.getboolean('global_ocean', 'forward_update_pio')
+        convert_to_cdf5 = config.getboolean('ssh_adjustment',
+                                            'convert_to_cdf5')
         adjust_ssh(variable='landIcePressure', iteration_count=iteration_count,
-                   step=self)
+                   step=self, update_pio=update_pio,
+                   convert_to_cdf5=convert_to_cdf5)

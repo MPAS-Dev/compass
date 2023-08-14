@@ -311,7 +311,7 @@ Finally, you might need to update the ``target`` and ``operating_system``.
 This is a bit of a "catch 22" in that you can use Spack to find this out but
 compass is designed to clone and set up Spack for you so we assume you don't
 have it yet.  For now, make your best guess using the info on
-`this page<https://spack.readthedocs.io/en/latest/basic_usage.html#architecture-specifiers>`_
+`this page <https://spack.readthedocs.io/en/latest/basic_usage.html#architecture-specifiers>`_
 and correct it later if necessary.
 
 You may need to load a system module to get the compilers and potentially other

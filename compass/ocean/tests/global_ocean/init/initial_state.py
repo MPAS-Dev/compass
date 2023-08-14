@@ -168,7 +168,8 @@ class InitialState(Step):
         plot_vertical_grid(grid_filename='vertical_grid.nc', config=config,
                            out_filename='vertical_grid.png')
 
-        run_model(self)
+        update_pio = config.getboolean('global_ocean', 'init_update_pio')
+        run_model(self, update_pio=update_pio)
 
         add_mesh_and_init_metadata(self.outputs, config,
                                    init_filename='initial_state.nc')
@@ -182,3 +183,6 @@ class InitialState(Step):
         self.ntasks = config.getint('global_ocean', 'init_ntasks')
         self.min_tasks = config.getint('global_ocean', 'init_min_tasks')
         self.openmp_threads = config.getint('global_ocean', 'init_threads')
+        self.cpus_per_task = config.getint('global_ocean',
+                                           'init_cpus_per_task')
+        self.min_cpus_per_task = self.cpus_per_task
