@@ -76,6 +76,9 @@ class OceanGraphPartition(FilesForE3SMStep):
             if ncores > ncells:
                 raise ValueError('Can\t have more tasks than cells in a '
                                  'partition file.')
+            out_filename = f'mpas-o.graph.info.{creation_date}.part.{ncores}'
+            if os.path.exists(out_filename):
+                continue
             if ncores == 1:
                 args = ['touch', f'mpas-o.graph.info.{creation_date}.part.1']
             else:

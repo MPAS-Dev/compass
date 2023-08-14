@@ -116,7 +116,16 @@ class SeaiceGraphPartition(FilesForE3SMStep):
             if ncores > ncells:
                 raise ValueError('Can\t have more tasks than cells in a '
                                  'partition file.')
-            if ncores > 1:
+            if ncores <= 0:
+                raise ValueError(f'Can\t make a partition for {ncores} tasks.')
+            out_filename = \
+                f'mpas-seaice.graph.info.{creation_date}.part.{ncores}'
+            if os.path.exists(out_filename):
+                continue
+
+            if ncores == 1:
+                args = ['touch', f'mpas-o.graph.info.{creation_date}.part.1']
+            else:
                 args.append(f'{ncores}')
 
         check_call(args, logger)
