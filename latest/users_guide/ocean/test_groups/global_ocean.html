@@ -186,6 +186,18 @@ Note that meshes and test cases may modify these options, as noted below.</p>
 <span class="na">cull_mesh_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span>
 
 
+<span class="c1"># Options relate to adjusting the sea-surface height or land-ice pressure</span>
+<span class="c1"># below ice shelves to they are dynamically consistent with one another</span>
+<span class="k">[ssh_adjustment]</span>
+
+<span class="c1"># the number of iterations of ssh adjustment to perform</span>
+<span class="na">iterations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span>
+
+<span class="c1"># Whether to convert adjusted initial condition files to CDF5 format during</span>
+<span class="c1"># ssh adjustment under ice shelves</span>
+<span class="na">convert_to_cdf5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+
+
 <span class="c1"># options for global ocean testcases</span>
 <span class="k">[global_ocean]</span>
 
@@ -206,16 +218,27 @@ Note that meshes and test cases may modify these options, as noted below.</p>
 <span class="na">btr_dt_per_km</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.5</span>
 
 <span class="c1">## config options related to the initial_state step</span>
+
+<span class="c1"># Maximum allowed Haney number for configurations with ice-shelf cavities</span>
+<span class="na">rx1_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">20</span>
+
 <span class="c1"># number of cores to use</span>
 <span class="na">init_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">36</span>
 <span class="c1"># minimum of cores, below which the step fails</span>
 <span class="na">init_min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span>
 <span class="c1"># number of threads</span>
 <span class="na">init_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="c1"># The number of cores per task in init mode -- used to avoid running out of</span>
+<span class="c1"># memory where needed</span>
+<span class="na">init_cpus_per_task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="c1"># whether to update PIO tasks and stride</span>
+<span class="na">init_update_pio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
 
 <span class="c1">## config options related to the forward steps</span>
 <span class="c1"># number of threads</span>
 <span class="na">forward_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="c1"># whether to update PIO tasks and stride</span>
+<span class="na">forward_update_pio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
 
 <span class="c1">## metadata related to the mesh</span>
 <span class="c1"># whether to add metadata to output files</span>

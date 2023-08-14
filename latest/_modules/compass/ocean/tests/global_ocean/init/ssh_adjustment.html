@@ -114,7 +114,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.global_ocean.init.ssh_adjustment</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.ocean.iceshelf</span> <span class="kn">import</span> <span class="n">adjust_ssh</span>
+<span></span><span class="kn">from</span> <span class="nn">importlib.resources</span> <span class="kn">import</span> <span class="n">contents</span>
+
+<span class="kn">from</span> <span class="nn">compass.ocean.iceshelf</span> <span class="kn">import</span> <span class="n">adjust_ssh</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.forward</span> <span class="kn">import</span> <span class="n">ForwardStep</span>
 
 
@@ -144,6 +146,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.global_ocean.init&#39;</span><span class="p">,</span>
                               <span class="s1">&#39;streams.ssh_adjust&#39;</span><span class="p">)</span>
 
+        <span class="n">mesh_package</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">package</span>
+        <span class="n">mesh_package_contents</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">contents</span><span class="p">(</span><span class="n">mesh_package</span><span class="p">))</span>
+        <span class="n">mesh_namelist</span> <span class="o">=</span> <span class="s1">&#39;namelist.ssh_adjust&#39;</span>
+        <span class="k">if</span> <span class="n">mesh_namelist</span> <span class="ow">in</span> <span class="n">mesh_package_contents</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">mesh_package</span><span class="p">,</span> <span class="n">mesh_namelist</span><span class="p">)</span>
+
+        <span class="n">mesh_streams</span> <span class="o">=</span> <span class="s1">&#39;streams.ssh_adjust&#39;</span>
+        <span class="k">if</span> <span class="n">mesh_streams</span> <span class="ow">in</span> <span class="n">mesh_package_contents</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">mesh_package</span><span class="p">,</span> <span class="n">mesh_streams</span><span class="p">)</span>
+
         <span class="n">mesh_path</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">get_cull_mesh_path</span><span class="p">()</span>
         <span class="n">init_path</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;initial_state&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
 
@@ -165,8 +177,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">iteration_count</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ssh_adjustment&#39;</span><span class="p">,</span> <span class="s1">&#39;iterations&#39;</span><span class="p">)</span>
+        <span class="n">update_pio</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_update_pio&#39;</span><span class="p">)</span>
+        <span class="n">convert_to_cdf5</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;ssh_adjustment&#39;</span><span class="p">,</span>
+                                            <span class="s1">&#39;convert_to_cdf5&#39;</span><span class="p">)</span>
         <span class="n">adjust_ssh</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;landIcePressure&#39;</span><span class="p">,</span> <span class="n">iteration_count</span><span class="o">=</span><span class="n">iteration_count</span><span class="p">,</span>
-                   <span class="n">step</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div></div>
+                   <span class="n">step</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_pio</span><span class="o">=</span><span class="n">update_pio</span><span class="p">,</span>
+                   <span class="n">convert_to_cdf5</span><span class="o">=</span><span class="n">convert_to_cdf5</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

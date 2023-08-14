@@ -132,7 +132,7 @@
 <h1>compass.ocean.iceshelf.adjust_ssh<a class="headerlink" href="#compass-ocean-iceshelf-adjust-ssh" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="compass.ocean.iceshelf.adjust_ssh">
-<span class="sig-prename descclassname"><span class="pre">compass.ocean.iceshelf.</span></span><span class="sig-name descname"><span class="pre">adjust_ssh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iteration_count</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/iceshelf.html#adjust_ssh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.iceshelf.adjust_ssh" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">compass.ocean.iceshelf.</span></span><span class="sig-name descname"><span class="pre">adjust_ssh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iteration_count</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_pio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convert_to_cdf5</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/iceshelf.html#adjust_ssh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.iceshelf.adjust_ssh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adjust the sea surface height or land-ice pressure to be dynamically
 consistent with one another.  A series of short model runs are performed,
 each with</p>
@@ -142,6 +142,10 @@ each with</p>
 <li><p><strong>variable</strong> (<em>{'ssh'</em><em>, </em><em>'landIcePressure'}</em>) – The variable to adjust</p></li>
 <li><p><strong>iteration_count</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – The number of iterations of adjustment</p></li>
 <li><p><strong>step</strong> (<a class="reference internal" href="../../generated/compass.Step.html#compass.Step" title="compass.Step"><em>compass.Step</em></a>) – the step for performing SSH or land-ice pressure adjustment</p></li>
+<li><p><strong>update_pio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to update PIO tasks and stride</p></li>
+<li><p><strong>convert_to_cdf5</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to convert files to CDF5 format with ncks after writing them
+out.  This is intended to improve MPAS-Ocean performance, since reading
+in NETCDF4 format files can be very slow.</p></li>
 </ul>
 </dd>
 </dl>
