@@ -181,13 +181,6 @@ def install_miniconda(conda_base, activate_base, logger):
     check_call(commands, logger=logger)
 
     commands = f'{activate_base} && ' \
-               f'conda remove -y boa'
-    try:
-        check_call(commands, logger=logger)
-    except subprocess.CalledProcessError:
-        pass
-
-    commands = f'{activate_base} && ' \
                f'mamba update -y --all && ' \
                f'mamba init'
 
