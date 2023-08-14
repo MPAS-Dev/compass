@@ -355,6 +355,12 @@ def get_env_vars(machine, compiler, mpilib):
                    f'export I_MPI_F77=ifort\n' \
                    f'export I_MPI_F90=ifort\n'
 
+    if machine.startswith('conda'):
+        # we're using parallelio so we don't have ADIOS support
+        env_vars = \
+            f'{env_vars}' \
+            f'export HAVE_ADIOS=false\n'
+
     if platform.system() == 'Linux' and machine.startswith('conda'):
         env_vars = \
             f'{env_vars}' \
