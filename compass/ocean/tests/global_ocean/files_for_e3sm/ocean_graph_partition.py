@@ -69,7 +69,14 @@ class OceanGraphPartition(FilesForE3SMStep):
         symlink('graph.info', f'mpas-o.graph.info.{creation_date}')
 
         ncells = sum(1 for _ in open('graph.info'))
-        cores = get_core_list(ncells=ncells)
+        max_cells_per_core = config.getint('files_for_e3sm',
+                                           'max_cells_per_core')
+        min_cells_per_core = config.getint('files_for_e3sm',
+                                           'min_cells_per_core')
+        cores = get_core_list(ncells=ncells,
+                              max_cells_per_core=max_cells_per_core,
+                              min_cells_per_core=min_cells_per_core)
+
         logger.info(f'Creating graph files between {np.amin(cores)} and '
                     f'{np.amax(cores)}')
         for ncores in cores:

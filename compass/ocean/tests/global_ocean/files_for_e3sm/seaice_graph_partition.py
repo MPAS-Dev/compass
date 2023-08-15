@@ -76,7 +76,13 @@ class SeaiceGraphPartition(FilesForE3SMStep):
                 write_netcdf(ds, 'mesh.nc')
                 mesh_filename = 'mesh.nc'
 
-        cores = get_core_list(ncells=ncells)
+        max_cells_per_core = config.getint('files_for_e3sm',
+                                           'max_cells_per_core')
+        min_cells_per_core = config.getint('files_for_e3sm',
+                                           'min_cells_per_core')
+        cores = get_core_list(ncells=ncells,
+                              max_cells_per_core=max_cells_per_core,
+                              min_cells_per_core=min_cells_per_core)
         logger.info(f'Creating graph files between {np.amin(cores)} and '
                     f'{np.amax(cores)}')
 
