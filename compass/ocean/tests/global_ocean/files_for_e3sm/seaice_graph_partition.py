@@ -129,9 +129,7 @@ class SeaiceGraphPartition(FilesForE3SMStep):
             if os.path.exists(out_filename):
                 continue
 
-            if ncores == 1:
-                args = ['touch', f'mpas-o.graph.info.{creation_date}.part.1']
-            else:
+            if ncores > 1:
                 args.append(f'{ncores}')
 
         check_call(args, logger)
