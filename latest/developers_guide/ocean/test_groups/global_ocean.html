@@ -695,6 +695,125 @@ module:</p>
 <a class="reference internal" href="../framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a>) with 60 vertical levels ranging in
 thickness from 10 to 250 m.</p>
 </section>
+<section id="rrs6to18-and-rrswisc6to18">
+<span id="dev-ocean-global-ocean-rrs6to18"></span><h5>RRS6to18 and RRSwISC6to18<a class="headerlink" href="#rrs6to18-and-rrswisc6to18" title="Permalink to this heading">¶</a></h5>
+<p>The <code class="docutils literal notranslate"><span class="pre">RRS6to18</span></code> and <code class="docutils literal notranslate"><span class="pre">RRSwISC6to18</span></code> Rossby-radius-scaling (RRS) meshes are
+the E3SM v3 “high resolution” meshes.  They have resolution that scales as
+a function of latitude approximately with the Rossby radius of deformation
+from 6 km at the poles to 18 km at the equator.</p>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.rrs6to18.RRS6to18BaseMesh.html#compass.ocean.tests.global_ocean.mesh.rrs6to18.RRS6to18BaseMesh" title="compass.ocean.tests.global_ocean.mesh.rrs6to18.RRS6to18BaseMesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.rrs6to18.RRS6to18BaseMesh</span></code></a>
+defines the resolution for the meshes. The
+<code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.rrs6to18</span></code> module includes namelist options
+appropriate for forward simulations with split-explicit (but not RK4) time
+integration on these meshes.  These set the time step and default run duration
+for short runs with these meshes.</p>
+<p>The default config options for these meshes are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
+<span class="k">[vertical_grid]</span>
+
+<span class="c1"># the type of vertical grid</span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">80layerE3SMv1</span>
+
+
+<span class="c1"># Options relate to adjusting the sea-surface height or land-ice pressure</span>
+<span class="c1"># below ice shelves to they are dynamically consistent with one another</span>
+<span class="k">[ssh_adjustment]</span>
+
+<span class="c1"># Whether to convert adjusted initial condition files to CDF5 format during</span>
+<span class="c1"># ssh adjustment under ice shelves</span>
+<span class="na">convert_to_cdf5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+
+
+<span class="c1"># options for global ocean testcases</span>
+<span class="k">[global_ocean]</span>
+
+<span class="c1">## config options related to the initial_state step</span>
+<span class="c1"># number of cores to use</span>
+<span class="na">init_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">512</span>
+<span class="c1"># minimum of cores, below which the step fails</span>
+<span class="na">init_min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">64</span>
+<span class="c1"># The number of cores per task in init mode -- used to avoid running out of</span>
+<span class="c1"># memory where needed</span>
+<span class="na">init_cpus_per_task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span>
+<span class="c1"># whether to update PIO tasks and stride</span>
+<span class="na">init_update_pio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+
+<span class="c1"># whether to update PIO tasks and stride</span>
+<span class="na">forward_update_pio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+
+<span class="c1"># the approximate number of cells in the mesh</span>
+<span class="na">approx_cell_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3700000</span>
+
+<span class="c1">## metadata related to the mesh</span>
+<span class="c1"># the prefix (e.g. QU, EC, WC, SO)</span>
+<span class="na">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">RRS</span>
+<span class="c1"># a description of the mesh and initial condition</span>
+<span class="na">mesh_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MPAS Eddy Closure mesh for E3SM version ${e3sm_version} with</span>
+<span class="w">                   </span><span class="na">enhanced resolution around the equator (30 km), South pole</span>
+<span class="w">                   </span><span class="na">(35 km), Greenland (${min_res} km), ${max_res}-km resolution</span>
+<span class="w">                   </span><span class="na">at mid latitudes, and ${levels} vertical levels</span>
+<span class="c1"># E3SM version that the mesh is intended for</span>
+<span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
+<span class="c1"># The revision number of the mesh, which should be incremented each time the</span>
+<span class="c1"># mesh is revised</span>
+<span class="na">mesh_revision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="c1"># the minimum (finest) resolution in the mesh</span>
+<span class="na">min_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6</span>
+<span class="c1"># the maximum (coarsest) resolution in the mesh, can be the same as min_res</span>
+<span class="na">max_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">18</span>
+<span class="c1"># The URL of the pull request documenting the creation of the mesh</span>
+<span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
+
+
+<span class="c1"># config options related to remapping topography to an MPAS-Ocean mesh</span>
+<span class="k">[remap_topography]</span>
+
+<span class="c1"># the target and minimum number of MPI tasks to use in remapping</span>
+<span class="na">ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4096</span>
+<span class="na">min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2048</span>
+
+<span class="c1"># The io section describes options related to file i/o</span>
+<span class="k">[io]</span>
+
+<span class="c1"># the NetCDF file format: NETCDF4, NETCDF4_CLASSIC, NETCDF3_64BIT, or</span>
+<span class="c1"># NETCDF3_CLASSIC</span>
+<span class="na">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NETCDF4</span>
+
+<span class="c1"># the NetCDF output engine: netcdf4 or scipy</span>
+<span class="na">engine</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">netcdf4</span>
+</pre></div>
+</div>
+<p>The vertical grid is a <code class="docutils literal notranslate"><span class="pre">80LayerE3SMv1</span></code> profile (see
+<a class="reference internal" href="../framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a>) with 80 vertical levels ranging in
+thickness from 2 to 150 m.</p>
+<p>Because of the large number of cells in these meshes, they have various
+requirement that other meshes do not.</p>
+<p>MPAS-ocean file output needs to be in
+<a class="reference external" href="http://cucis.ece.northwestern.edu/projects/PnetCDF/CDF-5.html">CDF-5</a>
+format.  This is handled by adding <code class="docutils literal notranslate"><span class="pre">io_type=&quot;pnetcdf,cdf5&quot;</span></code> to output
+streams.</p>
+<p>Python NetCDF file output needs to be in
+<a class="reference external" href="https://unidata.github.io/netcdf4-python/#creatingopeningclosing-a-netcdf-file">NETCDF4</a>
+format.  In in the sea surface height adjustment step (see
+<a class="reference internal" href="#dev-ocean-global-ocean-init"><span class="std std-ref">init test case</span></a>), adjusted initial condition files need to
+first be written out in <code class="docutils literal notranslate"><span class="pre">NETCDF4</span></code> format and then converted to <code class="docutils literal notranslate"><span class="pre">CDF-5</span></code>
+format, which is accomplished by setting the <code class="docutils literal notranslate"><span class="pre">convert_to_cdf5</span> <span class="pre">=</span> <span class="pre">True</span></code> config
+option.</p>
+<p>During initialization, the Haney-number vertical coordinate was not converging.
+This has been fixed by increasing the relative weights for smoothing and the
+z-star coordinate relative to the slope.  It also helped to increase the
+number of inner iterations and to smooth over more open ocean cells.  Given
+the higher surface resolution of the 80-layer RRS vertical coordinate.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>config_rx1_inner_iter_count = 20
+config_rx1_horiz_smooth_weight = 10.0
+config_rx1_vert_smooth_weight = 10.0
+config_rx1_slope_weight = 1e-1
+config_rx1_zstar_weight = 10.0
+config_rx1_horiz_smooth_open_ocean_cells = 40
+config_rx1_min_layer_thickness = 0.1
+</pre></div>
+</div>
+</section>
 <section id="so12to60-and-sowisc12to60">
 <span id="dev-ocean-global-ocean-sowisc12to60"></span><h5>SO12to60 and SOwISC12to60<a class="headerlink" href="#so12to60-and-sowisc12to60" title="Permalink to this heading">¶</a></h5>
 <p>The <code class="docutils literal notranslate"><span class="pre">SO12to60</span></code> and <code class="docutils literal notranslate"><span class="pre">SOwISC12to60</span></code> meshes are Southern Ocean regionally
@@ -778,7 +897,7 @@ thickness from 10 to 250 m.</p>
 <section id="wc14-and-wcwisc14">
 <span id="dev-ocean-global-ocean-wc14"></span><h5>WC14 and WCwISC14<a class="headerlink" href="#wc14-and-wcwisc14" title="Permalink to this heading">¶</a></h5>
 <p>The <code class="docutils literal notranslate"><span class="pre">WC14</span></code> and <code class="docutils literal notranslate"><span class="pre">WCwISC14</span></code> meshes are the Water Cycle regionally refined
-meshes for E3SM v3.  It has higher resolution (~14-km) around the continental
+meshes for E3SM v3.  They have higher resolution (~14-km) around the continental
 US, the Arctic Ocean, and a section of the North Atlantic containing the Gulf
 Stream. The resolution elsewhere varies between 35 km at the South Pole to 60
 km at mid latitudes, with a band of 30-km resolution around the equator.</p>

@@ -416,6 +416,21 @@ North Pacific, tapering to 60 km at mid latitudes, 30 km at the equator, and
    :width: 500 px
    :align: center
 
+.. _global_ocean_mesh_rrs6to18:
+
+RRS6to18 and RRSwISC6to18
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The E3SM v3 high resolution meshes are the Rossby-radius-scaling (RRS)
+6- to 18-km meshes. They have resolution that scales as
+a function of latitude approximately with the Rossby radius of deformation
+from 6 km at the poles to 18 km at the equator.  The RRSwISC6to18 mesh has
+ice-shelf cavities around Antarctica, whereas the RRS6to18 mesh does not.
+
+.. image:: images/rrs6to18_temp.png
+   :width: 500 px
+   :align: center
+
 .. _global_ocean_mesh_sowisc12to60:
 
 SO12to60 and SOwISC12to60

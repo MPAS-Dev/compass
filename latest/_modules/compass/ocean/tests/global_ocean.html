@@ -136,6 +136,9 @@
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.qu.dynamic_adjustment</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">QUDynamicAdjustment</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.rrs6to18.dynamic_adjustment</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">RRS6to18DynamicAdjustment</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.so12to60.dynamic_adjustment</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">SO12to60DynamicAdjustment</span><span class="p">,</span>
 <span class="p">)</span>
@@ -187,6 +190,10 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;WC14&#39;</span><span class="p">,</span> <span class="s1">&#39;WCwISC14&#39;</span><span class="p">],</span>
                         <span class="n">DynamicAdjustment</span><span class="o">=</span><span class="n">WC14DynamicAdjustment</span><span class="p">)</span>
+
+        <span class="c1"># RRS6to18: with and without cavities</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;RRS6to18&#39;</span><span class="p">,</span> <span class="s1">&#39;RRSwISC6to18&#39;</span><span class="p">],</span>
+                        <span class="n">DynamicAdjustment</span><span class="o">=</span><span class="n">RRS6to18DynamicAdjustment</span><span class="p">)</span>
 
         <span class="c1"># Kuroshio meshes without ice-shelf cavities</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Kuroshio12to60&#39;</span><span class="p">,</span> <span class="s1">&#39;Kuroshio8to60&#39;</span><span class="p">],</span>

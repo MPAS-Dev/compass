@@ -185,13 +185,23 @@
         <span class="n">symlink</span><span class="p">(</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;mpas-o.graph.info.</span><span class="si">{</span><span class="n">creation_date</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="n">ncells</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;graph.info&#39;</span><span class="p">))</span>
-        <span class="n">cores</span> <span class="o">=</span> <span class="n">get_core_list</span><span class="p">(</span><span class="n">ncells</span><span class="o">=</span><span class="n">ncells</span><span class="p">)</span>
+        <span class="n">max_cells_per_core</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span>
+                                           <span class="s1">&#39;max_cells_per_core&#39;</span><span class="p">)</span>
+        <span class="n">min_cells_per_core</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span>
+                                           <span class="s1">&#39;min_cells_per_core&#39;</span><span class="p">)</span>
+        <span class="n">cores</span> <span class="o">=</span> <span class="n">get_core_list</span><span class="p">(</span><span class="n">ncells</span><span class="o">=</span><span class="n">ncells</span><span class="p">,</span>
+                              <span class="n">max_cells_per_core</span><span class="o">=</span><span class="n">max_cells_per_core</span><span class="p">,</span>
+                              <span class="n">min_cells_per_core</span><span class="o">=</span><span class="n">min_cells_per_core</span><span class="p">)</span>
+
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Creating graph files between </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">cores</span><span class="p">)</span><span class="si">}</span><span class="s1"> and &#39;</span>
                     <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">cores</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">ncores</span> <span class="ow">in</span> <span class="n">cores</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">ncores</span> <span class="o">&gt;</span> <span class="n">ncells</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Can</span><span class="se">\t</span><span class="s1"> have more tasks than cells in a &#39;</span>
                                  <span class="s1">&#39;partition file.&#39;</span><span class="p">)</span>
+            <span class="n">out_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;mpas-o.graph.info.</span><span class="si">{</span><span class="n">creation_date</span><span class="si">}</span><span class="s1">.part.</span><span class="si">{</span><span class="n">ncores</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">out_filename</span><span class="p">):</span>
+                <span class="k">continue</span>
             <span class="k">if</span> <span class="n">ncores</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;touch&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;mpas-o.graph.info.</span><span class="si">{</span><span class="n">creation_date</span><span class="si">}</span><span class="s1">.part.1&#39;</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
