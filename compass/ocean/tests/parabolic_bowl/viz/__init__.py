@@ -75,9 +75,9 @@ class Viz(Step):
                 lines, labels = ax[i].get_legend_handles_labels()
 
         fig.tight_layout()
+        fig.subplots_adjust(bottom=0.2)
         fig.legend(lines, labels,
-                   loc='lower center', ncol=4,
-                   bbox_to_anchor=(0.5, -0.2))
+                   loc='lower center', ncol=4)
         fig.savefig('points.png')
 
         # Inject exact solution
@@ -111,8 +111,6 @@ class Viz(Step):
         for case in cases:
             include = True
             for res in self.resolutions:
-                print(f'{cases[case]}/output_{res}km.nc')
-                print(os.path.exists(f'{cases[case]}/output_{res}km.nc'))
                 if not os.path.exists(f'{cases[case]}/output_{res}km.nc'):
                     include = False
             if include:
@@ -232,6 +230,4 @@ class Viz(Step):
         else:
             print('Variable name not supported')
 
-        print(var)
-        print(soln.shape)
         return soln
