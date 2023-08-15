@@ -661,7 +661,16 @@ The default config options for these meshes are:
     [vertical_grid]
 
     # the type of vertical grid
-    grid_type = 80LayerE3SMv1
+    grid_type = 80layerE3SMv1
+
+
+    # Options relate to adjusting the sea-surface height or land-ice pressure
+    # below ice shelves to they are dynamically consistent with one another
+    [ssh_adjustment]
+
+    # Whether to convert adjusted initial condition files to CDF5 format during
+    # ssh adjustment under ice shelves
+    convert_to_cdf5 = True
 
 
     # options for global ocean testcases
@@ -672,16 +681,17 @@ The default config options for these meshes are:
     init_ntasks = 512
     # minimum of cores, below which the step fails
     init_min_tasks = 64
-    # maximum memory usage allowed (in MB)
-    init_max_memory = 1000
+    # The number of cores per task in init mode -- used to avoid running out of
+    # memory where needed
+    init_cpus_per_task = 4
+    # whether to update PIO tasks and stride
+    init_update_pio = False
 
-    ## config options related to the forward steps
-    # number of cores to use
-    forward_ntasks = 8192
-    # minimum of cores, below which the step fails
-    forward_min_tasks = 1024
-    # maximum memory usage allowed (in MB)
-    forward_max_memory = 1000
+    # whether to update PIO tasks and stride
+    forward_update_pio = False
+
+    # the approximate number of cells in the mesh
+    approx_cell_count = 3700000
 
     ## metadata related to the mesh
     # the prefix (e.g. QU, EC, WC, SO)
@@ -703,9 +713,60 @@ The default config options for these meshes are:
     # The URL of the pull request documenting the creation of the mesh
     pull_request = <<<Missing>>>
 
+
+    # config options related to remapping topography to an MPAS-Ocean mesh
+    [remap_topography]
+
+    # the target and minimum number of MPI tasks to use in remapping
+    ntasks = 4096
+    min_tasks = 2048
+
+    # The io section describes options related to file i/o
+    [io]
+
+    # the NetCDF file format: NETCDF4, NETCDF4_CLASSIC, NETCDF3_64BIT, or
+    # NETCDF3_CLASSIC
+    format = NETCDF4
+
+    # the NetCDF output engine: netcdf4 or scipy
+    engine = netcdf4
+
 The vertical grid is a ``80LayerE3SMv1`` profile (see
 :ref:`dev_ocean_framework_vertical`) with 80 vertical levels ranging in
 thickness from 2 to 150 m.
+
+Because of the large number of cells in these meshes, they have various
+requirement that other meshes do not.
+
+MPAS-ocean file output needs to be in
+`CDF-5 <http://cucis.ece.northwestern.edu/projects/PnetCDF/CDF-5.html>`_
+format.  This is handled by adding ``io_type="pnetcdf,cdf5"`` to output
+streams.
+
+Python NetCDF file output needs to be in
+`NETCDF4 <https://unidata.github.io/netcdf4-python/#creatingopeningclosing-a-netcdf-file>`_
+format.  In in the sea surface height adjustment step (see
+:ref:`dev_ocean_global_ocean_init`), adjusted initial condition files need to
+first be written out in ``NETCDF4`` format and then converted to ``CDF-5``
+format, which is accomplished by setting the ``convert_to_cdf5 = True`` config
+option.
+
+During initialization, the Haney-number vertical coordinate was not converging.
+This has been fixed by increasing the relative weights for smoothing and the
+z-star coordinate relative to the slope.  It also helped to increase the
+number of inner iterations and to smooth over more open ocean cells.  Given
+the higher surface resolution of the 80-layer RRS vertical coordinate.
+
+.. code-block:: none
+
+    config_rx1_inner_iter_count = 20
+    config_rx1_horiz_smooth_weight = 10.0
+    config_rx1_vert_smooth_weight = 10.0
+    config_rx1_slope_weight = 1e-1
+    config_rx1_zstar_weight = 10.0
+    config_rx1_horiz_smooth_open_ocean_cells = 40
+    config_rx1_min_layer_thickness = 0.1
+
 
 .. _dev_ocean_global_ocean_sowisc12to60:
 

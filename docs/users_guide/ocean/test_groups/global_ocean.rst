@@ -427,7 +427,7 @@ a function of latitude approximately with the Rossby radius of deformation
 from 6 km at the poles to 18 km at the equator.  The RRSwISC6to18 mesh has
 ice-shelf cavities around Antarctica, whereas the RRS6to18 mesh does not.
 
-.. image:: images/rrs6to18.png
+.. image:: images/rrs6to18_temp.png
    :width: 500 px
    :align: center
 
