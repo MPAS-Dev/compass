@@ -76,7 +76,13 @@ class SeaiceGraphPartition(FilesForE3SMStep):
                 write_netcdf(ds, 'mesh.nc')
                 mesh_filename = 'mesh.nc'
 
-        cores = get_core_list(ncells=ncells)
+        max_cells_per_core = config.getint('files_for_e3sm',
+                                           'max_cells_per_core')
+        min_cells_per_core = config.getint('files_for_e3sm',
+                                           'min_cells_per_core')
+        cores = get_core_list(ncells=ncells,
+                              max_cells_per_core=max_cells_per_core,
+                              min_cells_per_core=min_cells_per_core)
         logger.info(f'Creating graph files between {np.amin(cores)} and '
                     f'{np.amax(cores)}')
 
@@ -116,6 +122,13 @@ class SeaiceGraphPartition(FilesForE3SMStep):
             if ncores > ncells:
                 raise ValueError('Can\t have more tasks than cells in a '
                                  'partition file.')
+            if ncores <= 0:
+                raise ValueError(f'Can\t make a partition for {ncores} tasks.')
+            out_filename = \
+                f'mpas-seaice.graph.info.{creation_date}.part.{ncores}'
+            if os.path.exists(out_filename):
+                continue
+
             if ncores > 1:
                 args.append(f'{ncores}')
 

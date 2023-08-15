@@ -1,0 +1,15 @@
+<streams>
+
+<stream name="output"
+        output_interval="{{ output_interval }}"
+        io_type="pnetcdf,cdf5"/>
+
+<immutable_stream name="restart"
+                  filename_template="../restarts/rst.$Y-$M-$D_$h.$m.$s.nc"
+                  output_interval="{{ restart_interval }}"
+                  io_type="pnetcdf,cdf5"/>
+
+<stream name="globalStatsOutput"
+        output_interval="0000_00:00:01"/>
+
+</streams>
