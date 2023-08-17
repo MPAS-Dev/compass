@@ -16,8 +16,9 @@ class RunModel(Step):
         twice, the second time with ``namelist.landice.rst`` and
         ``streams.landice.rst``
     """
-    def __init__(self, test_case, name='run_model', subdir=None,
-                 ntasks=1, min_tasks=None, openmp_threads=1, suffixes=None):
+    def __init__(self, test_case, name='run_model', depth_integrated=False,
+                 subdir=None, ntasks=1, min_tasks=None, openmp_threads=1,
+                 suffixes=None):
         """
         Create a new test case
 
@@ -28,6 +29,9 @@ class RunModel(Step):
 
         name : str, optional
             the name of the test case
+
+        depth_integrated : bool, optional
+            Whether the (FO) velocity model is depth integrated
 
         subdir : str, optional
             the subdirectory for the step.  The default is ``name``
@@ -76,9 +80,15 @@ class RunModel(Step):
                 'compass.landice.tests.thwaites', 'streams.landice',
                 out_name='streams.{}'.format(suffix))
 
-        self.add_input_file(filename='albany_input.yaml',
-                            package='compass.landice.tests.thwaites',
-                            copy=True)
+        if depth_integrated:
+            self.add_input_file(filename='albany_input.yaml',
+                                target='albany_input_depthInt.yaml',
+                                package='compass.landice.tests.thwaites',
+                                copy=True)
+        else:
+            self.add_input_file(filename='albany_input.yaml',
+                                package='compass.landice.tests.thwaites',
+                                copy=True)
 
         self.add_model_as_input()
 

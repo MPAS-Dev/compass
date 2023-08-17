@@ -1,6 +1,6 @@
-from compass.validate import compare_variables
-from compass.testcase import TestCase
 from compass.landice.tests.thwaites.run_model import RunModel
+from compass.testcase import TestCase
+from compass.validate import compare_variables
 
 
 class RestartTest(TestCase):
@@ -10,7 +10,7 @@ class RestartTest(TestCase):
     test case verifies that the results of the two runs are identical.
     """
 
-    def __init__(self, test_group):
+    def __init__(self, test_group, depth_integrated=False):
         """
         Create the test case
 
@@ -19,16 +19,25 @@ class RestartTest(TestCase):
         test_group : compass.landice.tests.thwaites.Thwaites
             The test group that this test case belongs to
 
+        depth_integrated  : bool
+            Whether the (FO) velocity model is depth integrated
+
         """
-        name = 'restart_test'
+
+        if depth_integrated is True:
+            name = 'fo-depthInt_restart_test'
+        else:
+            name = 'fo_restart_test'
+
         super().__init__(test_group=test_group, name=name)
 
         ntasks = 36
         min_tasks = 4
 
         name = 'full_run'
-        step = RunModel(test_case=self, name=name, ntasks=ntasks,
-                        min_tasks=min_tasks, openmp_threads=1)
+        step = RunModel(test_case=self, name=name,
+                        depth_integrated=depth_integrated,
+                        ntasks=ntasks, min_tasks=min_tasks, openmp_threads=1)
         # modify the namelist options and streams file
         step.add_namelist_file(
             'compass.landice.tests.thwaites.restart_test',
@@ -40,6 +49,7 @@ class RestartTest(TestCase):
 
         name = 'restart_run'
         step = RunModel(test_case=self, name=name, ntasks=ntasks,
+                        depth_integrated=depth_integrated,
                         min_tasks=min_tasks, openmp_threads=1,
                         suffixes=['landice', 'landice.rst'])
 
