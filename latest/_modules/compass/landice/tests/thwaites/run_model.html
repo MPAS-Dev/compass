@@ -131,8 +131,9 @@
 <span class="sd">        twice, the second time with ``namelist.landice.rst`` and</span>
 <span class="sd">        ``streams.landice.rst``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="RunModel.__init__"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.thwaites.run_model.RunModel.html#compass.landice.tests.thwaites.run_model.RunModel.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;run_model&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">suffixes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="RunModel.__init__"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.thwaites.run_model.RunModel.html#compass.landice.tests.thwaites.run_model.RunModel.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;run_model&#39;</span><span class="p">,</span> <span class="n">depth_integrated</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">suffixes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new test case</span>
 
@@ -143,6 +144,9 @@
 
 <span class="sd">        name : str, optional</span>
 <span class="sd">            the name of the test case</span>
+
+<span class="sd">        depth_integrated : bool, optional</span>
+<span class="sd">            Whether the (FO) velocity model is depth integrated</span>
 
 <span class="sd">        subdir : str, optional</span>
 <span class="sd">            the subdirectory for the step.  The default is ``name``</span>
@@ -191,9 +195,15 @@
                 <span class="s1">&#39;compass.landice.tests.thwaites&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.landice&#39;</span><span class="p">,</span>
                 <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;albany_input.yaml&#39;</span><span class="p">,</span>
-                            <span class="n">package</span><span class="o">=</span><span class="s1">&#39;compass.landice.tests.thwaites&#39;</span><span class="p">,</span>
-                            <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">depth_integrated</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;albany_input.yaml&#39;</span><span class="p">,</span>
+                                <span class="n">target</span><span class="o">=</span><span class="s1">&#39;albany_input_depthInt.yaml&#39;</span><span class="p">,</span>
+                                <span class="n">package</span><span class="o">=</span><span class="s1">&#39;compass.landice.tests.thwaites&#39;</span><span class="p">,</span>
+                                <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;albany_input.yaml&#39;</span><span class="p">,</span>
+                                <span class="n">package</span><span class="o">=</span><span class="s1">&#39;compass.landice.tests.thwaites&#39;</span><span class="p">,</span>
+                                <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
 

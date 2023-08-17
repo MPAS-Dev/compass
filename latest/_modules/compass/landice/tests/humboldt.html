@@ -112,11 +112,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice.tests.humboldt</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.landice.tests.humboldt.decomposition_test</span> <span class="kn">import</span> <span class="n">DecompositionTest</span>
 <span class="kn">from</span> <span class="nn">compass.landice.tests.humboldt.mesh_gen</span> <span class="kn">import</span> <span class="n">MeshGen</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.humboldt.decomposition_test</span> \
-     <span class="kn">import</span> <span class="nn">DecompositionTest</span>
 <span class="kn">from</span> <span class="nn">compass.landice.tests.humboldt.restart_test</span> <span class="kn">import</span> <span class="n">RestartTest</span>
+<span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
 
 
 <div class="viewcode-block" id="Humboldt"><a class="viewcode-back" href="../../../../developers_guide/landice/generated/compass.landice.tests.humboldt.Humboldt.html#compass.landice.tests.humboldt.Humboldt">[docs]</a><span class="k">class</span> <span class="nc">Humboldt</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
@@ -137,34 +136,53 @@
         <span class="n">mesh_type</span> <span class="o">=</span> <span class="s1">&#39;1km&#39;</span>
         <span class="k">for</span> <span class="n">velo_solver</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;FO&#39;</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                    <span class="n">DecompositionTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                                      <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
-                                      <span class="n">calving_law</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
-                                      <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">))</span>
+                <span class="n">DecompositionTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                                  <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
+                                  <span class="n">calving_law</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
+                                  <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                    <span class="n">RestartTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                                <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
-                                <span class="n">calving_law</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
-                                <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">))</span>
+                <span class="n">RestartTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                            <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
+                            <span class="n">calving_law</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
+                            <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">))</span>
 
         <span class="c1"># Set up &#39;full physics&#39; tests using the 3km mesh</span>
         <span class="n">mesh_type</span> <span class="o">=</span> <span class="s1">&#39;3km&#39;</span>
         <span class="k">for</span> <span class="n">velo_solver</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;FO&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                    <span class="n">DecompositionTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                                      <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
-                                      <span class="n">calving_law</span><span class="o">=</span><span class="s1">&#39;von_Mises_stress&#39;</span><span class="p">,</span>
-                                      <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">,</span>
-                                      <span class="n">damage</span><span class="o">=</span><span class="s1">&#39;threshold&#39;</span><span class="p">,</span>
-                                      <span class="n">face_melt</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+                <span class="n">DecompositionTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                                  <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
+                                  <span class="n">calving_law</span><span class="o">=</span><span class="s1">&#39;von_Mises_stress&#39;</span><span class="p">,</span>
+                                  <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">,</span>
+                                  <span class="n">damage</span><span class="o">=</span><span class="s1">&#39;threshold&#39;</span><span class="p">,</span>
+                                  <span class="n">face_melt</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                    <span class="n">RestartTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                                <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
-                                <span class="n">calving_law</span><span class="o">=</span><span class="s1">&#39;von_Mises_stress&#39;</span><span class="p">,</span>
-                                <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">,</span>
-                                <span class="n">damage</span><span class="o">=</span><span class="s1">&#39;threshold&#39;</span><span class="p">,</span>
-                                <span class="n">face_melt</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+                <span class="n">RestartTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                            <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
+                            <span class="n">calving_law</span><span class="o">=</span><span class="s1">&#39;von_Mises_stress&#39;</span><span class="p">,</span>
+                            <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">,</span>
+                            <span class="n">damage</span><span class="o">=</span><span class="s1">&#39;threshold&#39;</span><span class="p">,</span>
+                            <span class="n">face_melt</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">velo_solver</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;FO&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                <span class="n">DecompositionTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                                  <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
+                                  <span class="n">calving_law</span><span class="o">=</span><span class="s1">&#39;von_Mises_stress&#39;</span><span class="p">,</span>
+                                  <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">,</span>
+                                  <span class="n">damage</span><span class="o">=</span><span class="s1">&#39;threshold&#39;</span><span class="p">,</span>
+                                  <span class="n">face_melt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                  <span class="n">depth_integrated</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                <span class="n">RestartTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                            <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
+                            <span class="n">calving_law</span><span class="o">=</span><span class="s1">&#39;von_Mises_stress&#39;</span><span class="p">,</span>
+                            <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">,</span>
+                            <span class="n">damage</span><span class="o">=</span><span class="s1">&#39;threshold&#39;</span><span class="p">,</span>
+                            <span class="n">face_melt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                            <span class="n">depth_integrated</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 
         <span class="c1"># Create decomp and restart tests for all calving laws.</span>
         <span class="c1"># Note that FO velo solver is NOT BFB across decompositions</span>
