@@ -1,7 +1,8 @@
 import os
-import xarray
 
+import xarray as xr
 from mpas_tools.logging import check_call
+
 from compass.parallel import run_command
 
 
@@ -105,7 +106,7 @@ def make_graph_file(mesh_filename, graph_filename='graph.info',
         weights
     """
 
-    with xarray.open_dataset(mesh_filename) as ds:
+    with xr.open_dataset(mesh_filename) as ds:
 
         nCells = ds.sizes['nCells']
 
@@ -113,8 +114,8 @@ def make_graph_file(mesh_filename, graph_filename='graph.info',
         cellsOnCell = ds.cellsOnCell.values - 1
         if weight_field is not None:
             if weight_field in ds:
-                raise ValueError('weight_field {} not found in {}'.format(
-                    weight_field, mesh_filename))
+                raise ValueError(f'weight_field {weight_field} not found in '
+                                 f'{mesh_filename}')
             weights = ds[weight_field].values
         else:
             weights = None
@@ -125,23 +126,23 @@ def make_graph_file(mesh_filename, graph_filename='graph.info',
             if cellsOnCell[i][j] != -1:
                 nEdges = nEdges + 1
 
-    nEdges = nEdges/2
+    nEdges = nEdges // 2
 
     with open(graph_filename, 'w+') as graph:
         if weights is None:
-            graph.write('{} {}\n'.format(nCells, nEdges))
+            graph.write(f'{nCells} {nEdges}\n')
 
             for i in range(nCells):
                 for j in range(0, nEdgesOnCell[i]):
                     if cellsOnCell[i][j] >= 0:
-                        graph.write('{} '.format(cellsOnCell[i][j]+1))
+                        graph.write(f'{cellsOnCell[i][j] + 1} ')
                 graph.write('\n')
         else:
-            graph.write('{} {} 010\n'.format(nCells, nEdges))
+            graph.write(f'{nCells} {nEdges} 010\n')
 
             for i in range(nCells):
-                graph.write('{} '.format(int(weights[i])))
+                graph.write(f'{int(weights[i])} ')
                 for j in range(0, nEdgesOnCell[i]):
                     if cellsOnCell[i][j] >= 0:
-                        graph.write('{} '.format(cellsOnCell[i][j] + 1))
+                        graph.write(f'{cellsOnCell[i][j] + 1} ')
                 graph.write('\n')
