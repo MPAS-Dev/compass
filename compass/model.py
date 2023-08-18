@@ -126,7 +126,7 @@ def make_graph_file(mesh_filename, graph_filename='graph.info',
             if cellsOnCell[i][j] != -1:
                 nEdges = nEdges + 1
 
-    nEdges = nEdges / 2
+    nEdges = nEdges // 2
 
     with open(graph_filename, 'w+') as graph:
         if weights is None:
