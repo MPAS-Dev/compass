@@ -1,3 +1,5 @@
+import time
+
 from compass.model import run_model
 from compass.step import Step
 
@@ -43,8 +45,6 @@ class Forward(Step):
 
         res_name = f'{resolution}km'
         self.add_namelist_file('compass.ocean.tests.parabolic_bowl',
-                               f'namelist.{res_name}.forward')
-        self.add_namelist_file('compass.ocean.tests.parabolic_bowl',
                                f'namelist.{coord_type}.forward')
 
         if ramp_type == 'ramp':
@@ -70,9 +70,10 @@ class Forward(Step):
 
     def setup(self):
         """
-        Set up the test case in the work directory, including downloading any
-        dependencies
+        Set namelist options based on config options
         """
+        dt = self.get_dt()
+        self.add_namelist_options({'config_dt': dt})
         self._get_resources()
 
     def constrain_resources(self, available_cores):
@@ -86,7 +87,31 @@ class Forward(Step):
         """
         Run this step of the testcase
         """
+        # update dt in case the user has changed dt_per_km
+        dt = self.get_dt()
+        self.update_namelist_at_runtime(options={'config_dt': dt},
+                                        out_name='namelist.ocean')
+
         run_model(self)
+
+    def get_dt(self):
+        """
+        Get the time step
+
+        Returns
+        -------
+        dt : str
+            the time step in HH:MM:SS
+        """
+        config = self.config
+        # dt is proportional to resolution
+        dt_per_km = config.getfloat('parabolic_bowl', 'dt_per_km')
+
+        dt = dt_per_km * self.resolution
+        # https://stackoverflow.com/a/1384565/7728169
+        dt = time.strftime('%H:%M:%S', time.gmtime(dt))
+
+        return dt
 
     def _get_resources(self):
         # get the these properties from the config options
