@@ -93,3 +93,23 @@ class Humboldt(TestGroup):
                                 velo_solver=velo_solver,
                                 calving_law=calving_law,
                                 mesh_type=mesh_type))
+
+        # Add hydro tests
+        mesh_type = '3km'
+        self.add_test_case(
+            DecompositionTest(test_group=self,
+                              velo_solver='none',
+                              calving_law='none',
+                              mesh_type=mesh_type,
+                              damage=None,
+                              face_melt=False,
+                              hydro=True))
+
+        self.add_test_case(
+            RestartTest(test_group=self,
+                        velo_solver='none',
+                        calving_law='none',
+                        mesh_type=mesh_type,
+                        damage=None,
+                        face_melt=False,
+                        hydro=True))

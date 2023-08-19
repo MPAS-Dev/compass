@@ -25,46 +25,28 @@
 <stream name="output"
         type="output"
         filename_template="output.nc"
-        output_interval="0000-00-01_00:00:00"
+        output_interval="0000-00-05_00:00:00"
         reference_time="2007-01-01_00:00:00"
         clobber_mode="truncate">
 
     <stream name="basicmesh"/>
     <var name="xtime"/>
-    <var name="normalVelocity"/>
     <var name="thickness"/>
     <var name="daysSinceStart"/>
     <var name="surfaceSpeed"/>
-    <var name="temperature"/>
+    <var name="basalSpeed"/>
     <var name="lowerSurface"/>
     <var name="upperSurface"/>
-    <var name="uReconstructX"/>
-    <var name="uReconstructY"/>
-    <var name="calvingThickness"/>
-    <var name="calvingVelocity"/>
-    <var name="vonMisesStress"/>
     <var name="cellMask"/>
-    <var name="damage"/>
-    <var name="faceMeltSpeed"/>
-    <var name="faceMeltingThickness"/>
+    <var name="basalMeltInput"/>
+    <var name="waterThickness"/>
+    <var name="waterVelocityCellX"/>
+    <var name="waterVelocityCellY"/>
+    <var name="hydropotential"/>
+    <var name="waterFlux"/>
+    <var name="channelArea"/>
+    <var name="channelDischarge"/>
 
-</stream>
-
-<stream name="globalStatsOutput"
-        type="output"
-        filename_template="globalStats.nc"
-        filename_interval="none"
-        clobber_mode="overwrite"
-        output_interval="0000-00-00_01:00:00"
-        reference_time="2007-01-01_00:00:00"
-        packages="globalStatsAMPKG"
-        runtime_format="single_file">
-    <var name="xtime"/>
-    <var name="daysSinceStart"/>
-    <var name="deltat"/>
-    <var name="allowableDtACFL"/>
-    <var name="allowableDtDCFL"/>
-    <var_struct name="globalStatsAM"/>
 </stream>
 
 </streams>
