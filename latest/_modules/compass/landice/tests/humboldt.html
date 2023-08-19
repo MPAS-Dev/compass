@@ -206,7 +206,27 @@
                     <span class="n">RestartTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                                 <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
                                 <span class="n">calving_law</span><span class="o">=</span><span class="n">calving_law</span><span class="p">,</span>
-                                <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">))</span></div></div>
+                                <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">))</span>
+
+        <span class="c1"># Add hydro tests</span>
+        <span class="n">mesh_type</span> <span class="o">=</span> <span class="s1">&#39;3km&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+            <span class="n">DecompositionTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                              <span class="n">velo_solver</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
+                              <span class="n">calving_law</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
+                              <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">,</span>
+                              <span class="n">damage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                              <span class="n">face_melt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                              <span class="n">hydro</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+            <span class="n">RestartTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                        <span class="n">velo_solver</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
+                        <span class="n">calving_law</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
+                        <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">,</span>
+                        <span class="n">damage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">face_melt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">hydro</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span></div></div>
 </pre></div>
 
            </div>

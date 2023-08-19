@@ -3,7 +3,7 @@
 humboldt
 ========
 
-The ``landice/humboldt`` test group includes a test case for creating a
+The ``landice/humboldt`` test group includes  test case for creating a
 mesh for Humboldt Glacier, Greenland, and a series of tests for running
 simulations on a Humboldt Glacier mesh.  Note that the tests that run MALI do
 not use the output of the mesh generation step directly, but instead
@@ -19,6 +19,8 @@ in which case a modeled velocity field from the initial condition is used.
 There are also two meshes available for running with MALI: a fast 3 km
 resolution mesh and a slower but more accurate 1 km mesh.  Most tests use the
 faster 3 km mesh.
+There also is a test that runs the subglacial hydrology model without any
+other physics.
 
 .. figure:: images/humboldt_1to10km.png
    :width: 777 px
@@ -57,7 +59,7 @@ the mesh generation options are adjusted through the config file.
     high_dist = 1.e5
     # distance within which cell spacing = min_spac (meters)
     low_dist = 1.e4
-    
+
     # mesh density functions
     use_speed = True
     use_dist_to_grounding_line = False

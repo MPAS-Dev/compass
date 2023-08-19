@@ -140,10 +140,14 @@
 
 <span class="sd">    depth_integrated  : bool</span>
 <span class="sd">        Whether the (FO) velocity model is depth integrated</span>
+
+<span class="sd">    hydro : bool</span>
+<span class="sd">        Whether to include subglacial hydrology</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="RestartTest.__init__"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.humboldt.restart_test.RestartTest.html#compass.landice.tests.humboldt.restart_test.RestartTest.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">velo_solver</span><span class="p">,</span> <span class="n">calving_law</span><span class="p">,</span> <span class="n">mesh_type</span><span class="p">,</span>
-                 <span class="n">damage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">face_melt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">depth_integrated</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                 <span class="n">damage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">face_melt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">depth_integrated</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">hydro</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the test case</span>
 
@@ -169,6 +173,9 @@
 
 <span class="sd">        depth_integrated  : bool</span>
 <span class="sd">            Whether the (FO) velocity model is depth integrated</span>
+
+<span class="sd">        hydro : bool</span>
+<span class="sd">            Whether to include subglacial hydrology</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;restart_test&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">=</span> <span class="n">mesh_type</span>
@@ -178,6 +185,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">calving_law</span> <span class="o">=</span> <span class="n">calving_law</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">damage</span> <span class="o">=</span> <span class="n">damage</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">face_melt</span> <span class="o">=</span> <span class="n">face_melt</span>
+        <span class="k">if</span> <span class="n">hydro</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hydro</span> <span class="o">=</span> <span class="n">hydro</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hydro</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="c1"># build dir name.  always include velo solver and calving law</span>
         <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;mesh-</span><span class="si">{}</span><span class="s1">_restart_test/velo-</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -190,6 +201,8 @@
             <span class="n">subdir</span> <span class="o">+=</span> <span class="s1">&#39;_damage-</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">damage</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">face_melt</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="n">subdir</span> <span class="o">+=</span> <span class="s1">&#39;_faceMelting&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hydro</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">subdir</span> <span class="o">+=</span> <span class="s1">&#39;_subglacialhydro&#39;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
@@ -200,11 +213,19 @@
                         <span class="n">damage</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">damage</span><span class="p">,</span>
                         <span class="n">face_melt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">face_melt</span><span class="p">,</span>
                         <span class="n">depth_integrated</span><span class="o">=</span><span class="n">depth_integrated</span><span class="p">,</span>
+                        <span class="n">hydro</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hydro</span><span class="p">,</span>
                         <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">)</span>
+        <span class="c1"># Hydro model restart tests should be shorter duration to keep the</span>
+        <span class="c1"># tests to a reasonable runtime.  Different nl templates have been</span>
+        <span class="c1"># set up for that</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hydro</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">nl1</span> <span class="o">=</span> <span class="s1">&#39;namelist.full.hydro&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nl1</span> <span class="o">=</span> <span class="s1">&#39;namelist.full&#39;</span>
         <span class="c1"># modify the namelist options and streams file</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
             <span class="s1">&#39;compass.landice.tests.humboldt.restart_test&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;namelist.full&#39;</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
+            <span class="n">nl1</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
             <span class="s1">&#39;compass.landice.tests.humboldt.restart_test&#39;</span><span class="p">,</span>
             <span class="s1">&#39;streams.full&#39;</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.landice&#39;</span><span class="p">)</span>
@@ -216,21 +237,31 @@
                         <span class="n">calving_law</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calving_law</span><span class="p">,</span>
                         <span class="n">damage</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">damage</span><span class="p">,</span>
                         <span class="n">face_melt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">face_melt</span><span class="p">,</span>
+                        <span class="n">hydro</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hydro</span><span class="p">,</span>
                         <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">,</span>
                         <span class="n">depth_integrated</span><span class="o">=</span><span class="n">depth_integrated</span><span class="p">,</span>
                         <span class="n">suffixes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;landice&#39;</span><span class="p">,</span> <span class="s1">&#39;landice.rst&#39;</span><span class="p">])</span>
 
+        <span class="c1"># Hydro model restart tests should be shorter duration to keep the</span>
+        <span class="c1"># tests to a reasonable runtime.  Different nl templates have been</span>
+        <span class="c1"># set up for that</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hydro</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">nl1</span> <span class="o">=</span> <span class="s1">&#39;namelist.restart.hydro&#39;</span>
+            <span class="n">nl2</span> <span class="o">=</span> <span class="s1">&#39;namelist.restart.rst.hydro&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nl1</span> <span class="o">=</span> <span class="s1">&#39;namelist.restart&#39;</span>
+            <span class="n">nl2</span> <span class="o">=</span> <span class="s1">&#39;namelist.restart.rst&#39;</span>
         <span class="c1"># modify the namelist options and streams file</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
             <span class="s1">&#39;compass.landice.tests.humboldt.restart_test&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;namelist.restart&#39;</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
+            <span class="n">nl1</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
             <span class="s1">&#39;compass.landice.tests.humboldt.restart_test&#39;</span><span class="p">,</span>
             <span class="s1">&#39;streams.restart&#39;</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.landice&#39;</span><span class="p">)</span>
 
         <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
             <span class="s1">&#39;compass.landice.tests.humboldt.restart_test&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;namelist.restart.rst&#39;</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice.rst&#39;</span><span class="p">)</span>
+            <span class="n">nl2</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice.rst&#39;</span><span class="p">)</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
             <span class="s1">&#39;compass.landice.tests.humboldt.restart_test&#39;</span><span class="p">,</span>
             <span class="s1">&#39;streams.restart.rst&#39;</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.landice.rst&#39;</span><span class="p">)</span>
@@ -255,6 +286,10 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">face_melt</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="n">variables</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;faceMeltingThickness&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hydro</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">variables</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;waterThickness&#39;</span><span class="p">,</span> <span class="s1">&#39;hydropotential&#39;</span><span class="p">,</span> <span class="s1">&#39;waterFlux&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;channelDischarge&#39;</span><span class="p">,</span> <span class="s1">&#39;channelArea&#39;</span><span class="p">])</span>
 
         <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
                           <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;full_run/output.nc&#39;</span><span class="p">,</span>

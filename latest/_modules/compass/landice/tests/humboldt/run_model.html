@@ -153,6 +153,7 @@
                  <span class="n">damage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">face_melt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">depth_integrated</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">hydro</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                  <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">suffixes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -180,6 +181,9 @@
 
 <span class="sd">        depth_integrated : bool, optional</span>
 <span class="sd">            Whether the (FO) velocity model is depth integrated</span>
+
+<span class="sd">        hydro : bool</span>
+<span class="sd">            Whether to include subglacial hydrology</span>
 
 <span class="sd">        mesh_type : {&#39;1km&#39;, &#39;3km&#39;}</span>
 <span class="sd">            The resolution or mesh type of the test case</span>
@@ -243,7 +247,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span> <span class="o">=</span> <span class="s1">&#39;Humboldt_1to10km_r04_20210615.nc&#39;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">forcing_file</span> <span class="o">=</span> <span class="s1">&#39;Humboldt_1to10km_MIROC5-rcp85_ismip-gis.nc&#39;</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">==</span> <span class="s1">&#39;3km&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span> <span class="o">=</span> <span class="s1">&#39;Humboldt_3to30km_r04_20210615.nc&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span> <span class="o">=</span> <span class="s1">&#39;Humboldt_3to30km_r04_20230522.nc&#39;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">forcing_file</span> <span class="o">=</span> <span class="s1">&#39;Humboldt_3to30km_MIROC5-rcp85_ismip6-gis.nc&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span><span class="p">,</span>
                             <span class="n">database</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
@@ -268,33 +272,44 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="n">suffixes</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
-                <span class="s1">&#39;compass.landice.tests.humboldt&#39;</span><span class="p">,</span> <span class="s1">&#39;namelist.landice&#39;</span><span class="p">,</span>
-                <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
-            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_velocity_solver&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">velo_solver</span><span class="p">),</span>
-                       <span class="s1">&#39;config_calving&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">calving_law</span><span class="p">)}</span>
-            <span class="c1"># optionally add damage and facemelt options if included</span>
-            <span class="k">if</span> <span class="n">damage</span> <span class="o">==</span> <span class="s1">&#39;threshold&#39;</span><span class="p">:</span>
-                <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_calculate_damage&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;.true.&#39;</span>
-                <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_damage_calving_method&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&#39;threshold&#39;&quot;</span>
-                <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_damage_calving_threshold&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0.5&#39;</span>
-            <span class="k">if</span> <span class="n">face_melt</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_front_mass_bal_grounded&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&#39;ismip6&#39;&quot;</span>
-                <span class="c1"># Assuming that if have this on, this is a &#39;full physics&#39;</span>
-                <span class="c1"># run and we want to keep it cheaper to allow it to be run in</span>
-                <span class="c1"># the full integration suite, so we increase the dt if a</span>
-                <span class="c1"># 3km run.</span>
-                <span class="c1"># NOTE: This could lead to confusion!</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">==</span> <span class="s1">&#39;3km&#39;</span><span class="p">:</span>
-                    <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_dt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&#39;0000-06-00_00:00:00&#39;&quot;</span>
-            <span class="c1"># now add accumulated options to namelist</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
-                                      <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">hydro</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
+                    <span class="s1">&#39;compass.landice.tests.humboldt&#39;</span><span class="p">,</span> <span class="s1">&#39;namelist.landice.hydro&#39;</span><span class="p">,</span>
+                    <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
+                    <span class="s1">&#39;compass.landice.tests.humboldt&#39;</span><span class="p">,</span> <span class="s1">&#39;namelist.landice&#39;</span><span class="p">,</span>
+                    <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
+                <span class="n">options</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;config_velocity_solver&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">velo_solver</span><span class="p">),</span>
+                    <span class="s1">&#39;config_calving&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">calving_law</span><span class="p">)}</span>
+                <span class="c1"># optionally add damage and facemelt options if included</span>
+                <span class="k">if</span> <span class="n">damage</span> <span class="o">==</span> <span class="s1">&#39;threshold&#39;</span><span class="p">:</span>
+                    <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_calculate_damage&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;.true.&#39;</span>
+                    <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_damage_calving_method&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&#39;threshold&#39;&quot;</span>
+                    <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_damage_calving_threshold&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0.5&#39;</span>
+                <span class="k">if</span> <span class="n">face_melt</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_front_mass_bal_grounded&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&#39;ismip6&#39;&quot;</span>
+                    <span class="c1"># Assuming that if have this on, this is a &#39;full physics&#39;</span>
+                    <span class="c1"># run and we want to keep it cheaper to allow it to be run</span>
+                    <span class="c1"># in the full integration suite, so we increase the dt if</span>
+                    <span class="c1"># a 3km run.</span>
+                    <span class="c1"># NOTE: This could lead to confusion!</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">==</span> <span class="s1">&#39;3km&#39;</span><span class="p">:</span>
+                        <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_dt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&#39;0000-06-00_00:00:00&#39;&quot;</span>
+                <span class="c1"># now add accumulated options to namelist</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span>
+                    <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
+                    <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
 
             <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;HUMBOLDT_INPUT_FILE&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span><span class="p">,</span>
                                    <span class="s1">&#39;HUMBOLDT_FORCING_FILE&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">forcing_file</span><span class="p">}</span>
+            <span class="k">if</span> <span class="n">hydro</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">streams_template_name</span> <span class="o">=</span> <span class="s1">&#39;streams.landice.hydro.template&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">streams_template_name</span> <span class="o">=</span> <span class="s1">&#39;streams.landice.template&#39;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
-                <span class="s1">&#39;compass.landice.tests.humboldt&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.landice.template&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;compass.landice.tests.humboldt&#39;</span><span class="p">,</span> <span class="n">streams_template_name</span><span class="p">,</span>
                 <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">),</span>
                 <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">)</span></div>
 
