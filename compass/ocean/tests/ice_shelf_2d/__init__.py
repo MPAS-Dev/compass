@@ -20,6 +20,9 @@ class IceShelf2d(TestGroup):
                     Default(test_group=self, resolution=resolution,
                             coord_type=coord_type))
                 self.add_test_case(
+                    Default(test_group=self, resolution=resolution,
+                            coord_type=coord_type, tidal_forcing=True))
+                self.add_test_case(
                     RestartTest(test_group=self, resolution=resolution,
                                 coord_type=coord_type))
 

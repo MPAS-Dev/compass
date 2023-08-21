@@ -40,7 +40,7 @@ class RestartTest(TestCase):
         name = 'restart_test'
         self.resolution = resolution
         self.coord_type = coord_type
-        subdir = '{}/{}/{}'.format(resolution, coord_type, name)
+        subdir = f'{resolution}/{coord_type}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 

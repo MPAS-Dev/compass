@@ -22,7 +22,8 @@ class Default(TestCase):
         The type of vertical coordinate (``z-star``, ``z-level``, etc.)
     """
 
-    def __init__(self, test_group, resolution, coord_type):
+    def __init__(self, test_group, resolution, coord_type,
+                 tidal_forcing=False):
         """
         Create the test case
 
@@ -38,9 +39,14 @@ class Default(TestCase):
             The type of vertical coordinate (``z-star``, ``z-level``, etc.)
         """
         name = 'default'
+        if tidal_forcing:
+            name = 'tidal_forcing'
+            with_frazil = False
+        else:
+            with_frazil = True
         self.resolution = resolution
         self.coord_type = coord_type
-        subdir = '{}/{}/{}'.format(resolution, coord_type, name)
+        subdir = f'{resolution}/{coord_type}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
@@ -48,11 +54,11 @@ class Default(TestCase):
             InitialState(test_case=self, resolution=resolution))
         self.add_step(
             SshAdjustment(test_case=self, coord_type=coord_type, ntasks=4,
-                          openmp_threads=1))
+                          openmp_threads=1, tidal_forcing=tidal_forcing))
         self.add_step(
             Forward(test_case=self, ntasks=4, openmp_threads=1,
                     coord_type=coord_type, resolution=resolution,
-                    with_frazil=True))
+                    with_frazil=with_frazil, tidal_forcing=tidal_forcing))
         self.add_step(Viz(test_case=self), run_by_default=False)
 
     def configure(self):

@@ -14,7 +14,7 @@ class Forward(Step):
     """
     def __init__(self, test_case, resolution, coord_type, name='forward',
                  subdir=None, ntasks=1, min_tasks=None, openmp_threads=1,
-                 with_frazil=True):
+                 with_frazil=True, tidal_forcing=False):
         """
         Create a new test case
 
@@ -63,6 +63,9 @@ class Forward(Step):
             self.add_namelist_file(
                 'compass.ocean.tests.ice_shelf_2d',
                 'namelist.single_layer.forward_and_ssh_adjust')
+        if tidal_forcing:
+            self.add_namelist_file('compass.ocean.tests.ice_shelf_2d',
+                                   'namelist.tidal_forcing.forward')
         if with_frazil:
             options = {'config_use_frazil_ice_formation': '.true.',
                        'config_frazil_maximum_depth': '2000.0'}
@@ -76,6 +79,9 @@ class Forward(Step):
         self.add_streams_file('compass.ocean.tests.ice_shelf_2d',
                               'streams.forward')
 
+        self.add_input_file(filename='forcing_data.nc',
+                            target=('../initial_state/'
+                                    'init_mode_forcing_data.nc'))
         self.add_input_file(filename='init.nc',
                             target='../ssh_adjustment/adjusted_init.nc')
         self.add_input_file(filename='graph.info',

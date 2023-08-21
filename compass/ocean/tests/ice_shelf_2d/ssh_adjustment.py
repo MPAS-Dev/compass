@@ -8,7 +8,7 @@ class SshAdjustment(Step):
     shelf to match the sea-surface height as part of ice-shelf 2D test cases
     """
     def __init__(self, test_case, coord_type, ntasks=1, min_tasks=None,
-                 openmp_threads=1):
+                 openmp_threads=1, tidal_forcing=False):
         """
         Create the step
 
