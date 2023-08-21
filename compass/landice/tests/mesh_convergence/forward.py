@@ -1,5 +1,3 @@
-import time
-from datetime import timedelta
 from importlib.resources import contents
 
 from compass.model import run_model
@@ -59,7 +57,7 @@ class Forward(Step):
 
     def setup(self):
         """
-        Set namelist options base on config options
+        Set namelist options based on config options
         """
 
         namelist_options, stream_replacements = self.get_dt_duration()
@@ -104,21 +102,13 @@ class Forward(Step):
             Namelist options to update
         """
         config = self.config
-        # dt is proportional to resolution: default 30 seconds per km
+        # dt is proportional to resolution
         dt_1km = config.getint('mesh_convergence', 'dt_1km')
+        dt = dt_1km * self.resolution * 3600.0 * 24.0
 
-        dt = dt_1km * self.resolution
-        # https://stackoverflow.com/a/1384565/7728169
-        dt = time.strftime('%H:%M:%S', time.gmtime(dt))
-
-        # the duration (hours) of the run
-        duration = \
-            int(3600 * config.getfloat('mesh_convergence', 'duration'))
-        delta = timedelta(seconds=duration)
-        hours = delta.seconds // 3600
-        minutes = delta.seconds // 60 % 60
-        seconds = delta.seconds % 60
-        duration = f'{delta.days:03d}_{hours:02d}:{minutes:02d}:{seconds:02d}'
+        # the duration (days) of the run
+        duration = config.getint('mesh_convergence', 'duration')
+        duration = f'{duration:05d}_00:00:00'
 
         namelist_replacements = {'config_dt': f"'{dt}'",
                                  'config_run_duration': f"'{duration}'"}

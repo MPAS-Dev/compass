@@ -1,4 +1,5 @@
 from mpas_tools.io import write_netcdf
+from mpas_tools.mesh.conversion import convert, cull
 from mpas_tools.planar_hex import make_planar_hex_mesh
 from mpas_tools.translate import center
 
@@ -42,6 +43,7 @@ class ConvInit(Step):
         """
         Run this step of the test case
         """
+        logger = self.logger
         config = self.config
         resolution = float(self.resolution)
 
@@ -51,12 +53,15 @@ class ConvInit(Step):
         nx = int(nx_1km / resolution)
         ny = int(ny_1km / resolution)
         dc = resolution * 1e3
+        nonperiodic = section.getboolean('nonperiodic')
 
         ds_mesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc,
-                                       nonperiodic_x=False,
-                                       nonperiodic_y=False)
+                                       nonperiodic_x=nonperiodic,
+                                       nonperiodic_y=nonperiodic)
 
         center(ds_mesh)
+        ds_mesh = cull(ds_mesh, logger=logger)
+        ds_mesh = convert(ds_mesh, logger=logger)
 
         write_netcdf(ds_mesh, 'mesh.nc')
         make_graph_file('mesh.nc', 'graph.info')
