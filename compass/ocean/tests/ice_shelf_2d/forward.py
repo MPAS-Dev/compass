@@ -1,3 +1,5 @@
+import time
+
 from compass.model import run_model
 from compass.step import Step
 
@@ -9,8 +11,12 @@ class Forward(Step):
 
     Attributes
     ----------
-    resolution : str
-        The resolution of the test case
+    resolution : float
+        The resolution of the test case in m
+
+    coord_type: str
+        The coordinate type (e.g., 'z-star', 'single_layer', etc.)
+
     """
     def __init__(self, test_case, resolution, coord_type, name='forward',
                  subdir=None, ntasks=1, min_tasks=None, openmp_threads=1,
@@ -23,8 +29,11 @@ class Forward(Step):
         test_case : compass.TestCase
             The test case this step belongs to
 
-        resolution : str
-            The resolution of the test case
+        coord_type: str
+            The coordinate type (e.g., 'z-star', 'single_layer', etc.)
+
+        resolution : float
+            The resolution of the test case in m
 
         name : str
             the name of the test case
@@ -48,6 +57,7 @@ class Forward(Step):
             whether the simulation includes frazil ice formation
         """
         self.resolution = resolution
+        self.tidal_forcing = tidal_forcing
         if min_tasks is None:
             min_tasks = ntasks
         super().__init__(test_case=test_case, name=name, subdir=subdir,
@@ -98,4 +108,13 @@ class Forward(Step):
         """
         Run this step of the test case
         """
+        config = self.config
+        dt_per_km = config.getfloat('ice_shelf_2d', 'dt_per_km')
+        if self.tidal_forcing == 'tidal_forcing':
+            dt_per_km = min(dt_per_km,
+                            config.getfloat('ice_shelf_2d',
+                                            'dt_per_km_tidal_forcing'))
+        dt = dt_per_km * self.resolution / 1.e3
+        dt_str = time.strftime('%H:%M:%S', time.gmtime(dt))
+        self.update_namelist_at_runtime({'config_dt': dt_str})
         run_model(self)

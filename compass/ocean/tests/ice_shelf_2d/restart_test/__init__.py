@@ -40,14 +40,19 @@ class RestartTest(TestCase):
         name = 'restart_test'
         self.resolution = resolution
         self.coord_type = coord_type
-        subdir = f'{resolution}/{coord_type}/{name}'
+        if resolution >= 1e3:
+            res_name = f'{int(resolution / 1e3)}km'
+        else:
+            res_name = f'{int(resolution)}m'
+        subdir = f'{res_name}/{coord_type}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
         self.add_step(
             InitialState(test_case=self, resolution=resolution))
         self.add_step(
-            SshAdjustment(test_case=self, coord_type=coord_type, ntasks=4,
+            SshAdjustment(test_case=self, resolution=resolution,
+                          coord_type=coord_type, ntasks=4,
                           openmp_threads=1))
 
         for part in ['full', 'restart']:

@@ -15,8 +15,8 @@ class Default(TestCase):
 
     Attributes
     ----------
-    resolution : str
-        The horizontal resolution of the test case
+    resolution : float
+        The horizontal resolution of the test case in m
 
     coord_type : str
         The type of vertical coordinate (``z-star``, ``z-level``, etc.)
@@ -46,7 +46,11 @@ class Default(TestCase):
             with_frazil = True
         self.resolution = resolution
         self.coord_type = coord_type
-        subdir = f'{resolution}/{coord_type}/{name}'
+        if resolution >= 1e3:
+            res_name = f'{int(resolution / 1e3)}km'
+        else:
+            res_name = f'{int(resolution)}m'
+        subdir = f'{res_name}/{coord_type}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
