@@ -1,3 +1,4 @@
+from compass.landice.tests.mesh_convergence.halfar import Halfar
 from compass.landice.tests.mesh_convergence.horizontal_advection import (
     HorizontalAdvection,
 )
@@ -16,3 +17,4 @@ class MeshConvergence(TestGroup):
         super().__init__(mpas_core=mpas_core, name='mesh_convergence')
 
         self.add_test_case(HorizontalAdvection(test_group=self))
+        self.add_test_case(Halfar(test_group=self))
