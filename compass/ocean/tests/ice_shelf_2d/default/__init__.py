@@ -57,8 +57,9 @@ class Default(TestCase):
         self.add_step(
             InitialState(test_case=self, resolution=resolution))
         self.add_step(
-            SshAdjustment(test_case=self, coord_type=coord_type, ntasks=4,
-                          openmp_threads=1, tidal_forcing=tidal_forcing))
+            SshAdjustment(test_case=self, coord_type=coord_type,
+                          resolution=resolution, ntasks=4, openmp_threads=1,
+                          tidal_forcing=tidal_forcing))
         self.add_step(
             Forward(test_case=self, ntasks=4, openmp_threads=1,
                     coord_type=coord_type, resolution=resolution,
