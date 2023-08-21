@@ -86,8 +86,7 @@ def remap_sss(in_filename, mesh_filename, mesh_name, out_filename, logger,
         mapping file
 
     out_filename : str
-        The melt rates interpolated to the MPAS mesh with ocean sensible heat
-        fluxes added on (assuming insulating ice)
+        An output file to write the remapped climatology of SSS to
 
     logger : logging.Logger
         A logger for output from the step
