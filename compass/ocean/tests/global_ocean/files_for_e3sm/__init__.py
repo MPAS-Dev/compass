@@ -22,6 +22,9 @@ from compass.ocean.tests.global_ocean.files_for_e3sm.ocean_mesh import (  # noqa
 from compass.ocean.tests.global_ocean.files_for_e3sm.remap_ice_shelf_melt import (  # noqa: E501
     RemapIceShelfMelt,
 )
+from compass.ocean.tests.global_ocean.files_for_e3sm.remap_iceberg_climatology import (  # noqa: E501
+    RemapIcebergClimatology,
+)
 from compass.ocean.tests.global_ocean.files_for_e3sm.remap_sea_surface_salinity_restoring import (  # noqa: E501
     RemapSeaSurfaceSalinityRestoring,
 )
@@ -116,6 +119,9 @@ class FilesForE3SM(TestCase):
             data_ice_shelf_melt=data_ice_shelf_melt))
 
         self.add_step(RemapSeaSurfaceSalinityRestoring(
+            test_case=self))
+
+        self.add_step(RemapIcebergClimatology(
             test_case=self))
 
     def configure(self):
