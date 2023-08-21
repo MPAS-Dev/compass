@@ -47,10 +47,12 @@ class Default(TestCase):
         self.add_step(
             InitialState(test_case=self, resolution=resolution))
         self.add_step(
-            SshAdjustment(test_case=self, ntasks=4, openmp_threads=1))
+            SshAdjustment(test_case=self, coord_type=coord_type, ntasks=4,
+                          openmp_threads=1))
         self.add_step(
             Forward(test_case=self, ntasks=4, openmp_threads=1,
-                    resolution=resolution, with_frazil=True))
+                    coord_type=coord_type, resolution=resolution,
+                    with_frazil=True))
         self.add_step(Viz(test_case=self), run_by_default=False)
 
     def configure(self):

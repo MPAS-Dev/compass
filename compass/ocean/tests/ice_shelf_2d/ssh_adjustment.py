@@ -7,7 +7,8 @@ class SshAdjustment(Step):
     A step for iteratively adjusting the pressure from the weight of the ice
     shelf to match the sea-surface height as part of ice-shelf 2D test cases
     """
-    def __init__(self, test_case, ntasks=1, min_tasks=None, openmp_threads=1):
+    def __init__(self, test_case, coord_type, ntasks=1, min_tasks=None,
+                 openmp_threads=1):
         """
         Create the step
 
@@ -15,6 +16,9 @@ class SshAdjustment(Step):
         ----------
         test_case : compass.TestCase
             The test case this step belongs to
+
+        coord_type: str
+            The coordinate type (e.g., 'z-star', 'single_layer', etc.)
 
         ntasks : int, optional
             the number of tasks the step would ideally use.  If fewer tasks
@@ -39,6 +43,10 @@ class SshAdjustment(Step):
         # start with the same namelist settings as the forward run
         self.add_namelist_file('compass.ocean.tests.ice_shelf_2d',
                                'namelist.forward')
+        if coord_type == 'single_layer':
+            self.add_namelist_file(
+                'compass.ocean.tests.ice_shelf_2d',
+                'namelist.single_layer.forward_and_ssh_adjust')
 
         # we don't want the global stats AM for this run
         self.add_namelist_options({'config_AM_globalStats_enable': '.false.'})

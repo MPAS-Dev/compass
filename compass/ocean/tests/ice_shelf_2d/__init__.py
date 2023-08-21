@@ -15,7 +15,7 @@ class IceShelf2d(TestGroup):
         super().__init__(mpas_core=mpas_core, name='ice_shelf_2d')
 
         for resolution in ['5km']:
-            for coord_type in ['z-star', 'z-level']:
+            for coord_type in ['z-star', 'z-level', 'single_layer']:
                 self.add_test_case(
                     Default(test_group=self, resolution=resolution,
                             coord_type=coord_type))
@@ -52,3 +52,7 @@ def configure(resolution, coord_type, config):
     if coord_type == 'z-level':
         # we need more vertical resolution
         config.set('vertical_grid', 'vert_levels', '100')
+    elif coord_type == 'single_layer':
+        config.set('vertical_grid', 'vert_levels', '1')
+        config.set('vertical_grid', 'coord_type', 'z-level')
+        config.set('vertical_grid', 'partial_cell_type', 'None')

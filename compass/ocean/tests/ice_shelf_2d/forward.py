@@ -12,8 +12,9 @@ class Forward(Step):
     resolution : str
         The resolution of the test case
     """
-    def __init__(self, test_case, resolution, name='forward', subdir=None,
-                 ntasks=1, min_tasks=None, openmp_threads=1, with_frazil=True):
+    def __init__(self, test_case, resolution, coord_type, name='forward',
+                 subdir=None, ntasks=1, min_tasks=None, openmp_threads=1,
+                 with_frazil=True):
         """
         Create a new test case
 
@@ -58,6 +59,10 @@ class Forward(Step):
 
         self.add_namelist_file('compass.ocean.tests.ice_shelf_2d',
                                'namelist.forward')
+        if coord_type == 'single_layer':
+            self.add_namelist_file(
+                'compass.ocean.tests.ice_shelf_2d',
+                'namelist.single_layer.forward_and_ssh_adjust')
         if with_frazil:
             options = {'config_use_frazil_ice_formation': '.true.',
                        'config_frazil_maximum_depth': '2000.0'}
