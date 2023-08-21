@@ -40,11 +40,29 @@ class Viz(Step):
         Run this step of the test case
         """
 
-        # Pointwise timeseries plots
+        points = self.get_points()
+        self.timeseries_plots(points)
+        self.inject_exact_solution()
+        self.contour_plots(points)
+        self.rmse_plots()
+
+    def get_points(self):
+        """
+        Get the point coordinates for plotting solution timeseries
+        """
+
         points = self.config.get('parabolic_bowl_viz', 'points')
         points = points.replace('[', '').replace(']', '').split(',')
         points = np.asarray(points, dtype=float).reshape(-1, 2)
         points = points * 1000
+
+        return points
+
+    def timeseries_plots(self, points):
+        """
+        Plot solution timeseries at a given number of points
+        for each resolution
+        """
 
         fig, ax = plt.subplots(nrows=len(points), ncols=1)
 
@@ -80,7 +98,11 @@ class Viz(Step):
                    loc='lower center', ncol=4)
         fig.savefig('points.png')
 
-        # Inject exact solution
+    def inject_exact_solution(self):
+        """
+        Save exact solution to output nc file
+        """
+
         for res in self.resolutions:
             ds = xr.open_dataset(f'output_{res}km.nc')
 
@@ -104,7 +126,72 @@ class Viz(Step):
                              format="NETCDF3_64BIT_OFFSET", mode='a')
             ds.close()
 
-        # RMSE plots
+    def contour_plots(self, points):
+        """
+        Plot contour plots at a specified output interval for each resolution
+        """
+
+        sol_min = -2
+        sol_max = 2
+        clevels = np.linspace(sol_min, sol_max, 50)
+        cmap = plt.get_cmap('RdBu')
+
+        ds = xr.open_dataset(f'output_{self.resolutions[0]}km.nc')
+        time = [dt.datetime.strptime(x.decode(), '%Y-%m-%d_%H:%M:%S')
+                for x in ds.xtime.values]
+        ds.close()
+
+        plot_interval = self.config.getint('parabolic_bowl_viz',
+                                           'plot_interval')
+        for i, tstep in enumerate(time):
+
+            if i % plot_interval != 0:
+                continue
+
+            ncols = len(self.resolutions) + 1
+            fig, ax = plt.subplots(nrows=1, ncols=ncols,
+                                   figsize=(5 * ncols, 5),
+                                   constrained_layout=True)
+
+            for j, res in enumerate(self.resolutions):
+                ds = xr.open_dataset(f'output_{res}km.nc')
+                ax[j].tricontourf(ds.xCell / 1000, ds.yCell / 1000,
+                                  ds['ssh'][i, :],
+                                  levels=clevels, cmap=cmap,
+                                  vmin=sol_min, vmax=sol_max, extend='both')
+                ax[j].set_aspect('equal', 'box')
+                ax[j].set_title(f'{res}km resolution')
+                ax[j].set_xlabel('x (km)')
+                ax[j].set_ylabel('y (km)')
+                ds.close()
+
+            ds = xr.open_dataset(f'output_{min(self.resolutions)}km.nc')
+            cm = ax[ncols - 1].tricontourf(ds.xCell / 1000, ds.yCell / 1000,
+                                           ds['ssh_exact'][i, :],
+                                           levels=clevels, cmap=cmap,
+                                           vmin=sol_min, vmax=sol_max,
+                                           extend='both')
+            ax[ncols - 1].set_aspect('equal', 'box')
+            ax[ncols - 1].scatter(points[:, 0] / 1000,
+                                  points[:, 1] / 1000, 15, 'k')
+
+            ax[ncols - 1].set_title('Analytical solution')
+            ax[ncols - 1].set_xlabel('x (km)')
+            ax[ncols - 1].set_ylabel('y (km)')
+            ds.close()
+
+            cb = fig.colorbar(cm, ax=ax[-1], shrink=0.6)
+            cb.set_label('ssh (m)')
+            t = round((time[i] - time[0]).total_seconds() / 86400., 2)
+            fig.suptitle(f'ssh solution at t={t} days')
+            fig.savefig(f'solution_{i:03d}.png')
+            plt.close()
+
+    def rmse_plots(self):
+        """
+        Plot convergence curves
+        """
+
         comparisons = []
         cases = {'standard_ramp': '../../../standard/ramp/viz',
                  'standard_noramp': '../../../standard/noramp/viz'}
@@ -123,9 +210,6 @@ class Viz(Step):
             rmse = np.zeros(len(self.resolutions))
             for i, res in enumerate(self.resolutions):
 
-                # rmse[i] = self.compute_rmse(
-                #     'zeta',
-                #     f'{cases[comp]}/output_{res}km.nc')
                 rmse[i] = self.compute_rmse(
                     'h',
                     f'{cases[comp]}/output_{res}km.nc')
@@ -148,10 +232,14 @@ class Viz(Step):
         ax.set_ylabel('RMSE (m)')
 
         ax.legend(loc='lower right')
+        ax.set_title('Layer thickness convergence')
         fig.tight_layout()
         fig.savefig('error.png')
 
     def compute_rmse(self, varname, filename):
+        """
+        Compute the rmse between the modeled and exact solutions
+        """
 
         ds = xr.open_dataset(filename)
 
@@ -172,6 +260,9 @@ class Viz(Step):
         return rmse
 
     def exact_solution(self, var, x, y, t):
+        """
+        Evaluate the exact solution
+        """
 
         config = self.config
 
