@@ -194,6 +194,8 @@ test cases and steps
    files_for_e3sm.diagnostic_masks.DiagnosticMasks.run
    files_for_e3sm.remap_ice_shelf_melt.RemapIceShelfMelt
    files_for_e3sm.remap_ice_shelf_melt.RemapIceShelfMelt.run
+   files_for_e3sm.remap_sea_surface_salinity_restoring.RemapSeaSurfaceSalinityRestoring
+   files_for_e3sm.remap_sea_surface_salinity_restoring.RemapSeaSurfaceSalinityRestoring.run
 
    init.Init
    init.Init.configure
