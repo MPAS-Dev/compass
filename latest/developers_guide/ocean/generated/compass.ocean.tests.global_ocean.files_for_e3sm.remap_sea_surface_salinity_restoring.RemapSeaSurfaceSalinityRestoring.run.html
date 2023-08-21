@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.ocean.haney.compute_haney_number &mdash; compass latest documentation</title>
+  <title>compass.ocean.tests.global_ocean.files_for_e3sm.remap_sea_surface_salinity_restoring.RemapSeaSurfaceSalinityRestoring.run &mdash; compass latest documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,8 +20,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="compass.ocean.iceshelf.compute_land_ice_pressure_and_draft" href="compass.ocean.iceshelf.compute_land_ice_pressure_and_draft.html" />
-    <link rel="prev" title="compass.ocean.mesh.remap_topography.RemapTopography.run" href="compass.ocean.mesh.remap_topography.RemapTopography.run.html" /> 
+    <link rel="next" title="compass.ocean.tests.global_ocean.init.Init" href="compass.ocean.tests.global_ocean.init.Init.html" />
+    <link rel="prev" title="compass.ocean.tests.global_ocean.files_for_e3sm.remap_sea_surface_salinity_restoring.RemapSeaSurfaceSalinityRestoring" href="compass.ocean.tests.global_ocean.files_for_e3sm.remap_sea_surface_salinity_restoring.RemapSeaSurfaceSalinityRestoring.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -75,8 +75,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../landice/api.html">landice</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html">ocean</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="compass.ocean.Ocean.html">compass.ocean.Ocean</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api.html#test-groups">Test Groups</a></li>
-<li class="toctree-l4 current"><a class="reference internal" href="../api.html#ocean-framework">ocean framework</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../api.html#test-groups">Test Groups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api.html#ocean-framework">ocean framework</a></li>
 </ul>
 </li>
 </ul>
@@ -118,9 +118,9 @@
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../api.html">API reference</a></li>
           <li class="breadcrumb-item"><a href="../api.html">ocean</a></li>
-      <li class="breadcrumb-item active">compass.ocean.haney.compute_haney_number</li>
+      <li class="breadcrumb-item active">compass.ocean.tests.global_ocean.files_for_e3sm.remap_sea_surface_salinity_restoring.RemapSeaSurfaceSalinityRestoring.run</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/developers_guide/ocean/generated/compass.ocean.haney.compute_haney_number.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.remap_sea_surface_salinity_restoring.RemapSeaSurfaceSalinityRestoring.run.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -128,30 +128,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="compass-ocean-haney-compute-haney-number">
-<h1>compass.ocean.haney.compute_haney_number<a class="headerlink" href="#compass-ocean-haney-compute-haney-number" title="Permalink to this heading">¶</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="compass.ocean.haney.compute_haney_number">
-<span class="sig-prename descclassname"><span class="pre">compass.ocean.haney.</span></span><span class="sig-name descname"><span class="pre">compute_haney_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds_mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ssh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/haney.html#compute_haney_number"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.haney.compute_haney_number" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the Haney number rx1 for each edge, and interpolate it to cells</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ds_mesh</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2023.8.1.dev0)"><em>xarray.Dataset</em></a>) – A dataset with the MPAS-Ocean mesh</p></li>
-<li><p><strong>layer_thickness</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2023.8.1.dev0)"><em>xarray.DataArray</em></a>) – A data array with layer thicknesses</p></li>
-<li><p><strong>ssh</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2023.8.1.dev0)"><em>xarray.DataArray</em></a>) – A data array with sea surface height</p></li>
-<li><p><strong>show_progress</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to show a progress bar</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>haney_edge</strong> (<em>xarray.DataArray</em>) – A data array with the Haney number at edges and layer interfaces</p></li>
-<li><p><strong>haney_cell</strong> (<em>xarray.DataArray</em>) – A data array with the Haney number interpolated to cell centers and
-layer interfaces</p></li>
-</ul>
-</p>
-</dd>
-</dl>
+  <section id="compass-ocean-tests-global-ocean-files-for-e3sm-remap-sea-surface-salinity-restoring-remapseasurfacesalinityrestoring-run">
+<h1>compass.ocean.tests.global_ocean.files_for_e3sm.remap_sea_surface_salinity_restoring.RemapSeaSurfaceSalinityRestoring.run<a class="headerlink" href="#compass-ocean-tests-global-ocean-files-for-e3sm-remap-sea-surface-salinity-restoring-remapseasurfacesalinityrestoring-run" title="Permalink to this heading">¶</a></h1>
+<dl class="py method">
+<dt class="sig sig-object py" id="compass.ocean.tests.global_ocean.files_for_e3sm.remap_sea_surface_salinity_restoring.RemapSeaSurfaceSalinityRestoring.run">
+<span class="sig-prename descclassname"><span class="pre">RemapSeaSurfaceSalinityRestoring.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/global_ocean/files_for_e3sm/remap_sea_surface_salinity_restoring.html#RemapSeaSurfaceSalinityRestoring.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.tests.global_ocean.files_for_e3sm.remap_sea_surface_salinity_restoring.RemapSeaSurfaceSalinityRestoring.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run this step of the test case</p>
 </dd></dl>
 
 </section>
@@ -160,8 +142,8 @@ layer interfaces</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="compass.ocean.mesh.remap_topography.RemapTopography.run.html" class="btn btn-neutral float-left" title="compass.ocean.mesh.remap_topography.RemapTopography.run" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="compass.ocean.iceshelf.compute_land_ice_pressure_and_draft.html" class="btn btn-neutral float-right" title="compass.ocean.iceshelf.compute_land_ice_pressure_and_draft" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.ocean.tests.global_ocean.files_for_e3sm.remap_sea_surface_salinity_restoring.RemapSeaSurfaceSalinityRestoring.html" class="btn btn-neutral float-left" title="compass.ocean.tests.global_ocean.files_for_e3sm.remap_sea_surface_salinity_restoring.RemapSeaSurfaceSalinityRestoring" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.ocean.tests.global_ocean.init.Init.html" class="btn btn-neutral float-right" title="compass.ocean.tests.global_ocean.init.Init" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
