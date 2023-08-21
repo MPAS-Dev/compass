@@ -1347,6 +1347,11 @@ The test case is made up of 10 steps:
     to the MPAS mesh.  This dataset is used in E3SM for ``DISMF`` (data
     ice-shelf melt flux) compsets.
 
+:py:class:`compass.ocean.tests.global_ocean.files_for_e3sm.remap_sea_surface_salinity_restoring.RemapSeaSurfaceSalinityRestoring`
+    is used to remap sea-surface salinity from the Polar science center
+    Hydrographic Climatology (PHC) to the MPAS mesh.  This dataset is used in
+    E3SM for compsets with data atmospheric/land forcing.
+
 files_for_e3sm for an existing mesh
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
