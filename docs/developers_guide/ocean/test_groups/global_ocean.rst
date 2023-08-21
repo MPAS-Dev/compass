@@ -1352,6 +1352,12 @@ The test case is made up of 10 steps:
     Hydrographic Climatology (PHC) to the MPAS mesh.  This dataset is used in
     E3SM for compsets with data atmospheric/land forcing.
 
+:py:class:`compass.ocean.tests.global_ocean.files_for_e3sm.remap_iceberg_climatology.RemapIcebergClimatology`
+    is used to remap freshwater fluxes from an iceberg climatology from
+    `Merino et al. (2016) <https://doi.org/10.1016/j.ocemod.2016.05.001>`_ to
+    the MPAS mesh.  This dataset is used in E3SM for compsets with data iceberg
+    freshwater fluxes (``DIB``).
+
 files_for_e3sm for an existing mesh
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
