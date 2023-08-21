@@ -8,6 +8,14 @@
 
 <immutable_stream name="restart"/>
 
+<stream name="forcing_data"
+        filename_template="forcing_data.nc"
+        input_interval="initial_only"
+        type="input">
+
+    <var name="tidalInputMask"/>
+</stream>
+
 <stream name="output"
         type="output"
         filename_template="output.nc"
@@ -17,9 +25,13 @@
     <var_struct name="tracers"/>
     <stream name="mesh"/>
     <var name="xtime"/>
+    <var name="daysSinceStartOfSim"/>
     <var name="normalVelocity"/>
     <var name="layerThickness"/>
     <var name="ssh"/>
+    <var name="velocityX"/>
+    <var name="velocityY"/>
+    <var name="tidalInputMask"/>
     <var name="atmosphericPressure"/>
     <var name="landIcePressure"/>
     <var name="landIceDraft"/>
@@ -33,7 +45,7 @@
 </stream>
 
 <stream name="globalStatsOutput"
-        output_interval="0000_00:00:01" >
+        output_interval="0000_00:10:00" >
 </stream>
 
 

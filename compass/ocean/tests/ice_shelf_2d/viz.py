@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy
+import pandas as pd
 import xarray
 
 from compass.step import Step
@@ -22,7 +23,10 @@ class Viz(Step):
 
         self.add_input_file(filename='initial_state.nc',
                             target='../initial_state/initial_state.nc')
+        self.add_input_file(filename='output.nc',
+                            target='../forward/output.nc')
         self.add_output_file('vert_grid.png')
+        self.add_output_file('velocity_max_t.png')
 
     def run(self):
         """
@@ -68,10 +72,30 @@ class Viz(Step):
                                       dims=('yCell', 'nVertLevelsP1'))
         zInterface = zInterface.where(interfaceMask)
 
-        plt.figure(figsize=[24, 12], dpi=100)
-        plt.plot(ds.yCell.values, zMid.values, 'b')
-        plt.plot(ds.yCell.values, zInterface.values, 'k')
-        plt.plot(ds.yCell.values, ds.ssh.values, 'g')
-        plt.plot(ds.yCell.values, -ds.bottomDepth.values, 'g')
+        y = ds.yCell.values / 1.e3
+        plt.figure(figsize=[12, 6], dpi=100)
+        plt.plot(y, zMid.values, 'b', label='zMid')
+        plt.plot(y, zInterface.values, 'k', label='zTop')
+        plt.plot(y, ds.ssh.values, '--g', label='SSH')
+        plt.plot(y, -ds.bottomDepth.values, '--r', label='zBed')
+        plt.xlabel('Distance (km)')
+        plt.ylabel('Depth (m)')
+        plt.legend()
         plt.savefig('vert_grid.png', dpi=200)
+        plt.close()
+        ds.close()
+
+        ds = xarray.open_dataset('output.nc')
+        # Plot the time series of max velocity
+        plt.figure(figsize=[12, 6], dpi=100)
+        umax = numpy.amax(ds.velocityX[:, :, 0].values, axis=1)
+        vmax = numpy.amax(ds.velocityY[:, :, 0].values, axis=1)
+        t = ds.daysSinceStartOfSim.values
+        time = pd.to_timedelta(t) / 1.e9
+        plt.plot(time, umax, 'k', label='u')
+        plt.plot(time, vmax, 'b', label='v')
+        plt.xlabel('Time (s)')
+        plt.ylabel('Velocity (m/s)')
+        plt.legend()
+        plt.savefig('velocity_max_t.png', dpi=200)
         plt.close()
