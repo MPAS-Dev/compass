@@ -3,7 +3,7 @@ import os
 import numpy as np
 import xarray as xr
 from mpas_tools.io import write_netcdf
-from pyremap import LatLon2DGridDescriptor, MpasMeshDescriptor, Remapper
+from pyremap import LatLonGridDescriptor, MpasMeshDescriptor, Remapper
 
 from compass.io import symlink
 from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step import (  # noqa: E501
@@ -117,10 +117,28 @@ def remap_iceberg_climo(in_filename, mesh_filename, mesh_name,
         But default, 'mpirun' from the conda environment is used
     """
 
+    name, ext = os.path.splitext(in_filename)
+    monotonic_filename = f'{name}_monotonic_lon{ext}'
+
+    ds = xr.open_dataset(in_filename)
+    # latitude and longitude are actually 1D
+    ds['lon'] = ds.longitude.isel(y=0)
+    ds['lat'] = ds.latitude.isel(x=0)
+    ds = ds.drop_vars(['latitude', 'longitude'])
+    ds = ds.rename(dict(x='lon', y='lat'))
+    # the first and last longitudes are zeroed out!!!
+    ds = ds.isel(lon=slice(1, ds.sizes['lon'] - 1))
+
+    lon_indices = np.argsort(ds.lon)
+    # make sure longitudes are unique
+    lon = ds.lon.isel(lon=lon_indices).values
+    lon, unique_indices = np.unique(lon, return_index=True)
+    lon_indices = lon_indices[unique_indices]
+    ds = ds.isel(lon=lon_indices)
+
+    ds.to_netcdf(monotonic_filename)
     logger.info('Creating the source grid descriptor...')
-    src_descriptor = LatLon2DGridDescriptor.read(fileName=in_filename,
-                                                 latVarName='latitude',
-                                                 lonVarName='longitude')
+    src_descriptor = LatLonGridDescriptor.read(fileName=monotonic_filename)
     src_mesh_name = src_descriptor.meshName
 
     logger.info('Creating the destination MPAS mesh descriptor...')
@@ -139,7 +157,8 @@ def remap_iceberg_climo(in_filename, mesh_filename, mesh_name,
     logger.info('Remapping...')
     name, ext = os.path.splitext(out_filename)
     remap_filename = f'{name}_after_remap{ext}'
-    remapper.remap_file(inFileName=in_filename, outFileName=remap_filename,
+    remapper.remap_file(inFileName=monotonic_filename,
+                        outFileName=remap_filename,
                         logger=logger)
 
     ds = xr.open_dataset(remap_filename)
