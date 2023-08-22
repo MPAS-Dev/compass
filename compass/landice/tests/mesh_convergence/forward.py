@@ -1,3 +1,4 @@
+import math
 from importlib.resources import contents
 
 from compass.model import run_model
@@ -101,14 +102,37 @@ class Forward(Step):
         options : dict
             Namelist options to update
         """
-        config = self.config
-        # dt is proportional to resolution
-        dt_1km = config.getint('mesh_convergence', 'dt_1km')
-        dt = dt_1km * self.resolution * 3600.0 * 24.0
 
-        # the duration (days) of the run
+        sec_in_yr = 3600.0 * 24.0 * 365.0
+
+        config = self.config
         duration = config.getint('mesh_convergence', 'duration')
-        duration = f'{duration:05d}_00:00:00'
+        dur_sec = duration * sec_in_yr
+        target_velocity = config.getfloat('mesh_convergence',
+                                          'target_velocity')
+        resolutions = config.getlist('mesh_convergence', 'resolutions',
+                                     dtype=int)
+        max_res = max(resolutions)
+        # calculate dt in s for the resolution in km and velo in m/yr
+        # apply ceil to ensure dt * nt actually exceeds duration
+        dt_max_res_cfl = math.ceil(max_res * 1000.0 / target_velocity *
+                                   sec_in_yr)
+        nt_max_res = math.ceil(dur_sec / dt_max_res_cfl)
+        dt_max_res = math.ceil(dur_sec / nt_max_res)
+        print(f'max res: nt={nt_max_res}, dt={dt_max_res}, '
+              f'err={abs(dur_sec - nt_max_res * dt_max_res) / dur_sec}')
+
+        dt = dt_max_res * self.resolution / max_res
+        nt = math.ceil(dur_sec / dt)
+        print(f'{self.resolution}km res: nt={nt}, dt={dt}, '
+              f'err={abs(dur_sec - nt * dt) / dur_sec}')
+
+        # check that dt*nt is acceptably close to duration
+        time_err = abs(dur_sec - nt * dt) / dur_sec
+        assert time_err < 1e-4, f'nt*dt differs from duration by {time_err}'
+
+        # the duration (years) of the run
+        duration = f'{duration:05d}-00-00_00:00:00'
 
         namelist_replacements = {'config_dt': f"'{dt}'",
                                  'config_run_duration': f"'{duration}'"}
