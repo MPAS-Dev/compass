@@ -54,6 +54,9 @@ class Analysis(ConvAnalysis):
                      xycoords='axes fraction', xy=(0.3, 0.95), fontsize=14)
         plt.xlabel('Number of Grid Cells', fontsize=14)
         plt.ylabel('L2 Norm', fontsize=14)
+        section = self.config['mesh_convergence']
+        duration = section.getfloat('duration')
+        plt.title(f'Horizontal advection convergence test, {duration} yrs')
         plt.savefig('convergence.png', bbox_inches='tight', pad_inches=0.1)
 
         section = self.config['horizontal_advection']
