@@ -45,11 +45,7 @@ class Init(ConvInit):
         nVertLevels = section.getint('vert_levels')
 
         section = config['mesh_convergence']
-        duration = 3600. * section.getfloat('duration')
-        dt_1km = section.getint('dt_1km')
-        resolution = float(self.resolution)
-        dt = dt_1km * resolution
-        dc = resolution * 1e3
+        duration = section.getfloat('duration') * 3600.0 * 24.0 * 365.0
 
         ds = xarray.open_dataset('mesh.nc')
         xCell = ds.xCell
@@ -57,15 +53,11 @@ class Init(ConvInit):
 
         if advect_x:
             x_vel = ds.attrs['x_period'] / duration
-            x_cfl = x_vel * dt / dc
-            print(f'x_cfl: {x_cfl}')
         else:
             x_vel = 0.
 
         if advect_y:
             y_vel = ds.attrs['y_period'] / duration
-            y_cfl = y_vel * dt / dc
-            print(f'y_cfl: {y_cfl}')
         else:
             y_vel = 0.
 

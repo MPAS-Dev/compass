@@ -59,9 +59,9 @@ class ConvInit(Step):
                                        nonperiodic_x=nonperiodic,
                                        nonperiodic_y=nonperiodic)
 
-        center(ds_mesh)
         ds_mesh = cull(ds_mesh, logger=logger)
         ds_mesh = convert(ds_mesh, logger=logger)
+        center(ds_mesh)
 
         write_netcdf(ds_mesh, 'mesh.nc')
         make_graph_file('mesh.nc', 'graph.info')
