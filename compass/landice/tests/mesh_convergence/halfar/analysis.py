@@ -35,22 +35,26 @@ class Analysis(ConvAnalysis):
         plt.switch_backend('Agg')
         resolutions = self.resolutions
         ncells_list = list()
-        errors = list()
+        rmse_errors = list()
+        center_errors = list()
         for res in resolutions:
-            rms_error, ncells = self.rmse(res)
+            rms_error, center_error, ncells = self.rmse(res)
             ncells_list.append(ncells)
-            errors.append(rms_error)
+            rmse_errors.append(rms_error)
+            center_errors.append(center_error)
 
         ncells = np.array(ncells_list)
-        errors = np.array(errors)
+        rmse_errors = np.array(rmse_errors)
+        center_errors = np.array(center_errors)
 
-        p = np.polyfit(np.log10(ncells), np.log10(errors), 1)
+        # plot rmse errors
+        p = np.polyfit(np.log10(ncells), np.log10(rmse_errors), 1)
         conv = abs(p[0]) * 2.0
-
         error_fit = ncells**p[0] * 10**p[1]
 
+        plt.figure(1)
         plt.loglog(ncells, error_fit, 'k')
-        plt.loglog(ncells, errors, 'or')
+        plt.loglog(ncells, rmse_errors, 'or')
         plt.annotate('Order of Convergence = {}'.format(np.round(conv, 3)),
                      xycoords='axes fraction', xy=(0.3, 0.95), fontsize=14)
         plt.xlabel('Number of Grid Cells', fontsize=14)
@@ -58,7 +62,24 @@ class Analysis(ConvAnalysis):
         section = self.config['mesh_convergence']
         duration = section.getfloat('duration')
         plt.title(f'Halfar convergence test, {duration} yrs')
-        plt.savefig('convergence.png', bbox_inches='tight', pad_inches=0.1)
+        plt.savefig('convergence_rmse.png', bbox_inches='tight',
+                    pad_inches=0.1)
+
+        # now repeat for center errors
+        plt.figure(2)
+        p = np.polyfit(np.log10(ncells), np.log10(center_errors), 1)
+        conv2 = abs(p[0]) * 2.0
+        error_fit = ncells**p[0] * 10**p[1]
+
+        plt.loglog(ncells, error_fit, 'k')
+        plt.loglog(ncells, center_errors, 'or')
+        plt.annotate('Order of Convergence = {}'.format(np.round(conv2, 3)),
+                     xycoords='axes fraction', xy=(0.3, 0.95), fontsize=14)
+        plt.xlabel('Number of Grid Cells', fontsize=14)
+        plt.ylabel('Dome center error (m)', fontsize=14)
+        plt.title(f'Halfar convergence test, {duration} yrs')
+        plt.savefig('convergence_dome.png', bbox_inches='tight',
+                    pad_inches=0.1)
 
         section = self.config['halfar']
         conv_thresh = section.getfloat('conv_thresh')
@@ -127,7 +148,10 @@ class Analysis(ConvAnalysis):
         rms_error = ((diff[mask]**2 * areaCell[mask] /
                       areaCell[mask].sum()).sum())**0.5
 
-        return rms_error, ncells
+        center_idx = np.where((xCell == 0.0) * (yCell == 0.0))
+        center_error = np.absolute(diff[center_idx])
+
+        return rms_error, center_error, ncells
 
 
 def _halfar(t, x, y, A, n, rho):
