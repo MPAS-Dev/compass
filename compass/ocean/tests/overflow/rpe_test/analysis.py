@@ -1,10 +1,9 @@
+import matplotlib.pyplot as plt
 import numpy as np
 import xarray
-import matplotlib.pyplot as plt
-import cmocean
 
-from compass.step import Step
 from compass.ocean.rpe import compute_rpe
+from compass.step import Step
 
 
 class Analysis(Step):
@@ -80,7 +79,7 @@ def _plot(filename, nus, rpe):
     plt.switch_backend('Agg')
     nanosecondsPerDay = 8.64e13
     num_files = len(nus)
-    time = 6/24
+    time = 6 / 24
 
     ds = xarray.open_dataset('output_1.nc')
     times = ds.daysSinceStartOfSim.values
@@ -89,7 +88,7 @@ def _plot(filename, nus, rpe):
 
     fig = plt.figure()
     for i in range(num_files):
-        rpe_norm = np.divide((rpe[i, :]-rpe[i, 0]), rpe[i, 0])
+        rpe_norm = np.divide((rpe[i, :] - rpe[i, 0]), rpe[i, 0])
         plt.plot(times, rpe_norm,
                  label=f"$\\nu_h=${nus[i]}")
     plt.xlabel('Time, days')
@@ -127,7 +126,7 @@ def _plot(filename, nus, rpe):
         # Don't assume that the output times are the same for all files
         times = ds.daysSinceStartOfSim.values
         times = np.divide(times.tolist(), nanosecondsPerDay)
-        t_idx = np.argmin(np.abs(times-time))
+        t_idx = np.argmin(np.abs(times - time))
         ds = ds.isel(Time=t_idx)
 
         ds = ds.sortby('yEdge')
@@ -174,3 +173,4 @@ def _plot(filename, nus, rpe):
             ax.set_xlabel('y (km)')
 
     plt.savefig(filename)
+    plt.close()
