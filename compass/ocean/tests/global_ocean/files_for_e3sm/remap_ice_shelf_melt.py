@@ -62,10 +62,10 @@ class RemapIceShelfMelt(FilesForE3SMStep):
         """
         Run this step of the test case
         """
+        super().run()
+
         if not self.with_ice_shelf_cavities:
             return
-
-        super().run()
 
         data_ice_shelf_melt = self.data_ice_shelf_melt
 

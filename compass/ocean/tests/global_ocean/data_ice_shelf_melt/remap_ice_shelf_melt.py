@@ -164,7 +164,6 @@ def remap_adusumilli(in_filename, mesh_filename, mesh_name,
     melt_rate = np.where(mask, melt_rate, 0.)
     ds['x'] = (('x',), x)
     ds['y'] = (('y',), y)
-    ds['landIceFluxMask'] = (('y', 'x'), mask.astype(float))
     ds['dataLandIceFreshwaterFlux'] = (('y', 'x'),
                                        melt_rate * rho_ice / s_per_yr)
     ds['dataLandIceHeatFlux'] = (latent_heat_of_fusion *
@@ -200,6 +199,10 @@ def remap_adusumilli(in_filename, mesh_filename, mesh_name,
         # regions with land ice
         ds_remap[field] = \
             mask * ds_remap[field].where(ds_remap[field].notnull(), 0.)
+
+        # add a time dimension
+        if 'Time' not in ds_remap[field].dims:
+            ds_remap[field] = ds_remap[field].expand_dims(dim='Time', axis=0)
 
     # deal with melting beyond the land-ice mask
 
