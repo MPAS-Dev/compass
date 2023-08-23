@@ -1,3 +1,4 @@
+import cmocean  # noqa: F401
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
@@ -54,9 +55,8 @@ class Visualize(Step):
             ncfile = Dataset(f'output_{mode}.nc', 'r')
             temp = ncfile.variables['temperature']
             plt.subplot(2, 1, j + 1)
-            plt.imshow(temp[time, 0:nx, :].T)
-            plt.clim([10, 20])
-            plt.jet()
+            plt.imshow(temp[time, 0:nx, :].T, cmap='cmo.thermal',
+                       vmin=10., vmax=20.)
             plt.colorbar()
             plt.xticks(np.arange(0., nx, 1000. / dc),
                        np.arange(0, nx * dc / 1000., 1))
