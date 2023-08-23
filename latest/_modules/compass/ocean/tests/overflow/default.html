@@ -113,10 +113,12 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.overflow.default</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.overflow.initial_state</span> <span class="kn">import</span> <span class="n">InitialState</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests</span> <span class="kn">import</span> <span class="n">overflow</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.overflow.forward</span> <span class="kn">import</span> <span class="n">Forward</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests</span> <span class="kn">import</span> <span class="n">overflow</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.overflow.initial_state_from_init_mode</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">InitialStateFromInitMode</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
 <span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
 
 
@@ -142,7 +144,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">/default&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">InitialState</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">InitialStateFromInitMode</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Forward</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span></div>
 
     <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

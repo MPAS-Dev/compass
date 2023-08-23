@@ -72,6 +72,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#default">default</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#rpe-test">rpe_test</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nonhydro">nonhydro</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hydro-vs-nonhydro">hydro_vs_nonhydro</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="planar_convergence.html">planar_convergence</a></li>
@@ -151,9 +153,10 @@
   <section id="overflow">
 <span id="ocean-overflow"></span><h1>overflow<a class="headerlink" href="#overflow" title="Permalink to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">ocean/overflow</span></code> test group induces a density current flowing down a
-continental slope and is documented in
-<a class="reference external" href="https://doi.org/10.1016/j.ocemod.2014.12.004">Petersen et al. 2015</a>.</p>
-<p>The domain is periodic on the zonal boundaries and solid on the meridional
+continental slope and includes four test cases.</p>
+<p>The first two are based on
+<a class="reference external" href="https://doi.org/10.1016/j.ocemod.2014.12.004">Petersen et al. 2015</a>.
+The domain is periodic on the zonal boundaries and solid on the meridional
 boundaries. Salinity is constant throughout the domain (at 35 PSU).  The
 initial temperature is bimodal with low temperature throughout the continental
 shelf region of 10 deg C and high temperature over the slope and deep ocean of
@@ -164,15 +167,26 @@ and flow down the slope as a bottom boundary current.</p>
 implementation error for other vertical coordinate options. For the default
 test case, the horizontal resolution is 10 km. For the RPE test case, the
 horizontal resolution is 2 km.</p>
-<p>The test group includes 2 test cases.  All test cases have 2 steps,
-<code class="docutils literal notranslate"><span class="pre">initial_state</span></code>, which defines the mesh and initial conditions for the model,
-and <code class="docutils literal notranslate"><span class="pre">forward</span></code>, which performs time integration of the model. For the RPE
-test, there is an additional <code class="docutils literal notranslate"><span class="pre">analysis</span></code> step which computes the RPE through
+<p>Test cases three and four have a different setup (mesh and initial conditions)
+based on the MITgcm test available at
+<cite>https://mitgcm.readthedocs.io/en/latest/examples/plume_on_slope/plume_on_slope.html</cite>.
+The domain is 200m deep and 6.4km across, with an horizontal resolution of 20m and
+60 layers in the vertical. The initial temperature is again bimodal with low
+temperature throughout the continental shelf region of 10 deg C and high temperature
+over the slope and deep ocean of 20 deg C. By default, the z-star coordinate system
+is used. The <code class="docutils literal notranslate"><span class="pre">nonhydro</span></code> test uses the nonhydrostatic formulation and has a run duration
+of 30min. The <code class="docutils literal notranslate"><span class="pre">hydro_vs_nonhydro</span></code> test compares the solutions obtained with the
+hydrostatic and nonhydrostatic model after 3h.</p>
+<p>All test cases have two steps, <code class="docutils literal notranslate"><span class="pre">initial_state</span></code>, which defines the mesh and initial
+conditions for the model, and <code class="docutils literal notranslate"><span class="pre">forward</span></code>, which performs time integration of the model.
+For the RPE test, there is an additional <code class="docutils literal notranslate"><span class="pre">analysis</span></code> step which computes the RPE through
 time in relation to the initial RPE and visualizes vertical cross-sections
-through the center of the domain.</p>
+through the center of the domain. For the <code class="docutils literal notranslate"><span class="pre">hydro_vs_nonhydro</span></code> test, there is an additional
+<code class="docutils literal notranslate"><span class="pre">visualization</span></code> step that plots the temperature profiles obtained with the
+hydrostatic and nonhydrostatic model after 3h.</p>
 <section id="config-options">
 <h2>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h2>
-<p>All 3 test cases share the same set of config options:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">default</span></code> and <code class="docutils literal notranslate"><span class="pre">rpe_test</span></code> test cases share this set of config options:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the overflow case</span>
 <span class="k">[overflow]</span>
 
@@ -184,6 +198,71 @@ through the center of the domain.</p>
 
 <span class="c1"># Viscosity values to test for rpe test case</span>
 <span class="na">viscosities</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1, 5, 10, 100, 1000</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">nonhydro</span></code> and <code class="docutils literal notranslate"><span class="pre">hydro_vs_nonhydro</span></code> tests share different config options:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for the horizontal grid</span>
+<span class="k">[horizontal_grid]</span>
+
+<span class="c1">#Number of cells in the x-direction</span>
+<span class="na">nx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">320</span>
+
+<span class="c1">#Number of cells in the y-direction</span>
+<span class="na">ny</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span>
+
+<span class="c1">#Distance from two cell centers</span>
+<span class="na">dc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">20.0</span>
+
+<span class="c1"># Options related to the vertical grid</span>
+<span class="k">[vertical_grid]</span>
+
+<span class="c1">#Depth of the bottom of the ocean</span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">200.0</span>
+
+<span class="c1">#Number of vertical levels</span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">60</span>
+
+<span class="c1"># the type of vertical grid</span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">uniform</span>
+
+<span class="c1"># The type of vertical coordinate (e.g. z-level, z-star)</span>
+<span class="na">coord_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">z-star</span>
+
+<span class="c1"># Whether to use &quot;partial&quot; or &quot;full&quot;, or &quot;None&quot; to not alter the topography</span>
+<span class="na">partial_cell_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
+
+<span class="c1"># config options for the solitary wave testcase</span>
+<span class="k">[hydro_vs_nonhydro]</span>
+
+<span class="c1">#Lateral position of the shelf-break</span>
+<span class="na">xs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4700.0</span>
+
+<span class="c1">#Length-scale of the slope</span>
+<span class="na">Ls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">533.3333</span>
+
+<span class="c1">#Beta in eos</span>
+<span class="na">eos_linear_beta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.8</span>
+
+<span class="c1">#Reference salinity</span>
+<span class="na">eos_linear_Sref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">35.0</span>
+
+<span class="c1">#Reference density</span>
+<span class="na">eos_linear_densityref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000.0</span>
+
+<span class="c1">#Density variation per layer</span>
+<span class="na">rhoz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-2.0e-4</span>
+
+<span class="c1">#Lower temperature</span>
+<span class="na">lower_temperature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span>
+
+<span class="c1">#Higher temperature</span>
+<span class="na">higher_temperature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">20.0</span>
+
+<span class="c1"># config options for the solitary wave testcase</span>
+<span class="k">[visualize]</span>
+
+<span class="c1">#Time at which plotting the variables</span>
+<span class="na">plotTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6</span>
 </pre></div>
 </div>
 </section>
@@ -202,6 +281,25 @@ in time at 5 different values of the viscosity (with steps named
 been used to evaluate spurious dissipation in relation to different models and
 vertical grid choices
 (<a class="reference external" href="https://doi.org/10.1016/j.ocemod.2014.12.004">Petersen et al. 2015</a>).</p>
+</section>
+<section id="nonhydro">
+<h2>nonhydro<a class="headerlink" href="#nonhydro" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ocean/overflow/nonhydro</span></code> uses the nonhydrostatic formulation. After the mesh and
+initial conditions are generated, the nonhydrostatic model is run for 30min using
+the RK4 time-stepping scheme with a time-step of 0.5s.</p>
+</section>
+<section id="hydro-vs-nonhydro">
+<h2>hydro_vs_nonhydro<a class="headerlink" href="#hydro-vs-nonhydro" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ocean/overflow/hydro_vs_nonhydro</span></code> compares the solutions obtained with
+the hydrostatic and nonhydrostatic model. After the creation of the mesh
+and initial conditions, an hydrostatic and a nonhydrostatic simulation
+are run using the RK4 time-stepping scheme with a time-step of 0.5s.
+The temperature profile at 3h is plotted for the hydrostatic
+and nonhydrostatic case. The plot shows that a Kelvin-Helmholtz instability
+develops in the nonhydrostatic case, leading to entrainment of
+ambient fluid into plumes, whereas the hydrostatic model fails to
+capture the correct physics.</p>
+<img alt="../../../_images/overflow_nonhydro.png" class="align-center" src="../../../_images/overflow_nonhydro.png" />
 </section>
 </section>
 

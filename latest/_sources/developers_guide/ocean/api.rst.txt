@@ -591,8 +591,21 @@ overflow
    forward.Forward
    forward.Forward.run
 
+   initial_state_from_init_mode.InitialStateFromInitMode
+   initial_state_from_init_mode.InitialStateFromInitMode.run
+
    initial_state.InitialState
    initial_state.InitialState.run
+
+   nonhydro.Nonhydro
+   nonhydro.forward.Forward
+   nonhydro.forward.Forward.run
+
+   hydro_vs_nonhydro.HydroVsNonhydro
+   hydro_vs_nonhydro.forward.Forward
+   hydro_vs_nonhydro.forward.Forward.run
+   hydro_vs_nonhydro.visualize.Visualize
+   hydro_vs_nonhydro.visualize.Visualize.run
 
 
 planar_convergence

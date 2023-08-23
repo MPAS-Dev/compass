@@ -113,20 +113,20 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.overflow.initial_state</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">xarray</span>
-
-<span class="kn">from</span> <span class="nn">mpas_tools.planar_hex</span> <span class="kn">import</span> <span class="n">make_planar_hex_mesh</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">xarray</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.mesh.conversion</span> <span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">cull</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.planar_hex</span> <span class="kn">import</span> <span class="n">make_planar_hex_mesh</span>
 
+<span class="kn">from</span> <span class="nn">compass.ocean.vertical</span> <span class="kn">import</span> <span class="n">init_vertical_coord</span>
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
-<span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">run_model</span>
 
 
 <div class="viewcode-block" id="InitialState"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.overflow.initial_state.InitialState.html#compass.ocean.tests.overflow.initial_state.InitialState">[docs]</a><span class="k">class</span> <span class="nc">InitialState</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A step for creating a mesh and initial condition for overflow test</span>
-<span class="sd">    cases</span>
+<span class="sd">    A step for creating a mesh and initial condition for the nonhydro</span>
+<span class="sd">    and the hydro vs nonhydro test cases.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="InitialState.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.overflow.initial_state.InitialState.html#compass.ocean.tests.overflow.initial_state.InitialState.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -134,23 +134,13 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        test_case : compass.testcase.Testcase</span>
-<span class="sd">            The test case this step belongs to</span>
+<span class="sd">        test_case : compass.TestCase</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;initial_state&#39;</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                         <span class="n">min_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.overflow&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;namelist.init&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.overflow&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;streams.init&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;initial_state&#39;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;ocean.nc&#39;</span><span class="p">]:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span></div>
+                     <span class="s1">&#39;initial_state.nc&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="InitialState.run"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.overflow.initial_state.InitialState.run.html#compass.ocean.tests.overflow.initial_state.InitialState.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -159,42 +149,84 @@
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;overflow&#39;</span><span class="p">]</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;horizontal_grid&#39;</span><span class="p">]</span>
         <span class="n">nx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;nx&#39;</span><span class="p">)</span>
         <span class="n">ny</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ny&#39;</span><span class="p">)</span>
         <span class="n">dc</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;dc&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span>
-           <span class="p">{</span><span class="s1">&#39;config_overflow_dc&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">})</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">make_planar_hex_mesh</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="o">=</span><span class="n">ny</span><span class="p">,</span> <span class="n">dc</span><span class="o">=</span><span class="n">dc</span><span class="p">,</span> <span class="n">nonperiodic_x</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                      <span class="n">nonperiodic_y</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39; * Make planar hex mesh&#39;</span><span class="p">)</span>
-        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">make_planar_hex_mesh</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="o">=</span><span class="n">ny</span><span class="p">,</span> <span class="n">dc</span><span class="o">=</span><span class="n">dc</span><span class="p">,</span> <span class="n">nonperiodic_x</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                                       <span class="n">nonperiodic_y</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39; * Completed Make planar hex mesh&#39;</span><span class="p">)</span>
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">graphInfoFileName</span><span class="o">=</span><span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
+                         <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39; * Cull mesh boundaries&#39;</span><span class="p">)</span>
-        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39; * Convert mesh&#39;</span><span class="p">)</span>
-        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">graphInfoFileName</span><span class="o">=</span><span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
-                          <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39; * Completed Convert mesh&#39;</span><span class="p">)</span>
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">]</span>
+        <span class="n">nVertLevels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;vert_levels&#39;</span><span class="p">)</span>
+        <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;bottom_depth&#39;</span><span class="p">)</span>
 
-        <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">namelist</span><span class="o">=</span><span class="s1">&#39;namelist.ocean&#39;</span><span class="p">,</span>
-                  <span class="n">streams</span><span class="o">=</span><span class="s1">&#39;streams.ocean&#39;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;hydro_vs_nonhydro&#39;</span><span class="p">]</span>
+        <span class="n">cold_water_range</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;cold_water_range&#39;</span><span class="p">)</span>
+        <span class="n">shelf_depth</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;shelf_depth&#39;</span><span class="p">)</span>
+        <span class="n">xs</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;xs&#39;</span><span class="p">)</span>
+        <span class="n">Ls</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;Ls&#39;</span><span class="p">)</span>
+        <span class="n">config_eos_linear_Sref</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;eos_linear_Sref&#39;</span><span class="p">)</span>
+        <span class="n">lower_temperature</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;lower_temperature&#39;</span><span class="p">)</span>
+        <span class="n">higher_temperature</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;higher_temperature&#39;</span><span class="p">)</span>
 
-        <span class="n">postrun_data</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;ocean.nc&#39;</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39; * Cull mesh dam boundaries&#39;</span><span class="p">)</span>
-        <span class="n">postrun_data_cull</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">postrun_data</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39; * Convert mesh&#39;</span><span class="p">)</span>
-        <span class="n">postrun_data_cull</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">postrun_data_cull</span><span class="p">,</span>
-                                    <span class="n">graphInfoFileName</span><span class="o">=</span><span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
-                                    <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">postrun_data_cull</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">)</span>
+        <span class="c1"># obtain dimensions and mesh variables</span>
+        <span class="c1"># vertical_coordinate = &#39;uniform&#39;</span>
 
-        <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">namelist</span><span class="o">=</span><span class="s1">&#39;namelist.ocean&#39;</span><span class="p">,</span>
-                  <span class="n">streams</span><span class="o">=</span><span class="s1">&#39;streams.ocean&#39;</span><span class="p">)</span></div></div>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">nCells</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">nCells</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">nEdges</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">nEdges</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">nVertices</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">nVertices</span><span class="o">.</span><span class="n">size</span>
+
+        <span class="n">xCell</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">xCell</span>
+
+        <span class="c1"># create and initialize variables</span>
+        <span class="c1"># bottom depth</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span> <span class="p">(</span><span class="o">-</span> <span class="n">bottom_depth</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span>
+                               <span class="p">(</span><span class="n">bottom_depth</span> <span class="o">-</span> <span class="n">shelf_depth</span><span class="p">)</span> <span class="o">*</span>
+                               <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">((</span><span class="n">nx</span> <span class="o">*</span> <span class="n">dc</span> <span class="o">-</span>
+                                <span class="n">ds</span><span class="o">.</span><span class="n">xCell</span> <span class="o">-</span> <span class="n">xs</span><span class="p">)</span> <span class="o">/</span> <span class="n">Ls</span><span class="p">)))</span>
+        <span class="c1"># ssh</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">xCell</span><span class="p">)</span>
+
+        <span class="n">init_vertical_coord</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+
+        <span class="c1"># initial salinity and temperature</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;salinity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">config_eos_linear_Sref</span> <span class="o">*</span>
+                          <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">zMid</span><span class="p">))</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">cellMask</span><span class="p">)</span>
+        <span class="c1"># T = Tref - (rho - rhoRef)/alpha</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">zMid</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">cellMask</span><span class="p">)</span>
+        <span class="n">temperature</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">iCell</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nCells</span><span class="p">):</span>
+            <span class="n">temperature</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">iCell</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nVertLevels</span><span class="p">):</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">xCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">cold_water_range</span><span class="p">):</span>
+                    <span class="n">temperature</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">iCell</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">lower_temperature</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">temperature</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">iCell</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">higher_temperature</span>
+
+        <span class="c1"># initial velocity on edges</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;nEdges&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">,),</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="n">nEdges</span><span class="p">,</span> <span class="n">nVertLevels</span><span class="p">]))</span>
+
+        <span class="c1"># Coriolis parameter</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fCell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">,),</span>
+                       <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">nCells</span><span class="p">,</span> <span class="n">nVertLevels</span><span class="p">]))</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fEdge&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nEdges&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">,),</span>
+                       <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">nEdges</span><span class="p">,</span> <span class="n">nVertLevels</span><span class="p">]))</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fVertex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nVertices&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">,),</span>
+                         <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">nVertices</span><span class="p">,</span> <span class="n">nVertLevels</span><span class="p">]))</span>
+
+        <span class="c1"># finalize and write file</span>
+        <span class="c1"># If you prefer not to have NaN as the fill value, you should consider</span>
+        <span class="c1"># using mpas_tools.io.write_netcdf() instead</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;initial_state.nc&#39;</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

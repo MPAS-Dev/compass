@@ -112,9 +112,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.overflow</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.overflow.default</span> <span class="kn">import</span> <span class="n">Default</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests.overflow.default</span> <span class="kn">import</span> <span class="n">Default</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.overflow.hydro_vs_nonhydro</span> <span class="kn">import</span> <span class="n">HydroVsNonhydro</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.overflow.nonhydro</span> <span class="kn">import</span> <span class="n">Nonhydro</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.overflow.rpe_test</span> <span class="kn">import</span> <span class="n">RpeTest</span>
+<span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
 
 
 <div class="viewcode-block" id="Overflow"><a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.tests.overflow.Overflow.html#compass.ocean.tests.overflow.Overflow">[docs]</a><span class="k">class</span> <span class="nc">Overflow</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
@@ -130,7 +132,9 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;overflow&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">Default</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="s1">&#39;10km&#39;</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">RpeTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="s1">&#39;2km&#39;</span><span class="p">))</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">RpeTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="s1">&#39;2km&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">Nonhydro</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">HydroVsNonhydro</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span></div></div>
 
 
 <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
@@ -149,14 +153,14 @@
     <span class="n">length</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;overflow&#39;</span><span class="p">,</span> <span class="s1">&#39;length&#39;</span><span class="p">)</span>
 
     <span class="n">dc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">resolution</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
-    <span class="n">nx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">width</span><span class="o">/</span><span class="n">dc</span><span class="p">)</span>
-    <span class="n">ny</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">length</span><span class="o">/</span><span class="n">dc</span><span class="p">)</span>
+    <span class="n">nx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">width</span> <span class="o">/</span> <span class="n">dc</span><span class="p">)</span>
+    <span class="n">ny</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">length</span> <span class="o">/</span> <span class="n">dc</span><span class="p">)</span>
 
     <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;overflow&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">nx</span><span class="p">),</span>
                <span class="n">comment</span><span class="o">=</span><span class="s1">&#39;the number of mesh cells in the x direction&#39;</span><span class="p">)</span>
     <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;overflow&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ny</span><span class="p">),</span>
                <span class="n">comment</span><span class="o">=</span><span class="s1">&#39;the number of mesh cells in the y direction&#39;</span><span class="p">)</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;overflow&#39;</span><span class="p">,</span> <span class="s1">&#39;dc&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">dc</span><span class="o">*</span><span class="mf">1e3</span><span class="p">),</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;overflow&#39;</span><span class="p">,</span> <span class="s1">&#39;dc&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">dc</span> <span class="o">*</span> <span class="mf">1e3</span><span class="p">),</span>
                <span class="n">comment</span><span class="o">=</span><span class="s1">&#39;the distance between adjacent cell centers&#39;</span><span class="p">)</span>
 </pre></div>
 

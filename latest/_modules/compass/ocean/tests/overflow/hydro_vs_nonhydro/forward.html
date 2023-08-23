@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.ocean.tests.overflow.hydro_vs_nonhydro.forward &mdash; compass latest documentation</title>
+      <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../../" id="documentation_options" src="../../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../../_static/jquery.js"></script>
+        <script src="../../../../../../_static/underscore.js"></script>
+        <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../../../_static/doctools.js"></script>
+        <script src="../../../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+              <div class="version">
+                latest
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../../ocean.html">compass.ocean</a></li>
+          <li class="breadcrumb-item"><a href="../../overflow.html">compass.ocean.tests.overflow</a></li>
+          <li class="breadcrumb-item"><a href="../hydro_vs_nonhydro.html">compass.ocean.tests.overflow.hydro_vs_nonhydro</a></li>
+      <li class="breadcrumb-item active">compass.ocean.tests.overflow.hydro_vs_nonhydro.forward</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.ocean.tests.overflow.hydro_vs_nonhydro.forward</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">run_model</span>
+<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+
+
+<div class="viewcode-block" id="Forward"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.overflow.hydro_vs_nonhydro.forward.Forward.html#compass.ocean.tests.overflow.hydro_vs_nonhydro.forward.Forward">[docs]</a><span class="k">class</span> <span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A step for performing forward MPAS-Ocean runs as part of the</span>
+<span class="sd">    hydro vs nonhydro test case.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    nonhydro_mode : bool</span>
+<span class="sd">        The resolution of the test case</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Forward.__init__"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.overflow.hydro_vs_nonhydro.forward.Forward.html#compass.ocean.tests.overflow.hydro_vs_nonhydro.forward.Forward.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">nonhydro_mode</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
+                 <span class="n">ntasks</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new test case</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.TestCase</span>
+<span class="sd">            The test case this step belongs to</span>
+
+<span class="sd">        name : str</span>
+<span class="sd">            the name of the test case</span>
+
+<span class="sd">        ntasks : int, optional</span>
+<span class="sd">            the number of cores the step would ideally use.  If fewer cores</span>
+<span class="sd">            are available on the system, the step will run on all available</span>
+<span class="sd">            cores as long as this is not below ``min_cores``</span>
+
+<span class="sd">        min_tasks : int, optional</span>
+<span class="sd">            the number of cores the step requires.  If the system has fewer</span>
+<span class="sd">            than this number of cores, the step will fail</span>
+
+<span class="sd">        openmp_threads : int, optional</span>
+<span class="sd">            the number of threads the step will use</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nonhydro_mode</span> <span class="o">=</span> <span class="n">nonhydro_mode</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                         <span class="n">ntasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="n">min_tasks</span><span class="p">,</span>
+                         <span class="n">openmp_threads</span><span class="o">=</span><span class="n">openmp_threads</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
+            <span class="s1">&#39;compass.ocean.tests.overflow.hydro_vs_nonhydro&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">nonhydro_mode</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
+                <span class="s1">&#39;compass.ocean.tests.overflow.hydro_vs_nonhydro&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;namelist.nonhydro&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
+                <span class="s1">&#39;compass.ocean.tests.overflow.hydro_vs_nonhydro&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;namelist.hydro&#39;</span><span class="p">)</span>
+
+        <span class="c1"># make sure output is double precision</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.streams&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.output&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.overflow.hydro_vs_nonhydro&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../initial_state/initial_state.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../initial_state/culled_graph.info&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span></div>
+
+    <span class="c1"># no setup() is needed</span>
+
+<div class="viewcode-block" id="Forward.run"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.overflow.hydro_vs_nonhydro.forward.Forward.run.html#compass.ocean.tests.overflow.hydro_vs_nonhydro.forward.Forward.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run this step of the test case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_pio</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
