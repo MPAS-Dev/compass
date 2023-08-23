@@ -1,0 +1,97 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import xarray as xr
+from scipy.interpolate import interp1d
+
+from compass.step import Step
+
+
+class Analysis(Step):
+    """
+    A step for visualizing drying slope results, as well as comparison with
+    analytical solution and ROMS results.
+
+    Attributes
+    ----------
+    """
+    def __init__(self, test_case, resolutions, damping_coeff):
+        super().__init__(test_case=test_case, name='analysis')
+        self.damping_coeff = damping_coeff
+        self.resolutions = resolutions
+        for resolution in resolutions:
+            if resolution < 1.:
+                res_name = f'{int(resolution*1e3)}m'
+            else:
+                res_name = f'{int(resolution)}km'
+            self.add_input_file(filename=f'output_{res_name}.nc',
+                                target=f'../forward_{res_name}/output.nc')
+        self.add_output_file(filename='convergence.png')
+
+    def run(self):
+        times = ['0.05', '0.15', '0.25', '0.30', '0.40', '0.50']
+        for time in times:
+            self._plot_convergence(time)
+
+    def _compute_rmse(self, ds, t):
+        x_exact, ssh_exact = self._exact_solution(t, self.damping_coeff)
+        ds = ds.isel(Time=t).groupby('yCell').mean(
+            dim=xr.ALL_DIMS)
+        x_mpas = ds.yCell.values / 1000.0
+        ssh_mpas = ds.ssh.values
+        # Interpolate mpas solution to the points at which we have an exact
+        # solution
+        f = interp1d(x_mpas, ssh_mpas)
+        ssh_mpas_interp = f(x_exact)
+        rmse = np.sqrt(np.mean(np.square(ssh_mpas_interp - ssh_exact)))
+        return rmse
+
+    def _plot_convergence(self, time):
+        """
+        Plot convergence curves
+        time : float
+            simulation time at which to evaluate rmse
+        """
+
+        fig, ax = plt.subplots(nrows=1, ncols=1)
+
+        max_rmse = 0
+        rmse = np.zeros(len(self.resolutions))
+        for i, resolution in enumerate(self.resolutions):
+            if resolution < 1.:
+                res_name = f'{int(resolution*1e3)}m'
+            else:
+                res_name = f'{int(resolution)}km'
+            ds = xr.open_dataset(f'output_{res_name}.nc')
+            rmse[i] = self._compute_rmse(ds, time)
+
+            if rmse[i] > max_rmse:
+                max_rmse = rmse[i]
+
+            ax.loglog(self.resolutions, rmse,
+                      linestyle='-', marker='o', label='comp')
+
+        rmse_1st_order = np.zeros(len(self.resolutions))
+        rmse_1st_order[0] = max_rmse
+        for i in range(len(self.resolutions) - 1):
+            rmse_1st_order[i + 1] = rmse_1st_order[i] / 2.0
+
+        ax.loglog(self.resolutions, np.flip(rmse_1st_order),
+                  linestyle='-', color='k', alpha=.25, label='1st order')
+
+        ax.set_xlabel('Cell size (km)')
+        ax.set_ylabel('RMSE (m)')
+
+        ax.legend(loc='lower right')
+        ax.set_title('Layer thickness convergence')
+        fig.tight_layout()
+        fig.savefig('convergence.png')
+
+    def _exact_solution(self, time):
+        """
+        Returns distance, ssh
+        """
+        datafile = f'./r{self.damping_coeff}d{time}-'\
+                   f'analytical.csv'
+        data = pd.read_csv(datafile, header=None)
+        return data[0], data[1]

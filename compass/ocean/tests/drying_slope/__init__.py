@@ -1,4 +1,5 @@
 from compass.ocean.tests.drying_slope.decomp import Decomp
+from compass.ocean.tests.drying_slope.convergence import Convergence
 from compass.ocean.tests.drying_slope.default import Default
 from compass.ocean.tests.drying_slope.loglaw import LogLaw
 from compass.ocean.tests.drying_slope.ramp import Ramp
@@ -31,3 +32,7 @@ class DryingSlope(TestGroup):
                 self.add_test_case(
                     LogLaw(test_group=self, resolution=resolution,
                            coord_type=coord_type))
+        for coord_type in ['sigma', 'single_layer']:
+            self.add_test_case(
+                Convergence(test_group=self,
+                            coord_type=coord_type))

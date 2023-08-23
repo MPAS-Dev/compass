@@ -83,6 +83,10 @@ class Viz(Step):
             self._images_to_movies(framesPerSecond=frames_per_second,
                                    outFolder=outFolder, extension=movie_format)
 
+    def _forcing(self, t):
+        ssh = 10. * numpy.sin(t * numpy.pi / 12.) - 10.
+        return ssh
+
     def _plot_ssh_time_series(self, outFolder='.'):
         """
         Plot ssh forcing on the right x boundary as a function of time against
