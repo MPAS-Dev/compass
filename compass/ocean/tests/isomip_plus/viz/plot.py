@@ -103,11 +103,13 @@ class TimeSeriesPlotter(object):
         self.plot_time_series(1e-6 * totalMeltFlux, 'total melt flux',
                               'totalMeltFlux', 'kT/yr')
 
-        blTempName = 'timeMonthly_avg_landIceBoundaryLayerTracers_' \
-                     'landIceBoundaryLayerTemperature'
-        interTempName = 'timeMonthly_avg_landIceInterfaceTracers_' \
-                        'landIceInterfaceTemperature'
-        da = (self.ds[blTempName] - self.ds[interTempName])
+        prefix = 'timeMonthly_avg_landIceBoundaryLayerTracers_'
+        boundary_layer_temperature = \
+            self.ds[f'{prefix}landIceBoundaryLayerTemperature']
+        prefix = 'timeMonthly_avg_landIceInterfaceTracers_'
+        interface_temperature = \
+            self.ds[f'{prefix}landIceInterfaceTemperature']
+        da = boundary_layer_temperature - interface_temperature
         da = (da * areaCell * iceMask).sum(dim='nCells') / totalArea
 
         self.plot_time_series(da, 'mean thermal driving',
@@ -377,23 +379,23 @@ class MoviePlotter(object):
                                oceanDomain=False, units='W/s',
                                vmin=-1e1, vmax=1e1, cmap='cmo.curl')
 
-        blTempName = 'timeMonthly_avg_landIceBoundaryLayerTracers_' \
-                     'landIceBoundaryLayerTemperature'
-        interTempName = 'timeMonthly_avg_landIceInterfaceTracers_' \
-                        'landIceInterfaceTemperature'
-
-        da = (self.ds[blTempName] - self.ds[interTempName])
+        prefix = 'timeMonthly_avg_landIceBoundaryLayerTracers_'
+        boundary_layer_temperature = \
+            self.ds[f'{prefix}landIceBoundaryLayerTemperature']
+        boundary_layer_salinity = \
+            self.ds[f'{prefix}landIceBoundaryLayerSalinity']
+        prefix = 'timeMonthly_avg_landIceInterfaceTracers_'
+        interface_temperature = \
+            self.ds[f'{prefix}landIceInterfaceTemperature']
+        interface_salinity = \
+            self.ds[f'{prefix}landIceInterfaceSalinity']
+        da = boundary_layer_temperature - interface_temperature
         self.plot_horiz_series(da, 'thermal driving',
                                prefix='thermalDriving',
                                oceanDomain=False, units='deg C',
                                vmin=-2, vmax=2, cmap='cmo.thermal')
 
-        blSalinName = 'timeMonthly_avg_landIceBoundaryLayerTracers_' \
-                      'landIceBoundaryLayerSalinity'
-        interSalinName = 'timeMonthly_avg_landIceInterfaceTracers_' \
-                         'landIceInterfaceSalinity'
-
-        da = (self.ds[blSalinName] - self.ds[interSalinName])
+        da = boundary_layer_salinity - interface_salinity
         self.plot_horiz_series(da, 'haline driving',
                                prefix='halineDriving',
                                oceanDomain=False, units='PSU',
@@ -467,7 +469,7 @@ class MoviePlotter(object):
     def plot_horiz_series(self, da, nameInTitle, prefix, oceanDomain,
                           units=None, vmin=None, vmax=None, cmap=None,
                           cmap_set_under=None, cmap_set_over=None,
-                          cmap_scale='linear'):
+                          cmap_scale='linear', time_indices=None):
         """
         Plot a series of image of a given variable
 
@@ -500,6 +502,9 @@ class MoviePlotter(object):
 
         cmap_scale : {'log', 'linear'}, optional
             Whether the colormap is logarithmic or linear
+
+        time_indices : list of int, optional
+            The time indices at which to plot. If not provided, set to all.
         """
 
         nTime = self.ds.sizes['Time']
@@ -512,7 +517,9 @@ class MoviePlotter(object):
         else:
             bar = None
 
-        for tIndex in range(nTime):
+        if time_indices is None:
+            time_indices = range(nTime)
+        for tIndex in time_indices:
             self.update_date(tIndex)
             field = da.isel(Time=tIndex).values
             outFileName = '{}/{}/{}_{:04d}.png'.format(
@@ -859,8 +866,12 @@ class MoviePlotter(object):
         plt.close()
 
     def _compute_section_x_z(self):
-        x = _interp_extrap_corner(
-            self.dsMesh.xIsomipCell[self.sectionCellIndices])
+        if 'xIsomipCell' in self.dsMesh.keys():
+            x = _interp_extrap_corner(
+                self.dsMesh.xIsomipCell[self.sectionCellIndices])
+        else:
+            x = _interp_extrap_corner(
+                self.dsMesh.xCell[self.sectionCellIndices])
         nx = len(x)
         nVertLevels = self.dsMesh.sizes['nVertLevels']
         nTime = self.ds.sizes['Time']
@@ -902,8 +913,12 @@ def _compute_cell_patches(dsMesh, mask):
     patches = []
     nVerticesOnCell = dsMesh.nEdgesOnCell.values
     verticesOnCell = dsMesh.verticesOnCell.values - 1
-    xVertex = dsMesh.xIsomipVertex.values
-    yVertex = dsMesh.yIsomipVertex.values
+    if 'xIsomipVertex' in dsMesh.keys():
+        xVertex = dsMesh.xIsomipVertex.values
+        yVertex = dsMesh.yIsomipVertex.values
+    else:
+        xVertex = dsMesh.xVertex.values
+        yVertex = dsMesh.yVertex.values
     for iCell in range(dsMesh.sizes['nCells']):
         if not mask[iCell]:
             continue
@@ -922,8 +937,12 @@ def _compute_cell_patches(dsMesh, mask):
 
 
 def _compute_section_cell_indices(y, dsMesh):
-    xCell = dsMesh.xIsomipCell.values
-    yCell = dsMesh.yIsomipCell.values
+    if 'xIsomipCell' in dsMesh.keys():
+        xCell = dsMesh.xIsomipCell.values
+        yCell = dsMesh.yIsomipCell.values
+    else:
+        xCell = dsMesh.xCell.values
+        yCell = dsMesh.yCell.values
     xMin = numpy.amin(xCell)
     xMax = numpy.amax(xCell)
     xs = numpy.linspace(xMin, xMax, 10000)
