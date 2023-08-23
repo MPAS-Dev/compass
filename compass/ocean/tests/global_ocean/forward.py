@@ -38,7 +38,8 @@ class ForwardStep(Step):
     """
     def __init__(self, test_case, mesh, time_integrator, init=None,
                  name='forward', subdir=None, ntasks=None, min_tasks=None,
-                 openmp_threads=None, get_dt_from_min_res=True):
+                 openmp_threads=None, get_dt_from_min_res=True,
+                 land_ice_flux_mode='pressure_only'):
         """
         Create a new step
 
@@ -77,6 +78,11 @@ class ForwardStep(Step):
         get_dt_from_min_res : bool
             Whether to automatically compute `config_dt` and `config_btr_dt`
             namelist options from the minimum resolution of the mesh
+
+        land_ice_flux_mode : {'pressure_only', 'standalone', 'data'}, optional
+            Whether to have no ice-shelf melt fluxes ("pressure_only"),
+            prognostic melt ("standalone") or data melt from a
+            satellite-derived climatology ("data").
         """
         self.mesh = mesh
         self.init = init
@@ -103,8 +109,15 @@ class ForwardStep(Step):
             'compass.ocean.tests.global_ocean', 'streams.forward')
 
         if mesh.with_ice_shelf_cavities:
-            self.add_namelist_file(
-                'compass.ocean.tests.global_ocean', 'namelist.wisc')
+            options = dict(config_check_ssh_consistency='.false.',
+                           config_land_ice_flux_mode=f"'{land_ice_flux_mode}'")
+            self.add_namelist_options(options)
+            if land_ice_flux_mode == 'data':
+                filename = 'prescribed_ismf_adusumilli2020.nc'
+                target = f'{init.path}/remap_ice_shelf_melt/{filename}'
+                self.add_input_file(filename=filename, work_dir_target=target)
+                self.add_streams_file(
+                    'compass.ocean.tests.global_ocean', 'streams.dismf')
 
         mesh_package = mesh.package
         mesh_package_contents = list(contents(mesh_package))

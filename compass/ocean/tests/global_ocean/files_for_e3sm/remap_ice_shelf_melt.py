@@ -1,11 +1,11 @@
 import os
 
 from compass.io import symlink
-from compass.ocean.tests.global_ocean.data_ice_shelf_melt.remap_ice_shelf_melt import (  # noqa: E501
-    remap_adusumilli,
-)
 from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step import (  # noqa: E501
     FilesForE3SMStep,
+)
+from compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt import (
+    remap_adusumilli,
 )
 
 
@@ -16,10 +16,10 @@ class RemapIceShelfMelt(FilesForE3SMStep):
 
     Attributes
     ----------
-    data_ice_shelf_melt : compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt
-        A test case where remapping has already occurred
+    init : compass.ocean.tests.global_ocean.init.Init
+        The test case that produces the initial condition for this run
     """  # noqa: E501
-    def __init__(self, test_case, data_ice_shelf_melt):
+    def __init__(self, test_case, init):
         """
         Create a new step
 
@@ -28,22 +28,22 @@ class RemapIceShelfMelt(FilesForE3SMStep):
         test_case : compass.TestCase
             The test case this step belongs to
 
-        data_ice_shelf_melt : compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt
-            A test case where remapping has already occurred
+        init : compass.ocean.tests.global_ocean.init.Init
+            The test case that produces the initial condition for this run
         """  # noqa: E501
         super().__init__(test_case, name='remap_ice_shelf_melt', ntasks=512,
                          min_tasks=1)
-        self.data_ice_shelf_melt = data_ice_shelf_melt
+        self.init = init
         filename = 'prescribed_ismf_adusumilli2020.nc'
-        if data_ice_shelf_melt is None:
+        if init is None:
             self.add_input_file(
                 filename='Adusumilli_2020_iceshelf_melt_rates_2010-2018_v0.h5',
                 target='Adusumilli_2020_iceshelf_melt_rates_2010-2018_v0.h5',
                 database='initial_condition_database',
                 url='http://library.ucsd.edu/dc/object/bb0448974g/_3_1.h5')
-        else:
+        elif 'remap_ice_shelf_melt' in self.init.steps:
             melt_path = \
-                data_ice_shelf_melt.steps['remap_ice_shelf_melt'].path
+                self.init.steps['remap_ice_shelf_melt'].path
 
             self.add_input_file(
                 filename=filename,
@@ -67,15 +67,13 @@ class RemapIceShelfMelt(FilesForE3SMStep):
         if not self.with_ice_shelf_cavities:
             return
 
-        data_ice_shelf_melt = self.data_ice_shelf_melt
-
         prefix = 'prescribed_ismf_adusumilli2020'
         suffix = f'{self.mesh_short_name}.{self.creation_date}'
 
         remapped_filename = f'{prefix}.nc'
         dest_filename = f'{prefix}.{suffix}.nc'
 
-        if data_ice_shelf_melt is None:
+        if self.init is None:
             logger = self.logger
             config = self.config
             ntasks = self.ntasks
