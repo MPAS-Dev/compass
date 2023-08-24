@@ -114,9 +114,6 @@
   <h1>Source code for compass.ocean.tests.global_ocean</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.analysis_test</span> <span class="kn">import</span> <span class="n">AnalysisTest</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.daily_output_test</span> <span class="kn">import</span> <span class="n">DailyOutputTest</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.data_ice_shelf_melt</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">DataIceShelfMelt</span><span class="p">,</span>
-<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.decomp_test</span> <span class="kn">import</span> <span class="n">DecompTest</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm</span> <span class="kn">import</span> <span class="n">FilesForE3SM</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.init</span> <span class="kn">import</span> <span class="n">Init</span>
@@ -251,14 +248,6 @@
                         <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
                         <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
 
-            <span class="k">if</span> <span class="n">mesh_test</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
-                <span class="n">data_melt_test</span> <span class="o">=</span> <span class="n">DataIceShelfMelt</span><span class="p">(</span>
-                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
-                    <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">data_melt_test</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">data_melt_test</span> <span class="o">=</span> <span class="kc">None</span>
-
             <span class="n">dynamic_adjustment_test</span> <span class="o">=</span> <span class="n">DynamicAdjustment</span><span class="p">(</span>
                 <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
                 <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">)</span>
@@ -267,8 +256,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
                 <span class="n">FilesForE3SM</span><span class="p">(</span>
                     <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
-                    <span class="n">dynamic_adjustment</span><span class="o">=</span><span class="n">dynamic_adjustment_test</span><span class="p">,</span>
-                    <span class="n">data_ice_shelf_melt</span><span class="o">=</span><span class="n">data_melt_test</span><span class="p">))</span>
+                    <span class="n">dynamic_adjustment</span><span class="o">=</span><span class="n">dynamic_adjustment_test</span><span class="p">))</span>
 
             <span class="k">if</span> <span class="n">include_rk4</span><span class="p">:</span>
                 <span class="n">time_integrator</span> <span class="o">=</span> <span class="s1">&#39;RK4&#39;</span>
@@ -307,14 +295,6 @@
                         <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
                         <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
 
-                <span class="k">if</span> <span class="n">mesh_test</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
-                    <span class="n">data_melt_test</span> <span class="o">=</span> <span class="n">DataIceShelfMelt</span><span class="p">(</span>
-                        <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
-                        <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">data_melt_test</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">data_melt_test</span> <span class="o">=</span> <span class="kc">None</span>
-
                 <span class="n">dynamic_adjustment_test</span> <span class="o">=</span> <span class="n">DynamicAdjustment</span><span class="p">(</span>
                     <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
                     <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">)</span>
@@ -323,8 +303,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
                     <span class="n">FilesForE3SM</span><span class="p">(</span>
                         <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init_test</span><span class="p">,</span>
-                        <span class="n">dynamic_adjustment</span><span class="o">=</span><span class="n">dynamic_adjustment_test</span><span class="p">,</span>
-                        <span class="n">data_ice_shelf_melt</span><span class="o">=</span><span class="n">data_melt_test</span><span class="p">))</span></div>
+                        <span class="n">dynamic_adjustment</span><span class="o">=</span><span class="n">dynamic_adjustment_test</span><span class="p">))</span></div>
 </pre></div>
 
            </div>

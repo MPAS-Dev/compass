@@ -157,14 +157,6 @@ test cases and steps
    daily_output_test.DailyOutputTest.configure
    daily_output_test.DailyOutputTest.run
 
-   data_ice_shelf_melt.DataIceShelfMelt
-   data_ice_shelf_melt.DataIceShelfMelt.configure
-   data_ice_shelf_melt.DataIceShelfMelt.validate
-
-   data_ice_shelf_melt.remap_ice_shelf_melt.RemapIceShelfMelt
-   data_ice_shelf_melt.remap_ice_shelf_melt.RemapIceShelfMelt.run
-   data_ice_shelf_melt.remap_ice_shelf_melt.remap_adusumilli
-
    decomp_test.DecompTest
    decomp_test.DecompTest.configure
    decomp_test.DecompTest.run
@@ -203,6 +195,9 @@ test cases and steps
    init.initial_state.InitialState
    init.initial_state.InitialState.setup
    init.initial_state.InitialState.run
+   init.remap_ice_shelf_melt.RemapIceShelfMelt
+   init.remap_ice_shelf_melt.RemapIceShelfMelt.run
+   init.remap_ice_shelf_melt.remap_adusumilli
    init.ssh_adjustment.SshAdjustment
    init.ssh_adjustment.SshAdjustment.setup
    init.ssh_adjustment.SshAdjustment.run

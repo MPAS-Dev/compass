@@ -153,7 +153,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="ForwardStep.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.forward.ForwardStep.html#compass.ocean.tests.global_ocean.forward.ForwardStep.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">openmp_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">get_dt_from_min_res</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                 <span class="n">openmp_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">get_dt_from_min_res</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">land_ice_flux_mode</span><span class="o">=</span><span class="s1">&#39;pressure_only&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new step</span>
 
@@ -192,6 +193,11 @@
 <span class="sd">        get_dt_from_min_res : bool</span>
 <span class="sd">            Whether to automatically compute `config_dt` and `config_btr_dt`</span>
 <span class="sd">            namelist options from the minimum resolution of the mesh</span>
+
+<span class="sd">        land_ice_flux_mode : {&#39;pressure_only&#39;, &#39;standalone&#39;, &#39;data&#39;}, optional</span>
+<span class="sd">            Whether to have no ice-shelf melt fluxes (&quot;pressure_only&quot;),</span>
+<span class="sd">            prognostic melt (&quot;standalone&quot;) or data melt from a</span>
+<span class="sd">            satellite-derived climatology (&quot;data&quot;).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init</span> <span class="o">=</span> <span class="n">init</span>
@@ -218,8 +224,15 @@
             <span class="s1">&#39;compass.ocean.tests.global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
-                <span class="s1">&#39;compass.ocean.tests.global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;namelist.wisc&#39;</span><span class="p">)</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config_check_ssh_consistency</span><span class="o">=</span><span class="s1">&#39;.false.&#39;</span><span class="p">,</span>
+                           <span class="n">config_land_ice_flux_mode</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">land_ice_flux_mode</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">land_ice_flux_mode</span> <span class="o">==</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span>
+                <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;prescribed_ismf_adusumilli2020.nc&#39;</span>
+                <span class="n">target</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/remap_ice_shelf_melt/</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">work_dir_target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
+                    <span class="s1">&#39;compass.ocean.tests.global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.dismf&#39;</span><span class="p">)</span>
 
         <span class="n">mesh_package</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">package</span>
         <span class="n">mesh_package_contents</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">contents</span><span class="p">(</span><span class="n">mesh_package</span><span class="p">))</span>

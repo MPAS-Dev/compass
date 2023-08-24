@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.ocean.tests.global_ocean.data_ice_shelf_melt.remap_ice_shelf_melt.remap_adusumilli &mdash; compass latest documentation</title>
+  <title>compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt.run &mdash; compass latest documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,8 +20,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="compass.ocean.tests.global_ocean.decomp_test.DecompTest" href="compass.ocean.tests.global_ocean.decomp_test.DecompTest.html" />
-    <link rel="prev" title="compass.ocean.tests.global_ocean.data_ice_shelf_melt.remap_ice_shelf_melt.RemapIceShelfMelt.run" href="compass.ocean.tests.global_ocean.data_ice_shelf_melt.remap_ice_shelf_melt.RemapIceShelfMelt.run.html" /> 
+    <link rel="next" title="compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.remap_adusumilli" href="compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.remap_adusumilli.html" />
+    <link rel="prev" title="compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt" href="compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -118,9 +118,9 @@
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../api.html">API reference</a></li>
           <li class="breadcrumb-item"><a href="../api.html">ocean</a></li>
-      <li class="breadcrumb-item active">compass.ocean.tests.global_ocean.data_ice_shelf_melt.remap_ice_shelf_melt.remap_adusumilli</li>
+      <li class="breadcrumb-item active">compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt.run</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/developers_guide/ocean/generated/compass.ocean.tests.global_ocean.data_ice_shelf_melt.remap_ice_shelf_melt.remap_adusumilli.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt.run.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -128,37 +128,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="compass-ocean-tests-global-ocean-data-ice-shelf-melt-remap-ice-shelf-melt-remap-adusumilli">
-<h1>compass.ocean.tests.global_ocean.data_ice_shelf_melt.remap_ice_shelf_melt.remap_adusumilli<a class="headerlink" href="#compass-ocean-tests-global-ocean-data-ice-shelf-melt-remap-ice-shelf-melt-remap-adusumilli" title="Permalink to this heading">¶</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="compass.ocean.tests.global_ocean.data_ice_shelf_melt.remap_ice_shelf_melt.remap_adusumilli">
-<span class="sig-prename descclassname"><span class="pre">compass.ocean.tests.global_ocean.data_ice_shelf_melt.remap_ice_shelf_melt.</span></span><span class="sig-name descname"><span class="pre">remap_adusumilli</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">land_ice_mask_filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapping_directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'conserve'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renormalization_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpi_tasks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallel_executable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/global_ocean/data_ice_shelf_melt/remap_ice_shelf_melt.html#remap_adusumilli"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.tests.global_ocean.data_ice_shelf_melt.remap_ice_shelf_melt.remap_adusumilli" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remap the Adusumilli et al. (2020) melt rates at 1 km resolution to an MPAS
-mesh</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>in_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The original Adusumilli et al. (2020) melt rates</p></li>
-<li><p><strong>mesh_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The MPAS mesh</p></li>
-<li><p><strong>mesh_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the mesh (e.g. oEC60to30wISC), used in the name of the
-mapping file</p></li>
-<li><p><strong>land_ice_mask_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – A file containing the variable <code class="docutils literal notranslate"><span class="pre">landIceMask</span></code> on the MPAS mesh</p></li>
-<li><p><strong>out_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The melt rates interpolated to the MPAS mesh with ocean sensible heat
-fluxes added on (assuming insulating ice)</p></li>
-<li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.11)"><em>logging.Logger</em></a>) – A logger for output from the step</p></li>
-<li><p><strong>mapping_directory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The directory where the mapping file should be stored (if it is to be
-computed) or where it already exists (if not)</p></li>
-<li><p><strong>method</strong> (<em>{'bilinear'</em><em>, </em><em>'neareststod'</em><em>, </em><em>'conserve'}</em><em>, </em><em>optional</em>) – The method of interpolation used, see documentation for
-<cite>ESMF_RegridWeightGen</cite> for details.</p></li>
-<li><p><strong>renormalization_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>optional</em>) – The minimum weight of a destination cell after remapping, below
-which it is masked out, or <code class="docutils literal notranslate"><span class="pre">None</span></code> for no renormalization and
-masking.</p></li>
-<li><p><strong>mpi_tasks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>optional</em>) – The number of MPI tasks to use to compute the mapping file</p></li>
-<li><p><strong>parallel_executable</strong> (<em>{'srun'</em><em>, </em><em>'mpirun'}</em><em>, </em><em>optional</em>) – The name of the parallel executable to use to launch ESMF tools.
-But default, ‘mpirun’ from the conda environment is used</p></li>
-</ul>
-</dd>
-</dl>
+  <section id="compass-ocean-tests-global-ocean-init-remap-ice-shelf-melt-remapiceshelfmelt-run">
+<h1>compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt.run<a class="headerlink" href="#compass-ocean-tests-global-ocean-init-remap-ice-shelf-melt-remapiceshelfmelt-run" title="Permalink to this heading">¶</a></h1>
+<dl class="py method">
+<dt class="sig sig-object py" id="compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt.run">
+<span class="sig-prename descclassname"><span class="pre">RemapIceShelfMelt.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/global_ocean/init/remap_ice_shelf_melt.html#RemapIceShelfMelt.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run this step of the test case</p>
 </dd></dl>
 
 </section>
@@ -167,8 +142,8 @@ But default, ‘mpirun’ from the conda environment is used</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="compass.ocean.tests.global_ocean.data_ice_shelf_melt.remap_ice_shelf_melt.RemapIceShelfMelt.run.html" class="btn btn-neutral float-left" title="compass.ocean.tests.global_ocean.data_ice_shelf_melt.remap_ice_shelf_melt.RemapIceShelfMelt.run" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="compass.ocean.tests.global_ocean.decomp_test.DecompTest.html" class="btn btn-neutral float-right" title="compass.ocean.tests.global_ocean.decomp_test.DecompTest" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt.html" class="btn btn-neutral float-left" title="compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.remap_adusumilli.html" class="btn btn-neutral float-right" title="compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.remap_adusumilli" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -598,12 +598,19 @@ given ``<mesh>`` are:
 
 * ``ocean/global_ocean/<mesh>/EN4_1900/init``
 
+For meshes with ice-shelf cavities, ``init`` also interpolates the
+`Adusumilli et al. (2020) <https://doi.org/10.1038/s41561-020-0616-z>`_
+annual mean Antarctic melt rates to the MPAS mesh for use in subsequent test
+cases and possible incorporation as a forcing dataset in E3SM. The ``init``
+test case also performs an ``ssh_adjustment`` step as described in
+:ref:`ocean_ssh_adjustment`.
+
 .. _global_ocean_performance_test:
 
 performance_test test case
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The ``performance_test`` test case runs a short forward integration, then
+The ``performance_test`` test case runs 1 or 2 short forward integration, then
 performs validation of prognostic variables (layer thickness, velocity,
 temperature and salinity) and, if applicable, variables related to fluxes
 below ice shelves. The duration of the forward run depends on the mesh and the
@@ -623,6 +630,13 @@ more of these versions of the ``performance_test`` will be available:
 
 Versions of this test cases is currently available for all meshes, but not
 necessarily for all combinations of initial conditions and time integrators.
+
+If ice-shelf cavities are not present, the test case includes 1 ``forward``
+step.
+
+In configurations with ice-shelf cavities, the test performs 2 short forward
+runs, one with prognostic ice-shelf melt fluxes and one with "data" ice shelf
+melt fluxes derived from satellite observations.
 
 .. _global_ocean_restart_test:
 
@@ -791,21 +805,6 @@ or more of these versions of the ``daily_output_test`` will be available:
 
 * ``ocean/global_ocean/QUwISC240/<ic>/daily_output_test/RK4``
 
-
-.. _global_ocean_data_ice_shelf_melt:
-
-data_ice_shelf_melt
-^^^^^^^^^^^^^^^^^^^
-
-For meshes with ice-shelf cavities, the ``data_ice_shelf_melt`` test case
-interpolates the
-`Adusumilli et al. (2020) <https://doi.org/10.1038/s41561-020-0616-z>`_
-annual mean Antarctic melt rates to the MPAS mesh for use in subsequent test
-cases and possible incorporation as a forcing dataset in E3SM.  It performs
-a short forward test equivalent to :ref:`global_ocean_performance_test` but
-with data ice-shelf melt fluxes enabled.  If a baseline is provided, the test
-case will compare a large number of variables related to ice-shelf fluxes to
-ensure that they are identical.
 
 .. _global_ocean_dynamic_adjustment:
 

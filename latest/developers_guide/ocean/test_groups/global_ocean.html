@@ -1003,6 +1003,9 @@ and <code class="docutils literal notranslate"><span class="pre">streams.wisc</s
 defines the step for creating the initial state, including defining the
 topography, wind stress, shortwave, potential temperature, salinity, and
 ecosystem input data files.</p>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt.html#compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt" title="compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt</span></code></a>
+defines a step that remaps melt rates from the satellite-derived dataset
+from <a class="reference external" href="https://doi.org/10.1038/s41561-020-0616-z">Adusumilli et al. (2020)</a>.</p>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.html#compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment" title="compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment</span></code></a>
 defines a step to adjust the <code class="docutils literal notranslate"><span class="pre">landIcePressure</span></code> variable to be in closer to
 dynamical balance with the sea-surface height (SSH) in configurations with
@@ -1015,8 +1018,13 @@ cavities, the SSH and land-ice pressure are compared against the baseline.</p>
 <section id="performance-test-test-case">
 <span id="dev-ocean-global-ocean-performance-test"></span><h3>performance_test test case<a class="headerlink" href="#performance-test-test-case" title="Permalink to this heading">¶</a></h3>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.performance_test.PerformanceTest.html#compass.ocean.tests.global_ocean.performance_test.PerformanceTest" title="compass.ocean.tests.global_ocean.performance_test.PerformanceTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.performance_test.PerformanceTest</span></code></a>
-defines a test case for performing a short MPAS-Ocean simulation as a “smoke
-test” to make sure nothing is clearly wrong with the configuration.</p>
+defines a test case for performing 1 or 2 short MPAS-Ocean simulations as
+“smoke tests” to make sure nothing is clearly wrong with the configuration.</p>
+<p>If ice-shelf cavities are not present, the test case includes 1 <code class="docutils literal notranslate"><span class="pre">forward</span></code>
+step.</p>
+<p>In configurations with ice-shelf cavities, the test performs 2 short forward
+runs, one with prognostic ice-shelf melt fluxes and one with “data” ice shelf
+melt fluxes derived from satellite observations.</p>
 <p>The module includes <code class="docutils literal notranslate"><span class="pre">namelist.wisc</span></code> and <code class="docutils literal notranslate"><span class="pre">streams.wisc</span></code>, which enable melt
 fluxes below ice shelves and write out related fields if the mesh includes
 <a class="reference internal" href="../framework.html#dev-ocean-framework-iceshelf"><span class="std std-ref">Ice-shelf cavities</span></a>.</p>
@@ -1092,15 +1100,6 @@ for the <code class="docutils literal notranslate"><span class="pre">timeSeriesS
 ensures that the time average of the prognostic variables as well as the
 sea-surface height are identical to those from the baseline if one is provided
 when calling <a class="reference internal" href="../../command_line.html#dev-compass-setup"><span class="std std-ref">compass setup</span></a>.</p>
-</section>
-<section id="data-ice-shelf-melt-test-case">
-<span id="dev-ocean-global-ocean-data-ice-shelf-melt"></span><h3>data_ice_shelf_melt test case<a class="headerlink" href="#data-ice-shelf-melt-test-case" title="Permalink to this heading">¶</a></h3>
-<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt.html#compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt" title="compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt</span></code></a>
-defines a test case that remaps melt rates from the satellite-derived dataset
-from <a class="reference external" href="https://doi.org/10.1038/s41561-020-0616-z">Adusumilli et al. (2020)</a>
-and then performs a performs a short forward run similar to
-<a class="reference internal" href="#dev-ocean-global-ocean-performance-test"><span class="std std-ref">performance_test test case</span></a> but with data ice-shelf melt
-fluxes enables.</p>
 </section>
 <section id="dynamic-adjustment-test-case">
 <span id="dev-ocean-global-ocean-dynamic-adjustment"></span><h3>dynamic_adjustment test case<a class="headerlink" href="#dynamic-adjustment-test-case" title="Permalink to this heading">¶</a></h3>
