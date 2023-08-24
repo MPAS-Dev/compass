@@ -975,6 +975,10 @@ defines the step for creating the initial state, including defining the
 topography, wind stress, shortwave, potential temperature, salinity, and
 ecosystem input data files.
 
+The class :py:class:`compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt`
+defines a step that remaps melt rates from the satellite-derived dataset
+from `Adusumilli et al. (2020) <https://doi.org/10.1038/s41561-020-0616-z>`_.
+
 The class :py:class:`compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment`
 defines a step to adjust the ``landIcePressure`` variable to be in closer to
 dynamical balance with the sea-surface height (SSH) in configurations with
@@ -991,8 +995,15 @@ performance_test test case
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The class :py:class:`compass.ocean.tests.global_ocean.performance_test.PerformanceTest`
-defines a test case for performing a short MPAS-Ocean simulation as a "smoke
-test" to make sure nothing is clearly wrong with the configuration.
+defines a test case for performing 1 or 2 short MPAS-Ocean simulations as
+"smoke tests" to make sure nothing is clearly wrong with the configuration.
+
+If ice-shelf cavities are not present, the test case includes 1 ``forward``
+step.
+
+In configurations with ice-shelf cavities, the test performs 2 short forward
+runs, one with prognostic ice-shelf melt fluxes and one with "data" ice shelf
+melt fluxes derived from satellite observations.
 
 The module includes ``namelist.wisc`` and ``streams.wisc``, which enable melt
 fluxes below ice shelves and write out related fields if the mesh includes
@@ -1089,18 +1100,6 @@ for the ``timeSeriesStatsMonthly`` analysis member) is written out.  The test
 ensures that the time average of the prognostic variables as well as the
 sea-surface height are identical to those from the baseline if one is provided
 when calling :ref:`dev_compass_setup`.
-
-.. _dev_ocean_global_ocean_data_ice_shelf_melt:
-
-data_ice_shelf_melt test case
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The class :py:class:`compass.ocean.tests.global_ocean.data_ice_shelf_melt.DataIceShelfMelt`
-defines a test case that remaps melt rates from the satellite-derived dataset
-from `Adusumilli et al. (2020) <https://doi.org/10.1038/s41561-020-0616-z>`_
-and then performs a performs a short forward run similar to
-:ref:`dev_ocean_global_ocean_performance_test` but with data ice-shelf melt
-fluxes enables.
 
 .. _dev_ocean_global_ocean_dynamic_adjustment:
 
