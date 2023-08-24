@@ -62,6 +62,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#default">default</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ramp">ramp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#loglaw">loglaw</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="global_convergence.html">global_convergence</a></li>
@@ -215,7 +216,9 @@ well as the solution from the ROMS model.</p>
 <p><code class="docutils literal notranslate"><span class="pre">ocean/drying_slope/${RES}/${COORD}/default</span></code> is the default version of the
 drying slope test case for two short (12h) test runs with two different drag
 coefficients and validation of sea surface height through visual inspection
-against analytic and ROMS solutions. <code class="docutils literal notranslate"><span class="pre">RES</span></code> is either 250m or 1km. <code class="docutils literal notranslate"><span class="pre">COORD</span></code> is either <code class="docutils literal notranslate"><span class="pre">single_layer</span></code> or <code class="docutils literal notranslate"><span class="pre">sigma</span></code>.</p>
+against analytic and ROMS solutions. <code class="docutils literal notranslate"><span class="pre">RES</span></code> is either 250m or 1km. <code class="docutils literal notranslate"><span class="pre">COORD</span></code>
+is either <code class="docutils literal notranslate"><span class="pre">single_layer</span></code> or <code class="docutils literal notranslate"><span class="pre">sigma</span></code>. Rayleigh drag is not compatible with
+<code class="docutils literal notranslate"><span class="pre">single_layer</span></code> so implicit drag with a constant coefficient is used.</p>
 </section>
 <section id="ramp">
 <h2>ramp<a class="headerlink" href="#ramp" title="Permalink to this heading">¶</a></h2>
@@ -224,6 +227,12 @@ test except the factor that scales velocities and velocity tendencies is
 ramped over a given layer thickness range rather than a binary switch at the
 minimum thickness. <code class="docutils literal notranslate"><span class="pre">RES</span></code> is either 250m or 1km. <code class="docutils literal notranslate"><span class="pre">COORD</span></code> is either
 <code class="docutils literal notranslate"><span class="pre">single_layer</span></code> or <code class="docutils literal notranslate"><span class="pre">sigma</span></code>.</p>
+</section>
+<section id="loglaw">
+<h2>loglaw<a class="headerlink" href="#loglaw" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ocean/drying_slope/${RES}/${COORD}/loglaw</span></code> is identical to the <code class="docutils literal notranslate"><span class="pre">default</span></code>
+test except that the log-law option for implicit bottom drag is used. <code class="docutils literal notranslate"><span class="pre">RES</span></code>
+is either 250m or 1km. <code class="docutils literal notranslate"><span class="pre">COORD</span></code> is either <code class="docutils literal notranslate"><span class="pre">single_layer</span></code> or <code class="docutils literal notranslate"><span class="pre">sigma</span></code>.</p>
 </section>
 </section>
 

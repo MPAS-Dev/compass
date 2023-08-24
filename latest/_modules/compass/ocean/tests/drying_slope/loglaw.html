@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.ocean.tests.drying_slope.default &mdash; compass latest documentation</title>
+  <title>compass.ocean.tests.drying_slope.loglaw &mdash; compass latest documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -103,7 +103,7 @@
           <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
           <li class="breadcrumb-item"><a href="../../../ocean.html">compass.ocean</a></li>
           <li class="breadcrumb-item"><a href="../drying_slope.html">compass.ocean.tests.drying_slope</a></li>
-      <li class="breadcrumb-item active">compass.ocean.tests.drying_slope.default</li>
+      <li class="breadcrumb-item active">compass.ocean.tests.drying_slope.loglaw</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -112,17 +112,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for compass.ocean.tests.drying_slope.default</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
+  <h1>Source code for compass.ocean.tests.drying_slope.loglaw</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests.drying_slope.forward</span> <span class="kn">import</span> <span class="n">Forward</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.drying_slope.initial_state</span> <span class="kn">import</span> <span class="n">InitialState</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.drying_slope.forward</span> <span class="kn">import</span> <span class="n">Forward</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.drying_slope.viz</span> <span class="kn">import</span> <span class="n">Viz</span>
+<span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
 <span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
 
 
-<div class="viewcode-block" id="Default"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.drying_slope.default.Default.html#compass.ocean.tests.drying_slope.default.Default">[docs]</a><span class="k">class</span> <span class="nc">Default</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="LogLaw"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.drying_slope.loglaw.LogLaw.html#compass.ocean.tests.drying_slope.loglaw.LogLaw">[docs]</a><span class="k">class</span> <span class="nc">LogLaw</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The default drying_slope test case</span>
+<span class="sd">    The drying_slope test case with log-law drag</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -133,7 +133,7 @@
 <span class="sd">        The type of vertical coordinate (``sigma``, ``single_layer``, etc.)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Default.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.drying_slope.default.Default.html#compass.ocean.tests.drying_slope.default.Default.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">coord_type</span><span class="p">):</span>
+<div class="viewcode-block" id="LogLaw.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.drying_slope.loglaw.LogLaw.html#compass.ocean.tests.drying_slope.loglaw.LogLaw.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">coord_type</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the test case</span>
 
@@ -148,7 +148,7 @@
 <span class="sd">        coord_type : str</span>
 <span class="sd">            The type of vertical coordinate (``sigma``, ``single_layer``)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;loglaw&#39;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">coord_type</span> <span class="o">=</span> <span class="n">coord_type</span>
@@ -160,22 +160,15 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">InitialState</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">coord_type</span><span class="o">=</span><span class="n">coord_type</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">coord_type</span> <span class="o">==</span> <span class="s1">&#39;single_layer&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Forward</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
-                                  <span class="n">ntasks</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                                  <span class="n">coord_type</span><span class="o">=</span><span class="n">coord_type</span><span class="p">))</span>
-            <span class="n">damping_coeffs</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">damping_coeffs</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0025</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">]</span>
-            <span class="k">for</span> <span class="n">damping_coeff</span> <span class="ow">in</span> <span class="n">damping_coeffs</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Forward</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
-                                      <span class="n">ntasks</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                                      <span class="n">damping_coeff</span><span class="o">=</span><span class="n">damping_coeff</span><span class="p">,</span>
-                                      <span class="n">coord_type</span><span class="o">=</span><span class="n">coord_type</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">damping_coeffs</span> <span class="o">=</span> <span class="n">damping_coeffs</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Viz</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">damping_coeffs</span><span class="o">=</span><span class="n">damping_coeffs</span><span class="p">))</span></div>
+        <span class="n">forward_step</span> <span class="o">=</span> <span class="n">Forward</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                               <span class="n">ntasks</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                               <span class="n">coord_type</span><span class="o">=</span><span class="n">coord_type</span><span class="p">)</span>
+        <span class="n">forward_step</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span>
+            <span class="p">{</span><span class="s1">&#39;config_implicit_bottom_drag_type&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;loglaw&#39;&quot;</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">forward_step</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Viz</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">damping_coeffs</span><span class="o">=</span><span class="kc">None</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="Default.configure"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.drying_slope.default.Default.configure.html#compass.ocean.tests.drying_slope.default.Default.configure">[docs]</a>    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LogLaw.configure"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.drying_slope.loglaw.LogLaw.configure.html#compass.ocean.tests.drying_slope.loglaw.LogLaw.configure">[docs]</a>    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Modify the configuration options for this test case.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -192,20 +185,13 @@
         <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;drying_slope&#39;</span><span class="p">,</span> <span class="s1">&#39;dc&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="s1">&#39;the distance &#39;</span>
                    <span class="s1">&#39;between adjacent cell centers&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Default.validate"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.drying_slope.default.Default.validate.html#compass.ocean.tests.drying_slope.default.Default.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LogLaw.validate"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.drying_slope.loglaw.LogLaw.validate.html#compass.ocean.tests.drying_slope.loglaw.LogLaw.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validate variables against a baseline</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">damping_coeffs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">damping_coeffs</span>
         <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span> <span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">damping_coeffs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">damping_coeff</span> <span class="ow">in</span> <span class="n">damping_coeffs</span><span class="p">:</span>
-                <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-                                  <span class="n">filename1</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;forward_</span><span class="si">{</span><span class="n">damping_coeff</span><span class="si">}</span><span class="s1">/&#39;</span>
-                                            <span class="s1">&#39;output.nc&#39;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-                              <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;forward/output.nc&#39;</span><span class="p">)</span></div></div>
+        <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
+                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;forward/output.nc&#39;</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>
