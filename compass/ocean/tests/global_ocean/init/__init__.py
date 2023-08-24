@@ -1,6 +1,9 @@
 import os
 
 from compass.ocean.tests.global_ocean.init.initial_state import InitialState
+from compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt import (
+    RemapIceShelfMelt,
+)
 from compass.ocean.tests.global_ocean.init.ssh_adjustment import SshAdjustment
 from compass.testcase import TestCase
 from compass.validate import compare_variables
@@ -53,6 +56,8 @@ class Init(TestCase):
                 initial_condition=initial_condition))
 
         if mesh.with_ice_shelf_cavities:
+            self.add_step(RemapIceShelfMelt(test_case=self, mesh=mesh))
+
             self.add_step(
                 SshAdjustment(test_case=self))
 
