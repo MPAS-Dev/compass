@@ -1,33 +1,12 @@
 from compass.ocean.tests.global_ocean.analysis_test import AnalysisTest
 from compass.ocean.tests.global_ocean.daily_output_test import DailyOutputTest
 from compass.ocean.tests.global_ocean.decomp_test import DecompTest
+from compass.ocean.tests.global_ocean.dynamic_adjustment import (
+    DynamicAdjustment,
+)
 from compass.ocean.tests.global_ocean.files_for_e3sm import FilesForE3SM
 from compass.ocean.tests.global_ocean.init import Init
 from compass.ocean.tests.global_ocean.mesh import Mesh
-from compass.ocean.tests.global_ocean.mesh.arrm10to60.dynamic_adjustment import (  # noqa: E501
-    ARRM10to60DynamicAdjustment,
-)
-from compass.ocean.tests.global_ocean.mesh.ec30to60.dynamic_adjustment import (
-    EC30to60DynamicAdjustment,
-)
-from compass.ocean.tests.global_ocean.mesh.kuroshio.dynamic_adjustment import (
-    KuroshioDynamicAdjustment,
-)
-from compass.ocean.tests.global_ocean.mesh.qu240.dynamic_adjustment import (
-    QU240DynamicAdjustment,
-)
-from compass.ocean.tests.global_ocean.mesh.qu.dynamic_adjustment import (
-    QUDynamicAdjustment,
-)
-from compass.ocean.tests.global_ocean.mesh.rrs6to18.dynamic_adjustment import (
-    RRS6to18DynamicAdjustment,
-)
-from compass.ocean.tests.global_ocean.mesh.so12to60.dynamic_adjustment import (
-    SO12to60DynamicAdjustment,
-)
-from compass.ocean.tests.global_ocean.mesh.wc14.dynamic_adjustment import (
-    WC14DynamicAdjustment,
-)
 from compass.ocean.tests.global_ocean.monthly_output_test import (
     MonthlyOutputTest,
 )
@@ -51,7 +30,6 @@ class GlobalOcean(TestGroup):
 
         # we do a lot of tests for QU240/QUwISC240
         self._add_tests(mesh_names=['QU240', 'Icos240', 'QUwISC240'],
-                        DynamicAdjustment=QU240DynamicAdjustment,
                         high_res_topography=False,
                         include_rk4=True,
                         include_regression=True,
@@ -59,34 +37,27 @@ class GlobalOcean(TestGroup):
                         include_en4_1900=True)
 
         # for other meshes, we do fewer tests
-        self._add_tests(mesh_names=['QU', 'Icos', 'QUwISC', 'IcoswISC'],
-                        DynamicAdjustment=QUDynamicAdjustment)
+        self._add_tests(mesh_names=['QU', 'Icos', 'QUwISC', 'IcoswISC'])
 
-        self._add_tests(mesh_names=['EC30to60', 'ECwISC30to60'],
-                        DynamicAdjustment=EC30to60DynamicAdjustment)
+        self._add_tests(mesh_names=['EC30to60', 'ECwISC30to60'])
 
-        self._add_tests(mesh_names=['ARRM10to60', 'ARRMwISC10to60'],
-                        DynamicAdjustment=ARRM10to60DynamicAdjustment)
+        self._add_tests(mesh_names=['ARRM10to60', 'ARRMwISC10to60'])
 
-        self._add_tests(mesh_names=['SO12to60', 'SOwISC12to60'],
-                        DynamicAdjustment=SO12to60DynamicAdjustment)
+        self._add_tests(mesh_names=['SO12to60', 'SOwISC12to60'])
 
-        self._add_tests(mesh_names=['WC14', 'WCwISC14'],
-                        DynamicAdjustment=WC14DynamicAdjustment)
+        self._add_tests(mesh_names=['WC14', 'WCwISC14'])
 
         # RRS6to18: with and without cavities
-        self._add_tests(mesh_names=['RRS6to18', 'RRSwISC6to18'],
-                        DynamicAdjustment=RRS6to18DynamicAdjustment)
+        self._add_tests(mesh_names=['RRS6to18', 'RRSwISC6to18'])
 
         # Kuroshio meshes without ice-shelf cavities
-        self._add_tests(mesh_names=['Kuroshio12to60', 'Kuroshio8to60'],
-                        DynamicAdjustment=KuroshioDynamicAdjustment)
+        self._add_tests(mesh_names=['Kuroshio12to60', 'Kuroshio8to60'])
 
         # A test case for making E3SM support files from an existing mesh
         self.add_test_case(FilesForE3SM(test_group=self))
 
-    def _add_tests(self, mesh_names, DynamicAdjustment,
-                   high_res_topography=True, include_rk4=False,
+    def _add_tests(self, mesh_names, high_res_topography=True,
+                   include_rk4=False,
                    include_regression=False, include_phc=False,
                    include_en4_1900=False):
         """ Add test cases for the given mesh(es) """
