@@ -89,12 +89,21 @@ drying_slope
 
    default.Default
    default.Default.configure
+   default.Default.validate
 
    forward.Forward
    forward.Forward.run
 
    initial_state.InitialState
    initial_state.InitialState.run
+
+   loglaw.LogLaw
+   loglaw.LogLaw.configure
+   loglaw.LogLaw.validate
+
+   ramp.Ramp
+   ramp.Ramp.configure
+   ramp.Ramp.validate
 
    viz.Viz
    viz.Viz.run

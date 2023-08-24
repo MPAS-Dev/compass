@@ -5,9 +5,9 @@ from compass.testcase import TestCase
 from compass.validate import compare_variables
 
 
-class Ramp(TestCase):
+class LogLaw(TestCase):
     """
-    The drying_slope test case with ramped wetting-velocity factor
+    The drying_slope test case with log-law drag
 
     Attributes
     ----------
@@ -33,7 +33,7 @@ class Ramp(TestCase):
         coord_type : str
             The type of vertical coordinate (``sigma``, ``single_layer``)
         """
-        name = 'ramp'
+        name = 'loglaw'
 
         self.resolution = resolution
         self.coord_type = coord_type
@@ -45,26 +45,13 @@ class Ramp(TestCase):
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
         self.add_step(InitialState(test_case=self, coord_type=coord_type))
-        if coord_type == 'single_layer':
-            forward_step = Forward(test_case=self, resolution=resolution,
-                                   ntasks=4, openmp_threads=1,
-                                   coord_type=coord_type)
-            damping_coeffs = None
-            forward_step.add_namelist_options(
-                {'config_zero_drying_velocity_ramp': ".true."})
-            self.add_step(forward_step)
-        else:
-            damping_coeffs = [0.0025, 0.01]
-            for damping_coeff in damping_coeffs:
-                forward_step = Forward(test_case=self, resolution=resolution,
-                                       ntasks=4, openmp_threads=1,
-                                       damping_coeff=damping_coeff,
-                                       coord_type=coord_type)
-                forward_step.add_namelist_options(
-                    {'config_zero_drying_velocity_ramp': ".true."})
-                self.add_step(forward_step)
-        self.damping_coeffs = damping_coeffs
-        self.add_step(Viz(test_case=self, damping_coeffs=damping_coeffs))
+        forward_step = Forward(test_case=self, resolution=resolution,
+                               ntasks=4, openmp_threads=1,
+                               coord_type=coord_type)
+        forward_step.add_namelist_options(
+            {'config_implicit_bottom_drag_type': "'loglaw'"})
+        self.add_step(forward_step)
+        self.add_step(Viz(test_case=self, damping_coeffs=None))
 
     def configure(self):
         """
@@ -87,13 +74,6 @@ class Ramp(TestCase):
         """
         Validate variables against a baseline
         """
-        damping_coeffs = self.damping_coeffs
         variables = ['layerThickness', 'normalVelocity']
-        if damping_coeffs is not None:
-            for damping_coeff in damping_coeffs:
-                compare_variables(test_case=self, variables=variables,
-                                  filename1=f'forward_{damping_coeff}/'
-                                            'output.nc')
-        else:
-            compare_variables(test_case=self, variables=variables,
-                              filename1='forward/output.nc')
+        compare_variables(test_case=self, variables=variables,
+                          filename1='forward/output.nc')

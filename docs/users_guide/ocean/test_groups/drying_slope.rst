@@ -84,7 +84,9 @@ default
 ``ocean/drying_slope/${RES}/${COORD}/default`` is the default version of the
 drying slope test case for two short (12h) test runs with two different drag
 coefficients and validation of sea surface height through visual inspection
-against analytic and ROMS solutions. ``RES`` is either 250m or 1km. ``COORD`` is either ``single_layer`` or ``sigma``.
+against analytic and ROMS solutions. ``RES`` is either 250m or 1km. ``COORD``
+is either ``single_layer`` or ``sigma``. Rayleigh drag is not compatible with
+``single_layer`` so implicit drag with a constant coefficient is used.
 
 ramp
 ----
@@ -94,3 +96,10 @@ test except the factor that scales velocities and velocity tendencies is
 ramped over a given layer thickness range rather than a binary switch at the
 minimum thickness. ``RES`` is either 250m or 1km. ``COORD`` is either
 ``single_layer`` or ``sigma``.
+
+loglaw
+------
+
+``ocean/drying_slope/${RES}/${COORD}/loglaw`` is identical to the ``default``
+test except that the log-law option for implicit bottom drag is used. ``RES``
+is either 250m or 1km. ``COORD`` is either ``single_layer`` or ``sigma``.
