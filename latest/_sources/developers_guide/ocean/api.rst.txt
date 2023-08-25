@@ -197,6 +197,8 @@ test cases and steps
    files_for_e3sm.remap_ice_shelf_melt.RemapIceShelfMelt.run
    files_for_e3sm.remap_sea_surface_salinity_restoring.RemapSeaSurfaceSalinityRestoring
    files_for_e3sm.remap_sea_surface_salinity_restoring.RemapSeaSurfaceSalinityRestoring.run
+   files_for_e3sm.remap_iceberg_climatology.RemapIcebergClimatology
+   files_for_e3sm.remap_iceberg_climatology.RemapIcebergClimatology.run
 
    init.Init
    init.Init.configure
