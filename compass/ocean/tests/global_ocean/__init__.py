@@ -56,13 +56,7 @@ class GlobalOcean(TestGroup):
                         include_rk4=True,
                         include_regression=True,
                         include_phc=True,
-                        include_en4_1900=True)
-        self._add_tests(mesh_names=['QU240', 'Icos240', 'QUwISC240'],
-                        DynamicAdjustment=QU240DynamicAdjustment,
-                        high_res_topography=False,
-                        include_rk4=True,
-                        include_regression=True,
-                        include_phc=True,
+                        include_en4_1900=True,
                         with_inactive_top_cells=True)
 
         # for other meshes, we do fewer tests
@@ -108,7 +102,7 @@ class GlobalOcean(TestGroup):
 
             init_test = Init(test_group=self, mesh=mesh_test,
                              initial_condition=default_ic,
-                             with_inactive_top_cells=with_inactive_top_cells)
+                             with_inactive_top_cells=False)
             self.add_test_case(init_test)
 
             time_integrator = default_time_int
@@ -171,6 +165,21 @@ class GlobalOcean(TestGroup):
                         test_group=self, mesh=mesh_test, init=init_test,
                         time_integrator=time_integrator))
 
+            if with_inactive_top_cells:
+                init_test = Init(test_group=self, mesh=mesh_test,
+                                 initial_condition=default_ic,
+                                 with_inactive_top_cells=True)
+                self.add_test_case(init_test)
+                self.add_test_case(
+                    PerformanceTest(
+                        test_group=self, mesh=mesh_test, init=init_test,
+                        time_integrator=default_time_int))
+                if include_rk4:
+                    self.add_test_case(
+                        PerformanceTest(
+                            test_group=self, mesh=mesh_test, init=init_test,
+                            time_integrator='RK4'))
+
             initial_conditions = []
             if include_phc:
                 initial_conditions.append('PHC')
@@ -181,8 +190,7 @@ class GlobalOcean(TestGroup):
                 # additional initial conditions (if any)
                 time_integrator = default_time_int
                 init_test = Init(test_group=self, mesh=mesh_test,
-                                 initial_condition=initial_condition,
-                                 with_inactive_top_cells=with_inactive_top_cells)
+                                 initial_condition=initial_condition)
                 self.add_test_case(init_test)
 
                 self.add_test_case(
