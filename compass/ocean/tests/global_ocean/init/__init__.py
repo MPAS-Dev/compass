@@ -54,7 +54,7 @@ class Init(TestCase):
             # Add the name of the subdir without inactive top cells whether or
             # not is has or will be run
             self.inactive_top_comp_subdir = init_subdir
-            init_subdir = os.path.join(init_subdir, inactive_top)
+            name = f'{name}_inactive_top'
         self.init_subdir = init_subdir
         subdir = os.path.join(self.init_subdir, name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
@@ -66,7 +66,7 @@ class Init(TestCase):
         self.add_step(
             InitialState(
                 test_case=self, mesh=mesh,
-                initial_condition=initial_condition, 
+                initial_condition=initial_condition,
                 with_inactive_top_cells=with_inactive_top_cells))
 
         if mesh.with_ice_shelf_cavities:
@@ -116,11 +116,12 @@ class Init(TestCase):
             if os.path.exists(filename2):
                 variables = ['temperature', 'salinity', 'layerThickness',
                              'normalVelocity']
-                compare_variables(test_case=self, variables=variables,
-                                  filename1='initial_state/initial_state_crop.nc'
-                                  filename2=filename2,
-                                  quiet=False, check_outputs=False,
-                                  skip_if_step_not_run=False)
+                compare_variables(
+                    test_case=self, variables=variables,
+                    filename1='initial_state/initial_state_crop.nc',
+                    filename2=filename2,
+                    quiet=False, check_outputs=False,
+                    skip_if_step_not_run=False)
 
             else:
                 self.logger.warn('The version of "init" without inactive top '
