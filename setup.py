@@ -34,6 +34,7 @@ install_requires = \
      'pyamg',
      'pyproj',
      'requests',
+     'ruamel.yaml',
      'scipy>=1.8.0',
      'shapely',
      'xarray']
