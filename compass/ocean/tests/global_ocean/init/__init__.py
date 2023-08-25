@@ -98,6 +98,15 @@ class Init(TestCase):
         config.set('global_ocean', 'init_description',
                    descriptions[initial_condition])
 
+        if self.with_inactive_top_cells:
+            # Since we start at minLevelCell = 2, we need to increase the
+            # number of vertical levels in the cfg file to end up with the
+            # intended number in the initial state
+            vert_levels = config.getint('vertical_grid', 'vert_levels')
+            config.set('vertical_grid', 'vert_levels', f'{vert_levels + 1}',
+                       comment='active vertical levels + inactive_top_cells')
+            config.set('vertical_grid', 'inactive_top_cells', '1')
+
     def validate(self):
         """
         Test cases can override this method to perform validation of variables
