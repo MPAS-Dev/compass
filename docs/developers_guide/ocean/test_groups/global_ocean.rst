@@ -1106,12 +1106,12 @@ when calling :ref:`dev_compass_setup`.
 dynamic_adjustment test case
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The parent class
+The class
 :py:class:`compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment`
 descends from :ref:`dev_ocean_global_ocean_forward_test` and defines a test
 case for performing a series of forward model runs in sequence to allow the
 ocean model to dynamically adjust to the initial condition.  This process
-involves a rapid increase in ocean velocity. the dissipation of fast-moving
+involves a rapid increase in ocean velocity, the dissipation of fast-moving
 waves, and adjustment of the sea-surface height to be in balance with the
 dynamic pressure (see :ref:`global_ocean_dynamic_adjustment` in the User's
 Guide). This process typically require smaller times steps and artificial
@@ -1125,81 +1125,104 @@ The test case also takes care of validating the output from the final
 ``simulation`` step, comparing ``temperature``, ``salinity``,
 ``layerThickness``, and ``normalVelocity`` with a baseline if one is provided.
 
-child classes
-^^^^^^^^^^^^^
+Each mesh needs to have a ``dynamic_adjustment.yaml`` (for the split-explicit
+time integrator) and optionally a ``dynamic_adjustment_rk4.yaml`` (if
+there is need to support dynamic adjustment with the RK4 time integrator).
+The YAML file defines some shared properties of each dynamic adjustment step
+and a list of properties (related to namelist options) for each step.  Here is
+and example:
 
-The modules ``compass.ocean.tests.global_ocean.mesh.<mesh_name>.dynamic_adjustment``
-define child classes of ``DynamicAdjustment``. Each of the
-:ref`global_ocean_meshes` has its own adjustment step, since the needs
-(duration of each step, amount of damping, time step, etc.) may be different
-between meshes.
+.. code-block:: yaml
 
-Each module includes ``streams.template``, a Jinja2 template for defining
-streams (see :ref:`dev_step_add_streams_file_template`):
+    dynamic_adjustment:
+      land_ice_flux_mode: data
+      get_dt_from_min_res: False
 
-.. code-block:: xml
+      steps:
+        damped_adjustment_1:
+          run_duration: 10_00:00:00
+          output_interval: 10_00:00:00
+          restart_interval: 10_00:00:00
+          dt: 00:15:00
+          btr_dt: 00:00:30
+          Rayleigh_damping_coeff: 1.0e-4
 
-    <streams>
+        damped_adjustment_2:
+          run_duration: 10_00:00:00
+          output_interval: 10_00:00:00
+          restart_interval: 10_00:00:00
+          dt: 00:15:00
+          btr_dt: 00:00:30
+          Rayleigh_damping_coeff: 1.0e-5
 
-    <stream name="output"
-            output_interval="{{ output_interval }}"/>
-    <immutable_stream name="restart"
-                      filename_template="../restarts/rst.$Y-$M-$D_$h.$m.$s.nc"
-                      output_interval="{{ restart_interval }}"/>
+        damped_adjustment_3:
+          run_duration: 10_00:00:00
+          output_interval: 10_00:00:00
+          restart_interval: 10_00:00:00
+          dt: 00:20:00
+          btr_dt: 00:00:40
+          Rayleigh_damping_coeff: 1.0e-6
 
-    </streams>
+        simulation:
+          run_duration: 10_00:00:00
+          output_interval: 10_00:00:00
+          restart_interval: 10_00:00:00
+          dt: 00:30:00
+          btr_dt: 00:01:00
+          Rayleigh_damping_coeff: None
 
-QU240 and QUwISC240
-^^^^^^^^^^^^^^^^^^^
+The ``land_ice_flux_mode`` only matters for versions of the mesh with ice-shelf
+cavities.  Fluxes below ice shelves can be off
+(``land_ice_flux_mode: pressure_only``), prognostic
+(``land_ice_flux_mode: standalone``), or come from data
+(``land_ice_flux_mode: data``, the suggested approach).  All steps run with
+the same ``land_ice_flux_mode``.
 
-The class :py:class:`compass.ocean.tests.global_ocean.mesh.qu240.dynamic_adjustment.QU240DynamicAdjustment`
-defines a test case for performing dynamical adjustment on the mesh.  In the
-``damped_adjustment_1`` step, the model is run for 1 day with strong Rayleigh
-friction (``1e-4`` 1/s) to damp the velocity field.  In the
-``simulation`` step, the model runs for an additional 1 day without Rayleigh
-friction.  The dynamic adjustment test case takes advantage of Jinja templating
-for streams files to use the same streams template for each step in the test
-case, see :ref:`dev_step_add_streams_file_template`.
+The option ``get_dt_from_min_res`` determines whether the time step is
+determined automatically from the mesh resolution or is specified in each
+step.  Typically, meshes will use ``get_dt_from_min_res: False`` unless they
+have been generalized to support a range of resolutions, like the
+:ref:`dev_ocean_global_ocean_qu_icos`.
 
+Under ``steps:``, each step can be named as you like except that the final
+step must be called ``simulation``. The convention for the other steps is
+to name and number them ``damped_adjustment_<n>``.  There can be any number of
+damping steps, each of which typically define:
 
-EC30to60 and ECwISC30to60
-^^^^^^^^^^^^^^^^^^^^^^^^^
+.. code-block:: yaml
 
-The class :py:class:`compass.ocean.tests.global_ocean.mesh.ec30to60.dynamic_adjustment.EC30to60DynamicAdjustment`
-defines a test case for performing dynamical adjustment on the mesh.  In the
-``damped_adjustment_1`` step, the model is run for 10 days with strong Rayleigh
-friction (``1e-4`` 1/s) to damp the velocity field.  In the
-``simulation`` step, the model runs for an additional 10 days without Rayleigh
-friction.  The dynamic adjustment test case takes advantage of Jinja templating
-for streams files to use the same streams template for each step in the test
-case, see :ref:`dev_step_add_streams_file_template`.
+    ...
+        damped_adjustment_1:
+          run_duration: 10_00:00:00
+          output_interval: 10_00:00:00
+          restart_interval: 10_00:00:00
+          dt: 00:15:00
+          btr_dt: 00:00:30
+          Rayleigh_damping_coeff: 1.0e-4
 
-SO12to60 and SOwISC12to60
-^^^^^^^^^^^^^^^^^^^^^^^^^
+Most of these entries are required.  The ``run_duration`` is the length of the
+simulation.  The ``output_interval`` is the frequency of output to the
+``output.nc`` file, which contains basic prognostic variables: temperature,
+salinity, layer thickness and normal velocity.  The ``restart_interval`` is
+the frequency at which restart files are written out.  Note that it is
+important that there be an integer number of restart intervals from the
+beginning of the dynamic adjustment to the start of the current step, which
+limits the flexibility in selecting the restart interval.
 
-The class :py:class:`compass.ocean.tests.global_ocean.mesh.so12to60.dynamic_adjustment.SO12to60DynamicAdjustment`
-defines a test case for performing dynamical adjustment on the mesh.  In the
-``damped_adjustment_1`` through ``damped_adjustment_3`` steps, the model is run for
-2, 4 and 4 days with gradually weakening Rayleigh friction (``1e-4``, ``4e-5``,
-and ``1e-5`` 1/s) to damp the velocity field.  In the ``simulation`` step, the
-model runs for an additional 10 days without Rayleigh friction.  The
-dynamic adjustment test case takes advantage of Jinja templating for streams
-files to use the same streams template for each step in the test case, see
-:ref:`dev_step_add_streams_file_template`.
+Typically, a goal of dynamic adjustment is to begin with a smaller baroclinic
+time step ``dt`` and the barotropic time step ``btr_dt`` (not applicable for
+RK4 time integration) and increase the values in subsequent damped adjustment
+steps.  The values in the ``simulation`` step should typically be the same as
+what the mesh will use in E3SM production runs.
 
-WC14 and WCwISC14
-^^^^^^^^^^^^^^^^^
-
-The class :py:class:`compass.ocean.tests.global_ocean.mesh.wc14.dynamic_adjustment.WC14DynamicAdjustment`
-defines a test case for performing dynamical adjustment on the mesh.  In the
-``damped_adjustment_1`` through ``damped_adjustment_6`` steps, the model is run
-for durations ranging from 6 hours to 3 days with gradually increasing time
-step and gradually weakening Rayleigh friction (from ``1e-3`` 1/s to ``0``) to
-damp the velocity field.  In the ``simulation`` step, the model runs for an
-additional 24 days without Rayleigh friction.  The dynamic adjustment test case
-takes advantage of Jinja templating for streams files to use the same streams
-template for each step in the test case, see
-:ref:`dev_step_add_streams_file_template`.
+Another goal of dynamic adjustment is to reduce the ``Rayleigh_damping_coeff``
+from a relatively high number (often ``1.0e-3`` or ``1.0e-4``) to nothing.  The
+Rayleigh friction is a linear damping on the momentum that can reduce the
+amplitude and speed of fast barotropic waves as the ocean spins up from rest.
+For steps where Rayleigh friction should be turned off, you can either omit
+the line with ``Rayleigh_damping_coeff`` or use
+``Rayleigh_damping_coeff: None``.  The latter is slightly preferred because it
+is more explicit.
 
 .. _dev_ocean_global_ocean_files_for_e3sm:
 
@@ -1215,7 +1238,7 @@ case called ``assembled_files``. See :ref:`global_ocean_files_for_e3sm` in the
 User's Guide for more details.  Output file names involve the "mesh short
 name", see :ref:`dev_ocean_global_ocean_metadata`.
 
-The test case is constructed with an argument ``restart_filename``. the final
+The test case is constructed with an argument ``restart_filename``, the final
 restart file produced by the :ref:`dev_ocean_global_ocean_dynamic_adjustment`
 for the given mesh.
 
