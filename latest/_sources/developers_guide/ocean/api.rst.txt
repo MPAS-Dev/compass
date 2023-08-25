@@ -219,29 +219,20 @@ test cases and steps
 
    mesh.ec30to60.EC30to60BaseMesh
    mesh.ec30to60.EC30to60BaseMesh.build_cell_width_lat_lon
-   mesh.ec30to60.dynamic_adjustment.EC30to60DynamicAdjustment
 
    mesh.qu.IcosMeshFromConfigStep
    mesh.qu.IcosMeshFromConfigStep.setup
    mesh.qu.QUMeshFromConfigStep
    mesh.qu.QUMeshFromConfigStep.setup
-   mesh.qu.dynamic_adjustment.QUDynamicAdjustment
-
-   mesh.qu240.dynamic_adjustment.QU240DynamicAdjustment
 
    mesh.rrs6to18.RRS6to18BaseMesh
    mesh.rrs6to18.RRS6to18BaseMesh.build_cell_width_lat_lon
-   mesh.rrs6to18.dynamic_adjustment.RRS6to18DynamicAdjustment
-   mesh.rrs6to18.dynamic_adjustment.RRS6to18DynamicAdjustment.configure
-   mesh.rrs6to18.dynamic_adjustment.RRS6to18DynamicAdjustment.run
 
    mesh.so12to60.SO12to60BaseMesh
    mesh.so12to60.SO12to60BaseMesh.build_cell_width_lat_lon
-   mesh.so12to60.dynamic_adjustment.SO12to60DynamicAdjustment
 
    mesh.wc14.WC14BaseMesh
    mesh.wc14.WC14BaseMesh.build_cell_width_lat_lon
-   mesh.wc14.dynamic_adjustment.WC14DynamicAdjustment
 
    performance_test.PerformanceTest
    performance_test.PerformanceTest.configure
@@ -256,7 +247,7 @@ test cases and steps
    threads_test.ThreadsTest.run
 
    dynamic_adjustment.DynamicAdjustment
-   dynamic_adjustment.DynamicAdjustment.run
+   dynamic_adjustment.DynamicAdjustment.validate
 
    forward.ForwardTestCase
    forward.ForwardTestCase.configure

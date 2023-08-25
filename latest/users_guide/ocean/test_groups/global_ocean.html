@@ -821,14 +821,10 @@ and ref:<cite>global_ocean_mesh_ecwisc30to60</cite> meshes, we perform a 10-day 
 with aggressive damping, followed by 10 more days without damping. Higher
 resolution meshes in <a class="reference internal" href="../../../index.html#legacy-compass"><span class="std std-ref">Legacy COMPASS</span></a> require several stages of damping,
 each over several days before damping can be removed.</p>
-<p>As with the <a class="reference internal" href="#global-ocean-performance-test"><span class="std std-ref">performance_test test case</span></a>, <code class="docutils literal notranslate"><span class="pre">dynamic_adjustment</span></code> can
-be run with either or both of the split-explicit or RK4 time integrator.
-Thus, for a given mesh <code class="docutils literal notranslate"><span class="pre">&lt;mesh&gt;</span></code> and initial condition <code class="docutils literal notranslate"><span class="pre">&lt;ic&gt;</span></code>, one or
-more of these versions of the <code class="docutils literal notranslate"><span class="pre">performance_test</span></code> will be available:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/&lt;mesh&gt;/&lt;ic&gt;/dynamic_adjustment/split_explicit</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/&lt;mesh&gt;/&lt;ic&gt;/dynamic_adjustment/RK4</span></code></p></li>
-</ul>
+<p>Currently <code class="docutils literal notranslate"><span class="pre">dynamic_adjustment</span></code> is only available for the split-explicit (not
+the RK4) time integrator. Thus, for a given mesh <code class="docutils literal notranslate"><span class="pre">&lt;mesh&gt;</span></code> and initial
+condition <code class="docutils literal notranslate"><span class="pre">&lt;ic&gt;</span></code>, the <code class="docutils literal notranslate"><span class="pre">dynamic_adjustment</span></code> will be available at:</p>
+<p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/&lt;mesh&gt;/&lt;ic&gt;/dynamic_adjustment</span></code></p>
 <p>Versions of this test cases is currently available for all meshes, but not
 necessarily for all combinations of initial conditions and time integrators.</p>
 <p>The <a class="reference internal" href="../suites.html#ocean-suite-qu240-for-e3sm"><span class="std std-ref">qu240_for_e3sm test suite</span></a>, <a class="reference internal" href="../suites.html#ocean-suite-quwisc240-for-e3sm"><span class="std std-ref">quwisc240_for_e3sm test suite</span></a>,

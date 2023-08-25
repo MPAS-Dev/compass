@@ -113,12 +113,19 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.global_ocean.dynamic_adjustment</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">xarray</span>
-<span class="kn">import</span> <span class="nn">glob</span>
+<span></span><span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">importlib.resources</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">from</span> <span class="nn">ruamel.yaml</span> <span class="kn">import</span> <span class="n">YAML</span>
+
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.forward</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ForwardStep</span><span class="p">,</span>
+    <span class="n">ForwardTestCase</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.forward</span> <span class="kn">import</span> <span class="n">ForwardTestCase</span>
 
 
 <div class="viewcode-block" id="DynamicAdjustment"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment.html#compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment">[docs]</a><span class="k">class</span> <span class="nc">DynamicAdjustment</span><span class="p">(</span><span class="n">ForwardTestCase</span><span class="p">):</span>
@@ -136,8 +143,7 @@
 <span class="sd">        A list of restart files from each dynamic-adjustment step</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="DynamicAdjustment.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment.html#compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">,</span>
-                 <span class="n">restart_filenames</span><span class="p">):</span>
+<div class="viewcode-block" id="DynamicAdjustment.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment.html#compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the test case</span>
 
@@ -154,19 +160,68 @@
 
 <span class="sd">        time_integrator : {&#39;split_explicit&#39;, &#39;RK4&#39;}</span>
 <span class="sd">            The time integrator to use for the forward run</span>
-
-<span class="sd">        restart_filenames : list of str</span>
-<span class="sd">            A list of restart files from each dynamic-adjustment step</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
                          <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">,</span>
                          <span class="n">name</span><span class="o">=</span><span class="s1">&#39;dynamic_adjustment&#39;</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">time_integrator</span> <span class="o">==</span> <span class="s1">&#39;split_explicit&#39;</span><span class="p">:</span>
+            <span class="n">yaml_filename</span> <span class="o">=</span> <span class="s1">&#39;dynamic_adjustment.yaml&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">yaml_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;dynamic_adjustment_</span><span class="si">{</span><span class="n">time_integrator</span><span class="si">}</span><span class="s1">.yaml&#39;</span>
+
+        <span class="n">yaml_filename</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+            <span class="n">importlib</span><span class="o">.</span><span class="n">resources</span><span class="o">.</span><span class="n">files</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">package</span><span class="p">)</span> <span class="o">/</span> <span class="n">yaml_filename</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">resources</span><span class="o">.</span><span class="n">files</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">package</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span>
+            <span class="n">yaml_filename</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
+        <span class="n">yaml_data</span> <span class="o">=</span> <span class="n">YAML</span><span class="p">(</span><span class="n">typ</span><span class="o">=</span><span class="s1">&#39;rt&#39;</span><span class="p">)</span>
+        <span class="n">options_dict</span> <span class="o">=</span> <span class="n">yaml_data</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;dynamic_adjustment&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">options_dict</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">yaml_filename</span><span class="si">}</span><span class="s1"> in </span><span class="si">{</span><span class="n">mesh</span><span class="o">.</span><span class="n">package</span><span class="si">}</span><span class="s1"> does not &#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39;start with &quot;dynamic_adjustment:&quot; as expected.&#39;</span><span class="p">)</span>
+        <span class="n">options_dict</span> <span class="o">=</span> <span class="n">options_dict</span><span class="p">[</span><span class="s1">&#39;dynamic_adjustment&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;land_ice_flux_mode&#39;</span> <span class="ow">in</span> <span class="n">options_dict</span><span class="p">:</span>
+            <span class="n">land_ice_flux_mode</span> <span class="o">=</span> <span class="n">options_dict</span><span class="p">[</span><span class="s1">&#39;land_ice_flux_mode&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">land_ice_flux_mode</span> <span class="o">=</span> <span class="s1">&#39;pressure_only&#39;</span>
+
+        <span class="k">if</span> <span class="s1">&#39;get_dt_from_min_res&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">options_dict</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">yaml_filename</span><span class="si">}</span><span class="s1"> in </span><span class="si">{</span><span class="n">mesh</span><span class="o">.</span><span class="n">package</span><span class="si">}</span><span class="s1"> does not &#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39;have a &quot;get_dt_from_min_res:&quot; option as &#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39;expected.&#39;</span><span class="p">)</span>
+
+        <span class="n">get_dt_from_min_res</span> <span class="o">=</span> <span class="n">options_dict</span><span class="p">[</span><span class="s1">&#39;get_dt_from_min_res&#39;</span><span class="p">]</span>
+
+        <span class="n">shared_options</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;config_AM_globalStats_enable&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;config_AM_globalStats_compute_on_startup&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;config_AM_globalStats_write_on_startup&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;config_use_activeTracers_surface_restoring&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="s1">&#39;shared&#39;</span> <span class="ow">in</span> <span class="n">options_dict</span><span class="p">:</span>
+            <span class="c1"># replace the defaults with values from shared options</span>
+            <span class="n">shared_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">options_dict</span><span class="p">[</span><span class="s1">&#39;shared&#39;</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="s1">&#39;steps&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">options_dict</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">yaml_filename</span><span class="si">}</span><span class="s1"> in </span><span class="si">{</span><span class="n">mesh</span><span class="o">.</span><span class="n">package</span><span class="si">}</span><span class="s1"> does not &#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39;have a &quot;steps:&quot; item as expected.&#39;</span><span class="p">)</span>
+
+        <span class="n">start_time</span> <span class="o">=</span> <span class="s1">&#39;0001-01-01_00:00:00&#39;</span>
+        <span class="n">previous_restart_filename</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">restart_filenames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">step_name</span> <span class="ow">in</span> <span class="n">options_dict</span><span class="p">[</span><span class="s1">&#39;steps&#39;</span><span class="p">]:</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="n">options_dict</span><span class="p">[</span><span class="s1">&#39;steps&#39;</span><span class="p">][</span><span class="n">step_name</span><span class="p">]</span>
+            <span class="n">restart_time</span><span class="p">,</span> <span class="n">restart_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_step</span><span class="p">(</span>
+                <span class="n">step_name</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">get_dt_from_min_res</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">,</span>
+                <span class="n">yaml_filename</span><span class="p">,</span> <span class="n">start_time</span><span class="p">,</span> <span class="n">previous_restart_filename</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span>
+                <span class="n">init</span><span class="p">,</span> <span class="n">land_ice_flux_mode</span><span class="p">,</span> <span class="n">shared_options</span><span class="p">)</span>
+            <span class="n">start_time</span> <span class="o">=</span> <span class="n">restart_time</span>
+            <span class="n">previous_restart_filename</span> <span class="o">=</span> <span class="n">restart_filename</span>
+            <span class="n">restart_filenames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">restart_filename</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">restart_filenames</span> <span class="o">=</span> <span class="n">restart_filenames</span></div>
 
-    <span class="c1"># no run() method is needed</span>
-
-    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DynamicAdjustment.validate"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment.validate.html#compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test cases can override this method to perform validation of variables</span>
 <span class="sd">        and timers</span>
@@ -183,12 +238,12 @@
 
         <span class="k">for</span> <span class="n">step_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span><span class="p">:</span>
             <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step_name</span><span class="p">]</span>
-            <span class="n">step_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>  <span class="n">step</span><span class="o">.</span><span class="n">subdir</span><span class="p">)</span>
+            <span class="n">step_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">subdir</span><span class="p">)</span>
             <span class="n">global_stats_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_path</span><span class="p">,</span> <span class="s1">&#39;analysis_members&#39;</span><span class="p">,</span>
                                              <span class="s1">&#39;globalStats.*.nc&#39;</span><span class="p">)</span>
             <span class="n">global_stats_path</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">global_stats_path</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">global_stats_path</span><span class="p">:</span>
-                <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+                <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">max_value</span> <span class="ow">in</span> <span class="n">max_values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                     <span class="n">max_in_global_stats</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">var</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
                     <span class="k">if</span> <span class="n">max_in_global_stats</span> <span class="o">&gt;</span> <span class="n">max_value</span><span class="p">:</span>
@@ -196,6 +251,107 @@
                             <span class="sa">f</span><span class="s1">&#39;Max of </span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1"> &gt; allowed threshold: &#39;</span>
                             <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">max_in_global_stats</span><span class="si">}</span><span class="s1"> &gt; </span><span class="si">{</span><span class="n">max_value</span><span class="si">}</span><span class="s1"> &#39;</span>
                             <span class="sa">f</span><span class="s1">&#39;in </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_add_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">get_dt_from_min_res</span><span class="p">,</span>
+                  <span class="n">time_integrator</span><span class="p">,</span> <span class="n">yaml_filename</span><span class="p">,</span> <span class="n">start_time</span><span class="p">,</span>
+                  <span class="n">previous_restart_filename</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">land_ice_flux_mode</span><span class="p">,</span>
+                  <span class="n">shared_options</span><span class="p">):</span>
+        <span class="n">required</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;run_duration&#39;</span><span class="p">,</span> <span class="s1">&#39;output_interval&#39;</span><span class="p">,</span> <span class="s1">&#39;restart_interval&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">get_dt_from_min_res</span><span class="p">:</span>
+            <span class="n">required</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;dt&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">time_integrator</span> <span class="o">==</span> <span class="s1">&#39;split_explicit&#39;</span><span class="p">:</span>
+                <span class="n">required</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;btr_dt&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">required</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">option</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;In </span><span class="si">{</span><span class="n">yaml_filename</span><span class="si">}</span><span class="s1"> in </span><span class="si">{</span><span class="n">mesh</span><span class="o">.</span><span class="n">package</span><span class="si">}</span><span class="s1">, step &#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">step_name</span><span class="si">}</span><span class="s1"> does not have required option </span><span class="si">{</span><span class="n">option</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">get_dt_from_min_res</span><span class="p">:</span>
+            <span class="n">omit</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;dt&#39;</span><span class="p">,</span> <span class="s1">&#39;btr_dt&#39;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">omit</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s1">&#39;In </span><span class="si">{</span><span class="n">yaml_filename</span><span class="si">}</span><span class="s1"> in </span><span class="si">{</span><span class="n">mesh</span><span class="o">.</span><span class="n">package</span><span class="si">}</span><span class="s1">, step &#39;</span>
+                        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">step_name</span><span class="si">}</span><span class="s1"> is getting dt from the minimum &#39;</span>
+                        <span class="sa">f</span><span class="s1">&#39;resolution of the mesh but dt and/or btr_dt &#39;</span>
+                        <span class="sa">f</span><span class="s1">&#39;are also specified.&#39;</span><span class="p">)</span>
+
+        <span class="n">run_duration</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s1">&#39;run_duration&#39;</span><span class="p">]</span>
+        <span class="n">restart_time</span> <span class="o">=</span> <span class="n">_get_restart_time</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">run_duration</span><span class="p">)</span>
+
+        <span class="n">step</span> <span class="o">=</span> <span class="n">ForwardStep</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
+                           <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">step_name</span><span class="p">,</span>
+                           <span class="n">subdir</span><span class="o">=</span><span class="n">step_name</span><span class="p">,</span>
+                           <span class="n">land_ice_flux_mode</span><span class="o">=</span><span class="n">land_ice_flux_mode</span><span class="p">,</span>
+                           <span class="n">get_dt_from_min_res</span><span class="o">=</span><span class="n">get_dt_from_min_res</span><span class="p">)</span>
+
+        <span class="n">namelist_options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">shared_options</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">previous_restart_filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">namelist_options</span><span class="p">[</span><span class="s1">&#39;config_do_restart&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;.false.&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">namelist_options</span><span class="p">[</span><span class="s1">&#39;config_do_restart&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;.true.&#39;</span>
+        <span class="n">namelist_options</span><span class="p">[</span><span class="s1">&#39;config_start_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">start_time</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+
+        <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;run_duration&#39;</span><span class="p">,</span> <span class="s1">&#39;dt&#39;</span><span class="p">,</span> <span class="s1">&#39;btr_dt&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+                <span class="n">namelist_options</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;config_</span><span class="si">{</span><span class="n">option</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">options</span><span class="p">[</span><span class="n">option</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;Rayleigh_damping_coeff&#39;</span> <span class="ow">in</span> <span class="n">options</span> <span class="ow">and</span>
+                <span class="n">options</span><span class="p">[</span><span class="s1">&#39;Rayleigh_damping_coeff&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;None&#39;</span><span class="p">):</span>
+            <span class="n">namelist_options</span><span class="p">[</span><span class="s1">&#39;config_implicit_bottom_drag_type&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="s2">&quot;&#39;constant_and_rayleigh&#39;&quot;</span>
+            <span class="n">namelist_options</span><span class="p">[</span><span class="s1">&#39;config_Rayleigh_damping_coeff&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;Rayleigh_damping_coeff&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">namelist_options</span><span class="p">[</span><span class="s1">&#39;config_implicit_bottom_drag_type&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="s2">&quot;&#39;constant&#39;&quot;</span>
+
+        <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">namelist_options</span><span class="p">)</span>
+
+        <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;output_interval&#39;</span><span class="p">:</span> <span class="n">options</span><span class="p">[</span><span class="s1">&#39;output_interval&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;restart_interval&#39;</span><span class="p">:</span> <span class="n">options</span><span class="p">[</span><span class="s1">&#39;restart_interval&#39;</span><span class="p">]}</span>
+        <span class="n">package</span> <span class="o">=</span> <span class="s1">&#39;compass.ocean.tests.global_ocean.dynamic_adjustment&#39;</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;streams.template&#39;</span><span class="p">,</span>
+                              <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">)</span>
+
+        <span class="n">restart_filename</span> <span class="o">=</span> \
+            <span class="sa">f</span><span class="s1">&#39;restarts/rst.</span><span class="si">{</span><span class="n">restart_time</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;.&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+        <span class="k">if</span> <span class="n">previous_restart_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">step</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../</span><span class="si">{</span><span class="n">previous_restart_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../</span><span class="si">{</span><span class="n">restart_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">restart_time</span><span class="p">,</span> <span class="n">restart_filename</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_restart_time</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">run_duration</span><span class="p">):</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">_%H:%M:%S&#39;</span><span class="p">)</span>
+    <span class="n">duration</span> <span class="o">=</span> <span class="n">_parse_duration</span><span class="p">(</span><span class="n">run_duration</span><span class="p">)</span>
+    <span class="n">restart</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">duration</span>
+    <span class="n">restart_time</span> <span class="o">=</span> <span class="n">restart</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%4Y-%m-</span><span class="si">%d</span><span class="s1">_%H:%M:%S&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">restart_time</span>
+
+
+<span class="k">def</span> <span class="nf">_parse_duration</span><span class="p">(</span><span class="n">duration_str</span><span class="p">):</span>
+    <span class="n">days</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">hours</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">minutes</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">split</span> <span class="o">=</span> <span class="n">duration_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
+    <span class="n">hms</span> <span class="o">=</span> <span class="n">split</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">split</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">days</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">split</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+
+    <span class="n">split</span> <span class="o">=</span> <span class="n">hms</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+    <span class="n">seconds</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">split</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">split</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">minutes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">split</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">split</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">hours</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">split</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">,</span> <span class="n">hours</span><span class="o">=</span><span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="o">=</span><span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="o">=</span><span class="n">seconds</span><span class="p">)</span>
 </pre></div>
 
            </div>

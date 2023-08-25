@@ -115,33 +115,12 @@
 <span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.analysis_test</span> <span class="kn">import</span> <span class="n">AnalysisTest</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.daily_output_test</span> <span class="kn">import</span> <span class="n">DailyOutputTest</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.decomp_test</span> <span class="kn">import</span> <span class="n">DecompTest</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.dynamic_adjustment</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DynamicAdjustment</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm</span> <span class="kn">import</span> <span class="n">FilesForE3SM</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.init</span> <span class="kn">import</span> <span class="n">Init</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh</span> <span class="kn">import</span> <span class="n">Mesh</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.arrm10to60.dynamic_adjustment</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
-    <span class="n">ARRM10to60DynamicAdjustment</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.ec30to60.dynamic_adjustment</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">EC30to60DynamicAdjustment</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.kuroshio.dynamic_adjustment</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">KuroshioDynamicAdjustment</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.qu240.dynamic_adjustment</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">QU240DynamicAdjustment</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.qu.dynamic_adjustment</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">QUDynamicAdjustment</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.rrs6to18.dynamic_adjustment</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">RRS6to18DynamicAdjustment</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.so12to60.dynamic_adjustment</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">SO12to60DynamicAdjustment</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.wc14.dynamic_adjustment</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">WC14DynamicAdjustment</span><span class="p">,</span>
-<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.monthly_output_test</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">MonthlyOutputTest</span><span class="p">,</span>
 <span class="p">)</span>
@@ -165,7 +144,6 @@
 
         <span class="c1"># we do a lot of tests for QU240/QUwISC240</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;QU240&#39;</span><span class="p">,</span> <span class="s1">&#39;Icos240&#39;</span><span class="p">,</span> <span class="s1">&#39;QUwISC240&#39;</span><span class="p">],</span>
-                        <span class="n">DynamicAdjustment</span><span class="o">=</span><span class="n">QU240DynamicAdjustment</span><span class="p">,</span>
                         <span class="n">high_res_topography</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                         <span class="n">include_rk4</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                         <span class="n">include_regression</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -173,34 +151,27 @@
                         <span class="n">include_en4_1900</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># for other meshes, we do fewer tests</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;QU&#39;</span><span class="p">,</span> <span class="s1">&#39;Icos&#39;</span><span class="p">,</span> <span class="s1">&#39;QUwISC&#39;</span><span class="p">,</span> <span class="s1">&#39;IcoswISC&#39;</span><span class="p">],</span>
-                        <span class="n">DynamicAdjustment</span><span class="o">=</span><span class="n">QUDynamicAdjustment</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;QU&#39;</span><span class="p">,</span> <span class="s1">&#39;Icos&#39;</span><span class="p">,</span> <span class="s1">&#39;QUwISC&#39;</span><span class="p">,</span> <span class="s1">&#39;IcoswISC&#39;</span><span class="p">])</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;EC30to60&#39;</span><span class="p">,</span> <span class="s1">&#39;ECwISC30to60&#39;</span><span class="p">],</span>
-                        <span class="n">DynamicAdjustment</span><span class="o">=</span><span class="n">EC30to60DynamicAdjustment</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;EC30to60&#39;</span><span class="p">,</span> <span class="s1">&#39;ECwISC30to60&#39;</span><span class="p">])</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ARRM10to60&#39;</span><span class="p">,</span> <span class="s1">&#39;ARRMwISC10to60&#39;</span><span class="p">],</span>
-                        <span class="n">DynamicAdjustment</span><span class="o">=</span><span class="n">ARRM10to60DynamicAdjustment</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ARRM10to60&#39;</span><span class="p">,</span> <span class="s1">&#39;ARRMwISC10to60&#39;</span><span class="p">])</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;SO12to60&#39;</span><span class="p">,</span> <span class="s1">&#39;SOwISC12to60&#39;</span><span class="p">],</span>
-                        <span class="n">DynamicAdjustment</span><span class="o">=</span><span class="n">SO12to60DynamicAdjustment</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;SO12to60&#39;</span><span class="p">,</span> <span class="s1">&#39;SOwISC12to60&#39;</span><span class="p">])</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;WC14&#39;</span><span class="p">,</span> <span class="s1">&#39;WCwISC14&#39;</span><span class="p">],</span>
-                        <span class="n">DynamicAdjustment</span><span class="o">=</span><span class="n">WC14DynamicAdjustment</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;WC14&#39;</span><span class="p">,</span> <span class="s1">&#39;WCwISC14&#39;</span><span class="p">])</span>
 
         <span class="c1"># RRS6to18: with and without cavities</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;RRS6to18&#39;</span><span class="p">,</span> <span class="s1">&#39;RRSwISC6to18&#39;</span><span class="p">],</span>
-                        <span class="n">DynamicAdjustment</span><span class="o">=</span><span class="n">RRS6to18DynamicAdjustment</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;RRS6to18&#39;</span><span class="p">,</span> <span class="s1">&#39;RRSwISC6to18&#39;</span><span class="p">])</span>
 
         <span class="c1"># Kuroshio meshes without ice-shelf cavities</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Kuroshio12to60&#39;</span><span class="p">,</span> <span class="s1">&#39;Kuroshio8to60&#39;</span><span class="p">],</span>
-                        <span class="n">DynamicAdjustment</span><span class="o">=</span><span class="n">KuroshioDynamicAdjustment</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Kuroshio12to60&#39;</span><span class="p">,</span> <span class="s1">&#39;Kuroshio8to60&#39;</span><span class="p">])</span>
 
         <span class="c1"># A test case for making E3SM support files from an existing mesh</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">FilesForE3SM</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span></div>
 
-    <span class="k">def</span> <span class="nf">_add_tests</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_names</span><span class="p">,</span> <span class="n">DynamicAdjustment</span><span class="p">,</span>
-                   <span class="n">high_res_topography</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">include_rk4</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">_add_tests</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_names</span><span class="p">,</span> <span class="n">high_res_topography</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                   <span class="n">include_rk4</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                    <span class="n">include_regression</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_phc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                    <span class="n">include_en4_1900</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Add test cases for the given mesh(es) &quot;&quot;&quot;</span>

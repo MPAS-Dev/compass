@@ -828,14 +828,11 @@ with aggressive damping, followed by 10 more days without damping. Higher
 resolution meshes in :ref:`legacy_compass` require several stages of damping,
 each over several days before damping can be removed.
 
-As with the :ref:`global_ocean_performance_test`, ``dynamic_adjustment`` can
-be run with either or both of the split-explicit or RK4 time integrator.
-Thus, for a given mesh ``<mesh>`` and initial condition ``<ic>``, one or
-more of these versions of the ``performance_test`` will be available:
+Currently ``dynamic_adjustment`` is only available for the split-explicit (not
+the RK4) time integrator. Thus, for a given mesh ``<mesh>`` and initial
+condition ``<ic>``, the ``dynamic_adjustment`` will be available at:
 
-* ``ocean/global_ocean/<mesh>/<ic>/dynamic_adjustment/split_explicit``
-
-* ``ocean/global_ocean/<mesh>/<ic>/dynamic_adjustment/RK4``
+``ocean/global_ocean/<mesh>/<ic>/dynamic_adjustment``
 
 Versions of this test cases is currently available for all meshes, but not
 necessarily for all combinations of initial conditions and time integrators.

@@ -1103,12 +1103,12 @@ when calling <a class="reference internal" href="../../command_line.html#dev-com
 </section>
 <section id="dynamic-adjustment-test-case">
 <span id="dev-ocean-global-ocean-dynamic-adjustment"></span><h3>dynamic_adjustment test case<a class="headerlink" href="#dynamic-adjustment-test-case" title="Permalink to this heading">¶</a></h3>
-<p>The parent class
+<p>The class
 <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment.html#compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment" title="compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment</span></code></a>
 descends from <a class="reference internal" href="#dev-ocean-global-ocean-forward-test"><span class="std std-ref">forward test case</span></a> and defines a test
 case for performing a series of forward model runs in sequence to allow the
 ocean model to dynamically adjust to the initial condition.  This process
-involves a rapid increase in ocean velocity. the dissipation of fast-moving
+involves a rapid increase in ocean velocity, the dissipation of fast-moving
 waves, and adjustment of the sea-surface height to be in balance with the
 dynamic pressure (see <a class="reference internal" href="../../../users_guide/ocean/test_groups/global_ocean.html#global-ocean-dynamic-adjustment"><span class="std std-ref">dynamic_adjustment test case</span></a> in the User’s
 Guide). This process typically require smaller times steps and artificial
@@ -1119,74 +1119,96 @@ in the <a class="reference internal" href="#dev-ocean-global-ocean-files-for-e3s
 <p>The test case also takes care of validating the output from the final
 <code class="docutils literal notranslate"><span class="pre">simulation</span></code> step, comparing <code class="docutils literal notranslate"><span class="pre">temperature</span></code>, <code class="docutils literal notranslate"><span class="pre">salinity</span></code>,
 <code class="docutils literal notranslate"><span class="pre">layerThickness</span></code>, and <code class="docutils literal notranslate"><span class="pre">normalVelocity</span></code> with a baseline if one is provided.</p>
-<section id="child-classes">
-<h4>child classes<a class="headerlink" href="#child-classes" title="Permalink to this heading">¶</a></h4>
-<p>The modules <code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.&lt;mesh_name&gt;.dynamic_adjustment</span></code>
-define child classes of <code class="docutils literal notranslate"><span class="pre">DynamicAdjustment</span></code>. Each of the
-:ref`global_ocean_meshes` has its own adjustment step, since the needs
-(duration of each step, amount of damping, time step, etc.) may be different
-between meshes.</p>
-<p>Each module includes <code class="docutils literal notranslate"><span class="pre">streams.template</span></code>, a Jinja2 template for defining
-streams (see <a class="reference internal" href="../../organization.html#dev-step-add-streams-file-template"><span class="std std-ref">Adding a template streams file</span></a>):</p>
-<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;streams&gt;</span>
+<p>Each mesh needs to have a <code class="docutils literal notranslate"><span class="pre">dynamic_adjustment.yaml</span></code> (for the split-explicit
+time integrator) and optionally a <code class="docutils literal notranslate"><span class="pre">dynamic_adjustment_rk4.yaml</span></code> (if
+there is need to support dynamic adjustment with the RK4 time integrator).
+The YAML file defines some shared properties of each dynamic adjustment step
+and a list of properties (related to namelist options) for each step.  Here is
+and example:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dynamic_adjustment</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">land_ice_flux_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data</span>
+<span class="w">  </span><span class="nt">get_dt_from_min_res</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
 
-<span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;output&quot;</span>
-<span class="w">        </span><span class="na">output_interval=</span><span class="s">&quot;{{ output_interval }}&quot;</span><span class="nt">/&gt;</span>
-<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;restart&quot;</span>
-<span class="w">                  </span><span class="na">filename_template=</span><span class="s">&quot;../restarts/rst.$Y-$M-$D_$h.$m.$s.nc&quot;</span>
-<span class="w">                  </span><span class="na">output_interval=</span><span class="s">&quot;{{ restart_interval }}&quot;</span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">damped_adjustment_1</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">run_duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">output_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">restart_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">dt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">00:15:00</span>
+<span class="w">      </span><span class="nt">btr_dt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">00:00:30</span>
+<span class="w">      </span><span class="nt">Rayleigh_damping_coeff</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0e-4</span>
 
-<span class="nt">&lt;/streams&gt;</span>
+<span class="w">    </span><span class="nt">damped_adjustment_2</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">run_duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">output_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">restart_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">dt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">00:15:00</span>
+<span class="w">      </span><span class="nt">btr_dt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">00:00:30</span>
+<span class="w">      </span><span class="nt">Rayleigh_damping_coeff</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0e-5</span>
+
+<span class="w">    </span><span class="nt">damped_adjustment_3</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">run_duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">output_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">restart_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">dt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">00:20:00</span>
+<span class="w">      </span><span class="nt">btr_dt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">00:00:40</span>
+<span class="w">      </span><span class="nt">Rayleigh_damping_coeff</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0e-6</span>
+
+<span class="w">    </span><span class="nt">simulation</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">run_duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">output_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">restart_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">dt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">00:30:00</span>
+<span class="w">      </span><span class="nt">btr_dt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">00:01:00</span>
+<span class="w">      </span><span class="nt">Rayleigh_damping_coeff</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">None</span>
 </pre></div>
 </div>
-</section>
-<section id="id1">
-<h4>QU240 and QUwISC240<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h4>
-<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.qu240.dynamic_adjustment.QU240DynamicAdjustment.html#compass.ocean.tests.global_ocean.mesh.qu240.dynamic_adjustment.QU240DynamicAdjustment" title="compass.ocean.tests.global_ocean.mesh.qu240.dynamic_adjustment.QU240DynamicAdjustment"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.qu240.dynamic_adjustment.QU240DynamicAdjustment</span></code></a>
-defines a test case for performing dynamical adjustment on the mesh.  In the
-<code class="docutils literal notranslate"><span class="pre">damped_adjustment_1</span></code> step, the model is run for 1 day with strong Rayleigh
-friction (<code class="docutils literal notranslate"><span class="pre">1e-4</span></code> 1/s) to damp the velocity field.  In the
-<code class="docutils literal notranslate"><span class="pre">simulation</span></code> step, the model runs for an additional 1 day without Rayleigh
-friction.  The dynamic adjustment test case takes advantage of Jinja templating
-for streams files to use the same streams template for each step in the test
-case, see <a class="reference internal" href="../../organization.html#dev-step-add-streams-file-template"><span class="std std-ref">Adding a template streams file</span></a>.</p>
-</section>
-<section id="id2">
-<h4>EC30to60 and ECwISC30to60<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h4>
-<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.ec30to60.dynamic_adjustment.EC30to60DynamicAdjustment.html#compass.ocean.tests.global_ocean.mesh.ec30to60.dynamic_adjustment.EC30to60DynamicAdjustment" title="compass.ocean.tests.global_ocean.mesh.ec30to60.dynamic_adjustment.EC30to60DynamicAdjustment"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.ec30to60.dynamic_adjustment.EC30to60DynamicAdjustment</span></code></a>
-defines a test case for performing dynamical adjustment on the mesh.  In the
-<code class="docutils literal notranslate"><span class="pre">damped_adjustment_1</span></code> step, the model is run for 10 days with strong Rayleigh
-friction (<code class="docutils literal notranslate"><span class="pre">1e-4</span></code> 1/s) to damp the velocity field.  In the
-<code class="docutils literal notranslate"><span class="pre">simulation</span></code> step, the model runs for an additional 10 days without Rayleigh
-friction.  The dynamic adjustment test case takes advantage of Jinja templating
-for streams files to use the same streams template for each step in the test
-case, see <a class="reference internal" href="../../organization.html#dev-step-add-streams-file-template"><span class="std std-ref">Adding a template streams file</span></a>.</p>
-</section>
-<section id="id3">
-<h4>SO12to60 and SOwISC12to60<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h4>
-<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.so12to60.dynamic_adjustment.SO12to60DynamicAdjustment.html#compass.ocean.tests.global_ocean.mesh.so12to60.dynamic_adjustment.SO12to60DynamicAdjustment" title="compass.ocean.tests.global_ocean.mesh.so12to60.dynamic_adjustment.SO12to60DynamicAdjustment"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.so12to60.dynamic_adjustment.SO12to60DynamicAdjustment</span></code></a>
-defines a test case for performing dynamical adjustment on the mesh.  In the
-<code class="docutils literal notranslate"><span class="pre">damped_adjustment_1</span></code> through <code class="docutils literal notranslate"><span class="pre">damped_adjustment_3</span></code> steps, the model is run for
-2, 4 and 4 days with gradually weakening Rayleigh friction (<code class="docutils literal notranslate"><span class="pre">1e-4</span></code>, <code class="docutils literal notranslate"><span class="pre">4e-5</span></code>,
-and <code class="docutils literal notranslate"><span class="pre">1e-5</span></code> 1/s) to damp the velocity field.  In the <code class="docutils literal notranslate"><span class="pre">simulation</span></code> step, the
-model runs for an additional 10 days without Rayleigh friction.  The
-dynamic adjustment test case takes advantage of Jinja templating for streams
-files to use the same streams template for each step in the test case, see
-<a class="reference internal" href="../../organization.html#dev-step-add-streams-file-template"><span class="std std-ref">Adding a template streams file</span></a>.</p>
-</section>
-<section id="id4">
-<h4>WC14 and WCwISC14<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h4>
-<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.wc14.dynamic_adjustment.WC14DynamicAdjustment.html#compass.ocean.tests.global_ocean.mesh.wc14.dynamic_adjustment.WC14DynamicAdjustment" title="compass.ocean.tests.global_ocean.mesh.wc14.dynamic_adjustment.WC14DynamicAdjustment"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.wc14.dynamic_adjustment.WC14DynamicAdjustment</span></code></a>
-defines a test case for performing dynamical adjustment on the mesh.  In the
-<code class="docutils literal notranslate"><span class="pre">damped_adjustment_1</span></code> through <code class="docutils literal notranslate"><span class="pre">damped_adjustment_6</span></code> steps, the model is run
-for durations ranging from 6 hours to 3 days with gradually increasing time
-step and gradually weakening Rayleigh friction (from <code class="docutils literal notranslate"><span class="pre">1e-3</span></code> 1/s to <code class="docutils literal notranslate"><span class="pre">0</span></code>) to
-damp the velocity field.  In the <code class="docutils literal notranslate"><span class="pre">simulation</span></code> step, the model runs for an
-additional 24 days without Rayleigh friction.  The dynamic adjustment test case
-takes advantage of Jinja templating for streams files to use the same streams
-template for each step in the test case, see
-<a class="reference internal" href="../../organization.html#dev-step-add-streams-file-template"><span class="std std-ref">Adding a template streams file</span></a>.</p>
-</section>
+<p>The <code class="docutils literal notranslate"><span class="pre">land_ice_flux_mode</span></code> only matters for versions of the mesh with ice-shelf
+cavities.  Fluxes below ice shelves can be off
+(<code class="docutils literal notranslate"><span class="pre">land_ice_flux_mode:</span> <span class="pre">pressure_only</span></code>), prognostic
+(<code class="docutils literal notranslate"><span class="pre">land_ice_flux_mode:</span> <span class="pre">standalone</span></code>), or come from data
+(<code class="docutils literal notranslate"><span class="pre">land_ice_flux_mode:</span> <span class="pre">data</span></code>, the suggested approach).  All steps run with
+the same <code class="docutils literal notranslate"><span class="pre">land_ice_flux_mode</span></code>.</p>
+<p>The option <code class="docutils literal notranslate"><span class="pre">get_dt_from_min_res</span></code> determines whether the time step is
+determined automatically from the mesh resolution or is specified in each
+step.  Typically, meshes will use <code class="docutils literal notranslate"><span class="pre">get_dt_from_min_res:</span> <span class="pre">False</span></code> unless they
+have been generalized to support a range of resolutions, like the
+<a class="reference internal" href="#dev-ocean-global-ocean-qu-icos"><span class="std std-ref">QU, QUwISC, Icos and IcoswISC</span></a>.</p>
+<p>Under <code class="docutils literal notranslate"><span class="pre">steps:</span></code>, each step can be named as you like except that the final
+step must be called <code class="docutils literal notranslate"><span class="pre">simulation</span></code>. The convention for the other steps is
+to name and number them <code class="docutils literal notranslate"><span class="pre">damped_adjustment_&lt;n&gt;</span></code>.  There can be any number of
+damping steps, each of which typically define:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">...</span>
+<span class="w">    </span><span class="nt">damped_adjustment_1</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">run_duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">output_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">restart_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">dt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">00:15:00</span>
+<span class="w">      </span><span class="nt">btr_dt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">00:00:30</span>
+<span class="w">      </span><span class="nt">Rayleigh_damping_coeff</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0e-4</span>
+</pre></div>
+</div>
+<p>Most of these entries are required.  The <code class="docutils literal notranslate"><span class="pre">run_duration</span></code> is the length of the
+simulation.  The <code class="docutils literal notranslate"><span class="pre">output_interval</span></code> is the frequency of output to the
+<code class="docutils literal notranslate"><span class="pre">output.nc</span></code> file, which contains basic prognostic variables: temperature,
+salinity, layer thickness and normal velocity.  The <code class="docutils literal notranslate"><span class="pre">restart_interval</span></code> is
+the frequency at which restart files are written out.  Note that it is
+important that there be an integer number of restart intervals from the
+beginning of the dynamic adjustment to the start of the current step, which
+limits the flexibility in selecting the restart interval.</p>
+<p>Typically, a goal of dynamic adjustment is to begin with a smaller baroclinic
+time step <code class="docutils literal notranslate"><span class="pre">dt</span></code> and the barotropic time step <code class="docutils literal notranslate"><span class="pre">btr_dt</span></code> (not applicable for
+RK4 time integration) and increase the values in subsequent damped adjustment
+steps.  The values in the <code class="docutils literal notranslate"><span class="pre">simulation</span></code> step should typically be the same as
+what the mesh will use in E3SM production runs.</p>
+<p>Another goal of dynamic adjustment is to reduce the <code class="docutils literal notranslate"><span class="pre">Rayleigh_damping_coeff</span></code>
+from a relatively high number (often <code class="docutils literal notranslate"><span class="pre">1.0e-3</span></code> or <code class="docutils literal notranslate"><span class="pre">1.0e-4</span></code>) to nothing.  The
+Rayleigh friction is a linear damping on the momentum that can reduce the
+amplitude and speed of fast barotropic waves as the ocean spins up from rest.
+For steps where Rayleigh friction should be turned off, you can either omit
+the line with <code class="docutils literal notranslate"><span class="pre">Rayleigh_damping_coeff</span></code> or use
+<code class="docutils literal notranslate"><span class="pre">Rayleigh_damping_coeff:</span> <span class="pre">None</span></code>.  The latter is slightly preferred because it
+is more explicit.</p>
 </section>
 <section id="files-for-e3sm-test-case">
 <span id="dev-ocean-global-ocean-files-for-e3sm"></span><h3>files_for_e3sm test case<a class="headerlink" href="#files-for-e3sm-test-case" title="Permalink to this heading">¶</a></h3>
@@ -1198,7 +1220,7 @@ Output files from the test case are symlinked in a directory within the test
 case called <code class="docutils literal notranslate"><span class="pre">assembled_files</span></code>. See <a class="reference internal" href="../../../users_guide/ocean/test_groups/global_ocean.html#global-ocean-files-for-e3sm"><span class="std std-ref">files_for_e3sm test case</span></a> in the
 User’s Guide for more details.  Output file names involve the “mesh short
 name”, see <a class="reference internal" href="#dev-ocean-global-ocean-metadata"><span class="std std-ref">metadata</span></a>.</p>
-<p>The test case is constructed with an argument <code class="docutils literal notranslate"><span class="pre">restart_filename</span></code>. the final
+<p>The test case is constructed with an argument <code class="docutils literal notranslate"><span class="pre">restart_filename</span></code>, the final
 restart file produced by the <a class="reference internal" href="#dev-ocean-global-ocean-dynamic-adjustment"><span class="std std-ref">dynamic_adjustment test case</span></a>
 for the given mesh.</p>
 <p>The test case is made up of 10 steps:</p>
