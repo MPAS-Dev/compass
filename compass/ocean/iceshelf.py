@@ -157,7 +157,7 @@ def adjust_ssh(variable, iteration_count, step, update_pio=True,
                 write_filename = out_filename
             write_netcdf(ds_out, write_filename)
             if convert_to_cdf5:
-                args = ['ncks', '-5', write_filename, out_filename]
+                args = ['ncks', '-O', '-5', write_filename, out_filename]
                 subprocess.check_call(args)
 
             # Write the largest change in SSH and its lon/lat to a file
