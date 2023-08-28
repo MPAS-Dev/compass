@@ -113,38 +113,44 @@ class Viz(Step):
         min_column_thickness = self.config.getfloat(
             'ice_shelf_2d', 'y1_water_column_thickness')
 
+        figsize = (4, 8)
         delssh = dsOut.ssh - dsOut.ssh[0, :]
         s_vmin = np.nanmin(delssh.values)
         s_vmax = np.nanmax(delssh.values)
         plotter.plot_horiz_series(delssh, 'delssh', 'delssh', True,
                                   cmap='cmo.curl',
                                   vmin=-1. * max(abs(s_vmin), abs(s_vmax)),
-                                  vmax=max(abs(s_vmin), abs(s_vmax)))
+                                  vmax=max(abs(s_vmin), abs(s_vmax)),
+                                  figsize=figsize)
 
         u_vmin = np.nanmin(dsOut.velocityX[:, :, 0].values)
         u_vmax = np.nanmax(dsOut.velocityX[:, :, 0].values)
         plotter.plot_horiz_series(dsOut.velocityX[:, :, 0], 'u', 'u', True,
                                   cmap='cmo.balance',
                                   vmin=-1. * max(abs(u_vmin), abs(u_vmax)),
-                                  vmax=max(abs(u_vmin), abs(u_vmax)))
+                                  vmax=max(abs(u_vmin), abs(u_vmax)),
+                                  figsize=figsize)
 
         v_vmin = np.nanmin(dsOut.velocityY[:, :, 0].values)
         v_vmax = np.nanmax(dsOut.velocityY[:, :, 0].values)
         plotter.plot_horiz_series(dsOut.velocityY[:, :, 0], 'v', 'v', True,
                                   cmap='cmo.balance',
                                   vmin=-1. * max(abs(v_vmin), abs(v_vmax)),
-                                  vmax=max(abs(v_vmin), abs(v_vmax)))
+                                  vmax=max(abs(v_vmin), abs(v_vmax)),
+                                  figsize=figsize)
 
         plotter.plot_horiz_series(dsOut.landIcePressure, 'landIcePressure',
                                   'landIcePressure',
                                   True, vmin=1e3,
                                   vmax=1e7, cmap_set_under='r',
-                                  cmap_scale='log')
+                                  cmap_scale='log',
+                                  figsize=figsize)
 
         plotter.plot_horiz_series(dsOut.ssh + ds.bottomDepth, 'H', 'H',
                                   True, vmin=min_column_thickness + 1e-10,
                                   vmax=2000, cmap_set_under='r',
-                                  cmap_scale='log')
+                                  cmap_scale='log',
+                                  figsize=figsize)
 
         delssh = dsAdj.ssh - ds.ssh
         s_vmin = np.nanmin(delssh.values)
@@ -152,4 +158,5 @@ class Viz(Step):
         plotter.plot_horiz_series(delssh, 'delssh_adjust', 'delssh_adjust',
                                   True, cmap='cmo.curl', time_indices=[0],
                                   vmin=-1. * max(abs(s_vmin), abs(s_vmax)),
-                                  vmax=max(abs(s_vmin), abs(s_vmax)))
+                                  vmax=max(abs(s_vmin), abs(s_vmax)),
+                                  figsize=figsize)

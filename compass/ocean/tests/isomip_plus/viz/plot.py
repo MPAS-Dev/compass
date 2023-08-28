@@ -469,7 +469,8 @@ class MoviePlotter(object):
     def plot_horiz_series(self, da, nameInTitle, prefix, oceanDomain,
                           units=None, vmin=None, vmax=None, cmap=None,
                           cmap_set_under=None, cmap_set_over=None,
-                          cmap_scale='linear', time_indices=None):
+                          cmap_scale='linear', time_indices=None,
+                          figsize=(9, 3)):
         """
         Plot a series of image of a given variable
 
@@ -533,7 +534,7 @@ class MoviePlotter(object):
                                    vmax=vmax, cmap=cmap,
                                    cmap_set_under=cmap_set_under,
                                    cmap_set_over=cmap_set_over,
-                                   cmap_scale=cmap_scale)
+                                   cmap_scale=cmap_scale, figsize=figsize)
             if self.showProgress:
                 bar.update(tIndex + 1)
         if self.showProgress:
