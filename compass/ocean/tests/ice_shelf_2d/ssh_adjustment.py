@@ -39,7 +39,6 @@ class SshAdjustment(Step):
 
         """
         self.resolution = resolution
-        self.tidal_forcing = tidal_forcing
         if min_tasks is None:
             min_tasks = ntasks
         super().__init__(test_case=test_case, name='ssh_adjustment',
@@ -83,10 +82,6 @@ class SshAdjustment(Step):
         """
         config = self.config
         dt_per_km = config.getfloat('ice_shelf_2d', 'dt_per_km')
-        if self.tidal_forcing == 'tidal_forcing':
-            dt_per_km = min(dt_per_km,
-                            config.getfloat('ice_shelf_2d',
-                                            'dt_per_km_tidal_forcing'))
         dt = dt_per_km * self.resolution / 1.e3
         dt_str = time.strftime('%H:%M:%S', time.gmtime(dt))
         self.update_namelist_at_runtime({'config_dt': dt_str})
