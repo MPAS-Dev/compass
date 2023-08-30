@@ -13,8 +13,8 @@ default
 
 The ``default`` test case implements the parabolic bowl test case found in 
 `Thacker 1981 <https://doi.org/10.1017/S0022112081001882>`_. The problem 
-consists an initial mound of water which propagtes outward and reflects off
-a wet/dry boundary in a parabolic-shaped basin. The presence of a Corilois 
+consists an initial mound of water which propagates outward and reflects off
+a wet/dry boundary in a parabolic-shaped basin. The presence of a Coriolis 
 factor causes the wave to rotate around the bowl as it oscillates. The 
 bathymetry is given as:
 
@@ -50,7 +50,7 @@ Since this is a single layer case, the solution for the total depth, :math:`h = 
         h(x,y,t) = b_0\left[ \frac{\sqrt{1-C^2}}{1-C\cos(\omega t)} - \left( \frac{R^2}{L^2} \right)\left( \frac{1-C^2}{(1-C\cos(\omega t))^2}\right)\right].
 
 
-By default, the resolution is varied from  5 km to 20 km by doubling the resolution,
+By default, the resolution is varied from  20 km to 5 km by doubling the resolution,
 with the time step proportional to resolution.
 The result of the ``viz`` step of the test case is are plots of the solution at 
 different times, a time series at various points, and a convergence plot.
@@ -102,7 +102,7 @@ The ``parabolic_bowl`` config options include:
     gravity = 9.81
 
     # a list of resolutions (km) to test 
-    resolutions = 5, 10, 20
+    resolutions = 20, 10, 5
     
     # time step per resolution (s/km), since dt is proportional to resolution
     dt_per_km = 0.5
@@ -166,6 +166,6 @@ the step (and therefore the test case) has failed.
 viz
 ~~~
 
-The vizualization step can be configured to plot the timeseries for an 
+The visualization step can be configured to plot the timeseries for an 
 arbitrary set of coordinates by setting ``points``. Also, the interval
 between contour plot time snaps can be controlled with ``plot_interval``.

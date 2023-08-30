@@ -14,7 +14,7 @@ default
 
 The :py:class:`compass.ocean.tests.parabolic_bowl.default.Default`
 test performs a series of 3 day-long runs where an initial mound of water
-ocsillates in a parabolic bowl.  The resolution of the problem (by default, between
+oscillates in a parabolic bowl.  The resolution of the problem (by default, between
 5 and 20 km).  Modeled results are compared with a known exact solution to
 demonstrate convergence.  See :ref:`ocean_parabolic_bowl_default`.
 for config options and more details on the test case.
