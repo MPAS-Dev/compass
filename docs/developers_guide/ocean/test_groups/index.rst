@@ -21,6 +21,7 @@ Test groups
    merry_go_round
    nonhydro
    overflow
+   parabolic_bowl
    planar_convergence
    soma
    sphere_transport

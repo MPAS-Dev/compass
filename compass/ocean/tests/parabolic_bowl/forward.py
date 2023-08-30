@@ -114,7 +114,7 @@ class Forward(Step):
         return dt
 
     def _get_resources(self):
-        # get the these properties from the config options
+        """ get the these properties from the config options """
         config = self.config
         self.ntasks = config.getint('parabolic_bowl',
                                     f'{self.resolution}km_ntasks')

@@ -129,6 +129,7 @@ class Viz(Step):
     def contour_plots(self, points):
         """
         Plot contour plots at a specified output interval for each resolution
+        and show where the points used in `points.png` are located.
         """
 
         sol_min = -2
