@@ -100,7 +100,7 @@ class Default(TestCase):
     def _setup_steps(self, config):
         """ setup steps given resolutions """
 
-        default_resolutions = '5, 10, 20'
+        default_resolutions = '20, 10, 5'
 
         # set the default values that a user may change before setup
         config.set('parabolic_bowl', 'resolutions', default_resolutions,
