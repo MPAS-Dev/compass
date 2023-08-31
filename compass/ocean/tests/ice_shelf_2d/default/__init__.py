@@ -47,9 +47,9 @@ class Default(TestCase):
         self.resolution = resolution
         self.coord_type = coord_type
         if resolution >= 1e3:
-            res_name = f'{int(resolution / 1e3)}km'
+            res_name = f'{resolution / 1e3:g}km'
         else:
-            res_name = f'{int(resolution)}m'
+            res_name = f'{resolution:g}m'
         subdir = f'{res_name}/{coord_type}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)

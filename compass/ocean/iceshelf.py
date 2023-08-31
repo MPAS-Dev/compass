@@ -42,7 +42,7 @@ def compute_land_ice_pressure_and_draft(ssh, modify_mask, ref_density):
 
 
 def adjust_ssh(variable, iteration_count, step, update_pio=True,
-               convert_to_cdf5=False, deltaSSH_threshold=None):
+               convert_to_cdf5=False, delta_ssh_threshold=None):
     """
     Adjust the sea surface height or land-ice pressure to be dynamically
     consistent with one another.  A series of short model runs are performed,
@@ -187,8 +187,8 @@ def adjust_ssh(variable, iteration_count, step, update_pio=True,
                 logger.info(f'     {string}')
                 log_file.write(f'{string}\n')
 
-                if deltaSSH_threshold is not None:
-                    if abs(deltaSSHMax) < deltaSSH_threshold:
+                if delta_ssh_threshold is not None:
+                    if abs(deltaSSHMax) < delta_ssh_threshold:
                         break
 
         logger.info("   - Complete\n")

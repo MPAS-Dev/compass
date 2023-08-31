@@ -87,4 +87,4 @@ class SshAdjustment(Step):
         self.update_namelist_at_runtime({'config_dt': dt_str})
         iteration_count = config.getint('ssh_adjustment', 'iterations')
         adjust_ssh(variable='landIcePressure', iteration_count=iteration_count,
-                   step=self, deltaSSH_threshold=1.e-10)
+                   step=self, delta_ssh_threshold=1.e-10)

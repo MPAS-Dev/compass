@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import xarray
+import xarray as xr
 
 from compass.ocean.tests.isomip_plus.viz.plot import MoviePlotter
 from compass.step import Step
@@ -36,9 +36,9 @@ class Viz(Step):
         Run this step of the test case
         """
 
-        ds = xarray.open_dataset('initial_state.nc')
-        dsOut = xarray.open_dataset('output.nc')
-        dsAdj = xarray.open_dataset('output_ssh.nc')
+        ds = xr.open_dataset('initial_state.nc')
+        dsOut = xr.open_dataset('output.nc')
+        dsAdj = xr.open_dataset('output_ssh.nc')
         plotter = MoviePlotter(inFolder='../forward',
                                streamfunctionFolder='',
                                outFolder='./plots',
@@ -54,8 +54,8 @@ class Viz(Step):
         nCells = ds.sizes['yCell']
         nVertLevels = ds.sizes['nVertLevels']
 
-        zIndex = xarray.DataArray(data=np.arange(nVertLevels),
-                                  dims='nVertLevels')
+        zIndex = xr.DataArray(data=np.arange(nVertLevels),
+                              dims='nVertLevels')
 
         minLevelCell = ds.minLevelCell - 1
         maxLevelCell = ds.maxLevelCell - 1
@@ -63,8 +63,8 @@ class Viz(Step):
         cellMask = np.logical_and(zIndex >= minLevelCell,
                                   zIndex <= maxLevelCell)
 
-        zIndex = xarray.DataArray(data=np.arange(nVertLevels + 1),
-                                  dims='nVertLevelsP1')
+        zIndex = xr.DataArray(data=np.arange(nVertLevels + 1),
+                              dims='nVertLevelsP1')
 
         interfaceMask = np.logical_and(zIndex >= minLevelCell,
                                        zIndex <= maxLevelCell + 1)
@@ -79,8 +79,8 @@ class Viz(Step):
             zInterface[:, zIndex + 1] = \
                 zInterface[:, zIndex] - thickness.values
 
-        zInterface = xarray.DataArray(data=zInterface,
-                                      dims=('yCell', 'nVertLevelsP1'))
+        zInterface = xr.DataArray(data=zInterface,
+                                  dims=('yCell', 'nVertLevelsP1'))
         zInterface = zInterface.where(interfaceMask)
 
         y = ds.yCell.values / 1.e3
@@ -91,11 +91,10 @@ class Viz(Step):
         plt.plot(y, -ds.bottomDepth.values, '--r', label='zBed')
         plt.xlabel('Distance (km)')
         plt.ylabel('Depth (m)')
-        plt.legend()
         plt.savefig('vert_grid.png', dpi=200)
         plt.close()
 
-        ds = xarray.open_dataset('initial_state.nc')
+        ds = xr.open_dataset('initial_state.nc')
 
         # Plot the time series of max velocity
         plt.figure(figsize=[12, 6], dpi=100)
@@ -117,7 +116,8 @@ class Viz(Step):
         delssh = dsOut.ssh - dsOut.ssh[0, :]
         s_vmin = np.nanmin(delssh.values)
         s_vmax = np.nanmax(delssh.values)
-        plotter.plot_horiz_series(delssh, 'delssh', 'delssh', True,
+        plotter.plot_horiz_series(da=delssh, nameInTitle='delssh',
+                                  prefix='delssh', oceanDomain=True,
                                   cmap='cmo.curl',
                                   vmin=-1. * max(abs(s_vmin), abs(s_vmax)),
                                   vmax=max(abs(s_vmin), abs(s_vmax)),
@@ -125,7 +125,8 @@ class Viz(Step):
 
         u_vmin = np.nanmin(dsOut.velocityX[:, :, 0].values)
         u_vmax = np.nanmax(dsOut.velocityX[:, :, 0].values)
-        plotter.plot_horiz_series(dsOut.velocityX[:, :, 0], 'u', 'u', True,
+        plotter.plot_horiz_series(da=dsOut.velocityX[:, :, 0], nameInTitle='u',
+                                  prefix='u', oceanDomain=True,
                                   cmap='cmo.balance',
                                   vmin=-1. * max(abs(u_vmin), abs(u_vmax)),
                                   vmax=max(abs(u_vmin), abs(u_vmax)),
@@ -133,30 +134,34 @@ class Viz(Step):
 
         v_vmin = np.nanmin(dsOut.velocityY[:, :, 0].values)
         v_vmax = np.nanmax(dsOut.velocityY[:, :, 0].values)
-        plotter.plot_horiz_series(dsOut.velocityY[:, :, 0], 'v', 'v', True,
+        plotter.plot_horiz_series(da=dsOut.velocityY[:, :, 0], nameInTitle='v',
+                                  prefix='v', oceanDomain=True,
                                   cmap='cmo.balance',
                                   vmin=-1. * max(abs(v_vmin), abs(v_vmax)),
                                   vmax=max(abs(v_vmin), abs(v_vmax)),
                                   figsize=figsize)
 
-        plotter.plot_horiz_series(dsOut.landIcePressure, 'landIcePressure',
-                                  'landIcePressure',
-                                  True, vmin=1e3,
-                                  vmax=1e7, cmap_set_under='r',
-                                  cmap_scale='log',
-                                  figsize=figsize)
+        plotter.plot_horiz_series(da=dsOut.landIcePressure,
+                                  nameInTitle='landIcePressure',
+                                  prefix='landIcePressure', oceanDomain=True,
+                                  vmin=1e3, vmax=1e7, cmap_set_under='r',
+                                  cmap_scale='log', figsize=figsize)
 
-        plotter.plot_horiz_series(dsOut.ssh + ds.bottomDepth, 'H', 'H',
-                                  True, vmin=min_column_thickness + 1e-10,
+        plotter.plot_horiz_series(da=dsOut.ssh + ds.bottomDepth,
+                                  nameInTitle='H', prefix='H',
+                                  oceanDomain=True,
+                                  vmin=min_column_thickness + 1e-10,
                                   vmax=2000, cmap_set_under='r',
-                                  cmap_scale='log',
-                                  figsize=figsize)
+                                  cmap_scale='log', figsize=figsize)
 
         delssh = dsAdj.ssh - ds.ssh
         s_vmin = np.nanmin(delssh.values)
         s_vmax = np.nanmax(delssh.values)
-        plotter.plot_horiz_series(delssh, 'delssh_adjust', 'delssh_adjust',
-                                  True, cmap='cmo.curl', time_indices=[0],
+        plotter.plot_horiz_series(da=delssh,
+                                  nameInTitle='delssh_adjust',
+                                  prefix='delssh_adjust',
+                                  oceanDomain=True,
+                                  cmap='cmo.curl', time_indices=[0],
                                   vmin=-1. * max(abs(s_vmin), abs(s_vmax)),
                                   vmax=max(abs(s_vmin), abs(s_vmax)),
                                   figsize=figsize)
