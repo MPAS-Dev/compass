@@ -24,7 +24,7 @@ controlled by the following config options:
     [remap_topography]
 
     # the name of the topography file in the bathymetry database
-    topo_filename = BedMachineAntarctica_v3_and_GEBCO_2022_0.0125_degree_20230315.nc
+    topo_filename = BedMachineAntarctica_v3_and_GEBCO_2023_0.0125_degree_20230831.nc
 
     # variable names in topo_filename
     lon_var = lon
@@ -37,7 +37,7 @@ controlled by the following config options:
     ocean_frac_var = ocean_mask
 
     # the description to include in metadata
-    description = Bathymetry is from GEBCO 2022, combined with BedMachine
+    description = Bathymetry is from GEBCO 2023, combined with BedMachine
                   Antarctica v3 around Antarctica.
 
     # the target and minimum number of MPI tasks to use in remapping
