@@ -172,7 +172,7 @@ class Mesh(TestCase):
         if 'remap_topography' in self.steps:
             description = config.get('remap_topography', 'description')
         else:
-            description = 'Bathymetry is from GEBCO 2022, combined with ' \
+            description = 'Bathymetry is from GEBCO 2023, combined with ' \
                           'BedMachine Antarctica v3 around Antarctica.'
 
         config.set('global_ocean', 'bathy_description', description)
