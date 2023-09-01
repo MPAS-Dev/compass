@@ -7,9 +7,10 @@
     config_tracer_advection = 'fo'
 
     config_calving = 'von_Mises_stress'
-    config_grounded_von_Mises_threshold_stress = 250.0e3
+    config_grounded_von_Mises_threshold_stress = 1.0e9
     config_floating_von_Mises_threshold_stress = 250.0e3
     config_calving_speed_limit = 0.000952 ! 30 km/yr
+    config_calving_error_threshold = 1.0e9
     config_damage_calving_threshold = 0.95
     config_calculate_damage = .true.
     config_damage_calving_method = 'none'
@@ -26,7 +27,8 @@
     config_basal_heat_flux_source = 'file'
 
     config_basal_mass_bal_float = 'ismip6'
-    config_front_mass_bal_grounded = 'none'
+    config_front_mass_bal_grounded = 'ismip6'
+    config_use_3d_thermal_forcing_for_face_melt = .true.
 
     config_ice_density = 910.0
     config_ocean_density = 1028.0
