@@ -604,6 +604,38 @@ overflow
    hydro_vs_nonhydro.visualize.Visualize
    hydro_vs_nonhydro.visualize.Visualize.run
 
+parabolic_bowl
+~~~~~~~~~~~~~~
+
+.. currentmodule:: compass.ocean.tests.parabolic_bowl
+
+.. autosummary::
+   :toctree: generated/
+
+   ParabolicBowl
+
+   default.Default
+   default.Default.configure
+   default.Default.update_cores
+   default.Default.validate
+
+   forward.Forward
+   forward.Forward.run
+   forward.Forward.setup
+   forward.Forward.get_dt
+
+   initial_state.InitialState
+   initial_state.InitialState.run
+
+   viz.Viz
+   viz.Viz.run
+   viz.Viz.get_points
+   viz.Viz.timeseries_plots
+   viz.Viz.inject_exact_solution
+   viz.Viz.contour_plots
+   viz.Viz.rmse_plots
+   viz.Viz.compute_rmse
+   viz.Viz.exact_solution
 
 planar_convergence
 ~~~~~~~~~~~~~~~~~~

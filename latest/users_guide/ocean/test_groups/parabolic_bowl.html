@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>parabolic_bowl &mdash; compass latest documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="planar_convergence" href="planar_convergence.html" />
+    <link rel="prev" title="overflow" href="overflow.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            compass
+          </a>
+              <div class="version">
+                latest
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../landice/index.html">Landice core</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Ocean core</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Test groups</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="baroclinic_channel.html">baroclinic_channel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dam_break.html">dam_break</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drying_slope.html">drying_slope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="global_convergence.html">global_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="global_ocean.html">global_ocean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gotm.html">gotm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hurricane.html">hurricane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ice_shelf_2d.html">ice_shelf_2d</a></li>
+<li class="toctree-l3"><a class="reference internal" href="internal_wave.html">internal_wave</a></li>
+<li class="toctree-l3"><a class="reference internal" href="isomip_plus.html">isomip_plus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lock_exchange.html">lock_exchange</a></li>
+<li class="toctree-l3"><a class="reference internal" href="merry_go_round.html">merry_go_round</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nonhydro.html">nonhydro</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overflow.html">overflow</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">parabolic_bowl</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#default">default</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="planar_convergence.html">planar_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soma.html">soma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sphere_transport.html">sphere_transport</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spherical_harmonic_transform.html">spherical_harmonic_transform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tides.html">tides</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utility.html">utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ziso.html">ziso</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../framework/index.html">Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../suites.html">Test suites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Ocean core</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Test groups</a></li>
+      <li class="breadcrumb-item active">parabolic_bowl</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/users_guide/ocean/test_groups/parabolic_bowl.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="parabolic-bowl">
+<span id="ocean-parabolic-bowl"></span><h1>parabolic_bowl<a class="headerlink" href="#parabolic-bowl" title="Permalink to this heading">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">parabolic_bowl</span></code> test group implements convergence study for
+wetting and drying. Currently, the only test case is the default case</p>
+<section id="default">
+<span id="ocean-parabolic-bowl-default"></span><h2>default<a class="headerlink" href="#default" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">default</span></code> test case implements the parabolic bowl test case found in
+<a class="reference external" href="https://doi.org/10.1017/S0022112081001882">Thacker 1981</a>. The problem
+consists an initial mound of water which propagates outward and reflects off
+a wet/dry boundary in a parabolic-shaped basin. The presence of a Coriolis
+factor causes the wave to rotate around the bowl as it oscillates. The
+bathymetry is given as:</p>
+<div class="math notranslate nohighlight">
+\[b(x,y) = b_0\left(1 - \frac{R^2}{L^2}\right),\]</div>
+<p>with</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}R &amp;= \sqrt{x^2 + y^2}, \\
+L &amp;= \sqrt{\frac{8gb_0}{\omega^2 - f^2}}.\end{split}\]</div>
+<p>An exact solution for this problem exists for the frictionless, nonlinear shallow water equations:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\eta(x,y,t) &amp;= b_0\left[ \frac{\sqrt{1-C^2}}{1-C\cos(\omega t)} -1 - \left( \frac{R^2}{L^2} \right)\left( \frac{1-C^2}{(1-C\cos(\omega t))^2}-1\right)\right], \\
+u(x,y,t) &amp;= \frac{1}{1-C\cos(\omega t)}\left( \frac{1}{2}\omega x C \sin(\omega t) - \frac{1}{2}fy\left( \sqrt{1-C^2} + C\cos(\omega t) - 1\right)\right), \\
+v(x,y,t) &amp;= \frac{1}{1-C\cos(\omega t)}\left(\frac{1}{2}fx\left(\sqrt{1-C^2} + A\cos(\omega t) -1 \right) + \frac{1}{2}\omega y C \sin(\omega t)\right),\end{split}\]</div>
+<p>where, <span class="math notranslate nohighlight">\(C\)</span> is defined as:</p>
+<div class="math notranslate nohighlight">
+\[C = \frac{(b_0+\eta_0)^2 - b_0^2}{(b_0+\eta_0)^2 + b_0^2}.\]</div>
+<p>Since this is a single layer case, the solution for the total depth, <span class="math notranslate nohighlight">\(h = \eta + b\)</span>, is</p>
+<div class="math notranslate nohighlight">
+\[h(x,y,t) = b_0\left[ \frac{\sqrt{1-C^2}}{1-C\cos(\omega t)} - \left( \frac{R^2}{L^2} \right)\left( \frac{1-C^2}{(1-C\cos(\omega t))^2}\right)\right].\]</div>
+<p>By default, the resolution is varied from  20 km to 5 km by doubling the resolution,
+with the time step proportional to resolution.
+The result of the <code class="docutils literal notranslate"><span class="pre">viz</span></code> step of the test case is are plots of the solution at
+different times, a time series at various points, and a convergence plot.</p>
+<a class="reference internal image-reference" href="../../../_images/parabolic_bowl_solution_000.png"><img alt="../../../_images/parabolic_bowl_solution_000.png" class="align-center" src="../../../_images/parabolic_bowl_solution_000.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="../../../_images/parabolic_bowl_solution_360.png"><img alt="../../../_images/parabolic_bowl_solution_360.png" class="align-center" src="../../../_images/parabolic_bowl_solution_360.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="../../../_images/parabolic_bowl_points.png"><img alt="../../../_images/parabolic_bowl_points.png" class="align-center" src="../../../_images/parabolic_bowl_points.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="../../../_images/parabolic_bowl_error.png"><img alt="../../../_images/parabolic_bowl_error.png" class="align-center" src="../../../_images/parabolic_bowl_error.png" style="width: 500px;" /></a>
+<section id="config-options">
+<h3>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">parabolic_bowl</span></code> config options include:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for drying slope test cases</span>
+<span class="k">[parabolic_bowl]</span>
+
+<span class="c1"># dimensions of domain in x and y directions (km)</span>
+<span class="na">Lx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1440</span>
+<span class="na">Ly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1560</span>
+
+<span class="c1"># Coriolis parameter</span>
+<span class="na">coriolis_parameter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.031e-4</span>
+
+<span class="c1"># Maximum initial ssh magnitude</span>
+<span class="na">eta_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2.0</span>
+
+<span class="c1"># Maximum water depth</span>
+<span class="na">depth_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">50.0</span>
+
+<span class="c1"># Angular fequency of oscillation</span>
+<span class="na">omega</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.4544e-4</span>
+
+<span class="c1"># Gravitational acceleration</span>
+<span class="na">gravity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">9.81</span>
+
+<span class="c1"># a list of resolutions (km) to test</span>
+<span class="na">resolutions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">20, 10, 5</span>
+
+<span class="c1"># time step per resolution (s/km), since dt is proportional to resolution</span>
+<span class="na">dt_per_km</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.5</span>
+
+<span class="c1"># the number of cells per core to aim for</span>
+<span class="na">goal_cells_per_core</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">300</span>
+
+<span class="c1"># the approximate maximum number of cells per core (the test will fail if too</span>
+<span class="c1"># few cores are available)</span>
+<span class="na">max_cells_per_core</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3000</span>
+
+<span class="c1"># config options for visualizing drying slope ouptut</span>
+<span class="k">[parabolic_bowl_viz]</span>
+
+<span class="c1"># coordinates (in km) for timeseries plot</span>
+<span class="na">points</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[0,0], [300,0], [610,0]</span>
+
+<span class="c1"># generate contour plots at a specified interval between output timesnaps</span>
+<span class="na">plot_interval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span>
+</pre></div>
+</div>
+<p>The last 7 options are used to control properties of the cosine bell and the
+background properties.  The first 4 options are discussed below.</p>
+</section>
+<section id="resolutions">
+<h3>resolutions<a class="headerlink" href="#resolutions" title="Permalink to this heading">¶</a></h3>
+<p>The default resolutions (in km) used in the test case are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">resolutions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">20, 10, 5</span>
+</pre></div>
+</div>
+<p>To alter the resolutions used in this test, you will need to create your own
+config file (or add a <code class="docutils literal notranslate"><span class="pre">parabolic_bowl</span></code> section to a config file if you’re
+already using one).  The resolutions are a comma-separated list of the
+resolution of the mesh in km.  If you specify a different list
+before setting up <code class="docutils literal notranslate"><span class="pre">parabolic_bowl</span></code>, steps will be generated with the requested
+resolutions.  (If you alter <code class="docutils literal notranslate"><span class="pre">resolutions</span></code> in the test case’s config file in
+the work directory, nothing will happen.)</p>
+</section>
+<section id="time-step">
+<h3>time step<a class="headerlink" href="#time-step" title="Permalink to this heading">¶</a></h3>
+<p>The time step for forward integration is determined by multiplying the
+resolution by <code class="docutils literal notranslate"><span class="pre">dt_per_km</span></code>, so that coarser meshes have longer time steps.
+You can alter this before setup (in a user config file) or before running the
+test case (in the config file in the work directory).</p>
+</section>
+<section id="cores">
+<h3>cores<a class="headerlink" href="#cores" title="Permalink to this heading">¶</a></h3>
+<p>The number of cores (and the minimum) is proportional to the number of cells,
+so that the number of cells per core is roughly constant.  You can alter how
+many cells are allocated to each core with <code class="docutils literal notranslate"><span class="pre">goal_cells_per_core</span></code>.  You can
+control the maximum number of cells that are allowed to be placed on a single
+core (before the test case will fail) with <code class="docutils literal notranslate"><span class="pre">max_cells_per_core</span></code>.  If there
+aren’t enough processors to handle the finest resolution, you will see that
+the step (and therefore the test case) has failed.</p>
+</section>
+<section id="viz">
+<h3>viz<a class="headerlink" href="#viz" title="Permalink to this heading">¶</a></h3>
+<p>The visualization step can be configured to plot the timeseries for an
+arbitrary set of coordinates by setting <code class="docutils literal notranslate"><span class="pre">points</span></code>. Also, the interval
+between contour plot time snaps can be controlled with <code class="docutils literal notranslate"><span class="pre">plot_interval</span></code>.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="overflow.html" class="btn btn-neutral float-left" title="overflow" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="planar_convergence.html" class="btn btn-neutral float-right" title="planar_convergence" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
