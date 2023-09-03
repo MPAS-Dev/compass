@@ -219,11 +219,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">plot_time_series</span><span class="p">(</span><span class="mf">1e-6</span> <span class="o">*</span> <span class="n">totalMeltFlux</span><span class="p">,</span> <span class="s1">&#39;total melt flux&#39;</span><span class="p">,</span>
                               <span class="s1">&#39;totalMeltFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;kT/yr&#39;</span><span class="p">)</span>
 
-        <span class="n">blTempName</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_landIceBoundaryLayerTracers_&#39;</span> \
-                     <span class="s1">&#39;landIceBoundaryLayerTemperature&#39;</span>
-        <span class="n">interTempName</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_landIceInterfaceTracers_&#39;</span> \
-                        <span class="s1">&#39;landIceInterfaceTemperature&#39;</span>
-        <span class="n">da</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="p">[</span><span class="n">blTempName</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="p">[</span><span class="n">interTempName</span><span class="p">])</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_landIceBoundaryLayerTracers_&#39;</span>
+        <span class="n">boundary_layer_temperature</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">landIceBoundaryLayerTemperature&#39;</span><span class="p">]</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_landIceInterfaceTracers_&#39;</span>
+        <span class="n">interface_temperature</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">landIceInterfaceTemperature&#39;</span><span class="p">]</span>
+        <span class="n">da</span> <span class="o">=</span> <span class="n">boundary_layer_temperature</span> <span class="o">-</span> <span class="n">interface_temperature</span>
         <span class="n">da</span> <span class="o">=</span> <span class="p">(</span><span class="n">da</span> <span class="o">*</span> <span class="n">areaCell</span> <span class="o">*</span> <span class="n">iceMask</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span> <span class="o">/</span> <span class="n">totalArea</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">plot_time_series</span><span class="p">(</span><span class="n">da</span><span class="p">,</span> <span class="s1">&#39;mean thermal driving&#39;</span><span class="p">,</span>
@@ -493,23 +495,23 @@
                                <span class="n">oceanDomain</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;W/s&#39;</span><span class="p">,</span>
                                <span class="n">vmin</span><span class="o">=-</span><span class="mf">1e1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1e1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.curl&#39;</span><span class="p">)</span>
 
-        <span class="n">blTempName</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_landIceBoundaryLayerTracers_&#39;</span> \
-                     <span class="s1">&#39;landIceBoundaryLayerTemperature&#39;</span>
-        <span class="n">interTempName</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_landIceInterfaceTracers_&#39;</span> \
-                        <span class="s1">&#39;landIceInterfaceTemperature&#39;</span>
-
-        <span class="n">da</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="p">[</span><span class="n">blTempName</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="p">[</span><span class="n">interTempName</span><span class="p">])</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_landIceBoundaryLayerTracers_&#39;</span>
+        <span class="n">boundary_layer_temperature</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">landIceBoundaryLayerTemperature&#39;</span><span class="p">]</span>
+        <span class="n">boundary_layer_salinity</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">landIceBoundaryLayerSalinity&#39;</span><span class="p">]</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_landIceInterfaceTracers_&#39;</span>
+        <span class="n">interface_temperature</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">landIceInterfaceTemperature&#39;</span><span class="p">]</span>
+        <span class="n">interface_salinity</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">landIceInterfaceSalinity&#39;</span><span class="p">]</span>
+        <span class="n">da</span> <span class="o">=</span> <span class="n">boundary_layer_temperature</span> <span class="o">-</span> <span class="n">interface_temperature</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">da</span><span class="p">,</span> <span class="s1">&#39;thermal driving&#39;</span><span class="p">,</span>
                                <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;thermalDriving&#39;</span><span class="p">,</span>
                                <span class="n">oceanDomain</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;deg C&#39;</span><span class="p">,</span>
                                <span class="n">vmin</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.thermal&#39;</span><span class="p">)</span>
 
-        <span class="n">blSalinName</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_landIceBoundaryLayerTracers_&#39;</span> \
-                      <span class="s1">&#39;landIceBoundaryLayerSalinity&#39;</span>
-        <span class="n">interSalinName</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_landIceInterfaceTracers_&#39;</span> \
-                         <span class="s1">&#39;landIceInterfaceSalinity&#39;</span>
-
-        <span class="n">da</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="p">[</span><span class="n">blSalinName</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="p">[</span><span class="n">interSalinName</span><span class="p">])</span>
+        <span class="n">da</span> <span class="o">=</span> <span class="n">boundary_layer_salinity</span> <span class="o">-</span> <span class="n">interface_salinity</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">da</span><span class="p">,</span> <span class="s1">&#39;haline driving&#39;</span><span class="p">,</span>
                                <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;halineDriving&#39;</span><span class="p">,</span>
                                <span class="n">oceanDomain</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;PSU&#39;</span><span class="p">,</span>
@@ -583,7 +585,8 @@
 <div class="viewcode-block" id="MoviePlotter.plot_horiz_series"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_horiz_series.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_horiz_series">[docs]</a>    <span class="k">def</span> <span class="nf">plot_horiz_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">da</span><span class="p">,</span> <span class="n">nameInTitle</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">oceanDomain</span><span class="p">,</span>
                           <span class="n">units</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                           <span class="n">cmap_set_under</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap_set_over</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                          <span class="n">cmap_scale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">):</span>
+                          <span class="n">cmap_scale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">time_indices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                          <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">)):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot a series of image of a given variable</span>
 
@@ -616,6 +619,9 @@
 
 <span class="sd">        cmap_scale : {&#39;log&#39;, &#39;linear&#39;}, optional</span>
 <span class="sd">            Whether the colormap is logarithmic or linear</span>
+
+<span class="sd">        time_indices : list of int, optional</span>
+<span class="sd">            The time indices at which to plot. If not provided, set to all.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">nTime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span>
@@ -628,7 +634,9 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">bar</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="k">for</span> <span class="n">tIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nTime</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">time_indices</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">time_indices</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">nTime</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">tIndex</span> <span class="ow">in</span> <span class="n">time_indices</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update_date</span><span class="p">(</span><span class="n">tIndex</span><span class="p">)</span>
             <span class="n">field</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">tIndex</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
             <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{:04d}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -642,7 +650,7 @@
                                    <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
                                    <span class="n">cmap_set_under</span><span class="o">=</span><span class="n">cmap_set_under</span><span class="p">,</span>
                                    <span class="n">cmap_set_over</span><span class="o">=</span><span class="n">cmap_set_over</span><span class="p">,</span>
-                                   <span class="n">cmap_scale</span><span class="o">=</span><span class="n">cmap_scale</span><span class="p">)</span>
+                                   <span class="n">cmap_scale</span><span class="o">=</span><span class="n">cmap_scale</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">showProgress</span><span class="p">:</span>
                 <span class="n">bar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tIndex</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">showProgress</span><span class="p">:</span>
@@ -975,8 +983,12 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_compute_section_x_z</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">_interp_extrap_corner</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">xIsomipCell</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionCellIndices</span><span class="p">])</span>
+        <span class="k">if</span> <span class="s1">&#39;xIsomipCell&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">_interp_extrap_corner</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">xIsomipCell</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionCellIndices</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">_interp_extrap_corner</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">xCell</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionCellIndices</span><span class="p">])</span>
         <span class="n">nx</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="n">nVertLevels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
         <span class="n">nTime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span>
@@ -1018,8 +1030,12 @@
     <span class="n">patches</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">nVerticesOnCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">nEdgesOnCell</span><span class="o">.</span><span class="n">values</span>
     <span class="n">verticesOnCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">verticesOnCell</span><span class="o">.</span><span class="n">values</span> <span class="o">-</span> <span class="mi">1</span>
-    <span class="n">xVertex</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">xIsomipVertex</span><span class="o">.</span><span class="n">values</span>
-    <span class="n">yVertex</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">yIsomipVertex</span><span class="o">.</span><span class="n">values</span>
+    <span class="k">if</span> <span class="s1">&#39;xIsomipVertex&#39;</span> <span class="ow">in</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">xVertex</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">xIsomipVertex</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">yVertex</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">yIsomipVertex</span><span class="o">.</span><span class="n">values</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">xVertex</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">xVertex</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">yVertex</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">yVertex</span><span class="o">.</span><span class="n">values</span>
     <span class="k">for</span> <span class="n">iCell</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">mask</span><span class="p">[</span><span class="n">iCell</span><span class="p">]:</span>
             <span class="k">continue</span>
@@ -1038,8 +1054,12 @@
 
 
 <span class="k">def</span> <span class="nf">_compute_section_cell_indices</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">):</span>
-    <span class="n">xCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">xIsomipCell</span><span class="o">.</span><span class="n">values</span>
-    <span class="n">yCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">yIsomipCell</span><span class="o">.</span><span class="n">values</span>
+    <span class="k">if</span> <span class="s1">&#39;xIsomipCell&#39;</span> <span class="ow">in</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">xCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">xIsomipCell</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">yCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">yIsomipCell</span><span class="o">.</span><span class="n">values</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">xCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">xCell</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">yCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">yCell</span><span class="o">.</span><span class="n">values</span>
     <span class="n">xMin</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">xCell</span><span class="p">)</span>
     <span class="n">xMax</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">xCell</span><span class="p">)</span>
     <span class="n">xs</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>

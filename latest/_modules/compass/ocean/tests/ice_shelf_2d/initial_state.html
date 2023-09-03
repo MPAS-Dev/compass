@@ -113,7 +113,8 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.ice_shelf_2d.initial_state</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">xarray</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">xarray</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.mesh.conversion</span> <span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">cull</span>
@@ -186,9 +187,9 @@
         <span class="c1"># d variables are total water-column thickness below ice shelf</span>
         <span class="n">y1</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;y1&#39;</span><span class="p">)</span>
         <span class="n">y2</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;y2&#39;</span><span class="p">)</span>
-        <span class="n">y3</span> <span class="o">=</span> <span class="n">y2</span> <span class="o">+</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;edge_width&#39;</span><span class="p">)</span>
-        <span class="n">d1</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;cavity_thickness&#39;</span><span class="p">)</span>
-        <span class="n">d2</span> <span class="o">=</span> <span class="n">d1</span> <span class="o">+</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;slope_height&#39;</span><span class="p">)</span>
+        <span class="n">y3</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;y3&#39;</span><span class="p">)</span>
+        <span class="n">d1</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;y1_water_column_thickness&#39;</span><span class="p">)</span>
+        <span class="n">d2</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;y2_water_column_thickness&#39;</span><span class="p">)</span>
         <span class="n">d3</span> <span class="o">=</span> <span class="n">bottom_depth</span>
 
         <span class="n">ds</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -244,7 +245,14 @@
         <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIcePressure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIcePressure</span>
         <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceDraft&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIceDraft</span>
 
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;initial_state.nc&#39;</span><span class="p">)</span></div></div>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;initial_state.nc&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Generate the tidal forcing dataset whether it is used or not</span>
+        <span class="n">ds_forcing</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+        <span class="n">y_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">yCell</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">ds_forcing</span><span class="p">[</span><span class="s1">&#39;tidalInputMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+            <span class="n">ds</span><span class="o">.</span><span class="n">yCell</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">y_max</span> <span class="o">-</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="mf">5.0e3</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_forcing</span><span class="p">,</span> <span class="s1">&#39;init_mode_forcing_data.nc&#39;</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

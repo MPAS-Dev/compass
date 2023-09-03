@@ -113,7 +113,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.ice_shelf_2d.forward</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">run_model</span>
+<span></span><span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">run_model</span>
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
 
@@ -124,11 +126,16 @@
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    resolution : str</span>
-<span class="sd">        The resolution of the test case</span>
+<span class="sd">    resolution : float</span>
+<span class="sd">        The resolution of the test case in m</span>
+
+<span class="sd">    coord_type: str</span>
+<span class="sd">        The coordinate type (e.g., &#39;z-star&#39;, &#39;single_layer&#39;, etc.)</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="Forward.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ice_shelf_2d.forward.Forward.html#compass.ocean.tests.ice_shelf_2d.forward.Forward.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">with_frazil</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="Forward.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ice_shelf_2d.forward.Forward.html#compass.ocean.tests.ice_shelf_2d.forward.Forward.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">coord_type</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span>
+                 <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">with_frazil</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tidal_forcing</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new test case</span>
 
@@ -137,8 +144,11 @@
 <span class="sd">        test_case : compass.TestCase</span>
 <span class="sd">            The test case this step belongs to</span>
 
-<span class="sd">        resolution : str</span>
-<span class="sd">            The resolution of the test case</span>
+<span class="sd">        coord_type: str</span>
+<span class="sd">            The coordinate type (e.g., &#39;z-star&#39;, &#39;single_layer&#39;, etc.)</span>
+
+<span class="sd">        resolution : float</span>
+<span class="sd">            The resolution of the test case in m</span>
 
 <span class="sd">        name : str</span>
 <span class="sd">            the name of the test case</span>
@@ -173,6 +183,13 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.ice_shelf_2d&#39;</span><span class="p">,</span>
                                <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">coord_type</span> <span class="o">==</span> <span class="s1">&#39;single_layer&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
+                <span class="s1">&#39;compass.ocean.tests.ice_shelf_2d&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;namelist.single_layer.forward_and_ssh_adjust&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tidal_forcing</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.ice_shelf_2d&#39;</span><span class="p">,</span>
+                                   <span class="s1">&#39;namelist.tidal_forcing.forward&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">with_frazil</span><span class="p">:</span>
             <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_use_frazil_ice_formation&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
                        <span class="s1">&#39;config_frazil_maximum_depth&#39;</span><span class="p">:</span> <span class="s1">&#39;2000.0&#39;</span><span class="p">}</span>
@@ -186,6 +203,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.ice_shelf_2d&#39;</span><span class="p">,</span>
                               <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;forcing_data.nc&#39;</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;../initial_state/&#39;</span>
+                                    <span class="s1">&#39;init_mode_forcing_data.nc&#39;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
                             <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../ssh_adjustment/adjusted_init.nc&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
@@ -202,6 +222,11 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">dt_per_km</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;ice_shelf_2d&#39;</span><span class="p">,</span> <span class="s1">&#39;dt_per_km&#39;</span><span class="p">)</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">dt_per_km</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">/</span> <span class="mf">1.e3</span>
+        <span class="n">dt_str</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span><span class="p">(</span><span class="n">dt</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">({</span><span class="s1">&#39;config_dt&#39;</span><span class="p">:</span> <span class="n">dt_str</span><span class="p">})</span>
         <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
 </pre></div>
 
