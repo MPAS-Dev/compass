@@ -1,3 +1,5 @@
+import time
+
 from compass.model import run_model
 from compass.step import Step
 
@@ -9,11 +11,16 @@ class Forward(Step):
 
     Attributes
     ----------
-    resolution : str
-        The resolution of the test case
+    resolution : float
+        The resolution of the test case in m
+
+    coord_type: str
+        The coordinate type (e.g., 'z-star', 'single_layer', etc.)
+
     """
-    def __init__(self, test_case, resolution, name='forward', subdir=None,
-                 ntasks=1, min_tasks=None, openmp_threads=1, with_frazil=True):
+    def __init__(self, test_case, resolution, coord_type, name='forward',
+                 subdir=None, ntasks=1, min_tasks=None, openmp_threads=1,
+                 with_frazil=True, tidal_forcing=False):
         """
         Create a new test case
 
@@ -22,8 +29,11 @@ class Forward(Step):
         test_case : compass.TestCase
             The test case this step belongs to
 
-        resolution : str
-            The resolution of the test case
+        coord_type: str
+            The coordinate type (e.g., 'z-star', 'single_layer', etc.)
+
+        resolution : float
+            The resolution of the test case in m
 
         name : str
             the name of the test case
@@ -58,6 +68,13 @@ class Forward(Step):
 
         self.add_namelist_file('compass.ocean.tests.ice_shelf_2d',
                                'namelist.forward')
+        if coord_type == 'single_layer':
+            self.add_namelist_file(
+                'compass.ocean.tests.ice_shelf_2d',
+                'namelist.single_layer.forward_and_ssh_adjust')
+        if tidal_forcing:
+            self.add_namelist_file('compass.ocean.tests.ice_shelf_2d',
+                                   'namelist.tidal_forcing.forward')
         if with_frazil:
             options = {'config_use_frazil_ice_formation': '.true.',
                        'config_frazil_maximum_depth': '2000.0'}
@@ -71,6 +88,9 @@ class Forward(Step):
         self.add_streams_file('compass.ocean.tests.ice_shelf_2d',
                               'streams.forward')
 
+        self.add_input_file(filename='forcing_data.nc',
+                            target=('../initial_state/'
+                                    'init_mode_forcing_data.nc'))
         self.add_input_file(filename='init.nc',
                             target='../ssh_adjustment/adjusted_init.nc')
         self.add_input_file(filename='graph.info',
@@ -87,4 +107,9 @@ class Forward(Step):
         """
         Run this step of the test case
         """
+        config = self.config
+        dt_per_km = config.getfloat('ice_shelf_2d', 'dt_per_km')
+        dt = dt_per_km * self.resolution / 1.e3
+        dt_str = time.strftime('%H:%M:%S', time.gmtime(dt))
+        self.update_namelist_at_runtime({'config_dt': dt_str})
         run_model(self)

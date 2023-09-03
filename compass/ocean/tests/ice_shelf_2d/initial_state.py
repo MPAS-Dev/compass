@@ -1,3 +1,4 @@
+import numpy as np
 import xarray
 from mpas_tools.cime.constants import constants
 from mpas_tools.io import write_netcdf
@@ -71,9 +72,9 @@ class InitialState(Step):
         # d variables are total water-column thickness below ice shelf
         y1 = section.getfloat('y1')
         y2 = section.getfloat('y2')
-        y3 = y2 + section.getfloat('edge_width')
-        d1 = section.getfloat('cavity_thickness')
-        d2 = d1 + section.getfloat('slope_height')
+        y3 = section.getfloat('y3')
+        d1 = section.getfloat('y1_water_column_thickness')
+        d2 = section.getfloat('y2_water_column_thickness')
         d3 = bottom_depth
 
         ds = dsMesh.copy()
@@ -130,3 +131,10 @@ class InitialState(Step):
         ds['landIceDraft'] = landIceDraft
 
         write_netcdf(ds, 'initial_state.nc')
+
+        # Generate the tidal forcing dataset whether it is used or not
+        ds_forcing = xarray.Dataset()
+        y_max = np.max(ds.yCell.values)
+        ds_forcing['tidalInputMask'] = xarray.where(
+            ds.yCell > (y_max - 0.6 * 5.0e3), 1.0, 0.0)
+        write_netcdf(ds_forcing, 'init_mode_forcing_data.nc')

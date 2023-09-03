@@ -40,20 +40,26 @@ class RestartTest(TestCase):
         name = 'restart_test'
         self.resolution = resolution
         self.coord_type = coord_type
-        subdir = '{}/{}/{}'.format(resolution, coord_type, name)
+        if resolution >= 1e3:
+            res_name = f'{resolution / 1e3:g}km'
+        else:
+            res_name = f'{resolution:g}m'
+        subdir = f'{res_name}/{coord_type}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
         self.add_step(
             InitialState(test_case=self, resolution=resolution))
         self.add_step(
-            SshAdjustment(test_case=self, ntasks=4, openmp_threads=1))
+            SshAdjustment(test_case=self, resolution=resolution,
+                          coord_type=coord_type, ntasks=4,
+                          openmp_threads=1))
 
         for part in ['full', 'restart']:
             name = '{}_run'.format(part)
-            step = Forward(test_case=self, name=name, subdir=name, ntasks=4,
-                           openmp_threads=1, resolution=resolution,
-                           with_frazil=True)
+            step = Forward(test_case=self, name=name, subdir=name,
+                           coord_type=coord_type, ntasks=4, openmp_threads=1,
+                           resolution=resolution, with_frazil=True)
 
             step.add_namelist_file(
                 'compass.ocean.tests.ice_shelf_2d.restart_test',

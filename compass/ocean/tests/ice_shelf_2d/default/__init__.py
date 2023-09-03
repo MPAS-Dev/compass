@@ -15,14 +15,15 @@ class Default(TestCase):
 
     Attributes
     ----------
-    resolution : str
-        The horizontal resolution of the test case
+    resolution : float
+        The horizontal resolution of the test case in m
 
     coord_type : str
         The type of vertical coordinate (``z-star``, ``z-level``, etc.)
     """
 
-    def __init__(self, test_group, resolution, coord_type):
+    def __init__(self, test_group, resolution, coord_type,
+                 tidal_forcing=False):
         """
         Create the test case
 
@@ -38,19 +39,31 @@ class Default(TestCase):
             The type of vertical coordinate (``z-star``, ``z-level``, etc.)
         """
         name = 'default'
+        if tidal_forcing:
+            name = 'tidal_forcing'
+            with_frazil = False
+        else:
+            with_frazil = True
         self.resolution = resolution
         self.coord_type = coord_type
-        subdir = '{}/{}/{}'.format(resolution, coord_type, name)
+        if resolution >= 1e3:
+            res_name = f'{resolution / 1e3:g}km'
+        else:
+            res_name = f'{resolution:g}m'
+        subdir = f'{res_name}/{coord_type}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
         self.add_step(
             InitialState(test_case=self, resolution=resolution))
         self.add_step(
-            SshAdjustment(test_case=self, ntasks=4, openmp_threads=1))
+            SshAdjustment(test_case=self, coord_type=coord_type,
+                          resolution=resolution, ntasks=4, openmp_threads=1,
+                          tidal_forcing=tidal_forcing))
         self.add_step(
             Forward(test_case=self, ntasks=4, openmp_threads=1,
-                    resolution=resolution, with_frazil=True))
+                    coord_type=coord_type, resolution=resolution,
+                    with_frazil=with_frazil, tidal_forcing=tidal_forcing))
         self.add_step(Viz(test_case=self), run_by_default=False)
 
     def configure(self):

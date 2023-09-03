@@ -42,7 +42,7 @@ def compute_land_ice_pressure_and_draft(ssh, modify_mask, ref_density):
 
 
 def adjust_ssh(variable, iteration_count, step, update_pio=True,
-               convert_to_cdf5=False):
+               convert_to_cdf5=False, delta_ssh_threshold=None):
     """
     Adjust the sea surface height or land-ice pressure to be dynamically
     consistent with one another.  A series of short model runs are performed,
@@ -168,6 +168,7 @@ def adjust_ssh(variable, iteration_count, step, update_pio=True,
                 iCell = numpy.abs(deltaSSH.where(mask)).argmax().values
 
                 ds_cell = ds.isel(nCells=iCell)
+                deltaSSHMax = deltaSSH.isel(nCells=iCell).values
 
                 if on_a_sphere:
                     coords = (f'lon/lat: '
@@ -177,7 +178,7 @@ def adjust_ssh(variable, iteration_count, step, update_pio=True,
                     coords = (f'x/y: {1e-3 * ds_cell.xCell.values:f} '
                               f'{1e-3 * ds_cell.yCell.values:f}')
                 string = (f'deltaSSHMax: '
-                          f'{deltaSSH.isel(nCells=iCell).values:g}, {coords}')
+                          f'{deltaSSHMax:g}, {coords}')
                 logger.info(f'     {string}')
                 log_file.write(f'{string}\n')
                 string = (f'ssh: {finalSSH.isel(nCells=iCell).values:g}, '
@@ -185,6 +186,10 @@ def adjust_ssh(variable, iteration_count, step, update_pio=True,
                           f'{landIcePressure.isel(nCells=iCell).values:g}')
                 logger.info(f'     {string}')
                 log_file.write(f'{string}\n')
+
+                if delta_ssh_threshold is not None:
+                    if abs(deltaSSHMax) < delta_ssh_threshold:
+                        break
 
         logger.info("   - Complete\n")
 
