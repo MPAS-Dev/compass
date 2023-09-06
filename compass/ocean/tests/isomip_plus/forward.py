@@ -71,6 +71,7 @@ class Forward(Step):
         options = dict()
         if not thin_film_present:
             options = get_time_steps(resolution)
+            print(f'forward: dt = {options["config_dt"]}')
 
         if run_duration is not None:
             options['config_run_duration'] = run_duration
@@ -179,33 +180,39 @@ class Forward(Step):
             dsIce = xarray.open_dataset(
                 os.path.join(self.work_dir,
                              'land_ice_fluxes.nc'))
-            plotter.plot_horiz_series(
-                dsIce.topDragMagnitude,
-                'topDragMagnitude', 'topDragMagnitude', True,
-                vmin=0 + tol, vmax=np.max(dsIce.topDragMagnitude.values),
-                cmap_set_under='k')
-            plotter.plot_horiz_series(
-                dsIce.landIceHeatFlux,
-                'landIceHeatFlux', 'landIceHeatFlux', True,
-                vmin=np.min(dsIce.landIceHeatFlux.values),
-                vmax=np.max(dsIce.landIceHeatFlux.values))
-            plotter.plot_horiz_series(
-                dsIce.landIceInterfaceTemperature,
-                'landIceInterfaceTemperature', 'landIceInterfaceTemperature',
-                True,
-                vmin=np.min(dsIce.landIceInterfaceTemperature.values),
-                vmax=np.max(dsIce.landIceInterfaceTemperature.values))
-            plotter.plot_horiz_series(
-                dsIce.landIceFreshwaterFlux,
-                'landIceFreshwaterFlux', 'landIceFreshwaterFlux', True,
-                vmin=0 + tol, vmax=1e-4,
-                cmap_set_under='k', cmap_scale='log')
-            plotter.plot_horiz_series(
-                dsIce.landIceFraction,
-                'landIceFraction', 'landIceFraction', True,
-                vmin=0 + tol, vmax=1 - tol,
-                cmap='cmo.balance',
-                cmap_set_under='k', cmap_set_over='r')
+            if 'topDragMagnitude' in dsIce.keys():
+                plotter.plot_horiz_series(
+                    dsIce.topDragMagnitude,
+                    'topDragMagnitude', 'topDragMagnitude', True,
+                    vmin=0 + tol, vmax=np.max(dsIce.topDragMagnitude.values),
+                    cmap_set_under='k')
+            if 'landIceHeatFlux' in dsIce.keys():
+                plotter.plot_horiz_series(
+                    dsIce.landIceHeatFlux,
+                    'landIceHeatFlux', 'landIceHeatFlux', True,
+                    vmin=np.min(dsIce.landIceHeatFlux.values),
+                    vmax=np.max(dsIce.landIceHeatFlux.values))
+            if 'landIceInterfaceTemperature' in dsIce.keys():
+                plotter.plot_horiz_series(
+                    dsIce.landIceInterfaceTemperature,
+                    'landIceInterfaceTemperature',
+                    'landIceInterfaceTemperature',
+                    True,
+                    vmin=np.min(dsIce.landIceInterfaceTemperature.values),
+                    vmax=np.max(dsIce.landIceInterfaceTemperature.values))
+            if 'landIceFreshwaterFlux' in dsIce.keys():
+                plotter.plot_horiz_series(
+                    dsIce.landIceFreshwaterFlux,
+                    'landIceFreshwaterFlux', 'landIceFreshwaterFlux', True,
+                    vmin=0 + tol, vmax=1e-4,
+                    cmap_set_under='k', cmap_scale='log')
+            if 'landIceFraction' in dsIce.keys():
+                plotter.plot_horiz_series(
+                    dsIce.landIceFraction,
+                    'landIceFraction', 'landIceFraction', True,
+                    vmin=0 + tol, vmax=1 - tol,
+                    cmap='cmo.balance',
+                    cmap_set_under='k', cmap_set_over='r')
             if 'landIceFloatingFraction' in dsIce.keys():
                 plotter.plot_horiz_series(
                     dsIce.landIceFloatingFraction,
@@ -258,7 +265,6 @@ def get_time_steps(resolution):
     # https://stackoverflow.com/a/1384565/7728169
     # Note: this will drop any fractional seconds, which is usually okay
     dt = time.strftime('%H:%M:%S', time.gmtime(dt))
-
     btr_dt = time.strftime('%H:%M:%S', time.gmtime(btr_dt))
 
     return dict(config_dt="'{}'".format(dt),
