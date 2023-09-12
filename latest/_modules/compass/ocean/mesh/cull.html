@@ -269,6 +269,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">with_ice_shelf_cavities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
         <span class="c1"># only use progress bars if we&#39;re not writing to a log file</span>
         <span class="n">use_progress_bar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_filename</span> <span class="ow">is</span> <span class="kc">None</span>
@@ -276,11 +277,15 @@
         <span class="n">do_inject_bathymetry</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_inject_bathymetry</span>
         <span class="n">preserve_floodplain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preserve_floodplain</span>
 
+        <span class="n">convert_to_cdf5</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span>
+                                            <span class="s1">&#39;convert_culled_mesh_to_cdf5&#39;</span><span class="p">)</span>
+
         <span class="n">cull_mesh</span><span class="p">(</span><span class="n">with_critical_passages</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
                   <span class="n">use_progress_bar</span><span class="o">=</span><span class="n">use_progress_bar</span><span class="p">,</span>
                   <span class="n">preserve_floodplain</span><span class="o">=</span><span class="n">preserve_floodplain</span><span class="p">,</span>
                   <span class="n">with_cavities</span><span class="o">=</span><span class="n">with_ice_shelf_cavities</span><span class="p">,</span>
-                  <span class="n">process_count</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span><span class="p">)</span>
+                  <span class="n">process_count</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span><span class="p">,</span>
+                  <span class="n">convert_to_cdf5</span><span class="o">=</span><span class="n">convert_to_cdf5</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">do_inject_bathymetry</span><span class="p">:</span>
             <span class="n">inject_bathymetry</span><span class="p">(</span><span class="n">mesh_file</span><span class="o">=</span><span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">)</span></div></div>
@@ -289,7 +294,7 @@
 <div class="viewcode-block" id="cull_mesh"><a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.mesh.cull.cull_mesh.html#compass.ocean.mesh.cull.cull_mesh">[docs]</a><span class="k">def</span> <span class="nf">cull_mesh</span><span class="p">(</span><span class="n">with_cavities</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">with_critical_passages</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
               <span class="n">custom_critical_passages</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">custom_land_blockages</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
               <span class="n">preserve_floodplain</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_progress_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-              <span class="n">process_count</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+              <span class="n">process_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">convert_to_cdf5</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    First step of initializing the global ocean:</span>
 
@@ -350,18 +355,21 @@
 <span class="sd">    process_count : int, optional</span>
 <span class="sd">        The number of cores to use to create masks (``None`` to use all</span>
 <span class="sd">        available cores)</span>
+<span class="sd">    convert_to_cdf5 : bool, optional</span>
+<span class="sd">        Convert the culled mesh to PNetCDF CDF-5 format</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">LoggingContext</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span> <span class="k">as</span> <span class="n">logger</span><span class="p">:</span>
         <span class="n">_cull_mesh_with_logging</span><span class="p">(</span>
             <span class="n">logger</span><span class="p">,</span> <span class="n">with_cavities</span><span class="p">,</span> <span class="n">with_critical_passages</span><span class="p">,</span>
             <span class="n">custom_critical_passages</span><span class="p">,</span> <span class="n">custom_land_blockages</span><span class="p">,</span>
-            <span class="n">preserve_floodplain</span><span class="p">,</span> <span class="n">use_progress_bar</span><span class="p">,</span> <span class="n">process_count</span><span class="p">)</span></div>
+            <span class="n">preserve_floodplain</span><span class="p">,</span> <span class="n">use_progress_bar</span><span class="p">,</span> <span class="n">process_count</span><span class="p">,</span>
+            <span class="n">convert_to_cdf5</span><span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">_cull_mesh_with_logging</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">with_cavities</span><span class="p">,</span> <span class="n">with_critical_passages</span><span class="p">,</span>
                             <span class="n">custom_critical_passages</span><span class="p">,</span> <span class="n">custom_land_blockages</span><span class="p">,</span>
                             <span class="n">preserve_floodplain</span><span class="p">,</span> <span class="n">use_progress_bar</span><span class="p">,</span>
-                            <span class="n">process_count</span><span class="p">):</span>
+                            <span class="n">process_count</span><span class="p">,</span> <span class="n">convert_to_cdf5</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Cull the mesh once the logger is defined for sure &quot;&quot;&quot;</span>
 
     <span class="n">critical_passages</span> <span class="o">=</span> <span class="n">with_critical_passages</span> <span class="ow">or</span> \
@@ -425,7 +433,7 @@
                 <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;critical_blockages.nc&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;cell&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;10e3&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">process_count</span><span class="p">),</span>
+                <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">process_count</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
                 <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
@@ -455,7 +463,7 @@
                 <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;critical_passages.nc&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;cell&#39;</span><span class="p">,</span> <span class="s1">&#39;edge&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;10e3&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">process_count</span><span class="p">),</span>
+                <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">process_count</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
                 <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
@@ -487,7 +495,14 @@
     <span class="c1"># sort the cell, edge and vertex indices for better performances</span>
     <span class="n">dsCulledMesh</span> <span class="o">=</span> <span class="n">sort_mesh</span><span class="p">(</span><span class="n">dsCulledMesh</span><span class="p">)</span>
 
-    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsCulledMesh</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">)</span>
+    <span class="n">out_filename</span> <span class="o">=</span> <span class="s1">&#39;culled_mesh.nc&#39;</span>
+    <span class="k">if</span> <span class="n">convert_to_cdf5</span><span class="p">:</span>
+        <span class="n">write_filename</span> <span class="o">=</span> <span class="s1">&#39;culled_mesh_before_cdf5.nc&#39;</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsCulledMesh</span><span class="p">,</span> <span class="n">write_filename</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ncks&#39;</span><span class="p">,</span> <span class="s1">&#39;-5&#39;</span><span class="p">,</span> <span class="n">write_filename</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">]</span>
+        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsCulledMesh</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">)</span>
 
     <span class="c1"># we need to make the graph file after sorting</span>
     <span class="n">make_graph_file</span><span class="p">(</span><span class="n">mesh_filename</span><span class="o">=</span><span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">,</span>
@@ -502,7 +517,7 @@
                 <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;critical_passages_mask_final.nc&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;cell&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;10e3&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">process_count</span><span class="p">),</span>
+                <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">process_count</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
                 <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
