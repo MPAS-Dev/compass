@@ -155,6 +155,7 @@ class CullMeshStep(Step):
         """
         with_ice_shelf_cavities = self.with_ice_shelf_cavities
         logger = self.logger
+        config = self.config
 
         # only use progress bars if we're not writing to a log file
         use_progress_bar = self.log_filename is None
@@ -162,11 +163,15 @@ class CullMeshStep(Step):
         do_inject_bathymetry = self.do_inject_bathymetry
         preserve_floodplain = self.preserve_floodplain
 
+        convert_to_cdf5 = config.getboolean('spherical_mesh',
+                                            'convert_culled_mesh_to_cdf5')
+
         cull_mesh(with_critical_passages=True, logger=logger,
                   use_progress_bar=use_progress_bar,
                   preserve_floodplain=preserve_floodplain,
                   with_cavities=with_ice_shelf_cavities,
-                  process_count=self.cpus_per_task)
+                  process_count=self.cpus_per_task,
+                  convert_to_cdf5=convert_to_cdf5)
 
         if do_inject_bathymetry:
             inject_bathymetry(mesh_file='culled_mesh.nc')
@@ -175,7 +180,7 @@ class CullMeshStep(Step):
 def cull_mesh(with_cavities=False, with_critical_passages=False,
               custom_critical_passages=None, custom_land_blockages=None,
               preserve_floodplain=False, logger=None, use_progress_bar=True,
-              process_count=1):
+              process_count=1, convert_to_cdf5=False):
     """
     First step of initializing the global ocean:
 
@@ -236,18 +241,21 @@ def cull_mesh(with_cavities=False, with_critical_passages=False,
     process_count : int, optional
         The number of cores to use to create masks (``None`` to use all
         available cores)
+    convert_to_cdf5 : bool, optional
+        Convert the culled mesh to PNetCDF CDF-5 format
     """
     with LoggingContext(name=__name__, logger=logger) as logger:
         _cull_mesh_with_logging(
             logger, with_cavities, with_critical_passages,
             custom_critical_passages, custom_land_blockages,
-            preserve_floodplain, use_progress_bar, process_count)
+            preserve_floodplain, use_progress_bar, process_count,
+            convert_to_cdf5)
 
 
 def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
                             custom_critical_passages, custom_land_blockages,
                             preserve_floodplain, use_progress_bar,
-                            process_count):
+                            process_count, convert_to_cdf5):
     """ Cull the mesh once the logger is defined for sure """
 
     critical_passages = with_critical_passages or \
@@ -311,7 +319,7 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
                 '-o', 'critical_blockages.nc',
                 '-t', 'cell',
                 '-s', '10e3',
-                '--process_count', '{}'.format(process_count),
+                '--process_count', f'{process_count}',
                 '--format', netcdf_format,
                 '--engine', netcdf_engine]
         check_call(args, logger=logger)
@@ -341,7 +349,7 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
                 '-o', 'critical_passages.nc',
                 '-t', 'cell', 'edge',
                 '-s', '10e3',
-                '--process_count', '{}'.format(process_count),
+                '--process_count', f'{process_count}',
                 '--format', netcdf_format,
                 '--engine', netcdf_engine]
         check_call(args, logger=logger)
@@ -373,7 +381,14 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
     # sort the cell, edge and vertex indices for better performances
     dsCulledMesh = sort_mesh(dsCulledMesh)
 
-    write_netcdf(dsCulledMesh, 'culled_mesh.nc')
+    out_filename = 'culled_mesh.nc'
+    if convert_to_cdf5:
+        write_filename = 'culled_mesh_before_cdf5.nc'
+        write_netcdf(dsCulledMesh, write_filename)
+        args = ['ncks', '-5', write_filename, out_filename]
+        check_call(args, logger=logger)
+    else:
+        write_netcdf(dsCulledMesh, out_filename)
 
     # we need to make the graph file after sorting
     make_graph_file(mesh_filename='culled_mesh.nc',
@@ -388,7 +403,7 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
                 '-o', 'critical_passages_mask_final.nc',
                 '-t', 'cell',
                 '-s', '10e3',
-                '--process_count', '{}'.format(process_count),
+                '--process_count', f'{process_count}',
                 '--format', netcdf_format,
                 '--engine', netcdf_engine]
         check_call(args, logger=logger)
