@@ -154,15 +154,15 @@ class Forward(Step):
         btr_dt = time.strftime(
             '%H:%M:%S', time.gmtime(dt_btr_per_km * resolution))
 
-        options = dict(config_dt="'{}'".format(dt),
-                       config_btr_dt="'{}'".format(btr_dt))
+        options = dict(config_dt=f"'{dt}'",
+                       config_btr_dt=f"'{btr_dt}'")
         self.update_namelist_at_runtime(options)
 
         run_model(self)
 
         if self.name == 'performance':
             # plot a few fields
-            plot_folder = '{}/plots'.format(self.work_dir)
+            plot_folder = f'{self.work_dir}/plots'
             if os.path.exists(plot_folder):
                 shutil.rmtree(plot_folder)
 
