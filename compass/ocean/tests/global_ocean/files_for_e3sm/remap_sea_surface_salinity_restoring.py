@@ -2,7 +2,7 @@ import os
 
 import xarray as xr
 from mpas_tools.io import write_netcdf
-from pyremap import LatLonGridDescriptor, MpasMeshDescriptor, Remapper
+from pyremap import LatLonGridDescriptor, MpasCellMeshDescriptor, Remapper
 
 from compass.io import symlink
 from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step import (  # noqa: E501
@@ -111,7 +111,7 @@ def remap_sss(in_filename, mesh_filename, mesh_name, out_filename, logger,
     src_descriptor = LatLonGridDescriptor.read(fileName=in_filename)
     src_mesh_name = src_descriptor.meshName
 
-    dst_descriptor = MpasMeshDescriptor(mesh_filename, mesh_name)
+    dst_descriptor = MpasCellMeshDescriptor(mesh_filename, mesh_name)
 
     mapping_filename = \
         f'{mapping_directory}/map_{src_mesh_name}_to_{mesh_name}_{method}.nc'
