@@ -28,6 +28,9 @@ class IsomipPlusTest(TestCase):
     vertical_coordinate : str
             The type of vertical coordinate (``z-star``, ``z-level``, etc.)
 
+    tidal_forcing: bool
+        Whether the case has tidal forcing
+
     time_varying_forcing : bool
         Whether the run includes time-varying land-ice forcing
 
@@ -270,7 +273,7 @@ class IsomipPlusTest(TestCase):
                 # default to 10 vertical levels instead of 36
                 config.set('vertical_grid', 'vert_levels', '10')
 
-        get_time_steps(config, resolution, thin_film_present, tidal_forcing)
+        _get_time_steps(config, resolution, thin_film_present, tidal_forcing)
 
     def validate(self):
         """
@@ -295,15 +298,7 @@ class IsomipPlusTest(TestCase):
                           filename1='performance/land_ice_fluxes.nc')
 
 
-def get_time_steps(config, resolution, thin_film_present, tidal_forcing):
-    """
-    Get the time step namelist replacements for the resolution
-
-    Parameters
-    ----------
-    resolution : float
-        The resolution in km
-    """
+def _get_time_steps(config, resolution, thin_film_present, tidal_forcing):
 
     dt_per_km = 120.
     if tidal_forcing or thin_film_present:
