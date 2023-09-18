@@ -98,6 +98,9 @@ for qoi in qoi_info:
     qoi_info[qoi]['values'] = np.zeros((nRuns,)) * np.nan
     qoi_info[qoi]['obs'] = None
 
+final_time = np.zeros((nRuns,)) * np.nan
+run_nums = np.ones((nRuns,), dtype=int) * -1
+
 # Get ensemble-wide information
 basin = None
 ens_cfg = configparser.ConfigParser()
@@ -267,6 +270,8 @@ for idx, run in enumerate(runs):
     print(f'Analyzing {run}')
     n_dirs += 1
 
+    run_nums[idx] = int(run[3:])
+
     # get param values for this run
     run_cfg = configparser.ConfigParser()
     run_cfg.read(os.path.join(run, 'run_info.cfg'))
@@ -285,6 +290,8 @@ for idx, run in enumerate(runs):
         n_with_output += 1
         f = netCDF4.Dataset(fpath, 'r')
         years = f.variables['daysSinceStart'][:] / 365.0
+
+        final_time[idx] = years[-1]
 
         VAF = f.variables['volumeAboveFloatation'][:] / \
             (1.0e12 / rhoi)  # in Gt
@@ -491,6 +498,35 @@ if plot_time_series:
                              'b:')
             ax_ts_grvol.plot([0, target_year], [0, max_val * target_year],
                              'b:')
+
+# --------------
+# run duration plots
+# --------------
+
+fig_duration = plt.figure(99, figsize=(8, 8), facecolor='w')
+nrow = 3
+ncol = 1
+
+ax_yr_histo = fig_duration.add_subplot(nrow, ncol, 1)
+plt.hist(final_time, bins=np.arange(final_time.min(), final_time.max() + 1))
+plt.xlabel('final simulated year')
+plt.ylabel('count')
+plt.grid()
+
+ax_yr_histo_cum = fig_duration.add_subplot(nrow, ncol, 2)
+plt.hist(final_time, bins=np.arange(final_time.min(), final_time.max() + 1),
+         cumulative=True)
+plt.xlabel('final simulated year')
+plt.ylabel('cumulative count')
+plt.grid()
+
+ax_yr_by_run = fig_duration.add_subplot(nrow, ncol, 3)
+plt.bar(run_nums, final_time, width=0.9)
+plt.xlabel('run number')
+plt.ylabel('final simulated year')
+plt.grid(axis='y')
+
+fig_duration.tight_layout()
 
 # --------------
 # single parameter plots
