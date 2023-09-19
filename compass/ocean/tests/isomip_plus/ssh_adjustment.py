@@ -1,5 +1,6 @@
+import time
+
 from compass.ocean.iceshelf import adjust_ssh
-from compass.ocean.tests.isomip_plus.forward import get_time_steps
 from compass.step import Step
 
 
@@ -25,6 +26,8 @@ class SshAdjustment(Step):
                          ntasks=None, min_tasks=None,
                          openmp_threads=None)
 
+        self.resolution = resolution
+
         # generate the namelist, replacing a few default options
         # start with the same namelist settings as the forward run
         self.add_namelist_file('compass.ocean.tests.isomip_plus',
@@ -39,8 +42,6 @@ class SshAdjustment(Step):
 
         # we don't want the global stats AM for this run
         options = dict()
-        if not thin_film_present:
-            options = get_time_steps(resolution)
         options['config_AM_globalStats_enable'] = '.false.'
         self.add_namelist_options(options)
 
@@ -80,6 +81,21 @@ class SshAdjustment(Step):
         Run this step of the test case
         """
         config = self.config
+        resolution = self.resolution
+
+        dt_per_km = config.getfloat('isomip_plus', 'dt_per_km')
+        dt_btr_per_km = config.getfloat('isomip_plus', 'dt_btr_per_km')
+
+        # https://stackoverflow.com/a/1384565/7728169
+        # Note: this will drop any fractional seconds, which is usually okay
+        dt = time.strftime('%H:%M:%S', time.gmtime(dt_per_km * resolution))
+        btr_dt = time.strftime(
+            '%H:%M:%S', time.gmtime(dt_btr_per_km * resolution))
+
+        options = dict(config_dt="'{}'".format(dt),
+                       config_btr_dt="'{}'".format(btr_dt))
+        self.update_namelist_at_runtime(options)
+
         iteration_count = config.getint('ssh_adjustment', 'iterations')
         adjust_ssh(variable='landIcePressure', iteration_count=iteration_count,
                    step=self)

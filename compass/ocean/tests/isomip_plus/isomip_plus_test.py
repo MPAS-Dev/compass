@@ -28,6 +28,9 @@ class IsomipPlusTest(TestCase):
     vertical_coordinate : str
             The type of vertical coordinate (``z-star``, ``z-level``, etc.)
 
+    tidal_forcing: bool
+        Whether the case has tidal forcing
+
     time_varying_forcing : bool
         Whether the run includes time-varying land-ice forcing
 
@@ -98,6 +101,7 @@ class IsomipPlusTest(TestCase):
         self.time_varying_forcing = time_varying_forcing
         self.time_varying_load = time_varying_load
         self.thin_film_present = thin_film_present
+        self.tidal_forcing = tidal_forcing
         self.planar = planar
 
         if resolution == int(resolution):
@@ -195,6 +199,8 @@ class IsomipPlusTest(TestCase):
         vertical_coordinate = self.vertical_coordinate
         thin_film_present = self.thin_film_present
         time_varying_load = self.time_varying_load
+        tidal_forcing = self.tidal_forcing
+
         config = self.config
         experiment = self.experiment
         planar = self.planar
@@ -267,6 +273,8 @@ class IsomipPlusTest(TestCase):
                 # default to 10 vertical levels instead of 36
                 config.set('vertical_grid', 'vert_levels', '10')
 
+        _get_time_steps(config, resolution, thin_film_present, tidal_forcing)
+
     def validate(self):
         """
         Perform validation of variables
@@ -288,3 +296,16 @@ class IsomipPlusTest(TestCase):
              'accumulatedLandIceMass', 'accumulatedLandIceHeat']
         compare_variables(test_case=self, variables=variables,
                           filename1='performance/land_ice_fluxes.nc')
+
+
+def _get_time_steps(config, resolution, thin_film_present, tidal_forcing):
+
+    dt_per_km = 120.
+    if tidal_forcing or thin_film_present:
+        dt_per_km = min(dt_per_km, 10.)
+    config.set('isomip_plus', 'dt_per_km', f'{dt_per_km}')
+
+    dt_btr_per_km = min(dt_per_km / 5., 5.)
+    config.set('isomip_plus', 'dt_btr_per_km', f'{dt_btr_per_km}')
+
+    return

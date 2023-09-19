@@ -153,8 +153,8 @@ class FilesForE3sm(Step):
         ncells = sum(1 for _ in open(graph_filename))
         min_graph_size = int(ncells / 6000)
         max_graph_size = int(ncells / 100)
-        logger.info('Creating graph files between {} and {}'.format(
-            min_graph_size, max_graph_size))
+        logger.info(f'Creating graph files between {min_graph_size} and '
+                    f'{max_graph_size}')
         n_power2 = 2**np.arange(1, 21)
         n_multiples12 = 12 * np.arange(1, 9)
 

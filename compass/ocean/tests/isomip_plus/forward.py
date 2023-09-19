@@ -69,9 +69,6 @@ class Forward(Step):
                                'namelist.forward')
 
         options = dict()
-        if not thin_film_present:
-            options = get_time_steps(resolution)
-
         if run_duration is not None:
             options['config_run_duration'] = run_duration
 
@@ -145,11 +142,27 @@ class Forward(Step):
         """
         Run this step of the test case
         """
+        config = self.config
+        resolution = self.resolution
+
+        dt_per_km = config.getfloat('isomip_plus', 'dt_per_km')
+        dt_btr_per_km = config.getfloat('isomip_plus', 'dt_btr_per_km')
+
+        # https://stackoverflow.com/a/1384565/7728169
+        # Note: this will drop any fractional seconds, which is usually okay
+        dt = time.strftime('%H:%M:%S', time.gmtime(dt_per_km * resolution))
+        btr_dt = time.strftime(
+            '%H:%M:%S', time.gmtime(dt_btr_per_km * resolution))
+
+        options = dict(config_dt=f"'{dt}'",
+                       config_btr_dt=f"'{btr_dt}'")
+        self.update_namelist_at_runtime(options)
+
         run_model(self)
 
         if self.name == 'performance':
             # plot a few fields
-            plot_folder = '{}/plots'.format(self.work_dir)
+            plot_folder = f'{self.work_dir}/plots'
             if os.path.exists(plot_folder):
                 shutil.rmtree(plot_folder)
 
@@ -179,33 +192,39 @@ class Forward(Step):
             dsIce = xarray.open_dataset(
                 os.path.join(self.work_dir,
                              'land_ice_fluxes.nc'))
-            plotter.plot_horiz_series(
-                dsIce.topDragMagnitude,
-                'topDragMagnitude', 'topDragMagnitude', True,
-                vmin=0 + tol, vmax=np.max(dsIce.topDragMagnitude.values),
-                cmap_set_under='k')
-            plotter.plot_horiz_series(
-                dsIce.landIceHeatFlux,
-                'landIceHeatFlux', 'landIceHeatFlux', True,
-                vmin=np.min(dsIce.landIceHeatFlux.values),
-                vmax=np.max(dsIce.landIceHeatFlux.values))
-            plotter.plot_horiz_series(
-                dsIce.landIceInterfaceTemperature,
-                'landIceInterfaceTemperature', 'landIceInterfaceTemperature',
-                True,
-                vmin=np.min(dsIce.landIceInterfaceTemperature.values),
-                vmax=np.max(dsIce.landIceInterfaceTemperature.values))
-            plotter.plot_horiz_series(
-                dsIce.landIceFreshwaterFlux,
-                'landIceFreshwaterFlux', 'landIceFreshwaterFlux', True,
-                vmin=0 + tol, vmax=1e-4,
-                cmap_set_under='k', cmap_scale='log')
-            plotter.plot_horiz_series(
-                dsIce.landIceFraction,
-                'landIceFraction', 'landIceFraction', True,
-                vmin=0 + tol, vmax=1 - tol,
-                cmap='cmo.balance',
-                cmap_set_under='k', cmap_set_over='r')
+            if 'topDragMagnitude' in dsIce.keys():
+                plotter.plot_horiz_series(
+                    dsIce.topDragMagnitude,
+                    'topDragMagnitude', 'topDragMagnitude', True,
+                    vmin=0 + tol, vmax=np.max(dsIce.topDragMagnitude.values),
+                    cmap_set_under='k')
+            if 'landIceHeatFlux' in dsIce.keys():
+                plotter.plot_horiz_series(
+                    dsIce.landIceHeatFlux,
+                    'landIceHeatFlux', 'landIceHeatFlux', True,
+                    vmin=np.min(dsIce.landIceHeatFlux.values),
+                    vmax=np.max(dsIce.landIceHeatFlux.values))
+            if 'landIceInterfaceTemperature' in dsIce.keys():
+                plotter.plot_horiz_series(
+                    dsIce.landIceInterfaceTemperature,
+                    'landIceInterfaceTemperature',
+                    'landIceInterfaceTemperature',
+                    True,
+                    vmin=np.min(dsIce.landIceInterfaceTemperature.values),
+                    vmax=np.max(dsIce.landIceInterfaceTemperature.values))
+            if 'landIceFreshwaterFlux' in dsIce.keys():
+                plotter.plot_horiz_series(
+                    dsIce.landIceFreshwaterFlux,
+                    'landIceFreshwaterFlux', 'landIceFreshwaterFlux', True,
+                    vmin=0 + tol, vmax=1e-4,
+                    cmap_set_under='k', cmap_scale='log')
+            if 'landIceFraction' in dsIce.keys():
+                plotter.plot_horiz_series(
+                    dsIce.landIceFraction,
+                    'landIceFraction', 'landIceFraction', True,
+                    vmin=0 + tol, vmax=1 - tol,
+                    cmap='cmo.balance',
+                    cmap_set_under='k', cmap_set_over='r')
             if 'landIceFloatingFraction' in dsIce.keys():
                 plotter.plot_horiz_series(
                     dsIce.landIceFloatingFraction,
@@ -232,34 +251,3 @@ class Forward(Step):
         self.ntasks = config.getint('isomip_plus', 'forward_ntasks')
         self.min_tasks = config.getint('isomip_plus', 'forward_min_tasks')
         self.openmp_threads = config.getint('isomip_plus', 'forward_threads')
-
-
-def get_time_steps(resolution):
-    """
-    Get the time step namelist replacements for the resolution
-
-    Parameters
-    ----------
-    resolution : float
-        The resolution in km
-
-    Returns
-    -------
-    options : dict
-        A dictionary with replacements for ``config_dt`` and ``config_brt_dt``
-    """
-
-    # 4 minutes at 2 km, and proportional to resolution
-    dt = 2. * 60 * resolution
-
-    # 10 sec at 2 km, and proportional to resolution
-    btr_dt = 5. * resolution
-
-    # https://stackoverflow.com/a/1384565/7728169
-    # Note: this will drop any fractional seconds, which is usually okay
-    dt = time.strftime('%H:%M:%S', time.gmtime(dt))
-
-    btr_dt = time.strftime('%H:%M:%S', time.gmtime(btr_dt))
-
-    return dict(config_dt="'{}'".format(dt),
-                config_btr_dt="'{}'".format(btr_dt))
