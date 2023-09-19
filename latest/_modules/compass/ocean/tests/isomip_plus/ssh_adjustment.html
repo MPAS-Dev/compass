@@ -113,8 +113,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.isomip_plus.ssh_adjustment</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.ocean.iceshelf</span> <span class="kn">import</span> <span class="n">adjust_ssh</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.forward</span> <span class="kn">import</span> <span class="n">get_time_steps</span>
+<span></span><span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">from</span> <span class="nn">compass.ocean.iceshelf</span> <span class="kn">import</span> <span class="n">adjust_ssh</span>
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
 
@@ -140,6 +141,8 @@
                          <span class="n">ntasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                          <span class="n">openmp_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
+
         <span class="c1"># generate the namelist, replacing a few default options</span>
         <span class="c1"># start with the same namelist settings as the forward run</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.isomip_plus&#39;</span><span class="p">,</span>
@@ -154,8 +157,6 @@
 
         <span class="c1"># we don&#39;t want the global stats AM for this run</span>
         <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">thin_film_present</span><span class="p">:</span>
-            <span class="n">options</span> <span class="o">=</span> <span class="n">get_time_steps</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span>
         <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_AM_globalStats_enable&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;.false.&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
 
@@ -195,6 +196,21 @@
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span>
+
+        <span class="n">dt_per_km</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;dt_per_km&#39;</span><span class="p">)</span>
+        <span class="n">dt_btr_per_km</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;dt_btr_per_km&#39;</span><span class="p">)</span>
+
+        <span class="c1"># https://stackoverflow.com/a/1384565/7728169</span>
+        <span class="c1"># Note: this will drop any fractional seconds, which is usually okay</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span><span class="p">(</span><span class="n">dt_per_km</span> <span class="o">*</span> <span class="n">resolution</span><span class="p">))</span>
+        <span class="n">btr_dt</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span>
+            <span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span><span class="p">(</span><span class="n">dt_btr_per_km</span> <span class="o">*</span> <span class="n">resolution</span><span class="p">))</span>
+
+        <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config_dt</span><span class="o">=</span><span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dt</span><span class="p">),</span>
+                       <span class="n">config_btr_dt</span><span class="o">=</span><span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">btr_dt</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+
         <span class="n">iteration_count</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ssh_adjustment&#39;</span><span class="p">,</span> <span class="s1">&#39;iterations&#39;</span><span class="p">)</span>
         <span class="n">adjust_ssh</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;landIcePressure&#39;</span><span class="p">,</span> <span class="n">iteration_count</span><span class="o">=</span><span class="n">iteration_count</span><span class="p">,</span>
                    <span class="n">step</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>

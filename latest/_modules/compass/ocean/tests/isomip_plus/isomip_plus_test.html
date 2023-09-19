@@ -143,6 +143,9 @@
 <span class="sd">    vertical_coordinate : str</span>
 <span class="sd">            The type of vertical coordinate (``z-star``, ``z-level``, etc.)</span>
 
+<span class="sd">    tidal_forcing: bool</span>
+<span class="sd">        Whether the case has tidal forcing</span>
+
 <span class="sd">    time_varying_forcing : bool</span>
 <span class="sd">        Whether the run includes time-varying land-ice forcing</span>
 
@@ -213,6 +216,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">time_varying_forcing</span> <span class="o">=</span> <span class="n">time_varying_forcing</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time_varying_load</span> <span class="o">=</span> <span class="n">time_varying_load</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">thin_film_present</span> <span class="o">=</span> <span class="n">thin_film_present</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tidal_forcing</span> <span class="o">=</span> <span class="n">tidal_forcing</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">planar</span> <span class="o">=</span> <span class="n">planar</span>
 
         <span class="k">if</span> <span class="n">resolution</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="p">):</span>
@@ -310,6 +314,8 @@
         <span class="n">vertical_coordinate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertical_coordinate</span>
         <span class="n">thin_film_present</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thin_film_present</span>
         <span class="n">time_varying_load</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_varying_load</span>
+        <span class="n">tidal_forcing</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tidal_forcing</span>
+
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">experiment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment</span>
         <span class="n">planar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">planar</span>
@@ -380,7 +386,9 @@
                 <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;vert_levels&#39;</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># default to 10 vertical levels instead of 36</span>
-                <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;vert_levels&#39;</span><span class="p">,</span> <span class="s1">&#39;10&#39;</span><span class="p">)</span></div>
+                <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;vert_levels&#39;</span><span class="p">,</span> <span class="s1">&#39;10&#39;</span><span class="p">)</span>
+
+        <span class="n">_get_time_steps</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">thin_film_present</span><span class="p">,</span> <span class="n">tidal_forcing</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -403,6 +411,19 @@
              <span class="s1">&#39;accumulatedLandIceMass&#39;</span><span class="p">,</span> <span class="s1">&#39;accumulatedLandIceHeat&#39;</span><span class="p">]</span>
         <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
                           <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;performance/land_ice_fluxes.nc&#39;</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_time_steps</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">thin_film_present</span><span class="p">,</span> <span class="n">tidal_forcing</span><span class="p">):</span>
+
+    <span class="n">dt_per_km</span> <span class="o">=</span> <span class="mf">120.</span>
+    <span class="k">if</span> <span class="n">tidal_forcing</span> <span class="ow">or</span> <span class="n">thin_film_present</span><span class="p">:</span>
+        <span class="n">dt_per_km</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dt_per_km</span><span class="p">,</span> <span class="mf">10.</span><span class="p">)</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;dt_per_km&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dt_per_km</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">dt_btr_per_km</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dt_per_km</span> <span class="o">/</span> <span class="mf">5.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">)</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;dt_btr_per_km&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dt_btr_per_km</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span>
 </pre></div>
 
            </div>
