@@ -5,7 +5,7 @@ import numpy as np
 import xarray as xr
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
-from pyremap import MpasMeshDescriptor, Remapper
+from pyremap import MpasCellMeshDescriptor, Remapper
 
 from compass.io import symlink
 from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step import (  # noqa: E501
@@ -154,8 +154,8 @@ def _make_mapping_file(in_mesh_filename, in_mesh_name, out_mesh_filename,
 
     mapping_file_name = f'map_{in_mesh_name}_to_{out_mesh_name}_{method}.nc'
 
-    in_descriptor = MpasMeshDescriptor(in_mesh_filename, in_mesh_name)
-    out_descriptor = MpasMeshDescriptor(out_mesh_filename, out_mesh_name)
+    in_descriptor = MpasCellMeshDescriptor(in_mesh_filename, in_mesh_name)
+    out_descriptor = MpasCellMeshDescriptor(out_mesh_filename, out_mesh_name)
 
     remapper = Remapper(in_descriptor, out_descriptor, mapping_file_name)
 

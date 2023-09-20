@@ -2,7 +2,7 @@ import os
 
 import xarray as xr
 from mpas_tools.io import write_netcdf
-from pyremap import LatLonGridDescriptor, MpasMeshDescriptor, Remapper
+from pyremap import LatLonGridDescriptor, MpasCellMeshDescriptor, Remapper
 
 from compass.step import Step
 
@@ -108,8 +108,8 @@ class RemapTopography(Step):
         in_mesh_name = in_descriptor.meshName
 
         out_mesh_name = self.mesh_name
-        out_descriptor = MpasMeshDescriptor(fileName='base_mesh.nc',
-                                            meshName=self.mesh_name)
+        out_descriptor = MpasCellMeshDescriptor(fileName='base_mesh.nc',
+                                                meshName=self.mesh_name)
 
         mapping_file_name = \
             f'map_{in_mesh_name}_to_{out_mesh_name}_{method}.nc'
