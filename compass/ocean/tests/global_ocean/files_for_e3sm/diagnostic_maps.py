@@ -4,8 +4,7 @@ import os
 import numpy
 import pyproj
 from pyremap import (
-    MpasCellMeshDescriptor,
-    MpasVertexMeshDescriptor,
+    MpasMeshDescriptor,
     ProjectionGridDescriptor,
     Remapper,
     get_lat_lon_descriptor,
@@ -206,7 +205,7 @@ def _make_mapping_file(mesh_name, out_grid_name, mesh_filename, out_descriptor,
 
     parallel_executable = config.get('parallel', 'parallel_executable')
 
-    in_descriptor = MpasCellMeshDescriptor(mesh_filename, mesh_name)
+    in_descriptor = MpasMeshDescriptor(mesh_filename, mesh_name)
 
     mapping_file_name = f'map_{mesh_name}_to_{out_grid_name}_bilinear.nc'
 
@@ -217,7 +216,7 @@ def _make_mapping_file(mesh_name, out_grid_name, mesh_filename, out_descriptor,
                                 esmf_parallel_exec=parallel_executable)
 
     # now the same on vertices (e.g. for streamfunctions)
-    in_descriptor = MpasVertexMeshDescriptor(mesh_filename, mesh_name)
+    in_descriptor = MpasMeshDescriptor(mesh_filename, mesh_name, vertices=True)
     mapping_file_name = \
         f'map_{mesh_name}_vertices_to_{out_grid_name}_bilinear.nc'
 
