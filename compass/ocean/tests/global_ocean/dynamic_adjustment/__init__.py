@@ -206,7 +206,8 @@ class DynamicAdjustment(ForwardTestCase):
         if previous_restart_filename is not None:
             step.add_input_file(filename=f'../{previous_restart_filename}')
         step.add_output_file(filename=f'../{restart_filename}')
-        step.add_output_file(filename='output.nc')
+        if step_name == 'simulation':
+            step.add_output_file(filename='output.nc')
 
         self.add_step(step)
 
