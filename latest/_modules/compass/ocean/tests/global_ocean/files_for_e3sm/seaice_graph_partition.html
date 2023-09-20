@@ -121,7 +121,7 @@
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
-<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">,</span> <span class="n">Remapper</span>
+<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">MpasMeshDescriptor</span><span class="p">,</span> <span class="n">Remapper</span>
 
 <span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
@@ -270,8 +270,8 @@
 
     <span class="n">mapping_file_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;map_</span><span class="si">{</span><span class="n">in_mesh_name</span><span class="si">}</span><span class="s1">_to_</span><span class="si">{</span><span class="n">out_mesh_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">.nc&#39;</span>
 
-    <span class="n">in_descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span><span class="n">in_mesh_filename</span><span class="p">,</span> <span class="n">in_mesh_name</span><span class="p">)</span>
-    <span class="n">out_descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span><span class="n">out_mesh_filename</span><span class="p">,</span> <span class="n">out_mesh_name</span><span class="p">)</span>
+    <span class="n">in_descriptor</span> <span class="o">=</span> <span class="n">MpasMeshDescriptor</span><span class="p">(</span><span class="n">in_mesh_filename</span><span class="p">,</span> <span class="n">in_mesh_name</span><span class="p">)</span>
+    <span class="n">out_descriptor</span> <span class="o">=</span> <span class="n">MpasMeshDescriptor</span><span class="p">(</span><span class="n">out_mesh_filename</span><span class="p">,</span> <span class="n">out_mesh_name</span><span class="p">)</span>
 
     <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span><span class="n">in_descriptor</span><span class="p">,</span> <span class="n">out_descriptor</span><span class="p">,</span> <span class="n">mapping_file_name</span><span class="p">)</span>
 

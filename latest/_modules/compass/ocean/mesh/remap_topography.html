@@ -116,7 +116,7 @@
 
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
-<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">LatLonGridDescriptor</span><span class="p">,</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">,</span> <span class="n">Remapper</span>
+<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">LatLonGridDescriptor</span><span class="p">,</span> <span class="n">MpasMeshDescriptor</span><span class="p">,</span> <span class="n">Remapper</span>
 
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
@@ -222,8 +222,8 @@
         <span class="n">in_mesh_name</span> <span class="o">=</span> <span class="n">in_descriptor</span><span class="o">.</span><span class="n">meshName</span>
 
         <span class="n">out_mesh_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_name</span>
-        <span class="n">out_descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span>
-                                                <span class="n">meshName</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_name</span><span class="p">)</span>
+        <span class="n">out_descriptor</span> <span class="o">=</span> <span class="n">MpasMeshDescriptor</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span>
+                                            <span class="n">meshName</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_name</span><span class="p">)</span>
 
         <span class="n">mapping_file_name</span> <span class="o">=</span> \
             <span class="sa">f</span><span class="s1">&#39;map_</span><span class="si">{</span><span class="n">in_mesh_name</span><span class="si">}</span><span class="s1">_to_</span><span class="si">{</span><span class="n">out_mesh_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">.nc&#39;</span>

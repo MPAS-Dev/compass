@@ -120,7 +120,7 @@
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
-<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">,</span> <span class="n">ProjectionGridDescriptor</span><span class="p">,</span> <span class="n">Remapper</span>
+<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">MpasMeshDescriptor</span><span class="p">,</span> <span class="n">ProjectionGridDescriptor</span><span class="p">,</span> <span class="n">Remapper</span>
 
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
@@ -288,7 +288,7 @@
     <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;Adusumilli_2020_ismf_2010-2018_v0.nc&#39;</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;done.&#39;</span><span class="p">)</span>
 
-    <span class="n">out_descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">)</span>
+    <span class="n">out_descriptor</span> <span class="o">=</span> <span class="n">MpasMeshDescriptor</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">)</span>
 
     <span class="n">mapping_filename</span> <span class="o">=</span> \
         <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mapping_directory</span><span class="si">}</span><span class="s1">/map_</span><span class="si">{</span><span class="n">in_grid_name</span><span class="si">}</span><span class="s1">_to_</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">.nc&#39;</span>
