@@ -44,7 +44,8 @@ class Ramp(TestCase):
         subdir = f'{res_name}/{coord_type}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
-        self.add_step(InitialState(test_case=self, coord_type=coord_type))
+        self.add_step(InitialState(test_case=self, resolution=resolution,
+                                   coord_type=coord_type))
         if coord_type == 'single_layer':
             forward_step = Forward(test_case=self, resolution=resolution,
                                    ntasks=4, openmp_threads=1,
@@ -65,23 +66,6 @@ class Ramp(TestCase):
                 self.add_step(forward_step)
         self.damping_coeffs = damping_coeffs
         self.add_step(Viz(test_case=self, damping_coeffs=damping_coeffs))
-
-    def configure(self):
-        """
-        Modify the configuration options for this test case.
-        """
-
-        resolution = self.resolution
-        config = self.config
-        ny = round(28 / resolution)
-        if resolution < 1.:
-            ny += 2
-        dc = 1e3 * resolution
-
-        config.set('drying_slope', 'ny', f'{ny}', comment='the number of '
-                   'mesh cells in the y direction')
-        config.set('drying_slope', 'dc', f'{dc}', comment='the distance '
-                   'between adjacent cell centers')
 
     def validate(self):
         """

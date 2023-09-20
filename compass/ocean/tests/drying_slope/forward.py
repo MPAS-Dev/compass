@@ -1,3 +1,5 @@
+import time
+
 from compass.model import run_model
 from compass.step import Step
 
@@ -57,14 +59,6 @@ class Forward(Step):
 
         self.add_namelist_file('compass.ocean.tests.drying_slope',
                                'namelist.forward')
-        if resolution < 1.:
-            res_name = f'{int(resolution*1e3)}m'
-        else:
-            res_name = f'{int(resolution)}km'
-        self.add_namelist_file('compass.ocean.tests.drying_slope',
-                               f'namelist.{res_name}.forward')
-        self.add_namelist_file('compass.ocean.tests.drying_slope',
-                               f'namelist.{coord_type}.forward')
         if damping_coeff is not None:
             # update the Rayleigh damping coeff to the requested value
             options = {'config_Rayleigh_damping_coeff': f'{damping_coeff}'}
@@ -96,5 +90,27 @@ class Forward(Step):
         """
         Run this step of the test case
         """
+        dt = self.get_dt()
+        self.update_namelist_at_runtime(options={'config_dt': dt},
+                                        out_name='namelist.ocean')
 
         run_model(self)
+
+    def get_dt(self):
+        """
+        Get the time step
+
+        Returns
+        -------
+        dt : str
+            the time step in HH:MM:SS
+        """
+        config = self.config
+        # dt is proportional to resolution
+        dt_per_km = config.getfloat('drying_slope', 'dt_per_km')
+
+        dt = dt_per_km * self.resolution
+        # https://stackoverflow.com/a/1384565/7728169
+        dt = time.strftime('%H:%M:%S', time.gmtime(dt))
+
+        return dt
