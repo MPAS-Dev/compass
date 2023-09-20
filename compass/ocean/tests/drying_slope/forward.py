@@ -91,7 +91,7 @@ class Forward(Step):
         Run this step of the test case
         """
         dt = self.get_dt()
-        self.update_namelist_at_runtime(options={'config_dt': dt},
+        self.update_namelist_at_runtime(options={'config_dt': f"'{dt}'"},
                                         out_name='namelist.ocean')
 
         run_model(self)
