@@ -107,7 +107,7 @@ def add_mesh_and_init_metadata(output_filenames, config, init_filename):
             metadata = _get_metadata(dsInit, config)
 
         for filename in output_filenames:
-            if filename.endswith('.nc'):
+            if filename.endswith('.nc') and os.path.exists(filename):
                 args = ['ncks']
                 for key, value in metadata.items():
                     args.extend(['--glb_att_add', f'{key}={value}'])
