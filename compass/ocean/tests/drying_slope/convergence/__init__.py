@@ -50,7 +50,7 @@ class Convergence(TestCase):
     def _setup_steps(self, config):
         """ setup steps given resolutions """
 
-        default_resolutions = '5, 10, 20'
+        default_resolutions = '0.5, 1, 2'
 
         # set the default values that a user may change before setup
         config.set('drying_slope_convergence', 'resolutions',
@@ -60,7 +60,7 @@ class Convergence(TestCase):
         # get the resolutions back, perhaps with values set in the user's
         # config file
         resolutions = config.getlist('drying_slope_convergence',
-                                     'resolutions', dtype=int)
+                                     'resolutions', dtype=float)
 
         if self.resolutions is not None and self.resolutions == resolutions:
             return
@@ -73,7 +73,10 @@ class Convergence(TestCase):
 
         for resolution in self.resolutions:
 
-            res_name = f'{resolution}km'
+            if resolution < 1.:
+                res_name = f'{int(resolution*1e3)}m'
+            else:
+                res_name = f'{int(resolution)}km'
             self.add_step(InitialState(test_case=self,
                                        name=f'initial_state_{res_name}',
                                        resolution=resolution,
@@ -81,7 +84,7 @@ class Convergence(TestCase):
             self.add_step(Forward(test_case=self, resolution=resolution,
                                   name=f'forward_{res_name}',
                                   ntasks=4, openmp_threads=1,
-                                  damping_coeff=self.damping_coeffs,
+                                  damping_coeff=self.damping_coeffs[0],
                                   coord_type=self.coord_type))
         self.add_step(Analysis(test_case=self,
                                resolutions=resolutions,
@@ -93,6 +96,12 @@ class Convergence(TestCase):
         """
         super().validate()
         variables = ['layerThickness', 'normalVelocity']
-        for res in self.resolutions:
+        damping_coeff = self.damping_coeffs[0]
+        for resolution in self.resolutions:
+            if resolution < 1.:
+                res_name = f'{int(resolution*1e3)}m'
+            else:
+                res_name = f'{int(resolution)}km'
+            name = f'{res_name}_{damping_coeff}'
             compare_variables(test_case=self, variables=variables,
-                              filename1=f'forward_{res}km/output.nc')
+                              filename1=f'forward_{name}/output.nc')

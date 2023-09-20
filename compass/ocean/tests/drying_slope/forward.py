@@ -50,6 +50,8 @@ class Forward(Step):
         """
         if min_tasks is None:
             min_tasks = ntasks
+        input_path = f'../{name}'
+        input_path = input_path.replace('forward', 'initial_state')
         if damping_coeff is not None:
             name = f'{name}_{damping_coeff}'
 
@@ -57,6 +59,7 @@ class Forward(Step):
                          ntasks=ntasks, min_tasks=min_tasks,
                          openmp_threads=openmp_threads)
 
+        self.resolution = resolution
         self.add_namelist_file('compass.ocean.tests.drying_slope',
                                'namelist.forward')
         if damping_coeff is not None:
@@ -67,7 +70,6 @@ class Forward(Step):
         self.add_streams_file('compass.ocean.tests.drying_slope',
                               'streams.forward')
 
-        input_path = '../initial_state'
         self.add_input_file(filename='mesh.nc',
                             target=f'{input_path}/culled_mesh.nc')
 
