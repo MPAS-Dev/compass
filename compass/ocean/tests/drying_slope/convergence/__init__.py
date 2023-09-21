@@ -9,7 +9,7 @@ from compass.validate import compare_variables
 
 class Convergence(TestCase):
     """
-    The default drying_slope test case
+    The convergence drying_slope test case
 
     Attributes
     ----------
@@ -18,6 +18,10 @@ class Convergence(TestCase):
 
     coord_type : str
         The type of vertical coordinate (``sigma``, ``single_layer``, etc.)
+
+    damping_coeffs: list of float
+        The damping coefficients at which to evaluate convergence. Must be of
+        length 1.
     """
 
     def __init__(self, test_group, coord_type, method):
@@ -31,6 +35,9 @@ class Convergence(TestCase):
 
         coord_type : str
             The type of vertical coordinate (``sigma``, ``single_layer``)
+
+        method: str
+            The wetting-and-drying method (``standard``, ``ramp``)
         """
         name = 'convergence'
 

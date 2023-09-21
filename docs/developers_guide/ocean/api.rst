@@ -87,12 +87,16 @@ drying_slope
 
    DryingSlope
 
+   analysis.Analysis
+   analysis.Analysis.run
+
+   convergence.Convergence
+   convergence.Convergence.validate
+
    decomp.Decomp
-   decomp.Decomp.configure
    decomp.Decomp.validate
 
    default.Default
-   default.Default.configure
    default.Default.validate
 
    forward.Forward
@@ -111,7 +115,6 @@ drying_slope
 
    viz.Viz
    viz.Viz.run
-
 
 global_convergence
 ~~~~~~~~~~~~~~~~~~

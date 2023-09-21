@@ -22,8 +22,8 @@ duration, bottom drag, and tidal forcing options, as well as shared
 ``streams.init`` and ``streams.forward`` files that defines ``mesh``, ``input``,
 ``restart``, ``forcing`` and ``output`` streams.
 
-Namelist options specific to resolutions and vertical coordinates are given in
-``namelist.${RES}.*`` and ``namelist.${COORD}*`` files.
+Namelist options specific vertical coordinates are given in
+``namelist.${COORD}*`` files.
 
 initial_state
 ~~~~~~~~~~~~~
@@ -66,6 +66,13 @@ between the analytical solution, MPAS-Ocean and ROMS. Similar plots are used
 to create a movie showing the solution from MPAS-Ocean at more fine-grained
 time intervals. 
 
+analysis
+~~~~~~~~
+
+The class :py:class:`compass.ocean.tests.drying_slope.analysis.Analysis`
+produces a convergence plot for a series of forward steps at different
+resolutions. It uses the analytical solution available at 5 discrete times t
+compute the RMSE.
 
 .. _dev_ocean_drying_slope_default:
 
@@ -81,6 +88,14 @@ two cases at different values of ``config_Rayleigh_damping_coeff``, 0.0025 and
 0.01, for which there is comparison data. The ``single_layer`` case runs at one
 value of the implicit bottom drag coefficient. 
 
+.. _dev_ocean_drying_slope_convergence:
+
+convergence
+-----------
+
+The :py:class:`compass.ocean.tests.drying_slope.convergence.Convergence` expands
+on the default class to include initial and forward steps for multiple
+resolutions and an analysis step to generate a convergence plot.
 
 .. _dev_ocean_drying_slope_decomp:
 
@@ -105,8 +120,6 @@ ramp
 The :py:class:`compass.ocean.tests.drying_slope.ramp.Ramp` is identical to the
 default class except it sets ``ramp`` to ``True`` for the forward step to enable
 the ramp feature for wetting and drying.
-
-
 .. _dev_ocean_drying_slope_log_law:
 
 loglaw

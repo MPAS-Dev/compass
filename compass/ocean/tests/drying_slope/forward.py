@@ -14,7 +14,7 @@ class Forward(Step):
                  ntasks=1, min_tasks=None, openmp_threads=1,
                  damping_coeff=None, coord_type='sigma'):
         """
-        Create a new test case
+        Create a forward step
 
         Parameters
         ----------

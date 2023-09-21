@@ -11,17 +11,42 @@ from compass.step import Step
 
 class Analysis(Step):
     """
-    A step for visualizing drying slope results, as well as comparison with
-    analytical solution and ROMS results.
+    A step for analyzing the convergence of drying slope results and producing
+    a convergence plot.
 
     Attributes
     ----------
+    damping_coeff : float
+        The Rayleigh damping coefficient used for the forward runs
+
+    resolutions : float
+        The resolution of the test case
+
+    times : list of float
+        The times at which to compare to the analytical solution
     """
     def __init__(self, test_case, resolutions, damping_coeff):
+        """
+        Create a forward step
+
+        Parameters
+        ----------
+        test_case : compass.TestCase
+            The test case this step belongs to
+
+        resolutions : list of floats
+            The resolution of the test case
+
+        damping_coeff: float
+            the value of the rayleigh damping coefficient
+        """
+
         super().__init__(test_case=test_case, name='analysis')
+
         self.damping_coeff = damping_coeff
         self.resolutions = resolutions
         self.times = ['0.05', '0.15', '0.25', '0.30', '0.40', '0.50']
+
         for resolution in resolutions:
             if resolution < 1.:
                 res_name = f'{int(resolution*1e3)}m'
@@ -34,12 +59,33 @@ class Analysis(Step):
                        '.csv'
             self.add_input_file(filename=filename, target=filename,
                                 database='drying_slope')
+
         self.add_output_file(filename='convergence.png')
 
     def run(self):
+        """
+        Run this step of the test case
+        """
         self._plot_convergence()
 
     def _compute_rmse(self, ds, t):
+        """
+        Get the time step
+
+        Parameters
+        ----------
+        ds : xarray.Dataset
+            the MPAS dataset containing output from a forward step
+        t : float
+            the time to evaluate the RMSE at
+
+        Returns
+        -------
+        rmse : float
+            the root-mean-squared-error of the MPAS output relative to the
+            analytical solution at time t
+        """
+
         x_exact, ssh_exact = self._exact_solution(t)
         tidx = int((float(t) / 0.2 + 1e-16) * 24.0)
         ds = ds.drop_vars(np.setdiff1d([j for j in ds.variables],
@@ -61,7 +107,6 @@ class Analysis(Step):
         """
         Plot convergence curves
         """
-
         comparisons = []
         cases = {'standard': '../../../standard/convergence/analysis',
                  'ramp': '../../../ramp/convergence/analysis'}
@@ -115,7 +160,7 @@ class Analysis(Step):
 
     def _exact_solution(self, time):
         """
-        Returns distance, ssh
+        Returns distance, ssh of the analytic solution
         """
         datafile = f'./r{self.damping_coeff}d{time}-'\
                    f'analytical.csv'
