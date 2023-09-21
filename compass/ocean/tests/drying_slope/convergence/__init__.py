@@ -20,7 +20,7 @@ class Convergence(TestCase):
         The type of vertical coordinate (``sigma``, ``single_layer``, etc.)
     """
 
-    def __init__(self, test_group, coord_type):
+    def __init__(self, test_group, coord_type, method):
         """
         Create the test case
 
@@ -37,20 +37,20 @@ class Convergence(TestCase):
         self.coord_type = coord_type
         damping_coeffs = [0.01]
         self.damping_coeffs = damping_coeffs
-        subdir = f'{coord_type}/{name}'
+        subdir = f'{coord_type}/{method}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
         self.resolutions = None
         # add the steps with default resolutions so they can be listed
         config = CompassConfigParser()
-        config.add_from_package('compass.ocean.tests.parabolic_bowl',
-                                'parabolic_bowl.cfg')
-        self._setup_steps(config)
+        config.add_from_package('compass.ocean.tests.drying_slope',
+                                'drying_slope.cfg')
+        self._setup_steps(config, subdir=subdir, method=method)
 
-    def _setup_steps(self, config):
+    def _setup_steps(self, config, subdir, method):
         """ setup steps given resolutions """
 
-        default_resolutions = '0.5, 1, 2'
+        default_resolutions = '0.25, 0.5, 1, 2'
 
         # set the default values that a user may change before setup
         config.set('drying_slope_convergence', 'resolutions',
@@ -77,15 +77,21 @@ class Convergence(TestCase):
                 res_name = f'{int(resolution*1e3)}m'
             else:
                 res_name = f'{int(resolution)}km'
+            init_name = f'initial_state_{res_name}'
             self.add_step(InitialState(test_case=self,
-                                       name=f'initial_state_{res_name}',
+                                       name=init_name,
                                        resolution=resolution,
                                        coord_type=self.coord_type))
-            self.add_step(Forward(test_case=self, resolution=resolution,
-                                  name=f'forward_{res_name}',
-                                  ntasks=4, openmp_threads=1,
-                                  damping_coeff=self.damping_coeffs[0],
-                                  coord_type=self.coord_type))
+            forward_step = Forward(test_case=self, resolution=resolution,
+                                   name=f'forward_{res_name}',
+                                   input_path=f'../{init_name}',
+                                   ntasks=4, openmp_threads=1,
+                                   damping_coeff=self.damping_coeffs[0],
+                                   coord_type=self.coord_type)
+            if method == 'ramp':
+                forward_step.add_namelist_options(
+                    {'config_zero_drying_velocity_ramp': ".true."})
+            self.add_step(forward_step)
         self.add_step(Analysis(test_case=self,
                                resolutions=resolutions,
                                damping_coeff=self.damping_coeffs[0]))
@@ -96,12 +102,10 @@ class Convergence(TestCase):
         """
         super().validate()
         variables = ['layerThickness', 'normalVelocity']
-        damping_coeff = self.damping_coeffs[0]
         for resolution in self.resolutions:
             if resolution < 1.:
                 res_name = f'{int(resolution*1e3)}m'
             else:
                 res_name = f'{int(resolution)}km'
-            name = f'{res_name}_{damping_coeff}'
             compare_variables(test_case=self, variables=variables,
-                              filename1=f'forward_{name}/output.nc')
+                              filename1=f'forward_{res_name}/output.nc')

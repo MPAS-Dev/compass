@@ -10,6 +10,7 @@ class Forward(Step):
     test cases.
     """
     def __init__(self, test_case, resolution, name='forward', subdir=None,
+                 input_path='../initial_state',
                  ntasks=1, min_tasks=None, openmp_threads=1,
                  damping_coeff=None, coord_type='sigma'):
         """
@@ -50,10 +51,6 @@ class Forward(Step):
         """
         if min_tasks is None:
             min_tasks = ntasks
-        input_path = f'../{name}'
-        input_path = input_path.replace('forward', 'initial_state')
-        if damping_coeff is not None:
-            name = f'{name}_{damping_coeff}'
 
         super().__init__(test_case=test_case, name=name, subdir=subdir,
                          ntasks=ntasks, min_tasks=min_tasks,
@@ -62,6 +59,9 @@ class Forward(Step):
         self.resolution = resolution
         self.add_namelist_file('compass.ocean.tests.drying_slope',
                                'namelist.forward')
+        if coord_type == 'single_layer':
+            self.add_namelist_file('compass.ocean.tests.drying_slope',
+                                   'namelist.single_layer.forward')
         if damping_coeff is not None:
             # update the Rayleigh damping coeff to the requested value
             options = {'config_Rayleigh_damping_coeff': f'{damping_coeff}'}
