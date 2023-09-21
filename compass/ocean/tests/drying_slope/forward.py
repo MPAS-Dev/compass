@@ -59,9 +59,9 @@ class Forward(Step):
         self.resolution = resolution
         self.add_namelist_file('compass.ocean.tests.drying_slope',
                                'namelist.forward')
-        if coord_type == 'single_layer':
+        if coord_type == 'single_layer' or coord_type == 'sigma':
             self.add_namelist_file('compass.ocean.tests.drying_slope',
-                                   'namelist.single_layer.forward')
+                                   f'namelist.{coord_type}.forward')
         if damping_coeff is not None:
             # update the Rayleigh damping coeff to the requested value
             options = {'config_Rayleigh_damping_coeff': f'{damping_coeff}'}
