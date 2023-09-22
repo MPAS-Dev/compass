@@ -37,8 +37,8 @@ class Mesh(Step):
                             package='compass.landice.tests.issunguata_sermia',
                             target='Issunguata_Sermia.geojson',
                             database=None)
-        self.add_input_file(filename='greenland_8km_2020_04_20.epsg3413.nc',
-                            target='greenland_8km_2020_04_20.epsg3413.nc',
+        self.add_input_file(filename='greenland_2km_2020_04_20.epsg3413.nc',
+                            target='greenland_2km_2020_04_20.epsg3413.nc',
                             database='')
 
     # no setup() method is needed
@@ -55,7 +55,7 @@ class Mesh(Step):
         cell_width, x1, y1, geom_points, geom_edges, floodMask = \
             build_cell_width(
                 self, section_name=section_name,
-                gridded_dataset='greenland_8km_2020_04_20.epsg3413.nc')
+                gridded_dataset='greenland_2km_2020_04_20.epsg3413.nc')
 
         build_mali_mesh(
             self, cell_width, x1, y1, geom_points, geom_edges,
