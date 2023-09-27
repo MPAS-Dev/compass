@@ -93,7 +93,11 @@ class Forward(Step):
         Run this step of the test case
         """
         dt = self.get_dt()
-        self.update_namelist_at_runtime(options={'config_dt': f"'{dt}'"},
+        section = self.config['vertical_grid']
+        thin_film_thickness = section.getfloat('thin_film_thickness')
+        options = {'config_dt': f"'{dt}'",
+                   'config_drying_min_cell_height': f'{thin_film_thickness}'}
+        self.update_namelist_at_runtime(options=options,
                                         out_name='namelist.ocean')
 
         run_model(self)

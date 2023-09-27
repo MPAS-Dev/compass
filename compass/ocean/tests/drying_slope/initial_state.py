@@ -47,16 +47,20 @@ class InitialState(Step):
         config = self.config
         logger = self.logger
 
-        config = self.config
         section = config['vertical_grid']
         coord_type = self.coord_type
+        thin_film_thickness = section.getfloat('thin_film_thickness') + 1.0e-9
         if coord_type == 'single_layer':
-            options = {'config_tidal_boundary_vert_levels': '1'}
+            options = {'config_tidal_boundary_vert_levels': '1',
+                       'config_drying_min_cell_height':
+                       f'{thin_film_thickness}'}
             self.update_namelist_at_runtime(options)
         else:
-            vert_levels = section.get('vert_levels')
+            vert_levels = section.getint('vert_levels')
             options = {'config_tidal_boundary_vert_levels': f'{vert_levels}',
-                       'config_tidal_boundary_layer_type': f"'{coord_type}'"}
+                       'config_tidal_boundary_layer_type': f"'{coord_type}'",
+                       'config_drying_min_cell_height':
+                       f'{thin_film_thickness}'}
             self.update_namelist_at_runtime(options)
 
         # Determine mesh parameters
