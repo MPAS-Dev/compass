@@ -929,7 +929,7 @@ def _compute_cell_patches(dsMesh, mask):
         vertices[:, 0] = 1e-3 * xVertex[vertexIndices]
         vertices[:, 1] = 1e-3 * yVertex[vertexIndices]
 
-        polygon = Polygon(vertices, True)
+        polygon = Polygon(vertices, closed=True)
         patches.append(polygon)
 
     p = PatchCollection(patches, alpha=1.)
