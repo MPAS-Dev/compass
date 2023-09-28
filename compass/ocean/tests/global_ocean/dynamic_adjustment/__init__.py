@@ -1,6 +1,7 @@
 import glob
 import importlib.resources
 import os
+import platform
 from datetime import datetime, timedelta
 
 import xarray as xr
@@ -217,7 +218,10 @@ def _get_restart_time(start_time, run_duration):
     start = datetime.strptime(start_time, '%Y-%m-%d_%H:%M:%S')
     duration = _parse_duration(run_duration)
     restart = start + duration
-    restart_time = restart.strftime('%4Y-%m-%d_%H:%M:%S')
+    if platform.system() == 'Darwin':
+        restart_time = restart.strftime('%Y-%m-%d_%H:%M:%S')
+    else:
+        restart_time = restart.strftime('%4Y-%m-%d_%H:%M:%S')
     return restart_time
 
 
