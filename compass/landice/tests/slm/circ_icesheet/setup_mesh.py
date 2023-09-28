@@ -74,7 +74,7 @@ class SetupMesh(Step):
         _create_smb_forcing_file(config, logger,
                                  mali_mesh_file='landice_grid.nc',
                                  filename='smb_forcing.nc')
-        logger.info('calling building mapping files')
+
         _build_mapping_files(config, logger,
                              mali_mesh_file='landice_grid.nc')
 
@@ -99,8 +99,8 @@ def _setup_circsheet_initial_conditions(config, logger, filename):
     ice_type = section.get('ice_type')
     set_topo_elev = section.getboolean('set_topo_elev')
     topo_elev = section.get('topo_elev')
-    r0 = section.get('r0')
-    h0 = section.get('h0')
+    r0 = section.getfloat('r0')
+    h0 = section.getfloat('h0')
     put_origin_on_a_cell = section.getboolean('put_origin_on_a_cell')
 
     # Open the file, get needed dimensions
@@ -147,7 +147,6 @@ def _setup_circsheet_initial_conditions(config, logger, filename):
     # Calculate the dome thickness for cells within the desired radius
     # (thickness will be NaN otherwise)
     thickness_field = thickness[0, :]
-    r0 = 6000000.0 * np.sqrt(0.125)
 
     print('r0', r0)
     print('r', r)
@@ -198,9 +197,8 @@ def _create_smb_forcing_file(config, logger, mali_mesh_file, filename):
         file to setup circ_icesheet
     """
     section = config['circ_icesheet']
-    r0 = section.get('r0')
-    h0 = section.get('h0')
-    r0 = 6000000.0 * np.sqrt(0.125)  # HH: comment this line out later
+    r0 = section.getfloat('r0')
+    h0 = section.getfloat('h0')
 
     section = config['smb_forcing']
     direction = section.get('direction')
@@ -227,7 +225,7 @@ def _create_smb_forcing_file(config, logger, mali_mesh_file, filename):
 
     # define the time (1 year interval)
     dt = 1
-    t_array = np.arange(0, 10, dt)
+    t_array = np.arange(0, 3, dt)
     x0 = 0.0
     y0 = 0.0
     r = ((xCell[:] - x0) ** 2 + (yCell[:] - y0) ** 2) ** 0.5
@@ -287,7 +285,7 @@ def _create_smb_forcing_file(config, logger, mali_mesh_file, filename):
     smbfile.close()
 
 
-def _build_mapping_files(self, config, logger, mali_mesh_file):
+def _build_mapping_files(config, logger, mali_mesh_file):
     """
     Build a mapping file if it does not exist.
     Mapping file is then used to remap the ismip6 source file in polarstero
@@ -312,25 +310,25 @@ def _build_mapping_files(self, config, logger, mali_mesh_file):
     """
 
     section = config['slm']
-    slm_res = section.get['slm_res']
-    method_mali_to_slm = section.get['mapping_method_mali_to_slm']
-    method_slm_to_mali = section.get['mapping_method_slm_to_mali']
+    slm_res = section.get('slm_res')
+    method_mali_to_slm = section.get('mapping_method_mali_to_slm')
+    method_slm_to_mali = section.get('mapping_method_slm_to_mali')
 
     section = config['circ_icesheet']
-    dc = section.get['dc']
+    dc = section.getfloat('dc')
 
-    mali_scripfile = 'mali_scrip.nc'
-    slm_scripfile = 'slm_scrip.nc'
+    mali_scripfile = f'mali{int(dc/1000)}km_scripfile.nc'
+    slm_scripfile = f'slm{slm_res}_scripfile.nc'
 
     # create slm scripfile
-    logger.info(f'creating scripfile for the SH-degree {slm_res}'
+    logger.info(f'creating scripfile for the SH-degree {slm_res} '
                 f'resolution SLM grid')
     args = ['ncremap',
             '-g', slm_scripfile,
             '-G',
-            f'latlon={slm_res},{int(2*slm_res)}#lat_typ=gss#lat_drc=n2s']
+            f'latlon={slm_res},{2*int(slm_res)}#lat_typ=gss#lat_drc=n2s']
 
-    check_call(args, logger=self.logger)
+    check_call(args, logger=logger)
 
     # create scrip files for source and destination grids
     logger.info('creating scrip file for the mali mesh')
@@ -341,17 +339,12 @@ def _build_mapping_files(self, config, logger, mali_mesh_file):
             '--file', mali_mesh_copy,
             '--proj', 'ais-bedmap2-sphere']
 
-    check_call(args, logger=self.logger)
+    check_call(args, logger=logger)
 
     scrip_from_mpas(mali_mesh_copy, mali_scripfile)
 
     # create a mapping file using ESMF weight gen
     logger.info('Creating a mapping file...')
-
-    mapping_file_mali_to_slm = f'mapping_file_mali{int(dc/1000)}_to' \
-                               f'_slm{slm_res}_{method_mali_to_slm}.nc'
-    mapping_file_slm_to_mali = f'mapping_file_slm{slm_res}_to' \
-                               f'_mali{int(dc/1000)}_{method_slm_to_mali}.nc'
 
     parallel_executable = config.get("parallel", "parallel_executable")
     # split the parallel executable into constituents in case it includes flags
@@ -359,17 +352,18 @@ def _build_mapping_files(self, config, logger, mali_mesh_file):
     args.extend(['ESMF_RegridWeightGen',
                  '-s', mali_scripfile,
                  '-d', slm_scripfile,
-                 '-w', mapping_file_mali_to_slm,
+                 '-w', 'mapping_file_mali_to_slm.nc',
                  '-m', method_mali_to_slm,
                  '-i', '-64bit_offset', '--netcdf4',
                  '--src_regional'])
 
     check_call(args, logger)
 
+    args = parallel_executable.split(' ')
     args.extend(['ESMF_RegridWeightGen',
                  '-s', slm_scripfile,
                  '-d', mali_scripfile,
-                 '-w', mapping_file_slm_to_mali,
+                 '-w', 'mapping_file_slm_to_mali.nc',
                  '-m', method_slm_to_mali,
                  '-i', '-64bit_offset', '--netcdf4',
                  '--dst_regional'])
