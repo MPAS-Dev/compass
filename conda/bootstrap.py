@@ -448,6 +448,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi,  # noqa: C901
             f'@{parallelio}+pnetcdf~timing"')
 
     if albany != 'None':
+        specs.append(f'"trilinos-for-albany@{albany}"')
         specs.append(f'"albany@{albany}+mpas"')
 
     yaml_template = f'{spack_template_path}/{machine}_{compiler}_{mpi}.yaml'
