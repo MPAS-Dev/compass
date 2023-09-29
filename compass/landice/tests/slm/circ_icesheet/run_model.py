@@ -1,3 +1,5 @@
+import os
+
 from compass.model import run_model
 from compass.step import Step
 
@@ -58,12 +60,23 @@ class RunModel(Step):
         self.add_input_file(filename='namelist.sealevel',
                             package='compass.landice.tests.slm',
                             copy=True)
-
+        self.add_input_file(filename='smb_forcing.nc',
+                            target='../setup_mesh/smb_forcing.nc')
+        self.add_input_file(filename='mapping_file_mali_to_slm.nc',
+                            target='../setup_mesh/'
+                            'mapping_file_mali_to_slm.nc')
+        self.add_input_file(filename='mapping_file_slm_to_mali.nc',
+                            target='../setup_mesh/'
+                            'mapping_file_slm_to_mali.nc')
         self.add_model_as_input()
 
         self.add_output_file(filename='output.nc')
 
-    # no setup() is needed
+    def setup(self):
+        os.makedirs(os.path.join(self.work_dir, 'OUTPUT_SLM/'),
+                    exist_ok='True')
+        os.makedirs(os.path.join(self.work_dir, 'ICELOAD_SLM/'),
+                    exist_ok='True')
 
     def run(self):
         """
