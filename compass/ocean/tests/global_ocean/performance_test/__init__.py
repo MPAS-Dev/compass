@@ -63,6 +63,24 @@ class PerformanceTest(ForwardTestCase):
         Test cases can override this method to perform validation of variables
         and timers
         """
+
+        common_variables = [
+            'ssh', 'landIcePressure', 'landIceDraft', 'landIceFraction',
+            'landIceMask', 'topDrag', 'topDragMagnitude',
+            'landIceFreshwaterFlux', 'landIceHeatFlux',
+            'accumulatedLandIceMass']
+        land_ice_variables = {
+            'prognostic_ice_shelf_melt': common_variables + [
+                'landIceFrictionVelocity', 'heatFluxToLandIce',
+                'landIceBoundaryLayerTemperature',
+                'landIceBoundaryLayerSalinity',
+                'landIceHeatTransferVelocity',
+                'landIceSaltTransferVelocity',
+                'landIceInterfaceTemperature',
+                'landIceInterfaceSalinity', 'accumulatedLandIceHeat'],
+            'data_ice_shelf_melt': common_variables
+        }
+
         for step in self.steps.values():
             step_subdir = step.subdir
             variables = ['temperature', 'salinity', 'layerThickness',
@@ -72,22 +90,8 @@ class PerformanceTest(ForwardTestCase):
                               filename1=f'{step_subdir}/output.nc')
 
             if self.mesh.with_ice_shelf_cavities:
-                variables = [
-                    'ssh', 'landIcePressure', 'landIceDraft',
-                    'landIceFraction', 'landIceMask',
-                    'landIceFrictionVelocity', 'topDrag',
-                    'topDragMagnitude', 'landIceFreshwaterFlux',
-                    'landIceHeatFlux', 'heatFluxToLandIce',
-                    'landIceBoundaryLayerTemperature',
-                    'landIceBoundaryLayerSalinity',
-                    'landIceHeatTransferVelocity',
-                    'landIceSaltTransferVelocity',
-                    'landIceInterfaceTemperature',
-                    'landIceInterfaceSalinity', 'accumulatedLandIceMass',
-                    'accumulatedLandIceHeat']
-
                 compare_variables(
-                    test_case=self, variables=variables,
+                    test_case=self, variables=land_ice_variables[step.name],
                     filename1=f'{step_subdir}/land_ice_fluxes.nc')
 
             timers = ['time integration']
