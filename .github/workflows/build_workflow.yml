@@ -91,7 +91,7 @@ jobs:
           mamba-version: "*"
           channels: conda-forge,e3sm/label/compass,defaults
           channel-priority: strict
-          auto-update-conda: true
+          auto-update-conda: false
           python-version: ${{ matrix.python-version }}
 
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
