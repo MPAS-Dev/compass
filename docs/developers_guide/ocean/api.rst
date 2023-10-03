@@ -109,10 +109,6 @@ drying_slope
    loglaw.LogLaw.configure
    loglaw.LogLaw.validate
 
-   ramp.Ramp
-   ramp.Ramp.configure
-   ramp.Ramp.validate
-
    viz.Viz
    viz.Viz.run
 
