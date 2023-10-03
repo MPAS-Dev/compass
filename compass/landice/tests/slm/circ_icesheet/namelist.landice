@@ -1,2 +1,53 @@
-config_dt = '0001-00-00_00:00:00'
-config_run_duration = '0002-00-00_00:00:00'
+&velocity_solver
+    config_velocity_solver = 'none'
+/
+&advection
+    config_thickness_advection = 'fo'
+    config_tracer_advection = 'none'
+/
+&solidearth
+    config_uplift_method = 'sealevelmodel'
+    config_slm_coupling_interval = '0001-00-00_00:00:00'
+    config_MALI_to_SLM_weights_file = 'mapping_file_mali_to_slm.nc'
+    config_SLM_to_MALI_weights_file = 'mapping_file_slm_to_mali.nc'
+/
+&calving
+    config_calving = 'none'
+    config_restore_calving_front = .false.
+/
+&thermal_solver
+    config_thermal_solver = 'none'
+/
+&iceshelf_melt
+    config_basal_mass_bal_float = 'none'
+    config_front_mass_bal_grounded = 'none'
+/
+&physical_parameters
+    config_ice_density = 910.0
+    config_ocean_density = 1028.0
+    config_sea_level = 0.0
+    config_dynamic_thickness = 10.0
+/
+&time_integration
+    config_dt = '0001-00-00_00:00:00'
+    config_time_integration = 'forward_euler'
+    config_adaptive_timestep = .false.
+/
+&time_management
+    config_do_restart = .false.
+    config_restart_timestamp_name = 'restart_timestamp'
+    config_start_time = '2015-01-01_00:00:00'
+    config_stop_time = '2055-01-01_00:00:00'
+    config_run_duration = 'none'
+    config_calendar_type = 'noleap'
+/
+&io
+    config_pio_stride = 128
+/
+&AM_globalStats
+    config_AM_globalStats_enable = .true.
+    config_AM_globalStats_compute_interval = 'output_interval'
+    config_AM_globalStats_stream_name = 'globalStatsOutput'
+    config_AM_globalStats_compute_on_startup = .true.
+    config_AM_globalStats_write_on_startup = .true.
+/

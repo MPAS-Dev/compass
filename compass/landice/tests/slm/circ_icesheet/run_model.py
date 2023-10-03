@@ -64,10 +64,10 @@ class RunModel(Step):
                             target='../setup_mesh/smb_forcing.nc')
         self.add_input_file(filename='mapping_file_mali_to_slm.nc',
                             target='../setup_mesh/'
-                            'mapping_file_mali_to_slm.nc')
+                                   'mapping_file_mali_to_slm.nc')
         self.add_input_file(filename='mapping_file_slm_to_mali.nc',
                             target='../setup_mesh/'
-                            'mapping_file_slm_to_mali.nc')
+                                   'mapping_file_slm_to_mali.nc')
         self.add_model_as_input()
 
         self.add_output_file(filename='output.nc')
