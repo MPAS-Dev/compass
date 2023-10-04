@@ -120,7 +120,8 @@
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">pyproj</span>
 <span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">MpasMeshDescriptor</span><span class="p">,</span>
+    <span class="n">MpasCellMeshDescriptor</span><span class="p">,</span>
+    <span class="n">MpasVertexMeshDescriptor</span><span class="p">,</span>
     <span class="n">ProjectionGridDescriptor</span><span class="p">,</span>
     <span class="n">Remapper</span><span class="p">,</span>
     <span class="n">get_lat_lon_descriptor</span><span class="p">,</span>
@@ -321,7 +322,7 @@
 
     <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;parallel_executable&#39;</span><span class="p">)</span>
 
-    <span class="n">in_descriptor</span> <span class="o">=</span> <span class="n">MpasMeshDescriptor</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">)</span>
+    <span class="n">in_descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">)</span>
 
     <span class="n">mapping_file_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;map_</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">_to_</span><span class="si">{</span><span class="n">out_grid_name</span><span class="si">}</span><span class="s1">_bilinear.nc&#39;</span>
 
@@ -332,7 +333,7 @@
                                 <span class="n">esmf_parallel_exec</span><span class="o">=</span><span class="n">parallel_executable</span><span class="p">)</span>
 
     <span class="c1"># now the same on vertices (e.g. for streamfunctions)</span>
-    <span class="n">in_descriptor</span> <span class="o">=</span> <span class="n">MpasMeshDescriptor</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">vertices</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">in_descriptor</span> <span class="o">=</span> <span class="n">MpasVertexMeshDescriptor</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">)</span>
     <span class="n">mapping_file_name</span> <span class="o">=</span> \
         <span class="sa">f</span><span class="s1">&#39;map_</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">_vertices_to_</span><span class="si">{</span><span class="n">out_grid_name</span><span class="si">}</span><span class="s1">_bilinear.nc&#39;</span>
 
