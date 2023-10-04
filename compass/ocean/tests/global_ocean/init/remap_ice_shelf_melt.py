@@ -4,7 +4,7 @@ import pyproj
 import xarray as xr
 from mpas_tools.cime.constants import constants
 from mpas_tools.io import write_netcdf
-from pyremap import MpasMeshDescriptor, ProjectionGridDescriptor, Remapper
+from pyremap import MpasCellMeshDescriptor, ProjectionGridDescriptor, Remapper
 
 from compass.step import Step
 
@@ -172,7 +172,7 @@ def remap_adusumilli(in_filename, mesh_filename, mesh_name,
     write_netcdf(ds, 'Adusumilli_2020_ismf_2010-2018_v0.nc')
     logger.info('done.')
 
-    out_descriptor = MpasMeshDescriptor(mesh_filename, mesh_name)
+    out_descriptor = MpasCellMeshDescriptor(mesh_filename, mesh_name)
 
     mapping_filename = \
         f'{mapping_directory}/map_{in_grid_name}_to_{mesh_name}.nc'
