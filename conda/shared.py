@@ -181,6 +181,8 @@ def install_miniconda(conda_base, activate_base, logger):
     check_call(commands, logger=logger)
 
     commands = f'{activate_base} && ' \
+               f'conda install -y --force-reinstall' \
+               f'   mamba=1.5.1 conda=23.7.4 && ' \
                f'mamba update -y --all && ' \
                f'mamba init'
 
