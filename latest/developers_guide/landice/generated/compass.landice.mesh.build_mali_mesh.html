@@ -145,12 +145,12 @@ bilinear method, and marks domain boundaries as Dirichlet cells.</p>
 based on mesh density functions define in <a class="reference internal" href="compass.landice.mesh.set_cell_width.html#compass.landice.mesh.set_cell_width" title="compass.landice.mesh.set_cell_width"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_cell_width()</span></code></a>
 to pass to
 <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.mesh.creation.build_mesh.build_planar_mesh.html#mpas_tools.mesh.creation.build_mesh.build_planar_mesh" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.mesh.creation.build_mesh.build_planar_mesh()</span></code></a>.</p></li>
-<li><p><strong>x1</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – x coordinates from gridded dataset</p></li>
-<li><p><strong>y1</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – y coordinates from gridded dataset</p></li>
+<li><p><strong>x1</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – x coordinates from gridded dataset</p></li>
+<li><p><strong>y1</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – y coordinates from gridded dataset</p></li>
 <li><p><strong>geom_points</strong> (<em>jigsawpy.jigsaw_msh_t.VERT2_t</em>) – xy node coordinates to pass to <code class="docutils literal notranslate"><span class="pre">build_planar_mesh()</span></code></p></li>
 <li><p><strong>geom_edges</strong> (<em>jigsawpy.jigsaw_msh_t.EDGE2_t</em>) – xy edge coordinates between nodes to pass to <code class="docutils literal notranslate"><span class="pre">build_planar_mesh()</span></code></p></li>
-<li><p><strong>mesh_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Filename to be used for final MALI NetCDF mesh file.</p></li>
-<li><p><strong>section_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Section of the config file from which to read parameters. The
+<li><p><strong>mesh_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Filename to be used for final MALI NetCDF mesh file.</p></li>
+<li><p><strong>section_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Section of the config file from which to read parameters. The
 following options to be set in the given config section:
 <code class="docutils literal notranslate"><span class="pre">levels</span></code>, <code class="docutils literal notranslate"><span class="pre">x_min</span></code>, <code class="docutils literal notranslate"><span class="pre">x_max</span></code>, <code class="docutils literal notranslate"><span class="pre">y_min</span></code>, <code class="docutils literal notranslate"><span class="pre">y_max</span></code>,
 <code class="docutils literal notranslate"><span class="pre">min_spac</span></code>, <code class="docutils literal notranslate"><span class="pre">max_spac</span></code>, <code class="docutils literal notranslate"><span class="pre">high_log_speed</span></code>, <code class="docutils literal notranslate"><span class="pre">low_log_speed</span></code>,
@@ -159,11 +159,11 @@ following options to be set in the given config section:
 <code class="docutils literal notranslate"><span class="pre">use_dist_to_edge</span></code>, <code class="docutils literal notranslate"><span class="pre">use_dist_to_grounding_line</span></code>, and <code class="docutils literal notranslate"><span class="pre">use_bed</span></code>.
 See the Land-Ice Framework section of the Users or Developers guide
 for more information about these options and their uses.</p></li>
-<li><p><strong>gridded_dataset</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Name of gridded dataset file to be used for interpolation to MALI mesh</p></li>
-<li><p><strong>projection</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Projection to be used for setting lat-long fields.
+<li><p><strong>gridded_dataset</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Name of gridded dataset file to be used for interpolation to MALI mesh</p></li>
+<li><p><strong>projection</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Projection to be used for setting lat-long fields.
 Likely <code class="docutils literal notranslate"><span class="pre">'gis-gimp'</span></code> or <code class="docutils literal notranslate"><span class="pre">'ais-bedmap2'</span></code></p></li>
-<li><p><strong>geojson_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>optional</em>) – Name of geojson file that defines regional domain extent.</p></li>
-<li><p><strong>cores</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>optional</em>) – The number of cores to use for mask creation</p></li>
+<li><p><strong>geojson_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Name of geojson file that defines regional domain extent.</p></li>
+<li><p><strong>cores</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – The number of cores to use for mask creation</p></li>
 </ul>
 </dd>
 </dl>

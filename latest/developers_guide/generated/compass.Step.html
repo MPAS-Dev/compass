@@ -166,59 +166,59 @@ itself is often an input to the step.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – the name of the test case</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – the name of the test case</p></li>
 <li><p><strong>test_case</strong> (<a class="reference internal" href="compass.TestCase.html#compass.TestCase" title="compass.TestCase"><em>compass.TestCase</em></a>) – The test case this step belongs to</p></li>
 <li><p><strong>test_group</strong> (<a class="reference internal" href="compass.TestGroup.html#compass.TestGroup" title="compass.TestGroup"><em>compass.TestGroup</em></a>) – The test group the test case belongs to</p></li>
 <li><p><strong>mpas_core</strong> (<a class="reference internal" href="compass.MpasCore.html#compass.MpasCore" title="compass.MpasCore"><em>compass.MpasCore</em></a>) – The MPAS core the test group belongs to</p></li>
-<li><p><strong>subdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – the subdirectory for the step</p></li>
-<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – the path within the base work directory of the step, made up of
+<li><p><strong>subdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – the subdirectory for the step</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – the path within the base work directory of the step, made up of
 <code class="docutils literal notranslate"><span class="pre">mpas_core</span></code>, <code class="docutils literal notranslate"><span class="pre">test_group</span></code>, the test case’s <code class="docutils literal notranslate"><span class="pre">subdir</span></code> and the
 step’s <code class="docutils literal notranslate"><span class="pre">subdir</span></code></p></li>
-<li><p><strong>cpus_per_task</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – the number of cores per task the step would ideally use.  If
+<li><p><strong>cpus_per_task</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – the number of cores per task the step would ideally use.  If
 fewer cores per node are available on the system, the step will
 run on all available cores as long as this is not below
 <code class="docutils literal notranslate"><span class="pre">min_cpus_per_task</span></code></p></li>
-<li><p><strong>min_cpus_per_task</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – the number of cores per task the step requires.  If the system
+<li><p><strong>min_cpus_per_task</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – the number of cores per task the step requires.  If the system
 has fewer than this number of cores per node, the step will fail</p></li>
-<li><p><strong>ntasks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – the number of tasks the step would ideally use.  If too few
+<li><p><strong>ntasks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – the number of tasks the step would ideally use.  If too few
 cores are available on the system to accommodate the number of
 tasks and the number of cores per task, the step will run on
 fewer tasks as long as as this is not below <code class="docutils literal notranslate"><span class="pre">min_tasks</span></code></p></li>
-<li><p><strong>min_tasks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – the number of tasks the step requires.  If the system has too
+<li><p><strong>min_tasks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – the number of tasks the step requires.  If the system has too
 few cores to accommodate the number of tasks and cores per task,
 the step will fail</p></li>
-<li><p><strong>openmp_threads</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – the number of OpenMP threads to use</p></li>
-<li><p><strong>max_memory</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – the amount of memory that the step is allowed to use in MB.
+<li><p><strong>openmp_threads</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – the number of OpenMP threads to use</p></li>
+<li><p><strong>max_memory</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – the amount of memory that the step is allowed to use in MB.
 This is currently just a placeholder for later use with task
 parallelism</p></li>
-<li><p><strong>input_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – a list of dict used to define input files typically to be
+<li><p><strong>input_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – a list of dict used to define input files typically to be
 downloaded to a database and/or symlinked in the work directory</p></li>
-<li><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – a list of absolute paths of input files produced from <code class="docutils literal notranslate"><span class="pre">input_data</span></code> as
+<li><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – a list of absolute paths of input files produced from <code class="docutils literal notranslate"><span class="pre">input_data</span></code> as
 part of setting up the step.  These input files must all exist at run
 time or the step will raise an exception</p></li>
-<li><p><strong>outputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – a list of absolute paths of output files produced by this step (or
+<li><p><strong>outputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – a list of absolute paths of output files produced by this step (or
 cached) and available as inputs to other test cases and steps.  These
 files must exist after the test has run or an exception will be raised</p></li>
-<li><p><strong>namelist_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – a dictionary used internally to keep track of updates to the default
+<li><p><strong>namelist_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – a dictionary used internally to keep track of updates to the default
 namelist options from calls to
 <a class="reference internal" href="compass.Step.add_namelist_file.html#compass.Step.add_namelist_file" title="compass.Step.add_namelist_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_namelist_file()</span></code></a>
 and <a class="reference internal" href="compass.Step.add_namelist_options.html#compass.Step.add_namelist_options" title="compass.Step.add_namelist_options"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_namelist_options()</span></code></a></p></li>
-<li><p><strong>streams_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – a dictionary used internally to keep track of updates to the default
+<li><p><strong>streams_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – a dictionary used internally to keep track of updates to the default
 streams from calls to <a class="reference internal" href="compass.Step.add_streams_file.html#compass.Step.add_streams_file" title="compass.Step.add_streams_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_streams_file()</span></code></a></p></li>
 <li><p><strong>config</strong> (<a class="reference internal" href="compass.config.CompassConfigParser.html#compass.config.CompassConfigParser" title="compass.config.CompassConfigParser"><em>compass.config.CompassConfigParser</em></a>) – Configuration options for this test case, a combination of the defaults
 for the machine, core and configuration</p></li>
 <li><p><strong>machine_info</strong> (<em>mache.MachineInfo</em>) – Information about E3SM supported machines</p></li>
-<li><p><strong>config_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The local name of the config file that <code class="docutils literal notranslate"><span class="pre">config</span></code> has been written to
+<li><p><strong>config_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The local name of the config file that <code class="docutils literal notranslate"><span class="pre">config</span></code> has been written to
 during setup and read from during run</p></li>
-<li><p><strong>work_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The step’s work directory, defined during setup as the combination
+<li><p><strong>work_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The step’s work directory, defined during setup as the combination
 of <code class="docutils literal notranslate"><span class="pre">base_work_dir</span></code> and <code class="docutils literal notranslate"><span class="pre">path</span></code></p></li>
-<li><p><strong>base_work_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The base work directory</p></li>
-<li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.11)"><em>logging.Logger</em></a>) – A logger for output from the step</p></li>
-<li><p><strong>log_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – At run time, the name of a log file where output/errors from the step
+<li><p><strong>base_work_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The base work directory</p></li>
+<li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><em>logging.Logger</em></a>) – A logger for output from the step</p></li>
+<li><p><strong>log_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – At run time, the name of a log file where output/errors from the step
 are being logged, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if output is to stdout/stderr</p></li>
-<li><p><strong>cached</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether to get all of the outputs for the step from the database of
+<li><p><strong>cached</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Whether to get all of the outputs for the step from the database of
 cached outputs for this MPAS core</p></li>
-<li><p><strong>run_as_subprocess</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether to run this step as a subprocess, rather than just running
+<li><p><strong>run_as_subprocess</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Whether to run this step as a subprocess, rather than just running
 it directly from the test case.  It is useful to run a step as a
 subprocess if there is not a good way to redirect output to a log
 file (e.g. if the step calls external code that, in turn, calls
@@ -234,28 +234,28 @@ additional subprocesses).</p></li>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>test_case</strong> (<a class="reference internal" href="compass.TestCase.html#compass.TestCase" title="compass.TestCase"><em>compass.TestCase</em></a>) – The test case this step belongs to</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – the name of the test case</p></li>
-<li><p><strong>subdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>optional</em>) – the subdirectory for the step.  The default is <code class="docutils literal notranslate"><span class="pre">name</span></code></p></li>
-<li><p><strong>cpus_per_task</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>optional</em>) – the number of cores per task the step would ideally use.  If
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – the name of the test case</p></li>
+<li><p><strong>subdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – the subdirectory for the step.  The default is <code class="docutils literal notranslate"><span class="pre">name</span></code></p></li>
+<li><p><strong>cpus_per_task</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – the number of cores per task the step would ideally use.  If
 fewer cores per node are available on the system, the step will
 run on all available cores as long as this is not below
 <code class="docutils literal notranslate"><span class="pre">min_cpus_per_task</span></code></p></li>
-<li><p><strong>min_cpus_per_task</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>optional</em>) – the number of cores per task the step requires.  If the system
+<li><p><strong>min_cpus_per_task</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – the number of cores per task the step requires.  If the system
 has fewer than this number of cores per node, the step will fail</p></li>
-<li><p><strong>ntasks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>optional</em>) – the number of tasks the step would ideally use.  If too few
+<li><p><strong>ntasks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – the number of tasks the step would ideally use.  If too few
 cores are available on the system to accommodate the number of
 tasks and the number of cores per task, the step will run on
 fewer tasks as long as as this is not below <code class="docutils literal notranslate"><span class="pre">min_tasks</span></code></p></li>
-<li><p><strong>min_tasks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>optional</em>) – the number of tasks the step requires.  If the system has too
+<li><p><strong>min_tasks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – the number of tasks the step requires.  If the system has too
 few cores to accommodate the number of tasks and cores per task,
 the step will fail</p></li>
-<li><p><strong>openmp_threads</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – the number of OpenMP threads to use</p></li>
-<li><p><strong>max_memory</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>optional</em>) – the amount of memory that the step is allowed to use in MB.
+<li><p><strong>openmp_threads</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – the number of OpenMP threads to use</p></li>
+<li><p><strong>max_memory</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – the amount of memory that the step is allowed to use in MB.
 This is currently just a placeholder for later use with task
 parallelism</p></li>
-<li><p><strong>cached</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to get all of the outputs for the step from the database of
+<li><p><strong>cached</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to get all of the outputs for the step from the database of
 cached outputs for this MPAS core</p></li>
-<li><p><strong>run_as_subprocess</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether to run this step as a subprocess, rather than just running
+<li><p><strong>run_as_subprocess</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Whether to run this step as a subprocess, rather than just running
 it directly from the test case.  It is useful to run a step as a
 subprocess if there is not a good way to redirect output to a log
 file (e.g. if the step calls external code that, in turn, calls
