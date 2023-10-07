@@ -3,6 +3,7 @@ import time
 from importlib.resources import contents
 
 from compass.model import run_model
+from compass.ocean.inactive_top_cells import remove_inactive_top_cells_output
 from compass.ocean.tests.global_ocean.metadata import (
     add_mesh_and_init_metadata,
 )
@@ -155,6 +156,9 @@ class ForwardStep(Step):
                 filename='graph.info',
                 work_dir_target=f'{init.path}/initial_state/graph.info')
 
+            if init.with_inactive_top_cells:
+                self.add_output_file(filename='output_crop.nc')
+
         self.add_model_as_input()
 
     def setup(self):
@@ -214,6 +218,12 @@ class ForwardStep(Step):
         update_pio = self.config.getboolean('global_ocean',
                                             'forward_update_pio')
         run_model(self, update_pio=update_pio)
+
+        if self.init.with_inactive_top_cells:
+            remove_inactive_top_cells_output(in_filename='output.nc',
+                                             out_filename='output_crop.nc',
+                                             mesh_filename='init.nc')
+
         add_mesh_and_init_metadata(self.outputs, self.config,
                                    init_filename='init.nc')
 

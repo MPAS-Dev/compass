@@ -1,3 +1,6 @@
+import os
+
+from compass.ocean.inactive_top_cells import remove_inactive_top_cells_output
 from compass.ocean.tests.global_ocean.forward import (
     ForwardStep,
     ForwardTestCase,
@@ -31,9 +34,18 @@ class PerformanceTest(ForwardTestCase):
         time_integrator : {'split_explicit', 'RK4'}
             The time integrator to use for the forward run
         """
+        name = 'performance_test'
+        if init.with_inactive_top_cells:
+            if time_integrator == 'RK4':
+                self.inactive_top_comp_subdir = os.path.join(
+                    mesh.mesh_name, init.initial_condition, time_integrator,
+                    name)
+            else:
+                self.inactive_top_comp_subdir = os.path.join(
+                    mesh.mesh_name, init.initial_condition, name)
+            name = f'{name}_inactive_top'
         super().__init__(test_group=test_group, mesh=mesh, init=init,
-                         time_integrator=time_integrator,
-                         name='performance_test')
+                         time_integrator=time_integrator, name=name)
 
         if mesh.with_ice_shelf_cavities:
             this_module = self.__module__
@@ -88,6 +100,24 @@ class PerformanceTest(ForwardTestCase):
 
             compare_variables(test_case=self, variables=variables,
                               filename1=f'{step_subdir}/output.nc')
+
+            if self.init.with_inactive_top_cells:
+                filename2 = os.path.join(self.base_work_dir,
+                                         self.mpas_core.name,
+                                         self.test_group.name,
+                                         self.inactive_top_comp_subdir,
+                                         'forward/output.nc')
+                if os.path.exists(filename2):
+                    compare_variables(
+                        test_case=self, variables=variables,
+                        filename1=f'{step_subdir}/output_crop.nc',
+                        filename2=filename2,
+                        quiet=False, check_outputs=False,
+                        skip_if_step_not_run=False)
+                else:
+                    self.logger.warn('The version of "performance_test" '
+                                     'without inactive top cells was not run. '
+                                     'Skipping validation.')
 
             if self.mesh.with_ice_shelf_cavities:
                 compare_variables(

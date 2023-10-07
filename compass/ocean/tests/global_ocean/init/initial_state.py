@@ -1,7 +1,11 @@
 import os
 from importlib.resources import contents
 
+import xarray
+from mpas_tools.io import write_netcdf
+
 from compass.model import run_model
+from compass.ocean.inactive_top_cells import remove_inactive_top_cells_output
 from compass.ocean.plot import plot_initial_state, plot_vertical_grid
 from compass.ocean.tests.global_ocean.metadata import (
     add_mesh_and_init_metadata,
@@ -23,7 +27,8 @@ class InitialState(Step):
     initial_condition : {'WOA23', 'PHC', 'EN4_1900'}
         The initial condition dataset to use
     """
-    def __init__(self, test_case, mesh, initial_condition):
+    def __init__(self, test_case, mesh, initial_condition,
+                 with_inactive_top_cells):
         """
         Create the step
 
@@ -44,6 +49,7 @@ class InitialState(Step):
         super().__init__(test_case=test_case, name='initial_state')
         self.mesh = mesh
         self.initial_condition = initial_condition
+        self.with_inactive_top_cells = with_inactive_top_cells
 
         package = 'compass.ocean.tests.global_ocean.init'
 
@@ -134,6 +140,9 @@ class InitialState(Step):
                      'graph.info']:
             self.add_output_file(filename=file)
 
+        if with_inactive_top_cells:
+            self.add_output_file(filename='initial_state_crop.nc')
+
     def setup(self):
         """
         Get resources at setup from config options
@@ -162,6 +171,7 @@ class InitialState(Step):
         Run this step of the testcase
         """
         config = self.config
+        logger = self.logger
         interfaces = generate_1d_grid(config=config)
 
         write_1d_grid(interfaces=interfaces, out_filename='vertical_grid.nc')
@@ -170,6 +180,39 @@ class InitialState(Step):
 
         update_pio = config.getboolean('global_ocean', 'init_update_pio')
         run_model(self, update_pio=update_pio)
+
+        if self.with_inactive_top_cells:
+
+            logger.info("   * Updating minLevelCell for inactive top cells")
+
+            in_filename = 'initial_state.nc'
+            out_filename = in_filename
+
+            with xarray.open_dataset(in_filename) as ds:
+                ds.load()
+
+                # keep the data set with Time for output
+                ds_out = ds
+
+                ds = ds.isel(Time=0)
+
+                offset = config.getint('vertical_grid',
+                                       'inactive_top_cells')
+
+                if 'minLevelCell' in ds:
+                    minLevelCell = ds.minLevelCell + offset
+                    ds_out['minLevelCell'] = minLevelCell
+                else:
+                    logger.info("   - Variable minLevelCell, needed for "
+                                "inactive top cells, is missing from the "
+                                "initial condition")
+
+            write_netcdf(ds_out, out_filename)
+
+            remove_inactive_top_cells_output(
+                in_filename=in_filename, out_filename='initial_state_crop.nc')
+
+            logger.info("   - Complete")
 
         add_mesh_and_init_metadata(self.outputs, config,
                                    init_filename='initial_state.nc')

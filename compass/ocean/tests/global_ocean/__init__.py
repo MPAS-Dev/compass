@@ -34,7 +34,8 @@ class GlobalOcean(TestGroup):
                         include_rk4=True,
                         include_regression=True,
                         include_phc=True,
-                        include_en4_1900=True)
+                        include_en4_1900=True,
+                        with_inactive_top_cells=True)
 
         # for other meshes, we do fewer tests
         self._add_tests(mesh_names=['QU', 'Icos', 'QUwISC', 'IcoswISC'])
@@ -59,7 +60,7 @@ class GlobalOcean(TestGroup):
     def _add_tests(self, mesh_names, high_res_topography=True,
                    include_rk4=False,
                    include_regression=False, include_phc=False,
-                   include_en4_1900=False):
+                   include_en4_1900=False, with_inactive_top_cells=False):
         """ Add test cases for the given mesh(es) """
 
         default_ic = 'WOA23'
@@ -71,7 +72,8 @@ class GlobalOcean(TestGroup):
             self.add_test_case(mesh_test)
 
             init_test = Init(test_group=self, mesh=mesh_test,
-                             initial_condition=default_ic)
+                             initial_condition=default_ic,
+                             with_inactive_top_cells=False)
             self.add_test_case(init_test)
 
             time_integrator = default_time_int
@@ -133,6 +135,21 @@ class GlobalOcean(TestGroup):
                     ThreadsTest(
                         test_group=self, mesh=mesh_test, init=init_test,
                         time_integrator=time_integrator))
+
+            if with_inactive_top_cells:
+                init_test = Init(test_group=self, mesh=mesh_test,
+                                 initial_condition=default_ic,
+                                 with_inactive_top_cells=True)
+                self.add_test_case(init_test)
+                self.add_test_case(
+                    PerformanceTest(
+                        test_group=self, mesh=mesh_test, init=init_test,
+                        time_integrator=default_time_int))
+                if include_rk4:
+                    self.add_test_case(
+                        PerformanceTest(
+                            test_group=self, mesh=mesh_test, init=init_test,
+                            time_integrator='RK4'))
 
             initial_conditions = []
             if include_phc:

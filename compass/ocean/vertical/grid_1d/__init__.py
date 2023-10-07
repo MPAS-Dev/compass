@@ -28,16 +28,21 @@ def generate_1d_grid(config):
         A 1D array of positive depths for layer interfaces in meters
     """
     section = config['vertical_grid']
+    offset = 0
+    if config.has_option('vertical_grid', 'inactive_top_cells'):
+        offset = section.getint('inactive_top_cells')
+        print(f'offset = {offset}')
+
     grid_type = section.get('grid_type')
     if grid_type == 'uniform':
         vert_levels = section.getint('vert_levels')
-        interfaces = _generate_uniform(vert_levels)
+        interfaces = _generate_uniform(vert_levels - offset)
     elif grid_type == 'tanh_dz':
         vert_levels = section.getint('vert_levels')
         min_layer_thickness = section.getfloat('min_layer_thickness')
         max_layer_thickness = section.getfloat('max_layer_thickness')
         bottom_depth = section.getfloat('bottom_depth')
-        interfaces = create_tanh_dz_grid(vert_levels,
+        interfaces = create_tanh_dz_grid(vert_levels - offset,
                                          bottom_depth,
                                          min_layer_thickness,
                                          max_layer_thickness)
@@ -65,6 +70,9 @@ def generate_1d_grid(config):
         bottom_depth = section.getfloat('bottom_depth')
         # renormalize to the requested range
         interfaces = (bottom_depth / interfaces[-1]) * interfaces
+
+    if config.has_option('vertical_grid', 'inactive_top_cells'):
+        interfaces = np.append(np.zeros((offset)), interfaces)
 
     return interfaces
 

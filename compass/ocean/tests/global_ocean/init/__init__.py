@@ -24,8 +24,14 @@ class Init(TestCase):
     init_subdir : str
         The subdirectory within the test group for all test cases with this
         initial condition
+
+    inactive_top_comp_subdir : str
+        If ``with_inactive_top_cells == True``, the subdirectory equivalent to
+        ``init_subdir`` for test cases without inactive top cells for use for
+        validation between tests with and without inactive top cells
     """
-    def __init__(self, test_group, mesh, initial_condition):
+    def __init__(self, test_group, mesh, initial_condition,
+                 with_inactive_top_cells=False):
         """
         Create the test case
 
@@ -43,17 +49,25 @@ class Init(TestCase):
         name = 'init'
         mesh_name = mesh.mesh_name
         ic_dir = initial_condition
-        self.init_subdir = os.path.join(mesh_name, ic_dir)
+        init_subdir = os.path.join(mesh_name, ic_dir)
+        if with_inactive_top_cells:
+            # Add the name of the subdir without inactive top cells whether or
+            # not is has or will be run
+            self.inactive_top_comp_subdir = init_subdir
+            name = f'{name}_inactive_top'
+        self.init_subdir = init_subdir
         subdir = os.path.join(self.init_subdir, name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
         self.mesh = mesh
         self.initial_condition = initial_condition
+        self.with_inactive_top_cells = with_inactive_top_cells
 
         self.add_step(
             InitialState(
                 test_case=self, mesh=mesh,
-                initial_condition=initial_condition))
+                initial_condition=initial_condition,
+                with_inactive_top_cells=with_inactive_top_cells))
 
         if mesh.with_ice_shelf_cavities:
             self.add_step(RemapIceShelfMelt(test_case=self, mesh=mesh))
@@ -84,6 +98,15 @@ class Init(TestCase):
         config.set('global_ocean', 'init_description',
                    descriptions[initial_condition])
 
+        if self.with_inactive_top_cells:
+            # Since we start at minLevelCell = 2, we need to increase the
+            # number of vertical levels in the cfg file to end up with the
+            # intended number in the initial state
+            vert_levels = config.getint('vertical_grid', 'vert_levels')
+            config.set('vertical_grid', 'vert_levels', f'{vert_levels + 1}',
+                       comment='active vertical levels + inactive_top_cells')
+            config.set('vertical_grid', 'inactive_top_cells', '1')
+
     def validate(self):
         """
         Test cases can override this method to perform validation of variables
@@ -92,6 +115,27 @@ class Init(TestCase):
         variables = ['temperature', 'salinity', 'layerThickness']
         compare_variables(test_case=self, variables=variables,
                           filename1='initial_state/initial_state.nc')
+
+        if self.with_inactive_top_cells:
+            # construct the work directory for the other test
+            filename2 = os.path.join(self.base_work_dir, self.mpas_core.name,
+                                     self.test_group.name,
+                                     self.inactive_top_comp_subdir,
+                                     'init/initial_state/initial_state.nc')
+            if os.path.exists(filename2):
+                variables = ['temperature', 'salinity', 'layerThickness',
+                             'normalVelocity']
+                compare_variables(
+                    test_case=self, variables=variables,
+                    filename1='initial_state/initial_state_crop.nc',
+                    filename2=filename2,
+                    quiet=False, check_outputs=False,
+                    skip_if_step_not_run=False)
+
+            else:
+                self.logger.warn('The version of "init" without inactive top '
+                                 'cells was not run.  Skipping\n'
+                                 'validation.')
 
         if self.mesh.with_ice_shelf_cavities:
             variables = ['ssh', 'landIcePressure']
