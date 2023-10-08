@@ -139,9 +139,21 @@ class InitialState(Step):
         Get resources at setup from config options
         """
         self._get_resources()
-        rx1_max = self.config.getfloat('global_ocean', 'rx1_max')
-        self.add_namelist_options({'config_rx1_max': f'{rx1_max}'},
-                                  mode='init')
+        section = self.config['global_ocean']
+        rx1_max = section.getfloat('rx1_max')
+        topo_smooth_iterations = section.getint('topo_smooth_iterations')
+        topo_smooth_weight = section.getfloat('topo_smooth_weight')
+
+        options = {
+            'config_rx1_max':
+                f'{rx1_max}',
+            'config_global_ocean_topography_smooth_iterations':
+                f'{topo_smooth_iterations}',
+            'config_global_ocean_topography_smooth_weight':
+                f'{topo_smooth_weight}',
+        }
+
+        self.add_namelist_options(options, mode='init')
 
     def constrain_resources(self, available_resources):
         """
