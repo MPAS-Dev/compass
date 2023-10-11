@@ -45,7 +45,7 @@ class Viz(Step):
         self.datatypes = datatypes
 
         self.add_input_file(filename='init.nc',
-                            target='../initial_state/ocean.nc')
+                            target='../initial_state/initial_state.nc')
         if damping_coeffs is None:
             self.add_input_file(filename='output.nc',
                                 target='../forward/output.nc')
@@ -160,7 +160,10 @@ class Viz(Step):
         mesh_ymean = ds_mesh.isel(Time=0).groupby('yCell').mean(
             dim=xr.ALL_DIMS)
         bottom_depth = mesh_ymean.bottomDepth.values
-        x = mesh_ymean.yCell.values / 1000.0
+        drying_length = self.config.getfloat('drying_slope', 'Ly_analysis')
+        drying_length = drying_length * 1e3
+        x_offset = np.max(mesh_ymean.yCell.values) - drying_length
+        x = (mesh_ymean.yCell.values - x_offset) / 1000.0
 
         xBed = np.linspace(0, 25, 100)
         yBed = 10.0 / 25.0 * xBed
