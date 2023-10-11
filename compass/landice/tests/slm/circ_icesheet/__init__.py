@@ -23,22 +23,33 @@ class CircIcesheetTest(TestCase):
         test_group : compass.landice.tests.dome.Dome
             The test group that this test case belongs to
             The resolution or type of mesh of the test case
+
+        name : str, optional
+            the name of the test case
         """
         name = 'circular_icesheet_test'
         subdir = name
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
-        self.add_step(SetupMesh(test_case=self))
+    def configure(self):
+        """
+        Set up the desired mesh-resolution tests
 
-        self.add_step(RunModel(test_case=self, ntasks=4, openmp_threads=1,
-                      name='run_step'))
+        Read the list of resolutions from the config
+        """
+        config = self.config
+        section = config['circ_icesheet']
+        resolutions = section.get('resolutions').split(',')
+        print('list of resolutione is ', resolutions)
 
+        for res in resolutions:
+            self.add_step(SetupMesh(test_case=self,
+                          name=f'{res}km_res/setup_mesh'))
+            self.add_step(RunModel(test_case=self, ntasks=1, openmp_threads=1,
+                          name=f'{res}km_res/run_model'))
         step = Visualize(test_case=self)
         self.add_step(step, run_by_default=True)
-
-    # no configure() method is needed because we will use the default
-    # config options
 
     # no run() method is needed because we're doing the default: running all
     # steps
