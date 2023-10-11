@@ -1,12 +1,14 @@
 import os
 import shutil
 
+import netCDF4
 import numpy as np
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 from mpas_tools.mesh.conversion import convert, cull
 from mpas_tools.planar_hex import make_planar_hex_mesh
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
+from mpas_tools.translate import center, translate
 from netCDF4 import Dataset as NetCDFFile
 
 from compass.model import make_graph_file
@@ -22,7 +24,7 @@ class SetupMesh(Step):
     ----------
     """
 
-    def __init__(self, test_case):
+    def __init__(self, test_case, name='setup_mesh'):
         """
         Create the step
 
@@ -31,7 +33,7 @@ class SetupMesh(Step):
         test_case : compass.TestCase
             The test case this step belongs to
         """
-        super().__init__(test_case=test_case, name='setup_mesh')
+        super().__init__(test_case=test_case, name=name)
 
         self.add_output_file(filename='graph.info')
         self.add_output_file(filename='landice_grid.nc')
@@ -49,12 +51,20 @@ class SetupMesh(Step):
         nx = section.getint('nx')
         ny = section.getint('ny')
         dc = section.getfloat('dc')
-        print('calling the mesh creation function')
+        # call the mesh creation function
         dsMesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc,
                                       nonperiodic_x=True,
                                       nonperiodic_y=True)
         dsMesh = cull(dsMesh, logger=logger)
         dsMesh = convert(dsMesh, logger=logger)
+        # translating the mesh center to x=0 & y=0
+        center(dsMesh)
+        # shift the center to a quarter or radius
+        r0 = section.getfloat('r0')
+        shift = r0
+        print(f'shifting the center by {shift} meters')
+        translate(dsMesh, shift, shift)
+        # write to a file
         write_netcdf(dsMesh, 'mpas_grid.nc')
 
         levels = 3
@@ -93,7 +103,7 @@ def _setup_circsheet_initial_conditions(config, logger, filename):
         A logger for output from the step
 
     filename : str
-        file to setup circ_icesheet
+        file to setup circular icesheet
     """
     section = config['circ_icesheet']
     ice_type = section.get('ice_type')
@@ -139,8 +149,7 @@ def _setup_circsheet_initial_conditions(config, logger, filename):
         x0 = 0.0
         y0 = 0.0
         r = ((xCell[:] - x0) ** 2 + (yCell[:] - y0) ** 2) ** 0.5
-        print('HH==max r is', max(r))
-        print('HH==min r is', min(r))
+
     # Assign variable values for the circular ice sheet
     # Set default value for non-circular cells
     thickness[:] = 0.0
@@ -148,8 +157,6 @@ def _setup_circsheet_initial_conditions(config, logger, filename):
     # (thickness will be NaN otherwise)
     thickness_field = thickness[0, :]
 
-    print('r0', r0)
-    print('r', r)
     if ice_type == 'cylinder':
         logger.info('cylinder ice type is chosen')
         thickness_field[r < r0] = h0
@@ -194,7 +201,7 @@ def _create_smb_forcing_file(config, logger, mali_mesh_file, filename):
         mesh file created in the current step
 
     filename : str
-        file to setup circ_icesheet
+        file to setup circular icesheet
     """
     section = config['circ_icesheet']
     r0 = section.getfloat('r0')
@@ -202,9 +209,14 @@ def _create_smb_forcing_file(config, logger, mali_mesh_file, filename):
 
     section = config['smb_forcing']
     direction = section.get('direction')
+    start_year = int(section.get('start_year'))
+    end_year = int(section.get('end_year'))
+    dt_year = int(section.get('dt_year'))
+    dHdt = section.getfloat('dHdt')
+    dRdt = section.getfloat('dRdt')
 
     # other constants used in the fuction
-    pi = 3.1415926535898  # pi value used in the SLM
+    # pi = 3.1415926535898  # pi value used in the SLM
     rhoi = 910.0  # ice density
 
     # Open the file, get needed dimensions
@@ -214,73 +226,66 @@ def _create_smb_forcing_file(config, logger, mali_mesh_file, filename):
     # Get variables
     xCell = smbfile.variables['xCell']
     yCell = smbfile.variables['yCell']
-    # nCells = smbfile.dimensions['nCells']
-    sfcMassBal = smbfile.variables['sfcMassBal']
+    nCells = smbfile.dimensions['nCells'].size
 
-    # set xtime variable
-    # smbfile.variables['xtime']
+    # time interval for the forcing
+    t_array = np.arange(start_year, end_year, dt_year)
+    nt = len(t_array)
 
     # initialize SMB value everywhere in the mesh
-    sfcMassBal[:, :] = 0.0
+    sfcMassBal = np.zeros((nt, nCells))
 
-    # define the time (1 year interval)
-    dt = 1
-    t_array = np.arange(0, 3, dt)
-    x0 = 0.0
-    y0 = 0.0
+    # Find center of domain
+    x0 = xCell[:].min() + 0.5 * (xCell[:].max() - xCell[:].min())
+    y0 = yCell[:].min() + 0.5 * (yCell[:].max() - yCell[:].min())
+    # calculate the radius of circ ice sheet
     r = ((xCell[:] - x0) ** 2 + (yCell[:] - y0) ** 2) ** 0.5
 
-    dVdt = -9.678E13
-    dHdt = 20.0
-    dRdt = 40000.0
-
     if direction == 'vertical':
-        print('creating a file that prescribes vertical smb')
-        # dHdt = dVdt / (pi*(r0*1000.0)**2) # change in ice thickness in m
-        smb = dHdt * rhoi / (365.0 * 24 * 60 * 60)  # smb in kg/m^2/s
+        logger.info('creating a file that prescribes vertical smb')
+        smb = dHdt * rhoi / (365.0 * 24 * 60 * 60)
+        logger.info(f'prescribed smb is {smb} kg/m2/s')
         indx = np.where(r <= r0)[0]
-
         # for loop through time
-        for t in t_array:
-            print((t))
-            Ht = h0 + (dHdt * t * dt)  # calculate a new height each time
-            print(f'new height will be: {Ht}km')
+        for t in range(len(t_array)):
+            Ht = h0 + (dHdt * (t + 1))  # calculate a new height each time
+            logger.info(f'At time {start_year + dt_year}, \
+                        new height will be {Ht} km')
             sfcMassBal[t, indx] = smb  # assign sfcMassBal
-            smbfile.variables['sfcMassBal'][t, :] = sfcMassBal[t, :]
+        smbfile.variables['sfcMassBal'][:, :] = sfcMassBal[:, :]
 
     elif direction == 'horizontal':
-        print('creating a file that prescribes horizontal smb')
-        # dRdt = (abs(Rf - r0)) / len(t_array)
-        smb = (10000.0) * rhoi / (365.0 * 24.0 * 60.0 * 60.0)
-        print('-smb is', -smb)
+        logger.info('creating a file that prescribes horizontal smb')
+        smb = -1 * ((10000.0) * rhoi / (365.0 * 24.0 * 60.0 * 60.0))
+        print(f'prescribed smb is {smb} kg/m2/s')
         # for loop through time
-        for t in t_array:
-            print((t))
-            # Rt = abs(np.sqrt(((dVdt * t * dt) / (pi * h0)) + (r0*1000)**2))
-            # calculate a new radius at each time; for constant radius change
-            Rt = (r0 - (dRdt * t * dt))
-            if (np.isnan(Rt) or Rt < 0):
+        for t in range(len(t_array)):
+            # calculate a new radius at each time
+            Rt = r0 + (dRdt * (t + 1))
+            if (Rt < 0):
                 Rt = 0.0
-                smbfile.variables['sfcMassBal'][t, :] = 0.0
-                print(f'new radius is: {Rt}km')
+                sfcMassBal[t, :] = 0.0
+                print(f'At time {start_year+dt_year*t}, \
+                      new radius will be {Rt} km')
             else:
-                indx = np.where(r >= Rt / 1000)[0]
-                print('idx', indx)
-                smbfile.variables['sfcMassBal'][t, indx] = -smb
-                print(f'new radius is: {Rt / 1000}km')
-            smbfile.variables['sfcMassBal'][t, :] = sfcMassBal[t, :]
+                indx = np.where(r >= Rt)[0]
+                sfcMassBal[t, indx] = smb
+                print(f'At time {start_year+dt_year*t}, \
+                      new radius will be {Rt/1000} km')
+        smbfile.variables['sfcMassBal'][:, :] = sfcMassBal[:, :]
 
-    elif direction == 'dome-halfar':
-        for t in t_array:
-            Rt = (((dVdt * dt * t) * 3 / (2 * pi) +
-                   (r0 * 1000) ** 3)) ** (1.0 / 3)
-            print(f'new radius is: {Rt / 1000}km')
-            # smb = (dVdt * t * dt) / (2 * pi * (Rt ** 2)) \
-            # * rhoi / (365.0 * 24.0 * 60.0 * 60.0)i
-            indx = np.where(r > r0)[0]
-            smbfile.variables['sfcMassBal'][t, :] = smb
-            print(f'smb is: {smb}')
-        print('ice thickness will change both horizontally and vertically')
+    # add xtime variable
+    smbfile.createDimension('StrLen', 64)
+    xtime = smbfile.createVariable('xtime', 'S1', ('Time', 'StrLen'))
+
+    # initialize SMB value everywhere in the mesh
+    xtime_str = []
+    for t_index in range(len(t_array)):
+        yr = start_year + (t_index * dt_year)
+        xtime_str = f'{int(yr)}-01-01_00:00:00'.ljust(64)
+        xtime_char = netCDF4.stringtochar(np.array([xtime_str], 'S64'),
+                                          encoding='utf-8')
+        xtime[t_index, :] = xtime_char
 
     smbfile.close()
 
@@ -330,18 +335,16 @@ def _build_mapping_files(config, logger, mali_mesh_file):
 
     check_call(args, logger=logger)
 
-    # create scrip files for source and destination grids
-    logger.info('creating scrip file for the mali mesh')
-    mali_mesh_copy = f'{mali_mesh_file}_copy'
-    shutil.copy(mali_mesh_file, mali_mesh_copy)
-
+    # adjust the lat-lon values
     args = ['set_lat_lon_fields_in_planar_grid.py',
-            '--file', mali_mesh_copy,
+            '--file', mali_mesh_file,
             '--proj', 'ais-bedmap2-sphere']
 
     check_call(args, logger=logger)
 
-    scrip_from_mpas(mali_mesh_copy, mali_scripfile)
+    # create scrip files for source and destination grids
+    logger.info('creating scrip file for the mali mesh')
+    scrip_from_mpas(mali_mesh_file, mali_scripfile)
 
     # create a mapping file using ESMF weight gen
     logger.info('Creating a mapping file...')
@@ -374,4 +377,3 @@ def _build_mapping_files(config, logger, mali_mesh_file):
     logger.info('Removing the temporary mesh and scripfiles...')
     os.remove(slm_scripfile)
     os.remove(mali_scripfile)
-    os.remove(mali_mesh_copy)
