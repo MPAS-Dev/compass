@@ -38,6 +38,9 @@ from compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition im
 from compass.ocean.tests.global_ocean.files_for_e3sm.seaice_mesh import (  # noqa: E501
     SeaiceMesh,
 )
+from compass.ocean.tests.global_ocean.files_for_e3sm.write_coeffs_reconstruct import (  # noqa: E501
+    WriteCoeffsReconstruct,
+)
 from compass.ocean.tests.global_ocean.forward import get_forward_subdir
 from compass.testcase import TestCase
 
@@ -114,6 +117,10 @@ class FilesForE3SM(TestCase):
 
         self.add_step(RemapIcebergClimatology(
             test_case=self))
+
+        if mesh is not None and init is not None:
+            self.add_step(WriteCoeffsReconstruct(
+                test_case=self, mesh=mesh, init=init))
 
     def configure(self):
         """
