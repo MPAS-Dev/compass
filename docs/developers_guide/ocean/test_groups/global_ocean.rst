@@ -1380,6 +1380,12 @@ The test case is made up of 10 steps:
     the MPAS mesh.  This dataset is used in E3SM for compsets with data iceberg
     freshwater fluxes (``DIB``).
 
+:py:class:`compass.ocean.tests.global_ocean.files_for_e3sm.write_coeffs_reconstruct.WriteCoeffsReconstruct`
+    is used to do a one-time-step forward run to write out coefficients
+    ``coeff_reconstruct`` for reconstructing vector fields at cell centers from
+    normal values at edges.  These can be used in combination with the
+
+
 files_for_e3sm for an existing mesh
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
