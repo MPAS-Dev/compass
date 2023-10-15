@@ -39,7 +39,7 @@ class ForwardStep(Step):
     def __init__(self, test_case, mesh, time_integrator, init=None,
                  name='forward', subdir=None, ntasks=None, min_tasks=None,
                  openmp_threads=None, get_dt_from_min_res=True,
-                 land_ice_flux_mode='pressure_only'):
+                 land_ice_flux_mode='pressure_only', **kwargs):
         """
         Create a new step
 
@@ -91,7 +91,7 @@ class ForwardStep(Step):
             min_tasks = ntasks
         super().__init__(test_case=test_case, name=name, subdir=subdir,
                          ntasks=ntasks, min_tasks=min_tasks,
-                         openmp_threads=openmp_threads)
+                         openmp_threads=openmp_threads, **kwargs)
 
         if (ntasks is None) != (openmp_threads is None):
             raise ValueError('You must specify both ntasks and openmp_threads '
@@ -179,6 +179,7 @@ class ForwardStep(Step):
             else:
                 # RK4, so use the smaller time step
                 self.add_namelist_options({'config_dt': btr_dt})
+        super().setup()
 
     def constrain_resources(self, available_resources):
         """
@@ -206,11 +207,13 @@ class ForwardStep(Step):
             else:
                 # RK4, so use the smaller time step
                 self.update_namelist_at_runtime({'config_dt': btr_dt})
+        super().runtime_setup()
 
     def run(self):
         """
         Run this step of the testcase
         """
+        super().run()
         update_pio = self.config.getboolean('global_ocean',
                                             'forward_update_pio')
         run_model(self, update_pio=update_pio)
