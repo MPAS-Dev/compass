@@ -1,5 +1,7 @@
 import os
 
+from mpas_tools.logging import check_call
+
 from compass.io import symlink
 from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step import (  # noqa: E501
     FilesForE3SMStep,
@@ -42,6 +44,15 @@ class WriteCoeffsReconstruct(ForwardStep, FilesForE3SMStep):
         Run this step of the testcase
         """
         super().run()
+
+        # perform a test reconstruction to make sure things are working
+        args = ['vector_reconstruct',
+                '-i', 'restart.nc',
+                '-o', 'velocity_components.nc',
+                '-w', 'coeffs_reconstruct.nc',
+                '-v', 'normalVelocity',
+                '--out_variables', 'velocity']
+        check_call(args=args, logger=self.logger)
 
         reconstruct_dir = \
             '../assembled_files/diagnostics/mpas_analysis/reconstruct'
