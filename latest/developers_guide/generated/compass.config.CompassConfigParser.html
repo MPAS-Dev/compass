@@ -173,43 +173,49 @@ certain paths are absolute, rather than relative.</p>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_user_config</span></code>(filename)</p></td>
 <td><p>Add a the contents of a user config file to the parser.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">combine</span></code>()</p></td>
-<td><p>Combine the config files into one.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">append</span></code>(other)</p></td>
+<td><p>Append a deep copy of another config parser to this one.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">combine</span></code>([raw])</p></td>
+<td><p>Combine the config files into one</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code>()</p></td>
 <td><p>Get a deep copy of the config parser</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get</span></code>(section, option)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get</span></code>(section, option)</p></td>
 <td><p>Get an option value for a given section.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getboolean</span></code>(section, option)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getboolean</span></code>(section, option)</p></td>
 <td><p>Get an option boolean value for a given section.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getexpression</span></code>(section, option[, dtype, ...])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getexpression</span></code>(section, option[, dtype, ...])</p></td>
 <td><p>Get an option as an expression (typically a list, though tuples and dicts are also available).</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getfloat</span></code>(section, option)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getfloat</span></code>(section, option)</p></td>
 <td><p>Get an option float value for a given section.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getint</span></code>(section, option)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getint</span></code>(section, option)</p></td>
 <td><p>Get an option integer value for a given section.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getlist</span></code>(section, option[, dtype])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getlist</span></code>(section, option[, dtype])</p></td>
 <td><p>Get an option value as a list for a given section.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_option</span></code>(section, option)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_option</span></code>(section, option)</p></td>
 <td><p>Whether the given section has the given option</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_section</span></code>(section)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_section</span></code>(section)</p></td>
 <td><p>Whether the given section is part of the config</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">list_files</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">list_files</span></code>()</p></td>
 <td><p>Get a list of files contributing to the combined config options</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">prepend</span></code>(other)</p></td>
+<td><p>Prepend a deep copy of another config parser to this one.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code>(section, option[, value, comment, user])</p></td>
 <td><p>Set the value of the given option in the given section.  The file from</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code>(fp[, include_sources, include_comments])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code>(fp[, include_sources, ...])</p></td>
 <td><p>Write the config options to the given file pointer.</p></td>
 </tr>
 </tbody>

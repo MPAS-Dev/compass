@@ -112,6 +112,7 @@
              
   <h1>Source code for compass.config</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
+
 <span class="kn">from</span> <span class="nn">mpas_tools.config</span> <span class="kn">import</span> <span class="n">MpasConfigParser</span>
 
 
@@ -127,8 +128,17 @@
 <span class="sd">    certain paths are absolute, rather than relative.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">combine</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">combine</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">combine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Combine the config files into one</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        raw : bool, optional</span>
+<span class="sd">            Whether to combine config &quot;raw&quot; config options, rather than using</span>
+<span class="sd">            extended interpolation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">raw</span><span class="o">=</span><span class="n">raw</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_absolute_paths</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_ensure_absolute_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
