@@ -38,5 +38,8 @@ class CompassConfigParser(MpasConfigParser):
             if not config.has_section(section):
                 continue
             for option, value in config.items(section):
-                value = os.path.abspath(value)
-                config.set(section, option, value)
+                # not safe to make paths that start with other config options
+                # into absolute paths
+                if not value.startswith('$'):
+                    value = os.path.abspath(value)
+                    config.set(section, option, value)
