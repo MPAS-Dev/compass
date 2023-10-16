@@ -1,3 +1,6 @@
+from numpy import ceil
+
+from compass.config import CompassConfigParser
 from compass.ocean.tests.drying_slope.forward import Forward
 from compass.ocean.tests.drying_slope.initial_state import InitialState
 from compass.ocean.tests.drying_slope.viz import Viz
@@ -32,6 +35,9 @@ class Default(TestCase):
 
         coord_type : str
             The type of vertical coordinate (``sigma``, ``single_layer``)
+
+        method : str
+            The type of wetting-and-drying algorithm
         """
         name = 'default'
 
@@ -47,9 +53,17 @@ class Default(TestCase):
         self.add_step(InitialState(test_case=self, resolution=resolution,
                                    coord_type=coord_type))
         damping_coeffs = None
+        config = CompassConfigParser()
+        config.add_from_package('compass.ocean.tests.drying_slope',
+                                'drying_slope.cfg')
+        section = config['drying_slope']
+        ntasks_baseline = section.getint('ntasks_baseline')
+        min_tasks = section.getint('min_tasks')
+        ntasks = max(min_tasks, int(ceil(ntasks_baseline / resolution**2.)))
         if coord_type == 'single_layer':
             forward_step = Forward(test_case=self, resolution=resolution,
-                                   ntasks=4, openmp_threads=1,
+                                   ntasks=ntasks, min_tasks=min_tasks,
+                                   openmp_threads=1,
                                    coord_type=coord_type)
             if method == 'ramp':
                 forward_step.add_namelist_options(
@@ -60,7 +74,8 @@ class Default(TestCase):
             for damping_coeff in damping_coeffs:
                 forward_step = Forward(test_case=self, resolution=resolution,
                                        name=f'forward_{damping_coeff}',
-                                       ntasks=4, openmp_threads=1,
+                                       ntasks=ntasks, min_tasks=min_tasks,
+                                       openmp_threads=1,
                                        damping_coeff=damping_coeff,
                                        coord_type=coord_type)
                 if method == 'ramp':

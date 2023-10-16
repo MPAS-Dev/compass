@@ -1,3 +1,6 @@
+from numpy import ceil
+
+from compass.config import CompassConfigParser
 from compass.ocean.tests.drying_slope.forward import Forward
 from compass.ocean.tests.drying_slope.initial_state import InitialState
 from compass.ocean.tests.drying_slope.viz import Viz
@@ -46,8 +49,16 @@ class LogLaw(TestCase):
                          subdir=subdir)
         self.add_step(InitialState(test_case=self, coord_type=coord_type,
                                    resolution=resolution))
+        config = CompassConfigParser()
+        config.add_from_package('compass.ocean.tests.drying_slope',
+                                'drying_slope.cfg')
+        section = config['drying_slope']
+        ntasks_baseline = section.getint('ntasks_baseline')
+        min_tasks = section.getint('min_tasks')
+        ntasks = max(min_tasks, int(ceil(ntasks_baseline / resolution**2.)))
         forward_step = Forward(test_case=self, resolution=resolution,
-                               ntasks=4, openmp_threads=1,
+                               ntasks=ntasks, min_tasks=min_tasks,
+                               openmp_threads=1,
                                coord_type=coord_type)
         forward_step.add_namelist_options(
             {'config_implicit_bottom_drag_type': "'loglaw'"})

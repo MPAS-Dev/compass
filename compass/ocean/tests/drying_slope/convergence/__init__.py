@@ -1,3 +1,5 @@
+from numpy import ceil
+
 from compass.config import CompassConfigParser
 from compass.ocean.tests.drying_slope.analysis import Analysis
 from compass.ocean.tests.drying_slope.forward import Forward
@@ -77,6 +79,9 @@ class Convergence(TestCase):
         self.steps_to_run = list()
 
         self.resolutions = resolutions
+        section = config['drying_slope']
+        ntasks_baseline = section.getint('ntasks_baseline')
+        min_tasks = section.getint('min_tasks')
 
         for resolution in self.resolutions:
 
@@ -89,10 +94,13 @@ class Convergence(TestCase):
                                        name=init_name,
                                        resolution=resolution,
                                        coord_type=self.coord_type))
+            ntasks = max(min_tasks,
+                         int(ceil(ntasks_baseline / resolution**2.)))
             forward_step = Forward(test_case=self, resolution=resolution,
                                    name=f'forward_{res_name}',
                                    input_path=f'../{init_name}',
-                                   ntasks=4, openmp_threads=1,
+                                   ntasks=ntasks, min_tasks=min_tasks,
+                                   openmp_threads=1,
                                    damping_coeff=self.damping_coeffs[0],
                                    coord_type=self.coord_type)
             if method == 'ramp':
