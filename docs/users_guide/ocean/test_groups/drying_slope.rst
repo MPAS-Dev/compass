@@ -52,32 +52,74 @@ The config options for this test case are:
    # Options related to the vertical grid
    [vertical_grid]
    
+   # the type of vertical grid
+   grid_type = uniform
+   
+   # Number of vertical levels
+   bottom_depth = 10.
+   
    # Number of vertical levels
    vert_levels = 10
    
-   # The type of vertical coordinate (e.g. z-level, z-star)
-   coord_type = sigma
+   # Thickness of each layer in the thin film region
+   thin_film_thickness = 1.0e-3
+   
+   # Whether to use "partial" or "full", or "None" to not alter the topography
+   partial_cell_type = None
+   
+   # The minimum fraction of a layer for partial cells
+   min_pc_fraction = 0.1
    
    # config options for drying slope test cases
    [drying_slope]
    
-   # the number of grid cells in x and y
+   # the number of grid cells in x
    nx = 6
+   
+   # Length over which wetting and drying actually occur
+   Ly_analysis = 25.
+   
+   # Domain length
+   Ly = 30.
+   
+   # Bottom depth at the right side of the domain
+   right_bottom_depth = 10.
+   
+   # Bottom depth at the left side of the domain
+   left_bottom_depth = 0.
+   
+   # Plug width as a fraction of the domain
+   plug_width_frac = 0.0
+   
+   # Plug temperature
+   plug_temperature = 20.0
+   
+   # Background temperature
+   background_temperature = 20.0
+   
+   # Background salinity
+   background_salinity = 35.0
    
    # time step in s per km of horizontal resolution
    dt_per_km = 30
+   
+   # Number of tasks at 1km resolution
+   ntasks_baseline = 4
+   
+   # Minimum number of tasks
+   min_tasks = 1
    
    # config options for visualizing drying slope ouptut
    [drying_slope_convergence]
    
    resolutions = 0.25, 0.5, 1, 2
-
+   
    # config options for visualizing drying slope ouptut
    [drying_slope_viz]
    
    # whether to generate movie
    generate_movie = False
-
+   
    # frames per second for movies
    frames_per_second = 30
    
@@ -117,15 +159,6 @@ processors and the results of each are compared. ``RES`` is either 250m or 1km.
 ``COORD`` is either ``single_layer`` or ``sigma``. The ``sigma`` case uses a
 Rayleigh drag coefficient of 0.01. Rayleigh drag is not compatible with
 ``single_layer`` so implicit drag with a constant coefficient is used.
-
-ramp
-----
-
-``ocean/drying_slope/${RES}/${COORD}/ramp`` is identical to the ``default``
-test except the factor that scales velocities and velocity tendencies is
-ramped over a given layer thickness range rather than a binary switch at the
-minimum thickness. ``RES`` is either 250m or 1km. ``COORD`` is either
-``single_layer`` or ``sigma``.
 
 loglaw
 ------
