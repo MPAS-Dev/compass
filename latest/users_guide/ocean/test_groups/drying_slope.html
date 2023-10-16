@@ -61,6 +61,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">drying_slope</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#default">default</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#decomp">decomp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ramp">ramp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#loglaw">loglaw</a></li>
 </ul>
@@ -219,6 +220,15 @@ drying slope test case for two short (12h) test runs with two different drag
 coefficients and validation of sea surface height through visual inspection
 against analytic and ROMS solutions. <code class="docutils literal notranslate"><span class="pre">RES</span></code> is either 250m or 1km. <code class="docutils literal notranslate"><span class="pre">COORD</span></code>
 is either <code class="docutils literal notranslate"><span class="pre">single_layer</span></code> or <code class="docutils literal notranslate"><span class="pre">sigma</span></code>. Rayleigh drag is not compatible with
+<code class="docutils literal notranslate"><span class="pre">single_layer</span></code> so implicit drag with a constant coefficient is used.</p>
+</section>
+<section id="decomp">
+<h2>decomp<a class="headerlink" href="#decomp" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ocean/drying_slope/${RES}/${COORD}/decomp</span></code> is identical to the default version
+of the drying slope test case except it is run twice, on 1 processor and 12
+processors and the results of each are compared. <code class="docutils literal notranslate"><span class="pre">RES</span></code> is either 250m or 1km.
+<code class="docutils literal notranslate"><span class="pre">COORD</span></code> is either <code class="docutils literal notranslate"><span class="pre">single_layer</span></code> or <code class="docutils literal notranslate"><span class="pre">sigma</span></code>. The <code class="docutils literal notranslate"><span class="pre">sigma</span></code> case uses a
+Rayleigh drag coefficient of 0.01. Rayleigh drag is not compatible with
 <code class="docutils literal notranslate"><span class="pre">single_layer</span></code> so implicit drag with a constant coefficient is used.</p>
 </section>
 <section id="ramp">

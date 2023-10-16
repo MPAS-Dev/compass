@@ -70,6 +70,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">drying_slope</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#framework">framework</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#default">default</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#decomp">decomp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ramp">ramp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#loglaw">loglaw</a></li>
 </ul>
@@ -214,6 +215,19 @@ types are supported. For <code class="docutils literal notranslate"><span class=
 two cases at different values of <code class="docutils literal notranslate"><span class="pre">config_Rayleigh_damping_coeff</span></code>, 0.0025 and
 0.01, for which there is comparison data. The <code class="docutils literal notranslate"><span class="pre">single_layer</span></code> case runs at one
 value of the implicit bottom drag coefficient.</p>
+</section>
+<section id="decomp">
+<span id="dev-ocean-drying-slope-decomp"></span><h2>decomp<a class="headerlink" href="#decomp" title="Permalink to this heading">¶</a></h2>
+<p>The <a class="reference internal" href="../generated/compass.ocean.tests.drying_slope.decomp.Decomp.html#compass.ocean.tests.drying_slope.decomp.Decomp" title="compass.ocean.tests.drying_slope.decomp.Decomp"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.drying_slope.decomp.Decomp</span></code></a>
+test performs two 12-hour runs on 1 and 12 cores, respectively.
+<a class="reference internal" href="../../framework.html#dev-validation"><span class="std std-ref">Validation</span></a> is performed by comparing the output of the two runs.
+This class accepts resolution and coordinate type <code class="docutils literal notranslate"><span class="pre">coord_type</span></code> as arguments.
+Both <code class="docutils literal notranslate"><span class="pre">sigma</span></code> and <code class="docutils literal notranslate"><span class="pre">single_layer</span></code> coordinate types are supported. For
+<code class="docutils literal notranslate"><span class="pre">sigma</span></code> coordinates, this case is hard-coded to run with</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">config_Rayleigh_damping_coeff</span></code> equal to 0.01. The <code class="docutils literal notranslate"><span class="pre">single_layer</span></code> case</p>
+</div></blockquote>
+<p>runs at one value of the implicit bottom drag coefficient.</p>
 </section>
 <section id="ramp">
 <span id="dev-ocean-drying-slope-ramp"></span><h2>ramp<a class="headerlink" href="#ramp" title="Permalink to this heading">¶</a></h2>

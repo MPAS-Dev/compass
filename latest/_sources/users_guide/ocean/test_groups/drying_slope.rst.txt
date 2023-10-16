@@ -88,6 +88,16 @@ against analytic and ROMS solutions. ``RES`` is either 250m or 1km. ``COORD``
 is either ``single_layer`` or ``sigma``. Rayleigh drag is not compatible with
 ``single_layer`` so implicit drag with a constant coefficient is used.
 
+decomp
+------
+
+``ocean/drying_slope/${RES}/${COORD}/decomp`` is identical to the default version
+of the drying slope test case except it is run twice, on 1 processor and 12
+processors and the results of each are compared. ``RES`` is either 250m or 1km.
+``COORD`` is either ``single_layer`` or ``sigma``. The ``sigma`` case uses a
+Rayleigh drag coefficient of 0.01. Rayleigh drag is not compatible with
+``single_layer`` so implicit drag with a constant coefficient is used.
+
 ramp
 ----
 
