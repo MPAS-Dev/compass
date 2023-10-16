@@ -151,8 +151,11 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">has_section</span><span class="p">(</span><span class="n">section</span><span class="p">):</span>
                 <span class="k">continue</span>
             <span class="k">for</span> <span class="n">option</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">section</span><span class="p">):</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-                <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+                <span class="c1"># not safe to make paths that start with other config options</span>
+                <span class="c1"># into absolute paths</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;$&#39;</span><span class="p">):</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
