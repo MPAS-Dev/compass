@@ -1,5 +1,5 @@
-from compass.ocean.tests.drying_slope.decomp import Decomp
 from compass.ocean.tests.drying_slope.convergence import Convergence
+from compass.ocean.tests.drying_slope.decomp import Decomp
 from compass.ocean.tests.drying_slope.default import Default
 from compass.ocean.tests.drying_slope.loglaw import LogLaw
 from compass.testgroup import TestGroup

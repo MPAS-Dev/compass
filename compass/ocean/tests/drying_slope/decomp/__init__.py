@@ -13,9 +13,12 @@ class Decomp(TestCase):
     ----------
     resolution : str
         The resolution of the test case
+
+    coord_type : str
+        The type of vertical coordinate (``sigma``, ``single_layer``, etc.)
     """
 
-    def __init__(self, test_group, resolution, coord_type):
+    def __init__(self, test_group, resolution, coord_type, method):
         """
         Create the test case
 
@@ -29,6 +32,9 @@ class Decomp(TestCase):
 
         coord_type : str
             The type of vertical coordinate (``sigma``, ``single_layer``)
+
+        method : str
+            The type of wetting-and-drying algorithm
         """
         name = 'decomp'
         self.resolution = resolution
