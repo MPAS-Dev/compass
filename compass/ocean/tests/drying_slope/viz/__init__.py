@@ -44,6 +44,8 @@ class Viz(Step):
         self.times = times
         self.datatypes = datatypes
 
+        self.add_input_file(filename='init.nc',
+                            target='../initial_state/ocean.nc')
         if damping_coeffs is None:
             self.add_input_file(filename='output.nc',
                                 target='../forward/output.nc')
@@ -154,6 +156,12 @@ class Viz(Step):
             ncFilename = [f'output_{damping_coeff}.nc'
                           for damping_coeff in damping_coeffs]
 
+        ds_mesh = xr.open_dataset('init.nc')
+        mesh_ymean = ds_mesh.isel(Time=0).groupby('yCell').mean(
+            dim=xr.ALL_DIMS)
+        bottom_depth = mesh_ymean.bottomDepth.values
+        x = mesh_ymean.yCell.values / 1000.0
+
         xBed = np.linspace(0, 25, 100)
         yBed = 10.0 / 25.0 * xBed
 
@@ -181,21 +189,39 @@ class Viz(Step):
                 plottime = int((float(atime) / 0.2 + 1e-16) * 24.0)
                 ymean = ds.isel(Time=plottime).groupby('yCell').mean(
                     dim=xr.ALL_DIMS)
-                x = ymean.yCell.values / 1000.0
                 y = ymean.ssh.values
 
                 ax.plot(x, -y, label='MPAS-O', color=colors['MPAS-O'])
-                ax.text(1, ay, atime + ' days', size=8,
-                        transform=ax.transAxes)
                 if damping_coeffs is not None:
                     ax.text(0.5, 5, 'r = ' + str(damping_coeffs[i]))
                     # Plot comparison data
-                    for datatype in datatypes:
-                        datafile = f'./r{damping_coeffs[i]}d{atime}-'\
-                                   f'{datatype.lower()}.csv'
-                        data = pd.read_csv(datafile, header=None)
-                        ax.scatter(data[0], data[1], marker='.',
-                                   color=colors[datatype], label=datatype)
+                    if tidx is not None:
+                        plt.title(f'{atime:03f} days')
+                        for atime, ay in zip(self.times, locs):
+                            ax.text(1, ay, f'{atime} days', size=8,
+                                    transform=ax.transAxes)
+                            for datatype in datatypes:
+                                datafile = f'./r{damping_coeffs[i]}d{atime}-'\
+                                           f'{datatype.lower()}.csv'
+                                if os.path.exists(datafile):
+                                    data = pd.read_csv(datafile, header=None)
+                                    ax.scatter(data[0], data[1], marker='.',
+                                               color=colors[datatype],
+                                               label=datatype)
+                    else:
+                        ax.text(1, ay, f'{atime} days', size=8,
+                                transform=ax.transAxes)
+                        for datatype in datatypes:
+                            datafile = f'./r{damping_coeffs[i]}d{atime}-'\
+                                       f'{datatype.lower()}.csv'
+                            if os.path.exists(datafile):
+                                data = pd.read_csv(datafile, header=None)
+                                ax.scatter(data[0], data[1], marker='.',
+                                           color=colors[datatype],
+                                           label=datatype)
+            # Plot bottom depth, but line will not be visible unless bottom
+            # depth is incorrect
+            ax.plot(x, bottom_depth, ':k')
             ax.legend(frameon=False, loc='lower left')
 
             ds.close()
@@ -210,8 +236,8 @@ class Viz(Step):
 
         filename = f'{outFolder}/ssh_depth_section'
         if tidx is not None:
-            filename = f'{filename}_t{tidx}'
-        fig.savefig(filename, dpi=200, format='png')
+            filename = f'{filename}_t{tidx:03d}'
+        fig.savefig(f'{filename}.png', dpi=200, format='png')
         plt.close(fig)
 
     def _images_to_movies(self, outFolder='.', framesPerSecond=30,
@@ -229,7 +255,7 @@ class Viz(Step):
         outFileName = f'{outFolder}/{prefix}.{extension}'
         if overwrite or not os.path.exists(outFileName):
 
-            imageFileTemplate = f'{outFolder}/{prefix}_%03d.png'
+            imageFileTemplate = f'{outFolder}/{prefix}_t%03d.png'
             logFileName = f'{outFolder}/logs/{prefix}.log'
             with open(logFileName, 'w') as logFile:
                 args = ['ffmpeg', '-y', '-r', framesPerSecond,
