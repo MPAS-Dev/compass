@@ -72,6 +72,7 @@ class InitialState(Step):
         # be removed
         if resolution < 1.:
             ny += 2
+        ny = 2 * round(ny / 2)
 
         logger.info(' * Make planar hex mesh')
         ds_mesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc,
