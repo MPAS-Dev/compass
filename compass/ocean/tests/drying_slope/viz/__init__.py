@@ -160,7 +160,7 @@ class Viz(Step):
         mesh_ymean = ds_mesh.isel(Time=0).groupby('yCell').mean(
             dim=xr.ALL_DIMS)
         bottom_depth = mesh_ymean.bottomDepth.values
-        drying_length = self.config.getfloat('drying_slope', 'Ly_analysis')
+        drying_length = self.config.getfloat('drying_slope', 'ly_analysis')
         drying_length = drying_length * 1e3
         x_offset = np.max(mesh_ymean.yCell.values) - drying_length
         x = (mesh_ymean.yCell.values - x_offset) / 1000.0

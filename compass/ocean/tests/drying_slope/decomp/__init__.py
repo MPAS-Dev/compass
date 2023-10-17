@@ -46,8 +46,7 @@ class Decomp(TestCase):
         subdir = f'{coord_type}/{method}/{res_name}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
-        self.add_step(InitialState(test_case=self, resolution=resolution,
-                                   coord_type=coord_type))
+        self.add_step(InitialState(test_case=self, resolution=resolution))
 
         if coord_type == 'single_layer':
             damping_coeff = None

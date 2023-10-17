@@ -48,8 +48,8 @@ class InitialState(Step):
 
         section = config['drying_slope']
         nx = section.getint('nx')
-        domain_length = section.getfloat('Ly') * 1e3
-        drying_length = section.getfloat('Ly_analysis') * 1e3
+        domain_length = section.getfloat('ly') * 1e3
+        drying_length = section.getfloat('ly_analysis') * 1e3
         plug_width_frac = section.getfloat('plug_width_frac')
         right_bottom_depth = section.getfloat('right_bottom_depth')
         left_bottom_depth = section.getfloat('left_bottom_depth')
