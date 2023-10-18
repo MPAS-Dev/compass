@@ -168,7 +168,7 @@ def remap_iceberg_climo(in_filename, mesh_filename, mesh_name,
     logger.info('Renaming dimensions and variables...')
     rename = dict(ncol='nCells',
                   month='Time',
-                  Icb_flux='bergFreshWaterFluxData')
+                  Icb_flux='bergFreshwaterFluxData')
     ds = ds.rename(rename)
     logger.info('Adding xtime...')
     xtime = []
@@ -178,7 +178,7 @@ def remap_iceberg_climo(in_filename, mesh_filename, mesh_name,
     ds['xtime'] = ('Time', np.array(xtime, 'S64'))
 
     logger.info('Fix masking...')
-    field = 'bergFreshWaterFluxData'
+    field = 'bergFreshwaterFluxData'
     # zero out the field where it's currently NaN
     ds[field] = ds[field].where(ds[field].notnull(), 0.)
 
