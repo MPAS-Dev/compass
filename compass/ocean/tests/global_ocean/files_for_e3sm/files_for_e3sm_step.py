@@ -38,8 +38,9 @@ class FilesForE3SMStep(Step):
         A list of the variables that belong to the MPAS horizontal mesh
     """
 
-    def __init__(self, test_case, name, subdir=None, cpus_per_task=1,
-                 min_cpus_per_task=1, ntasks=1, min_tasks=1,):
+    def __init__(self, test_case, name='files_for_e3sm_step', subdir=None,
+                 cpus_per_task=1, min_cpus_per_task=1, ntasks=1, min_tasks=1,
+                 **kwargs):
         """
         Create a new test case
 
@@ -79,7 +80,7 @@ class FilesForE3SMStep(Step):
         super().__init__(test_case=test_case, name=name, subdir=subdir,
                          cpus_per_task=cpus_per_task,
                          min_cpus_per_task=min_cpus_per_task, ntasks=ntasks,
-                         min_tasks=min_tasks)
+                         min_tasks=min_tasks, **kwargs)
 
         self.mesh_short_name = None
         self.creation_date = None
@@ -130,6 +131,7 @@ class FilesForE3SMStep(Step):
         if with_ice_shelf_cavities != 'autodetect':
             self.with_ice_shelf_cavities = \
                 (with_ice_shelf_cavities.lower() == 'true')
+        super().setup()
 
     def run(self):  # noqa: C901
         """
@@ -209,3 +211,5 @@ class FilesForE3SMStep(Step):
                 os.makedirs(dest_dir)
             except FileExistsError:
                 pass
+
+        super().run()
