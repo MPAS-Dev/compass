@@ -100,6 +100,9 @@ The config options for this test case are:
    # Background salinity
    background_salinity = 35.0
    
+   # Coriolis parameter
+   coriolis_parameter = 0.0
+
    # time step in s per km of horizontal resolution
    dt_per_km = 30
    

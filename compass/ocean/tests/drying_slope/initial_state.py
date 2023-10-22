@@ -56,6 +56,7 @@ class InitialState(Step):
         plug_temperature = section.getfloat('plug_temperature')
         background_temperature = section.getfloat('background_temperature')
         background_salinity = section.getfloat('background_salinity')
+        coriolis_parameter = section.getfloat('coriolis_parameter')
 
         # Check config options
         if domain_length < drying_length:
@@ -113,6 +114,15 @@ class InitialState(Step):
                                      plug_temperature, background_temperature)
         ds['tracer1'] = xr.where(y_cell < y_plug_boundary, 1.0, 0.0)
         ds['salinity'] = background_salinity * xr.ones_like(y_cell)
+        normalVelocity = xr.zeros_like(ds_mesh.xEdge)
+        normalVelocity, _ = xr.broadcast(normalVelocity, ds.refBottomDepth)
+        normalVelocity = normalVelocity.transpose('nEdges', 'nVertLevels')
+        normalVelocity = normalVelocity.expand_dims(dim='Time', axis=0)
+        ds['normalVelocity'] = normalVelocity
+        ds['fCell'] = coriolis_parameter * xr.ones_like(ds.xCell)
+        ds['fEdge'] = coriolis_parameter * xr.ones_like(ds.xEdge)
+        ds['fVertex'] = coriolis_parameter * xr.ones_like(ds.xVertex)
+
         write_netcdf(ds, 'initial_state.nc')
 
         # Define the tidal boundary condition over 1-cell width
