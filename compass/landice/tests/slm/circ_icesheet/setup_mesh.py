@@ -212,8 +212,8 @@ def _create_smb_forcing_file(config, logger, mali_mesh_file, filename):
     start_year = int(section.get('start_year'))
     end_year = int(section.get('end_year'))
     dt_year = int(section.get('dt_year'))
-    dHdt = section.getfloat('dHdt')
-    dRdt = section.getfloat('dRdt')
+    dhdt = section.getfloat('dhdt')
+    drdt = section.getfloat('drdt')
 
     # other constants used in the fuction
     # pi = 3.1415926535898  # pi value used in the SLM
@@ -243,12 +243,12 @@ def _create_smb_forcing_file(config, logger, mali_mesh_file, filename):
 
     if direction == 'vertical':
         logger.info('creating a file that prescribes vertical smb')
-        smb = dHdt * rhoi / (365.0 * 24 * 60 * 60)
+        smb = dhdt * rhoi / (365.0 * 24 * 60 * 60)
         logger.info(f'prescribed smb is {smb} kg/m2/s')
         indx = np.where(r <= r0)[0]
         # for loop through time
         for t in range(len(t_array)):
-            Ht = h0 + (dHdt * (t + 1))  # calculate a new height each time
+            Ht = h0 + (dhdt * (t + 1))  # calculate a new height each time
             logger.info(f'At time {start_year + dt_year}, \
                         new height will be {Ht} km')
             sfcMassBal[t, indx] = smb  # assign sfcMassBal
@@ -261,7 +261,7 @@ def _create_smb_forcing_file(config, logger, mali_mesh_file, filename):
         # for loop through time
         for t in range(len(t_array)):
             # calculate a new radius at each time
-            Rt = r0 + (dRdt * (t + 1))
+            Rt = r0 + (drdt * (t + 1))
             if (Rt < 0):
                 Rt = 0.0
                 sfcMassBal[t, :] = 0.0
