@@ -171,10 +171,18 @@ class ProcessGeom(Step):
                                       mode='constant', cval=0.)
         bed[mask] /= smoothed_mask[mask]
 
+        # We only use the ice surface where the ocean is present to compute
+        # land ice pressure
+        ice_thickness = filters.gaussian_filter(
+            ds.iceThickness * ocean_fraction, filter_sigma, mode='constant',
+            cval=0.)
+        ice_thickness[mask] /= smoothed_mask[mask]
+
         smoothed_draft_mask = filters.gaussian_filter(
             ds.landIceFloatingFraction, filter_sigma, mode='constant', cval=0.)
         smoothed_draft_mask[mask] /= smoothed_mask[mask]
 
         ds['Z_ice_draft'] = (('y', 'x'), draft)
         ds['Z_bed'] = (('y', 'x'), bed)
+        ds['iceThickness'] = (('y', 'x'), ice_thickness)
         ds['smoothedDraftMask'] = (('y', 'x'), smoothed_draft_mask)

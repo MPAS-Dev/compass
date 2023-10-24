@@ -111,11 +111,12 @@ def interpolate_geom(ds_mesh, ds_geom, min_ocean_fraction, thin_film_present):
                                   ds_geom.landIceGroundedFraction)
 
     # mask the topography to the ocean region before interpolation
-    for var in ['Z_bed', 'Z_ice_draft', 'landIceFraction',
+    for var in ['Z_bed', 'Z_ice_surface', 'Z_ice_draft', 'landIceFraction',
                 'landIceFloatingFraction', 'smoothedDraftMask']:
         ds_geom[var] = ds_geom[var] * ds_geom['oceanFraction']
 
     fields = {'bottomDepthObserved': 'Z_bed',
+              'landIceThickness': 'iceThickness',
               'ssh': 'Z_ice_draft',
               'oceanFracObserved': 'oceanFraction',
               'landIceFraction': 'landIceFraction',
