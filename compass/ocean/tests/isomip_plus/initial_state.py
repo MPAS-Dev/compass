@@ -7,7 +7,7 @@ import xarray as xr
 from mpas_tools.cime.constants import constants
 from mpas_tools.io import write_netcdf
 
-from compass.ocean.iceshelf import compute_land_ice_pressure_and_draft
+from compass.ocean.iceshelf import compute_land_ice_pressure_from_draft
 from compass.ocean.tests.isomip_plus.geom import interpolate_geom
 from compass.ocean.tests.isomip_plus.viz.plot import MoviePlotter
 from compass.ocean.vertical import init_vertical_coord
@@ -126,8 +126,10 @@ class InitialState(Step):
         ds['landIceFraction'] = xr.where(mask, ds.landIceFraction, 0.)
 
         ref_density = constants['SHR_CONST_RHOSW']
-        landIcePressure, landIceDraft = compute_land_ice_pressure_and_draft(
-            ssh=ds.ssh, modify_mask=ds.ssh < 0., ref_density=ref_density)
+        landIceDraft = ds.ssh
+        landIcePressure = compute_land_ice_pressure_from_draft(
+            land_ice_draft=landIceDraft, modify_mask=ds.ssh < 0.,
+            ref_density=ref_density)
 
         ds['landIcePressure'] = landIcePressure
         ds['landIceDraft'] = landIceDraft
