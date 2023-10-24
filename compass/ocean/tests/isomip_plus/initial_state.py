@@ -7,7 +7,11 @@ import xarray as xr
 from mpas_tools.cime.constants import constants
 from mpas_tools.io import write_netcdf
 
-from compass.ocean.iceshelf import compute_land_ice_pressure_from_draft
+from compass.ocean.iceshelf import (
+    compute_land_ice_density_from_draft,
+    compute_land_ice_pressure_from_draft,
+    compute_land_ice_pressure_from_thickness,
+)
 from compass.ocean.tests.isomip_plus.geom import interpolate_geom
 from compass.ocean.tests.isomip_plus.viz.plot import MoviePlotter
 from compass.ocean.vertical import init_vertical_coord
@@ -125,14 +129,20 @@ class InitialState(Step):
 
         ds['landIceFraction'] = xr.where(mask, ds.landIceFraction, 0.)
 
-        ref_density = constants['SHR_CONST_RHOSW']
-        landIceDraft = ds.ssh
-        landIcePressure = compute_land_ice_pressure_from_draft(
-            land_ice_draft=landIceDraft, modify_mask=ds.ssh < 0.,
-            ref_density=ref_density)
+        land_ice_draft = ds.ssh
+        if thin_film_present:
+            land_ice_thickness = ds.landIceThickness
+            land_ice_density = compute_land_ice_density_from_draft(
+                land_ice_draft, land_ice_thickness,
+                floating_mask=ds.landIceFloatingMask)
+            land_ice_pressure = compute_land_ice_pressure_from_thickness(
+                land_ice_thickness=land_ice_thickness, modify_mask=ds.ssh < 0.,
+                land_ice_density=land_ice_density)
+        else:
+            land_ice_pressure = compute_land_ice_pressure_from_draft(
+                land_ice_draft=land_ice_draft, modify_mask=land_ice_draft < 0.)
 
-        ds['landIcePressure'] = landIcePressure
-        ds['landIceDraft'] = landIceDraft
+        ds['landIcePressure'] = land_ice_pressure
 
         if self.time_varying_forcing:
             self._write_time_varying_forcing(ds_init=ds)
@@ -173,8 +183,8 @@ class InitialState(Step):
         # that this effect isn't signicant.
         freezing_temp = (6.22e-2 +
                          -5.63e-2 * init_bot_sal +
-                         -7.43e-8 * landIcePressure +
-                         -1.74e-10 * landIcePressure * init_bot_sal)
+                         -7.43e-8 * land_ice_pressure +
+                         -1.74e-10 * land_ice_pressure * init_bot_sal)
         _, thin_film_temp = np.meshgrid(ds.refZMid, freezing_temp)
         _, thin_film_mask = np.meshgrid(ds.refZMid, thin_film_mask)
         thin_film_temp = np.expand_dims(thin_film_temp, axis=0)
@@ -233,6 +243,8 @@ class InitialState(Step):
             ds['oceanFracObserved'].expand_dims(dim='Time', axis=0)
         ds['landIcePressure'] = \
             ds['landIcePressure'].expand_dims(dim='Time', axis=0)
+        ds['landIceThickness'] = \
+            ds['landIceThickness'].expand_dims(dim='Time', axis=0)
         ds['landIceGroundedFraction'] = \
             ds['landIceGroundedFraction'].expand_dims(dim='Time', axis=0)
         ds['bottomDepth'] = ds['bottomDepth'].expand_dims(dim='Time', axis=0)
@@ -248,7 +260,10 @@ class InitialState(Step):
                                   True)
         plotter.plot_horiz_series(ds.landIcePressure,
                                   'landIcePressure', 'landIcePressure',
-                                  True, vmin=1, vmax=1e6, cmap_scale='log')
+                                  True, vmin=1e5, vmax=1e7, cmap_scale='log')
+        plotter.plot_horiz_series(ds.landIceThickness,
+                                  'landIceThickness', 'landIceThickness',
+                                  True, vmin=0, vmax=1e3)
         plotter.plot_horiz_series(ds.ssh,
                                   'ssh', 'ssh',
                                   True, vmin=-700, vmax=0)
