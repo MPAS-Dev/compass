@@ -157,7 +157,7 @@ def _get_geom_fields(ds_geom, ds_mesh, thin_film_present):
     y_cell = ds_mesh.yIsomipCell.values
 
     if thin_film_present:
-        ocean_fraction = - ds_geom['landFraction'] + 1.0
+        ocean_fraction = xarray.where(ds_geom['Z_bed'] > 0., 0., 1.)
     else:
         ocean_fraction = (ds_geom['landIceFloatingFraction'] +
                           ds_geom['openOceanFraction'])
