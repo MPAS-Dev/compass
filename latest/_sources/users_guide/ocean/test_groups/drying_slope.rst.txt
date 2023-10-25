@@ -64,6 +64,14 @@ The config options for this test case are:
    # the number of grid cells in x and y
    nx = 6
    
+   # time step in s per km of horizontal resolution
+   dt_per_km = 30
+   
+   # config options for visualizing drying slope ouptut
+   [drying_slope_convergence]
+   
+   resolutions = 0.25, 0.5, 1, 2
+
    # config options for visualizing drying slope ouptut
    [drying_slope_viz]
    
@@ -81,12 +89,24 @@ All units are mks.
 default
 -------
 
-``ocean/drying_slope/${RES}/${COORD}/default`` is the default version of the
-drying slope test case for two short (12h) test runs with two different drag
-coefficients and validation of sea surface height through visual inspection
+``ocean/drying_slope/${COORD}/${METHOD}/${RES}/default`` is the default version
+of the drying slope test case for two short (12h) test runs with two different
+drag coefficients and validation of sea surface height through visual inspection
 against analytic and ROMS solutions. ``RES`` is either 250m or 1km. ``COORD``
-is either ``single_layer`` or ``sigma``. Rayleigh drag is not compatible with
-``single_layer`` so implicit drag with a constant coefficient is used.
+is either ``single_layer`` or ``sigma``. The wetting and drying ``METHOD`` is
+either ``standard`` or ``ramp``. The ``ramp`` method ramps velocities and
+velocity tendencies over a given layer thickness range rather than a binary
+switch at the minimum thickness.
+
+convergence
+-----------
+
+``ocean/drying_slope/${COORD}/${METHOD}/convergence`` is a convergence test in
+horizontal resolution and time. It produces a convergence plot for the
+resolutions specified in the config file. ``COORD`` is either ``single_layer``
+or ``sigma``. The wetting and drying ``METHOD`` is either ``standard`` or
+``ramp``. If the other of the two methods has already been run, its convergence
+curve will be included in the plot.
 
 decomp
 ------

@@ -113,8 +113,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.drying_slope.decomp</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests</span> <span class="kn">import</span> <span class="n">drying_slope</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.drying_slope.forward</span> <span class="kn">import</span> <span class="n">Forward</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests.drying_slope.forward</span> <span class="kn">import</span> <span class="n">Forward</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.drying_slope.initial_state</span> <span class="kn">import</span> <span class="n">InitialState</span>
 <span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
 <span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
@@ -129,19 +128,28 @@
 <span class="sd">    ----------</span>
 <span class="sd">    resolution : str</span>
 <span class="sd">        The resolution of the test case</span>
+
+<span class="sd">    coord_type : str</span>
+<span class="sd">        The type of vertical coordinate (``sigma``, ``single_layer``, etc.)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Decomp.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.drying_slope.decomp.Decomp.html#compass.ocean.tests.drying_slope.decomp.Decomp.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">coord_type</span><span class="p">):</span>
+<div class="viewcode-block" id="Decomp.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.drying_slope.decomp.Decomp.html#compass.ocean.tests.drying_slope.decomp.Decomp.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">coord_type</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        test_group : compass.ocean.tests.baroclinic_channel.BaroclinicChannel</span>
+<span class="sd">        test_group : compass.ocean.tests.drying_slope.DryingSlope</span>
 <span class="sd">            The test group that this test case belongs to</span>
 
-<span class="sd">        resolution : str</span>
-<span class="sd">            The resolution of the test case</span>
+<span class="sd">        resolution : float</span>
+<span class="sd">            The resolution of the test case in km</span>
+
+<span class="sd">        coord_type : str</span>
+<span class="sd">            The type of vertical coordinate (``sigma``, ``single_layer``)</span>
+
+<span class="sd">        method : str</span>
+<span class="sd">            The type of wetting-and-drying algorithm</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;decomp&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
@@ -150,11 +158,12 @@
             <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="o">*</span><span class="mf">1e3</span><span class="p">)</span><span class="si">}</span><span class="s1">m&#39;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span><span class="si">}</span><span class="s1">km&#39;</span>
-        <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">coord_type</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">coord_type</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">InitialState</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                                   <span class="n">coord_type</span><span class="o">=</span><span class="n">coord_type</span><span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">InitialState</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">coord_type</span><span class="o">=</span><span class="n">coord_type</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">coord_type</span> <span class="o">==</span> <span class="s1">&#39;single_layer&#39;</span><span class="p">:</span>
             <span class="n">damping_coeff</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
@@ -166,26 +175,10 @@
                                    <span class="n">ntasks</span><span class="o">=</span><span class="n">procs</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                                    <span class="n">damping_coeff</span><span class="o">=</span><span class="n">damping_coeff</span><span class="p">,</span>
                                    <span class="n">coord_type</span><span class="o">=</span><span class="n">coord_type</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;ramp&#39;</span><span class="p">:</span>
+                <span class="n">forward_step</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span>
+                    <span class="p">{</span><span class="s1">&#39;config_zero_drying_velocity_ramp&#39;</span><span class="p">:</span> <span class="s2">&quot;.true.&quot;</span><span class="p">})</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">forward_step</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Decomp.configure"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.drying_slope.decomp.Decomp.configure.html#compass.ocean.tests.drying_slope.decomp.Decomp.configure">[docs]</a>    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Modify the configuration options for this test case.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">ny</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="mi">28</span> <span class="o">/</span> <span class="n">resolution</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">resolution</span> <span class="o">&lt;</span> <span class="mf">1.</span><span class="p">:</span>
-            <span class="n">ny</span> <span class="o">+=</span> <span class="mi">2</span>
-        <span class="n">dc</span> <span class="o">=</span> <span class="mf">1e3</span> <span class="o">*</span> <span class="n">resolution</span>
-
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;drying_slope&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ny</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="s1">&#39;the number of &#39;</span>
-                   <span class="s1">&#39;mesh cells in the y direction&#39;</span><span class="p">)</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;drying_slope&#39;</span><span class="p">,</span> <span class="s1">&#39;dc&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="s1">&#39;the distance &#39;</span>
-                   <span class="s1">&#39;between adjacent cell centers&#39;</span><span class="p">)</span></div>
-
-    <span class="c1"># no run() method is needed</span>
 
 <div class="viewcode-block" id="Decomp.validate"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.drying_slope.decomp.Decomp.validate.html#compass.ocean.tests.drying_slope.decomp.Decomp.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>

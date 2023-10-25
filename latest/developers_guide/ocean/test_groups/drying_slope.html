@@ -70,6 +70,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">drying_slope</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#framework">framework</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#default">default</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#convergence">convergence</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#decomp">decomp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ramp">ramp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#loglaw">loglaw</a></li>
@@ -165,8 +166,8 @@ in <a class="reference internal" href="../../../users_guide/ocean/test_groups/dr
 duration, bottom drag, and tidal forcing options, as well as shared
 <code class="docutils literal notranslate"><span class="pre">streams.init</span></code> and <code class="docutils literal notranslate"><span class="pre">streams.forward</span></code> files that defines <code class="docutils literal notranslate"><span class="pre">mesh</span></code>, <code class="docutils literal notranslate"><span class="pre">input</span></code>,
 <code class="docutils literal notranslate"><span class="pre">restart</span></code>, <code class="docutils literal notranslate"><span class="pre">forcing</span></code> and <code class="docutils literal notranslate"><span class="pre">output</span></code> streams.</p>
-<p>Namelist options specific to resolutions and vertical coordinates are given in
-<code class="docutils literal notranslate"><span class="pre">namelist.${RES}.*</span></code> and <code class="docutils literal notranslate"><span class="pre">namelist.${COORD}*</span></code> files.</p>
+<p>Namelist options specific vertical coordinates are given in
+<code class="docutils literal notranslate"><span class="pre">namelist.${COORD}*</span></code> files.</p>
 <section id="initial-state">
 <h3>initial_state<a class="headerlink" href="#initial-state" title="Permalink to this heading">¶</a></h3>
 <p>The class
@@ -204,6 +205,13 @@ between the analytical solution, MPAS-Ocean and ROMS. Similar plots are used
 to create a movie showing the solution from MPAS-Ocean at more fine-grained
 time intervals.</p>
 </section>
+<section id="analysis">
+<h3>analysis<a class="headerlink" href="#analysis" title="Permalink to this heading">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.drying_slope.analysis.Analysis.html#compass.ocean.tests.drying_slope.analysis.Analysis" title="compass.ocean.tests.drying_slope.analysis.Analysis"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.drying_slope.analysis.Analysis</span></code></a>
+produces a convergence plot for a series of forward steps at different
+resolutions. It uses the analytical solution available at 5 discrete times t
+compute the RMSE.</p>
+</section>
 </section>
 <section id="default">
 <span id="dev-ocean-drying-slope-default"></span><h2>default<a class="headerlink" href="#default" title="Permalink to this heading">¶</a></h2>
@@ -215,6 +223,12 @@ types are supported. For <code class="docutils literal notranslate"><span class=
 two cases at different values of <code class="docutils literal notranslate"><span class="pre">config_Rayleigh_damping_coeff</span></code>, 0.0025 and
 0.01, for which there is comparison data. The <code class="docutils literal notranslate"><span class="pre">single_layer</span></code> case runs at one
 value of the implicit bottom drag coefficient.</p>
+</section>
+<section id="convergence">
+<span id="dev-ocean-drying-slope-convergence"></span><h2>convergence<a class="headerlink" href="#convergence" title="Permalink to this heading">¶</a></h2>
+<p>The <a class="reference internal" href="../generated/compass.ocean.tests.drying_slope.convergence.Convergence.html#compass.ocean.tests.drying_slope.convergence.Convergence" title="compass.ocean.tests.drying_slope.convergence.Convergence"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.drying_slope.convergence.Convergence</span></code></a> expands
+on the default class to include initial and forward steps for multiple
+resolutions and an analysis step to generate a convergence plot.</p>
 </section>
 <section id="decomp">
 <span id="dev-ocean-drying-slope-decomp"></span><h2>decomp<a class="headerlink" href="#decomp" title="Permalink to this heading">¶</a></h2>
@@ -231,12 +245,13 @@ Both <code class="docutils literal notranslate"><span class="pre">sigma</span></
 </section>
 <section id="ramp">
 <span id="dev-ocean-drying-slope-ramp"></span><h2>ramp<a class="headerlink" href="#ramp" title="Permalink to this heading">¶</a></h2>
-<p>The <a class="reference internal" href="../generated/compass.ocean.tests.drying_slope.ramp.Ramp.html#compass.ocean.tests.drying_slope.ramp.Ramp" title="compass.ocean.tests.drying_slope.ramp.Ramp"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.drying_slope.ramp.Ramp</span></code></a> is identical to the
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.drying_slope.ramp.Ramp</span></code> is identical to the
 default class except it sets <code class="docutils literal notranslate"><span class="pre">ramp</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code> for the forward step to enable
-the ramp feature for wetting and drying.</p>
+the ramp feature for wetting and drying.
+.. _dev_ocean_drying_slope_log_law:</p>
 </section>
 <section id="loglaw">
-<span id="dev-ocean-drying-slope-log-law"></span><h2>loglaw<a class="headerlink" href="#loglaw" title="Permalink to this heading">¶</a></h2>
+<h2>loglaw<a class="headerlink" href="#loglaw" title="Permalink to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="../generated/compass.ocean.tests.drying_slope.loglaw.LogLaw.html#compass.ocean.tests.drying_slope.loglaw.LogLaw" title="compass.ocean.tests.drying_slope.loglaw.LogLaw"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.drying_slope.loglaw.LogLaw</span></code></a> is identical to the
 default class except it uses the log-law implicit drag option.</p>
 </section>

@@ -61,6 +61,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">drying_slope</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#default">default</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#convergence">convergence</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#decomp">decomp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ramp">ramp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#loglaw">loglaw</a></li>
@@ -198,6 +199,14 @@ well as the solution from the ROMS model.</p>
 <span class="c1"># the number of grid cells in x and y</span>
 <span class="na">nx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6</span>
 
+<span class="c1"># time step in s per km of horizontal resolution</span>
+<span class="na">dt_per_km</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">30</span>
+
+<span class="c1"># config options for visualizing drying slope ouptut</span>
+<span class="k">[drying_slope_convergence]</span>
+
+<span class="na">resolutions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.25, 0.5, 1, 2</span>
+
 <span class="c1"># config options for visualizing drying slope ouptut</span>
 <span class="k">[drying_slope_viz]</span>
 
@@ -215,12 +224,23 @@ well as the solution from the ROMS model.</p>
 </section>
 <section id="default">
 <h2>default<a class="headerlink" href="#default" title="Permalink to this heading">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">ocean/drying_slope/${RES}/${COORD}/default</span></code> is the default version of the
-drying slope test case for two short (12h) test runs with two different drag
-coefficients and validation of sea surface height through visual inspection
+<p><code class="docutils literal notranslate"><span class="pre">ocean/drying_slope/${COORD}/${METHOD}/${RES}/default</span></code> is the default version
+of the drying slope test case for two short (12h) test runs with two different
+drag coefficients and validation of sea surface height through visual inspection
 against analytic and ROMS solutions. <code class="docutils literal notranslate"><span class="pre">RES</span></code> is either 250m or 1km. <code class="docutils literal notranslate"><span class="pre">COORD</span></code>
-is either <code class="docutils literal notranslate"><span class="pre">single_layer</span></code> or <code class="docutils literal notranslate"><span class="pre">sigma</span></code>. Rayleigh drag is not compatible with
-<code class="docutils literal notranslate"><span class="pre">single_layer</span></code> so implicit drag with a constant coefficient is used.</p>
+is either <code class="docutils literal notranslate"><span class="pre">single_layer</span></code> or <code class="docutils literal notranslate"><span class="pre">sigma</span></code>. The wetting and drying <code class="docutils literal notranslate"><span class="pre">METHOD</span></code> is
+either <code class="docutils literal notranslate"><span class="pre">standard</span></code> or <code class="docutils literal notranslate"><span class="pre">ramp</span></code>. The <code class="docutils literal notranslate"><span class="pre">ramp</span></code> method ramps velocities and
+velocity tendencies over a given layer thickness range rather than a binary
+switch at the minimum thickness.</p>
+</section>
+<section id="convergence">
+<h2>convergence<a class="headerlink" href="#convergence" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ocean/drying_slope/${COORD}/${METHOD}/convergence</span></code> is a convergence test in
+horizontal resolution and time. It produces a convergence plot for the
+resolutions specified in the config file. <code class="docutils literal notranslate"><span class="pre">COORD</span></code> is either <code class="docutils literal notranslate"><span class="pre">single_layer</span></code>
+or <code class="docutils literal notranslate"><span class="pre">sigma</span></code>. The wetting and drying <code class="docutils literal notranslate"><span class="pre">METHOD</span></code> is either <code class="docutils literal notranslate"><span class="pre">standard</span></code> or
+<code class="docutils literal notranslate"><span class="pre">ramp</span></code>. If the other of the two methods has already been run, its convergence
+curve will be included in the plot.</p>
 </section>
 <section id="decomp">
 <h2>decomp<a class="headerlink" href="#decomp" title="Permalink to this heading">¶</a></h2>
