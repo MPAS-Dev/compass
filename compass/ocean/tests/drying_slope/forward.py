@@ -1,3 +1,5 @@
+import time
+
 from compass.model import run_model
 from compass.step import Step
 
@@ -8,10 +10,11 @@ class Forward(Step):
     test cases.
     """
     def __init__(self, test_case, resolution, name='forward', subdir=None,
+                 input_path='../initial_state',
                  ntasks=1, min_tasks=None, openmp_threads=1,
                  damping_coeff=None, coord_type='sigma'):
         """
-        Create a new test case
+        Create a forward step
 
         Parameters
         ----------
@@ -48,23 +51,17 @@ class Forward(Step):
         """
         if min_tasks is None:
             min_tasks = ntasks
-        if damping_coeff is not None:
-            name = f'{name}_{damping_coeff}'
 
         super().__init__(test_case=test_case, name=name, subdir=subdir,
                          ntasks=ntasks, min_tasks=min_tasks,
                          openmp_threads=openmp_threads)
 
+        self.resolution = resolution
         self.add_namelist_file('compass.ocean.tests.drying_slope',
                                'namelist.forward')
-        if resolution < 1.:
-            res_name = f'{int(resolution*1e3)}m'
-        else:
-            res_name = f'{int(resolution)}km'
-        self.add_namelist_file('compass.ocean.tests.drying_slope',
-                               f'namelist.{res_name}.forward')
-        self.add_namelist_file('compass.ocean.tests.drying_slope',
-                               f'namelist.{coord_type}.forward')
+        if coord_type == 'single_layer' or coord_type == 'sigma':
+            self.add_namelist_file('compass.ocean.tests.drying_slope',
+                                   f'namelist.{coord_type}.forward')
         if damping_coeff is not None:
             # update the Rayleigh damping coeff to the requested value
             options = {'config_Rayleigh_damping_coeff': f'{damping_coeff}'}
@@ -73,7 +70,6 @@ class Forward(Step):
         self.add_streams_file('compass.ocean.tests.drying_slope',
                               'streams.forward')
 
-        input_path = '../initial_state'
         self.add_input_file(filename='mesh.nc',
                             target=f'{input_path}/culled_mesh.nc')
 
@@ -96,5 +92,31 @@ class Forward(Step):
         """
         Run this step of the test case
         """
+        dt = self.get_dt()
+        section = self.config['vertical_grid']
+        thin_film_thickness = section.getfloat('thin_film_thickness')
+        options = {'config_dt': f"'{dt}'",
+                   'config_drying_min_cell_height': f'{thin_film_thickness}'}
+        self.update_namelist_at_runtime(options=options,
+                                        out_name='namelist.ocean')
 
         run_model(self)
+
+    def get_dt(self):
+        """
+        Get the time step
+
+        Returns
+        -------
+        dt : str
+            the time step in HH:MM:SS
+        """
+        config = self.config
+        # dt is proportional to resolution
+        dt_per_km = config.getfloat('drying_slope', 'dt_per_km')
+
+        dt = dt_per_km * self.resolution
+        # https://stackoverflow.com/a/1384565/7728169
+        dt = time.strftime('%H:%M:%S', time.gmtime(dt))
+
+        return dt

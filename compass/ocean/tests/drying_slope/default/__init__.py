@@ -1,7 +1,10 @@
-from compass.testcase import TestCase
-from compass.ocean.tests.drying_slope.initial_state import InitialState
+from numpy import ceil
+
+from compass.config import CompassConfigParser
 from compass.ocean.tests.drying_slope.forward import Forward
+from compass.ocean.tests.drying_slope.initial_state import InitialState
 from compass.ocean.tests.drying_slope.viz import Viz
+from compass.testcase import TestCase
 from compass.validate import compare_variables
 
 
@@ -18,7 +21,7 @@ class Default(TestCase):
         The type of vertical coordinate (``sigma``, ``single_layer``, etc.)
     """
 
-    def __init__(self, test_group, resolution, coord_type):
+    def __init__(self, test_group, resolution, coord_type, method):
         """
         Create the test case
 
@@ -32,6 +35,9 @@ class Default(TestCase):
 
         coord_type : str
             The type of vertical coordinate (``sigma``, ``single_layer``)
+
+        method : str
+            The type of wetting-and-drying algorithm
         """
         name = 'default'
 
@@ -41,41 +47,43 @@ class Default(TestCase):
             res_name = f'{int(resolution*1e3)}m'
         else:
             res_name = f'{int(resolution)}km'
-        subdir = f'{res_name}/{coord_type}/{name}'
+        subdir = f'{coord_type}/{method}/{res_name}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
-        self.add_step(InitialState(test_case=self, coord_type=coord_type))
+        self.add_step(InitialState(test_case=self, resolution=resolution,
+                                   coord_type=coord_type))
+        damping_coeffs = None
+        config = CompassConfigParser()
+        config.add_from_package('compass.ocean.tests.drying_slope',
+                                'drying_slope.cfg')
+        section = config['drying_slope']
+        ntasks_baseline = section.getint('ntasks_baseline')
+        min_tasks = section.getint('min_tasks')
+        ntasks = max(min_tasks, int(ceil(ntasks_baseline / resolution**2.)))
         if coord_type == 'single_layer':
-            self.add_step(Forward(test_case=self, resolution=resolution,
-                                  ntasks=4, openmp_threads=1,
-                                  coord_type=coord_type))
-            damping_coeffs = None
+            forward_step = Forward(test_case=self, resolution=resolution,
+                                   ntasks=ntasks, min_tasks=min_tasks,
+                                   openmp_threads=1,
+                                   coord_type=coord_type)
+            if method == 'ramp':
+                forward_step.add_namelist_options(
+                    {'config_zero_drying_velocity_ramp': ".true."})
+            self.add_step(forward_step)
         else:
             damping_coeffs = [0.0025, 0.01]
             for damping_coeff in damping_coeffs:
-                self.add_step(Forward(test_case=self, resolution=resolution,
-                                      ntasks=4, openmp_threads=1,
-                                      damping_coeff=damping_coeff,
-                                      coord_type=coord_type))
+                forward_step = Forward(test_case=self, resolution=resolution,
+                                       name=f'forward_{damping_coeff}',
+                                       ntasks=ntasks, min_tasks=min_tasks,
+                                       openmp_threads=1,
+                                       damping_coeff=damping_coeff,
+                                       coord_type=coord_type)
+                if method == 'ramp':
+                    forward_step.add_namelist_options(
+                        {'config_zero_drying_velocity_ramp': ".true."})
+                self.add_step(forward_step)
         self.damping_coeffs = damping_coeffs
         self.add_step(Viz(test_case=self, damping_coeffs=damping_coeffs))
-
-    def configure(self):
-        """
-        Modify the configuration options for this test case.
-        """
-
-        resolution = self.resolution
-        config = self.config
-        ny = round(28 / resolution)
-        if resolution < 1.:
-            ny += 2
-        dc = 1e3 * resolution
-
-        config.set('drying_slope', 'ny', f'{ny}', comment='the number of '
-                   'mesh cells in the y direction')
-        config.set('drying_slope', 'dc', f'{dc}', comment='the distance '
-                   'between adjacent cell centers')
 
     def validate(self):
         """

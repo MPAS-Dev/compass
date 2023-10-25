@@ -1,12 +1,9 @@
-import xarray
-import numpy
-
-from mpas_tools.planar_hex import make_planar_hex_mesh
 from mpas_tools.io import write_netcdf
 from mpas_tools.mesh.conversion import convert, cull
+from mpas_tools.planar_hex import make_planar_hex_mesh
 
-from compass.step import Step
 from compass.model import run_model
+from compass.step import Step
 
 
 class InitialState(Step):
@@ -14,7 +11,8 @@ class InitialState(Step):
     A step for creating a mesh and initial condition for drying slope test
     cases
     """
-    def __init__(self, test_case, coord_type='sigma'):
+    def __init__(self, test_case, resolution, name='initial_state',
+                 coord_type='sigma'):
         """
         Create the step
 
@@ -23,10 +21,12 @@ class InitialState(Step):
         test_case : compass.ocean.tests.drying_slope.default.Default
             The test case this step belongs to
         """
-        super().__init__(test_case=test_case, name='initial_state', ntasks=1,
+        super().__init__(test_case=test_case, name=name, ntasks=1,
                          min_tasks=1, openmp_threads=1)
 
         self.coord_type = coord_type
+
+        self.resolution = resolution
 
         self.add_namelist_file('compass.ocean.tests.drying_slope',
                                'namelist.init', mode='init')
@@ -47,22 +47,28 @@ class InitialState(Step):
         config = self.config
         logger = self.logger
 
-        config = self.config
         section = config['vertical_grid']
         coord_type = self.coord_type
+        thin_film_thickness = section.getfloat('thin_film_thickness') + 1.0e-9
         if coord_type == 'single_layer':
-            options = {'config_tidal_boundary_vert_levels': '1'}
+            options = {'config_tidal_boundary_vert_levels': '1',
+                       'config_drying_min_cell_height':
+                       f'{thin_film_thickness}'}
             self.update_namelist_at_runtime(options)
         else:
-            vert_levels = section.get('vert_levels')
+            vert_levels = section.getint('vert_levels')
             options = {'config_tidal_boundary_vert_levels': f'{vert_levels}',
-                       'config_tidal_boundary_layer_type': f"'{coord_type}'"}
+                       'config_tidal_boundary_layer_type': f"'{coord_type}'",
+                       'config_drying_min_cell_height':
+                       f'{thin_film_thickness}'}
             self.update_namelist_at_runtime(options)
 
-        section = config['drying_slope']
-        nx = section.getint('nx')
-        ny = section.getint('ny')
-        dc = section.getfloat('dc')
+        # Determine mesh parameters
+        nx = config.getint('drying_slope', 'nx')
+        ny = round(28 / self.resolution)
+        if self.resolution < 1.:
+            ny += 2
+        dc = 1e3 * self.resolution
 
         logger.info(' * Make planar hex mesh')
         dsMesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc, nonperiodic_x=False,
