@@ -8,7 +8,7 @@ from mpas_tools.cime.constants import constants
 from mpas_tools.io import write_netcdf
 
 from compass.ocean.iceshelf import (
-    compute_land_ice_density_from_draft,
+    compute_land_ice_draft_from_pressure,
     compute_land_ice_pressure_from_draft,
     compute_land_ice_pressure_from_thickness,
 )
@@ -101,12 +101,15 @@ class InitialState(Step):
         section = config['isomip_plus']
         min_land_ice_fraction = section.getfloat('min_land_ice_fraction')
         min_ocean_fraction = section.getfloat('min_ocean_fraction')
+        ice_density = section.getfloat('ice_density')
 
         ds_geom = xr.open_dataset('input_geometry_processed.nc')
         ds_mesh = xr.open_dataset('culled_mesh.nc')
 
         ds = interpolate_geom(ds_mesh, ds_geom, min_ocean_fraction,
                               thin_film_present)
+
+        ds['bottomDepth'] = -ds.bottomDepthObserved
 
         ds['landIceFraction'] = \
             ds['landIceFraction'].expand_dims(dim='Time', axis=0)
@@ -129,16 +132,17 @@ class InitialState(Step):
 
         ds['landIceFraction'] = xr.where(mask, ds.landIceFraction, 0.)
 
-        land_ice_draft = ds.ssh
         if thin_film_present:
             land_ice_thickness = ds.landIceThickness
-            land_ice_density = compute_land_ice_density_from_draft(
-                land_ice_draft, land_ice_thickness,
-                floating_mask=ds.landIceFloatingMask)
             land_ice_pressure = compute_land_ice_pressure_from_thickness(
                 land_ice_thickness=land_ice_thickness, modify_mask=ds.ssh < 0.,
-                land_ice_density=land_ice_density)
+                land_ice_density=ice_density)
+            land_ice_draft = compute_land_ice_draft_from_pressure(
+                land_ice_pressure=land_ice_pressure,
+                modify_mask=ds.bottomDepth > 0.)
+            ds['ssh'] = np.maximum(land_ice_draft, -ds.bottomDepth)
         else:
+            land_ice_draft = ds.ssh
             land_ice_pressure = compute_land_ice_pressure_from_draft(
                 land_ice_draft=land_ice_draft, modify_mask=land_ice_draft < 0.)
 
@@ -146,8 +150,6 @@ class InitialState(Step):
 
         if self.time_varying_forcing:
             self._write_time_varying_forcing(ds_init=ds)
-
-        ds['bottomDepth'] = -ds.bottomDepthObserved
 
         section = config['isomip_plus']
 
