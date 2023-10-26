@@ -14,7 +14,7 @@ from compass.model import partition, run_model
 def compute_land_ice_pressure_from_thickness(land_ice_thickness, modify_mask,
                                              land_ice_density=None):
     """
-    Compute the pressure from and overlying ice shelf
+    Compute the pressure from an overlying ice shelf from ice thickness
 
     Parameters
     ----------
@@ -43,7 +43,7 @@ def compute_land_ice_pressure_from_thickness(land_ice_thickness, modify_mask,
 def compute_land_ice_pressure_from_draft(land_ice_draft, modify_mask,
                                          ref_density=None):
     """
-    Compute the pressure from and overlying ice shelf
+    Compute the pressure from an overlying ice shelf from ice draft
 
     Parameters
     ----------
