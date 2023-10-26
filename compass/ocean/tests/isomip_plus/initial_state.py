@@ -148,9 +148,6 @@ class InitialState(Step):
 
         ds['landIcePressure'] = land_ice_pressure
 
-        if self.time_varying_forcing:
-            self._write_time_varying_forcing(ds_init=ds)
-
         section = config['isomip_plus']
 
         # Deepen the bottom depth to maintain the minimum water-column
@@ -215,6 +212,15 @@ class InitialState(Step):
         ds['normalVelocity'] = normalVelocity.expand_dims(dim='Time', axis=0)
 
         write_netcdf(ds, 'initial_state.nc')
+
+        if self.time_varying_forcing:
+            self._write_time_varying_forcing(ds_init=ds,
+                                             ice_density=ice_density)
+        else:
+            # We need to add the time dimension for plotting purposes
+            ds['landIcePressure'] = \
+                ds['landIcePressure'].expand_dims(dim='Time', axis=0)
+
         return ds, frac
 
     def _plot(self, ds):
@@ -243,8 +249,6 @@ class InitialState(Step):
 
         ds['oceanFracObserved'] = \
             ds['oceanFracObserved'].expand_dims(dim='Time', axis=0)
-        ds['landIcePressure'] = \
-            ds['landIcePressure'].expand_dims(dim='Time', axis=0)
         ds['landIceThickness'] = \
             ds['landIceThickness'].expand_dims(dim='Time', axis=0)
         ds['landIceGroundedFraction'] = \
@@ -382,7 +386,7 @@ class InitialState(Step):
 
         write_netcdf(ds_forcing, 'init_mode_forcing_data.nc')
 
-    def _write_time_varying_forcing(self, ds_init):
+    def _write_time_varying_forcing(self, ds_init, ice_density):
         """
         Write time-varying land-ice forcing and update the initial condition
         """
@@ -402,10 +406,27 @@ class InitialState(Step):
         landIceFraction = list()
         landIceFloatingFraction = list()
 
+        if self.thin_film_present:
+            land_ice_thickness = ds_init.landIceThickness
+            land_ice_pressure = compute_land_ice_pressure_from_thickness(
+                land_ice_thickness=land_ice_thickness,
+                modify_mask=ds_init.landIceFraction > 0.,
+                land_ice_density=ice_density)
+            land_ice_draft = compute_land_ice_draft_from_pressure(
+                land_ice_pressure=land_ice_pressure,
+                modify_mask=ds_init.bottomDepth > 0.)
+            land_ice_draft = np.maximum(land_ice_draft, -ds_init.bottomDepth)
+            land_ice_draft = land_ice_draft.transpose()
+        else:
+            land_ice_draft = ds_init.landIceDraft
+            land_ice_pressure = ds_init.landIcePressure
+
         for scale in scales:
-            landIceDraft.append(scale * ds_init.landIceDraft)
-            landIcePressure.append(scale * ds_init.landIcePressure)
+            landIceDraft.append(scale * land_ice_draft)
+            landIcePressure.append(scale * land_ice_pressure)
             landIceFraction.append(ds_init.landIceFraction)
+            # Since floating fraction does not change, none of the thin film
+            # cases allow for the area undergoing melting to change
             landIceFloatingFraction.append(ds_init.landIceFloatingFraction)
 
         ds_out['landIceDraftForcing'] = xr.concat(landIceDraft, 'Time')
@@ -427,6 +448,6 @@ class InitialState(Step):
             'The fraction of each cell covered by floating land ice'
         write_netcdf(ds_out, 'land_ice_forcing.nc')
 
-        ds_init['landIceDraft'] = scales[0] * ds_init.landIceDraft
-        ds_init['ssh'] = ds_init.landIceDraft
-        ds_init['landIcePressure'] = scales[0] * ds_init.landIcePressure
+        ds_init['landIceDraft'] = scales[0] * land_ice_draft
+        ds_init['ssh'] = land_ice_draft
+        ds_init['landIcePressure'] = scales[0] * land_ice_pressure
