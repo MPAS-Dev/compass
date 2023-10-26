@@ -40,40 +40,6 @@ def compute_land_ice_pressure_from_thickness(land_ice_thickness, modify_mask,
     return land_ice_pressure
 
 
-def compute_land_ice_density_from_draft(land_ice_draft, land_ice_thickness,
-                                        floating_mask, ref_density=None):
-    """
-    Compute the spatially-averaged ice density needed to match the ice draft
-
-    Parameters
-    ----------
-    land_ice_draft : xarray.DataArray
-        The ice draft (sea surface height)
-
-    land_ice_thickness: xarray.DataArray
-        The ice thickness
-
-    floating_mask : xarray.DataArray
-        A mask that is 1 where the ice is assumed in hydrostatic equilibrium
-
-    ref_density : float, optional
-        A reference density for seawater displaced by the ice shelf
-
-    Returns
-    -------
-    land_ice_density: float
-        The ice density
-    """
-    if ref_density is None:
-        ref_density = constants['SHR_CONST_RHOSW']
-    land_ice_draft = numpy.where(floating_mask, land_ice_draft, numpy.nan)
-    land_ice_thickness = numpy.where(floating_mask, land_ice_thickness,
-                                     numpy.nan)
-    land_ice_density = \
-        numpy.nanmean(-ref_density * land_ice_draft / land_ice_thickness)
-    return land_ice_density
-
-
 def compute_land_ice_pressure_from_draft(land_ice_draft, modify_mask,
                                          ref_density=None):
     """
