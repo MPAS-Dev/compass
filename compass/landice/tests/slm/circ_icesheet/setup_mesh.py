@@ -48,9 +48,16 @@ class SetupMesh(Step):
         config = self.config
         section = config['circ_icesheet']
 
-        nx = section.getint('nx')
-        ny = section.getint('ny')
+        lx = section.getfloat('lx')
+        ly = section.getfloat('ly')
         dc = section.getfloat('dc')
+
+        # calculate the number of grid cells in x and y direction
+        # for the uniform, hexagonal planar mesh
+        nx = max(2 * int(0.5 * lx / dc + 0.5), 4)
+        # factor of 2/sqrt(3) because of hexagonal mesh
+        ny = max(2 * int(0.5 * ly * (2. / np.sqrt(3)) / dc + 0.5), 4)
+
         # call the mesh creation function
         dsMesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc,
                                       nonperiodic_x=True,
