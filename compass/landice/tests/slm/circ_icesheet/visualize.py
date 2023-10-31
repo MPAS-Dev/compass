@@ -329,13 +329,12 @@ class output_analysis:
         lat0 = -90 * np.pi / 180
         # standard parallel in radians where distortion should be zero (k=1)
         lon0 = 0  # center of the longitude
-        for i in range(len(latCell)):
-            # expression for 'k' from p. 157
-            # eqn. 21-4 in https://pubs.usgs.gov/pp/1395/report.pdf.
-            # p. 142 provides a table showing 'k' for stereographic projection
-            self.k[i] = 2 * k0 / (1 + (np.sin(lat0) * np.sin(latCell[i])) +
-                                  (np.cos(lat0) * np.cos(latCell[i]) *
-                                   np.cos(lonCell[i] - lon0)))
+        # expression for 'k' from p. 157
+        # eqn. 21-4 in https://pubs.usgs.gov/pp/1395/report.pdf.
+        # p. 142 provides a table showing 'k' for stereographic projection
+        self.k[:] = 2 * k0 / (1 + (np.sin(lat0) * np.sin(latCell[:])) +
+                              (np.cos(lat0) * np.cos(latCell[:]) *
+                               np.cos(lonCell[:] - lon0)))
 
         # default MALI time steps from the MALI outputs
         self.yrs_mali = DS['daysSinceStart'].load() / 365.0 + 2015.0
