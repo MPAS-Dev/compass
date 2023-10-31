@@ -115,14 +115,16 @@
              
   <h1>Source code for compass.landice.tests.ismip6_forcing.ocean_thermal.process_thermal_forcing</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.ismip6_forcing.create_mapfile</span> \
-    <span class="kn">import</span> <span class="nn">build_mapping_file</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
+
+<span class="kn">from</span> <span class="nn">compass.landice.tests.ismip6_forcing.create_mapfile</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">build_mapping_file</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
 
@@ -230,26 +232,26 @@
                                                        <span class="n">method_remap</span><span class="p">)</span>
 
         <span class="c1"># call the function that renames the ismip6 variables to MALI variables</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Renaming the ismip6 variables to mali variable names...&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Renaming the ismip6 variables to mali variable names...&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rename_ismip6_thermal_forcing_to_mali_vars</span><span class="p">(</span><span class="n">remapped_file_temp</span><span class="p">,</span>
                                                         <span class="n">output_file</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Remapping and renamping process done successfully. &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;Removing the temporary file &#39;remapped.nc&#39;...&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Remapping and renamping process done successfully. &quot;</span>
+                    <span class="s2">&quot;Removing the temporary file &#39;remapped.nc&#39;...&quot;</span><span class="p">)</span>
 
         <span class="c1"># remove the temporary combined file</span>
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">remapped_file_temp</span><span class="p">)</span>
 
         <span class="c1"># place the output file in appropriate directory</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span><span class="p">):</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating a new directory for the output data...&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating a new directory for the output data...&quot;</span><span class="p">)</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
 
         <span class="n">src</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="n">output_file</span><span class="p">)</span>
         <span class="n">dst</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;!---Done processing the file---!&quot;</span><span class="p">)</span></div>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;!---Done processing the file---!&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ProcessThermalForcing.remap_ismip6_thermal_forcing_to_mali_vars"><a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.remap_ismip6_thermal_forcing_to_mali_vars.html#compass.landice.tests.ismip6_forcing.ocean_thermal.process_thermal_forcing.ProcessThermalForcing.remap_ismip6_thermal_forcing_to_mali_vars">[docs]</a>    <span class="k">def</span> <span class="nf">remap_ismip6_thermal_forcing_to_mali_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                   <span class="n">input_file</span><span class="p">,</span>
@@ -287,8 +289,8 @@
                                <span class="n">input_file</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="p">,</span>
                                <span class="n">method_remap</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mapping file exists. &quot;</span>
-                             <span class="sa">f</span><span class="s2">&quot;Remapping the input data...&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Mapping file exists. &quot;</span>
+                             <span class="s2">&quot;Remapping the input data...&quot;</span><span class="p">)</span>
 
         <span class="c1"># remap the input data</span>
         <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ncremap&quot;</span><span class="p">,</span>
@@ -314,7 +316,6 @@
 <span class="sd">            remapped ismip6 data renamed on mali mesh</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">process_obs_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_obs</span>
 
         <span class="c1"># open dataset in 20 years chunk</span>
@@ -324,11 +325,18 @@
         <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_zOcean&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">z</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">)</span>  <span class="c1"># dropping &#39;z&#39; while it&#39;s still called &#39;z&#39;</span>
 
+        <span class="n">zbnds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">z_bnds</span>
+        <span class="k">if</span> <span class="s2">&quot;time&quot;</span> <span class="ow">in</span> <span class="n">zbnds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="n">zbnds</span> <span class="o">=</span> <span class="n">zbnds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;ismip6shelfMelt_zBndsOcean&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">zbnds</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s2">&quot;z_bnds&quot;</span><span class="p">)</span>
+
         <span class="c1"># build dictionary for ismip6 variables that MALI takes in</span>
         <span class="k">if</span> <span class="n">process_obs_data</span><span class="p">:</span>
             <span class="n">ismip6_to_mali_dims</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
                 <span class="n">z</span><span class="o">=</span><span class="s2">&quot;nISMIP6OceanLayers&quot;</span><span class="p">,</span>
-                <span class="n">ncol</span><span class="o">=</span><span class="s2">&quot;nCells&quot;</span><span class="p">)</span>
+                <span class="n">ncol</span><span class="o">=</span><span class="s2">&quot;nCells&quot;</span><span class="p">,</span>
+                <span class="n">nbounds</span><span class="o">=</span><span class="s2">&quot;TWO&quot;</span><span class="p">)</span>
             <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;thermal_forcing&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;thermal_forcing&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span>
                 <span class="n">dim</span><span class="o">=</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
             <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">ismip6_to_mali_dims</span><span class="p">)</span>
@@ -336,7 +344,8 @@
             <span class="n">ismip6_to_mali_dims</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
                 <span class="n">z</span><span class="o">=</span><span class="s2">&quot;nISMIP6OceanLayers&quot;</span><span class="p">,</span>
                 <span class="n">time</span><span class="o">=</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span>
-                <span class="n">ncol</span><span class="o">=</span><span class="s2">&quot;nCells&quot;</span><span class="p">)</span>
+                <span class="n">ncol</span><span class="o">=</span><span class="s2">&quot;nCells&quot;</span><span class="p">,</span>
+                <span class="n">nbounds</span><span class="o">=</span><span class="s2">&quot;TWO&quot;</span><span class="p">)</span>
             <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">ismip6_to_mali_dims</span><span class="p">)</span>
             <span class="c1"># add xtime variable</span>
             <span class="n">xtime</span> <span class="o">=</span> <span class="p">[]</span>
@@ -362,7 +371,7 @@
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">ismip6_to_mali_vars</span><span class="p">)</span>
 
         <span class="c1"># drop unnecessary variables</span>
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">([</span><span class="s2">&quot;z_bnds&quot;</span><span class="p">,</span> <span class="s2">&quot;lat_vertices&quot;</span><span class="p">,</span> <span class="s2">&quot;area&quot;</span><span class="p">,</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">([</span><span class="s2">&quot;lat_vertices&quot;</span><span class="p">,</span> <span class="s2">&quot;area&quot;</span><span class="p">,</span>
                            <span class="s2">&quot;lon_vertices&quot;</span><span class="p">,</span> <span class="s2">&quot;lat&quot;</span><span class="p">,</span> <span class="s2">&quot;lon&quot;</span><span class="p">])</span>
 
         <span class="c1"># transpose dimension</span>
@@ -374,88 +383,89 @@
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
         <span class="n">ds</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
-    <span class="c1"># create a nested dictionary for the ISMIP6 original forcing files including relative path</span>
-    <span class="n">_file_obs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;AIS/Ocean_Forcing/climatology_from_obs_1995-2017/obs_thermal_forcing_1995-2017_8km_x_60m.nc&quot;</span><span class="p">]</span>
+    <span class="c1"># create a nested dictionary for the ISMIP6 original forcing files</span>
+    <span class="c1"># including relative path</span>
+    <span class="n">_file_obs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;AIS/Ocean_Forcing/climatology_from_obs_1995-2017/obs_thermal_forcing_1995-2017_8km_x_60m.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
     <span class="n">_files</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;2100&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;CCSM4&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;RCP85&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;AIS/Ocean_Forcing/ccsm4_rcp8.5/1995-2100/CCSM4_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>
+                <span class="s2">&quot;RCP85&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;AIS/Ocean_Forcing/ccsm4_rcp8.5/1995-2100/CCSM4_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
             <span class="p">},</span>
             <span class="s2">&quot;CESM2&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;SSP585v1&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Ocean_Forcing/cesm2_ssp585/1995-2100/CESM2_ssp585_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;AIS/Ocean_Forcing/cesm2_ssp585/1995-2100/CESM2_ssp585_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
                 <span class="s2">&quot;SSP585v2&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Ocean_Forcing/cesm2_ssp585/1995-2100/CESM2_ssp585_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;AIS/Ocean_Forcing/cesm2_ssp585/1995-2100/CESM2_ssp585_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
             <span class="p">},</span>
             <span class="s2">&quot;CNRM_CM6&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;SSP126&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Ocean_Forcing/cnrm-cm6-1_ssp126/1995-2100/CNRM-CM6-1_ssp126_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;AIS/Ocean_Forcing/cnrm-cm6-1_ssp126/1995-2100/CNRM-CM6-1_ssp126_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
                 <span class="s2">&quot;SSP585&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Ocean_Forcing/cnrm-cm6-1_ssp585/1995-2100/CNRM-CM6-1_ssp585_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>
+                    <span class="s2">&quot;AIS/Ocean_Forcing/cnrm-cm6-1_ssp585/1995-2100/CNRM-CM6-1_ssp585_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
             <span class="p">},</span>
             <span class="s2">&quot;CNRM_ESM2&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;SSP585&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Ocean_Forcing/cnrm-esm2-1_ssp585/1995-2100/CNRM-ESM2-1_ssp585_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>
+                    <span class="s2">&quot;AIS/Ocean_Forcing/cnrm-esm2-1_ssp585/1995-2100/CNRM-ESM2-1_ssp585_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
             <span class="p">},</span>
             <span class="s2">&quot;CSIRO-Mk3-6-0&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;RCP85&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Ocean_Forcing/csiro-mk3-6-0_rcp8.5/1995-2100/CSIRO-Mk3-6-0_RCP85_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>
+                    <span class="s2">&quot;AIS/Ocean_Forcing/csiro-mk3-6-0_rcp8.5/1995-2100/CSIRO-Mk3-6-0_RCP85_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
             <span class="p">},</span>
             <span class="s2">&quot;HadGEM2-ES&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;RCP85&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Ocean_Forcing/hadgem2-es_rcp8.5/1995-2100/HadGEM2-ES_RCP85_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>
+                    <span class="s2">&quot;AIS/Ocean_Forcing/hadgem2-es_rcp8.5/1995-2100/HadGEM2-ES_RCP85_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
             <span class="p">},</span>
             <span class="s2">&quot;IPSL-CM5A-MR&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;RCP26&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Ocean_Forcing/ipsl-cm5a-mr_rcp2.6/1995-2100/IPSL-CM5A-MR_RCP26_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;AIS/Ocean_Forcing/ipsl-cm5a-mr_rcp2.6/1995-2100/IPSL-CM5A-MR_RCP26_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
                 <span class="s2">&quot;RCP85&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Ocean_Forcing/ipsl-cm5a-mr_rcp8.5/1995-2100/IPSL-CM5A-MR_RCP85_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>
+                    <span class="s2">&quot;AIS/Ocean_Forcing/ipsl-cm5a-mr_rcp8.5/1995-2100/IPSL-CM5A-MR_RCP85_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
             <span class="p">},</span>
             <span class="s2">&quot;MIROC-ESM-CHEM&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;RCP85&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Ocean_Forcing/miroc-esm-chem_rcp8.5/1995-2100/MIROC-ESM-CHEM_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>
+                    <span class="s2">&quot;AIS/Ocean_Forcing/miroc-esm-chem_rcp8.5/1995-2100/MIROC-ESM-CHEM_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
             <span class="p">},</span>
             <span class="s2">&quot;NorESM1-M&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;RCP26&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Ocean_Forcing/noresm1-m_rcp2.6/1995-2100/NorESM1-M_RCP26_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;AIS/Ocean_Forcing/noresm1-m_rcp2.6/1995-2100/NorESM1-M_RCP26_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
                 <span class="s2">&quot;RCP85&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Ocean_Forcing/noresm1-m_rcp8.5/1995-2100/NorESM1-M_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>
+                    <span class="s2">&quot;AIS/Ocean_Forcing/noresm1-m_rcp8.5/1995-2100/NorESM1-M_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
             <span class="p">},</span>
             <span class="s2">&quot;UKESM1-0-LL&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;SSP585&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Ocean_Forcing/ukesm1-0-ll_ssp585/1995-2100/UKESM1-0-LL_ssp585_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>
+                    <span class="s2">&quot;AIS/Ocean_Forcing/ukesm1-0-ll_ssp585/1995-2100/UKESM1-0-LL_ssp585_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
             <span class="p">}</span>
         <span class="p">},</span>
         <span class="s2">&quot;2300&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;CCSM4&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;RCP85&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Ocean_forcing/ccsm4_RCP85/1995-2300/CCSM4_RCP85_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>
+                    <span class="s2">&quot;AIS/Ocean_forcing/ccsm4_RCP85/1995-2300/CCSM4_RCP85_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
             <span class="p">},</span>
             <span class="s2">&quot;CESM2-WACCM&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;SSP585&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Ocean_forcing/cesm2-waccm_ssp585/1995-2299/CESM2-WACCM_SSP585_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;AIS/Ocean_forcing/cesm2-waccm_ssp585/1995-2299/CESM2-WACCM_SSP585_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
                 <span class="s2">&quot;SSP585-repeat&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Ocean_forcing/cesm2-waccm_ssp585-repeat/1995-2300/CESM2-WACCM_ssp585_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>
+                    <span class="s2">&quot;AIS/Ocean_forcing/cesm2-waccm_ssp585-repeat/1995-2300/CESM2-WACCM_ssp585_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
             <span class="p">},</span>
             <span class="s2">&quot;HadGEM2-ES&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;RCP85&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Ocean_forcing/hadgem2-es_RCP85/1995-2299/HadGEM2-ES_RCP85_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;AIS/Ocean_forcing/hadgem2-es_RCP85/1995-2299/HadGEM2-ES_RCP85_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
                 <span class="s2">&quot;RCP85-repeat&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Ocean_forcing/hadgem2-es_RCP85-repeat/1995-2300/HadGEM2-ES_rcp85_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>
+                    <span class="s2">&quot;AIS/Ocean_forcing/hadgem2-es_RCP85-repeat/1995-2300/HadGEM2-ES_rcp85_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
             <span class="p">},</span>
             <span class="s2">&quot;NorESM1-M&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;RCP26-repeat&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Ocean_forcing/noresm1-m_RCP26-repeat/1995-2300/NorESM1-M_RCP26_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;AIS/Ocean_forcing/noresm1-m_RCP26-repeat/1995-2300/NorESM1-M_RCP26_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
                 <span class="s2">&quot;RCP85-repeat&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Ocean_forcing/noresm1-m_RCP85-repeat/1995-2300/NorESM1-M_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>
+                    <span class="s2">&quot;AIS/Ocean_forcing/noresm1-m_RCP85-repeat/1995-2300/NorESM1-M_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
             <span class="p">},</span>
             <span class="s2">&quot;UKESM1-0-LL&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;SSP126&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Ocean_forcing/ukesm1-0-ll_ssp126/1995-2300/UKESM1-0-LL_thermal_forcing_8km_x_60m_v2.nc&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;AIS/Ocean_forcing/ukesm1-0-ll_ssp126/1995-2300/UKESM1-0-LL_thermal_forcing_8km_x_60m_v2.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
                 <span class="s2">&quot;SSP585&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Ocean_forcing/ukesm1-0-ll_ssp585/1995-2300/UKESM1-0-LL_SSP585_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;AIS/Ocean_forcing/ukesm1-0-ll_ssp585/1995-2300/UKESM1-0-LL_SSP585_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
                 <span class="s2">&quot;SSP585-repeat&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Ocean_forcing/ukesm1-0-ll_ssp585-repeat/1995-2300/UKESM1-0-LL_ssp585_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>
+                    <span class="s2">&quot;AIS/Ocean_forcing/ukesm1-0-ll_ssp585-repeat/1995-2300/UKESM1-0-LL_ssp585_thermal_forcing_8km_x_60m.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
             <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span></div>
