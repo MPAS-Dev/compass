@@ -40,14 +40,20 @@ class CircIcesheetTest(TestCase):
         """
         config = self.config
         section = config['circ_icesheet']
-        resolutions = section.get('resolutions').split(',')
-        print('list of resolutione is ', resolutions)
+        mali_res = section.get('mali_res').split(',')
 
-        for res in resolutions:
-            self.add_step(SetupMesh(test_case=self,
-                          name=f'{res}km_res/setup_mesh'))
-            self.add_step(RunModel(test_case=self, ntasks=1, openmp_threads=1,
-                          name=f'{res}km_res/run_model'))
+        section = config['slm']
+        slm_nglv = section.get('slm_nglv').split(',')
+        print(f'list of MALI-mesh resolution is {mali_res} km.')
+        print(f'list of SLM Gauss-Legendre latitudinal points is {slm_nglv}.')
+
+        for res in mali_res:
+            for nglv in slm_nglv:
+                self.add_step(SetupMesh(test_case=self,
+                              name=f'mali{res}km_slm{nglv}/setup_mesh'))
+                self.add_step(RunModel(test_case=self, ntasks=1,
+                              openmp_threads=1,
+                              name=f'mali{res}km_slm{nglv}/run_model'))
         step = Visualize(test_case=self)
         self.add_step(step, run_by_default=True)
 
