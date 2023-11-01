@@ -323,6 +323,7 @@ def _build_mapping_files(config, logger, mali_mesh_file):
 
     section = config['slm']
     slm_res = section.get('slm_res')
+    slm_nglv = section.get('slm_nglv')
     method_mali_to_slm = section.get('mapping_method_mali_to_slm')
     method_slm_to_mali = section.get('mapping_method_slm_to_mali')
 
@@ -330,15 +331,15 @@ def _build_mapping_files(config, logger, mali_mesh_file):
     dc = section.getfloat('dc')
 
     mali_scripfile = f'mali{int(dc/1000)}km_scripfile.nc'
-    slm_scripfile = f'slm{slm_res}_scripfile.nc'
+    slm_scripfile = f'slm{slm_res}_nglv{slm_nglv}scripfile.nc'
 
     # create slm scripfile
     logger.info(f'creating scripfile for the SH-degree {slm_res} '
-                f'resolution SLM grid')
+                f'resolution and {slm_nglv} nglv points for the SLM grid')
     args = ['ncremap',
             '-g', slm_scripfile,
             '-G',
-            f'latlon={slm_res},{2*int(slm_res)}#lat_typ=gss#lat_drc=n2s']
+            f'latlon={slm_nglv},{2*int(slm_nglv)}#lat_typ=gss#lat_drc=n2s']
 
     check_call(args, logger=logger)
 
