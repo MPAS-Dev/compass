@@ -67,8 +67,7 @@ class SetupMesh(Step):
         # translating the mesh center to x=0 & y=0
         center(dsMesh)
         # shift the center to a quarter or radius
-        r0 = section.getfloat('r0')
-        shift = r0
+        shift = 200000.0
         print(f'shifting the center by {shift} meters')
         translate(dsMesh, shift, shift)
         # write to a file
