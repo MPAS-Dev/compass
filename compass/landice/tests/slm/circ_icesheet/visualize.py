@@ -42,12 +42,17 @@ class Visualize(Step):
         """
         config = self.config
         section = config['circ_icesheet']
-        resolutions = section.get('resolutions').split(',')
+        mali_res = section.get('mali_res').split(',')
 
-        for res in resolutions:
-            self.add_input_file(filename=f'output_res{res}km.nc',
-                                target=f'../{res}km_res/run_model/'
-                                'output/output.nc')
+        section = config['slm']
+        slm_nglv = section.get('slm_nglv').split(',')
+
+        for res in mali_res:
+            for nglv in slm_nglv:
+                self.add_input_file(filename=f'output_mali{res}km_'
+                                    'slm{nglv}.nc',
+                                    target=f'../mali{res}km_slm{nglv}/'
+                                    'run_model/output/output.nc')
 
     def run(self):
         """
@@ -56,35 +61,40 @@ class Visualize(Step):
         logger = self.logger
         config = self.config
         section = config['circ_icesheet']
-        resolutions = section.get('resolutions').split(',')
+        mali_res = section.get('mali_res').split(',')
 
         section = config['slm']
         coupling = section.getboolean('coupling')
+        slm_nglv = section.get('slm_nglv').split(',')
 
         section = config['circ_icesheet_viz']
         save_images = section.getboolean('save_images')
         hide_figs = section.getboolean('hide_figs')
 
         # visualize run model results
-        for res in resolutions:
-            run_path = f'../{res}km_res/run_model/'
-            logger.info(f'analyzing & visualizing outputs in path: {run_path}')
-            visualize_slm_circsheet(config, logger, res)
+        num_files = 0
+        for res in mali_res:
+            for nglv in slm_nglv:
+                run_path = f'../mali{res}km_slm{nglv}/run_model/'
+                logger.info(f'analyzing outputs in path: {run_path}')
+                visualize_slm_circsheet(config, logger, res, nglv)
+                num_files = num_files + 1
 
         # calculate and plot rmse in SLC
-        if coupling and len(resolutions) > 1:
+        if coupling and num_files > 1:
             ncells_list = list()
             rmse_list = list()
-            for res in resolutions:
-                run_data = output_analysis(config, logger,
-                                           res, run_path)
-                ncells_res = run_data.ncells
-                rmse_res = run_data.rmse_slc
-                ncells_list.append(ncells_res)
-                rmse_list.append(rmse_res)
+            for res in mali_res:
+                for nglv in slm_nglv:
+                    run_data = output_analysis(config, logger,
+                                               res, nglv, run_path)
+                    ncells_res = run_data.ncells
+                    rmse_res = run_data.rmse_slc
+                    ncells_list.append(ncells_res)
+                    rmse_list.append(rmse_res)
 
-                ncells = np.array(ncells_list)
-                rmse = np.array(rmse_list)
+                    ncells = np.array(ncells_list)
+                    rmse = np.array(rmse_list)
 
             # plot rmse errors
             p = np.polyfit(np.log10(ncells), np.log10(rmse), 1)
@@ -110,7 +120,7 @@ class Visualize(Step):
                 plt.show()
 
 
-def visualize_slm_circsheet(config, logger, res):
+def visualize_slm_circsheet(config, logger, res, nglv):
     """
     Plot the output from a circular ice sheet test case
 
@@ -126,6 +136,9 @@ def visualize_slm_circsheet(config, logger, res):
 
     res : str
         resolution of MALI mesh
+
+    nglv : str
+        Number of Gauss-Legendre points in latitude in the SLM grid
     """
     section = config['circ_icesheet_viz']
     save_images = section.getboolean('save_images')
@@ -133,10 +146,10 @@ def visualize_slm_circsheet(config, logger, res):
 
     section = config['slm']
     coupling = section.getboolean('coupling')
-    slm_res = int(section.get('slm_res'))
+    slm_nglv = int(section.get('slm_nglv'))
 
     # get an instance of output analysis class
-    run_path = f'../{res}km_res/run_model/'
+    run_path = f'../mali{res}km_slm{slm_nglv}/run_model/'
     run_data = output_analysis(config, logger, res, run_path)
     yrs = run_data.yrs
 
@@ -156,7 +169,7 @@ def visualize_slm_circsheet(config, logger, res):
         ax1.set_ylabel('Mass (Gt)')
         ax1.grid(True)
     if save_images:
-        plt.savefig(f'ice_mass_mali{res}km_slm{slm_res}.png')
+        plt.savefig(f'ice_mass_mali{res}km_slm{slm_nglv}.png')
         fig1.clf()
 
     # figure 2
@@ -175,7 +188,7 @@ def visualize_slm_circsheet(config, logger, res):
         ax2.set_ylabel('Mass (Gt)')
         ax2.grid(True)
     if save_images:
-        plt.savefig(f'ice_mass_change_mali{res}km_slm{slm_res}.png')
+        plt.savefig(f'ice_mass_change_mali{res}km_slm{slm_nglv}.png')
         fig2.clf()
 
     # figure 3
@@ -204,7 +217,7 @@ def visualize_slm_circsheet(config, logger, res):
         ax3.set_ylabel('Sea-level change (m)')
         ax3.grid(True)
     if save_images:
-        plt.savefig(f'ice_contribution_to_SLC_mali{res}km_slm{slm_res}.png')
+        plt.savefig(f'ice_contribution_to_SLC_mali{res}km_slm{slm_nglv}.png')
         fig3.clf()
 
     # figure 4 & 5
@@ -219,7 +232,7 @@ def visualize_slm_circsheet(config, logger, res):
         ax4.set_ylabel('Mass (Gt)')
         ax4.grid(True)
         if save_images:
-            plt.savefig(f'diff_ice_mass_change_mali{res}km_slm{slm_res}.png')
+            plt.savefig(f'diff_ice_mass_change_mali{res}km_slm{slm_nglv}.png')
             fig4.clf()
 
         fig5 = plt.figure(5, facecolor='w')
@@ -234,7 +247,7 @@ def visualize_slm_circsheet(config, logger, res):
         ax5.set_ylabel('sea-level change (m)')
         ax5.grid(True)
         if save_images:
-            plt.savefig(f'diff_sea_level_change_mali{res}km_slm{slm_res}.png')
+            plt.savefig(f'diff_sea_level_change_mali{res}km_slm{slm_nglv}.png')
             fig5.clf()
 
     if hide_figs:
@@ -260,7 +273,7 @@ class output_analysis:
     rmse : float
        root mean square error between mali_slc and slm_slc
     """
-    def __init__(self, config, logger, res, run_path):
+    def __init__(self, config, logger, res, nglv, run_path):
         """
         Calculate sea-level change from run outputs
 
@@ -277,15 +290,16 @@ class output_analysis:
         res : str
             Resolution of MALI mesh
 
+        nglv : str
+            Number of Gauss-Legendre points in latitude in the SLM
+
         run_path : str
             Path to runs where the output file exists
-
-        coupling : str
-            Whether MALI is coupled to the SLM
         """
         self.config = config
         self.logger = logger
         self.res = res
+        self.nglv = nglv
         self.run_path = run_path
 
         section = config['slm']
@@ -297,7 +311,7 @@ class output_analysis:
             AocnBeta_const = section.getfloat('AocnBeta_const')
 
         # mali output file name
-        fname_mali = f'output_res{res}km.nc'
+        fname_mali = f'output_mali{res}km_slm{nglv}.nc'
 
         # read in the MALI outputs
         DS = xr.open_mfdataset(fname_mali, combine='nested',
