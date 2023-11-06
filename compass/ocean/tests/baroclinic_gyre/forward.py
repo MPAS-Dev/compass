@@ -9,8 +9,8 @@ class Forward(Step):
 
     Attributes
     ----------
-    resolution : str
-        The resolution of the test case
+    resolution : float
+        The resolution of the test case (m)
 
     """
     def __init__(self, test_case, resolution, name='forward', subdir=None,
@@ -23,8 +23,8 @@ class Forward(Step):
         test_case : compass.TestCase
             The test case this step belongs to
 
-        resolution : str
-            The resolution of the test case
+        resolution : float
+            The resolution of the test case (m)
 
         name : str
             the name of the test case
@@ -36,6 +36,11 @@ class Forward(Step):
             Whether to run a long (3-year) simulation to quasi-equilibrium
         """
         self.resolution = resolution
+        if resolution >= 1e3:
+            res_name = f'{int(resolution/1e3)}km'
+        else:
+            res_name = f'{int(resolution)}m'
+
         res_params = {'80km': {'ntasks': 20,  # MODIFY
                                'min_tasks': 2,
                                'dt': "'00:12:00'",
@@ -43,12 +48,12 @@ class Forward(Step):
                                'mom_del4': "5.0e10",
                                'run_duration': "'0000_00:36:00'"}}
 
-        if resolution not in res_params:
+        if res_name not in res_params:
             raise ValueError(
-                f'Unsupported resolution {resolution}. Supported values are: '
+                f'Unsupported resolution {res_name}. Supported values are: '
                 f'{list(res_params)}')
 
-        res_params = res_params[resolution]
+        res_params = res_params[res_name]
 
         ntasks = res_params['ntasks']
         min_tasks = res_params['min_tasks']
