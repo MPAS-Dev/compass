@@ -1,5 +1,6 @@
 import numpy as np
 import xarray as xr
+from mpas_tools.cime.constants import constants
 from mpas_tools.io import write_netcdf
 
 from compass.ocean.vertical import init_vertical_coord
@@ -64,12 +65,13 @@ def _write_initial_state(config, dsMesh):
     init_vertical_coord(config, ds)
 
     # setting the initial conditions
+    initial_salinity = config.getfloat('initial_salinity')
     temperature = (-11. * np.log(0.0414 *
                    (-1. * ds.zMid + 100.3)) + 48.8)
     temperature = temperature.transpose('Time', 'nCells', 'nVertLevels')
-    print(f'bottom T: {temperature[0, 200, -1]} and \
-            surface : {temperature[0, 200, 0]}')
-    salinity = 34.0 * xr.ones_like(temperature)
+    print(f'bottom T: {temperature[0, 0, -1]} and \
+            surface : {temperature[0, 0, 0]}')
+    salinity = initial_salinity * xr.ones_like(temperature)
 
     normalVelocity = xr.zeros_like(ds.xEdge)
     normalVelocity, _ = xr.broadcast(normalVelocity, ds.refBottomDepth)
@@ -80,7 +82,7 @@ def _write_initial_state(config, dsMesh):
     ds['salinity'] = salinity
     ds['normalVelocity'] = normalVelocity
 
-    omega = 2. * np.pi / 86164.
+    omega = 2. * np.pi / constants['SHR_CONST_SDAY']
     ds['fCell'] = 2. * omega * np.sin(ds.latCell)
     ds['fEdge'] = 2. * omega * np.sin(ds.latEdge)
     ds['fVertex'] = 2. * omega * np.sin(ds.latVertex)
@@ -97,6 +99,7 @@ def _write_forcing(config, lat):
     tempMin = section.getfloat('temp_min')
     tempMax = section.getfloat('temp_max')
     restoring_temp_piston_vel = section.getfloat('restoring_temp_piston_vel')
+    initial_salinity = section.getfloat('initial_salinity')
     lat = np.rad2deg(lat)
     # set wind stress
     windStressZonal = - tauMax * np.cos(2 * np.pi * (lat - latMin) /
@@ -117,7 +120,7 @@ def _write_forcing(config, lat):
             temperatureSurfaceRestoringValue)
 
     salinitySurfaceRestoringValue = \
-        34.0 * xr.ones_like(temperatureSurfaceRestoringValue)
+        initial_salinity * xr.ones_like(temperatureSurfaceRestoringValue)
     salinityPistonVelocity = xr.zeros_like(temperaturePistonVelocity)
 
     dsForcing = xr.Dataset()
