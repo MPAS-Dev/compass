@@ -66,4 +66,5 @@ class GyreTestCase(TestCase):
         compare_variables(test_case=self,
                           variables=['layerThickness', 'temperature',
                                      'ssh'],
-                          filename1='forward/output.nc')
+                          filename1='forward/output/'
+                                    'output.0001-01-01_00.00.00.nc')
