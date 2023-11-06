@@ -14,8 +14,8 @@ class InitialState(Step):
 
     Attributes
     ----------
-    resolution : str
-        The resolution of the test case
+    resolution : float
+        The resolution of the test case (m)
     """
     def __init__(self, test_case, resolution):
         """
@@ -26,8 +26,8 @@ class InitialState(Step):
         test_case : compass.TestCase
             The test case this step belongs to
 
-        resolution : str
-            The resolution of the test case
+        resolution : float
+            The resolution of the test case (m)
         """
         super().__init__(test_case=test_case, name='initial_state')
         self.resolution = resolution
@@ -65,7 +65,7 @@ def _write_initial_state(config, dsMesh):
     init_vertical_coord(config, ds)
 
     # setting the initial conditions
-    initial_salinity = config.getfloat('initial_salinity')
+    initial_salinity = config.getfloat('baroclinic_gyre', 'initial_salinity')
     temperature = (-11. * np.log(0.0414 *
                    (-1. * ds.zMid + 100.3)) + 48.8)
     temperature = temperature.transpose('Time', 'nCells', 'nVertLevels')

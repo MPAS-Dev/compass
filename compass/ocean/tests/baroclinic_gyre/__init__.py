@@ -13,7 +13,7 @@ class BaroclinicGyre(TestGroup):
         """
         super().__init__(mpas_core=mpas_core, name='baroclinic_gyre')
 
-        for resolution in ['80km']:
+        for resolution in [80000.]:
             self.add_test_case(
                 GyreTestCase(test_group=self, resolution=resolution,
                              long=False))

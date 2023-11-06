@@ -12,8 +12,8 @@ class GyreTestCase(TestCase):
 
     Attributes
     ----------
-    resolution : str
-        The resolution of the test case
+    resolution : float
+        The resolution of the test case (m)
     """
 
     def __init__(self, test_group, resolution, long):
@@ -26,25 +26,29 @@ class GyreTestCase(TestCase):
         compass.ocean.tests.baroclinic_gyre.BaroclinicGyre
             The test group that this test case belongs to
 
-        resolution : str
-            The resolution of the test case
+        resolution : float
+            The resolution of the test case (m)
 
         long : bool
             Whether to run a long (3-year) simulation to quasi-equilibrium
         """
-        name = 'performance'
+        name = 'performance_test'
         self.resolution = resolution
         self.long = long
 
         if long:
-            name = 'long'
+            name = '3_year_test'
 
-        subdir = f'{resolution}/{name}'
+        if resolution >= 1e3:
+            res_name = f'{int(resolution/1e3)}km'
+        else:
+            res_name = f'{int(resolution)}m'
+        subdir = f'{res_name}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
         self.add_step(QuasiUniformSphericalMeshStep(
-            test_case=self, cell_width=int(resolution[:-2])))
+            test_case=self, cell_width=int(resolution / 1e3)))
         self.add_step(CullMesh(test_case=self))
         self.add_step(
             InitialState(test_case=self, resolution=resolution))
