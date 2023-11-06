@@ -76,10 +76,10 @@ represent temperature.
 Analysis
 --------------
 
-For scientific validation, this test case is meant to be run to quasi-steady state and its mean state compared to the MITgcm test case and / or theoretical scaling. This is done through an analysis step in the ``long`` case. 
-Examples of qualitative plots include: i) equilibrated SSH contours on top of surface heat fluxes, ii) barotropic streamfunction (compared to MITgcm or a braotropic gyre test case).
+For scientific validation, this test case is meant to be run to quasi-steady state and its mean state compared to the MITgcm test case and / or theoretical scaling. This is done through an analysis step in the ``3_year_test`` case. 
+Examples of qualitative plots include: i) equilibrated SSH contours on top of surface heat fluxes, ii) barotropic streamfunction (compared to MITgcm or a barotropic gyre test case).
 
-Examples of checks against theory include: iii) max of simulated barotropic streamfunction ~ Sverdrup transport, iv) simulated thermocline depth ~ scaling argument for penetration depth (Vallis (2017) or Cushman-Roisin and Beckers (2011).
+Examples of checks against theory include: iii) max of simulated barotropic streamfunction ~ Sverdrup transport, iv) simulated thermocline depth ~ scaling argument for penetration depth (Vallis (2017) or Cushman-Roisin and Beckers (2011)).
 
 Consider the Sverdrup transport:
 
@@ -145,6 +145,9 @@ All 2 test cases share the same set of config options:
     
     # Maximum zonal wind stress value
     wind_stress_max = 0.1
+
+    # Constant salinity value (also used in restoring)
+    initial_salinity = 34.
     
     # Surface temperature restoring
     temp_min = 0.
@@ -153,16 +156,16 @@ All 2 test cases share the same set of config options:
     # Restoring piston velocity for surface temperature (s-1)
     restoring_temp_piston_vel = 3.86e-7
 
-performance
+performance_test
 ------------
 
-``ocean/baroclinic_gyre/performance`` is the default version of the
+``ocean/baroclinic_gyre/performance_test`` is the default version of the
 baroclinic_gyre test case for a short (10-day) test run and validation of
 prognostic variables for regression testing.
 
-long
+3_year_test
 --------
 
-``ocean/baroclinic_gyre/long`` is an additional version of the
+``ocean/baroclinic_gyre/3_year_test`` is an additional version of the
 baroclinic_gyre test case for a test run to quasi equilibirum (3 years)
 and validation of the mean state against theory and results from other models.
