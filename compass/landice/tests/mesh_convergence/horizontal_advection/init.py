@@ -92,6 +92,6 @@ class Init(ConvInit):
         ds['bedTopography'] = bedTopography
         ds['uReconstructX'] = uReconstructX
         ds['uReconstructY'] = uReconstructY
-        ds['passiveTracer'] = passiveTracer
+        ds['passiveTracer2d'] = passiveTracer
 
         write_netcdf(ds, 'initial_state.nc')
