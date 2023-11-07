@@ -34,7 +34,7 @@ according to latitude :math:`\varphi`
 .. math::
       f(\varphi) = 2 \Omega \sin( \varphi )
 
-with the rotation rate, :math:`\Omega` set to :math:`\frac{2 \pi}{86164} \text{s}^{-1}` (i.e., corresponding the to standard Earth rotation rate).
+with the rotation rate, :math:`\Omega` set to :math:`\frac{2 \pi}{86164} \text{s}^{-1}` (i.e., corresponding to the standard Earth rotation rate, using the CIME constant to ensure consistency).
 The sinusoidal wind-stress variations are defined according to
 
 .. math::
@@ -58,8 +58,8 @@ Initial state
 --------------
 
 Initially the fluid is stratified
-with a reference potential temperature profile that varies from (approximately) :math:`\theta=30.7 \text{ } ^{\circ}`\ C
-in the surface layer to :math:`\theta=1.3 \text{ } ^{\circ}`\ C in the bottom layer. The temperature values were determined by fitting an analytical function to the MITgcm discrete values (originally ranging from 2 to :math:`30 \text{ } ^{\circ}`\ C. 
+with a reference potential temperature profile that varies from (approximately) :math:`\theta=30.6 \text{ } ^{\circ}`\ C
+in the surface layer to :math:`\theta=1.56 \text{ } ^{\circ}`\ C in the bottom layer. To ensure that the profile is independent of the vertical discretization, the profile is now set by a surface value (at the top interface) and a bottom value (at the bottom interface), set in the `.cfg` file. The default values have been chosen for the layer values (calculated with `zMid`) to approximate the discrete values presented in the MITgcm test case. The temperature functional form (and inner parameter `cc`  was determined by fitting an analytical function to the MITgcm discrete layer values (originally ranging from 2 to :math:`30 \text{ } ^{\circ}`\ C. If the `bottom_depth` is different from the default 1800m value, the temperature profile is stretched in the vertical to fit the surface and bottom temperature constraints, but the thermocline depth and the discrete layer values will move away from the MITgcm test case.  
 The equation of state used in this experiment is linear:
 
 .. math::
@@ -67,7 +67,7 @@ The equation of state used in this experiment is linear:
   :label: rho_lineareos
 
 with :math:`\rho_{0}=999.8\,{\rm kg\,m}^{-3}` and
-:math:`\alpha_{\theta}=2\times10^{-4}\,{\rm K}^{-1}`. The salinity is set to a uniform value of :math:`S=34`\ psu. 
+:math:`\alpha_{\theta}=2\times10^{-4}\,{\rm K}^{-1}`. The salinity is set to a uniform value of :math:`S=34`\ psu (set in the `.cfg` file) 
 Given the linear equation of state, in this configuration the model state variable for temperature is
 equivalent to either in-situ temperature, :math:`T`, or potential
 temperature, :math:`\theta`. For simplicity, here we use the variable :math:`\theta` to
