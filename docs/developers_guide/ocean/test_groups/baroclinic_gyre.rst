@@ -36,7 +36,7 @@ First, a mesh appropriate for the resolution is generated using
 :py:class:`compass.mesh.QuasiUniformSphericalMeshStep`.  Then, the mesh is
 culled to keep a single ocean basin (with lat, lon bounds set in `.cfg` file).  A vertical grid is generated,
 with 15 layers of thickness that increases linearly with depth (10m increase by default), from 50m at the surface to 190m at depth (full depth: 1800m).
-Finally, the initial temperature field is initialized with a vertical profile to match the discrete values set in the `MITgcm test case <https://mitgcm.readthedocs.io/en/latest/examples/baroclinic_gyre/baroclinic_gyre.html>`_, uniform in horizontal space. Salinity is set to a constant value (34 pus)  and initial
+Finally, the initial temperature field is initialized with a vertical profile to approximate the discrete values set in the `MITgcm test case <https://mitgcm.readthedocs.io/en/latest/examples/baroclinic_gyre/baroclinic_gyre.html>`_, uniform in horizontal space. The surface and bottom values are set in the `.cfg` file. Salinity is set to a constant value (34 psu, set in the `.cfg` file)  and initial
 velocity is set to zero. 
 
 The ``initial_state`` step also generates the forcing, defined as zonal wind stress that varies with latitude, surface temperature restoring that varies with latitutde, and writes it to `forcing.nc`.
