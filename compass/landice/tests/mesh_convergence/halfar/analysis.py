@@ -26,7 +26,8 @@ class Analysis(ConvAnalysis):
         """
         super().__init__(test_case=test_case, resolutions=resolutions)
         self.resolutions = resolutions
-        self.add_output_file('convergence.png')
+        self.add_output_file('convergence_rmse.png')
+        self.add_output_file('convergence_dome.png')
 
     def run(self):
         """
