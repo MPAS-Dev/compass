@@ -1,5 +1,6 @@
-from compass.ocean.tests.global_ocean.metadata import \
-    get_author_and_email_from_git
+from compass.ocean.tests.global_ocean.metadata import (
+    get_author_and_email_from_git,
+)
 
 
 def configure_hurricane(test_case, mesh):
@@ -17,6 +18,7 @@ def configure_hurricane(test_case, mesh):
     config = test_case.config
 
     config.add_from_package('compass.mesh', 'mesh.cfg')
+    config.add_from_package('compass.ocean.tests.hurricane', 'hurricane.cfg')
     config.add_from_package(mesh.package, mesh.mesh_config_filename,
                             exception=True)
 
