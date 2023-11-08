@@ -2,6 +2,7 @@ from compass.ocean.tests.global_ocean.metadata import (
     get_author_and_email_from_git,
 )
 
+
 def configure_hurricane(test_case, mesh):
     """
     Modify the configuration options for this test case
