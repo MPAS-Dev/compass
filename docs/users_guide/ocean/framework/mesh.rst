@@ -41,7 +41,7 @@ controlled by the following config options:
                   Antarctica v3 around Antarctica.
 
     # the target and minimum number of MPI tasks to use in remapping
-    ntasks = 1024
+    ntasks = 4096
     min_tasks = 360
 
     # remapping method {'bilinear', 'neareststod', 'conserve'}
