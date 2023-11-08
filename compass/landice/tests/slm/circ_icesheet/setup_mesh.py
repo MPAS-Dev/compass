@@ -1,11 +1,12 @@
 import os
 import shutil
 
+import mpas_tools.io
 import netCDF4
 import numpy as np
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
-from mpas_tools.mesh.conversion import convert, cull
+from mpas_tools.mesh.conversion import cull
 from mpas_tools.planar_hex import make_planar_hex_mesh
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
 from mpas_tools.translate import center, translate
@@ -58,20 +59,27 @@ class SetupMesh(Step):
         # factor of 2/sqrt(3) because of hexagonal mesh
         ny = max(2 * int(0.5 * ly * (2. / np.sqrt(3)) / dc + 0.5), 4)
 
+        mpas_tools.io.default_format = 'NETCDF4'
+        mpas_tools.io.default_engine = 'netcdf4'
+
         # call the mesh creation function
         dsMesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc,
                                       nonperiodic_x=True,
                                       nonperiodic_y=True)
         dsMesh = cull(dsMesh, logger=logger)
-        dsMesh = convert(dsMesh, logger=logger)
+        # adding the time dimension is needed for netcdf4 formatting to work
+        dsMesh['xtime'] = ('Time', ['2015-01-01_00:00:00'.ljust(64)])
         # translating the mesh center to x=0 & y=0
         center(dsMesh)
         # shift the center to a quarter or radius
         shift = 200000.0
         print(f'shifting the center by {shift} meters')
         translate(dsMesh, shift, shift)
-        # write to a file
-        write_netcdf(dsMesh, 'mpas_grid.nc')
+
+        fname_culled = 'culled_mesh_before_cdf5.nc'
+        write_netcdf(dsMesh, fname_culled)
+        args = ['ncks', '-O', '-5', fname_culled, 'mpas_grid.nc']
+        check_call(args, logger=logger)
 
         levels = 3
         args = ['create_landice_grid_from_generic_MPAS_grid.py',
@@ -93,6 +101,8 @@ class SetupMesh(Step):
 
         _build_mapping_files(config, logger,
                              mali_mesh_file='landice_grid.nc')
+
+        os.remove(fname_culled)
 
 
 def _setup_circsheet_initial_conditions(config, logger, filename):
