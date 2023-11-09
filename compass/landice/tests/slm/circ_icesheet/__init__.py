@@ -50,7 +50,8 @@ class CircIcesheetTest(TestCase):
         for res in mali_res:
             for nglv in slm_nglv:
                 self.add_step(SetupMesh(test_case=self,
-                              name=f'mali{res}km_slm{nglv}/setup_mesh'))
+                                        name=f'mali{res}km_slm{nglv}/'
+                                        f'setup_mesh', res=res, nglv=nglv))
                 self.add_step(RunModel(test_case=self, ntasks=1,
                               openmp_threads=1,
                               name=f'mali{res}km_slm{nglv}/run_model'))

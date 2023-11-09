@@ -11,8 +11,8 @@ class RunModel(Step):
     Attributes
     ----------
     """
-    def __init__(self, test_case, name='run_model',
-                 subdir=None, ntasks=1, min_tasks=None, openmp_threads=1):
+    def __init__(self, test_case, res, nglv, ntasks, name='run_model',
+                 subdir=None, min_tasks=None, openmp_threads=1):
         """
         Create a new test case
 
@@ -21,16 +21,22 @@ class RunModel(Step):
         test_case : compass.TestCase
             The test case this step belongs to
 
+        res : str
+            Resolution of the MALI domain
+
+        nglv : str
+            Number of Gauss-Legendre nodes in latitude in the SLM grid
+
+        ntasks : int
+            the number of tasks the step would ideally use.  If fewer tasks
+            are available on the system, the step will run on all available
+            tasks as long as this is not below ``min_tasks``
+
         name : str, optional
             the name of the test case
 
         subdir : str, optional
             the subdirectory for the step.  The default is ``name``
-
-        ntasks : int, optional
-            the number of tasks the step would ideally use.  If fewer tasks
-            are available on the system, the step will run on all available
-            tasks as long as this is not below ``min_tasks``
 
         min_tasks : int, optional
             the number of tasks the step requires.  If the system has fewer
@@ -39,6 +45,9 @@ class RunModel(Step):
         openmp_threads : int, optional
             the number of OpenMP threads the step will use
         """
+        self.res = res
+        self.nglv = nglv
+
         if min_tasks is None:
             min_tasks = ntasks
         super().__init__(test_case=test_case, name=name, subdir=subdir,
