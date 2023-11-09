@@ -23,9 +23,14 @@ class SetupMesh(Step):
 
     Attributes
     ----------
+    res : str
+        Resolution of MALI mesh
+
+    nglv : str
+        Number of Gauss-Legendre nodes in latitude in the SLM
     """
 
-    def __init__(self, test_case, name='setup_mesh'):
+    def __init__(self, test_case, name, res, nglv):
         """
         Create the step
 
@@ -33,12 +38,20 @@ class SetupMesh(Step):
         ----------
         test_case : compass.TestCase
             The test case this step belongs to
+
+        res : str
+            Resolution of MALI mesh
+
+        nglv : str
+            Number of Gauss-Legendre nodes in latitude in the SLM
         """
         super().__init__(test_case=test_case, name=name)
 
         self.add_output_file(filename='graph.info')
         self.add_output_file(filename='landice_grid.nc')
 
+        self.res = res
+        self.nglv = nglv
     # no setup() method is needed
 
     def run(self):
@@ -51,7 +64,7 @@ class SetupMesh(Step):
 
         lx = section.getfloat('lx')
         ly = section.getfloat('ly')
-        dc = section.getfloat('dc')
+        dc = float(self.res) * 1000.0
 
         # calculate the number of grid cells in x and y direction
         # for the uniform, hexagonal planar mesh
@@ -99,7 +112,7 @@ class SetupMesh(Step):
                                  mali_mesh_file='landice_grid.nc',
                                  filename='smb_forcing.nc')
 
-        _build_mapping_files(config, logger,
+        _build_mapping_files(config, logger, self.res, self.nglv,
                              mali_mesh_file='landice_grid.nc')
 
         os.remove(fname_culled)
@@ -306,7 +319,7 @@ def _create_smb_forcing_file(config, logger, mali_mesh_file, filename):
     smbfile.close()
 
 
-def _build_mapping_files(config, logger, mali_mesh_file):
+def _build_mapping_files(config, logger, res, nglv, mali_mesh_file):
     """
     Build a mapping file if it does not exist.
     Mapping file is then used to remap the ismip6 source file in polarstero
@@ -317,29 +330,29 @@ def _build_mapping_files(config, logger, mali_mesh_file):
     config : compass.config.CompassConfigParser
         Configuration options for a ismip6 forcing test case
 
-    cores : int
-        the number of cores for the ESMF_RegridWeightGen
-
     logger : logging.Logger
         A logger for output from the step
 
-    mali_mesh_file : str, optional
-        The MALI mesh file if mapping file does not exist
+    name : str
+        Name of the step
 
-    method_remap : str, optional
-        Remapping method used in building a mapping file
+    res : str
+        Resolution of MALI mesh
+
+    nglv : str
+            Number of Gauss-Legendre nodes in latitude in the SLM
+
+    mali_mesh_file : str
+        The MALI mesh file
     """
 
     section = config['slm']
     slm_res = section.get('slm_res')
-    slm_nglv = section.get('slm_nglv')
+    slm_nglv = int(nglv)
     method_mali_to_slm = section.get('mapping_method_mali_to_slm')
     method_slm_to_mali = section.get('mapping_method_slm_to_mali')
 
-    section = config['circ_icesheet']
-    dc = section.getfloat('dc')
-
-    mali_scripfile = f'mali{int(dc/1000)}km_scripfile.nc'
+    mali_scripfile = f'mali{int(res)}km_scripfile.nc'
     slm_scripfile = f'slm{slm_res}_nglv{slm_nglv}scripfile.nc'
 
     # create slm scripfile
