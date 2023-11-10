@@ -50,7 +50,7 @@ class Visualize(Step):
         for res in mali_res:
             for nglv in slm_nglv:
                 self.add_input_file(filename=f'output_mali{res}km_'
-                                    'slm{nglv}.nc',
+                                    f'slm{nglv}.nc',
                                     target=f'../mali{res}km_slm{nglv}/'
                                     'run_model/output/output.nc')
 
@@ -69,7 +69,6 @@ class Visualize(Step):
 
         section = config['circ_icesheet_viz']
         save_images = section.getboolean('save_images')
-        hide_figs = section.getboolean('hide_figs')
 
         # visualize run model results
         num_files = 0
@@ -82,42 +81,112 @@ class Visualize(Step):
 
         # calculate and plot rmse in SLC
         if coupling and num_files > 1:
-            ncells_list = list()
-            rmse_list = list()
+            # ncells_list = list()
+            # rmse_list = list()
+            pct_err_slc_list = list()
+            pct_err_slc_z0_list = list()
+            pct_err_slc_z0_matrix = np.zeros((len(mali_res), len(slm_nglv)))
+            n = 0
             for res in mali_res:
                 for nglv in slm_nglv:
+                    run_path = f'../mali{res}km_slm{nglv}/run_model/'
                     run_data = output_analysis(config, logger,
                                                res, nglv, run_path)
-                    ncells_res = run_data.ncells
-                    rmse_res = run_data.rmse_slc
-                    ncells_list.append(ncells_res)
-                    rmse_list.append(rmse_res)
+                    # ncells_res = run_data.ncells
+                    # rmse_res = run_data.rmse_slc
+                    pct_err_slc_res = run_data.pct_err_slc
+                    pct_err_slc_z0_res = run_data.pct_err_slm_z0
+                    # ncells_list.append(ncells_res)
+                    # rmse_list.append(rmse_res)
+                    pct_err_slc_list.append(pct_err_slc_res)
+                    pct_err_slc_z0_list.append(pct_err_slc_z0_res)
 
-                    ncells = np.array(ncells_list)
-                    rmse = np.array(rmse_list)
+                    # ncells = np.array(ncells_list)
+                    # rmse = np.array(rmse_list)
+                    pct_err_slc = np.array(pct_err_slc_list)
+                    pct_err_slc_z0 = np.array(pct_err_slc_z0_list)
 
-            # plot rmse errors
-            p = np.polyfit(np.log10(ncells), np.log10(rmse), 1)
-            conv = abs(p[0]) * 2.0
-            error_fit = ncells**p[0] * 10**p[1]
+                # assign the percentage error array in matrix
+                pct_err_slc_z0_matrix[n, :] = pct_err_slc_z0
+                n += 1
 
-            plt.figure(1)
-            plt.loglog(ncells, error_fit, 'k')
-            plt.loglog(ncells, rmse, 'or')
-            plt.annotate('Order of Convergence = {}'.format(np.round(conv, 3)),
-                         xycoords='axes fraction', xy=(0.3, 0.95),
-                         fontsize=14)
-            plt.xlabel('Number of Grid Cells', fontsize=14)
-            plt.ylabel('L2 Norm', fontsize=14)
-            plt.title('MALI-SLM RMSE in SLC')
-            if save_images:
-                plt.savefig('RMSE.png', bbox_inches='tight')
-                plt.clf()
-            if hide_figs:
-                logger.info("Plot display disabled with"
-                            "hide_plot config option.")
-            else:
-                plt.show()
+                # plot mean percentage error for fixed MALI res
+                plot_pct_err_slc(res, slm_nglv, pct_err_slc,
+                                 'Mean Percent Error in SLC')
+                plot_pct_err_slc(res, slm_nglv, pct_err_slc_z0,
+                                 'Mean Percent Error in SLC-z0')
+                # reset the lists for percentage error
+                del pct_err_slc_list[:], pct_err_slc_z0_list[:]
+
+            # plot the heat map of mean percentage errors
+            plot_heatmap(pct_err_slc_z0_matrix, mali_res, slm_nglv,
+                         save_images)
+
+
+def plot_heatmap(data, mali_res, slm_nglv, save_images):
+    """
+    Plot a heat map of mean percentage error in SLC.
+
+    Parameters
+    ----------
+    data : float
+        Matrix of arrays containing mean percentage error values
+
+    mali_res : str
+        List of MALI-resolution strings
+
+    slm_nglv : str
+        List of SLM nglv values
+
+    save_images : str
+        Boolean on whether to save the plot or not
+    """
+
+    fig1 = plt.figure(1, facecolot='w')
+    ax1 = fig1.add_subplot(1, 1, 1)
+    im = ax1.imshow(data, cmap='Blues')
+    ax1.figure.colorbar(im, ax=ax1)
+    ax1.set_title('Mean Percentage Error (%)')
+    ax1.set_xticks(np.arange(len(slm_nglv)), labels=slm_nglv)
+    ax1.set_yticks(np.arange(len(mali_res)), labels=mali_res)
+    ax1.set_xlabel('# of GL nodes in Latitude')
+    ax1.set_ylabel('MALI domain resolution (km)')
+    if save_images:
+        plt.savefig('Heatmap_MPE.png')
+        fig1.clf()
+
+
+def plot_pct_err_slc(mali_res, slm_nglv, data, figure_title):
+    """
+    Plot mean percentage errors in sea-level change where
+    MALI-calculation is taken as a true value.
+
+    Parameters
+    ----------
+    mali_res : str
+        Resolution of the MALI domain
+
+    slm_nglv : int
+        Array of the number of Gauss-Legendre nodes in latitude
+        in the SLM grid
+
+    data : float
+        Data array containing the percentage error values
+
+    figure_title : str
+        Title of the figure
+    """
+
+    fig1 = plt.figure(1, facecolor='w')
+    ax1 = fig1.add_subplot(1, 1, 1)
+    ax1.plot(np.array(slm_nglv), data, marker='o')
+    ax1.set_xlabel('# of Gauss-Legendre nodes in latitude (SLM)', fontsize=14)
+    ax1.legend(loc='best', ncol=1, prop={'size': 10})
+    ax1.set_title(f'{figure_title} for {mali_res}km MALI res')
+    ax1.set_ylabel('percent error (%)', fontsize=14)
+    plt.savefig(f'{figure_title} for {mali_res}km MALI res.png',
+                bbox_inches='tight')
+    fig1.clf()
 
 
 def visualize_slm_circsheet(config, logger, res, nglv):
@@ -146,11 +215,10 @@ def visualize_slm_circsheet(config, logger, res, nglv):
 
     section = config['slm']
     coupling = section.getboolean('coupling')
-    slm_nglv = int(section.get('slm_nglv'))
 
     # get an instance of output analysis class
-    run_path = f'../mali{res}km_slm{slm_nglv}/run_model/'
-    run_data = output_analysis(config, logger, res, run_path)
+    run_path = f'../mali{res}km_slm{nglv}/run_model/'
+    run_data = output_analysis(config, logger, res, nglv, run_path)
     yrs = run_data.yrs
 
     # figure 1
@@ -169,7 +237,7 @@ def visualize_slm_circsheet(config, logger, res, nglv):
         ax1.set_ylabel('Mass (Gt)')
         ax1.grid(True)
     if save_images:
-        plt.savefig(f'ice_mass_mali{res}km_slm{slm_nglv}.png')
+        plt.savefig(f'ice_mass_mali{res}km_slm{nglv}.png')
         fig1.clf()
 
     # figure 2
@@ -188,7 +256,7 @@ def visualize_slm_circsheet(config, logger, res, nglv):
         ax2.set_ylabel('Mass (Gt)')
         ax2.grid(True)
     if save_images:
-        plt.savefig(f'ice_mass_change_mali{res}km_slm{slm_nglv}.png')
+        plt.savefig(f'ice_mass_change_mali{res}km_slm{nglv}.png')
         fig2.clf()
 
     # figure 3
@@ -217,7 +285,7 @@ def visualize_slm_circsheet(config, logger, res, nglv):
         ax3.set_ylabel('Sea-level change (m)')
         ax3.grid(True)
     if save_images:
-        plt.savefig(f'ice_contribution_to_SLC_mali{res}km_slm{slm_nglv}.png')
+        plt.savefig(f'ice_contribution_to_SLC_mali{res}km_slm{nglv}.png')
         fig3.clf()
 
     # figure 4 & 5
@@ -232,7 +300,7 @@ def visualize_slm_circsheet(config, logger, res, nglv):
         ax4.set_ylabel('Mass (Gt)')
         ax4.grid(True)
         if save_images:
-            plt.savefig(f'diff_ice_mass_change_mali{res}km_slm{slm_nglv}.png')
+            plt.savefig(f'diff_ice_mass_change_mali{res}km_slm{nglv}.png')
             fig4.clf()
 
         fig5 = plt.figure(5, facecolor='w')
@@ -240,14 +308,14 @@ def visualize_slm_circsheet(config, logger, res, nglv):
         ax5.plot(yrs, run_data.diff_slc, label='MALI minus SLM',
                  linestyle='-', color='k')
         ax5.plot(yrs, run_data.diff_slc_z0, label='MALI minus SLM (z0)',
-                 linestyle='-', color='k')
+                 linestyle='-', color='r')
         ax5.set_xlabel('Year')
         ax5.legend(loc='best', ncol=1, prop={'size': 10})
         ax5.set_title('Difference in sea-level change')
         ax5.set_ylabel('sea-level change (m)')
         ax5.grid(True)
         if save_images:
-            plt.savefig(f'diff_sea_level_change_mali{res}km_slm{slm_nglv}.png')
+            plt.savefig(f'diff_sea_level_change_mali{res}km_slm{nglv}.png')
             fig5.clf()
 
     if hide_figs:
@@ -360,45 +428,47 @@ class output_analysis:
             time_stride = int(section.get('time_stride'))
             # reset the time indices to match the # of SLM timesteps
             nt = np.arange(0, DS.dims['Time'], time_stride, dtype='i')
+            nt = np.arange(0, 50, time_stride, dtype='i')
             self.yrs = self.yrs_mali[nt]
-            z0 = np.zeros((len(self.yrs), ))
-            Aocn = np.zeros((len(self.yrs), ))
-            AocnBeta = np.zeros((len(self.yrs), ))
+            nyrs = len(self.yrs)
+            z0 = np.zeros((nyrs, ))
+            Aocn = np.zeros((nyrs, ))
+            AocnBeta = np.zeros((nyrs, ))
             # get ice mass on the SLM interpolated from the MALI mesh
             fname = os.path.join(fpath_slm, 'ice_volume')
-            self.ice_vol_slm = slm_outputs(fname).data * rhoi / 1.0e12
-            self.dice_vol_slm = slm_outputs(fname).change_total * \
+            self.ice_vol_slm = slm_outputs(fname, nyrs).data * rhoi / 1.0e12
+            self.dice_vol_slm = slm_outputs(fname, nyrs).change_total * \
                 rhoi / 1.0e12  # in Gt
             # get slc correction and ocean area from the SLM
             fname = os.path.join(fpath_slm, 'gmsle_deltaSL_Ocean_fixed')
             if os.path.exists(fname):
                 logger.info(f'reading in file {fname}')
-                z0 = slm_outputs(fname).change_total
-                self.SLC_slm_Aocn = slm_outputs(fname).data
+                z0 = slm_outputs(fname, nyrs).change_total
+                self.SLC_slm_Aocn = slm_outputs(fname, nyrs).data
 
             fname = os.path.join(fpath_slm, 'gmsle_deltaSL_OceanBeta_fixed')
             if os.path.exists(fname):
                 logger.info(f'reading in file {fname}')
-                self.SLC_slm_AocnBeta = slm_outputs(fname).data
+                self.SLC_slm_AocnBeta = slm_outputs(fname, nyrs).data
 
             fname = os.path.join(fpath_slm, 'ocean_area')
             if os.path.exists(fname):
                 logger.info(f'reading in file {fname}')
-                Aocn = slm_outputs(fname).data
-                logger.info(f'area of the ocean is: {Aocn}')
+                Aocn = slm_outputs(fname, nyrs).data
+                # logger.info(f'area of the ocean is: {Aocn}')
             fname = os.path.join(fpath_slm, 'oceanBeta_area')
             if os.path.exists(fname):
                 logger.info(f'reading in file {fname}')
-                AocnBeta = slm_outputs(fname).data
-                logger.info(f'area of the ocean Beta is: {AocnBeta}')
+                AocnBeta = slm_outputs(fname, nyrs).data
+                # logger.info(f'area of the ocean Beta is: {AocnBeta}')
         else:
             # if not coupled, use default values for MALI outputs
             # assuming MALI output interval is 1 year
             nt = np.arange(0, DS.dims['Time'], 1, dtype='i')
             self.yrs = self.yrs_mali
-            z0 = np.zeros((len(self.yrs), ))
-            Aocn = np.zeros((len(self.yrs), ))
-            AocnBeta = np.zeros(len(self.yrs, ))
+            z0 = np.zeros(nyrs, )
+            Aocn = np.zeros(nyrs, )
+            AocnBeta = np.zeros(nyrs, )
 
             z0[:] = 0.0
             logger.info("'gmsle_change' file doesn't exist. "
@@ -447,8 +517,8 @@ class output_analysis:
             bedt = bed[indx, :].load()
             cellMaskt = cellMask[indx, :].load()
             thicknesst = thickness[indx, :].load()
-            areaCellt = areaCell.sum()
-            logger.info(f'area of the mali domain is {areaCellt}')
+            # areaCellt = areaCell.sum()
+            # logger.info(f'area of the mali domain is {areaCellt}')
 
             # calculation of sea-level change following Goelzer et al. 2020
             self.grnd_vol_unscaled[t] = (areaCell * grounded(cellMaskt) *
@@ -515,12 +585,25 @@ class output_analysis:
 
         # calculate RMSE between MALI and SLM calculation of SLC
         if coupling:
-            self.diff_slc = self.SLCcorr_AocnBeta - self.SLC_slm_AocnBeta
-            self.diff_slc_z0 = self.SLCcorr_z0_AocnBeta - self.SLC_slm_AocnBeta
+            self.diff_slc = self.SLC_slm_AocnBeta - self.SLCcorr_AocnBeta
+            self.diff_slc_z0 = self.SLC_slm_AocnBeta - \
+                self.SLCcorr_z0_AocnBeta
             self.rmse_slc = np.sqrt((self.diff_slc**2).mean())
+            self.pct_err_slc = ((abs(self.diff_slc[1:]) /
+                                 abs(self.SLCcorr_AocnBeta[1:])) *
+                                100).mean()
+            self.pct_err_slc_z0 = ((abs(self.diff_slc_z0[1:]) /
+                                    abs(self.SLCcorr_z0_AocnBeta[1:])) *
+                                   100).mean()
+            self.pct_err_slm = ((abs(self.diff_slc[1:]) /
+                                 abs(self.SLC_slm_AocnBeta[1:])) *
+                                100).mean()
+            self.pct_err_slm_z0 = ((abs(self.diff_slc_z0[1:]) /
+                                    abs(self.SLC_slm_AocnBeta[1:])) *
+                                   100).mean()
+
         else:
-            logger.info('MALI is not coupled to the SLM. No RMSE to compute.')
-            self.rmse_slc = np.nan
+            logger.info('MALI is not coupled to the SLM. No MPE to compute.')
 
 
 def grounded(cellMask):
@@ -544,7 +627,7 @@ class slm_outputs:
         Change in data value at a time step
         with respect to the intial time step
     """
-    def __init__(self, filename):
+    def __init__(self, filename, nyrs):
         """
         Calculate the sea-level model output file
 
@@ -552,11 +635,14 @@ class slm_outputs:
         ----------
         filename : str
             Filename of SLM output data
+
+        nyrs : int
+            Number of time indices to be analyzed
         """
         self.fname = filename
-        self.data = np.loadtxt(self.fname)
-        self.change_dt = np.zeros(len(self.data),)
-        self.change_total = np.zeros(len(self.data),)
+        self.data = np.loadtxt(self.fname)[0:nyrs]
+        self.change_dt = np.zeros(nyrs,)
+        self.change_total = np.zeros(nyrs,)
         for i in range(len(self.change_dt) - 1):
             self.change_dt[i + 1] = (float(self.data[i + 1]) -
                                      float(self.data[i]))
