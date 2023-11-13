@@ -529,10 +529,10 @@ def build_cell_width(self, section_name, gridded_dataset,
     geom_points, geom_edges = set_rectangular_geom_points_and_edges(*bnds)
 
     # Remove ice not connected to the ice sheet.
-    flood_mask = gridded_flood_fill(thk) == 0
-    thk[flood_mask] = 0.0
-    vx[flood_mask] = 0.0
-    vy[flood_mask] = 0.0
+    flood_mask = gridded_flood_fill(thk)
+    thk[flood_mask == 0] = 0.0
+    vx[flood_mask == 0] = 0.0
+    vy[flood_mask == 0] = 0.0
 
     # Calculate distance from each grid point to ice edge
     # and grounding line, for use in cell spacing functions.
