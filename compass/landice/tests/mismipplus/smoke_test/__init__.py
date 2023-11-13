@@ -1,6 +1,6 @@
-from compass.validate import compare_variables
-from compass.testcase import TestCase
 from compass.landice.tests.mismipplus.run_model import RunModel
+from compass.testcase import TestCase
+from compass.validate import compare_variables
 
 
 class SmokeTest(TestCase):
