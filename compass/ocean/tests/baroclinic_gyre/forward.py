@@ -105,3 +105,8 @@ class Forward(Step):
         Run this step of the test case
         """
         run_model(self, partition_graph=True)
+
+        if self.name == '3_year_test':
+            replacements = {'config_do_restart': '.true.',
+                            'config_start_time': "'file'"}
+            self.update_namelist_at_runtime(replacements)
