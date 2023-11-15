@@ -86,6 +86,7 @@ class Forward(Step):
             options['config_stop_time'] = "'0004-01-01_00:00:00'"
             options['config_run_duration'] = "'none'"
 
+        self.add_namelist_options(options=options)
         self.add_input_file(filename='init.nc',
                             target='../initial_state/initial_state.nc')
         self.add_input_file(filename='forcing.nc',
