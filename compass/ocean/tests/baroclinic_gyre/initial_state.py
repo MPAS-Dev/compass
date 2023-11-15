@@ -69,10 +69,12 @@ def _write_initial_state(config, dsMesh):
     temp_top = section.getfloat('initial_temp_top')
     temp_bot = section.getfloat('initial_temp_bot')
 
+    print(f'zmid: {ds.zMid.values}')
     cc = 0.049  # 0.049 value from optimization on 1800m
     aa = temp_top / np.log(cc)
     bb = (cc ** (temp_bot / temp_top) - cc)
-    temperature = aa * np.log(bb * ds.zMid / bottom_depth + cc)
+    temperature = aa * np.log(bb * -1.0 * ds.zMid / bottom_depth + cc)
+    print(f'Tinit: {temperature.values}')
     val_bot = aa * np.log(bb + cc)
     val_top = aa * np.log(cc)
     print(f'analytical bottom T: {val_bot} at \
