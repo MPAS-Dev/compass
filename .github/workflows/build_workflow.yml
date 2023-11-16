@@ -98,16 +98,16 @@ jobs:
         name: Install compass
         run: |
           ./conda/configure_compass_env.py \
-            --env_only \
             --env_name compass_test \
             --python=${{ matrix.python-version }} \
+            --mpi=mpich \
             --verbose
-          source load_compass_test.sh
+          source load_compass_test_mpich.sh
 
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
         name: Build Sphinx Docs
         run: |
-          source load_compass_test.sh
+          source load_compass_test_mpich.sh
           cd docs
           make html
 
@@ -116,7 +116,7 @@ jobs:
         env:
           CHECK_IMAGES: False
         run: |
-          source load_compass_test.sh
+          source load_compass_test_mpich.sh
           python -c "import compass"
           compass list
           compass list --machines
