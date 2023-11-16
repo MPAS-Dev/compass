@@ -1,5 +1,6 @@
-from compass.testgroup import TestGroup
+from compass.landice.tests.mismipplus.makemeshtest import MakeMeshTest
 from compass.landice.tests.mismipplus.smoke_test import SmokeTest
+from compass.testgroup import TestGroup
 
 
 class MISMIPplus(TestGroup):
@@ -15,3 +16,6 @@ class MISMIPplus(TestGroup):
         super().__init__(mpas_core=mpas_core, name='mismipplus')
 
         self.add_test_case(SmokeTest(test_group=self))
+
+        # Dummy test case for testing the mesh stepup.
+        self.add_test_case(MakeMeshTest(test_group=self))
