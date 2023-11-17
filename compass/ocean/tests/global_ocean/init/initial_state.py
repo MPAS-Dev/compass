@@ -1,5 +1,12 @@
 import os
-from importlib.resources import contents
+import shutil
+from importlib.resources import contents, read_text
+
+import numpy as np
+import xarray as xr
+from jinja2 import Template
+from mpas_tools.io import write_netcdf
+from mpas_tools.logging import check_call
 
 from compass.model import run_model
 from compass.ocean.plot import plot_initial_state, plot_vertical_grid
@@ -171,6 +178,8 @@ class InitialState(Step):
         update_pio = config.getboolean('global_ocean', 'init_update_pio')
         run_model(self, update_pio=update_pio)
 
+        self._smooth_topography()
+
         add_mesh_and_init_metadata(self.outputs, config,
                                    init_filename='initial_state.nc')
 
@@ -186,3 +195,64 @@ class InitialState(Step):
         self.cpus_per_task = config.getint('global_ocean',
                                            'init_cpus_per_task')
         self.min_cpus_per_task = self.cpus_per_task
+
+    def _smooth_topography(self):
+        """ Smooth the topography using a Gaussian filter """
+        config = self.config
+        section = config['global_ocean']
+        num_passes = section.getint('topo_smooth_num_passes')
+        if num_passes == 0:
+            return
+
+        min_level = section.getint('topo_smooth_min_level')
+        distance_limit = section.getfloat('topo_smooth_distance_limit')
+        std_deviation = section.getfloat('topo_smooth_std_deviation')
+
+        template = Template(read_text(
+            'compass.ocean.tests.global_ocean.init', 'smooth_topo.template'))
+
+        text = template.render(num_passes=f'{num_passes}',
+                               min_level=f'{min_level}',
+                               distance_limit=f'{distance_limit}',
+                               std_deviation=f'{std_deviation}')
+
+        # add trailing end line
+        text = f'{text}\n'
+
+        with open('smooth_depth_in', 'w') as file:
+            file.write(text)
+
+        check_call(args=['ocean_smooth_topo_skip_land_ice'],
+                   logger=self.logger)
+
+        with (xr.open_dataset('initial_state.nc') as ds_init):
+            with xr.open_dataset('topo_smooth.nc') as ds_smooth:
+                for field in ['bottomDepth', 'maxLevelCell',
+                              'restingThickness']:
+                    attrs = ds_init[field].attrs
+                    ds_init[field] = ds_smooth[f'{field}New']
+                    ds_init[field].attrs = attrs
+
+            nVertLevels = ds_init.sizes['nVertLevels']
+            maxLevelCell = ds_init.maxLevelCell - 1
+            restingThickness = ds_init.restingThickness
+            ssh = ds_init.ssh
+            bottomDepth = ds_init.bottomDepth
+
+            zIndex = xr.DataArray(data=np.arange(nVertLevels),
+                                  dims='nVertLevels')
+            mask = zIndex <= maxLevelCell
+            layerStretch = (ssh + bottomDepth) / bottomDepth
+            layerThickness = restingThickness * layerStretch
+            layerThickness = layerThickness.where(mask, 0.)
+            layerThickness = \
+                layerThickness.transpose('Time', 'nCells', 'nVertLevels')
+
+            field = 'layerThickness'
+            attrs = ds_init[field].attrs
+            ds_init[field] = layerThickness
+            ds_init[field].attrs = attrs
+
+            write_netcdf(ds_init, 'initial_state_smooth.nc')
+
+        shutil.copy('initial_state_smooth.nc', 'initial_state.nc')
