@@ -1,6 +1,12 @@
 import os
-from importlib.resources import contents
+from importlib.resources import contents, read_text
 
+import xarray as xr
+from jinja2 import Template
+from mpas_tools.io import write_netcdf
+from mpas_tools.logging import check_call
+
+from compass.io import symlink
 from compass.model import run_model
 from compass.ocean.plot import plot_initial_state, plot_vertical_grid
 from compass.ocean.tests.global_ocean.metadata import (
@@ -79,7 +85,7 @@ class InitialState(Step):
 
         cull_step = self.mesh.steps['cull_mesh']
         target = os.path.join(cull_step.path, 'topography_culled.nc')
-        self.add_input_file(filename='topography.nc',
+        self.add_input_file(filename='topography_culled.nc',
                             work_dir_target=target)
 
         self.add_input_file(
@@ -162,6 +168,8 @@ class InitialState(Step):
         Run this step of the testcase
         """
         config = self.config
+        self._smooth_topography()
+
         interfaces = generate_1d_grid(config=config)
 
         write_1d_grid(interfaces=interfaces, out_filename='vertical_grid.nc')
@@ -186,3 +194,43 @@ class InitialState(Step):
         self.cpus_per_task = config.getint('global_ocean',
                                            'init_cpus_per_task')
         self.min_cpus_per_task = self.cpus_per_task
+
+    def _smooth_topography(self):
+        """ Smooth the topography using a Gaussian filter """
+        config = self.config
+        section = config['global_ocean']
+        num_passes = section.getint('topo_smooth_num_passes')
+        if num_passes == 0:
+            # just symlink the culled topography to be the topography used for
+            # the initial condition
+            symlink(target='topography_culled.nc', link_name='topography.nc')
+            return
+
+        distance_limit = section.getfloat('topo_smooth_distance_limit')
+        std_deviation = section.getfloat('topo_smooth_std_deviation')
+
+        template = Template(read_text(
+            'compass.ocean.tests.global_ocean.init', 'smooth_topo.template'))
+
+        text = template.render(num_passes=f'{num_passes}',
+                               distance_limit=f'{distance_limit}',
+                               std_deviation=f'{std_deviation}')
+
+        # add trailing end line
+        text = f'{text}\n'
+
+        with open('smooth_depth_in', 'w') as file:
+            file.write(text)
+
+        check_call(args=['ocean_smooth_topo_before_init'],
+                   logger=self.logger)
+
+        with (xr.open_dataset('topography_culled.nc') as ds_topo):
+            with xr.open_dataset('topography_orig_and_smooth.nc') as ds_smooth:
+                for field in ['bed_elevation', 'landIceDraftObserved',
+                              'landIceThkObserved']:
+                    attrs = ds_topo[field].attrs
+                    ds_topo[field] = ds_smooth[f'{field}New']
+                    ds_topo[field].attrs = attrs
+
+            write_netcdf(ds_topo, 'topography.nc')
