@@ -1,0 +1,66 @@
+&time_config
+    itersl = 1
+    starttime = 2015
+    dt1 = 1
+
+/
+&io_directory
+    inputfolder_ice = '/usr/projects/climate/hollyhan/SeaLevelModel_Inputs/icemodel/GL{{ nglv }}/ice_noGrIS_GL{{ nglv }}/'
+    inputfolder = '/usr/projects/climate/hollyhan/SeaLevelModel_Inputs/others/GL{{ nglv }}/'
+    planetfolder = '/usr/projects/climate/hollyhan/SeaLevelModel_Inputs/earthmodel/'
+    gridfolder = '/usr/projects/climate/hollyhan/SeaLevelModel_Inputs/others/GL{{ nglv }}/'
+    outputfolder = 'OUTPUT_SLM/'
+    outputfolder_ice = 'ICELOAD_SLM/'
+    folder_coupled = ''
+
+/
+&file_format
+    ext =''
+    fType_in = 'text'
+    fType_out = 'both'
+
+/
+&file_name
+    planetmodel   = 'prem_512.l60K2C.sum18p6.dum19p2.tz19p4.lm22'
+    icemodel      = 'iceGlobalDomain_zeroField_GL{{ nglv }}_'
+    icemodel_out  = 'iceload_out_'
+    timearray     = 'times'
+    topomodel     = 'idealized_topo_1500mOcean_SH_GL{{ nglv }}'
+    topo_initial  = 'idealized_topo_1500mOcean_SH_GL{{ nglv }}'
+    grid_lat      = 'GLlat_{{ nglv }}.txt'
+    grid_lon      = 'GLlon_{{ nglv }}.txt'
+
+/
+&model_config
+    checkmarine = .false.
+    tpw = .true.
+    calcRG = .true.
+    input_times = .false.
+    initial_topo = .true.
+    iceVolume = .true.
+    coupling = .true.
+    patch_ice = .true.
+
+/
+&model_resolution
+    norder = 512
+    nglv = {{ nglv }}
+
+/
+&timewindow_config
+    L_sim = 100
+    dt1 = 1
+    dt2 = 10
+    dt3 = 10
+    dt4 = 10
+    Ldt1 = 100
+    Ldt2 = 0
+    Ldt3 = 0
+    Ldt4 = 0
+
+/
+&others
+    whichplanet = 'earth'
+
+
+/
