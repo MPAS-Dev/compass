@@ -52,9 +52,18 @@ class CircIcesheetTest(TestCase):
                 self.add_step(SetupMesh(test_case=self,
                                         name=f'mali{res}km_slm{nglv}/'
                                         f'setup_mesh', res=res, nglv=nglv))
-                self.add_step(RunModel(test_case=self, ntasks=1,
-                              openmp_threads=1,
-                              name=f'mali{res}km_slm{nglv}/run_model'))
+                if (int(res) <= 16 and int(res) > 2):
+                    ntasks = 256
+                elif (int(res) <= 2):
+                    ntasks = 512
+                else:
+                    ntasks = 128
+                min_tasks = ntasks
+                self.add_step(RunModel(test_case=self, res=res, nglv=nglv,
+                                       ntasks=ntasks, min_tasks=min_tasks,
+                                       openmp_threads=1,
+                                       name=f'mali{res}km_slm{nglv}'
+                                       '/run_model'))
         step = Visualize(test_case=self)
         self.add_step(step, run_by_default=True)
 
