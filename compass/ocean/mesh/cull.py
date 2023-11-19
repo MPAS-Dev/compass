@@ -413,9 +413,8 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
 
     if with_cavities:
         if has_remapped_topo:
-            _land_mask_from_topo(with_cavities=False,
-                                 topo_filename='topography_culled.nc',
-                                 mask_filename='ice_coverage.nc')
+            _land_ice_mask_from_topo(topo_filename='topography_culled.nc',
+                                     mask_filename='ice_coverage.nc')
         else:
             _land_mask_from_geojson(with_cavities=False,
                                     process_count=process_count,
@@ -503,6 +502,20 @@ def _land_mask_from_topo(with_cavities, topo_filename, mask_filename):
 
     ds_mask = xr.Dataset()
     ds_mask['regionCellMasks'] = cull_mask
+    write_netcdf(ds_mask, mask_filename)
+
+
+def _land_ice_mask_from_topo(topo_filename, mask_filename):
+    ds_topo = xr.open_dataset(topo_filename)
+    land_ice_frac = ds_topo.landIceFracObserved
+
+    # we want the mask to be 1 where there's at least half land-ice
+    land_ice_mask = xr.where(land_ice_frac > 0.5, 1, 0)
+
+    land_ice_mask = land_ice_mask.expand_dims(dim='nRegions', axis=1)
+
+    ds_mask = xr.Dataset()
+    ds_mask['regionCellMasks'] = land_ice_mask
     write_netcdf(ds_mask, mask_filename)
 
 
