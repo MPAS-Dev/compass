@@ -2,6 +2,9 @@ import glob
 import os
 import shutil
 import sys
+from importlib import resources
+
+from jinja2 import Template
 
 from compass.io import symlink
 from compass.job import write_job_script
@@ -49,6 +52,7 @@ class SetUpExperiment(Step):
         region_mask_fname = os.path.split(region_mask_path)[-1]
         calving_method = section.get('calving_method')
         use_face_melting = section.getboolean('use_face_melting')
+        sea_level_model = section.getboolean('sea_level_model')
 
         if self.exp == 'hist':
             exp_fcg = 'ctrlAE'
@@ -218,6 +222,40 @@ class SetUpExperiment(Step):
                        'config_apply_calving_mask': ".true."}
             self.add_namelist_options(options=options,
                                       out_name='namelist.landice')
+
+        if sea_level_model:
+            # get config options
+            slm_input_ice = section.get('slm_input_ice')
+            slm_input_earth = section.get('slm_input_earth')
+            slm_input_others = section.get('slm_input_others')
+            # nglv = section.getint('nglv')
+
+            # incorporate the SLM config in the landice namelist
+            options = {'config_uplift_method': "'sealevelmodel'"}
+            self.add_namelist_options(options=options,
+                                      out_name='namelist.landice')
+
+            # change the sealevel namelist
+            template = Template(resources.read_text
+                                (resource_location,
+                                 'namelist.sealevel.template'))
+            text = template.render(slm_input_ice=slm_input_ice,
+                                   slm_input_earth=slm_input_earth,
+                                   slm_input_others=slm_input_others)
+
+            # write out the namelise.sealevel file
+            file_slm_nl = os.path.join(self.work_dir, 'namelist.sealevel')
+            with open(file_slm_nl, 'w') as handle:
+                handle.write(text)
+
+            # create SLM output paths
+            os.makedirs(os.path.join(self.work_dir, 'OUTPUT_SLM/'),
+                        exist_ok='True')
+            os.makedirs(os.path.join(self.work_dir, 'ICELOAD_SLM/'),
+                        exist_ok='True')
+
+            # create the mapping files
+            # HH place holder
 
         # For all projection runs, symlink the restart file for the
         # historical run
