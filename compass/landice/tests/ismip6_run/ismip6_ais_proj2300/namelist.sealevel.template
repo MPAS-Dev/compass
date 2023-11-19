@@ -1,0 +1,66 @@
+&time_config
+    itersl = 1
+    starttime = 2015
+    dt1 = 5
+
+/
+&model_resolution
+    norder = 512
+    nglv = "{{ nglv }}"
+
+/
+&io_directory
+    inputfolder_ice = "{{ slm_input_ice }}"
+    inputfolder = "{{ slm_input_others }}"
+    planetfolder = "{{ slm_input_earth }}"
+    gridfolder = "{{ slm_input_others }}"
+    outputfolder = OUTPUT_SLM/
+    outputfolder_ice = ICELOAD_SLM/
+    folder_coupled = ''
+
+/
+&file_format
+    ext =''
+    fType_in = 'text'
+    fType_out = 'both'
+
+/
+&file_name
+    planetmodel   = 'prem_512.l60K2C.sum18p6.dum19p2.tz19p4.lm22'
+    icemodel      = 'iceGlobalDomain_'
+    icemodel_out  = 'iceload_out_'
+    timearray     = 'times'
+    topomodel     = 'etopo2_{{ nglv }}_AISbedmap2'
+    topo_initial  = 'etopo2_{{ nglv }}_AISbedmap2'
+    grid_lat      = 'GLlat_{{ nglv }}.txt'
+    grid_lon      = 'GLlon_{{ nglv}}.txt'
+
+/
+&model_config
+    checkmarine = .true.
+    tpw = .true.
+    calcRG = .true.
+    input_times = .false.
+    initial_topo = .true.
+    iceVolume = .true.
+    coupling = .true.
+    patch_ice = .false.
+
+/
+&timewindow_config
+    L_sim = 285
+    dt1 = 5
+    dt2 = 10
+    dt3 = 10
+    dt4 = 10
+    Ldt1 = 285
+    Ldt2 = 0
+    Ldt3 = 0
+    Ldt4 = 0
+
+/
+&others
+    whichplanet = 'earth'
+
+
+/
