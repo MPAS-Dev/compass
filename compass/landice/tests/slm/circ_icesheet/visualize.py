@@ -440,13 +440,13 @@ class output_analysis:
             self.dice_vol_slm = slm_outputs(fname, nyrs).change_total * \
                 rhoi / 1.0e12  # in Gt
             # get slc correction and ocean area from the SLM
-            fname = os.path.join(fpath_slm, 'gmsle_deltaSL_Ocean_fixed')
+            fname = os.path.join(fpath_slm, 'gmslc_ocnArea')
             if os.path.exists(fname):
                 logger.info(f'reading in file {fname}')
                 z0 = slm_outputs(fname, nyrs).change_total
                 self.SLC_slm_Aocn = slm_outputs(fname, nyrs).data
 
-            fname = os.path.join(fpath_slm, 'gmsle_deltaSL_OceanBeta_fixed')
+            fname = os.path.join(fpath_slm, 'gmslc_ocnBetaArea')
             if os.path.exists(fname):
                 logger.info(f'reading in file {fname}')
                 self.SLC_slm_AocnBeta = slm_outputs(fname, nyrs).data
