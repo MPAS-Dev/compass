@@ -527,9 +527,8 @@
 
     <span class="k">if</span> <span class="n">with_cavities</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">has_remapped_topo</span><span class="p">:</span>
-            <span class="n">_land_mask_from_topo</span><span class="p">(</span><span class="n">with_cavities</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                                 <span class="n">topo_filename</span><span class="o">=</span><span class="s1">&#39;topography_culled.nc&#39;</span><span class="p">,</span>
-                                 <span class="n">mask_filename</span><span class="o">=</span><span class="s1">&#39;ice_coverage.nc&#39;</span><span class="p">)</span>
+            <span class="n">_land_ice_mask_from_topo</span><span class="p">(</span><span class="n">topo_filename</span><span class="o">=</span><span class="s1">&#39;topography_culled.nc&#39;</span><span class="p">,</span>
+                                     <span class="n">mask_filename</span><span class="o">=</span><span class="s1">&#39;ice_coverage.nc&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">_land_mask_from_geojson</span><span class="p">(</span><span class="n">with_cavities</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                     <span class="n">process_count</span><span class="o">=</span><span class="n">process_count</span><span class="p">,</span>
@@ -617,6 +616,20 @@
 
     <span class="n">ds_mask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
     <span class="n">ds_mask</span><span class="p">[</span><span class="s1">&#39;regionCellMasks&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cull_mask</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_mask</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_land_ice_mask_from_topo</span><span class="p">(</span><span class="n">topo_filename</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">):</span>
+    <span class="n">ds_topo</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">topo_filename</span><span class="p">)</span>
+    <span class="n">land_ice_frac</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="o">.</span><span class="n">landIceFracObserved</span>
+
+    <span class="c1"># we want the mask to be 1 where there&#39;s at least half land-ice</span>
+    <span class="n">land_ice_mask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">land_ice_frac</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">land_ice_mask</span> <span class="o">=</span> <span class="n">land_ice_mask</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nRegions&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">ds_mask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+    <span class="n">ds_mask</span><span class="p">[</span><span class="s1">&#39;regionCellMasks&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">land_ice_mask</span>
     <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_mask</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">)</span>
 
 
