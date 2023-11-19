@@ -1,4 +1,7 @@
 import os
+from importlib import resources
+
+from jinja2 import Template
 
 from compass.model import run_model
 from compass.step import Step
@@ -66,9 +69,6 @@ class RunModel(Step):
                             target='../setup_mesh/landice_grid.nc')
         self.add_input_file(filename='graph.info',
                             target='../setup_mesh/graph.info')
-        self.add_input_file(filename='namelist.sealevel',
-                            package='compass.landice.tests.slm',
-                            copy=True)
         self.add_input_file(filename='smb_forcing.nc',
                             target='../setup_mesh/smb_forcing.nc')
         self.add_input_file(filename='mapping_file_mali_to_slm.nc',
@@ -86,6 +86,17 @@ class RunModel(Step):
                     exist_ok='True')
         os.makedirs(os.path.join(self.work_dir, 'ICELOAD_SLM/'),
                     exist_ok='True')
+
+        # change the sealevel namelist
+        template = Template(resources.read_text
+                            ('compass.landice.tests.slm',
+                             'namelist.sealevel.template'))
+        text = template.render(nglv=self.nglv)
+
+        # write out the namelise.sealevel file
+        file_slm_nl = os.path.join(self.work_dir, 'namelist.sealevel')
+        with open(file_slm_nl, 'w') as handle:
+            handle.write(text)
 
     def run(self):
         """
