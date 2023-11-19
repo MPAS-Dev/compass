@@ -1,13 +1,12 @@
 import os
-import shutil
 from importlib.resources import contents, read_text
 
-import numpy as np
 import xarray as xr
 from jinja2 import Template
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 
+from compass.io import symlink
 from compass.model import run_model
 from compass.ocean.plot import plot_initial_state, plot_vertical_grid
 from compass.ocean.tests.global_ocean.metadata import (
@@ -86,7 +85,7 @@ class InitialState(Step):
 
         cull_step = self.mesh.steps['cull_mesh']
         target = os.path.join(cull_step.path, 'topography_culled.nc')
-        self.add_input_file(filename='topography.nc',
+        self.add_input_file(filename='topography_culled.nc',
                             work_dir_target=target)
 
         self.add_input_file(
@@ -169,6 +168,8 @@ class InitialState(Step):
         Run this step of the testcase
         """
         config = self.config
+        self._smooth_topography()
+
         interfaces = generate_1d_grid(config=config)
 
         write_1d_grid(interfaces=interfaces, out_filename='vertical_grid.nc')
@@ -177,8 +178,6 @@ class InitialState(Step):
 
         update_pio = config.getboolean('global_ocean', 'init_update_pio')
         run_model(self, update_pio=update_pio)
-
-        self._smooth_topography()
 
         add_mesh_and_init_metadata(self.outputs, config,
                                    init_filename='initial_state.nc')
@@ -202,9 +201,11 @@ class InitialState(Step):
         section = config['global_ocean']
         num_passes = section.getint('topo_smooth_num_passes')
         if num_passes == 0:
+            # just symlink the culled topography to be the topography used for
+            # the initial condition
+            symlink(target='topography_culled.nc', link_name='topography.nc')
             return
 
-        min_level = section.getint('topo_smooth_min_level')
         distance_limit = section.getfloat('topo_smooth_distance_limit')
         std_deviation = section.getfloat('topo_smooth_std_deviation')
 
@@ -212,7 +213,6 @@ class InitialState(Step):
             'compass.ocean.tests.global_ocean.init', 'smooth_topo.template'))
 
         text = template.render(num_passes=f'{num_passes}',
-                               min_level=f'{min_level}',
                                distance_limit=f'{distance_limit}',
                                std_deviation=f'{std_deviation}')
 
@@ -222,37 +222,15 @@ class InitialState(Step):
         with open('smooth_depth_in', 'w') as file:
             file.write(text)
 
-        check_call(args=['ocean_smooth_topo_skip_land_ice'],
+        check_call(args=['ocean_smooth_topo_before_init'],
                    logger=self.logger)
 
-        with (xr.open_dataset('initial_state.nc') as ds_init):
-            with xr.open_dataset('topo_smooth.nc') as ds_smooth:
-                for field in ['bottomDepth', 'maxLevelCell',
-                              'restingThickness']:
-                    attrs = ds_init[field].attrs
-                    ds_init[field] = ds_smooth[f'{field}New']
-                    ds_init[field].attrs = attrs
+        with (xr.open_dataset('topography_culled.nc') as ds_topo):
+            with xr.open_dataset('topography_orig_and_smooth.nc') as ds_smooth:
+                for field in ['bed_elevation', 'landIceDraftObserved',
+                              'landIceThkObserved']:
+                    attrs = ds_topo[field].attrs
+                    ds_topo[field] = ds_smooth[f'{field}New']
+                    ds_topo[field].attrs = attrs
 
-            nVertLevels = ds_init.sizes['nVertLevels']
-            maxLevelCell = ds_init.maxLevelCell - 1
-            restingThickness = ds_init.restingThickness
-            ssh = ds_init.ssh
-            bottomDepth = ds_init.bottomDepth
-
-            zIndex = xr.DataArray(data=np.arange(nVertLevels),
-                                  dims='nVertLevels')
-            mask = zIndex <= maxLevelCell
-            layerStretch = (ssh + bottomDepth) / bottomDepth
-            layerThickness = restingThickness * layerStretch
-            layerThickness = layerThickness.where(mask, 0.)
-            layerThickness = \
-                layerThickness.transpose('Time', 'nCells', 'nVertLevels')
-
-            field = 'layerThickness'
-            attrs = ds_init[field].attrs
-            ds_init[field] = layerThickness
-            ds_init[field].attrs = attrs
-
-            write_netcdf(ds_init, 'initial_state_smooth.nc')
-
-        shutil.copy('initial_state_smooth.nc', 'initial_state.nc')
+            write_netcdf(ds_topo, 'topography.nc')
