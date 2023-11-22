@@ -32,8 +32,8 @@ class SetupMesh(Step):
         """
         super().__init__(test_case=test_case, name='setup_mesh')
 
-        #
-        for filename in ['mesh.nc', 'graph.info', 'landice_grid.nc']:
+        # Files to be created as part of the this step
+        for filename in ['mpas_grid.nc', 'graph.info', 'landice_grid.nc']:
             self.add_output_file(filename=filename)
 
     def run(self):
@@ -63,27 +63,26 @@ class SetupMesh(Step):
         # per MISMIP+ converion
         ds_mesh = shift_origin_to_lower_left(ds_mesh)
 
-        write_netcdf(ds_mesh, 'mesh.nc')
+        write_netcdf(ds_mesh, 'mpas_grid.nc')
 
         # just use get, not getint since var need to be string
         # anyway for subprocess call
         levels = section.get('levels')
         args = ['create_landice_grid_from_generic_MPAS_grid.py',
-                '-i', 'mesh.nc',
-                '-o', 'landice_grid_template.nc',
+                '-i', 'mpas_grid.nc',
+                '-o', 'landice_grid.nc',
                 '-l', levels,
                 '--diri',
                 '--thermal']
 
         check_call(args, logger)
 
-        make_graph_file(mesh_filename='landice_grid_template.nc',
+        make_graph_file(mesh_filename='landice_grid.nc',
                         graph_filename='graph.info')
 
         # create the initial conditions for the MISMIP+ spinup expr
         _setup_MISMPPlus_IC(config, logger,
-                            input_file='landice_grid_template.nc',
-                            output_file='landice_grid.nc')
+                            filename='landice_grid.nc')
 
 
 def shift_origin_to_lower_left(ds_mesh):
@@ -102,10 +101,11 @@ def shift_origin_to_lower_left(ds_mesh):
     # because getting the first interior cell edge
     # from the global min/max wont' work
     unique_xs = np.unique(ds_mesh.xCell.data)
-    unique_ys = np.unique(ds_mesh.xCell.data)
+    # unique_ys = np.unique(ds_mesh.yCell.data)
 
     xShift = -1.0 * unique_xs.min()
-    yShift = -1.0 * unique_ys.min()
+    # yShift = -1.0 * unique_ys.min()*5.0
+    yShift = 40e3 - (ds_mesh.yCell.max() + ds_mesh.yCell.min()) / 2
 
     # Shift all spatial points by calculated shift
     for loc in ['Cell', 'Edge', 'Vertex']:
@@ -173,7 +173,7 @@ def __mismipplus_bed(x, y):
     return z_b
 
 
-def _setup_MISMPPlus_IC(config, logger, input_file, output_file):
+def _setup_MISMPPlus_IC(config, logger, filename):
     """
     Add the inital condition for the MISMIP+ spinup to the given MPAS mesh file
 
@@ -185,11 +185,9 @@ def _setup_MISMPPlus_IC(config, logger, input_file, output_file):
     logger : logging.Logger
         A logger for output from the step
 
-    input_file : str
-        NetCDF file to place the MISMIP+ ICs into
+    filename : str
+        NetCDF file to place the MISMIP+ ICs in
 
-    output_file : str
-        .....
     """
 
     # Hard code some parameters from Table 1. of Asay-Davis et al. 2016
@@ -207,7 +205,7 @@ def _setup_MISMPPlus_IC(config, logger, input_file, output_file):
     init_thickness = section.getfloat('init_thickness')
 
     # open the file
-    src = xr.open_dataset(input_file, engine='netcdf4')
+    src = xr.open_dataset(filename)
 
     # Set the bedTopography
     src['bedTopography'].loc[:] = __mismipplus_bed(src.xCell, src.yCell)
@@ -241,7 +239,6 @@ def _setup_MISMPPlus_IC(config, logger, input_file, output_file):
     src['layerThicknessFractions'].loc[:] = 1.0 / float(nVertLevels)
 
     # Write the dataset to disk
-    # NOTE: Do I need flags for the write mode?
-    write_netcdf(src, output_file, engine='netcdf4')
+    write_netcdf(src, filename)
 
-    print(f'Successfully added MISMIP+ initial conditions to: {output_file}')
+    print(f'Successfully added MISMIP+ initial conditions to: {filename}')
