@@ -59,15 +59,15 @@ class SetupMesh(Step):
         ds_mesh = cull(ds_mesh, logger=logger)
         ds_mesh = convert(ds_mesh, logger=logger)
 
-        # custom function to shift the orgin to the lower left
-        # per MISMIP+ converion
-        ds_mesh = shift_origin_to_lower_left(ds_mesh)
+        # custom function to shift the orgin for the MISMIP+ experiments
+        ds_mesh = center_trough(ds_mesh)
 
         write_netcdf(ds_mesh, 'mpas_grid.nc')
 
-        # just use get, not getint since var need to be string
-        # anyway for subprocess call
+        # using `.get(...)`, instead of `.getint(...)` since variable needs
+        # to be string anyway for subprocess call
         levels = section.get('levels')
+
         args = ['create_landice_grid_from_generic_MPAS_grid.py',
                 '-i', 'mpas_grid.nc',
                 '-o', 'landice_grid.nc',
@@ -85,9 +85,10 @@ class SetupMesh(Step):
                             filename='landice_grid.nc')
 
 
-def shift_origin_to_lower_left(ds_mesh):
+def center_trough(ds_mesh):
     """
-    Shift the orgin of the to lower left corner
+    Shift the orgin so that the bed trough is center about the Y-axis and the
+    X-axis is shifted all the way to the left.
 
     Parameters
     ----------
@@ -101,11 +102,14 @@ def shift_origin_to_lower_left(ds_mesh):
     # because getting the first interior cell edge
     # from the global min/max wont' work
     unique_xs = np.unique(ds_mesh.xCell.data)
-    # unique_ys = np.unique(ds_mesh.yCell.data)
 
+    # Get the center of y-axis (i.e. half distance)
+    yCenter = (ds_mesh.yCell.max() + ds_mesh.yCell.min()) / 2
+
+    # Shift x-axis so that the x-origin is all the way to the left
     xShift = -1.0 * unique_xs.min()
-    # yShift = -1.0 * unique_ys.min()*5.0
-    yShift = 40e3 - (ds_mesh.yCell.max() + ds_mesh.yCell.min()) / 2
+    # Shift y-axis so that it's centered about the MISMIP+ bed trough
+    yShift = 40e3 - yCenter
 
     # Shift all spatial points by calculated shift
     for loc in ['Cell', 'Edge', 'Vertex']:
