@@ -147,6 +147,7 @@ class InitialState(Step):
                 land_ice_draft=land_ice_draft, modify_mask=land_ice_draft < 0.)
 
         ds['landIcePressure'] = land_ice_pressure
+        ds['landIceDraft'] = land_ice_draft
 
         section = config['isomip_plus']
 
