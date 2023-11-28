@@ -1,3 +1,5 @@
+import warnings
+
 import numpy as np
 import xarray as xr
 from mpas_tools.io import write_netcdf
@@ -70,6 +72,22 @@ class SetupMesh(Step):
 
         section = config['mismipplus']
         nonperiodic = section.getboolean('nonperiodic')
+
+        # read the resolution from the .cfg file at runtime
+        resolution = section.getint('resolution')
+
+        # check if the resolution has been changed since the `compass setup`
+        # command was run
+        if self.resolution != resolution:
+            warnings.warn(f'Resolution was set at {self.resolution:2d}km when'
+                          f' `compass setup` was called. Since then the'
+                          f' resolution in the configuration file has been'
+                          f' changed to {resolution:2d}km. Changing resolution'
+                          f' at runtime is not supported. Change the'
+                          f' resolution value in the configuration file within'
+                          f' the python module and rerun the `compass setup`'
+                          f' command in order to create a mesh at a resolution'
+                          f' of {resolution:2d}km')
 
         ds_mesh = make_planar_hex_mesh(nx=self.nx, ny=self.ny, dc=self.dc,
                                        nonperiodic_x=nonperiodic,
