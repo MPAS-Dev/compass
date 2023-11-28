@@ -18,7 +18,7 @@ class SetupMesh(Step):
     resolution : int
         The resolution of the test case
     """
-    def __init__(self, test_case):
+    def __init__(self, test_case, resolution):
         """
         Create the step
 
@@ -30,11 +30,36 @@ class SetupMesh(Step):
         resolution : int
             The resolution of the test case
         """
-        super().__init__(test_case=test_case, name='setup_mesh')
+        # Defined resolutions, the value of `resolution` in the configuration
+        # file needs to a key in the dictionary, or added manually.
+        resolution_params = {'8km': {'nx': 73, 'ny': 14, 'dc': 9237.604307},
+                             '4km': {'nx': 144, 'ny': 24, 'dc': 4618.802154},
+                             '2km': {'nx': 284, 'ny': 44, 'dc': 2309.401077},
+                             '1km': {'nx': 566, 'ny': 84, 'dc': 1154.700538}}
+
+        # With the defined resolution, make the associated key for the param
+        # dictionary (neccessary b/c unstructured hex meshes)
+        key = f'{resolution}km'
+
+        # Ensure the resolution passed in the configuration file is defined
+        # within the parameter dictionary. If this is not the case, either:
+        #   1. choose an already defined resolution
+        #   2. add the appropriate parameter values to the dict.
+        assert key in resolution_params
+
+        super().__init__(test_case=test_case,
+                         name=f'{key}_setupmesh',
+                         subdir=f"{key}/setupmesh")
 
         # Files to be created as part of the this step
         for filename in ['mpas_grid.nc', 'graph.info', 'landice_grid.nc']:
             self.add_output_file(filename=filename)
+
+        # unpack the mesh parameters for the given resolution as set as
+        # attributes
+        self.nx, self.ny, self.dc = resolution_params[key].values()
+
+        self.resolution = resolution
 
     def run(self):
         """
@@ -44,15 +69,9 @@ class SetupMesh(Step):
         config = self.config
 
         section = config['mismipplus']
-
-        nx = section.getint('nx')
-        ny = section.getint('ny')
-
-        dc = section.getfloat('dc')
-
         nonperiodic = section.getboolean('nonperiodic')
 
-        ds_mesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc,
+        ds_mesh = make_planar_hex_mesh(nx=self.nx, ny=self.ny, dc=self.dc,
                                        nonperiodic_x=nonperiodic,
                                        nonperiodic_y=nonperiodic)
 
