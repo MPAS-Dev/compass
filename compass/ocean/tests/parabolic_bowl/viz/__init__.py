@@ -18,7 +18,7 @@ class Viz(Step):
     Attributes
     ----------
     """
-    def __init__(self, test_case, resolutions):
+    def __init__(self, test_case, resolutions, use_lts):
         """
         Create the step
 
@@ -30,6 +30,7 @@ class Viz(Step):
         super().__init__(test_case=test_case, name='viz')
 
         self.resolutions = resolutions
+        self.use_lts = use_lts
 
         for res in resolutions:
             self.add_input_file(filename=f'output_{res}km.nc',
@@ -193,9 +194,15 @@ class Viz(Step):
         Plot convergence curves
         """
 
+        ramp_name = 'ramp'
+        noramp_name = 'noramp'
+        if self.use_lts:
+            ramp_name = 'ramp_lts'
+            noramp_name = 'noramp_lts'
+
         comparisons = []
-        cases = {'standard_ramp': '../../../standard/ramp/viz',
-                 'standard_noramp': '../../../standard/noramp/viz'}
+        cases = {'standard_ramp': f'../../../standard/{ramp_name}/viz',
+                 'standard_noramp': f'../../../standard/{noramp_name}/viz'}
         for case in cases:
             include = True
             for res in self.resolutions:

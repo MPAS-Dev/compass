@@ -2,6 +2,7 @@ from math import floor
 
 from compass.ocean.tests.dam_break.forward import Forward
 from compass.ocean.tests.dam_break.initial_state import InitialState
+from compass.ocean.tests.dam_break.lts.lts_regions import LTSRegions
 from compass.ocean.tests.dam_break.viz import Viz
 from compass.testcase import TestCase
 from compass.validate import compare_variables
@@ -18,7 +19,7 @@ class Ramp(TestCase):
 
     """
 
-    def __init__(self, test_group, resolution):
+    def __init__(self, test_group, resolution, use_lts):
         """
         Create the test case
 
@@ -30,8 +31,14 @@ class Ramp(TestCase):
         resolution : float
             The resolution of the test case in m
 
+        use_lts : bool
+            Whether local time-stepping is used
+
         """
-        name = 'ramp'
+        if use_lts:
+            name = 'ramp_lts'
+        else:
+            name = 'ramp'
 
         self.resolution = resolution
         if resolution < 1.:
@@ -44,8 +51,14 @@ class Ramp(TestCase):
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
-        self.add_step(InitialState(test_case=self))
+        init_step = InitialState(test_case=self, use_lts=use_lts)
+        self.add_step(init_step)
+
+        if use_lts:
+            self.add_step(LTSRegions(test_case=self, init_step=init_step))
+
         forward_step = Forward(test_case=self, resolution=resolution,
+                               use_lts=use_lts,
                                ntasks=ntasks, min_tasks=min_tasks,
                                openmp_threads=1)
         forward_step.add_namelist_options({'config_zero_drying_velocity_ramp':
