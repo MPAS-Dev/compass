@@ -141,12 +141,12 @@ def center_trough(ds_mesh):
     unique_xs = np.unique(ds_mesh.xCell.data)
 
     # Get the center of y-axis (i.e. half distance)
-    yCenter = (ds_mesh.yCell.max() + ds_mesh.yCell.min()) / 2
+    yCenter = (ds_mesh.yCell.max() + ds_mesh.yCell.min()) / 2.
 
     # Shift x-axis so that the x-origin is all the way to the left
     xShift = -1.0 * unique_xs.min()
     # Shift y-axis so that it's centered about the MISMIP+ bed trough
-    yShift = 40e3 - yCenter
+    yShift = 4.e4 - yCenter
 
     # Shift all spatial points by calculated shift
     for loc in ['Cell', 'Edge', 'Vertex']:
@@ -220,8 +220,8 @@ def _setup_MISMPPlus_IC(config, logger, filename):
 
     Parameters
     ----------
-    config : comass.config.CompassConfigParser
-        Configuration options for this test case, ....
+    config : compass.config.CompassConfigParser
+        Configuration options for this test case
 
     logger : logging.Logger
         A logger for output from the step
@@ -242,7 +242,6 @@ def _setup_MISMPPlus_IC(config, logger, filename):
     section = config['mismipplus']
     nVertLevels = section.getint('levels')
 
-    # this parameter might need to specififed in .cfg
     init_thickness = section.getfloat('init_thickness')
 
     # open the file
@@ -259,7 +258,7 @@ def _setup_MISMPPlus_IC(config, logger, filename):
     # Set the surface mass balance
     src['sfcMassBal'].loc[:] = xr.where(src.xCell > xcalve, accum, -100.)
 
-    # Boolean maks for indexes which correspond to the N/S boudnary of mesh
+    # Boolean masks for indices which correspond to the N/S boundary of mesh
     mask = (src.yCell == src.yCell.min()) | (src.yCell == src.yCell.max())
     # Set the velocity boundary conditions
     src['dirichletVelocityMask'].loc[:] = xr.where(mask, 1, 0)
