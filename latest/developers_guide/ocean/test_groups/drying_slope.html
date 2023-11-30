@@ -71,7 +71,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#default">default</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#convergence">convergence</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#decomp">decomp</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ramp">ramp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#loglaw">loglaw</a></li>
 </ul>
 </li>
@@ -174,13 +173,17 @@ duration, bottom drag, and tidal forcing options, as well as shared
 defines a step for setting up the initial state for each test case.</p>
 <p>First, a mesh appropriate for the resolution is generated using
 <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.planar_hex.make_planar_hex_mesh.html#mpas_tools.planar_hex.make_planar_hex_mesh" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.planar_hex.make_planar_hex_mesh()</span></code></a>.  Then, the mesh is
-culled to remove periodicity in the y direction. MPAS-Ocean is then run in init
-mode. If the vertical coordinate is <code class="docutils literal notranslate"><span class="pre">sigma</span></code>, the vertical grid configured
-accordingly during init mode. During this init mode run, ssh is initialized
-using the tidal forcing config options, and temperature and salinity are set
-to constant values by default. (Namelist options may be modified to produce a
-plug of different temperature values from the background, but this is not
-employed in this test case.)</p>
+culled to remove periodicity in the y direction. The vertical grid is
+configured according to the config options in the <code class="docutils literal notranslate"><span class="pre">vertial_grid</span></code> section.
+The bottom depth is then set according to config options
+<code class="docutils literal notranslate"><span class="pre">right_bottom_depth</span></code> and <code class="docutils literal notranslate"><span class="pre">left_bottom_depth</span></code>. The initial layer
+thicknesses are set to the minimum thickness and the initial state is set to
+a constant value by default according to the config options
+<code class="docutils literal notranslate"><span class="pre">background_temperature</span></code> and <code class="docutils literal notranslate"><span class="pre">background_salinity</span></code>. Optionally, a mass of
+warmer water can be initialized over part of the domain, a “plug,” using
+config options <code class="docutils literal notranslate"><span class="pre">plug_width_frac</span></code> and <code class="docutils literal notranslate"><span class="pre">plug_width_temperature</span></code>. For current
+configurations, tracer tendencies are off and these tracer options do not
+affect the flow.</p>
 </section>
 <section id="forward">
 <h3>forward<a class="headerlink" href="#forward" title="Link to this heading">¶</a></h3>
@@ -189,7 +192,9 @@ defines a step for running MPAS-Ocean from the initial condition produced in
 the <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step. If <code class="docutils literal notranslate"><span class="pre">damping_coeff</span></code> is provided as an argument to
 the constructor, the associate namelist option
 (<code class="docutils literal notranslate"><span class="pre">config_Rayleigh_damping_coeff</span></code>) will be given this value. MPAS-Ocean is run
-in <code class="docutils literal notranslate"><span class="pre">run()</span></code>.</p>
+in <code class="docutils literal notranslate"><span class="pre">run()</span></code>. The time step is determined as a function of resolution by the
+config option <code class="docutils literal notranslate"><span class="pre">dt_per_km</span></code>. The number of tasks is determined as a function
+of resolution by <code class="docutils literal notranslate"><span class="pre">ntasks_baseline</span></code> and <code class="docutils literal notranslate"><span class="pre">min_tasks</span></code>.</p>
 </section>
 <section id="viz">
 <h3>viz<a class="headerlink" href="#viz" title="Link to this heading">¶</a></h3>
@@ -241,13 +246,6 @@ Both <code class="docutils literal notranslate"><span class="pre">sigma</span></
 <div><p><code class="docutils literal notranslate"><span class="pre">config_Rayleigh_damping_coeff</span></code> equal to 0.01. The <code class="docutils literal notranslate"><span class="pre">single_layer</span></code> case</p>
 </div></blockquote>
 <p>runs at one value of the implicit bottom drag coefficient.</p>
-</section>
-<section id="ramp">
-<span id="dev-ocean-drying-slope-ramp"></span><h2>ramp<a class="headerlink" href="#ramp" title="Link to this heading">¶</a></h2>
-<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.drying_slope.ramp.Ramp</span></code> is identical to the
-default class except it sets <code class="docutils literal notranslate"><span class="pre">ramp</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code> for the forward step to enable
-the ramp feature for wetting and drying.
-.. _dev_ocean_drying_slope_log_law:</p>
 </section>
 <section id="loglaw">
 <h2>loglaw<a class="headerlink" href="#loglaw" title="Link to this heading">¶</a></h2>

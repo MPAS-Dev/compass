@@ -62,7 +62,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#default">default</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#convergence">convergence</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#decomp">decomp</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ramp">ramp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#loglaw">loglaw</a></li>
 </ul>
 </li>
@@ -186,20 +185,65 @@ well as the solution from the ROMS model.</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
 <span class="k">[vertical_grid]</span>
 
+<span class="c1"># the type of vertical grid</span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">uniform</span>
+
+<span class="c1"># Number of vertical levels</span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.</span>
+
 <span class="c1"># Number of vertical levels</span>
 <span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span>
 
-<span class="c1"># The type of vertical coordinate (e.g. z-level, z-star)</span>
-<span class="na">coord_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">sigma</span>
+<span class="c1"># Thickness of each layer in the thin film region</span>
+<span class="na">thin_film_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.0e-3</span>
+
+<span class="c1"># Whether to use &quot;partial&quot; or &quot;full&quot;, or &quot;None&quot; to not alter the topography</span>
+<span class="na">partial_cell_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
+
+<span class="c1"># The minimum fraction of a layer for partial cells</span>
+<span class="na">min_pc_fraction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.1</span>
 
 <span class="c1"># config options for drying slope test cases</span>
 <span class="k">[drying_slope]</span>
 
-<span class="c1"># the number of grid cells in x and y</span>
+<span class="c1"># the number of grid cells in x</span>
 <span class="na">nx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6</span>
+
+<span class="c1"># Length over which wetting and drying actually occur</span>
+<span class="na">Ly_analysis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">25.</span>
+
+<span class="c1"># Domain length</span>
+<span class="na">Ly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">30.</span>
+
+<span class="c1"># Bottom depth at the right side of the domain</span>
+<span class="na">right_bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.</span>
+
+<span class="c1"># Bottom depth at the left side of the domain</span>
+<span class="na">left_bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.</span>
+
+<span class="c1"># Plug width as a fraction of the domain</span>
+<span class="na">plug_width_frac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.0</span>
+
+<span class="c1"># Plug temperature</span>
+<span class="na">plug_temperature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">20.0</span>
+
+<span class="c1"># Background temperature</span>
+<span class="na">background_temperature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">20.0</span>
+
+<span class="c1"># Background salinity</span>
+<span class="na">background_salinity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">35.0</span>
+
+<span class="c1"># Coriolis parameter</span>
+<span class="na">coriolis_parameter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.0</span>
 
 <span class="c1"># time step in s per km of horizontal resolution</span>
 <span class="na">dt_per_km</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">30</span>
+
+<span class="c1"># Number of tasks at 1km resolution</span>
+<span class="na">ntasks_baseline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span>
+
+<span class="c1"># Minimum number of tasks</span>
+<span class="na">min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
 
 <span class="c1"># config options for visualizing drying slope ouptut</span>
 <span class="k">[drying_slope_convergence]</span>
@@ -249,14 +293,6 @@ processors and the results of each are compared. <code class="docutils literal n
 <code class="docutils literal notranslate"><span class="pre">COORD</span></code> is either <code class="docutils literal notranslate"><span class="pre">single_layer</span></code> or <code class="docutils literal notranslate"><span class="pre">sigma</span></code>. The <code class="docutils literal notranslate"><span class="pre">sigma</span></code> case uses a
 Rayleigh drag coefficient of 0.01. Rayleigh drag is not compatible with
 <code class="docutils literal notranslate"><span class="pre">single_layer</span></code> so implicit drag with a constant coefficient is used.</p>
-</section>
-<section id="ramp">
-<h2>ramp<a class="headerlink" href="#ramp" title="Link to this heading">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">ocean/drying_slope/${RES}/${COORD}/ramp</span></code> is identical to the <code class="docutils literal notranslate"><span class="pre">default</span></code>
-test except the factor that scales velocities and velocity tendencies is
-ramped over a given layer thickness range rather than a binary switch at the
-minimum thickness. <code class="docutils literal notranslate"><span class="pre">RES</span></code> is either 250m or 1km. <code class="docutils literal notranslate"><span class="pre">COORD</span></code> is either
-<code class="docutils literal notranslate"><span class="pre">single_layer</span></code> or <code class="docutils literal notranslate"><span class="pre">sigma</span></code>.</p>
 </section>
 <section id="loglaw">
 <h2>loglaw<a class="headerlink" href="#loglaw" title="Link to this heading">¶</a></h2>

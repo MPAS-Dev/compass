@@ -211,8 +211,7 @@
             <span class="n">init_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;initial_state_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">&#39;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">InitialState</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                                        <span class="n">name</span><span class="o">=</span><span class="n">init_name</span><span class="p">,</span>
-                                       <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
-                                       <span class="n">coord_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">coord_type</span><span class="p">))</span>
+                                       <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
             <span class="n">ntasks</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">min_tasks</span><span class="p">,</span>
                          <span class="nb">int</span><span class="p">(</span><span class="n">ceil</span><span class="p">(</span><span class="n">ntasks_baseline</span> <span class="o">/</span> <span class="n">resolution</span><span class="o">**</span><span class="mf">2.</span><span class="p">)))</span>
             <span class="n">forward_step</span> <span class="o">=</span> <span class="n">Forward</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
@@ -245,7 +244,13 @@
                 <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span><span class="si">}</span><span class="s1">km&#39;</span>
             <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
                               <span class="n">filename1</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;forward_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">/output.nc&#39;</span><span class="p">)</span></div>
-</div>
+
+
+    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Change config options as needed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;coord_type&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">coord_type</span><span class="p">)</span></div>
 
 </pre></div>
 
