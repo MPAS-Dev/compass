@@ -70,8 +70,7 @@ class SetupMesh(Step):
         logger = self.logger
         config = self.config
 
-        section = config['mismipplus']
-        nonperiodic = section.getboolean('nonperiodic')
+        section = config['mesh']
 
         # read the resolution from the .cfg file at runtime
         resolution = section.getint('resolution')
@@ -90,8 +89,8 @@ class SetupMesh(Step):
                           f' of {resolution:2d}km')
 
         ds_mesh = make_planar_hex_mesh(nx=self.nx, ny=self.ny, dc=self.dc,
-                                       nonperiodic_x=nonperiodic,
-                                       nonperiodic_y=nonperiodic)
+                                       nonperiodic_x=True,
+                                       nonperiodic_y=True)
 
         ds_mesh = cull(ds_mesh, logger=logger)
         ds_mesh = convert(ds_mesh, logger=logger)
@@ -133,18 +132,11 @@ def center_trough(ds_mesh):
         The mesh to be shifted
     """
 
-    # Why do you need unique grid points?
-    # that shouldn't alter the global min........
-    # I guess so that the masking method is consitent throughout,
-    # because getting the first interior cell edge
-    # from the global min/max wont' work
-    unique_xs = np.unique(ds_mesh.xCell.data)
-
     # Get the center of y-axis (i.e. half distance)
     yCenter = (ds_mesh.yCell.max() + ds_mesh.yCell.min()) / 2.
 
     # Shift x-axis so that the x-origin is all the way to the left
-    xShift = -1.0 * unique_xs.min()
+    xShift = -1.0 * ds_mesh.xCell.min()
     # Shift y-axis so that it's centered about the MISMIP+ bed trough
     yShift = 4.e4 - yCenter
 
@@ -161,7 +153,7 @@ def center_trough(ds_mesh):
 
     # Reduce the cell areas by half along the N/S boundary
 
-    # Boolean maks for indexes which correspond to the N/S boudnary of mesh
+    # Boolean mask for indices which correspond to the N/S boundary of mesh
     mask = ((ds_mesh.yCell == ds_mesh.yCell.min()) |
             (ds_mesh.yCell == ds_mesh.yCell.max()))
 
@@ -169,10 +161,11 @@ def center_trough(ds_mesh):
                                    ds_mesh.areaCell * 0.5,
                                    ds_mesh.areaCell)
 
-    # Reduce the edge lengths by half along the N/S boundary
+    # Needed of reducing the edge lengths by half along the N/S boundary.
+    # Values returned by `np.unique` will be sorted.
     unique_ys_edge = np.unique(ds_mesh.yEdge.data)
 
-    # Boolean maks for indexes edges on the N/S boudnary of mesh
+    # Boolean mask for edge indices on the N/S boundary of the mesh
     mask = ((ds_mesh.yEdge == unique_ys_edge[0]) |
             (ds_mesh.yEdge == unique_ys_edge[-1]))
     # WHL: zero out the edges on the boundary
@@ -188,7 +181,18 @@ def center_trough(ds_mesh):
     return ds_mesh
 
 
-def __mismipplus_bed(x, y):
+def _mismipplus_bed(x, y):
+    """
+    Equations 1-4 from Asay-Davis et al. (2016).
+
+    Parameters
+    ----------
+    x : xarray.DataArray
+        x cell coordinates
+
+    y : xarray.DataArray
+        y cell coordinates
+    """
     x = x / 1.e3      # m to km
     y = y / 1.e3      # m to km
     B0 = -150.        # m
@@ -239,7 +243,7 @@ def _setup_MISMPPlus_IC(config, logger, filename):
     xcalve = 640.e3   # m
 
     # Read parameters from the .cfg file
-    section = config['mismipplus']
+    section = config['mesh']
     nVertLevels = section.getint('levels')
     init_thickness = section.getfloat('init_thickness')
 
@@ -251,7 +255,7 @@ def _setup_MISMPPlus_IC(config, logger, filename):
     # against the fields coordinates
 
     # Set the bedTopography
-    src['bedTopography'].loc[:] = __mismipplus_bed(src.xCell, src.yCell)
+    src['bedTopography'].loc[:] = _mismipplus_bed(src.xCell, src.yCell)
 
     # Set the ice thickness
     src['thickness'].loc[:] = xr.where(src.xCell < xcalve, init_thickness, 0.)
@@ -264,6 +268,8 @@ def _setup_MISMPPlus_IC(config, logger, filename):
     # Boolean masks for indices which correspond to the N/S boundary of mesh
     mask = (src.yCell == src.yCell.min()) | (src.yCell == src.yCell.max())
     # Set the velocity boundary conditions
+    # NOTE: `.variable` is needed so that coordinates are properly broadcast
+    #        due to a bug in xarray, which was resolved as of 2023.9.0
     src['dirichletVelocityMask'].loc[:] = xr.where(mask, 1, 0).variable
 
     # Skipping WHL step of setting the initial velocities to zero

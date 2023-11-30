@@ -27,11 +27,11 @@ class MeshGen(TestCase):
         super().__init__(test_group=test_group, name=name)
 
         config = CompassConfigParser()
-        module = 'compass.landice.tests.mismipplus'
+        module = 'compass.landice.tests.mismipplus.mesh_gen'
         # add from config
-        config.add_from_package(module, 'mismipplus.cfg')
+        config.add_from_package(module, 'mesh_gen.cfg')
 
-        resolution = config.getint('mismipplus', 'resolution')
+        resolution = config.getint('mesh', 'resolution')
 
         # Setting up steps of test case
         self.add_step(SetupMesh(test_case=self, resolution=resolution))
