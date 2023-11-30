@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ensemble_generator &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -142,7 +141,7 @@
            <div itemprop="articleBody">
              
   <section id="ensemble-generator">
-<span id="dev-landice-ensemble-generator"></span><h1>ensemble_generator<a class="headerlink" href="#ensemble-generator" title="Permalink to this heading">¶</a></h1>
+<span id="dev-landice-ensemble-generator"></span><h1>ensemble_generator<a class="headerlink" href="#ensemble-generator" title="Link to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">ensemble_generator</span></code> test group (<code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ensemble_generator</span></code>)
 creates an ensemble of MALI
 simulations with different parameter values.  The ensemble framework
@@ -150,11 +149,11 @@ sets up a user-defined number of simulations with parameter values selected
 by uniform sampling or from a space-filling Sobol sequence
 (see <a class="reference internal" href="../../../users_guide/landice/test_groups/ensemble_generator.html#landice-ensemble-generator"><span class="std std-ref">ensemble_generator</span></a>).</p>
 <section id="framework">
-<span id="dev-landice-ensemble-generator-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Permalink to this heading">¶</a></h2>
+<span id="dev-landice-ensemble-generator-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Link to this heading">¶</a></h2>
 <p>The shared config options for the <code class="docutils literal notranslate"><span class="pre">ensemble_generator</span></code> test group are described
 in <a class="reference internal" href="../../../users_guide/landice/test_groups/ensemble_generator.html#landice-ensemble-generator"><span class="std std-ref">ensemble_generator</span></a> in the User’s Guide.</p>
 <section id="ensemble-member">
-<h3>ensemble_member<a class="headerlink" href="#ensemble-member" title="Permalink to this heading">¶</a></h3>
+<h3>ensemble_member<a class="headerlink" href="#ensemble-member" title="Link to this heading">¶</a></h3>
 <p>The class <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ensemble_generator.EnsembleMember</span></code>
 defines a step for a single ensemble member (model run).  The constructor
 stores the run number and name, as well as the parameter values to be used
@@ -205,7 +204,7 @@ there is a function <code class="docutils literal notranslate"><span class="pre"
 deltaT in a basal melt parameter file.</p>
 </section>
 <section id="ensemble-manager">
-<h3>ensemble_manager<a class="headerlink" href="#ensemble-manager" title="Permalink to this heading">¶</a></h3>
+<h3>ensemble_manager<a class="headerlink" href="#ensemble-manager" title="Link to this heading">¶</a></h3>
 <p>The class <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ensemble_generator.EnsembleManager</span></code>
 defines a step for managing the entire ensemble.  The constructor and setup
 methods perform minimal operations.  The <code class="docutils literal notranslate"><span class="pre">run</span></code> method submits each run in
@@ -214,7 +213,7 @@ to assess if runs need restarts and modify them to be submitted as such.</p>
 </section>
 </section>
 <section id="ensemble">
-<h2>ensemble<a class="headerlink" href="#ensemble" title="Permalink to this heading">¶</a></h2>
+<h2>ensemble<a class="headerlink" href="#ensemble" title="Link to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="../generated/compass.landice.tests.ensemble_generator.ensemble.Ensemble.html#compass.landice.tests.ensemble_generator.ensemble.Ensemble" title="compass.landice.tests.ensemble_generator.ensemble.Ensemble"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ensemble_generator.ensemble.Ensemble</span></code></a>
 uses the framework described above to set up an ensemble of
 simulations.  The constructor simply adds the ensemble manager as the only step.

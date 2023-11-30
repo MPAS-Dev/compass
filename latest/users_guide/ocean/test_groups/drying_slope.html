@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>drying_slope &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -154,7 +153,7 @@
            <div itemprop="articleBody">
              
   <section id="drying-slope">
-<span id="ocean-drying-slope"></span><h1>drying_slope<a class="headerlink" href="#drying-slope" title="Permalink to this heading">¶</a></h1>
+<span id="ocean-drying-slope"></span><h1>drying_slope<a class="headerlink" href="#drying-slope" title="Link to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">ocean/drying_slope</span></code> test group reproducs the tidal channel flow test case
 from <a class="reference external" href="http://dx.doi.org/10.1016/j.cageo.2013.05.004">Warner et al. (2013)</a>
 which was originally presented in
@@ -182,7 +181,7 @@ step performs visualization of the ssh field. For the <code class="docutils lite
 well as the solution from the ROMS model.</p>
 <a class="reference internal image-reference" href="../../../_images/drying_slope_validation.png"><img alt="../../../_images/drying_slope_validation.png" class="align-center" src="../../../_images/drying_slope_validation.png" style="width: 500px;" /></a>
 <section id="config-options">
-<h2>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h2>
+<h2>config options<a class="headerlink" href="#config-options" title="Link to this heading">¶</a></h2>
 <p>The config options for this test case are:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
 <span class="k">[vertical_grid]</span>
@@ -223,7 +222,7 @@ well as the solution from the ROMS model.</p>
 <p>All units are mks.</p>
 </section>
 <section id="default">
-<h2>default<a class="headerlink" href="#default" title="Permalink to this heading">¶</a></h2>
+<h2>default<a class="headerlink" href="#default" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">ocean/drying_slope/${COORD}/${METHOD}/${RES}/default</span></code> is the default version
 of the drying slope test case for two short (12h) test runs with two different
 drag coefficients and validation of sea surface height through visual inspection
@@ -234,7 +233,7 @@ velocity tendencies over a given layer thickness range rather than a binary
 switch at the minimum thickness.</p>
 </section>
 <section id="convergence">
-<h2>convergence<a class="headerlink" href="#convergence" title="Permalink to this heading">¶</a></h2>
+<h2>convergence<a class="headerlink" href="#convergence" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">ocean/drying_slope/${COORD}/${METHOD}/convergence</span></code> is a convergence test in
 horizontal resolution and time. It produces a convergence plot for the
 resolutions specified in the config file. <code class="docutils literal notranslate"><span class="pre">COORD</span></code> is either <code class="docutils literal notranslate"><span class="pre">single_layer</span></code>
@@ -243,7 +242,7 @@ or <code class="docutils literal notranslate"><span class="pre">sigma</span></co
 curve will be included in the plot.</p>
 </section>
 <section id="decomp">
-<h2>decomp<a class="headerlink" href="#decomp" title="Permalink to this heading">¶</a></h2>
+<h2>decomp<a class="headerlink" href="#decomp" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">ocean/drying_slope/${RES}/${COORD}/decomp</span></code> is identical to the default version
 of the drying slope test case except it is run twice, on 1 processor and 12
 processors and the results of each are compared. <code class="docutils literal notranslate"><span class="pre">RES</span></code> is either 250m or 1km.
@@ -252,7 +251,7 @@ Rayleigh drag coefficient of 0.01. Rayleigh drag is not compatible with
 <code class="docutils literal notranslate"><span class="pre">single_layer</span></code> so implicit drag with a constant coefficient is used.</p>
 </section>
 <section id="ramp">
-<h2>ramp<a class="headerlink" href="#ramp" title="Permalink to this heading">¶</a></h2>
+<h2>ramp<a class="headerlink" href="#ramp" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">ocean/drying_slope/${RES}/${COORD}/ramp</span></code> is identical to the <code class="docutils literal notranslate"><span class="pre">default</span></code>
 test except the factor that scales velocities and velocity tendencies is
 ramped over a given layer thickness range rather than a binary switch at the
@@ -260,7 +259,7 @@ minimum thickness. <code class="docutils literal notranslate"><span class="pre">
 <code class="docutils literal notranslate"><span class="pre">single_layer</span></code> or <code class="docutils literal notranslate"><span class="pre">sigma</span></code>.</p>
 </section>
 <section id="loglaw">
-<h2>loglaw<a class="headerlink" href="#loglaw" title="Permalink to this heading">¶</a></h2>
+<h2>loglaw<a class="headerlink" href="#loglaw" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">ocean/drying_slope/${RES}/${COORD}/loglaw</span></code> is identical to the <code class="docutils literal notranslate"><span class="pre">default</span></code>
 test except that the log-law option for implicit bottom drag is used. <code class="docutils literal notranslate"><span class="pre">RES</span></code>
 is either 250m or 1km. <code class="docutils literal notranslate"><span class="pre">COORD</span></code> is either <code class="docutils literal notranslate"><span class="pre">single_layer</span></code> or <code class="docutils literal notranslate"><span class="pre">sigma</span></code>.</p>

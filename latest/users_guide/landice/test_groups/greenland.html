@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>greenland &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -146,13 +145,13 @@
            <div itemprop="articleBody">
              
   <section id="greenland">
-<span id="landice-greenland"></span><h1>greenland<a class="headerlink" href="#greenland" title="Permalink to this heading">¶</a></h1>
+<span id="landice-greenland"></span><h1>greenland<a class="headerlink" href="#greenland" title="Link to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">landice/greenland</span></code> test group runs tests with a coarse (20-km)
 <a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/gis20km.210608.nc">Greenland mesh</a>.</p>
 <figure class="align-center" id="id1">
 <a class="reference internal image-reference" href="../../../_images/gis_speed.png"><img alt="../../../_images/gis_speed.png" src="../../../_images/gis_speed.png" style="width: 742px;" /></a>
 <figcaption>
-<p><span class="caption-text">FO velocity solution visualized in Paraview.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<p><span class="caption-text">FO velocity solution visualized in Paraview.</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
 <p>The test group includes 3 test cases, each of which has one or more steps
@@ -166,7 +165,7 @@ Albany, but the SIA variant of the test can be run without Albany.  The FO
 version uses no-slip basal boundary condition. There is no integration step
 for the test case <code class="docutils literal notranslate"><span class="pre">mesh_gen</span></code>.</p>
 <section id="config-options">
-<h2>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h2>
+<h2>config options<a class="headerlink" href="#config-options" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">mesh_gen</span></code> test case uses the default config options below.
 The other test cases do not use config options.</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[mesh]</span>
@@ -201,19 +200,19 @@ The other test cases do not use config options.</p>
 </div>
 </section>
 <section id="smoke-test">
-<h2>smoke_test<a class="headerlink" href="#smoke-test" title="Permalink to this heading">¶</a></h2>
+<h2>smoke_test<a class="headerlink" href="#smoke-test" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">landice/greenland/smoke_test</span></code> is the default version of the greenland test
 case for a short (5-day) test run.</p>
 </section>
 <section id="decomposition-test">
-<h2>decomposition_test<a class="headerlink" href="#decomposition-test" title="Permalink to this heading">¶</a></h2>
+<h2>decomposition_test<a class="headerlink" href="#decomposition-test" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">landice/greenland/decomposition_test</span></code> runs short (5-day) integrations of the
 model forward in time on 1 (<code class="docutils literal notranslate"><span class="pre">1proc_run</span></code> step) and then on 4 cores
 (<code class="docutils literal notranslate"><span class="pre">4proc_run</span></code> step) to make sure the resulting prognostic variables are
 bit-for-bit identical between the two runs.</p>
 </section>
 <section id="restart-test">
-<h2>restart_test<a class="headerlink" href="#restart-test" title="Permalink to this heading">¶</a></h2>
+<h2>restart_test<a class="headerlink" href="#restart-test" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">landice/greenland/2000m/restart_test</span></code> first run a short (5-day) integration
 of the model forward in time (<code class="docutils literal notranslate"><span class="pre">full_run</span></code> step).  Then, a second step
 (<code class="docutils literal notranslate"><span class="pre">restart_run</span></code>) performs a 3-day, then a 2-day run, where the second begins
@@ -222,7 +221,7 @@ between the “full” and “restart” runs at year 2 to make sure they are
 bit-for-bit identical.</p>
 </section>
 <section id="mesh-gen">
-<h2>mesh_gen<a class="headerlink" href="#mesh-gen" title="Permalink to this heading">¶</a></h2>
+<h2>mesh_gen<a class="headerlink" href="#mesh-gen" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">landice/greenland/mesh_gen</span></code> creates a variable resolution mesh based
 on the the config options listed above. This will not be the same as the
 pre-generated 20 km mesh used in the other three test cases because it uses

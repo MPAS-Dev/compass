@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>soma &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -153,7 +152,7 @@
            <div itemprop="articleBody">
              
   <section id="soma">
-<span id="ocean-soma"></span><h1>soma<a class="headerlink" href="#soma" title="Permalink to this heading">¶</a></h1>
+<span id="ocean-soma"></span><h1>soma<a class="headerlink" href="#soma" title="Link to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">ocean/soma</span></code> test group implements variants of the Simulating Ocean
 Mesoscale Activity (SOMA) test case from
 <a class="reference external" href="https://doi.org/10.1175/JPO-D-14-0260.1">Wolfram et al. (2015)</a>.  From that
@@ -181,7 +180,7 @@ The <code class="docutils literal notranslate"><span class="pre">forward</span><
 <code class="docutils literal notranslate"><span class="pre">analysis</span></code> step compares the temperature and salinity at each particle with
 an analytic solution defining the initial condition.</p>
 <section id="shared-config-options">
-<h2>shared config options<a class="headerlink" href="#shared-config-options" title="Permalink to this heading">¶</a></h2>
+<h2>shared config options<a class="headerlink" href="#shared-config-options" title="Link to this heading">¶</a></h2>
 <p>Both <code class="docutils literal notranslate"><span class="pre">soma</span></code> test cases share the following config options:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for Simulating Ocean Mesoscale Activity (SOMA) testcases</span>
 <span class="k">[soma]</span>
@@ -218,7 +217,7 @@ an analytic solution defining the initial condition.</p>
 distribution.</p>
 </section>
 <section id="default">
-<h2>default<a class="headerlink" href="#default" title="Permalink to this heading">¶</a></h2>
+<h2>default<a class="headerlink" href="#default" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">ocean/soma/&lt;resolution&gt;/default</span></code> is the default version of the SOMA
 test case from <a class="reference external" href="https://doi.org/10.1175/JPO-D-14-0260.1">Wolfram et al. (2015)</a>.
 This test uses 60 unequally spaced layers and does not use surface restoring
@@ -228,7 +227,7 @@ or include particle dynamics.</p>
 prognostic variables for regression testing.</p>
 </section>
 <section id="long">
-<h2>long<a class="headerlink" href="#long" title="Permalink to this heading">¶</a></h2>
+<h2>long<a class="headerlink" href="#long" title="Link to this heading">¶</a></h2>
 <p>Results in Wolfram et al. (2015) are shown from longer simulations, as provided
 by the <code class="docutils literal notranslate"><span class="pre">ocean/soma/&lt;resolution&gt;/long</span></code> test cases. As in the <code class="docutils literal notranslate"><span class="pre">default</span></code>
 test cases, this test uses 60 unequally spaced layers and does not use surface
@@ -237,7 +236,7 @@ configured for a longer simulation (3 years) potentially appropriate for
 scientific work.</p>
 </section>
 <section id="particles">
-<h2>particles<a class="headerlink" href="#particles" title="Permalink to this heading">¶</a></h2>
+<h2>particles<a class="headerlink" href="#particles" title="Link to this heading">¶</a></h2>
 <p>Wolfram et al. (2015) is focused on diffusion as measured by particle
 trajectories.  For now, most SOMA test cases do not include particles, but
 we include one test case, <code class="docutils literal notranslate"><span class="pre">ocean/soma/32km/particles</span></code>, with particles from
@@ -247,13 +246,13 @@ identical to <code class="docutils literal notranslate"><span class="pre">defaul
 the test-case validation.</p>
 </section>
 <section id="surface-restoring">
-<h2>surface_restoring<a class="headerlink" href="#surface-restoring" title="Permalink to this heading">¶</a></h2>
+<h2>surface_restoring<a class="headerlink" href="#surface-restoring" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">ocean/soma/&lt;resolution&gt;/surface_restoring</span></code> test cases are identical to
 <code class="docutils literal notranslate"><span class="pre">default</span></code> except that they include restoring of the surface temperature to
 a prescribed field that varies linearly with latitude.</p>
 </section>
 <section id="three-layer">
-<h2>three_layer<a class="headerlink" href="#three-layer" title="Permalink to this heading">¶</a></h2>
+<h2>three_layer<a class="headerlink" href="#three-layer" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">ocean/soma/&lt;resolution&gt;/three_layer</span></code> test cases are identical to
 <code class="docutils literal notranslate"><span class="pre">default</span></code> except that they have only 3 vertical layers and do not include the
 continental shelf in the simulation domain.</p>

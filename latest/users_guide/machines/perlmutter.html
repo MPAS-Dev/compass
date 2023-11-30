@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Perlmutter &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -135,7 +134,7 @@
            <div itemprop="articleBody">
              
   <section id="perlmutter">
-<span id="machine-perlmutter"></span><h1>Perlmutter<a class="headerlink" href="#perlmutter" title="Permalink to this heading">¶</a></h1>
+<span id="machine-perlmutter"></span><h1>Perlmutter<a class="headerlink" href="#perlmutter" title="Link to this heading">¶</a></h1>
 <p>login: <code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">$my_username&#64;perlmutter-p1.nersc.gov</span></code></p>
 <p>interactive login:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># for CPU:</span>
@@ -165,13 +164,13 @@ salloc<span class="w"> </span>--partition<span class="o">=</span>debug<span clas
 <li><p>E3SM uses <a class="reference external" href="https://e3sm-project.github.io/zstash/">zstash</a></p></li>
 </ul>
 <section id="perlmutter-cpu">
-<h2>Perlmutter-CPU<a class="headerlink" href="#perlmutter-cpu" title="Permalink to this heading">¶</a></h2>
+<h2>Perlmutter-CPU<a class="headerlink" href="#perlmutter-cpu" title="Link to this heading">¶</a></h2>
 <p><strong>There has not yet been a release with Perlmutter-CPU, so the following applies
 to the release of compass v1.2.0, when it happens.</strong></p>
 <p>Perlmutter’s CPU and GPU nodes have different configuration options and
 compilers.  We only support Perlmutter-CPU at this time.</p>
 <section id="config-options">
-<h3>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h3>
+<h3>config options<a class="headerlink" href="#config-options" title="Link to this heading">¶</a></h3>
 <p>Here are the default
 config options added when you choose <code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">pm-cpu</span></code> when setting up test
 cases or a test suite:</p>
@@ -257,7 +256,7 @@ cases or a test suite:</p>
 </div>
 </section>
 <section id="hyperthreading">
-<h3>Hyperthreading<a class="headerlink" href="#hyperthreading" title="Permalink to this heading">¶</a></h3>
+<h3>Hyperthreading<a class="headerlink" href="#hyperthreading" title="Link to this heading">¶</a></h3>
 <p>By default, hyperthreading has been disable on Perlmutter. We had found some
 some issues with runs hanging in early testing that seemed to be mitigated by
 disabling hyperthreading.  We disable hyperthreading by setting
@@ -277,7 +276,7 @@ as follows:</p>
 </div>
 </section>
 <section id="gnu-on-perlmutter-cpu">
-<h3>Gnu on Perlmutter-CPU<a class="headerlink" href="#gnu-on-perlmutter-cpu" title="Permalink to this heading">¶</a></h3>
+<h3>Gnu on Perlmutter-CPU<a class="headerlink" href="#gnu-on-perlmutter-cpu" title="Link to this heading">¶</a></h3>
 <p>To load the compass environment and modules, and set appropriate environment
 variables:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>/global/cfs/cdirs/e3sm/software/compass/pm-cpu/load_latest_compass_gnu_mpich.sh
@@ -290,7 +289,7 @@ variables:</p>
 </section>
 </section>
 <section id="jupyter-notebook-on-remote-data">
-<h2>Jupyter notebook on remote data<a class="headerlink" href="#jupyter-notebook-on-remote-data" title="Permalink to this heading">¶</a></h2>
+<h2>Jupyter notebook on remote data<a class="headerlink" href="#jupyter-notebook-on-remote-data" title="Link to this heading">¶</a></h2>
 <p>You can run Jupyter notebooks on NERSC with direct access to scratch data as
 follows:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>-Y<span class="w"> </span>-L<span class="w"> </span><span class="m">8844</span>:localhost:8844<span class="w"> </span>MONIKER@perlmutter-p1.nersc.gov

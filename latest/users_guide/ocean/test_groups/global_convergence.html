@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>global_convergence &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -149,11 +148,11 @@
            <div itemprop="articleBody">
              
   <section id="global-convergence">
-<span id="ocean-global-convergence"></span><h1>global_convergence<a class="headerlink" href="#global-convergence" title="Permalink to this heading">¶</a></h1>
+<span id="ocean-global-convergence"></span><h1>global_convergence<a class="headerlink" href="#global-convergence" title="Link to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">global_convergence</span></code> test group implements convergence studies on the
 full globe.  Currently, the only test case is the advection of a cosine bell.</p>
 <section id="cosine-bell">
-<span id="ocean-global-convergence-cosine-bell"></span><h2>cosine_bell<a class="headerlink" href="#cosine-bell" title="Permalink to this heading">¶</a></h2>
+<span id="ocean-global-convergence-cosine-bell"></span><h2>cosine_bell<a class="headerlink" href="#cosine-bell" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">cosine_bell</span></code> test case implements the Cosine Bell test case as first
 described in <a class="reference external" href="https://doi.org/10.1016/S0021-9991(05)80016-6">Williamson et al. 1992</a>
 but using the variant from Sec. 3a of
@@ -177,7 +176,7 @@ The result of the <code class="docutils literal notranslate"><span class="pre">a
 following showing convergence as a function of the number of cells:</p>
 <a class="reference internal image-reference" href="../../../_images/cosine_bell_convergence.png"><img alt="../../../_images/cosine_bell_convergence.png" class="align-center" src="../../../_images/cosine_bell_convergence.png" style="width: 500px;" /></a>
 <section id="config-options">
-<h3>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h3>
+<h3>config options<a class="headerlink" href="#config-options" title="Link to this heading">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">cosine_bell</span></code> config options include:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for cosine bell convergence test case</span>
 <span class="k">[cosine_bell]</span>
@@ -230,7 +229,7 @@ following showing convergence as a function of the number of cells:</p>
 background properties.  The first 4 options are discussed below.</p>
 </section>
 <section id="resolutions">
-<h3>resolutions<a class="headerlink" href="#resolutions" title="Permalink to this heading">¶</a></h3>
+<h3>resolutions<a class="headerlink" href="#resolutions" title="Link to this heading">¶</a></h3>
 <p>The default resolutions used in the test case depends on the mesh type. For
 the <code class="docutils literal notranslate"><span class="pre">qu</span></code> mesh type, the defaults are:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">resolutions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">60, 120, 240, 480</span>
@@ -251,14 +250,14 @@ use a resolution close to those listed in <a class="reference internal" href="..
 resolution will be rounded to the nearest allowed icosahedral resolution.</p>
 </section>
 <section id="time-step">
-<h3>time step<a class="headerlink" href="#time-step" title="Permalink to this heading">¶</a></h3>
+<h3>time step<a class="headerlink" href="#time-step" title="Link to this heading">¶</a></h3>
 <p>The time step for forward integration is determined by multiplying the
 resolution by <code class="docutils literal notranslate"><span class="pre">dt_per_km</span></code>, so that coarser meshes have longer time steps.
 You can alter this before setup (in a user config file) or before running the
 test case (in the config file in the work directory).</p>
 </section>
 <section id="cores">
-<h3>cores<a class="headerlink" href="#cores" title="Permalink to this heading">¶</a></h3>
+<h3>cores<a class="headerlink" href="#cores" title="Link to this heading">¶</a></h3>
 <p>The number of cores (and the minimum) is proportional to the number of cells,
 so that the number of cells per core is roughly constant.  You can alter how
 many cells are allocated to each core with <code class="docutils literal notranslate"><span class="pre">goal_cells_per_core</span></code>.  You can

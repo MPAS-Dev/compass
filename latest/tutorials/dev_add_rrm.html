@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM) &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -125,7 +124,7 @@
            <div itemprop="articleBody">
              
   <section id="developer-tutorial-adding-a-new-ocean-sea-ice-regionally-refined-mesh-rrm">
-<span id="dev-tutorial-add-rrm"></span><h1>Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)<a class="headerlink" href="#developer-tutorial-adding-a-new-ocean-sea-ice-regionally-refined-mesh-rrm" title="Permalink to this heading">¶</a></h1>
+<span id="dev-tutorial-add-rrm"></span><h1>Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)<a class="headerlink" href="#developer-tutorial-adding-a-new-ocean-sea-ice-regionally-refined-mesh-rrm" title="Link to this heading">¶</a></h1>
 <p>This tutorial presents a step-by-step guide to adding a new mesh to the
 <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> test group in <code class="docutils literal notranslate"><span class="pre">compass</span></code> (see the <a class="reference internal" href="../glossary.html#glossary"><span class="std std-ref">Glossary</span></a> for
 definitions of some relevant terms).  In this tutorial, I will add a new
@@ -133,7 +132,7 @@ mesh called YAM (“yet another mesh”) that is based on techniques used to bui
 the existing <a class="reference internal" href="../developers_guide/ocean/test_groups/global_ocean.html#dev-ocean-global-ocean-sowisc12to60"><span class="std std-ref">SO12to60 and SOwISC12to60</span></a> as well as
 <a class="reference internal" href="../developers_guide/ocean/test_groups/global_ocean.html#dev-ocean-global-ocean-wc14"><span class="std std-ref">WC14 and WCwISC14</span></a> meshes.</p>
 <section id="getting-started">
-<span id="dev-tutorial-add-rrm-getting-started"></span><h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h2>
+<span id="dev-tutorial-add-rrm-getting-started"></span><h2>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h2>
 <p>To begin with, you will need to check out the compass repo and create a new
 branch from <code class="docutils literal notranslate"><span class="pre">main</span></code> for developing the new mesh.  For this purpose, we
 will stick with the simpler approach in <a class="reference internal" href="../developers_guide/quick_start.html#dev-compass-repo"><span class="std std-ref">Set up a compass repository: for beginners</span></a> here, but feel
@@ -178,7 +177,7 @@ for your machine.</p>
 <p>Now, we’re ready to start developing!</p>
 </section>
 <section id="adding-a-new-mesh">
-<span id="dev-tutorial-add-rrm-add-mesh"></span><h2>Adding a new mesh<a class="headerlink" href="#adding-a-new-mesh" title="Permalink to this heading">¶</a></h2>
+<span id="dev-tutorial-add-rrm-add-mesh"></span><h2>Adding a new mesh<a class="headerlink" href="#adding-a-new-mesh" title="Link to this heading">¶</a></h2>
 <p>Use any method you like for editing code.  If you haven’t settled on a method
 and are working on your own laptop or desktop, you may want to try an
 integrated development environment (<a class="reference external" href="https://www.jetbrains.com/pycharm/">PyCharm</a>
@@ -323,7 +322,7 @@ vim<span class="w"> </span>__init__.py
 <p>Okay, great!  We’re ready to test this out!</p>
 </section>
 <section id="running-the-mesh-test-case">
-<span id="dev-tutorial-add-rrm-test-mesh"></span><h2>Running the mesh test case<a class="headerlink" href="#running-the-mesh-test-case" title="Permalink to this heading">¶</a></h2>
+<span id="dev-tutorial-add-rrm-test-mesh"></span><h2>Running the mesh test case<a class="headerlink" href="#running-the-mesh-test-case" title="Link to this heading">¶</a></h2>
 <p>First, let’s make sure the mesh exists when we list the available test cases
 in compass:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass<span class="w"> </span>list
@@ -495,7 +494,7 @@ can look at the the culled mesh in ParaVeiw by copying
 easier to see.  After culling, the land just appears as holes in the mesh.</p>
 </section>
 <section id="switching-to-an-ec30to60-base-resolution">
-<span id="dev-tutorial-add-rrm-ec-base-mesh"></span><h2>Switching to an EC30to60 base resolution<a class="headerlink" href="#switching-to-an-ec30to60-base-resolution" title="Permalink to this heading">¶</a></h2>
+<span id="dev-tutorial-add-rrm-ec-base-mesh"></span><h2>Switching to an EC30to60 base resolution<a class="headerlink" href="#switching-to-an-ec30to60-base-resolution" title="Link to this heading">¶</a></h2>
 <p>Returning to the terminal where we are developing the code, let’s make the mesh
 more interesting.</p>
 <p>So far, all E3SM ocean and sea-ice RRMs start with the EC30to60 (eddy-closure
@@ -548,7 +547,7 @@ should look like:</p>
 <a class="reference internal image-reference" href="../_images/ec30to60_culled_paraview.png"><img alt="../_images/ec30to60_culled_paraview.png" class="align-center" src="../_images/ec30to60_culled_paraview.png" style="width: 500px;" /></a>
 </section>
 <section id="adding-regions-of-higher-resolution">
-<span id="dev-tutorial-add-rrm-add-high-res"></span><h2>Adding regions of higher resolution<a class="headerlink" href="#adding-regions-of-higher-resolution" title="Permalink to this heading">¶</a></h2>
+<span id="dev-tutorial-add-rrm-add-high-res"></span><h2>Adding regions of higher resolution<a class="headerlink" href="#adding-regions-of-higher-resolution" title="Link to this heading">¶</a></h2>
 <p>Now, let’s add some regions of higher resolution to the mesh.</p>
 <p>We typically define these regions using <a class="reference external" href="https://geojson.org/">geojson</a>
 files.  The easiest way to create them is to go to <a class="reference external" href="https://geojson.io/">geojson.io</a>.
@@ -772,7 +771,7 @@ should look like:</p>
 <a class="reference internal image-reference" href="../_images/atl20km_culled_paraview.png"><img alt="../_images/atl20km_culled_paraview.png" class="align-center" src="../_images/atl20km_culled_paraview.png" style="width: 500px;" /></a>
 </section>
 <section id="adding-a-very-high-resolution-region">
-<span id="dev-tutorial-add-rrm-add-very-high-res"></span><h2>Adding a very high resolution region<a class="headerlink" href="#adding-a-very-high-resolution-region" title="Permalink to this heading">¶</a></h2>
+<span id="dev-tutorial-add-rrm-add-very-high-res"></span><h2>Adding a very high resolution region<a class="headerlink" href="#adding-a-very-high-resolution-region" title="Link to this heading">¶</a></h2>
 <p>Using the same approach as in the previous section, we can define another
 region where we will increase the resolution to 10 km.</p>
 <p>I used geojson.io to create a region around the Amazon River delta:</p>
@@ -918,7 +917,7 @@ should look like:</p>
 <a class="reference internal image-reference" href="../_images/yam10to60_culled_paraview.png"><img alt="../_images/yam10to60_culled_paraview.png" class="align-center" src="../_images/yam10to60_culled_paraview.png" style="width: 500px;" /></a>
 </section>
 <section id="adding-an-initial-condition-and-performance-test">
-<span id="dev-tutorial-add-rrm-add-init"></span><h2>Adding an initial condition and performance test<a class="headerlink" href="#adding-an-initial-condition-and-performance-test" title="Permalink to this heading">¶</a></h2>
+<span id="dev-tutorial-add-rrm-add-init"></span><h2>Adding an initial condition and performance test<a class="headerlink" href="#adding-an-initial-condition-and-performance-test" title="Link to this heading">¶</a></h2>
 <p>We now have a horizontal ocean mesh, but there are several more steps in
 compass before we can start to integrate the new mesh into E3SM.</p>
 <p>First, we need to add an <code class="docutils literal notranslate"><span class="pre">init</span></code> test case that will create the vertical
@@ -1161,7 +1160,7 @@ the E3SM Ocean Team, but you can take a look at the log files and see if you
 can diagnose any issues yourself.</p>
 </section>
 <section id="adding-a-dynamic-adjustment-test">
-<span id="dev-tutorial-add-rrm-add-dyn-adj"></span><h2>Adding a dynamic adjustment test<a class="headerlink" href="#adding-a-dynamic-adjustment-test" title="Permalink to this heading">¶</a></h2>
+<span id="dev-tutorial-add-rrm-add-dyn-adj"></span><h2>Adding a dynamic adjustment test<a class="headerlink" href="#adding-a-dynamic-adjustment-test" title="Link to this heading">¶</a></h2>
 <p>The initial condition we generated in the last section starts with the ocean
 at rest.  This state is not consistent with the density profile, so there
 will be a period of a few months of rapid adjustment involving dissipation of
@@ -1723,7 +1722,7 @@ stream in <code class="docutils literal notranslate"><span class="pre">streams.o
 this field available to visualize.</p>
 </section>
 <section id="adding-a-files-for-e3sm-test">
-<span id="dev-tutorial-add-rrm-add-files-for-e3sm"></span><h2>Adding a files for E3SM test<a class="headerlink" href="#adding-a-files-for-e3sm-test" title="Permalink to this heading">¶</a></h2>
+<span id="dev-tutorial-add-rrm-add-files-for-e3sm"></span><h2>Adding a files for E3SM test<a class="headerlink" href="#adding-a-files-for-e3sm-test" title="Link to this heading">¶</a></h2>
 <p>The final test case to add for a new RRM mesh is <code class="docutils literal notranslate"><span class="pre">files_for_e3sm</span></code>.  This test
 case creates a number of important files in the format they are needed for
 E3SM or diagnostic software used to analysis E3SM simulations.  No additional

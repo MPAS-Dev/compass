@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>global_ocean &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -148,7 +147,7 @@
            <div itemprop="articleBody">
              
   <section id="global-ocean">
-<span id="dev-ocean-global-ocean"></span><h1>global_ocean<a class="headerlink" href="#global-ocean" title="Permalink to this heading">¶</a></h1>
+<span id="dev-ocean-global-ocean"></span><h1>global_ocean<a class="headerlink" href="#global-ocean" title="Link to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> test group
 (<a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.GlobalOcean.html#compass.ocean.tests.global_ocean.GlobalOcean" title="compass.ocean.tests.global_ocean.GlobalOcean"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.GlobalOcean</span></code></a>)
 creates meshes and initial conditions, and performs testing and dynamic
@@ -156,7 +155,7 @@ adjustment for global, realistic ocean domains. It includes 9 test cases on 5
 meshes, with the expectation that more meshes from <a class="reference internal" href="../../../index.html#legacy-compass"><span class="std std-ref">Legacy COMPASS</span></a> will
 be added in the near future.</p>
 <section id="framework">
-<span id="dev-ocean-global-ocean-framework"></span><h2>Framework<a class="headerlink" href="#framework" title="Permalink to this heading">¶</a></h2>
+<span id="dev-ocean-global-ocean-framework"></span><h2>Framework<a class="headerlink" href="#framework" title="Link to this heading">¶</a></h2>
 <p>The shared config options for the <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> test group
 are described in <a class="reference internal" href="../../../users_guide/ocean/test_groups/global_ocean.html#ocean-global-ocean"><span class="std std-ref">global_ocean</span></a> in the User’s Guide.</p>
 <p>Additionally, the test group has several shared namelist and streams files,
@@ -164,7 +163,7 @@ some for shared parameters and streams for forward runs (<code class="docutils l
 and <code class="docutils literal notranslate"><span class="pre">streams.forward</span></code>), and one specific to meshes with ice-shelf cavities
 (<code class="docutils literal notranslate"><span class="pre">namelist.wisc</span></code>).</p>
 <section id="metadata">
-<span id="dev-ocean-global-ocean-metadata"></span><h3>metadata<a class="headerlink" href="#metadata" title="Permalink to this heading">¶</a></h3>
+<span id="dev-ocean-global-ocean-metadata"></span><h3>metadata<a class="headerlink" href="#metadata" title="Link to this heading">¶</a></h3>
 <p>The module <code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.metadata</span></code> determines the values
 of a set of metadata related to the E3SM mesh name, initial condition, conda
 environment, etc. that are added to nearly all <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> NetCDF output.
@@ -257,7 +256,7 @@ standard naming convention for E3SM:</p>
 long name <code class="docutils literal notranslate"><span class="pre">QU240kmL16E3SMv2r1</span></code>.</p>
 </section>
 <section id="tasks">
-<span id="dev-ocean-global-ocean-tasks"></span><h3>tasks<a class="headerlink" href="#tasks" title="Permalink to this heading">¶</a></h3>
+<span id="dev-ocean-global-ocean-tasks"></span><h3>tasks<a class="headerlink" href="#tasks" title="Link to this heading">¶</a></h3>
 <p>The function <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.tasks.get_ntasks_from_cell_count.html#compass.ocean.tests.global_ocean.tasks.get_ntasks_from_cell_count" title="compass.ocean.tests.global_ocean.tasks.get_ntasks_from_cell_count"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.tasks.get_ntasks_from_cell_count()</span></code></a>
 can be used to compute a good number of MPI tasks (both the target and the
 minimum) for MPAS-Ocean to use based on the <code class="docutils literal notranslate"><span class="pre">goal_cells_per_core</span></code> and
@@ -275,7 +274,7 @@ on various meshes.  Some test cases still specify the number of MPI tasks
 explicitly because it is part of their testing protocol.</p>
 </section>
 <section id="forward-test-case">
-<span id="dev-ocean-global-ocean-forward-test"></span><h3>forward test case<a class="headerlink" href="#forward-test-case" title="Permalink to this heading">¶</a></h3>
+<span id="dev-ocean-global-ocean-forward-test"></span><h3>forward test case<a class="headerlink" href="#forward-test-case" title="Link to this heading">¶</a></h3>
 <p>The parent class for test cases in <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> that include running
 MPAS-Ocean forward in time is
 <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.forward.ForwardTestCase.html#compass.ocean.tests.global_ocean.forward.ForwardTestCase" title="compass.ocean.tests.global_ocean.forward.ForwardTestCase"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.forward.ForwardTestCase</span></code></a>.  This
@@ -293,7 +292,7 @@ cores as well as the number of threads based on config options.  Then, it calls
 the base class’ <code class="docutils literal notranslate"><span class="pre">run()</span></code> method to run its steps.</p>
 </section>
 <section id="forward-step">
-<span id="dev-ocean-global-ocean-forward-step"></span><h3>forward step<a class="headerlink" href="#forward-step" title="Permalink to this heading">¶</a></h3>
+<span id="dev-ocean-global-ocean-forward-step"></span><h3>forward step<a class="headerlink" href="#forward-step" title="Link to this heading">¶</a></h3>
 <p>The parent class for steps in <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> that run MPAS-Ocean forward in
 time is <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.forward.ForwardStep.html#compass.ocean.tests.global_ocean.forward.ForwardStep" title="compass.ocean.tests.global_ocean.forward.ForwardStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.forward.ForwardStep</span></code></a>.
 The constructor for <code class="docutils literal notranslate"><span class="pre">ForwardStep</span></code> takes several arguments.  At a minimum,
@@ -369,7 +368,7 @@ files.</p>
 </section>
 </section>
 <section id="test-cases">
-<span id="dev-ocean-global-ocean-testcases"></span><h2>Test cases<a class="headerlink" href="#test-cases" title="Permalink to this heading">¶</a></h2>
+<span id="dev-ocean-global-ocean-testcases"></span><h2>Test cases<a class="headerlink" href="#test-cases" title="Link to this heading">¶</a></h2>
 <p>There are 9 <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> test cases.  First, <code class="docutils literal notranslate"><span class="pre">mesh</span></code> must be run to
 generate and cull the mesh, then one of the variants of <code class="docutils literal notranslate"><span class="pre">init</span></code> must be run
 to create an initial condition on that mesh.  After that, any of the
@@ -379,7 +378,7 @@ can be run in any order and as desired.  If an initial condition for E3SM is
 desired, the user (or test suite) should first run <code class="docutils literal notranslate"><span class="pre">dynamic_adjustment</span></code> and
 then <code class="docutils literal notranslate"><span class="pre">files_for_e3sm</span></code>.</p>
 <section id="mesh-test-case">
-<span id="dev-ocean-global-ocean-mesh"></span><h3>mesh test case<a class="headerlink" href="#mesh-test-case" title="Permalink to this heading">¶</a></h3>
+<span id="dev-ocean-global-ocean-mesh"></span><h3>mesh test case<a class="headerlink" href="#mesh-test-case" title="Link to this heading">¶</a></h3>
 <p>This test case generates an MPAS horizontal mesh, then culls out the land cells
 to improve model efficiency.</p>
 <p>A <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.Mesh.html#compass.ocean.tests.global_ocean.mesh.Mesh" title="compass.ocean.tests.global_ocean.mesh.Mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.Mesh</span></code></a> object is constructed
@@ -400,10 +399,10 @@ specific to the mesh can be found</p>
 </dd>
 </dl>
 <section id="meshes">
-<span id="dev-ocean-global-ocean-meshes"></span><h4>meshes<a class="headerlink" href="#meshes" title="Permalink to this heading">¶</a></h4>
+<span id="dev-ocean-global-ocean-meshes"></span><h4>meshes<a class="headerlink" href="#meshes" title="Link to this heading">¶</a></h4>
 <p><code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> currently defines 5 meshes, with more to come.</p>
 <section id="qu240-and-quwisc240">
-<span id="dev-ocean-global-ocean-qu240"></span><h5>QU240 and QUwISC240<a class="headerlink" href="#qu240-and-quwisc240" title="Permalink to this heading">¶</a></h5>
+<span id="dev-ocean-global-ocean-qu240"></span><h5>QU240 and QUwISC240<a class="headerlink" href="#qu240-and-quwisc240" title="Link to this heading">¶</a></h5>
 <p>The <code class="docutils literal notranslate"><span class="pre">QU240</span></code> mesh is a quasi-uniform mesh with 240-km resolution. The
 <code class="docutils literal notranslate"><span class="pre">QUwISC240</span></code> mesh is identical except that it includes the cavities below ice
 shelves in the ocean domain. The mesh is defined by
@@ -481,7 +480,7 @@ duration for short runs with these meshes.</p>
 with 16 vertical levels ranging in thickness from 3 to 500 m.</p>
 </section>
 <section id="icos240-and-icoswisc240">
-<span id="dev-ocean-global-ocean-isco240"></span><h5>Icos240 and IcoswISC240<a class="headerlink" href="#icos240-and-icoswisc240" title="Permalink to this heading">¶</a></h5>
+<span id="dev-ocean-global-ocean-isco240"></span><h5>Icos240 and IcoswISC240<a class="headerlink" href="#icos240-and-icoswisc240" title="Link to this heading">¶</a></h5>
 <p>The <code class="docutils literal notranslate"><span class="pre">Icos240</span></code> mesh is a subdivided icosahedral mesh with 240-km resolution
 using the <a class="reference internal" href="../../generated/compass.mesh.IcosahedralMeshStep.html#compass.mesh.IcosahedralMeshStep" title="compass.mesh.IcosahedralMeshStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.mesh.IcosahedralMeshStep</span></code></a> class. The
 <code class="docutils literal notranslate"><span class="pre">IcoswISC240</span></code> mesh is identical except that it includes the cavities below
@@ -489,7 +488,7 @@ ice shelves in the ocean domain. Aside from the base mesh, these are identical
 to <a class="reference internal" href="#dev-ocean-global-ocean-qu240"><span class="std std-ref">QU240 and QUwISC240</span></a>.</p>
 </section>
 <section id="qu-quwisc-icos-and-icoswisc">
-<span id="dev-ocean-global-ocean-qu-icos"></span><h5>QU, QUwISC, Icos and IcoswISC<a class="headerlink" href="#qu-quwisc-icos-and-icoswisc" title="Permalink to this heading">¶</a></h5>
+<span id="dev-ocean-global-ocean-qu-icos"></span><h5>QU, QUwISC, Icos and IcoswISC<a class="headerlink" href="#qu-quwisc-icos-and-icoswisc" title="Link to this heading">¶</a></h5>
 <p>The generalized <code class="docutils literal notranslate"><span class="pre">QU</span></code> and <code class="docutils literal notranslate"><span class="pre">Icos</span></code> meshes are quasi-uniform meshes with
 user-defined resolutions (120 km by default). The <code class="docutils literal notranslate"><span class="pre">QUwISC</span></code> and <code class="docutils literal notranslate"><span class="pre">IcoswISC</span></code>
 meshes are identical except that they include the cavities below ice shelves in
@@ -576,7 +575,7 @@ thickness from 10 to 250 m.</p>
 <p>The resolution of the mesh is controlled by <code class="docutils literal notranslate"><span class="pre">qu_resolution</span></code>.</p>
 </section>
 <section id="ec30to60-and-ecwisc30to60">
-<span id="dev-ocean-global-ocean-ec30to60"></span><h5>EC30to60 and ECwISC30to60<a class="headerlink" href="#ec30to60-and-ecwisc30to60" title="Permalink to this heading">¶</a></h5>
+<span id="dev-ocean-global-ocean-ec30to60"></span><h5>EC30to60 and ECwISC30to60<a class="headerlink" href="#ec30to60-and-ecwisc30to60" title="Link to this heading">¶</a></h5>
 <p>The <code class="docutils literal notranslate"><span class="pre">EC30to60</span></code> mesh is an “eddy-closure” mesh with 30-km resolution at the
 equator, 60-km resolution at mid latitudes, and 35-km resolution at the poles.
 The mesh resolution is purely a function of latitude. The <code class="docutils literal notranslate"><span class="pre">ECwISC30to60</span></code> mesh
@@ -644,7 +643,7 @@ step and default run duration for short runs with these meshes.</p>
 thickness from 10 to 250 m.</p>
 </section>
 <section id="kuroshio8to60-and-kuroshio12to60">
-<span id="dev-ocean-global-ocean-kuroshio"></span><h5>Kuroshio8to60 and Kuroshio12to60<a class="headerlink" href="#kuroshio8to60-and-kuroshio12to60" title="Permalink to this heading">¶</a></h5>
+<span id="dev-ocean-global-ocean-kuroshio"></span><h5>Kuroshio8to60 and Kuroshio12to60<a class="headerlink" href="#kuroshio8to60-and-kuroshio12to60" title="Link to this heading">¶</a></h5>
 <p>The <code class="docutils literal notranslate"><span class="pre">Kuroshio8to60</span></code> and <code class="docutils literal notranslate"><span class="pre">Kuroshio12to60</span></code> mehses are designed to explore
 dynamics of the Western Boundary Current (WBC) in the North Pacific Ocean,
 the Kuroshio.</p>
@@ -697,7 +696,7 @@ module:</p>
 thickness from 10 to 250 m.</p>
 </section>
 <section id="rrs6to18-and-rrswisc6to18">
-<span id="dev-ocean-global-ocean-rrs6to18"></span><h5>RRS6to18 and RRSwISC6to18<a class="headerlink" href="#rrs6to18-and-rrswisc6to18" title="Permalink to this heading">¶</a></h5>
+<span id="dev-ocean-global-ocean-rrs6to18"></span><h5>RRS6to18 and RRSwISC6to18<a class="headerlink" href="#rrs6to18-and-rrswisc6to18" title="Link to this heading">¶</a></h5>
 <p>The <code class="docutils literal notranslate"><span class="pre">RRS6to18</span></code> and <code class="docutils literal notranslate"><span class="pre">RRSwISC6to18</span></code> Rossby-radius-scaling (RRS) meshes are
 the E3SM v3 “high resolution” meshes.  They have resolution that scales as
 a function of latitude approximately with the Rossby radius of deformation
@@ -816,7 +815,7 @@ config_rx1_min_layer_thickness = 0.1
 </div>
 </section>
 <section id="so12to60-and-sowisc12to60">
-<span id="dev-ocean-global-ocean-sowisc12to60"></span><h5>SO12to60 and SOwISC12to60<a class="headerlink" href="#so12to60-and-sowisc12to60" title="Permalink to this heading">¶</a></h5>
+<span id="dev-ocean-global-ocean-sowisc12to60"></span><h5>SO12to60 and SOwISC12to60<a class="headerlink" href="#so12to60-and-sowisc12to60" title="Link to this heading">¶</a></h5>
 <p>The <code class="docutils literal notranslate"><span class="pre">SO12to60</span></code> and <code class="docutils literal notranslate"><span class="pre">SOwISC12to60</span></code> meshes are Southern Ocean regionally
 refined meshes with 12-km resolution around the Southern Ocean and Antarctica,
 45-km at southern mid-latitudes, 30-km at the equator and in the North
@@ -896,7 +895,7 @@ step and default run duration for short runs with these meshes.</p>
 thickness from 10 to 250 m.</p>
 </section>
 <section id="wc14-and-wcwisc14">
-<span id="dev-ocean-global-ocean-wc14"></span><h5>WC14 and WCwISC14<a class="headerlink" href="#wc14-and-wcwisc14" title="Permalink to this heading">¶</a></h5>
+<span id="dev-ocean-global-ocean-wc14"></span><h5>WC14 and WCwISC14<a class="headerlink" href="#wc14-and-wcwisc14" title="Link to this heading">¶</a></h5>
 <p>The <code class="docutils literal notranslate"><span class="pre">WC14</span></code> and <code class="docutils literal notranslate"><span class="pre">WCwISC14</span></code> meshes are the Water Cycle regionally refined
 meshes for E3SM v3.  They have higher resolution (~14-km) around the continental
 US, the Arctic Ocean, and a section of the North Atlantic containing the Gulf
@@ -974,7 +973,7 @@ thickness from 10 to 250 m.</p>
 </section>
 </section>
 <section id="init-test-case">
-<span id="dev-ocean-global-ocean-init"></span><h3>init test case<a class="headerlink" href="#init-test-case" title="Permalink to this heading">¶</a></h3>
+<span id="dev-ocean-global-ocean-init"></span><h3>init test case<a class="headerlink" href="#init-test-case" title="Link to this heading">¶</a></h3>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.init.Init.html#compass.ocean.tests.global_ocean.init.Init" title="compass.ocean.tests.global_ocean.init.Init"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.init.Init</span></code></a> defines a test
 case for creating a global initial condition using MPAS-Ocean’s init mode.
 Currently there are 3 choices for the potential temperature and salinity
@@ -1017,7 +1016,7 @@ condition to make sure they are identical.  In simulations with ice-shelf
 cavities, the SSH and land-ice pressure are compared against the baseline.</p>
 </section>
 <section id="performance-test-test-case">
-<span id="dev-ocean-global-ocean-performance-test"></span><h3>performance_test test case<a class="headerlink" href="#performance-test-test-case" title="Permalink to this heading">¶</a></h3>
+<span id="dev-ocean-global-ocean-performance-test"></span><h3>performance_test test case<a class="headerlink" href="#performance-test-test-case" title="Link to this heading">¶</a></h3>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.performance_test.PerformanceTest.html#compass.ocean.tests.global_ocean.performance_test.PerformanceTest" title="compass.ocean.tests.global_ocean.performance_test.PerformanceTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.performance_test.PerformanceTest</span></code></a>
 defines a test case for performing 1 or 2 short MPAS-Ocean simulations as
 “smoke tests” to make sure nothing is clearly wrong with the configuration.</p>
@@ -1034,7 +1033,7 @@ ice-shelf cavities are included in the mesh) are compared with a baseline, and
 the <code class="docutils literal notranslate"><span class="pre">time</span> <span class="pre">integration</span></code> timer is compared with that of the baseline.</p>
 </section>
 <section id="restart-test-test-case">
-<span id="dev-ocean-global-ocean-restart-test"></span><h3>restart_test test case<a class="headerlink" href="#restart-test-test-case" title="Permalink to this heading">¶</a></h3>
+<span id="dev-ocean-global-ocean-restart-test"></span><h3>restart_test test case<a class="headerlink" href="#restart-test-test-case" title="Link to this heading">¶</a></h3>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.restart_test.RestartTest.html#compass.ocean.tests.global_ocean.restart_test.RestartTest" title="compass.ocean.tests.global_ocean.restart_test.RestartTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.restart_test.RestartTest</span></code></a>
 defines a test case for comparing a <code class="docutils literal notranslate"><span class="pre">full_run</span></code> of a longer duration with a
 <code class="docutils literal notranslate"><span class="pre">restart_run</span></code> that is made up of two segments if half the duration with a
@@ -1051,7 +1050,7 @@ a baseline if one is provided when calling <a class="reference internal" href=".
 namelist replacements and streams files.</p>
 </section>
 <section id="decomp-test-test-case">
-<span id="dev-ocean-global-ocean-decomp-test"></span><h3>decomp_test test case<a class="headerlink" href="#decomp-test-test-case" title="Permalink to this heading">¶</a></h3>
+<span id="dev-ocean-global-ocean-decomp-test"></span><h3>decomp_test test case<a class="headerlink" href="#decomp-test-test-case" title="Link to this heading">¶</a></h3>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.decomp_test.DecompTest.html#compass.ocean.tests.global_ocean.decomp_test.DecompTest" title="compass.ocean.tests.global_ocean.decomp_test.DecompTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.decomp_test.DecompTest</span></code></a>
 defines a test case that performs a short run once on 4 cores and once on 8
 cores.  It ensures that <code class="docutils literal notranslate"><span class="pre">temperature</span></code>, <code class="docutils literal notranslate"><span class="pre">salinity</span></code>, <code class="docutils literal notranslate"><span class="pre">layerThickness</span></code> and
@@ -1063,7 +1062,7 @@ is currently being generated for), the duration is 6 hours for the
 <code class="docutils literal notranslate"><span class="pre">split-explicit</span></code> integrator and 10 minutes for <code class="docutils literal notranslate"><span class="pre">RK4</span></code>.</p>
 </section>
 <section id="threads-test-test-case">
-<span id="dev-ocean-global-ocean-threads-test"></span><h3>threads_test test case<a class="headerlink" href="#threads-test-test-case" title="Permalink to this heading">¶</a></h3>
+<span id="dev-ocean-global-ocean-threads-test"></span><h3>threads_test test case<a class="headerlink" href="#threads-test-test-case" title="Link to this heading">¶</a></h3>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.threads_test.ThreadsTest.html#compass.ocean.tests.global_ocean.threads_test.ThreadsTest" title="compass.ocean.tests.global_ocean.threads_test.ThreadsTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.threads_test.ThreadsTest</span></code></a>
 defines a test case that performs a short run once on 4 cores, each with 1
 thread and once on 4 cores, each with 2 threads.  It ensures that
@@ -1076,7 +1075,7 @@ is currently being generated for), the duration is 6 hours for the
 <code class="docutils literal notranslate"><span class="pre">split-explicit</span></code> integrator and 10 minutes for <code class="docutils literal notranslate"><span class="pre">RK4</span></code>.</p>
 </section>
 <section id="analysis-test-test-case">
-<span id="dev-ocean-global-ocean-analysis-test"></span><h3>analysis_test test case<a class="headerlink" href="#analysis-test-test-case" title="Permalink to this heading">¶</a></h3>
+<span id="dev-ocean-global-ocean-analysis-test"></span><h3>analysis_test test case<a class="headerlink" href="#analysis-test-test-case" title="Link to this heading">¶</a></h3>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.analysis_test.AnalysisTest.html#compass.ocean.tests.global_ocean.analysis_test.AnalysisTest" title="compass.ocean.tests.global_ocean.analysis_test.AnalysisTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.analysis_test.AnalysisTest</span></code></a>
 defines a test case that performs a short run with 14 analysis members (see
 <a class="reference internal" href="../../../users_guide/ocean/test_groups/global_ocean.html#global-ocean-analysis-test"><span class="std std-ref">analysis_test test case</span></a> in the User’s Guide). The <code class="docutils literal notranslate"><span class="pre">namelist.forward</span></code>
@@ -1091,7 +1090,7 @@ is currently being generated for), the duration is 6 hours for the
 <code class="docutils literal notranslate"><span class="pre">split-explicit</span></code> integrator and 10 minutes for <code class="docutils literal notranslate"><span class="pre">RK4</span></code>.</p>
 </section>
 <section id="daily-output-test-test-case">
-<span id="dev-ocean-global-ocean-daily-output-test"></span><h3>daily_output_test test case<a class="headerlink" href="#daily-output-test-test-case" title="Permalink to this heading">¶</a></h3>
+<span id="dev-ocean-global-ocean-daily-output-test"></span><h3>daily_output_test test case<a class="headerlink" href="#daily-output-test-test-case" title="Link to this heading">¶</a></h3>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.daily_output_test.DailyOutputTest.html#compass.ocean.tests.global_ocean.daily_output_test.DailyOutputTest" title="compass.ocean.tests.global_ocean.daily_output_test.DailyOutputTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.daily_output_test.DailyOutputTest</span></code></a>
 defines a test case that performs a 1-day run with the <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsDaily</span></code>
 analysis members (see <a class="reference internal" href="../../../users_guide/ocean/test_groups/global_ocean.html#global-ocean-daily-output-test"><span class="std std-ref">daily_output_test test case</span></a> in the User’s
@@ -1103,7 +1102,7 @@ sea-surface height are identical to those from the baseline if one is provided
 when calling <a class="reference internal" href="../../command_line.html#dev-compass-setup"><span class="std std-ref">compass setup</span></a>.</p>
 </section>
 <section id="dynamic-adjustment-test-case">
-<span id="dev-ocean-global-ocean-dynamic-adjustment"></span><h3>dynamic_adjustment test case<a class="headerlink" href="#dynamic-adjustment-test-case" title="Permalink to this heading">¶</a></h3>
+<span id="dev-ocean-global-ocean-dynamic-adjustment"></span><h3>dynamic_adjustment test case<a class="headerlink" href="#dynamic-adjustment-test-case" title="Link to this heading">¶</a></h3>
 <p>The class
 <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment.html#compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment" title="compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment</span></code></a>
 descends from <a class="reference internal" href="#dev-ocean-global-ocean-forward-test"><span class="std std-ref">forward test case</span></a> and defines a test
@@ -1212,7 +1211,7 @@ the line with <code class="docutils literal notranslate"><span class="pre">Rayle
 is more explicit.</p>
 </section>
 <section id="files-for-e3sm-test-case">
-<span id="dev-ocean-global-ocean-files-for-e3sm"></span><h3>files_for_e3sm test case<a class="headerlink" href="#files-for-e3sm-test-case" title="Permalink to this heading">¶</a></h3>
+<span id="dev-ocean-global-ocean-files-for-e3sm"></span><h3>files_for_e3sm test case<a class="headerlink" href="#files-for-e3sm-test-case" title="Link to this heading">¶</a></h3>
 <p>After running a <a class="reference internal" href="#dev-ocean-global-ocean-dynamic-adjustment"><span class="std std-ref">dynamic_adjustment test case</span></a>, files can be
 prepared for use as E3SM ocean and sea-ice initial conditions using the test
 case defined in
@@ -1346,7 +1345,7 @@ normal values at edges.  These can be used in combination with the</p>
 </dl>
 </section>
 <section id="files-for-e3sm-for-an-existing-mesh">
-<h3>files_for_e3sm for an existing mesh<a class="headerlink" href="#files-for-e3sm-for-an-existing-mesh" title="Permalink to this heading">¶</a></h3>
+<h3>files_for_e3sm for an existing mesh<a class="headerlink" href="#files-for-e3sm-for-an-existing-mesh" title="Link to this heading">¶</a></h3>
 <p>The test case <code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/files_for_e3sm</span></code> can be used to create all the
 same files as in <a class="reference internal" href="#dev-ocean-global-ocean-files-for-e3sm"><span class="std std-ref">files_for_e3sm test case</span></a> but for an
 existing mesh.  To point to the existing mesh and associated graph file, the

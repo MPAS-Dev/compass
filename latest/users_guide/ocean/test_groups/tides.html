@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>tides &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -151,7 +150,7 @@
            <div itemprop="articleBody">
              
   <section id="tides">
-<span id="ocean-tides"></span><h1>tides<a class="headerlink" href="#tides" title="Permalink to this heading">¶</a></h1>
+<span id="ocean-tides"></span><h1>tides<a class="headerlink" href="#tides" title="Link to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">ocean/tides</span></code> test group defines meshes,
 initial conditions, forward simulations, and validation for global,
 realistic ocean domains. These are single layer, barotropic simulations
@@ -164,7 +163,7 @@ simulation and are compared with the TPXO database.
 Currently, the icosaheral 7 mesh is supported with
 more mesh resolutions to be added in the future.</p>
 <section id="shared-config-options">
-<h2>Shared config options<a class="headerlink" href="#shared-config-options" title="Permalink to this heading">¶</a></h2>
+<h2>Shared config options<a class="headerlink" href="#shared-config-options" title="Link to this heading">¶</a></h2>
 <p>All <code class="docutils literal notranslate"><span class="pre">tides</span></code> test cases start the following shared config options.
 Note that meshes and test cases may modify these options, as noted below.</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for spherical meshes</span>
@@ -226,44 +225,44 @@ Note that meshes and test cases may modify these options, as noted below.</p>
 </div>
 </section>
 <section id="mesh-test-case">
-<span id="tides-mesh"></span><h2>mesh test case<a class="headerlink" href="#mesh-test-case" title="Permalink to this heading">¶</a></h2>
+<span id="tides-mesh"></span><h2>mesh test case<a class="headerlink" href="#mesh-test-case" title="Link to this heading">¶</a></h2>
 <p>The mesh test case produces the horizontal mesh. The base mesh has global coverage
 and is culled to remove land cells. Cells beneath ice shelves are retained in the mesh.</p>
 </section>
 <section id="init-test-case">
-<span id="tides-init"></span><h2>init test case<a class="headerlink" href="#init-test-case" title="Permalink to this heading">¶</a></h2>
+<span id="tides-init"></span><h2>init test case<a class="headerlink" href="#init-test-case" title="Link to this heading">¶</a></h2>
 <p>The init test performs steps to set up the vertical mesh, initial conditions,
 atmospheric forcing, and prepares the station locations for timeseries output.</p>
 <section id="remap-bathymetry-step">
-<h3>remap bathymetry step<a class="headerlink" href="#remap-bathymetry-step" title="Permalink to this heading">¶</a></h3>
+<h3>remap bathymetry step<a class="headerlink" href="#remap-bathymetry-step" title="Link to this heading">¶</a></h3>
 <p>This step performs an integral remap of bathymetric data onto the MPAS-O mesh</p>
 </section>
 <section id="interpolate-wave-drag-step">
-<h3>interpolate wave drag step<a class="headerlink" href="#interpolate-wave-drag-step" title="Permalink to this heading">¶</a></h3>
+<h3>interpolate wave drag step<a class="headerlink" href="#interpolate-wave-drag-step" title="Link to this heading">¶</a></h3>
 <p>In this step, a timescale factor from HYCOM data is interpolated onto
 the MPAS-O mesh to be used in the topographic wave drag parameterization.
 A plot is also produced to verify the interpolation.</p>
 </section>
 <section id="initial-state-step">
-<h3>initial state step<a class="headerlink" href="#initial-state-step" title="Permalink to this heading">¶</a></h3>
+<h3>initial state step<a class="headerlink" href="#initial-state-step" title="Link to this heading">¶</a></h3>
 <p>The initial state step runs MPAS-Ocean in init mode to create the initial
 condition file for the forward run. The vertical mesh is setup for a
 single layer.</p>
 </section>
 </section>
 <section id="forward-test-case">
-<span id="tides-forward"></span><h2>forward test case<a class="headerlink" href="#forward-test-case" title="Permalink to this heading">¶</a></h2>
+<span id="tides-forward"></span><h2>forward test case<a class="headerlink" href="#forward-test-case" title="Link to this heading">¶</a></h2>
 <p>The forward test case is responsible for the forward model simulation and
 analysis.</p>
 <section id="forward-step">
-<h3>forward step<a class="headerlink" href="#forward-step" title="Permalink to this heading">¶</a></h3>
+<h3>forward step<a class="headerlink" href="#forward-step" title="Link to this heading">¶</a></h3>
 <p>The forward step runs a 125 day model simulation. The simulation
 begins with a spinup period, where the tides
 are ramped to their full value to avoid shocking the system.
 The harmonic analysis period begins following this spinup period.</p>
 </section>
 <section id="analysis-step">
-<h3>analysis step<a class="headerlink" href="#analysis-step" title="Permalink to this heading">¶</a></h3>
+<h3>analysis step<a class="headerlink" href="#analysis-step" title="Link to this heading">¶</a></h3>
 <p>The analysis step extracts the harmonic constituent amplitude and phase values
 at each cell center from the TPXO database. The TPXO values are used to compute
 global, shallow, and deep RMS errors. The global MPAS-O and TPXO solutions are

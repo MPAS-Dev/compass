@@ -1,21 +1,20 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.step &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -126,7 +125,9 @@
 <span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">download</span><span class="p">,</span> <span class="n">package_path</span><span class="p">,</span> <span class="n">symlink</span>
 
 
-<div class="viewcode-block" id="Step"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.html#compass.Step">[docs]</a><span class="k">class</span> <span class="nc">Step</span><span class="p">:</span>
+<div class="viewcode-block" id="Step">
+<a class="viewcode-back" href="../../developers_guide/generated/compass.Step.html#compass.Step">[docs]</a>
+<span class="k">class</span> <span class="nc">Step</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The base class for a step of a test cases, such as setting up a mesh,</span>
 <span class="sd">    creating an initial condition, or running the MPAS core forward in time.</span>
@@ -250,7 +251,9 @@
 <span class="sd">        additional subprocesses).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Step.__init__"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.html#compass.Step.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cpus_per_task</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<div class="viewcode-block" id="Step.__init__">
+<a class="viewcode-back" href="../../developers_guide/generated/compass.Step.html#compass.Step.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cpus_per_task</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                  <span class="n">min_cpus_per_task</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                  <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_memory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">run_as_subprocess</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -350,7 +353,10 @@
         <span class="c1"># output caching</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cached</span> <span class="o">=</span> <span class="n">cached</span></div>
 
-<div class="viewcode-block" id="Step.set_resources"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.set_resources.html#compass.Step.set_resources">[docs]</a>    <span class="k">def</span> <span class="nf">set_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpus_per_task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_cpus_per_task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+
+<div class="viewcode-block" id="Step.set_resources">
+<a class="viewcode-back" href="../../developers_guide/generated/compass.Step.set_resources.html#compass.Step.set_resources">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpus_per_task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_cpus_per_task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                       <span class="n">ntasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                       <span class="n">max_memory</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -403,7 +409,10 @@
         <span class="k">if</span> <span class="n">max_memory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">max_memory</span> <span class="o">=</span> <span class="n">max_memory</span></div>
 
-<div class="viewcode-block" id="Step.constrain_resources"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.constrain_resources.html#compass.Step.constrain_resources">[docs]</a>    <span class="k">def</span> <span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_resources</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Step.constrain_resources">
+<a class="viewcode-back" href="../../developers_guide/generated/compass.Step.constrain_resources.html#compass.Step.constrain_resources">[docs]</a>
+    <span class="k">def</span> <span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_resources</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constrain ``cpus_per_task`` and ``ntasks`` based on the number of</span>
 <span class="sd">        cores available to this step</span>
@@ -437,7 +446,10 @@
                 <span class="sa">f</span><span class="s1">&#39;Available number of MPI tasks (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="si">}</span><span class="s1">) is below the &#39;</span>
                 <span class="sa">f</span><span class="s1">&#39;minimum of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span><span class="si">}</span><span class="s1"> for step </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Step.setup"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.setup.html#compass.Step.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Step.setup">
+<a class="viewcode-back" href="../../developers_guide/generated/compass.Step.setup.html#compass.Step.setup">[docs]</a>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set up the test case in the work directory, including downloading any</span>
 <span class="sd">        dependencies.  The step should override this function to perform setup</span>
@@ -446,7 +458,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Step.runtime_setup"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.runtime_setup.html#compass.Step.runtime_setup">[docs]</a>    <span class="k">def</span> <span class="nf">runtime_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Step.runtime_setup">
+<a class="viewcode-back" href="../../developers_guide/generated/compass.Step.runtime_setup.html#compass.Step.runtime_setup">[docs]</a>
+    <span class="k">def</span> <span class="nf">runtime_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update attributes of the step at runtime before calling the ``run()``</span>
 <span class="sd">        method.  The most common reason to override this method is to</span>
@@ -458,14 +473,20 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Step.run"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.run.html#compass.Step.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Step.run">
+<a class="viewcode-back" href="../../developers_guide/generated/compass.Step.run.html#compass.Step.run">[docs]</a>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run the step.  Every child class must override this method to perform</span>
 <span class="sd">        the main work.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Step.add_input_file"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.add_input_file.html#compass.Step.add_input_file">[docs]</a>    <span class="k">def</span> <span class="nf">add_input_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+
+<div class="viewcode-block" id="Step.add_input_file">
+<a class="viewcode-back" href="../../developers_guide/generated/compass.Step.add_input_file.html#compass.Step.add_input_file">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_input_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                        <span class="n">database_component</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">work_dir_target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                        <span class="n">package</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -530,7 +551,10 @@
                                     <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">work_dir_target</span><span class="o">=</span><span class="n">work_dir_target</span><span class="p">,</span>
                                     <span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="n">copy</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="Step.add_output_file"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.add_output_file.html#compass.Step.add_output_file">[docs]</a>    <span class="k">def</span> <span class="nf">add_output_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Step.add_output_file">
+<a class="viewcode-back" href="../../developers_guide/generated/compass.Step.add_output_file.html#compass.Step.add_output_file">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_output_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add the output file that must be produced by this step and may be made</span>
 <span class="sd">        available as an input to steps, perhaps in other test cases.  This file</span>
@@ -544,13 +568,19 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Step.add_model_as_input"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.add_model_as_input.html#compass.Step.add_model_as_input">[docs]</a>    <span class="k">def</span> <span class="nf">add_model_as_input</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Step.add_model_as_input">
+<a class="viewcode-back" href="../../developers_guide/generated/compass.Step.add_model_as_input.html#compass.Step.add_model_as_input">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_model_as_input</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        make a link to the model executable and add it to the inputs</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;&lt;&lt;&lt;model&gt;&gt;&gt;&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Step.add_namelist_file"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.add_namelist_file.html#compass.Step.add_namelist_file">[docs]</a>    <span class="k">def</span> <span class="nf">add_namelist_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package</span><span class="p">,</span> <span class="n">namelist</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+
+<div class="viewcode-block" id="Step.add_namelist_file">
+<a class="viewcode-back" href="../../developers_guide/generated/compass.Step.add_namelist_file.html#compass.Step.add_namelist_file">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_namelist_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package</span><span class="p">,</span> <span class="n">namelist</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                           <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a file with updates to namelist options to the step to be parsed</span>
@@ -583,7 +613,10 @@
         <span class="n">namelist_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">,</span> <span class="n">namelist</span><span class="o">=</span><span class="n">namelist</span><span class="p">,</span>
                                   <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="Step.add_namelist_options"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.add_namelist_options.html#compass.Step.add_namelist_options">[docs]</a>    <span class="k">def</span> <span class="nf">add_namelist_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Step.add_namelist_options">
+<a class="viewcode-back" href="../../developers_guide/generated/compass.Step.add_namelist_options.html#compass.Step.add_namelist_options">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_namelist_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add the namelist replacements to be parsed when generating a namelist</span>
 <span class="sd">        file if and when the step gets set up.</span>
@@ -611,7 +644,10 @@
 
         <span class="n">namelist_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="Step.update_namelist_at_runtime"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.update_namelist_at_runtime.html#compass.Step.update_namelist_at_runtime">[docs]</a>    <span class="k">def</span> <span class="nf">update_namelist_at_runtime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Step.update_namelist_at_runtime">
+<a class="viewcode-back" href="../../developers_guide/generated/compass.Step.update_namelist_at_runtime.html#compass.Step.update_namelist_at_runtime">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_namelist_at_runtime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update an existing namelist file with additional options.  This would</span>
 <span class="sd">        typically be used for namelist options that are only known at runtime,</span>
@@ -644,7 +680,10 @@
 
         <span class="n">compass</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">namelist</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Step.update_namelist_pio"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.update_namelist_pio.html#compass.Step.update_namelist_pio">[docs]</a>    <span class="k">def</span> <span class="nf">update_namelist_pio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Step.update_namelist_pio">
+<a class="viewcode-back" href="../../developers_guide/generated/compass.Step.update_namelist_pio.html#compass.Step.update_namelist_pio">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_namelist_pio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Modify the namelist so the number of PIO tasks and the stride between</span>
 <span class="sd">        them consistent with the number of nodes and cores (one PIO task per</span>
@@ -679,7 +718,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">replacements</span><span class="p">,</span>
                                         <span class="n">out_name</span><span class="o">=</span><span class="n">out_name</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Step.add_streams_file"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.add_streams_file.html#compass.Step.add_streams_file">[docs]</a>    <span class="k">def</span> <span class="nf">add_streams_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package</span><span class="p">,</span> <span class="n">streams</span><span class="p">,</span> <span class="n">template_replacements</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+
+<div class="viewcode-block" id="Step.add_streams_file">
+<a class="viewcode-back" href="../../developers_guide/generated/compass.Step.add_streams_file.html#compass.Step.add_streams_file">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_streams_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package</span><span class="p">,</span> <span class="n">streams</span><span class="p">,</span> <span class="n">template_replacements</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                          <span class="n">out_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a streams file to the step to be parsed when generating a complete</span>
@@ -714,7 +756,10 @@
             <span class="nb">dict</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">,</span> <span class="n">streams</span><span class="o">=</span><span class="n">streams</span><span class="p">,</span>
                  <span class="n">replacements</span><span class="o">=</span><span class="n">template_replacements</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="Step.update_streams_at_runtime"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.update_streams_at_runtime.html#compass.Step.update_streams_at_runtime">[docs]</a>    <span class="k">def</span> <span class="nf">update_streams_at_runtime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package</span><span class="p">,</span> <span class="n">streams</span><span class="p">,</span>
+
+<div class="viewcode-block" id="Step.update_streams_at_runtime">
+<a class="viewcode-back" href="../../developers_guide/generated/compass.Step.update_streams_at_runtime.html#compass.Step.update_streams_at_runtime">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_streams_at_runtime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package</span><span class="p">,</span> <span class="n">streams</span><span class="p">,</span>
                                   <span class="n">template_replacements</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the streams files during the run phase of this step using the</span>
@@ -754,6 +799,7 @@
         <span class="n">tree</span> <span class="o">=</span> <span class="n">compass</span><span class="o">.</span><span class="n">streams</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">streams</span><span class="p">,</span> <span class="n">tree</span><span class="o">=</span><span class="n">tree</span><span class="p">,</span>
                                     <span class="n">replacements</span><span class="o">=</span><span class="n">template_replacements</span><span class="p">)</span>
         <span class="n">compass</span><span class="o">.</span><span class="n">streams</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></div>
+
 
     <span class="k">def</span> <span class="nf">process_inputs_and_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># noqa: C901</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1109,6 +1155,7 @@
 
         <span class="n">bar</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  done.&#39;</span><span class="p">)</span></div>
+
 </pre></div>
 
            </div>

@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ismip6_forcing &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -144,7 +143,7 @@
            <div itemprop="articleBody">
              
   <section id="ismip6-forcing">
-<span id="dev-landice-ismip6-forcing"></span><h1>ismip6_forcing<a class="headerlink" href="#ismip6-forcing" title="Permalink to this heading">¶</a></h1>
+<span id="dev-landice-ismip6-forcing"></span><h1>ismip6_forcing<a class="headerlink" href="#ismip6-forcing" title="Link to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">ismip6_forcing</span></code> test group (<code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ismip6_</span>
 <span class="pre">forcing.Ismip6Forcing</span></code>) processes (i.e., remapping and renaming) the
 atmospheric and oceanic forcing data of the Ice Sheet Model
@@ -162,12 +161,12 @@ of the source (ISMIP6) and destination (MALI) mesh depending on the existence
 of a mapping file. Below, we describe the shared framework for this
 test group and the 3 test cases.</p>
 <section id="framework">
-<span id="dev-landice-ismip6-forcing-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Permalink to this heading">¶</a></h2>
+<span id="dev-landice-ismip6-forcing-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Link to this heading">¶</a></h2>
 <p>The shared config options for the <code class="docutils literal notranslate"><span class="pre">ismip6_forcing</span></code> test group are described
 in <a class="reference internal" href="../../../users_guide/landice/test_groups/ismip6_forcing.html#landice-ismip6-forcing"><span class="std std-ref">ismip6_forcing</span></a> in the User’s Guide.</p>
 </section>
 <section id="atmosphere">
-<span id="dev-landice-ismip6-forcing-atmosphere"></span><h2>atmosphere<a class="headerlink" href="#atmosphere" title="Permalink to this heading">¶</a></h2>
+<span id="dev-landice-ismip6-forcing-atmosphere"></span><h2>atmosphere<a class="headerlink" href="#atmosphere" title="Link to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="../generated/compass.landice.tests.ismip6_forcing.atmosphere.Atmosphere.html#compass.landice.tests.ismip6_forcing.atmosphere.Atmosphere" title="compass.landice.tests.ismip6_forcing.atmosphere.Atmosphere"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ismip6_forcing.atmosphere.Atmosphere</span></code></a>
 performs processing of the surface mass balance (SMB) forcing.
 Processing data includes regridding the original ISMIP6 SMB data from its
@@ -175,7 +174,7 @@ native polarstereo grid to MALI’s unstructured grid, renaming variables and
 correcting the SMB anomaly field for the MALI base SMB.</p>
 </section>
 <section id="ocean-basal">
-<span id="dev-landice-ismip6-forcing-ocean-basal"></span><h2>ocean_basal<a class="headerlink" href="#ocean-basal" title="Permalink to this heading">¶</a></h2>
+<span id="dev-landice-ismip6-forcing-ocean-basal"></span><h2>ocean_basal<a class="headerlink" href="#ocean-basal" title="Link to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="../generated/compass.landice.tests.ismip6_forcing.ocean_basal.OceanBasal.html#compass.landice.tests.ismip6_forcing.ocean_basal.OceanBasal" title="compass.landice.tests.ismip6_forcing.ocean_basal.OceanBasal"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ismip6_forcing.ocean_basal.OceanBasal</span></code></a>
 performs processing of the coefficients for the basal melt parameterization
 utilized by the ISMIP6 protocol. Processing data includes combining the
@@ -183,7 +182,7 @@ IMBIE2 basin number file and parameterization coefficients and remapping onto
 the MALI mesh.</p>
 </section>
 <section id="ocean-thermal">
-<span id="dev-landice-ismip6-forcing-ocean-thermal"></span><h2>ocean_thermal<a class="headerlink" href="#ocean-thermal" title="Permalink to this heading">¶</a></h2>
+<span id="dev-landice-ismip6-forcing-ocean-thermal"></span><h2>ocean_thermal<a class="headerlink" href="#ocean-thermal" title="Link to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="../generated/compass.landice.tests.ismip6_forcing.ocean_thermal.OceanThermal.html#compass.landice.tests.ismip6_forcing.ocean_thermal.OceanThermal" title="compass.landice.tests.ismip6_forcing.ocean_thermal.OceanThermal"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ismip6_forcing.ocean_thermal.OceanThermal</span></code></a>
 performs the processing of ocean thermal forcing, both observational climatology
 (in <code class="docutils literal notranslate"><span class="pre">ocean_thermal_obs</span></code>) and the CMIP model data (in <code class="docutils literal notranslate"><span class="pre">ocean_thermal</span></code>).

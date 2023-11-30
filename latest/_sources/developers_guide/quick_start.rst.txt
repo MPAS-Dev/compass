@@ -265,7 +265,7 @@ the branch is.  If you do not use the worktree approach, you will also need to
 check what branch you are currently on with ``git log``, ``git branch`` or
 a similar command.
 
-If you wish to work with another compiler, simply rerun the script with a new
+If you wish to work with another compiler, simply rerun the configure script with a new
 compiler name and an activation script will be produced.  You can then source
 either activation script to get the same conda environment but with different
 compilers and related modules.  Make sure you are careful to set up compass by
@@ -324,6 +324,22 @@ you have worked with (or if you aren't sure), it is safest to not just reinstall
 the ``compass`` package but also to check the dependencies by re-running:
 ``./conda/configure_compass_env.py``  with the same arguments as above.
 This will also reinstall the ``compass`` package from the current directory.
+The activation script includes a check to see if the version of compass used
+to produce the load script is the same as the version of compass in the
+current branch.  If the two don't match, an error like the following results
+and the environment is not activated:
+
+.. code-block::
+
+    $ source load_compass_test_morpheus_gnu_openmpi.sh
+    This load script is for a different version of compass:
+    __version__ = '1.2.0-alpha.6'
+
+    Your code is version:
+    __version__ = '1.2.0-alpha.7'
+
+    You need to run ./conda/configure_compass_env.py to update your conda
+    environment and load script.
 
 If you need more than one conda environment (e.g. because you are testing
 multiple branches at the same time), you can choose your own name
@@ -360,10 +376,10 @@ switch branches.
         python -m pip install -e .
 
     The activation script will do this automatically when you source it in
-    the root directory of your compass branch.  This is substantially faster
-    than rerunning ``./conda/configure_compass_env.py ...`` but risks
-    dependencies being out of date.  Since dependencies change fairly rarely,
-    this will usually be safe.
+    the root directory of your compass branch.  The activation script will also
+    check if the current compass version matches the one used to create the
+    activation script, thus catching situations where the dependencies are out
+    of date and the configure script needs to be rerun.
 
 Troubleshooting
 ~~~~~~~~~~~~~~~

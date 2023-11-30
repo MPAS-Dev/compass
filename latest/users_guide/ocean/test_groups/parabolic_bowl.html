@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>parabolic_bowl &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -149,11 +148,11 @@
            <div itemprop="articleBody">
              
   <section id="parabolic-bowl">
-<span id="ocean-parabolic-bowl"></span><h1>parabolic_bowl<a class="headerlink" href="#parabolic-bowl" title="Permalink to this heading">¶</a></h1>
+<span id="ocean-parabolic-bowl"></span><h1>parabolic_bowl<a class="headerlink" href="#parabolic-bowl" title="Link to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">parabolic_bowl</span></code> test group implements convergence study for
 wetting and drying. Currently, the only test case is the default case</p>
 <section id="default">
-<span id="ocean-parabolic-bowl-default"></span><h2>default<a class="headerlink" href="#default" title="Permalink to this heading">¶</a></h2>
+<span id="ocean-parabolic-bowl-default"></span><h2>default<a class="headerlink" href="#default" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">default</span></code> test case implements the parabolic bowl test case found in
 <a class="reference external" href="https://doi.org/10.1017/S0022112081001882">Thacker 1981</a>. The problem
 consists an initial mound of water which propagates outward and reflects off
@@ -186,7 +185,7 @@ different times, a time series at various points, and a convergence plot.</p>
 <a class="reference internal image-reference" href="../../../_images/parabolic_bowl_points.png"><img alt="../../../_images/parabolic_bowl_points.png" class="align-center" src="../../../_images/parabolic_bowl_points.png" style="width: 500px;" /></a>
 <a class="reference internal image-reference" href="../../../_images/parabolic_bowl_error.png"><img alt="../../../_images/parabolic_bowl_error.png" class="align-center" src="../../../_images/parabolic_bowl_error.png" style="width: 500px;" /></a>
 <section id="config-options">
-<h3>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h3>
+<h3>config options<a class="headerlink" href="#config-options" title="Link to this heading">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">parabolic_bowl</span></code> config options include:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for drying slope test cases</span>
 <span class="k">[parabolic_bowl]</span>
@@ -237,7 +236,7 @@ different times, a time series at various points, and a convergence plot.</p>
 background properties.  The first 4 options are discussed below.</p>
 </section>
 <section id="resolutions">
-<h3>resolutions<a class="headerlink" href="#resolutions" title="Permalink to this heading">¶</a></h3>
+<h3>resolutions<a class="headerlink" href="#resolutions" title="Link to this heading">¶</a></h3>
 <p>The default resolutions (in km) used in the test case are:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">resolutions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">20, 10, 5</span>
 </pre></div>
@@ -251,14 +250,14 @@ resolutions.  (If you alter <code class="docutils literal notranslate"><span cla
 the work directory, nothing will happen.)</p>
 </section>
 <section id="time-step">
-<h3>time step<a class="headerlink" href="#time-step" title="Permalink to this heading">¶</a></h3>
+<h3>time step<a class="headerlink" href="#time-step" title="Link to this heading">¶</a></h3>
 <p>The time step for forward integration is determined by multiplying the
 resolution by <code class="docutils literal notranslate"><span class="pre">dt_per_km</span></code>, so that coarser meshes have longer time steps.
 You can alter this before setup (in a user config file) or before running the
 test case (in the config file in the work directory).</p>
 </section>
 <section id="cores">
-<h3>cores<a class="headerlink" href="#cores" title="Permalink to this heading">¶</a></h3>
+<h3>cores<a class="headerlink" href="#cores" title="Link to this heading">¶</a></h3>
 <p>The number of cores (and the minimum) is proportional to the number of cells,
 so that the number of cells per core is roughly constant.  You can alter how
 many cells are allocated to each core with <code class="docutils literal notranslate"><span class="pre">goal_cells_per_core</span></code>.  You can
@@ -268,7 +267,7 @@ aren’t enough processors to handle the finest resolution, you will see that
 the step (and therefore the test case) has failed.</p>
 </section>
 <section id="viz">
-<h3>viz<a class="headerlink" href="#viz" title="Permalink to this heading">¶</a></h3>
+<h3>viz<a class="headerlink" href="#viz" title="Link to this heading">¶</a></h3>
 <p>The visualization step can be configured to plot the timeseries for an
 arbitrary set of coordinates by setting <code class="docutils literal notranslate"><span class="pre">points</span></code>. Also, the interval
 between contour plot time snaps can be controlled with <code class="docutils literal notranslate"><span class="pre">plot_interval</span></code>.</p>

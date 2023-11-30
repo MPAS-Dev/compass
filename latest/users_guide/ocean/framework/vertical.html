@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vertical coordinate &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -131,7 +130,7 @@
            <div itemprop="articleBody">
              
   <section id="vertical-coordinate">
-<span id="ocean-vertical"></span><h1>Vertical coordinate<a class="headerlink" href="#vertical-coordinate" title="Permalink to this heading">¶</a></h1>
+<span id="ocean-vertical"></span><h1>Vertical coordinate<a class="headerlink" href="#vertical-coordinate" title="Link to this heading">¶</a></h1>
 <p>The vertical coordinate used in most MPAS-Ocean test cases is determined by
 config options in the <code class="docutils literal notranslate"><span class="pre">vertical_grid</span></code> section of the config file:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
@@ -175,9 +174,9 @@ depends grid type and is described below.</p>
 <p>The options <code class="docutils literal notranslate"><span class="pre">coord_type</span></code>, <code class="docutils literal notranslate"><span class="pre">partial_cell_type</span></code> and <code class="docutils literal notranslate"><span class="pre">min_pc_fraction</span></code>
 relate to <a class="reference internal" href="#ocean-vert-3d"><span class="std std-ref">3D vertical coordinates</span></a>, described below.</p>
 <section id="d-grid-type">
-<h2>1D Grid type<a class="headerlink" href="#d-grid-type" title="Permalink to this heading">¶</a></h2>
+<h2>1D Grid type<a class="headerlink" href="#d-grid-type" title="Link to this heading">¶</a></h2>
 <section id="uniform">
-<h3>uniform<a class="headerlink" href="#uniform" title="Permalink to this heading">¶</a></h3>
+<h3>uniform<a class="headerlink" href="#uniform" title="Link to this heading">¶</a></h3>
 <p>Uniform vertical grids have vertical layers all of the same thickness. The
 layer thickness is simply <code class="docutils literal notranslate"><span class="pre">bottom_depth</span></code> (the positive depth of the bottom
 interface of the deepest layer) divided by the number of layers
@@ -198,7 +197,7 @@ layers, each 100 m thick.</p>
 </div>
 </section>
 <section id="tanh-dz">
-<h3>tanh_dz<a class="headerlink" href="#tanh-dz" title="Permalink to this heading">¶</a></h3>
+<h3>tanh_dz<a class="headerlink" href="#tanh-dz" title="Link to this heading">¶</a></h3>
 <p>This vertical coordinate is a variant on
 <a class="reference external" href="https://doi.org/10.1016/j.ocemod.2017.03.012">Stewart et al. (2017)</a>.  Layer
 thickness is defined by:</p>
@@ -238,7 +237,7 @@ number of vertical levels (one less than the number of layer interfaces) and
 </div>
 </section>
 <section id="index-tanh-dz">
-<h3>index_tanh_dz<a class="headerlink" href="#index-tanh-dz" title="Permalink to this heading">¶</a></h3>
+<h3>index_tanh_dz<a class="headerlink" href="#index-tanh-dz" title="Link to this heading">¶</a></h3>
 <p>This is similar to <code class="docutils literal notranslate"><span class="pre">tanh_dz</span></code> but the hyperbolic tangent function is defined
 in layer index space rather than physical depth. Layer thickness is defined by:</p>
 <div class="math notranslate nohighlight">
@@ -285,7 +284,7 @@ number of vertical levels (one less than the number of layer interfaces) and
 </div>
 </section>
 <section id="layerphc">
-<h3>60layerPHC<a class="headerlink" href="#layerphc" title="Permalink to this heading">¶</a></h3>
+<h3>60layerPHC<a class="headerlink" href="#layerphc" title="Link to this heading">¶</a></h3>
 <p>This is the vertical grid used by the Polar science center Hydrographic Climatology
 (<a class="reference external" href="http://psc.apl.washington.edu/nonwp_projects/PHC/Climatology.html">PHC</a>).
 Layer thicknesses vary over 60 layers from 10 m at the surface to 250 m at the
@@ -301,7 +300,7 @@ seafloor, which is at 5500 m depth.  To get the default grid, use:</p>
 so that bottom of the deepest layer is at <code class="docutils literal notranslate"><span class="pre">z</span> <span class="pre">=</span> <span class="pre">-bottom_depth</span></code></p>
 </section>
 <section id="layere3smv1">
-<h3>80layerE3SMv1<a class="headerlink" href="#layere3smv1" title="Permalink to this heading">¶</a></h3>
+<h3>80layerE3SMv1<a class="headerlink" href="#layere3smv1" title="Link to this heading">¶</a></h3>
 <p>This is the vertical grid was used in some E3SM v1 and v2 meshes, such as the
 ARRM10to60 mesh. Layer thicknesses vary over 80 layers from 2 m at the surface
 to 146 m at the seafloor, which is at 5550 m depth.  To get the default grid,
@@ -317,7 +316,7 @@ use:</p>
 so that bottom of the deepest layer is at <code class="docutils literal notranslate"><span class="pre">z</span> <span class="pre">=</span> <span class="pre">-bottom_depth</span></code>.</p>
 </section>
 <section id="id1">
-<h3>100layerE3SMv1<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<h3>100layerE3SMv1<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
 <p>This is the vertical grid was used in some E3SM v1 experiments. Layer
 thicknesses vary over 100 layers from 1.51 m at the surface to 221 m at the
 seafloor, which is at 6000 m depth.  To get the default grid, use:</p>
@@ -346,7 +345,7 @@ with the sea floor at 2500 m.</p>
 </section>
 </section>
 <section id="d-vertical-coordinates">
-<span id="ocean-vert-3d"></span><h2>3D vertical coordinates<a class="headerlink" href="#d-vertical-coordinates" title="Permalink to this heading">¶</a></h2>
+<span id="ocean-vert-3d"></span><h2>3D vertical coordinates<a class="headerlink" href="#d-vertical-coordinates" title="Link to this heading">¶</a></h2>
 <p>Currently, <code class="docutils literal notranslate"><span class="pre">z-star</span></code> and <code class="docutils literal notranslate"><span class="pre">z-level</span></code> vertical coordinates are supported
 (<code class="docutils literal notranslate"><span class="pre">coord_type</span></code>).  Each supports 3 options for <code class="docutils literal notranslate"><span class="pre">partial_cell_type</span></code>: <code class="docutils literal notranslate"><span class="pre">full</span></code>
 meaning the topography (bottom depth and sea-surface height) are expanded so
@@ -359,7 +358,7 @@ the smallest fraction of a layer that a partial cell is allowed to have before
 it must either be expanded to the minimum or collapsed to the next adjacent
 valid layer (whichever would cause the smallest change).</p>
 <section id="z-star">
-<span id="ocean-z-star"></span><h3>z-star<a class="headerlink" href="#z-star" title="Permalink to this heading">¶</a></h3>
+<span id="ocean-z-star"></span><h3>z-star<a class="headerlink" href="#z-star" title="Link to this heading">¶</a></h3>
 <p>Most MPAS-Ocean test cases currently use the z* vertical coordinate
 (<a class="reference external" href="https://doi.org/10.1016/j.ocemod.2003.09.003">Adcroft and Campin, 2004</a>)
 by default.  Typically (in the absence of ice-shelf cavities), the initial
@@ -373,7 +372,7 @@ significantly from their “resting” thickness under ice shelves as if they we
 being pressed down by the weight of the ice.</p>
 </section>
 <section id="z-level">
-<span id="ocean-z-level"></span><h3>z-level<a class="headerlink" href="#z-level" title="Permalink to this heading">¶</a></h3>
+<span id="ocean-z-level"></span><h3>z-level<a class="headerlink" href="#z-level" title="Link to this heading">¶</a></h3>
 <p>In the absence of <a class="reference internal" href="ice_shelf.html#ocean-ice-shelf-cavities"><span class="std std-ref">Ice shelf-cavities</span></a>, the z-level coordinate in
 MPAS-Ocean is the same as the <a class="reference internal" href="#ocean-z-star"><span class="std std-ref">z-star</span></a> coordinate.</p>
 <p>When ice-shelf cavities are included, rather than depressing the vertical grid

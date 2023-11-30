@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Organization of Tests &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -160,18 +159,18 @@
 <a class="reference internal image-reference" href="../_images/org_in_package.png"><img alt="../_images/org_in_package.png" src="../_images/org_in_package.png" style="width: 311px;" /></a>
 <figcaption>
 <p><span class="caption-text">Figure 1: The organization of MPAS cores (green), test groups (blue), test
-cases (orange) and steps (red) in the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package.</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+cases (orange) and steps (red) in the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package.</span><a class="headerlink" href="#id5" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
 <section id="organization-of-tests">
-<span id="dev-organization"></span><h1>Organization of Tests<a class="headerlink" href="#organization-of-tests" title="Permalink to this heading">¶</a></h1>
+<span id="dev-organization"></span><h1>Organization of Tests<a class="headerlink" href="#organization-of-tests" title="Link to this heading">¶</a></h1>
 <p>Here, we describe how tests in <code class="docutils literal notranslate"><span class="pre">compass</span></code> are organized, both in the package
 itself and in the work directories where they get set up and run.  At the base
 level are MPAS Cores (<a class="reference internal" href="landice/index.html#dev-landice"><span class="std std-ref">Landice core</span></a> or <a class="reference internal" href="ocean/index.html#dev-ocean"><span class="std std-ref">Ocean core</span></a>).  Each MPAS core
 has collection of test groups, which has a collection of test cases, each of
 which contains a sequence of steps.</p>
 <section id="directory-structure">
-<h2>Directory structure<a class="headerlink" href="#directory-structure" title="Permalink to this heading">¶</a></h2>
+<h2>Directory structure<a class="headerlink" href="#directory-structure" title="Link to this heading">¶</a></h2>
 <p>In the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package within a local clone of the compass repository,
 MPAS cores, test groups, test cases and steps are laid out like shown in Fig 1.</p>
 <p>Each MPAS core has its directory with the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package directory. Among
@@ -189,7 +188,7 @@ provided below.</p>
 <a class="reference internal image-reference" href="../_images/org_in_work_dir.png"><img alt="../_images/org_in_work_dir.png" src="../_images/org_in_work_dir.png" style="width: 283px;" /></a>
 <figcaption>
 <p><span class="caption-text">Figure 2: The organization of MPAS cores (green), test groups (blue), test
-cases (orange) and steps (red) in an example work directory.</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+cases (orange) and steps (red) in an example work directory.</span><a class="headerlink" href="#id6" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
 <p>At the top level are directories for the MPAS cores.  There is no <code class="docutils literal notranslate"><span class="pre">tests</span></code>
@@ -203,7 +202,7 @@ additional subdirectories are used to sort steps within a test case (e.g. if
 the same step will be run at different mesh resolutions in a convergence test).</p>
 </section>
 <section id="mpas-cores">
-<span id="dev-cores"></span><h2>MPAS Cores<a class="headerlink" href="#mpas-cores" title="Permalink to this heading">¶</a></h2>
+<span id="dev-cores"></span><h2>MPAS Cores<a class="headerlink" href="#mpas-cores" title="Link to this heading">¶</a></h2>
 <p>Currently, there are two MPAS cores, <code class="docutils literal notranslate"><span class="pre">landice</span></code>, which has test cases for
 MALI, and <code class="docutils literal notranslate"><span class="pre">ocean</span></code>, which encompasses all the test cases for MPAS-Ocean.</p>
 <p>From a developer’s perspective, an MPAS core is a package within <code class="docutils literal notranslate"><span class="pre">compass</span></code>
@@ -312,7 +311,7 @@ section:</p>
 </div>
 </section>
 <section id="test-groups">
-<span id="dev-test-groups"></span><h2>Test Groups<a class="headerlink" href="#test-groups" title="Permalink to this heading">¶</a></h2>
+<span id="dev-test-groups"></span><h2>Test Groups<a class="headerlink" href="#test-groups" title="Link to this heading">¶</a></h2>
 <p>Test groups are the next level of test-case organization below
 <a class="reference internal" href="#dev-cores"><span class="std std-ref">MPAS Cores</span></a>.  Typically, the test cases within a test group are
 in some way conceptually linked, serving a similar purpose or being variants on
@@ -463,7 +462,7 @@ a shared “framework” of packages, modules, config files, namelists, and stre
 files that is shared among test cases and steps.</p>
 </section>
 <section id="test-cases">
-<span id="dev-test-cases"></span><h2>Test cases<a class="headerlink" href="#test-cases" title="Permalink to this heading">¶</a></h2>
+<span id="dev-test-cases"></span><h2>Test cases<a class="headerlink" href="#test-cases" title="Link to this heading">¶</a></h2>
 <p>In many ways, test cases are compass’s fundamental building blocks, since a
 user can’t set up an individual step of test case (though they can run the
 steps one at a time).</p>
@@ -479,7 +478,7 @@ at runtime can instead be handled by individual steps by overriding the
 <a class="reference internal" href="generated/compass.Step.runtime_setup.html#compass.Step.runtime_setup" title="compass.Step.runtime_setup"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.runtime_setup()</span></code></a> methods.  Details about these methods
 are described further in <a class="reference internal" href="#dev-steps"><span class="std std-ref">Steps</span></a>.</p>
 <section id="testcase-attributes">
-<span id="dev-test-case-class"></span><h3>TestCase attributes<a class="headerlink" href="#testcase-attributes" title="Permalink to this heading">¶</a></h3>
+<span id="dev-test-case-class"></span><h3>TestCase attributes<a class="headerlink" href="#testcase-attributes" title="Link to this heading">¶</a></h3>
 <p>The base class <a class="reference internal" href="generated/compass.TestCase.html#compass.TestCase" title="compass.TestCase"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.TestCase</span></code></a> has a large number of attributes
 that are useful at different stages (init, configuration and run) of the test
 case.</p>
@@ -592,7 +591,7 @@ mesh type and the velocity solver an attributes:</p>
 </div>
 </section>
 <section id="constructor">
-<span id="dev-test-case-init"></span><h3>constructor<a class="headerlink" href="#constructor" title="Permalink to this heading">¶</a></h3>
+<span id="dev-test-case-init"></span><h3>constructor<a class="headerlink" href="#constructor" title="Link to this heading">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> method must first call the base constructor
 <code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code>, passing the name of the test case, the test group it
 will belong to, and the subdirectory (if different from the name of the test
@@ -716,7 +715,7 @@ given rather clumsy names – <code class="docutils literal notranslate"><span c
 but these could be any unique names.</p>
 </section>
 <section id="configure">
-<span id="dev-test-case-configure"></span><h3>configure()<a class="headerlink" href="#configure" title="Permalink to this heading">¶</a></h3>
+<span id="dev-test-case-configure"></span><h3>configure()<a class="headerlink" href="#configure" title="Link to this heading">¶</a></h3>
 <p>The <a class="reference internal" href="generated/compass.TestCase.configure.html#compass.TestCase.configure" title="compass.TestCase.configure"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.TestCase.configure()</span></code></a> method can be overridden by a
 child class to set config options or build them up from defaults stored in
 config files within the test case or its test group. The <code class="docutils literal notranslate"><span class="pre">self.config</span></code>
@@ -769,7 +768,7 @@ in their own <code class="docutils literal notranslate"><span class="pre">setup(
 <code class="docutils literal notranslate"><span class="pre">configure()</span></code> at all.</p>
 </section>
 <section id="run">
-<span id="dev-test-case-run"></span><h3>run()<a class="headerlink" href="#run" title="Permalink to this heading">¶</a></h3>
+<span id="dev-test-case-run"></span><h3>run()<a class="headerlink" href="#run" title="Link to this heading">¶</a></h3>
 <p>The functionality of <a class="reference internal" href="generated/compass.TestCase.run.html#compass.TestCase.run" title="compass.TestCase.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.TestCase.run()</span></code></a> has been moved to the
 <a class="reference internal" href="generated/compass.run.serial.run_tests.html#compass.run.serial.run_tests" title="compass.run.serial.run_tests"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.run.serial.run_tests()</span></code></a> function.  The <code class="docutils literal notranslate"><span class="pre">run</span></code> method is now
 deprecated and should not be used to modify runtime processes;
@@ -778,7 +777,7 @@ deprecated and should not be used to modify runtime processes;
 are further explained in <a class="reference internal" href="#dev-steps"><span class="std std-ref">Steps</span></a>.</p>
 </section>
 <section id="validate">
-<span id="dev-test-case-validate"></span><h3>validate()<a class="headerlink" href="#validate" title="Permalink to this heading">¶</a></h3>
+<span id="dev-test-case-validate"></span><h3>validate()<a class="headerlink" href="#validate" title="Link to this heading">¶</a></h3>
 <p>The base class’s <a class="reference internal" href="generated/compass.TestCase.validate.html#compass.TestCase.validate" title="compass.TestCase.validate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.TestCase.validate()</span></code></a> can be overridden to
 perform <a class="reference internal" href="framework.html#dev-validation"><span class="std std-ref">Validation</span></a> of variables in output files from a step and/or
 timers from the MPAS model.</p>
@@ -807,7 +806,7 @@ involved in the comparison was not run.</p>
 </section>
 </section>
 <section id="steps">
-<span id="dev-steps"></span><h2>Steps<a class="headerlink" href="#steps" title="Permalink to this heading">¶</a></h2>
+<span id="dev-steps"></span><h2>Steps<a class="headerlink" href="#steps" title="Link to this heading">¶</a></h2>
 <p>Steps are the smallest units of work that can be executed on their own in
 <code class="docutils literal notranslate"><span class="pre">compass</span></code>.  All test cases are made up of 1 or more steps, and all steps
 are set up into subdirectories inside of the work directory for the test case.
@@ -820,7 +819,7 @@ The child class must override the constructor and the
 <a class="reference internal" href="generated/compass.Step.run.html#compass.Step.run" title="compass.Step.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.run()</span></code></a> method, and will sometimes also wish to override
 the <a class="reference internal" href="generated/compass.Step.setup.html#compass.Step.setup" title="compass.Step.setup"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.setup()</span></code></a> method, described below.</p>
 <section id="step-attributes">
-<span id="dev-step-attributes"></span><h3>Step attributes<a class="headerlink" href="#step-attributes" title="Permalink to this heading">¶</a></h3>
+<span id="dev-step-attributes"></span><h3>Step attributes<a class="headerlink" href="#step-attributes" title="Link to this heading">¶</a></h3>
 <p>As was the case for test cases, the base class <a class="reference internal" href="generated/compass.Step.html#compass.Step" title="compass.Step"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.Step</span></code></a> has a
 large number of attributes that are useful at different stages (init, setup and
 run) of the step.</p>
@@ -968,7 +967,7 @@ mesh type as an attribute:</p>
 </div>
 </section>
 <section id="dev-step-init">
-<span id="id1"></span><h3>constructor<a class="headerlink" href="#dev-step-init" title="Permalink to this heading">¶</a></h3>
+<span id="id1"></span><h3>constructor<a class="headerlink" href="#dev-step-init" title="Link to this heading">¶</a></h3>
 <p>The step’s constructor (<code class="docutils literal notranslate"><span class="pre">__init__()</span></code> method) should call the base case’s
 constructor with <code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code>, passing the name of the step, the
 test case it belongs to, and possibly several optional arguments: the
@@ -1087,7 +1086,7 @@ for later processing).</p>
 <p>Finally, two input and one output file are added.</p>
 </section>
 <section id="constrain-resources">
-<span id="dev-step-constrain-resources"></span><h3>constrain_resources()<a class="headerlink" href="#constrain-resources" title="Permalink to this heading">¶</a></h3>
+<span id="dev-step-constrain-resources"></span><h3>constrain_resources()<a class="headerlink" href="#constrain-resources" title="Link to this heading">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">constrain_resources()</span></code> method is used to update the <code class="docutils literal notranslate"><span class="pre">ntasks</span></code>,
 <code class="docutils literal notranslate"><span class="pre">min_tasks</span></code>, <code class="docutils literal notranslate"><span class="pre">cpus_per_task</span></code>, and <code class="docutils literal notranslate"><span class="pre">min_cpus_per_task</span></code> attributes prior to
 running the step, in case the user has modified these in the config options.
@@ -1128,7 +1127,7 @@ will fail with an error message.</p>
 </dl>
 </section>
 <section id="setup">
-<span id="dev-step-setup"></span><h3>setup()<a class="headerlink" href="#setup" title="Permalink to this heading">¶</a></h3>
+<span id="dev-step-setup"></span><h3>setup()<a class="headerlink" href="#setup" title="Link to this heading">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">setup()</span></code> method is called when a user is setting up the step either
 as part of a call to <a class="reference internal" href="command_line.html#dev-compass-setup"><span class="std std-ref">compass setup</span></a> or <a class="reference internal" href="command_line.html#dev-compass-suite"><span class="std std-ref">compass suite</span></a>.
 As in <a class="reference internal" href="#dev-step-init"><span class="std std-ref">constructor</span></a>, you can add input, output, streams and namelist
@@ -1167,7 +1166,7 @@ python multiprocessing, so the <code class="docutils literal notranslate"><span 
 attributes are set to appropriate values based on config options.</p>
 </section>
 <section id="runtime-setup">
-<span id="dev-step-runtime-setup"></span><h3>runtime_setup()<a class="headerlink" href="#runtime-setup" title="Permalink to this heading">¶</a></h3>
+<span id="dev-step-runtime-setup"></span><h3>runtime_setup()<a class="headerlink" href="#runtime-setup" title="Link to this heading">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">runtime_setup()</span></code> method is used to modify any behaviors of the step at
 runtime, in the way that <a class="reference internal" href="generated/compass.TestCase.run.html#compass.TestCase.run" title="compass.TestCase.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.TestCase.run()</span></code></a> was previously used.
 This includes things like partitioning an MPAS mesh across processors and
@@ -1178,7 +1177,7 @@ These attributes must be altered by overriding
 <a class="reference internal" href="#dev-step-constrain-resources"><span class="std std-ref">constrain_resources()</span></a>.</p>
 </section>
 <section id="dev-step-run">
-<span id="id2"></span><h3>run()<a class="headerlink" href="#dev-step-run" title="Permalink to this heading">¶</a></h3>
+<span id="id2"></span><h3>run()<a class="headerlink" href="#dev-step-run" title="Link to this heading">¶</a></h3>
 <p>Okay, we’re ready to define how the step will run!</p>
 <p>The contents of <code class="docutils literal notranslate"><span class="pre">run()</span></code> can vary quite a lot between steps.</p>
 <p>In the <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> test group, the <code class="docutils literal notranslate"><span class="pre">run()</span></code> function for
@@ -1341,7 +1340,7 @@ for the requested number of tasks, and runs the model.</p>
 explore different steps.</p>
 </section>
 <section id="inputs-and-outputs">
-<span id="dev-step-inputs-outputs"></span><h3>inputs and outputs<a class="headerlink" href="#inputs-and-outputs" title="Permalink to this heading">¶</a></h3>
+<span id="dev-step-inputs-outputs"></span><h3>inputs and outputs<a class="headerlink" href="#inputs-and-outputs" title="Link to this heading">¶</a></h3>
 <p>Currently, steps run in sequence in the order they are added to the test case
 (or in the order they appear in the test case’s <code class="docutils literal notranslate"><span class="pre">steps_to_run</span></code> attribute.
 There are plans to allow test cases and their steps to run in parallel in the
@@ -1386,7 +1385,7 @@ the future if new steps are added that depend on
 <p><a class="reference internal" href="generated/compass.Step.html#compass.Step" title="compass.Step"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.Step</span></code></a> includes several methods for adding input, output,
 namelist and streams files:</p>
 <section id="input-files">
-<span id="dev-step-input"></span><h4>Input files<a class="headerlink" href="#input-files" title="Permalink to this heading">¶</a></h4>
+<span id="dev-step-input"></span><h4>Input files<a class="headerlink" href="#input-files" title="Link to this heading">¶</a></h4>
 <p>Typically, a step will add input files with
 <a class="reference internal" href="generated/compass.Step.add_input_file.html#compass.Step.add_input_file" title="compass.Step.add_input_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_input_file()</span></code></a> during init or in its <code class="docutils literal notranslate"><span class="pre">setup()</span></code>
 method.  It is also possible to add inputs in the test case’s
@@ -1404,7 +1403,7 @@ respect to the step’s work directory:</p>
 usually not directly in the step’s work directory.</p>
 </section>
 <section id="symlinks-to-input-files">
-<span id="dev-step-input-symlinks"></span><h4>Symlinks to input files<a class="headerlink" href="#symlinks-to-input-files" title="Permalink to this heading">¶</a></h4>
+<span id="dev-step-input-symlinks"></span><h4>Symlinks to input files<a class="headerlink" href="#symlinks-to-input-files" title="Link to this heading">¶</a></h4>
 <p>The most common type of input file is the output from another step. Rather than
 just giving the file name directly, as in the example above, the preference is
 to place a symbolic link in the work directory.  This makes it much easier to
@@ -1458,7 +1457,7 @@ not yet known at init). Here is an example taken from
 </div>
 </section>
 <section id="symlink-to-input-files-from-compass">
-<span id="dev-step-input-compass"></span><h4>Symlink to input files from compass<a class="headerlink" href="#symlink-to-input-files-from-compass" title="Permalink to this heading">¶</a></h4>
+<span id="dev-step-input-compass"></span><h4>Symlink to input files from compass<a class="headerlink" href="#symlink-to-input-files-from-compass" title="Link to this heading">¶</a></h4>
 <p>Another common need is to symlink a data file from within the test group or
 test case:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">add_input_file</span>
@@ -1475,7 +1474,7 @@ test case:</p>
 framework will take care of figuring out where the package is located.</p>
 </section>
 <section id="downloading-and-symlinking-input-files">
-<span id="dev-step-input-download"></span><h4>Downloading and symlinking input files<a class="headerlink" href="#downloading-and-symlinking-input-files" title="Permalink to this heading">¶</a></h4>
+<span id="dev-step-input-download"></span><h4>Downloading and symlinking input files<a class="headerlink" href="#downloading-and-symlinking-input-files" title="Link to this heading">¶</a></h4>
 <p>Another type of input file is one that is downloaded and stored locally.
 Typically, to save ourselves the time of downloading large files and to reduce
 potential problems on systems with firewalls, we cache the downloaded files in
@@ -1518,7 +1517,7 @@ the step’s working directory:</p>
 <p>We recommend against this practice except for very small files.</p>
 </section>
 <section id="copying-input-files">
-<span id="dev-step-input-copy"></span><h4>Copying input files<a class="headerlink" href="#copying-input-files" title="Permalink to this heading">¶</a></h4>
+<span id="dev-step-input-copy"></span><h4>Copying input files<a class="headerlink" href="#copying-input-files" title="Link to this heading">¶</a></h4>
 <p>In nearly all the cases discussed above, a symlink is created to the input
 file, usually either from the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package or from one of the databases.
 If you wish to copy the file instead of symlinking it (e.g. so a user can make
@@ -1534,7 +1533,7 @@ to <code class="docutils literal notranslate"><span class="pre">self.add_input_f
 directory.</p>
 </section>
 <section id="output-files">
-<span id="dev-step-output"></span><h4>Output files<a class="headerlink" href="#output-files" title="Permalink to this heading">¶</a></h4>
+<span id="dev-step-output"></span><h4>Output files<a class="headerlink" href="#output-files" title="Link to this heading">¶</a></h4>
 <p>We require that all steps provide a list of any output files that other steps
 are allowed to use as inputs.  This helps us keep track of dependencies and
 will be used in the future to enable steps to run in parallel as long as they
@@ -1549,7 +1548,7 @@ in the test case’s <a class="reference internal" href="#dev-test-case-init"><s
 and is converted to an absolute path internally before the step is run.</p>
 </section>
 <section id="cached-output-files">
-<span id="dev-step-cached-output"></span><h4>Cached output files<a class="headerlink" href="#cached-output-files" title="Permalink to this heading">¶</a></h4>
+<span id="dev-step-cached-output"></span><h4>Cached output files<a class="headerlink" href="#cached-output-files" title="Link to this heading">¶</a></h4>
 <p>Many <code class="docutils literal notranslate"><span class="pre">compass</span></code> test cases and steps are expensive enough that it can become
 time consuming to run full workflows to produce meshes and initial conditions
 in order to test simulations.  Therefore, <code class="docutils literal notranslate"><span class="pre">compass</span></code> provides a mechanism for
@@ -1617,7 +1616,7 @@ recommended.</p>
 </section>
 </section>
 <section id="adding-namelist-and-streams-files">
-<span id="dev-step-namelists-and-streams"></span><h3>Adding namelist and streams files<a class="headerlink" href="#adding-namelist-and-streams-files" title="Permalink to this heading">¶</a></h3>
+<span id="dev-step-namelists-and-streams"></span><h3>Adding namelist and streams files<a class="headerlink" href="#adding-namelist-and-streams-files" title="Link to this heading">¶</a></h3>
 <p>MPAS cores, test groups, and test cases can provide namelist and streams files
 that are used to replace default namelist options and streams definitions
 before MPAS gets run.  Namelist and streams files within the <code class="docutils literal notranslate"><span class="pre">compass</span></code>
@@ -1630,7 +1629,7 @@ name list and streams file should be built up by modifying the defaults for the
 MPAS model.  The namelists and streams files themselves are generated
 automatically as part of setting up the test case.</p>
 <section id="adding-a-namelist-file">
-<span id="dev-step-add-namelists-file"></span><h4>Adding a namelist file<a class="headerlink" href="#adding-a-namelist-file" title="Permalink to this heading">¶</a></h4>
+<span id="dev-step-add-namelists-file"></span><h4>Adding a namelist file<a class="headerlink" href="#adding-a-namelist-file" title="Link to this heading">¶</a></h4>
 <p>Typically, a step that runs the MPAS model will include one or more calls to
 <a class="reference internal" href="generated/compass.Step.add_namelist_file.html#compass.Step.add_namelist_file" title="compass.Step.add_namelist_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_namelist_file()</span></code></a> within the <a class="reference internal" href="#dev-step-init"><span class="std std-ref">constructor</span></a>
 or <a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a> method.  Calling this method simply adds the file to
@@ -1667,7 +1666,7 @@ the test group first, and then override those with the replacements for
 the test case or step.</p>
 </section>
 <section id="adding-namelist-options">
-<span id="dev-step-add-namelist-options"></span><h4>Adding namelist options<a class="headerlink" href="#adding-namelist-options" title="Permalink to this heading">¶</a></h4>
+<span id="dev-step-add-namelist-options"></span><h4>Adding namelist options<a class="headerlink" href="#adding-namelist-options" title="Link to this heading">¶</a></h4>
 <p>Sometimes, it is easier to replace namelist options using a dictionary within
 the code, rather than a namelist file.  This is appropriate when there are only
 1 or 2 options to replace (so creating a file seems like overkill) or when the
@@ -1699,7 +1698,7 @@ convert a numerical value to a string.</p>
 </div>
 </section>
 <section id="updating-namelist-options-at-runtime">
-<span id="dev-step-update-namelist-options"></span><h4>Updating namelist options at runtime<a class="headerlink" href="#updating-namelist-options-at-runtime" title="Permalink to this heading">¶</a></h4>
+<span id="dev-step-update-namelist-options"></span><h4>Updating namelist options at runtime<a class="headerlink" href="#updating-namelist-options-at-runtime" title="Link to this heading">¶</a></h4>
 <p>It is sometimes useful to update namelist options after a namelist has already
 been generated as part of setting up.  This typically happens within a step’s
 <code class="docutils literal notranslate"><span class="pre">run()</span></code> method for options that cannot be known beforehand, particularly
@@ -1715,7 +1714,7 @@ In such cases, call <a class="reference internal" href="generated/compass.Step.u
 </div>
 </section>
 <section id="adding-a-streams-file">
-<span id="dev-step-add-streams-file"></span><h4>Adding a streams file<a class="headerlink" href="#adding-a-streams-file" title="Permalink to this heading">¶</a></h4>
+<span id="dev-step-add-streams-file"></span><h4>Adding a streams file<a class="headerlink" href="#adding-a-streams-file" title="Link to this heading">¶</a></h4>
 <p>Streams files are a bit more complicated than namelist files because
 streams files are XML documents, requiring some slightly more sophisticated
 parsing.</p>
@@ -1774,7 +1773,7 @@ argument.   If <code class="docutils literal notranslate"><span class="pre">init
 mode, this can also be specified.</p>
 </section>
 <section id="adding-a-template-streams-file">
-<span id="dev-step-add-streams-file-template"></span><h4>Adding a template streams file<a class="headerlink" href="#adding-a-template-streams-file" title="Permalink to this heading">¶</a></h4>
+<span id="dev-step-add-streams-file-template"></span><h4>Adding a template streams file<a class="headerlink" href="#adding-a-template-streams-file" title="Link to this heading">¶</a></h4>
 <p>The main difference between namelists and streams files is that there is no
 direct equivalent for streams of <a class="reference internal" href="generated/compass.Step.add_namelist_options.html#compass.Step.add_namelist_options" title="compass.Step.add_namelist_options"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_namelist_options()</span></code></a>.
 It is simply too confusing to try to define streams within the code.</p>
@@ -1822,7 +1821,7 @@ Thus, calls to <a class="reference internal" href="generated/compass.Step.add_st
 <a class="reference internal" href="generated/compass.Step.add_namelist_options.html#compass.Step.add_namelist_options" title="compass.Step.add_namelist_options"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_namelist_options()</span></code></a>.</p>
 </section>
 <section id="updating-a-streams-file-at-runtime">
-<span id="dev-step-update-streams"></span><h4>Updating a streams file at runtime<a class="headerlink" href="#updating-a-streams-file-at-runtime" title="Permalink to this heading">¶</a></h4>
+<span id="dev-step-update-streams"></span><h4>Updating a streams file at runtime<a class="headerlink" href="#updating-a-streams-file-at-runtime" title="Link to this heading">¶</a></h4>
 <p>Just as with namelist options, it is sometimes useful to update streams files
 after it has already been generated as part of setting up.  This typically
 happens within a step’s <code class="docutils literal notranslate"><span class="pre">run()</span></code> method for properties of the stream that
@@ -1856,7 +1855,7 @@ with the new run duration:</p>
 </section>
 </section>
 <section id="adding-mpas-model-as-an-input">
-<h3>Adding MPAS model as an input<a class="headerlink" href="#adding-mpas-model-as-an-input" title="Permalink to this heading">¶</a></h3>
+<h3>Adding MPAS model as an input<a class="headerlink" href="#adding-mpas-model-as-an-input" title="Link to this heading">¶</a></h3>
 <p>If a step involves running MPAS, the model executable can be linked and added
 as an input to the step by calling <code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.add_model_as_input()</span></code>
 in <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> or the <code class="docutils literal notranslate"><span class="pre">setup()</span></code> method.  This way, if the user has
@@ -1867,7 +1866,7 @@ and the config options.</p>
 </section>
 </section>
 <section id="test-suites">
-<span id="dev-suites"></span><h2>Test Suites<a class="headerlink" href="#test-suites" title="Permalink to this heading">¶</a></h2>
+<span id="dev-suites"></span><h2>Test Suites<a class="headerlink" href="#test-suites" title="Link to this heading">¶</a></h2>
 <p>As described in the <a class="reference internal" href="../users_guide/test_suites.html#test-suites"><span class="std std-ref">Test Suites</span></a> section of the User’s Guide, COMPASS
 test cases can be organized into test suites.  Each core has separate regression
 suites, and a core can have multiple independent regression suites.  A developer

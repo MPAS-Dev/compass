@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ice_shelf_2d &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -151,7 +150,7 @@
            <div itemprop="articleBody">
              
   <section id="ice-shelf-2d">
-<span id="ocean-ice-shelf-2d"></span><h1>ice_shelf_2d<a class="headerlink" href="#ice-shelf-2d" title="Permalink to this heading">¶</a></h1>
+<span id="ocean-ice-shelf-2d"></span><h1>ice_shelf_2d<a class="headerlink" href="#ice-shelf-2d" title="Link to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">ocean/ice_shelf_2d</span></code> test group describes a
 series of very simplified ice-shelf test cases where topography and initial
 conditions only vary in the y direction.  The test case currently supports
@@ -180,7 +179,7 @@ the <code class="docutils literal notranslate"><span class="pre">ssh</span></cod
 performs time integration of the model.  The <code class="docutils literal notranslate"><span class="pre">viz</span></code> step can be used to plot
 the vertical coordinate, interpolated between adjacent cell centers.</p>
 <section id="shared-config-options">
-<h2>shared config options<a class="headerlink" href="#shared-config-options" title="Permalink to this heading">¶</a></h2>
+<h2>shared config options<a class="headerlink" href="#shared-config-options" title="Link to this heading">¶</a></h2>
 <p>Both <code class="docutils literal notranslate"><span class="pre">ice_shelf_2d</span></code> test cases share the following config options:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
 <span class="k">[vertical_grid]</span>
@@ -246,7 +245,7 @@ the vertical coordinate, interpolated between adjacent cell centers.</p>
 temperature and salinity of the test case by altering these options.</p>
 </section>
 <section id="default">
-<h2>default<a class="headerlink" href="#default" title="Permalink to this heading">¶</a></h2>
+<h2>default<a class="headerlink" href="#default" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">ocean/ice_shelf_2d/5km/default</span></code> includes a relatively
 strenuous, iterative process to dynamically adjust <code class="docutils literal notranslate"><span class="pre">landIcePressure</span></code> and
 <code class="docutils literal notranslate"><span class="pre">ssh</span></code> to be compatible with one another in the <code class="docutils literal notranslate"><span class="pre">ssh_adjustment</span></code> step.
@@ -270,7 +269,7 @@ under ice shelves.</p>
 <p>Frazil-ice formation is not included in this test case.</p>
 </section>
 <section id="restart-test">
-<h2>restart_test<a class="headerlink" href="#restart-test" title="Permalink to this heading">¶</a></h2>
+<h2>restart_test<a class="headerlink" href="#restart-test" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">ocean/ice_shelf_2d/5km/restart_test</span></code> performs fewer
 iterations of <code class="docutils literal notranslate"><span class="pre">ssh_adjustment</span></code> than <code class="docutils literal notranslate"><span class="pre">default</span></code>, but it does include
 frazil-ice formation.  The model is integrated forward in time for a 2 time

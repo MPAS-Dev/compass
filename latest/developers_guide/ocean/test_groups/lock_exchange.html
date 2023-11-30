@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>lock_exchange &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -147,7 +146,7 @@
            <div itemprop="articleBody">
              
   <section id="lock-exchange">
-<span id="dev-ocean-lock-exchange"></span><h1>lock_exchange<a class="headerlink" href="#lock-exchange" title="Permalink to this heading">¶</a></h1>
+<span id="dev-ocean-lock-exchange"></span><h1>lock_exchange<a class="headerlink" href="#lock-exchange" title="Link to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">lock_exchange</span></code> test group
 (<a class="reference internal" href="../generated/compass.ocean.tests.lock_exchange.LockExchange.html#compass.ocean.tests.lock_exchange.LockExchange" title="compass.ocean.tests.lock_exchange.LockExchange"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.lock_exchange.LockExchange</span></code></a>)
 implements two test cases (see <a class="reference internal" href="../../../users_guide/ocean/test_groups/lock_exchange.html#ocean-lock-exchange"><span class="std std-ref">lock_exchange</span></a>)
@@ -158,7 +157,7 @@ whereas the second one uses the nonhydrostatic version.
 Here, we describe the shared framework for this test group
 and the two test cases.</p>
 <section id="framework">
-<span id="dev-ocean-lock-exchange-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Permalink to this heading">¶</a></h2>
+<span id="dev-ocean-lock-exchange-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Link to this heading">¶</a></h2>
 <p>The shared config options for the <code class="docutils literal notranslate"><span class="pre">lock_exchange</span></code> test group
 are described in <a class="reference internal" href="../../../users_guide/ocean/test_groups/lock_exchange.html#ocean-lock-exchange"><span class="std std-ref">lock_exchange</span></a> in the User’s Guide.</p>
 <p>Additionally, the test group has a shared <code class="docutils literal notranslate"><span class="pre">namelist.forward</span></code> file with
@@ -166,7 +165,7 @@ a few common namelist options related to time step, run duration, viscosity,
 and drag, as well as a shared <code class="docutils literal notranslate"><span class="pre">streams.forward</span></code> file that defines <code class="docutils literal notranslate"><span class="pre">mesh</span></code>,
 <code class="docutils literal notranslate"><span class="pre">input</span></code>, and <code class="docutils literal notranslate"><span class="pre">output</span></code> streams.</p>
 <section id="initial-state">
-<h3>initial_state<a class="headerlink" href="#initial-state" title="Permalink to this heading">¶</a></h3>
+<h3>initial_state<a class="headerlink" href="#initial-state" title="Link to this heading">¶</a></h3>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.lock_exchange.initial_state.InitialState.html#compass.ocean.tests.lock_exchange.initial_state.InitialState" title="compass.ocean.tests.lock_exchange.initial_state.InitialState"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.lock_exchange.initial_state.InitialState</span></code></a>
 sets up the initial state for the two test case.</p>
 <p>First, a planar mesh is generated using <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.planar_hex.make_planar_hex_mesh.html#mpas_tools.planar_hex.make_planar_hex_mesh" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.planar_hex.make_planar_hex_mesh()</span></code></a>.
@@ -176,7 +175,7 @@ density profile is computed along with temperature, uniform salinity and zero in
 velocity.</p>
 </section>
 <section id="forward">
-<h3>forward<a class="headerlink" href="#forward" title="Permalink to this heading">¶</a></h3>
+<h3>forward<a class="headerlink" href="#forward" title="Link to this heading">¶</a></h3>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.lock_exchange.forward.Forward.html#compass.ocean.tests.lock_exchange.forward.Forward" title="compass.ocean.tests.lock_exchange.forward.Forward"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.lock_exchange.forward.Forward</span></code></a>
 defines a step for running MPAS-Ocean from the initial condition produced in
 the <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step. Namelist and streams files are generate during
@@ -190,12 +189,12 @@ The two cases have a shared <code class="docutils literal notranslate"><span cla
 <code class="docutils literal notranslate"><span class="pre">mesh</span></code>, <code class="docutils literal notranslate"><span class="pre">input</span></code>, and <code class="docutils literal notranslate"><span class="pre">output</span></code> streams.</p>
 </section>
 <section id="visualize">
-<h3>visualize<a class="headerlink" href="#visualize" title="Permalink to this heading">¶</a></h3>
+<h3>visualize<a class="headerlink" href="#visualize" title="Link to this heading">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">visualize</span></code> step defined by
 <a class="reference internal" href="../generated/compass.ocean.tests.lock_exchange.visualize.Visualize.html#compass.ocean.tests.lock_exchange.visualize.Visualize" title="compass.ocean.tests.lock_exchange.visualize.Visualize"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.lock_exchange.visualize.Visualize</span></code></a>
 makes a plot of the densitiy profile at time t = 5s.</p>
 <section id="hydro">
-<span id="dev-ocean-lock-exchange-hydro"></span><h4>hydro<a class="headerlink" href="#hydro" title="Permalink to this heading">¶</a></h4>
+<span id="dev-ocean-lock-exchange-hydro"></span><h4>hydro<a class="headerlink" href="#hydro" title="Link to this heading">¶</a></h4>
 <p>This test uses the standard hydrostatic model to describe the interaction
 over time of two basins of water with different densities. After the creation
 of the mesh and initial conditions, a hydrostatic simulation is run.
@@ -204,7 +203,7 @@ and lower layer. This happens because of the hydrostatic assumption, which
 prevents the generation of the Kelvin-Helmholtz instability.</p>
 </section>
 <section id="nonhydro">
-<span id="dev-ocean-lock-exchange-nonhydro"></span><h4>nonhydro<a class="headerlink" href="#nonhydro" title="Permalink to this heading">¶</a></h4>
+<span id="dev-ocean-lock-exchange-nonhydro"></span><h4>nonhydro<a class="headerlink" href="#nonhydro" title="Link to this heading">¶</a></h4>
 <p>This test uses the nonhydrostatic model to describe the interaction
 over time of two basins of water with different densities. After the creation
 of the mesh and initial conditions, a nonhydrostatic simulation is run.

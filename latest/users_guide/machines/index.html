@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Machines &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -130,7 +129,7 @@
            <div itemprop="articleBody">
              
   <section id="machines">
-<span id="id1"></span><h1>Machines<a class="headerlink" href="#machines" title="Permalink to this heading">¶</a></h1>
+<span id="id1"></span><h1>Machines<a class="headerlink" href="#machines" title="Link to this heading">¶</a></h1>
 <p>One of the major advantages of <code class="docutils literal notranslate"><span class="pre">compass</span></code> over <a class="reference internal" href="../../index.html#legacy-compass"><span class="std std-ref">Legacy COMPASS</span></a> is that it
 attempts to be aware of the capabilities of the machine it is running on.  This
 is a particular advantage for so-called “supported” machines with a config file
@@ -139,7 +138,7 @@ it is not difficult to set a few config options in your user config file to
 describe your machine.  Then, <code class="docutils literal notranslate"><span class="pre">compass</span></code> can use this data to make sure test
 cases are configured in a way that is appropriate for your machine.</p>
 <section id="config-options">
-<h2>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h2>
+<h2>config options<a class="headerlink" href="#config-options" title="Link to this heading">¶</a></h2>
 <p>The config options typically defined for a machine are:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The paths section describes paths that are used within the ocean core test</span>
 <span class="c1"># cases.</span>
@@ -215,7 +214,7 @@ as does the account that typical <code class="docutils literal notranslate"><spa
 machine.</p>
 </section>
 <section id="slurm-job-queueing">
-<span id="slurm"></span><h2>Slurm job queueing<a class="headerlink" href="#slurm-job-queueing" title="Permalink to this heading">¶</a></h2>
+<span id="slurm"></span><h2>Slurm job queueing<a class="headerlink" href="#slurm-job-queueing" title="Link to this heading">¶</a></h2>
 <p>Most HPC systems now use the
 <a class="reference external" href="https://slurm.schedmd.com/documentation.html">slurm workload manager</a>.
 Here are some basic commands:</p>
@@ -228,7 +227,7 @@ scancel<span class="w"> </span>jobID<span class="w"> </span><span class="c1"># c
 </div>
 </section>
 <section id="supported-machines">
-<span id="id2"></span><h2>Supported Machines<a class="headerlink" href="#supported-machines" title="Permalink to this heading">¶</a></h2>
+<span id="id2"></span><h2>Supported Machines<a class="headerlink" href="#supported-machines" title="Link to this heading">¶</a></h2>
 <p>On each supported machine, users will be able to source a script to activate
 the appropriate compass environment and compilers.  Most machines support 2
 compilers, each with one or more variants of MPI and the required NetCDF,
@@ -250,7 +249,7 @@ to use the default MPI variant for each compiler on each machine.</p>
 </div>
 </section>
 <section id="other-machines">
-<span id="id3"></span><h2>Other Machines<a class="headerlink" href="#other-machines" title="Permalink to this heading">¶</a></h2>
+<span id="id3"></span><h2>Other Machines<a class="headerlink" href="#other-machines" title="Link to this heading">¶</a></h2>
 <p>If you are working on an “unknown” machine, you will need to define some of
 the config options that would normally be in a machine’s config file yourself
 in your user config file:</p>
@@ -290,7 +289,7 @@ three commands, depending on how you would like to handle MPI support in the
 conda packages.</p>
 </section>
 <section id="id4">
-<h2>MPICH<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h2>
+<h2>MPICH<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
 <p>To create a conda environment called “compass” with MPI from the <code class="docutils literal notranslate"><span class="pre">mpich</span></code>
 package, run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>compass<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>-c<span class="w"> </span>e3sm/label/compass<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.10<span class="w"> </span><span class="s2">&quot;compass=*=mpi_mpich*&quot;</span>
@@ -299,7 +298,7 @@ package, run:</p>
 <p>This is the recommended default for single-node Linux and OSX machines.</p>
 </section>
 <section id="id5">
-<h2>OpenMPI<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h2>
+<h2>OpenMPI<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h2>
 <p>To create a conda environment called “compass” with MPI from the <code class="docutils literal notranslate"><span class="pre">openmpi</span></code>
 package, run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>compass<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>-c<span class="w"> </span>e3sm/label/compass<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.10<span class="w"> </span><span class="s2">&quot;compass=*=mpi_openmpi*&quot;</span>
@@ -307,7 +306,7 @@ package, run:</p>
 </div>
 </section>
 <section id="no-mpi-from-conda-forge">
-<h2>No MPI from conda-forge<a class="headerlink" href="#no-mpi-from-conda-forge" title="Permalink to this heading">¶</a></h2>
+<h2>No MPI from conda-forge<a class="headerlink" href="#no-mpi-from-conda-forge" title="Link to this heading">¶</a></h2>
 <p>To create a conda environment called “compass” without any MPI package from
 conda-forge, run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>compass<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>-c<span class="w"> </span>e3sm/label/compass<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.10<span class="w"> </span><span class="s2">&quot;compass=*=nompi*&quot;</span>

@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Quick Start for Developers &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -135,9 +134,9 @@
            <div itemprop="articleBody">
              
   <section id="quick-start-for-developers">
-<span id="dev-quick-start"></span><h1>Quick Start for Developers<a class="headerlink" href="#quick-start-for-developers" title="Permalink to this heading">¶</a></h1>
+<span id="dev-quick-start"></span><h1>Quick Start for Developers<a class="headerlink" href="#quick-start-for-developers" title="Link to this heading">¶</a></h1>
 <section id="unix-shell">
-<span id="dev-shell"></span><h2>Unix Shell<a class="headerlink" href="#unix-shell" title="Permalink to this heading">¶</a></h2>
+<span id="dev-shell"></span><h2>Unix Shell<a class="headerlink" href="#unix-shell" title="Link to this heading">¶</a></h2>
 <p>Currently, compass only supports <code class="docutils literal notranslate"><span class="pre">bash</span></code> and related unix shells (such as
 <code class="docutils literal notranslate"><span class="pre">ksh</span></code> on the Mac).  We do not support <code class="docutils literal notranslate"><span class="pre">csh</span></code>, <code class="docutils literal notranslate"><span class="pre">tcsh</span></code> or other variants of
 <code class="docutils literal notranslate"><span class="pre">csh</span></code>.  An activation script for those shells will not be created.</p>
@@ -145,7 +144,7 @@
 switch to bash by calling <code class="docutils literal notranslate"><span class="pre">/bin/bash</span></code> each time you want to use compass.</p>
 </section>
 <section id="set-up-a-compass-repository-for-beginners">
-<span id="dev-compass-repo"></span><h2>Set up a compass repository: for beginners<a class="headerlink" href="#set-up-a-compass-repository-for-beginners" title="Permalink to this heading">¶</a></h2>
+<span id="dev-compass-repo"></span><h2>Set up a compass repository: for beginners<a class="headerlink" href="#set-up-a-compass-repository-for-beginners" title="Link to this heading">¶</a></h2>
 <p>To begin, obtain the main branch of the
 <a class="reference external" href="https://github.com/MPAS-Dev/compass">compass repository</a> with:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:MPAS-Dev/compass.git
@@ -157,7 +156,7 @@ git<span class="w"> </span>submodule<span class="w"> </span>update<span class="w
 the compass repository.</p>
 </section>
 <section id="compass-conda-environment-compilers-and-system-modules">
-<span id="dev-conda-env"></span><h2>compass conda environment, compilers and system modules<a class="headerlink" href="#compass-conda-environment-compilers-and-system-modules" title="Permalink to this heading">¶</a></h2>
+<span id="dev-conda-env"></span><h2>compass conda environment, compilers and system modules<a class="headerlink" href="#compass-conda-environment-compilers-and-system-modules" title="Link to this heading">¶</a></h2>
 <p>As a developer, you will need your own environment with the latest dependencies
 for compass and a development installation of <code class="docutils literal notranslate"><span class="pre">compass</span></code> from the branch
 you’re working on.</p>
@@ -196,7 +195,7 @@ letting <code class="docutils literal notranslate"><span class="pre">configure_c
 you if you don’t already have it installed.</p>
 </div>
 <section id="supported-machines">
-<h3>Supported machines<a class="headerlink" href="#supported-machines" title="Permalink to this heading">¶</a></h3>
+<h3>Supported machines<a class="headerlink" href="#supported-machines" title="Link to this heading">¶</a></h3>
 <p>If you are on one of the <a class="reference internal" href="machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a>, run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./conda/configure_compass_env.py<span class="w"> </span>--conda<span class="w"> </span>&lt;base_path_to_install_or_update_conda&gt;<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-c<span class="w"> </span>&lt;compiler&gt;<span class="w"> </span><span class="o">[</span>--mpi<span class="w"> </span>&lt;mpi&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>-m<span class="w"> </span>&lt;machine&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--with_albany<span class="o">]</span><span class="w"> </span><span class="se">\</span>
@@ -220,7 +219,7 @@ you run into trouble with the automatic recognition (e.g. if you’re setting
 up the environment on a compute node, which is not recommended).</p>
 </section>
 <section id="environments-with-albany">
-<h3>Environments with Albany<a class="headerlink" href="#environments-with-albany" title="Permalink to this heading">¶</a></h3>
+<h3>Environments with Albany<a class="headerlink" href="#environments-with-albany" title="Link to this heading">¶</a></h3>
 <p>If you are working with MALI, you should specify <code class="docutils literal notranslate"><span class="pre">--with_albany</span></code>.  This will
 ensure that the Albany and Trilinos libraries are included among those built
 with system compilers and MPI libraries, a requirement for many MAlI test
@@ -231,7 +230,7 @@ conda/spack environment.  The main downside is simply that unneeded libraries
 will be linked in to MPAS-Ocean.</p>
 </section>
 <section id="environments-with-petsc-and-netlib-lapack">
-<h3>Environments with PETSc and Netlib-LAPACK<a class="headerlink" href="#environments-with-petsc-and-netlib-lapack" title="Permalink to this heading">¶</a></h3>
+<h3>Environments with PETSc and Netlib-LAPACK<a class="headerlink" href="#environments-with-petsc-and-netlib-lapack" title="Link to this heading">¶</a></h3>
 <p>If you are working with MPAS-Ocean test cases that need PETSc and
 Netlib-LAPACK, you should specify <code class="docutils literal notranslate"><span class="pre">--with_petsc</span></code> to
 point to Spack environments where these libraries are included.  Appropriate
@@ -239,7 +238,7 @@ environment variables for pointing to these libraries will be build into the
 resulting load script (see below).</p>
 </section>
 <section id="unknown-machines">
-<h3>Unknown machines<a class="headerlink" href="#unknown-machines" title="Permalink to this heading">¶</a></h3>
+<h3>Unknown machines<a class="headerlink" href="#unknown-machines" title="Link to this heading">¶</a></h3>
 <p>If your are on an “unknown” machine, typically a Mac or Linux laptop or
 workstation, you will need to specify which flavor of MPI you want to use
 (<code class="docutils literal notranslate"><span class="pre">mpich</span></code> or <code class="docutils literal notranslate"><span class="pre">openmpi</span></code>):</p>
@@ -268,7 +267,7 @@ with the developers.</p>
 </div>
 </section>
 <section id="what-the-script-does">
-<h3>What the script does<a class="headerlink" href="#what-the-script-does" title="Permalink to this heading">¶</a></h3>
+<h3>What the script does<a class="headerlink" href="#what-the-script-does" title="Link to this heading">¶</a></h3>
 <p>In addition to installing Mambaforge and creating the conda environment for
 you, this script will also:</p>
 <ul class="simple">
@@ -302,7 +301,7 @@ the expected packages are available.</p></li>
 </ul>
 </section>
 <section id="optional-flags">
-<h3>Optional flags<a class="headerlink" href="#optional-flags" title="Permalink to this heading">¶</a></h3>
+<h3>Optional flags<a class="headerlink" href="#optional-flags" title="Link to this heading">¶</a></h3>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">--check</span></code></dt><dd><p>Check to make sure expected commands are present</p>
 </dd>
@@ -318,7 +317,7 @@ compilers)</p>
 </dl>
 </section>
 <section id="activating-the-environment">
-<h3>Activating the environment<a class="headerlink" href="#activating-the-environment" title="Permalink to this heading">¶</a></h3>
+<h3>Activating the environment<a class="headerlink" href="#activating-the-environment" title="Link to this heading">¶</a></h3>
 <p>Each time you want to work with compass, you will need to run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>./load_dev_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh
 </pre></div>
@@ -351,7 +350,7 @@ are actually running <code class="docutils literal notranslate"><span class="pre
 the branch is.  If you do not use the worktree approach, you will also need to
 check what branch you are currently on with <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">log</span></code>, <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">branch</span></code> or
 a similar command.</p>
-<p>If you wish to work with another compiler, simply rerun the script with a new
+<p>If you wish to work with another compiler, simply rerun the configure script with a new
 compiler name and an activation script will be produced.  You can then source
 either activation script to get the same conda environment but with different
 compilers and related modules.  Make sure you are careful to set up compass by
@@ -359,7 +358,7 @@ pointing to a version of the MPAS model that was compiled with the correct
 compiler.</p>
 </section>
 <section id="switching-between-different-compass-environments">
-<h3>Switching between different compass environments<a class="headerlink" href="#switching-between-different-compass-environments" title="Permalink to this heading">¶</a></h3>
+<h3>Switching between different compass environments<a class="headerlink" href="#switching-between-different-compass-environments" title="Link to this heading">¶</a></h3>
 <p>Many developers are switching between different <code class="docutils literal notranslate"><span class="pre">compass</span></code> branches.
 We have 2 main workflows for doing this: checking out different branches
 in the same directory (with <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span></code>) or creating new directories for
@@ -404,7 +403,22 @@ in a branch or worktree you are working on compared to a previous branch
 you have worked with (or if you aren’t sure), it is safest to not just reinstall
 the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package but also to check the dependencies by re-running:
 <code class="docutils literal notranslate"><span class="pre">./conda/configure_compass_env.py</span></code>  with the same arguments as above.
-This will also reinstall the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package from the current directory.</p>
+This will also reinstall the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package from the current directory.
+The activation script includes a check to see if the version of compass used
+to produce the load script is the same as the version of compass in the
+current branch.  If the two don’t match, an error like the following results
+and the environment is not activated:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ source load_compass_test_morpheus_gnu_openmpi.sh
+This load script is for a different version of compass:
+__version__ = &#39;1.2.0-alpha.6&#39;
+
+Your code is version:
+__version__ = &#39;1.2.0-alpha.7&#39;
+
+You need to run ./conda/configure_compass_env.py to update your conda
+environment and load script.
+</pre></div>
+</div>
 <p>If you need more than one conda environment (e.g. because you are testing
 multiple branches at the same time), you can choose your own name
 for the conda environment.  Typically, this might be something related to the
@@ -436,14 +450,14 @@ just the <code class="docutils literal notranslate"><span class="pre">compass</s
 </pre></div>
 </div>
 <p>The activation script will do this automatically when you source it in
-the root directory of your compass branch.  This is substantially faster
-than rerunning <code class="docutils literal notranslate"><span class="pre">./conda/configure_compass_env.py</span> <span class="pre">...</span></code> but risks
-dependencies being out of date.  Since dependencies change fairly rarely,
-this will usually be safe.</p>
+the root directory of your compass branch.  The activation script will also
+check if the current compass version matches the one used to create the
+activation script, thus catching situations where the dependencies are out
+of date and the configure script needs to be rerun.</p>
 </div>
 </section>
 <section id="troubleshooting">
-<h3>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading">¶</a></h3>
+<h3>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading">¶</a></h3>
 <p>If you run into trouble with the environment or just want a clean start, you
 can run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./conda/configure_compass_env.py<span class="w"> </span>--conda<span class="w"> </span>&lt;conda_path&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;compiler&gt;<span class="w"> </span>--recreate
@@ -454,7 +468,7 @@ scratch.  This takes just a little extra time.</p>
 </section>
 </section>
 <section id="creating-updating-only-the-compass-environment">
-<span id="dev-creating-only-env"></span><h2>Creating/updating only the compass environment<a class="headerlink" href="#creating-updating-only-the-compass-environment" title="Permalink to this heading">¶</a></h2>
+<span id="dev-creating-only-env"></span><h2>Creating/updating only the compass environment<a class="headerlink" href="#creating-updating-only-the-compass-environment" title="Link to this heading">¶</a></h2>
 <p>For some workflows (e.g. for MALI development with the Albany library when the
 MALI build environment has been created outside of <code class="docutils literal notranslate"><span class="pre">compass</span></code>, for example,
 on an unsupported machine), you may only want to create the conda environment
@@ -492,7 +506,7 @@ be safe.</p>
 </div>
 </section>
 <section id="building-mpas-components">
-<span id="dev-build-mpas"></span><h2>Building MPAS components<a class="headerlink" href="#building-mpas-components" title="Permalink to this heading">¶</a></h2>
+<span id="dev-build-mpas"></span><h2>Building MPAS components<a class="headerlink" href="#building-mpas-components" title="Link to this heading">¶</a></h2>
 <p>The MPAS repository is a submodule of the compass repository.  For example, to
 compile MPAS-Ocean:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>./load_dev_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh
@@ -520,7 +534,7 @@ and complete instructions will be added here in the future.</p>
 <code class="docutils literal notranslate"><span class="pre">&lt;mpas_make_target&gt;</span></code> command for each machine and compiler.</p>
 </section>
 <section id="running-compass-from-the-repo">
-<span id="dev-working-with-compass"></span><h2>Running compass from the repo<a class="headerlink" href="#running-compass-from-the-repo" title="Permalink to this heading">¶</a></h2>
+<span id="dev-working-with-compass"></span><h2>Running compass from the repo<a class="headerlink" href="#running-compass-from-the-repo" title="Link to this heading">¶</a></h2>
 <p>If you follow the procedure above, you can run compass with the <code class="docutils literal notranslate"><span class="pre">compass</span></code>
 command-line tool exactly like described in the User’s Guide <a class="reference internal" href="../users_guide/quick_start.html#quick-start"><span class="std std-ref">Quick Start for Users</span></a>
 and as detailed in <a class="reference internal" href="command_line.html#dev-command-line"><span class="std std-ref">Command-line interface</span></a>.</p>
@@ -557,7 +571,7 @@ up the suite or test case (<code class="docutils literal notranslate"><span clas
 activation script you sourced before setting up the suite or test case).</p>
 </section>
 <section id="code-style-for-compass">
-<span id="dev-compass-style"></span><h2>Code style for compass<a class="headerlink" href="#code-style-for-compass" title="Permalink to this heading">¶</a></h2>
+<span id="dev-compass-style"></span><h2>Code style for compass<a class="headerlink" href="#code-style-for-compass" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">compass</span></code> complies with the coding conventions of
 <a class="reference external" href="https://peps.python.org/pep-0008/">PEP8</a>. Rather than memorize all the
 guidelines, the easiest way to stay in compliance as a developer writing new
@@ -581,7 +595,7 @@ run the checker again to make sure we’ve resolved the issue.</p>
 style checker at this stage.</p>
 </section>
 <section id="set-up-a-compass-repository-with-worktrees-for-advanced-users">
-<span id="dev-compass-repo-advanced"></span><h2>Set up a compass repository with worktrees: for advanced users<a class="headerlink" href="#set-up-a-compass-repository-with-worktrees-for-advanced-users" title="Permalink to this heading">¶</a></h2>
+<span id="dev-compass-repo-advanced"></span><h2>Set up a compass repository with worktrees: for advanced users<a class="headerlink" href="#set-up-a-compass-repository-with-worktrees-for-advanced-users" title="Link to this heading">¶</a></h2>
 <p>This section uses <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">worktree</span></code>, which provides more flexibility but is more
 complicated. See the beginner section above for the simpler version. In the
 worktree version, you will have many unix directories, and each corresponds to

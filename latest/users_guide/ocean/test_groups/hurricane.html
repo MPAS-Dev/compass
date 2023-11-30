@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>hurricane &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -151,7 +150,7 @@
            <div itemprop="articleBody">
              
   <section id="hurricane">
-<span id="ocean-hurricane"></span><h1>hurricane<a class="headerlink" href="#hurricane" title="Permalink to this heading">¶</a></h1>
+<span id="ocean-hurricane"></span><h1>hurricane<a class="headerlink" href="#hurricane" title="Link to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">ocean/hurricane</span></code> test group defines meshes,
 initial conditions, forward simulations, and validation for global,
 realistic ocean domains with regional refinement. These simulations
@@ -174,7 +173,7 @@ LTS counterpart which is identified by the <code class="docutils literal notrans
 Note that the executable to be used with LTS has to be compiled with
 the following options: <code class="docutils literal notranslate"><span class="pre">USE_LTS=true</span> <span class="pre">OPENMP=false</span></code>.</p>
 <section id="shared-config-options">
-<h2>Shared config options<a class="headerlink" href="#shared-config-options" title="Permalink to this heading">¶</a></h2>
+<h2>Shared config options<a class="headerlink" href="#shared-config-options" title="Link to this heading">¶</a></h2>
 <p>All <code class="docutils literal notranslate"><span class="pre">hurricane</span></code> test cases start the following shared config options.
 Note that meshes and test cases may modify these options, as noted below.</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for spherical meshes</span>
@@ -226,7 +225,7 @@ Note that meshes and test cases may modify these options, as noted below.</p>
 </div>
 </section>
 <section id="mesh-test-case">
-<span id="hurricane-mesh"></span><h2>mesh test case<a class="headerlink" href="#mesh-test-case" title="Permalink to this heading">¶</a></h2>
+<span id="hurricane-mesh"></span><h2>mesh test case<a class="headerlink" href="#mesh-test-case" title="Link to this heading">¶</a></h2>
 <p>The mesh test case uses the mesh step from the global ocean test group.
 First, it generates the global mesh based on a specified mesh resolution
 function. Next, bathymetry/topography data is interpolated on the mesh from the
@@ -243,25 +242,25 @@ The parallel partitioning is modified accordingly to achieve proper
 load balancing.</p>
 </section>
 <section id="init-test-case">
-<span id="hurricane-init"></span><h2>init test case<a class="headerlink" href="#init-test-case" title="Permalink to this heading">¶</a></h2>
+<span id="hurricane-init"></span><h2>init test case<a class="headerlink" href="#init-test-case" title="Link to this heading">¶</a></h2>
 <p>The init test performs steps to set up the vertical mesh, initial conditions,
 atmospheric forcing, and prepares the station locations for timeseries output.</p>
 <section id="initial-state-step">
-<h3>initial state step<a class="headerlink" href="#initial-state-step" title="Permalink to this heading">¶</a></h3>
+<h3>initial state step<a class="headerlink" href="#initial-state-step" title="Link to this heading">¶</a></h3>
 <p>The initial state step runs MPAS-Ocean in init mode to create the initial
 condition file for the forward run. The vertical mesh is setup for a
 single layer case and the ssh with a thin layer on land for wetting and
 drying cases.</p>
 </section>
 <section id="interpolate-atmosphere-forcing-step">
-<h3>interpolate atmosphere forcing step<a class="headerlink" href="#interpolate-atmosphere-forcing-step" title="Permalink to this heading">¶</a></h3>
+<h3>interpolate atmosphere forcing step<a class="headerlink" href="#interpolate-atmosphere-forcing-step" title="Link to this heading">¶</a></h3>
 <p>The CFSv2 reanalysis wind vector components and atmospheric pressure fields
 for the storm event are interpolated onto the horizontal mesh at hourly
 intervals. These are read in and used to update the atmospheric forcing in the
 forward run.</p>
 </section>
 <section id="create-pointstats-file-step">
-<h3>create pointstats file step<a class="headerlink" href="#create-pointstats-file-step" title="Permalink to this heading">¶</a></h3>
+<h3>create pointstats file step<a class="headerlink" href="#create-pointstats-file-step" title="Link to this heading">¶</a></h3>
 <p>In order to perform validation of the forward simulation, timeseries data
 is recored at mesh cell centers which are closest to observation stations.
 This set reads in the observation station locations and finds the cells
@@ -269,7 +268,7 @@ closest to them. A file is created that is the input to the
 pointWiseStats analysis member for the forward run.</p>
 </section>
 <section id="compute-topographic-wave-drag-step">
-<span id="hurricane-init-lts"></span><h3>compute topographic wave drag step<a class="headerlink" href="#compute-topographic-wave-drag-step" title="Permalink to this heading">¶</a></h3>
+<span id="hurricane-init-lts"></span><h3>compute topographic wave drag step<a class="headerlink" href="#compute-topographic-wave-drag-step" title="Link to this heading">¶</a></h3>
 <p>This step is carried out only if the LTS option is selected for the init test case.</p>
 <p>The reciprocal of the e-folding time, <code class="docutils literal notranslate"><span class="pre">r_inv</span></code>, from the HyCOM model,
 is computed in this step. See
@@ -279,17 +278,17 @@ for the topographic wave drag tendency in the model.</p>
 </section>
 </section>
 <section id="sandy-test-case">
-<span id="hurricane-sandy"></span><h2>sandy test case<a class="headerlink" href="#sandy-test-case" title="Permalink to this heading">¶</a></h2>
+<span id="hurricane-sandy"></span><h2>sandy test case<a class="headerlink" href="#sandy-test-case" title="Link to this heading">¶</a></h2>
 <p>The sandy test case is responsible for the forward model simulation and
 analysis.</p>
 <section id="forward-step">
-<h3>forward step<a class="headerlink" href="#forward-step" title="Permalink to this heading">¶</a></h3>
+<h3>forward step<a class="headerlink" href="#forward-step" title="Link to this heading">¶</a></h3>
 <p>The forward step runs the model simulation of the storm. The simulation
 begins with a spinup period, where the tides and atmospheric forcing
 are ramped to their full value to avoid shocking the system.</p>
 </section>
 <section id="analysis-step">
-<h3>analysis step<a class="headerlink" href="#analysis-step" title="Permalink to this heading">¶</a></h3>
+<h3>analysis step<a class="headerlink" href="#analysis-step" title="Link to this heading">¶</a></h3>
 <p>The analysis step plots the timeseries data at each observation station
 to compare the modeled and observed data. Both NOAA and USGS station data
 is used for the validation.</p>

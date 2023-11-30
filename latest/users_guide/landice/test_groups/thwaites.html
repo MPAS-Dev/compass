@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>thwaites &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -145,7 +144,7 @@
            <div itemprop="articleBody">
              
   <section id="thwaites">
-<span id="landice-thwaites"></span><h1>thwaites<a class="headerlink" href="#thwaites" title="Permalink to this heading">¶</a></h1>
+<span id="landice-thwaites"></span><h1>thwaites<a class="headerlink" href="#thwaites" title="Link to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">landice/thwaites</span></code> test group runs tests with a coarse (4-14-km)
 <a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/thwaites.4km.210608.nc">Thwaites Glacier mesh</a>.
 The purpose of this test group is to provide a realistic glacier that
@@ -157,7 +156,7 @@ Thwaites mesh at different resolutions and using different data sources.</p>
 <a class="reference internal image-reference" href="../../../_images/thwaites_speed.png"><img alt="../../../_images/thwaites_speed.png" src="../../../_images/thwaites_speed.png" style="width: 777px;" /></a>
 <figcaption>
 <p><span class="caption-text">FO velocity solution visualized in Paraview.  Grounding line position
-shown with a white line.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+shown with a white line.</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
 <p>The test group includes three test cases, two of which have one or more steps
@@ -170,7 +169,7 @@ can only be run with the FO velocity solvers. Running with the FO solver require
 a build of MALI that includes Albany. There is no integration step for the test
 case <code class="docutils literal notranslate"><span class="pre">mesh_gen</span></code>.</p>
 <section id="config-options">
-<h2>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h2>
+<h2>config options<a class="headerlink" href="#config-options" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">mesh_gen</span></code> test case uses the default config options below.
 The other test cases do not use config options.</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[mesh]</span>
@@ -205,14 +204,14 @@ The other test cases do not use config options.</p>
 </div>
 </section>
 <section id="decomposition-test">
-<h2>decomposition_test<a class="headerlink" href="#decomposition-test" title="Permalink to this heading">¶</a></h2>
+<h2>decomposition_test<a class="headerlink" href="#decomposition-test" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">landice/thwaites/decomposition_test</span></code> runs short (2-day) integrations of the
 model forward in time on 16 (<code class="docutils literal notranslate"><span class="pre">16proc_run</span></code> step) and then on 32 cores
 (<code class="docutils literal notranslate"><span class="pre">32proc_run</span></code> step) to make sure the resulting prognostic variables are
 bit-for-bit identical between the two runs.</p>
 </section>
 <section id="restart-test">
-<h2>restart_test<a class="headerlink" href="#restart-test" title="Permalink to this heading">¶</a></h2>
+<h2>restart_test<a class="headerlink" href="#restart-test" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">landice/thwaites/restart_test</span></code> first runs a short (5-day) integration
 of the model forward in time (<code class="docutils literal notranslate"><span class="pre">full_run</span></code> step).  Then, a second step
 (<code class="docutils literal notranslate"><span class="pre">restart_run</span></code>) performs two subsequent 2 and 3 day integrations, where the
@@ -221,7 +220,7 @@ are compared between the “full” and “restart” runs to make sure they are
 bit-for-bit identical.</p>
 </section>
 <section id="mesh-gen">
-<h2>mesh_gen<a class="headerlink" href="#mesh-gen" title="Permalink to this heading">¶</a></h2>
+<h2>mesh_gen<a class="headerlink" href="#mesh-gen" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">landice/thwaites/mesh_gen</span></code> creates a variable resolution mesh based
 on the the config options listed above. This will not be the same as the
 pre-generated 4-14km mesh used in <code class="docutils literal notranslate"><span class="pre">decomposition_test</span></code> and <code class="docutils literal notranslate"><span class="pre">restart_test</span></code>

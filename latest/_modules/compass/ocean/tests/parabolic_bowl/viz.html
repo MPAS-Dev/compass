@@ -1,21 +1,20 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.tests.parabolic_bowl.viz &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
-        <script src="../../../../../_static/jquery.js"></script>
-        <script src="../../../../../_static/underscore.js"></script>
-        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../../_static/doctools.js"></script>
-        <script src="../../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -125,7 +124,9 @@
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
 
-<div class="viewcode-block" id="Viz"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.viz.Viz.html#compass.ocean.tests.parabolic_bowl.viz.Viz">[docs]</a><span class="k">class</span> <span class="nc">Viz</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<div class="viewcode-block" id="Viz">
+<a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.viz.Viz.html#compass.ocean.tests.parabolic_bowl.viz.Viz">[docs]</a>
+<span class="k">class</span> <span class="nc">Viz</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for visualizing parabolic bowl results and</span>
 <span class="sd">    comparing with analytical solution</span>
@@ -133,7 +134,9 @@
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="Viz.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.viz.Viz.html#compass.ocean.tests.parabolic_bowl.viz.Viz.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolutions</span><span class="p">):</span>
+<div class="viewcode-block" id="Viz.__init__">
+<a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.viz.Viz.html#compass.ocean.tests.parabolic_bowl.viz.Viz.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolutions</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the step</span>
 
@@ -150,7 +153,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;output_</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km.nc&#39;</span><span class="p">,</span>
                                 <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../forward_</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km/output.nc&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Viz.run"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.viz.Viz.run.html#compass.ocean.tests.parabolic_bowl.viz.Viz.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Viz.run">
+<a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.viz.Viz.run.html#compass.ocean.tests.parabolic_bowl.viz.Viz.run">[docs]</a>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -161,7 +167,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">contour_plots</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rmse_plots</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Viz.get_points"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.viz.Viz.get_points.html#compass.ocean.tests.parabolic_bowl.viz.Viz.get_points">[docs]</a>    <span class="k">def</span> <span class="nf">get_points</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Viz.get_points">
+<a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.viz.Viz.get_points.html#compass.ocean.tests.parabolic_bowl.viz.Viz.get_points">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_points</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the point coordinates for plotting solution timeseries</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -173,7 +182,10 @@
 
         <span class="k">return</span> <span class="n">points</span></div>
 
-<div class="viewcode-block" id="Viz.timeseries_plots"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.viz.Viz.timeseries_plots.html#compass.ocean.tests.parabolic_bowl.viz.Viz.timeseries_plots">[docs]</a>    <span class="k">def</span> <span class="nf">timeseries_plots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Viz.timeseries_plots">
+<a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.viz.Viz.timeseries_plots.html#compass.ocean.tests.parabolic_bowl.viz.Viz.timeseries_plots">[docs]</a>
+    <span class="k">def</span> <span class="nf">timeseries_plots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot solution timeseries at a given number of points</span>
 <span class="sd">        for each resolution</span>
@@ -213,7 +225,10 @@
                    <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower center&#39;</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;points.png&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Viz.inject_exact_solution"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.viz.Viz.inject_exact_solution.html#compass.ocean.tests.parabolic_bowl.viz.Viz.inject_exact_solution">[docs]</a>    <span class="k">def</span> <span class="nf">inject_exact_solution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Viz.inject_exact_solution">
+<a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.viz.Viz.inject_exact_solution.html#compass.ocean.tests.parabolic_bowl.viz.Viz.inject_exact_solution">[docs]</a>
+    <span class="k">def</span> <span class="nf">inject_exact_solution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save exact solution to output nc file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -241,7 +256,10 @@
                              <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;NETCDF3_64BIT_OFFSET&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
             <span class="n">ds</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Viz.contour_plots"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.viz.Viz.contour_plots.html#compass.ocean.tests.parabolic_bowl.viz.Viz.contour_plots">[docs]</a>    <span class="k">def</span> <span class="nf">contour_plots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Viz.contour_plots">
+<a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.viz.Viz.contour_plots.html#compass.ocean.tests.parabolic_bowl.viz.Viz.contour_plots">[docs]</a>
+    <span class="k">def</span> <span class="nf">contour_plots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot contour plots at a specified output interval for each resolution</span>
 <span class="sd">        and show where the points used in `points.png` are located.</span>
@@ -303,7 +321,10 @@
             <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;solution_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">03d</span><span class="si">}</span><span class="s1">.png&#39;</span><span class="p">)</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Viz.rmse_plots"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.viz.Viz.rmse_plots.html#compass.ocean.tests.parabolic_bowl.viz.Viz.rmse_plots">[docs]</a>    <span class="k">def</span> <span class="nf">rmse_plots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Viz.rmse_plots">
+<a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.viz.Viz.rmse_plots.html#compass.ocean.tests.parabolic_bowl.viz.Viz.rmse_plots">[docs]</a>
+    <span class="k">def</span> <span class="nf">rmse_plots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot convergence curves</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -352,7 +373,10 @@
         <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;error.png&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Viz.compute_rmse"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.viz.Viz.compute_rmse.html#compass.ocean.tests.parabolic_bowl.viz.Viz.compute_rmse">[docs]</a>    <span class="k">def</span> <span class="nf">compute_rmse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">varname</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Viz.compute_rmse">
+<a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.viz.Viz.compute_rmse.html#compass.ocean.tests.parabolic_bowl.viz.Viz.compute_rmse">[docs]</a>
+    <span class="k">def</span> <span class="nf">compute_rmse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">varname</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the rmse between the modeled and exact solutions</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -375,7 +399,10 @@
 
         <span class="k">return</span> <span class="n">rmse</span></div>
 
-<div class="viewcode-block" id="Viz.exact_solution"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.viz.Viz.exact_solution.html#compass.ocean.tests.parabolic_bowl.viz.Viz.exact_solution">[docs]</a>    <span class="k">def</span> <span class="nf">exact_solution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Viz.exact_solution">
+<a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.viz.Viz.exact_solution.html#compass.ocean.tests.parabolic_bowl.viz.Viz.exact_solution">[docs]</a>
+    <span class="k">def</span> <span class="nf">exact_solution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Evaluate the exact solution</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -437,7 +464,9 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Variable name not supported&#39;</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">soln</span></div></div>
+        <span class="k">return</span> <span class="n">soln</span></div>
+</div>
+
 </pre></div>
 
            </div>

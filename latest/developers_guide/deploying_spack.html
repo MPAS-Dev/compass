@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Deploying a new spack environment &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -147,11 +146,11 @@
            <div itemprop="articleBody">
              
   <section id="deploying-a-new-spack-environment">
-<span id="dev-deploying-spack"></span><h1>Deploying a new spack environment<a class="headerlink" href="#deploying-a-new-spack-environment" title="Permalink to this heading">¶</a></h1>
+<span id="dev-deploying-spack"></span><h1>Deploying a new spack environment<a class="headerlink" href="#deploying-a-new-spack-environment" title="Link to this heading">¶</a></h1>
 <section id="where-do-we-update-compass-dependencies">
-<h2>Where do we update compass dependencies?<a class="headerlink" href="#where-do-we-update-compass-dependencies" title="Permalink to this heading">¶</a></h2>
+<h2>Where do we update compass dependencies?<a class="headerlink" href="#where-do-we-update-compass-dependencies" title="Link to this heading">¶</a></h2>
 <section id="mache">
-<h3>Mache<a class="headerlink" href="#mache" title="Permalink to this heading">¶</a></h3>
+<h3>Mache<a class="headerlink" href="#mache" title="Link to this heading">¶</a></h3>
 <p>If system modules change in E3SM, we try to stay in sync:</p>
 <ul class="simple">
 <li><p>compilers</p></li>
@@ -163,7 +162,7 @@
 </ul>
 </section>
 <section id="spack">
-<h3>Spack<a class="headerlink" href="#spack" title="Permalink to this heading">¶</a></h3>
+<h3>Spack<a class="headerlink" href="#spack" title="Link to this heading">¶</a></h3>
 <p>Spack is for libraries used by MPAS and tools that need system MPI:</p>
 <ul class="simple">
 <li><p>ESMF</p></li>
@@ -174,7 +173,7 @@
 </ul>
 </section>
 <section id="conda">
-<h3>Conda<a class="headerlink" href="#conda" title="Permalink to this heading">¶</a></h3>
+<h3>Conda<a class="headerlink" href="#conda" title="Link to this heading">¶</a></h3>
 <p>Conda (via conda-forge) is used for python packages and related dependencies
 that don’t need system MPI. Conda environments aren’t shared between
 developers because the compass you’re developing is part of the conda
@@ -182,10 +181,10 @@ environment.</p>
 </section>
 </section>
 <section id="id1">
-<h2>Mache<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<h2>Mache<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
 <p>A brief tour of mache.</p>
 <section id="identifying-e3sm-machines">
-<h3>Identifying E3SM machines<a class="headerlink" href="#identifying-e3sm-machines" title="Permalink to this heading">¶</a></h3>
+<h3>Identifying E3SM machines<a class="headerlink" href="#identifying-e3sm-machines" title="Link to this heading">¶</a></h3>
 <p>Compass and other packages use mache to identify what machine they’re on (when
 you’re on a login node).  This is used when configuring compass and creating a
 conda environment.  Because of this, there is a “bootstrapping” process where
@@ -193,7 +192,7 @@ a conda environment is created with mache installed in it, then the machine is
 identified and the rest of the compass setup can continue.</p>
 </section>
 <section id="config-options-describing-e3sm-machines">
-<h3>Config options describing E3SM machines<a class="headerlink" href="#config-options-describing-e3sm-machines" title="Permalink to this heading">¶</a></h3>
+<h3>Config options describing E3SM machines<a class="headerlink" href="#config-options-describing-e3sm-machines" title="Link to this heading">¶</a></h3>
 <p>Mache has config files for each E3SM machine that tell us where E3SM-Unified
 is, where to find diagnostics, and much more, see
 <a class="reference external" href="https://github.com/E3SM-Project/mache/tree/main/mache/machines">machines</a>.
@@ -209,7 +208,7 @@ These config options are shared across packages including:</p>
 find locally cached files in its “databases” and much more.</p>
 </section>
 <section id="modules-env-variables-etc-for-e3sm-machines">
-<h3>Modules, env. variables, etc. for  E3SM machines<a class="headerlink" href="#modules-env-variables-etc-for-e3sm-machines" title="Permalink to this heading">¶</a></h3>
+<h3>Modules, env. variables, etc. for  E3SM machines<a class="headerlink" href="#modules-env-variables-etc-for-e3sm-machines" title="Link to this heading">¶</a></h3>
 <p>Mache keeps its own copy of the E3SM file
 <a class="reference external" href="https://github.com/E3SM-Project/E3SM/blob/master/cime_config/machines/config_machines.xml">config_machines.xml</a>
 in the package <a class="reference external" href="https://github.com/E3SM-Project/mache/blob/main/mache/cime_machine_config/config_machines.xml">here</a>.
@@ -219,7 +218,7 @@ mache’s copy of <code class="docutils literal notranslate"><span class="pre">c
 update in spack, see below.dev_quick_start</p>
 </section>
 <section id="creating-spack-environments">
-<h3>Creating spack environments<a class="headerlink" href="#creating-spack-environments" title="Permalink to this heading">¶</a></h3>
+<h3>Creating spack environments<a class="headerlink" href="#creating-spack-environments" title="Link to this heading">¶</a></h3>
 <p>Mache has templates for making spack environments on some of the E3SM supported
 machines.  See <a class="reference external" href="https://github.com/E3SM-Project/mache/tree/main/mache/spack">spack</a>.
 It also has functions for building the spack environments with these templates
@@ -227,7 +226,7 @@ using E3SM’s fork of spack (see below).</p>
 </section>
 </section>
 <section id="updating-spack-from-compass-with-mache-from-a-remote-branch">
-<h2>Updating spack from compass with mache from a remote branch<a class="headerlink" href="#updating-spack-from-compass-with-mache-from-a-remote-branch" title="Permalink to this heading">¶</a></h2>
+<h2>Updating spack from compass with mache from a remote branch<a class="headerlink" href="#updating-spack-from-compass-with-mache-from-a-remote-branch" title="Link to this heading">¶</a></h2>
 <p>If you haven’t cloned compass and added my fork, here’s the process:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>compass
 <span class="nb">cd</span><span class="w"> </span>compass/
@@ -329,7 +328,7 @@ supported on each machine, take a look at <a class="reference internal" href="ma
 <p>Be aware that not all compilers and MPI libraries support Albany and PETSc, as
 discussed below.</p>
 <section id="testing-spack-with-petsc-and-netlib-lapack">
-<h3>Testing spack with PETSc (and Netlib LAPACK)<a class="headerlink" href="#testing-spack-with-petsc-and-netlib-lapack" title="Permalink to this heading">¶</a></h3>
+<h3>Testing spack with PETSc (and Netlib LAPACK)<a class="headerlink" href="#testing-spack-with-petsc-and-netlib-lapack" title="Link to this heading">¶</a></h3>
 <p>If you want to build PETSc (and Netlib LAPACK), use the <code class="docutils literal notranslate"><span class="pre">--with_petsc</span></code> flag.
 Currently, this only works with some
 compilers, but that may be more that I was trying to limit the amount of work
@@ -354,7 +353,7 @@ that lists supported compilers and MPI libraries on each machine.</p>
 </div>
 </section>
 <section id="testing-spack-with-albany">
-<h3>Testing spack with Albany<a class="headerlink" href="#testing-spack-with-albany" title="Permalink to this heading">¶</a></h3>
+<h3>Testing spack with Albany<a class="headerlink" href="#testing-spack-with-albany" title="Link to this heading">¶</a></h3>
 <p>If you also want to build Albany, use the <code class="docutils literal notranslate"><span class="pre">--with_albany</span></code> flag.  Currently,
 this only works with Gnu compilers.  There is a file,
 <a class="reference external" href="https://github.com/MPAS-Dev/compass/blob/main/conda/albany_supported.txt">albany_support.txt</a>,
@@ -376,7 +375,7 @@ that lists supported compilers and MPI libraries on each machine.</p>
 </div>
 </section>
 <section id="troubleshooting-spack">
-<h3>Troubleshooting spack<a class="headerlink" href="#troubleshooting-spack" title="Permalink to this heading">¶</a></h3>
+<h3>Troubleshooting spack<a class="headerlink" href="#troubleshooting-spack" title="Link to this heading">¶</a></h3>
 <p>If you encounter an error like:
 .. code-block:: none</p>
 <blockquote>
@@ -399,9 +398,9 @@ get the <code class="docutils literal notranslate"><span class="pre">spack</span
 </section>
 </section>
 <section id="testing-compass">
-<h2>Testing compass<a class="headerlink" href="#testing-compass" title="Permalink to this heading">¶</a></h2>
+<h2>Testing compass<a class="headerlink" href="#testing-compass" title="Link to this heading">¶</a></h2>
 <section id="testing-mpas-ocean-without-petsc">
-<h3>Testing MPAS-Ocean without PETSc<a class="headerlink" href="#testing-mpas-ocean-without-petsc" title="Permalink to this heading">¶</a></h3>
+<h3>Testing MPAS-Ocean without PETSc<a class="headerlink" href="#testing-mpas-ocean-without-petsc" title="Link to this heading">¶</a></h3>
 <p>Please use the E3SM-Project submodule in compass for testing, rather than
 E3SM’s master branch.  The submodule is the version we know works with compass
 and serves as kind of a baseline for other testing.</p>
@@ -438,7 +437,7 @@ sbatch<span class="w"> </span>job_script.pr.bash
 test on several compilers automatically.</p>
 </section>
 <section id="testing-mali-with-albany">
-<h3>Testing MALI with Albany<a class="headerlink" href="#testing-mali-with-albany" title="Permalink to this heading">¶</a></h3>
+<h3>Testing MALI with Albany<a class="headerlink" href="#testing-mali-with-albany" title="Link to this heading">¶</a></h3>
 <p>Please use the MALI-Dev submodule in compass for testing, rather than MALI-Dev
 develop branch.  The submodule is the version we know works with compass and
 serves as kind of a baseline for other testing.</p>
@@ -456,7 +455,7 @@ sbatch<span class="w"> </span>job_script.full_integration.bash
 </div>
 </section>
 <section id="testing-mpas-ocean-with-petsc">
-<h3>Testing MPAS-Ocean with PETSc<a class="headerlink" href="#testing-mpas-ocean-with-petsc" title="Permalink to this heading">¶</a></h3>
+<h3>Testing MPAS-Ocean with PETSc<a class="headerlink" href="#testing-mpas-ocean-with-petsc" title="Link to this heading">¶</a></h3>
 <p>The tests for PETSc use nonhydrostatic capabilities not yet integrated into
 E3SM.  So you can’t use the E3SM-Project submodule.  You need to use Sara
 Calandrini’s <a class="reference external" href="https://github.com/scalandr/E3SM/tree/ocean/nonhydro">nonhydro</a>
@@ -488,7 +487,7 @@ build (and run).</p>
 </section>
 </section>
 <section id="deploying-shared-spack-environments">
-<h2>Deploying shared spack environments<a class="headerlink" href="#deploying-shared-spack-environments" title="Permalink to this heading">¶</a></h2>
+<h2>Deploying shared spack environments<a class="headerlink" href="#deploying-shared-spack-environments" title="Link to this heading">¶</a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Be careful about deploying shared spack environments, as changes you make
@@ -510,7 +509,7 @@ git<span class="w"> </span>reset<span class="w"> </span>–hard<span class="w"> 
 </pre></div>
 </div>
 <section id="deploy-spack-for-compass-without-albany-or-petsc">
-<h3>Deploy spack for compass without Albany or PETSc<a class="headerlink" href="#deploy-spack-for-compass-without-albany-or-petsc" title="Permalink to this heading">¶</a></h3>
+<h3>Deploy spack for compass without Albany or PETSc<a class="headerlink" href="#deploy-spack-for-compass-without-albany-or-petsc" title="Link to this heading">¶</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">TMPDIR</span><span class="o">=</span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/spack_temp
 ./conda/configure_compass_env.py<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--conda<span class="w"> </span><span class="si">${</span><span class="nv">CONDA_BASE</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
@@ -523,7 +522,7 @@ git<span class="w"> </span>reset<span class="w"> </span>–hard<span class="w"> 
 </div>
 </section>
 <section id="deploying-spack-with-albany">
-<h3>Deploying spack with Albany<a class="headerlink" href="#deploying-spack-with-albany" title="Permalink to this heading">¶</a></h3>
+<h3>Deploying spack with Albany<a class="headerlink" href="#deploying-spack-with-albany" title="Link to this heading">¶</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">TMPDIR</span><span class="o">=</span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/spack_temp
 ./conda/configure_compass_env.py<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--conda<span class="w"> </span><span class="si">${</span><span class="nv">CONDA_BASE</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
@@ -537,7 +536,7 @@ git<span class="w"> </span>reset<span class="w"> </span>–hard<span class="w"> 
 </div>
 </section>
 <section id="deploying-spack-with-petsc-and-netlib-lapack">
-<h3>Deploying spack with PETSc (and Netlib LAPACK)<a class="headerlink" href="#deploying-spack-with-petsc-and-netlib-lapack" title="Permalink to this heading">¶</a></h3>
+<h3>Deploying spack with PETSc (and Netlib LAPACK)<a class="headerlink" href="#deploying-spack-with-petsc-and-netlib-lapack" title="Link to this heading">¶</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">TMPDIR</span><span class="o">=</span>/lcrc/group/e3sm/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>/spack_temp
 ./conda/configure_compass_env.py<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--conda<span class="w"> </span><span class="si">${</span><span class="nv">CONDA_BASE</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>

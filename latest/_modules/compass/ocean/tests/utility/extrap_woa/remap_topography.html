@@ -1,21 +1,20 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.tests.utility.extrap_woa.remap_topography &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../../../../" id="documentation_options" src="../../../../../../_static/documentation_options.js"></script>
-        <script src="../../../../../../_static/jquery.js"></script>
-        <script src="../../../../../../_static/underscore.js"></script>
-        <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../../../_static/doctools.js"></script>
-        <script src="../../../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../../search.html" /> 
@@ -119,13 +118,17 @@
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
 
-<div class="viewcode-block" id="RemapTopography"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.utility.extrap_woa.RemapTopography.html#compass.ocean.tests.utility.extrap_woa.RemapTopography">[docs]</a><span class="k">class</span> <span class="nc">RemapTopography</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<div class="viewcode-block" id="RemapTopography">
+<a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.utility.extrap_woa.RemapTopography.html#compass.ocean.tests.utility.extrap_woa.RemapTopography">[docs]</a>
+<span class="k">class</span> <span class="nc">RemapTopography</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for remapping bathymetry and ice-shelf topography from one</span>
 <span class="sd">    latitude-longitude grid to another</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="RemapTopography.__init__"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.utility.extrap_woa.RemapTopography.html#compass.ocean.tests.utility.extrap_woa.RemapTopography.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
+<div class="viewcode-block" id="RemapTopography.__init__">
+<a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.utility.extrap_woa.RemapTopography.html#compass.ocean.tests.utility.extrap_woa.RemapTopography.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new step</span>
 
@@ -140,7 +143,10 @@
                             <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../combine/woa_combined.nc&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;topography_remapped.nc&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="RemapTopography.setup"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.utility.extrap_woa.RemapTopography.setup.html#compass.ocean.tests.utility.extrap_woa.RemapTopography.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="RemapTopography.setup">
+<a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.utility.extrap_woa.RemapTopography.setup.html#compass.ocean.tests.utility.extrap_woa.RemapTopography.setup">[docs]</a>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set up the step in the work directory, including downloading any</span>
 <span class="sd">        dependencies.</span>
@@ -157,7 +163,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;extrap_woa&#39;</span><span class="p">,</span> <span class="s1">&#39;remap_ntasks&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;extrap_woa&#39;</span><span class="p">,</span> <span class="s1">&#39;remap_min_tasks&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="RemapTopography.constrain_resources"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.utility.extrap_woa.RemapTopography.constrain_resources.html#compass.ocean.tests.utility.extrap_woa.RemapTopography.constrain_resources">[docs]</a>    <span class="k">def</span> <span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_resources</span><span class="p">):</span>
+
+<div class="viewcode-block" id="RemapTopography.constrain_resources">
+<a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.utility.extrap_woa.RemapTopography.constrain_resources.html#compass.ocean.tests.utility.extrap_woa.RemapTopography.constrain_resources">[docs]</a>
+    <span class="k">def</span> <span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_resources</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constrain ``cpus_per_task`` and ``ntasks`` based on the number of</span>
 <span class="sd">        cores available to this step</span>
@@ -172,7 +181,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;extrap_woa&#39;</span><span class="p">,</span> <span class="s1">&#39;remap_min_tasks&#39;</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">constrain_resources</span><span class="p">(</span><span class="n">available_resources</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="RemapTopography.run"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.utility.extrap_woa.RemapTopography.run.html#compass.ocean.tests.utility.extrap_woa.RemapTopography.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="RemapTopography.run">
+<a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.utility.extrap_woa.RemapTopography.run.html#compass.ocean.tests.utility.extrap_woa.RemapTopography.run">[docs]</a>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -204,7 +216,9 @@
 
         <span class="n">remapper</span><span class="o">.</span><span class="n">remap_file</span><span class="p">(</span><span class="n">inFileName</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">,</span>
                             <span class="n">outFileName</span><span class="o">=</span><span class="s1">&#39;topography_remapped.nc&#39;</span><span class="p">,</span>
-                            <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div></div>
+                            <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
+</div>
+
 </pre></div>
 
            </div>

@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Developer Tutorial: Porting a legacy COMPASS test group &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -134,7 +133,7 @@
            <div itemprop="articleBody">
              
   <section id="developer-tutorial-porting-a-legacy-compass-test-group">
-<span id="dev-tutorial-porting-legacy"></span><h1>Developer Tutorial: Porting a legacy COMPASS test group<a class="headerlink" href="#developer-tutorial-porting-a-legacy-compass-test-group" title="Permalink to this heading">¶</a></h1>
+<span id="dev-tutorial-porting-legacy"></span><h1>Developer Tutorial: Porting a legacy COMPASS test group<a class="headerlink" href="#developer-tutorial-porting-a-legacy-compass-test-group" title="Link to this heading">¶</a></h1>
 <p>This tutorial presents a step-by-step guide to porting a legacy COMPASS test
 group to the <code class="docutils literal notranslate"><span class="pre">compass</span></code> python package (see the <a class="reference internal" href="../glossary.html#glossary"><span class="std std-ref">Glossary</span></a> for
 definitions of these terms). The tutorial uses the legacy COMPASS test group
@@ -143,7 +142,7 @@ definitions of these terms). The tutorial uses the legacy COMPASS test group
 test group creates a tiny (4 x 4 cell) doubly periodic mesh and uses it to
 test MPAS-Ocean calls to the <a class="reference external" href="https://gotm.net/">General Ocean Turbulence Model (GOTM)</a>.</p>
 <section id="getting-started">
-<h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h2>
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h2>
 <p>To begin with, you will need to check out two different branches of compass.
 First, you will need the <code class="docutils literal notranslate"><span class="pre">legacy</span></code> branch.  Since we will simply be looking
 at the code and copying it as needed, you can simply browse the branch directly
@@ -190,7 +189,7 @@ for your machine.</p>
 <p>Now, we’re ready to start developing!</p>
 </section>
 <section id="the-legacy-compass-test-group">
-<h2>The legacy COMPASS test group<a class="headerlink" href="#the-legacy-compass-test-group" title="Permalink to this heading">¶</a></h2>
+<h2>The legacy COMPASS test group<a class="headerlink" href="#the-legacy-compass-test-group" title="Link to this heading">¶</a></h2>
 <p>…But before we get started, a little background on legacy COMPASS for those
 who haven’t used it extensively.  In legacy COMPASS, the test group is just a
 directory with multiple test cases and, optionally, templates and other files
@@ -282,7 +281,7 @@ and a python script for plotting the results compared to analytic solutions
 (<code class="docutils literal notranslate"><span class="pre">plot_profile.py</span></code>).</p>
 </section>
 <section id="making-a-new-test-group">
-<h2>Making a new test group<a class="headerlink" href="#making-a-new-test-group" title="Permalink to this heading">¶</a></h2>
+<h2>Making a new test group<a class="headerlink" href="#making-a-new-test-group" title="Link to this heading">¶</a></h2>
 <p>Okay, with those details as a reference point from legacy COMPASS, let’s jump
 into developing the new test group in <code class="docutils literal notranslate"><span class="pre">compass</span></code>.  Use any method you like
 for editing code.  If you haven’t settled on a method and are working on your
@@ -369,7 +368,7 @@ groups in the ocean core:</p>
 <code class="docutils literal notranslate"><span class="pre">compass</span></code> knows about the test group.</p>
 </section>
 <section id="adding-a-test-case">
-<h2>Adding a test case<a class="headerlink" href="#adding-a-test-case" title="Permalink to this heading">¶</a></h2>
+<h2>Adding a test case<a class="headerlink" href="#adding-a-test-case" title="Link to this heading">¶</a></h2>
 <p>We’ll add a test case called <code class="docutils literal notranslate"><span class="pre">default</span></code> to <code class="docutils literal notranslate"><span class="pre">gotm</span></code>.  Unlike in legacy
 COMPASS, we don’t need to specify the resolution of the test case.  We want
 to encourage as much <a class="reference internal" href="../developers_guide/overview.html#dev-code-sharing"><span class="std std-ref">Code sharing</span></a> as can reasonably be achieved,
@@ -411,7 +410,7 @@ case belongs to on to the base class’s constructor (<code class="docutils lite
 and give the test case a name, <code class="docutils literal notranslate"><span class="pre">default</span></code>.</p>
 </section>
 <section id="varying-resolution-or-other-parameters">
-<h2>Varying resolution (or other parameters)<a class="headerlink" href="#varying-resolution-or-other-parameters" title="Permalink to this heading">¶</a></h2>
+<h2>Varying resolution (or other parameters)<a class="headerlink" href="#varying-resolution-or-other-parameters" title="Link to this heading">¶</a></h2>
 <p>Since the <code class="docutils literal notranslate"><span class="pre">Gotm</span></code> test group only has one test case at one resolution (and the
 resolution isn’t an important property of the setup—-it’s using multiple
 horizontal grid cells but it’s acting like a single column), we will just
@@ -506,7 +505,7 @@ pick the right inner dictionary, and then set config options (see
 </div>
 </section>
 <section id="adding-the-init-step">
-<h2>Adding the init step<a class="headerlink" href="#adding-the-init-step" title="Permalink to this heading">¶</a></h2>
+<h2>Adding the init step<a class="headerlink" href="#adding-the-init-step" title="Link to this heading">¶</a></h2>
 <p>In legacy COMPASS, the other <code class="docutils literal notranslate"><span class="pre">config_*.xml</span></code> files besides <code class="docutils literal notranslate"><span class="pre">config_driver.xml</span></code>
 define the step in the test case.  In <code class="docutils literal notranslate"><span class="pre">compass</span></code>, these are defined in classes
 that descend from the <code class="docutils literal notranslate"><span class="pre">Step</span></code> base class in modules.  The modules can be
@@ -579,7 +578,7 @@ how we decided which of the outputs from the test case to include in this list.
 <a class="reference external" href="http://glaros.dtc.umn.edu/gkhome/metis/metis/overview">Metis</a> to partition
 the mesh across processors, and <code class="docutils literal notranslate"><span class="pre">ocean.nc</span></code> is the initial condition.</p>
 <section id="defining-namelist-options">
-<h3>Defining namelist options<a class="headerlink" href="#defining-namelist-options" title="Permalink to this heading">¶</a></h3>
+<h3>Defining namelist options<a class="headerlink" href="#defining-namelist-options" title="Link to this heading">¶</a></h3>
 <p>In <code class="docutils literal notranslate"><span class="pre">compass</span></code>, there are two main ways to set namelist options for MPAS model
 runs and we will demonstrate both in this test case.  First, you can define a
 namelist file with the desired values.  This is useful for namelist options that
@@ -624,7 +623,7 @@ yet included the <code class="docutils literal notranslate"><span class="pre">co
 <code class="docutils literal notranslate"><span class="pre">config_periodic_planar_bottom_depth</span></code> options from the legacy test case.</p>
 </section>
 <section id="defining-streams">
-<h3>Defining streams<a class="headerlink" href="#defining-streams" title="Permalink to this heading">¶</a></h3>
+<h3>Defining streams<a class="headerlink" href="#defining-streams" title="Link to this heading">¶</a></h3>
 <p>Similarly, it is convenient to define input and output streams for MPAS-Ocean
 using a streams file, very similar to what you will see when the test case
 is set up.  The syntax in <code class="docutils literal notranslate"><span class="pre">compass</span></code> for defining streams is a lot simpler
@@ -691,7 +690,7 @@ stream in the <code class="docutils literal notranslate"><span class="pre">strea
 </div>
 </section>
 <section id="defining-config-options">
-<h3>Defining config options<a class="headerlink" href="#defining-config-options" title="Permalink to this heading">¶</a></h3>
+<h3>Defining config options<a class="headerlink" href="#defining-config-options" title="Link to this heading">¶</a></h3>
 <p>The remainder of the <code class="docutils literal notranslate"><span class="pre">init</span></code> step will consist of defining the <code class="docutils literal notranslate"><span class="pre">run()</span></code>
 method that does the real work of the step.  To make it easier for users to
 modify the test case a little bit to suit their needs, we may want to include
@@ -725,7 +724,7 @@ be included automatically when the config file is produced when the test case ge
 set up.</p>
 </section>
 <section id="defining-the-run-method">
-<h3>Defining the run method<a class="headerlink" href="#defining-the-run-method" title="Permalink to this heading">¶</a></h3>
+<h3>Defining the run method<a class="headerlink" href="#defining-the-run-method" title="Link to this heading">¶</a></h3>
 <p>With these config options, namelists and streams files defined, we will
 implement the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method of the <code class="docutils literal notranslate"><span class="pre">init</span></code> step to do the rest of the work
 for this step.  In legacy COMPASS, the XML for defining the run scrip was:</p>
@@ -830,7 +829,7 @@ which MPAS core this test case belongs to, and so on.</p>
 </section>
 </section>
 <section id="adding-the-forward-step">
-<h2>Adding the forward step<a class="headerlink" href="#adding-the-forward-step" title="Permalink to this heading">¶</a></h2>
+<h2>Adding the forward step<a class="headerlink" href="#adding-the-forward-step" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">Forward</span></code> step will be conceptually similar to the <code class="docutils literal notranslate"><span class="pre">Init</span></code> step.  Again,
 we make a <code class="docutils literal notranslate"><span class="pre">Forward</span></code> class that descends from <code class="docutils literal notranslate"><span class="pre">Step</span></code> with a constructor that
 calls the base constructor with the name of the step as well as the requested
@@ -1041,7 +1040,7 @@ identical to the full streams file in the work directory:</p>
 </div>
 </section>
 <section id="adding-the-analysis-step">
-<h2>Adding the analysis step<a class="headerlink" href="#adding-the-analysis-step" title="Permalink to this heading">¶</a></h2>
+<h2>Adding the analysis step<a class="headerlink" href="#adding-the-analysis-step" title="Link to this heading">¶</a></h2>
 <p>The legacy <code class="docutils literal notranslate"><span class="pre">analysis</span></code> step is defined like this:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;config</span><span class="w"> </span><span class="na">case=</span><span class="s">&quot;analysis&quot;</span><span class="nt">&gt;</span>
 <span class="w">    </span><span class="nt">&lt;add_link</span><span class="w"> </span><span class="na">source=</span><span class="s">&quot;../forward/output.nc&quot;</span><span class="w"> </span><span class="na">dest=</span><span class="s">&quot;output.nc&quot;</span><span class="nt">/&gt;</span>
@@ -1167,7 +1166,7 @@ in log files rather than going to the terminal when multiple steps or test
 cases are running).</p>
 </section>
 <section id="updating-the-test-case-and-test-group">
-<h2>Updating the test case and test group<a class="headerlink" href="#updating-the-test-case-and-test-group" title="Permalink to this heading">¶</a></h2>
+<h2>Updating the test case and test group<a class="headerlink" href="#updating-the-test-case-and-test-group" title="Link to this heading">¶</a></h2>
 <p>The nearly final steps are to add the steps to the test case, and then the test
 case to the test group:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
@@ -1222,7 +1221,7 @@ case to the test group:</p>
 </div>
 </section>
 <section id="adding-validation">
-<h2>Adding validation<a class="headerlink" href="#adding-validation" title="Permalink to this heading">¶</a></h2>
+<h2>Adding validation<a class="headerlink" href="#adding-validation" title="Link to this heading">¶</a></h2>
 <p>The legacy <code class="docutils literal notranslate"><span class="pre">gotm/2.5km/default</span></code> test case didn’t include any
 <a class="reference internal" href="../developers_guide/framework.html#dev-validation"><span class="std std-ref">Validation</span></a> but it is a very good idea to include some.  This way,
 the test case can be used as part of a regression suite to determine if
@@ -1250,14 +1249,14 @@ this run as they were in a previous run if a baseline run was provided when the
 test case got set up (see <a class="reference internal" href="../users_guide/test_suites.html#test-suites"><span class="std std-ref">Test Suites</span></a>).</p>
 </section>
 <section id="set-up-and-run">
-<h2>Set up and run<a class="headerlink" href="#set-up-and-run" title="Permalink to this heading">¶</a></h2>
+<h2>Set up and run<a class="headerlink" href="#set-up-and-run" title="Link to this heading">¶</a></h2>
 <p>You’re all set!  You should be able to see your new test case when you run
 <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">list</span></code>, set it up by running <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code>, and run it by running
 <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> within the work directory.  See <a class="reference internal" href="../developers_guide/command_line.html#dev-command-line"><span class="std std-ref">Command-line interface</span></a> for
 more on that process.</p>
 </section>
 <section id="documentation">
-<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this heading">¶</a></h2>
+<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">¶</a></h2>
 <p>Make sure to add some documentation of your new test group.  You need to add
 all of the functions, classes and methods to the API documentation in
 <code class="docutils literal notranslate"><span class="pre">docs/developers_guide/&lt;core&gt;/api.rst</span></code>, following the examples for other

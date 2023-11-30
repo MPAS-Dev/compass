@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Caching outputs from compass steps &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -155,11 +154,11 @@
            <div itemprop="articleBody">
              
   <section id="caching-outputs-from-compass-steps">
-<span id="design-doc-cached-outputs"></span><h1>Caching outputs from compass steps<a class="headerlink" href="#caching-outputs-from-compass-steps" title="Permalink to this heading">¶</a></h1>
+<span id="design-doc-cached-outputs"></span><h1>Caching outputs from compass steps<a class="headerlink" href="#caching-outputs-from-compass-steps" title="Link to this heading">¶</a></h1>
 <p>Date: 2021/07/30</p>
 <p>Contributors: Xylar Asay-Davis</p>
 <section id="summary">
-<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">¶</a></h2>
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">¶</a></h2>
 <p>We would like to have a way to download output files for <code class="docutils literal notranslate"><span class="pre">compass</span></code> steps from
 an online cache instead of generating them each time the step runs.  The
 primary motivation for this is to optionally avoid time-consuming steps for
@@ -170,9 +169,9 @@ providing an easy way for both developers and users to control which steps in a
 test case or suite are cached and which are run as normal.</p>
 </section>
 <section id="requirements">
-<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading">¶</a></h2>
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">¶</a></h2>
 <section id="requirement-cached-outputs">
-<span id="req-cached"></span><h3>Requirement: cached outputs<a class="headerlink" href="#requirement-cached-outputs" title="Permalink to this heading">¶</a></h3>
+<span id="req-cached"></span><h3>Requirement: cached outputs<a class="headerlink" href="#requirement-cached-outputs" title="Link to this heading">¶</a></h3>
 <p>Date last modified: 2021/07/30</p>
 <p>Contributors: Xylar Asay-Davis</p>
 <p>Each <code class="docutils literal notranslate"><span class="pre">compass</span></code> step defines its output files in the <code class="docutils literal notranslate"><span class="pre">compass.Step.outputs</span></code>
@@ -181,7 +180,7 @@ to download cached files for each of these outputs and to use these cached
 files for the outputs of the step instead of computing them.</p>
 </section>
 <section id="requirement-selecting-whether-to-use-cached-outputs">
-<span id="req-select"></span><h3>Requirement: selecting whether to use cached outputs<a class="headerlink" href="#requirement-selecting-whether-to-use-cached-outputs" title="Permalink to this heading">¶</a></h3>
+<span id="req-select"></span><h3>Requirement: selecting whether to use cached outputs<a class="headerlink" href="#requirement-selecting-whether-to-use-cached-outputs" title="Link to this heading">¶</a></h3>
 <p>Date last modified: 2021/07/30</p>
 <p>Contributors: Xylar Asay-Davis</p>
 <p>There needs to be a mechanism for developers and users to select which steps
@@ -190,14 +189,14 @@ practical, it should not be overly tedious or manual (e.g. manually setting a
 flag for each step).</p>
 </section>
 <section id="requirement-updating-cached-outputs">
-<span id="req-update"></span><h3>Requirement: updating cached outputs<a class="headerlink" href="#requirement-updating-cached-outputs" title="Permalink to this heading">¶</a></h3>
+<span id="req-update"></span><h3>Requirement: updating cached outputs<a class="headerlink" href="#requirement-updating-cached-outputs" title="Link to this heading">¶</a></h3>
 <p>Date last modified: 2021/07/30</p>
 <p>Contributors: Xylar Asay-Davis</p>
 <p>There should be a documented process for creating cached outputs for steps and
 uploading them.</p>
 </section>
 <section id="requirement-unique-identifier-for-cached-outputs">
-<span id="req-unique"></span><h3>Requirement: unique identifier for cached outputs<a class="headerlink" href="#requirement-unique-identifier-for-cached-outputs" title="Permalink to this heading">¶</a></h3>
+<span id="req-unique"></span><h3>Requirement: unique identifier for cached outputs<a class="headerlink" href="#requirement-unique-identifier-for-cached-outputs" title="Link to this heading">¶</a></h3>
 <p>Date last modified: 2021/07/30</p>
 <p>Contributors: Xylar Asay-Davis</p>
 <p>There should be a mechanism for giving each cached output file a unique
@@ -212,7 +211,7 @@ old cache files.</p>
 </div>
 </section>
 <section id="requirement-either-normal-or-cached-versions-of-a-step">
-<span id="req-normal-or-cached"></span><h3>Requirement: either “normal” or “cached” versions of a step<a class="headerlink" href="#requirement-either-normal-or-cached-versions-of-a-step" title="Permalink to this heading">¶</a></h3>
+<span id="req-normal-or-cached"></span><h3>Requirement: either “normal” or “cached” versions of a step<a class="headerlink" href="#requirement-either-normal-or-cached-versions-of-a-step" title="Link to this heading">¶</a></h3>
 <p>Date last modified: 2021/07/30</p>
 <p>Contributors: Xylar Asay-Davis</p>
 <p>We <strong>do not</strong> require the ability to set up a “normal” and a “cached” version
@@ -221,9 +220,9 @@ case, it would place important constraints on the design solution.)</p>
 </section>
 </section>
 <section id="design">
-<h2>Design<a class="headerlink" href="#design" title="Permalink to this heading">¶</a></h2>
+<h2>Design<a class="headerlink" href="#design" title="Link to this heading">¶</a></h2>
 <section id="design-cached-outputs">
-<span id="des-cached"></span><h3>Design: cached outputs<a class="headerlink" href="#design-cached-outputs" title="Permalink to this heading">¶</a></h3>
+<span id="des-cached"></span><h3>Design: cached outputs<a class="headerlink" href="#design-cached-outputs" title="Link to this heading">¶</a></h3>
 <p>Date last modified: 2021/07/30</p>
 <p>Contributors: Xylar Asay-Davis</p>
 <p><code class="docutils literal notranslate"><span class="pre">compass</span></code> supports “databases” of input data files on the E3SM
@@ -237,7 +236,7 @@ files on the server correspond to which output files via a python dictionary,
 as described in <a class="reference internal" href="#des-unique"><span class="std std-ref">Design: unique identifier for cached outputs</span></a>.</p>
 </section>
 <section id="design-selecting-whether-to-use-cached-outputs">
-<span id="des-select"></span><h3>Design: selecting whether to use cached outputs<a class="headerlink" href="#design-selecting-whether-to-use-cached-outputs" title="Permalink to this heading">¶</a></h3>
+<span id="des-select"></span><h3>Design: selecting whether to use cached outputs<a class="headerlink" href="#design-selecting-whether-to-use-cached-outputs" title="Link to this heading">¶</a></h3>
 <p>Date last modified: 2021/08/03</p>
 <p>Contributors: Xylar Asay-Davis</p>
 <p>A <code class="docutils literal notranslate"><span class="pre">compass</span></code> suite can indicate cached steps in two ways.  If all steps in a
@@ -279,7 +278,7 @@ them, as long as cache files have been stored on the LCRC server and added to
 the <code class="docutils literal notranslate"><span class="pre">cached_files.json</span></code> database.</p>
 </section>
 <section id="design-updating-cached-outputs">
-<span id="des-update"></span><h3>Design: updating cached outputs<a class="headerlink" href="#design-updating-cached-outputs" title="Permalink to this heading">¶</a></h3>
+<span id="des-update"></span><h3>Design: updating cached outputs<a class="headerlink" href="#design-updating-cached-outputs" title="Link to this heading">¶</a></h3>
 <p>Date last modified: 2021/08/03</p>
 <p>Contributors: Xylar Asay-Davis</p>
 <p>A new <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">cache</span></code> command-line tool will be added.  This will only be
@@ -296,7 +295,7 @@ those on the LCRC server.  For example:</p>
 </div>
 </section>
 <section id="design-unique-identifier-for-cached-outputs">
-<span id="des-unique"></span><h3>Design: unique identifier for cached outputs<a class="headerlink" href="#design-unique-identifier-for-cached-outputs" title="Permalink to this heading">¶</a></h3>
+<span id="des-unique"></span><h3>Design: unique identifier for cached outputs<a class="headerlink" href="#design-unique-identifier-for-cached-outputs" title="Link to this heading">¶</a></h3>
 <p>Date last modified: 2021/08/03</p>
 <p>Contributors: Xylar Asay-Davis</p>
 <p>Each cached file on the LCRC server will include a date stamp in the file name.
@@ -319,7 +318,7 @@ database for that MPAS core on the LCRC server.  For example:</p>
 </div>
 </section>
 <section id="design-either-normal-or-cached-versions-of-a-step">
-<span id="des-normal-or-cached"></span><h3>Design: either “normal” or “cached” versions of a step<a class="headerlink" href="#design-either-normal-or-cached-versions-of-a-step" title="Permalink to this heading">¶</a></h3>
+<span id="des-normal-or-cached"></span><h3>Design: either “normal” or “cached” versions of a step<a class="headerlink" href="#design-either-normal-or-cached-versions-of-a-step" title="Link to this heading">¶</a></h3>
 <p>Date last modified: 2021/07/30</p>
 <p>Contributors: Xylar Asay-Davis</p>
 <p>A prototype implementation of output caching had separate versions of test
@@ -338,11 +337,11 @@ directory.</p>
 </section>
 </section>
 <section id="implementation">
-<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this heading">¶</a></h2>
+<h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading">¶</a></h2>
 <p>The implementation is on
 <a class="reference external" href="https://github.com/xylar/compass/tree/cached_init">this branch</a>.</p>
 <section id="implementation-cached-outputs">
-<span id="imp-cached"></span><h3>Implementation: cached outputs<a class="headerlink" href="#implementation-cached-outputs" title="Permalink to this heading">¶</a></h3>
+<span id="imp-cached"></span><h3>Implementation: cached outputs<a class="headerlink" href="#implementation-cached-outputs" title="Link to this heading">¶</a></h3>
 <p>Date last modified: 2021/08/04</p>
 <p>Contributors: Xylar Asay-Davis</p>
 <p>Each step has a boolean attribute <code class="docutils literal notranslate"><span class="pre">cached</span></code> that defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code> but
@@ -354,7 +353,7 @@ MPAS core’s <code class="docutils literal notranslate"><span class="pre">cache
 generated.</p>
 </section>
 <section id="implementation-selecting-whether-to-use-cached-outputs">
-<span id="imp-select"></span><h3>Implementation: selecting whether to use cached outputs<a class="headerlink" href="#implementation-selecting-whether-to-use-cached-outputs" title="Permalink to this heading">¶</a></h3>
+<span id="imp-select"></span><h3>Implementation: selecting whether to use cached outputs<a class="headerlink" href="#implementation-selecting-whether-to-use-cached-outputs" title="Link to this heading">¶</a></h3>
 <p>Date last modified: 2021/08/04</p>
 <p>Contributors: Xylar Asay-Davis</p>
 <p>The implementation includes the two mechanisms for selecting cached outputs
@@ -386,7 +385,7 @@ create a test suite for test cases where users are likely to want some steps
 with and others without cached outputs, as in the Cosine Bell example above.</p>
 </section>
 <section id="implementation-updating-cached-outputs">
-<span id="imp-update"></span><h3>Implementation: updating cached outputs<a class="headerlink" href="#implementation-updating-cached-outputs" title="Permalink to this heading">¶</a></h3>
+<span id="imp-update"></span><h3>Implementation: updating cached outputs<a class="headerlink" href="#implementation-updating-cached-outputs" title="Link to this heading">¶</a></h3>
 <p>Date last modified: 2021/08/04</p>
 <p>Contributors: Xylar Asay-Davis</p>
 <p>The new <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">cache</span></code> command has been added and is defined in the
@@ -434,7 +433,7 @@ a branch of the compass repo, committed to the branch, and updated on
 <code class="docutils literal notranslate"><span class="pre">master</span></code> with a pull request as normal.</p>
 </section>
 <section id="implementation-unique-identifier-for-cached-outputs">
-<span id="imp-unique"></span><h3>Implementation: unique identifier for cached outputs<a class="headerlink" href="#implementation-unique-identifier-for-cached-outputs" title="Permalink to this heading">¶</a></h3>
+<span id="imp-unique"></span><h3>Implementation: unique identifier for cached outputs<a class="headerlink" href="#implementation-unique-identifier-for-cached-outputs" title="Link to this heading">¶</a></h3>
 <p>Date last modified: 2021/08/04</p>
 <p>Contributors: Xylar Asay-Davis</p>
 <p>A date string is appended to the end of files in the <code class="docutils literal notranslate"><span class="pre">compass_cache</span></code> database
@@ -443,7 +442,7 @@ date the <code class="docutils literal notranslate"><span class="pre">compass</s
 the <code class="docutils literal notranslate"><span class="pre">--date_string</span></code> flag if desired.</p>
 </section>
 <section id="implementation-either-normal-or-cached-versions-of-a-step">
-<span id="imp-normal-or-cached"></span><h3>Implementation: either “normal” or “cached” versions of a step<a class="headerlink" href="#implementation-either-normal-or-cached-versions-of-a-step" title="Permalink to this heading">¶</a></h3>
+<span id="imp-normal-or-cached"></span><h3>Implementation: either “normal” or “cached” versions of a step<a class="headerlink" href="#implementation-either-normal-or-cached-versions-of-a-step" title="Link to this heading">¶</a></h3>
 <p>Date last modified: 2021/08/04</p>
 <p>Contributors: Xylar Asay-Davis</p>
 <p>The implementation leans heavily on the assumption that a given step will
@@ -470,9 +469,9 @@ cached version of the step.</p>
 </section>
 </section>
 <section id="testing">
-<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">¶</a></h2>
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">¶</a></h2>
 <section id="testing-cached-outputs">
-<span id="test-cached"></span><h3>Testing: cached outputs<a class="headerlink" href="#testing-cached-outputs" title="Permalink to this heading">¶</a></h3>
+<span id="test-cached"></span><h3>Testing: cached outputs<a class="headerlink" href="#testing-cached-outputs" title="Link to this heading">¶</a></h3>
 <p>Date last modified: 2021/08/04</p>
 <p>Contributors: Xylar Asay-Davis</p>
 <p>I have constructed cached versions of the following steps on the LCRC server,
@@ -515,7 +514,7 @@ cached outputs as inputs.  All tests ran successfully and were bit-for-bit with
 a baseline that was used to produce the cached outputs.</p>
 </section>
 <section id="testing-selecting-whether-to-use-cached-outputs">
-<span id="test-select"></span><h3>Testing: selecting whether to use cached outputs<a class="headerlink" href="#testing-selecting-whether-to-use-cached-outputs" title="Permalink to this heading">¶</a></h3>
+<span id="test-select"></span><h3>Testing: selecting whether to use cached outputs<a class="headerlink" href="#testing-selecting-whether-to-use-cached-outputs" title="Link to this heading">¶</a></h3>
 <p>Date last modified: 2021/08/04</p>
 <p>Contributors: Xylar Asay-Davis</p>
 <p>I added QUwISC240 test case to the ocean <code class="docutils literal notranslate"><span class="pre">nightly</span></code> test suite using cached
@@ -547,7 +546,7 @@ compass<span class="w"> </span>setup<span class="w"> </span>-n<span class="w"> <
 <p>Results were bit-for-bit with the same test cases run without cached outputs.</p>
 </section>
 <section id="testing-updating-cached-outputs">
-<span id="test-update"></span><h3>Testing: updating cached outputs<a class="headerlink" href="#testing-updating-cached-outputs" title="Permalink to this heading">¶</a></h3>
+<span id="test-update"></span><h3>Testing: updating cached outputs<a class="headerlink" href="#testing-updating-cached-outputs" title="Link to this heading">¶</a></h3>
 <p>Date last modified: 2021/08/04</p>
 <p>Contributors: Xylar Asay-Davis</p>
 <p>All cached files used in the testing above sere created with <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">cache</span></code>
@@ -560,7 +559,7 @@ file basename (before the extension).</p>
 flag could be used to specify an alternative suffix, as expected.</p>
 </section>
 <section id="testing-unique-identifier-for-cached-outputs">
-<span id="test-unique"></span><h3>Testing: unique identifier for cached outputs<a class="headerlink" href="#testing-unique-identifier-for-cached-outputs" title="Permalink to this heading">¶</a></h3>
+<span id="test-unique"></span><h3>Testing: unique identifier for cached outputs<a class="headerlink" href="#testing-unique-identifier-for-cached-outputs" title="Link to this heading">¶</a></h3>
 <p>Date last modified: 2021/08/04</p>
 <p>Contributors: Xylar Asay-Davis</p>
 <p>All files in the <code class="docutils literal notranslate"><span class="pre">compass_cache</span></code> database have date strings appended to them
@@ -568,7 +567,7 @@ to make them unique.  No testing has been performed yet to ensure that new
 cached files with new dated can be added but I don’t foresee any problems.</p>
 </section>
 <section id="testing-either-normal-or-cached-versions-of-a-step">
-<span id="test-normal-or-cached"></span><h3>Testing: either “normal” or “cached” versions of a step<a class="headerlink" href="#testing-either-normal-or-cached-versions-of-a-step" title="Permalink to this heading">¶</a></h3>
+<span id="test-normal-or-cached"></span><h3>Testing: either “normal” or “cached” versions of a step<a class="headerlink" href="#testing-either-normal-or-cached-versions-of-a-step" title="Link to this heading">¶</a></h3>
 <p>Date last modified: 2021/08/04</p>
 <p>Contributors: Xylar Asay-Davis</p>
 <p>The implementation that I tested is based on this requrements.  However, in the
