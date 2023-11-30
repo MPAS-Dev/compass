@@ -92,8 +92,7 @@ class Convergence(TestCase):
             init_name = f'initial_state_{res_name}'
             self.add_step(InitialState(test_case=self,
                                        name=init_name,
-                                       resolution=resolution,
-                                       coord_type=self.coord_type))
+                                       resolution=resolution))
             ntasks = max(min_tasks,
                          int(ceil(ntasks_baseline / resolution**2.)))
             forward_step = Forward(test_case=self, resolution=resolution,
@@ -124,3 +123,9 @@ class Convergence(TestCase):
                 res_name = f'{int(resolution)}km'
             compare_variables(test_case=self, variables=variables,
                               filename1=f'forward_{res_name}/output.nc')
+
+    def configure(self):
+        """
+        Change config options as needed
+        """
+        self.config.set('vertical_grid', 'coord_type', self.coord_type)

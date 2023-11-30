@@ -50,8 +50,7 @@ class Default(TestCase):
         subdir = f'{coord_type}/{method}/{res_name}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
-        self.add_step(InitialState(test_case=self, resolution=resolution,
-                                   coord_type=coord_type))
+        self.add_step(InitialState(test_case=self, resolution=resolution))
         damping_coeffs = None
         config = CompassConfigParser()
         config.add_from_package('compass.ocean.tests.drying_slope',
@@ -99,3 +98,9 @@ class Default(TestCase):
         else:
             compare_variables(test_case=self, variables=variables,
                               filename1='forward/output.nc')
+
+    def configure(self):
+        """
+        Change config options as needed
+        """
+        self.config.set('vertical_grid', 'coord_type', self.coord_type)

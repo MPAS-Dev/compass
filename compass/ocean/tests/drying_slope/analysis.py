@@ -91,7 +91,10 @@ class Analysis(Step):
         ds = ds.drop_vars(np.setdiff1d([j for j in ds.variables],
                                        ['yCell', 'ssh']))
         ds = ds.isel(Time=tidx)
-        x_mpas = ds.yCell.values / 1000.0
+        drying_length = self.config.getfloat('drying_slope', 'ly_analysis')
+        drying_length = drying_length * 1e3
+        x_offset = np.max(ds.yCell.values) - drying_length
+        x_mpas = (ds.yCell.values - x_offset) / 1000.0
         ssh_mpas = ds.ssh.values
         # Interpolate mpas solution to the points at which we have an exact
         # solution

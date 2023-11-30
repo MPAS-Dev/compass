@@ -1,8 +1,9 @@
+import xarray as xr
 from mpas_tools.io import write_netcdf
 from mpas_tools.mesh.conversion import convert, cull
 from mpas_tools.planar_hex import make_planar_hex_mesh
 
-from compass.model import run_model
+from compass.ocean.vertical import init_vertical_coord
 from compass.step import Step
 
 
@@ -12,7 +13,7 @@ class InitialState(Step):
     cases
     """
     def __init__(self, test_case, resolution, name='initial_state',
-                 coord_type='sigma'):
+                 baroclinic=False):
         """
         Create the step
 
@@ -24,18 +25,10 @@ class InitialState(Step):
         super().__init__(test_case=test_case, name=name, ntasks=1,
                          min_tasks=1, openmp_threads=1)
 
-        self.coord_type = coord_type
-
         self.resolution = resolution
 
-        self.add_namelist_file('compass.ocean.tests.drying_slope',
-                               'namelist.init', mode='init')
-
-        self.add_streams_file('compass.ocean.tests.drying_slope',
-                              'streams.init', mode='init')
-
         for file in ['base_mesh.nc', 'culled_mesh.nc', 'culled_graph.info',
-                     'ocean.nc']:
+                     'initial_state.nc', 'forcing.nc']:
             self.add_output_file(file)
 
         self.add_model_as_input()
@@ -46,42 +39,96 @@ class InitialState(Step):
         """
         config = self.config
         logger = self.logger
+        resolution = self.resolution
 
+        # Fetch config options
         section = config['vertical_grid']
-        coord_type = self.coord_type
-        thin_film_thickness = section.getfloat('thin_film_thickness') + 1.0e-9
-        if coord_type == 'single_layer':
-            options = {'config_tidal_boundary_vert_levels': '1',
-                       'config_drying_min_cell_height':
-                       f'{thin_film_thickness}'}
-            self.update_namelist_at_runtime(options)
-        else:
-            vert_levels = section.getint('vert_levels')
-            options = {'config_tidal_boundary_vert_levels': f'{vert_levels}',
-                       'config_tidal_boundary_layer_type': f"'{coord_type}'",
-                       'config_drying_min_cell_height':
-                       f'{thin_film_thickness}'}
-            self.update_namelist_at_runtime(options)
+        thin_film_thickness = section.getfloat('thin_film_thickness')
+        vert_levels = section.getint('vert_levels')
+
+        section = config['drying_slope']
+        nx = section.getint('nx')
+        domain_length = section.getfloat('ly') * 1e3
+        drying_length = section.getfloat('ly_analysis') * 1e3
+        plug_width_frac = section.getfloat('plug_width_frac')
+        right_bottom_depth = section.getfloat('right_bottom_depth')
+        left_bottom_depth = section.getfloat('left_bottom_depth')
+        plug_temperature = section.getfloat('plug_temperature')
+        background_temperature = section.getfloat('background_temperature')
+        background_salinity = section.getfloat('background_salinity')
+        coriolis_parameter = section.getfloat('coriolis_parameter')
+
+        # Check config options
+        if domain_length < drying_length:
+            raise ValueError('Domain is not long enough to capture wetting '
+                             'front')
+        if right_bottom_depth < left_bottom_depth:
+            raise ValueError('Right boundary must be deeper than left '
+                             'boundary')
 
         # Determine mesh parameters
-        nx = config.getint('drying_slope', 'nx')
-        ny = round(28 / self.resolution)
-        if self.resolution < 1.:
+        dc = 1e3 * resolution
+        ny = round(domain_length / dc)
+        # This is just for consistency with previous implementations and could
+        # be removed
+        if resolution < 1.:
             ny += 2
-        dc = 1e3 * self.resolution
+        ny = 2 * round(ny / 2)
 
         logger.info(' * Make planar hex mesh')
-        dsMesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc, nonperiodic_x=False,
-                                      nonperiodic_y=True)
+        ds_mesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc,
+                                       nonperiodic_x=False,
+                                       nonperiodic_y=True)
         logger.info(' * Completed Make planar hex mesh')
-        write_netcdf(dsMesh, 'base_mesh.nc')
+        write_netcdf(ds_mesh, 'base_mesh.nc')
 
         logger.info(' * Cull mesh')
-        dsMesh = cull(dsMesh, logger=logger)
+        ds_mesh = cull(ds_mesh, logger=logger)
         logger.info(' * Convert mesh')
-        dsMesh = convert(dsMesh, graphInfoFileName='culled_graph.info',
-                         logger=logger)
+        ds_mesh = convert(ds_mesh, graphInfoFileName='culled_graph.info',
+                          logger=logger)
         logger.info(' * Completed Convert mesh')
-        write_netcdf(dsMesh, 'culled_mesh.nc')
-        run_model(self, namelist='namelist.ocean',
-                  streams='streams.ocean')
+        write_netcdf(ds_mesh, 'culled_mesh.nc')
+
+        ds = ds_mesh.copy()
+        ds_forcing = ds_mesh.copy()
+
+        y_min = ds_mesh.yCell.min()
+        y_max = ds_mesh.yCell.max()
+        dc_edge_min = ds_mesh.dcEdge.min()
+
+        y_cell = ds.yCell
+        max_level_cell = vert_levels
+        bottom_depth = (right_bottom_depth - (y_max - y_cell) / drying_length *
+                        (right_bottom_depth - left_bottom_depth))
+        ds['bottomDepth'] = bottom_depth
+        # Set the water column to dry everywhere
+        ds['ssh'] = -bottom_depth + thin_film_thickness * max_level_cell
+        # We don't use config_tidal_forcing_monochromatic_baseline because the
+        # default value doesn't alter the initial state
+        init_vertical_coord(config, ds)
+
+        plug_width = domain_length * plug_width_frac
+        y_plug_boundary = y_min + plug_width
+        ds['temperature'] = xr.where(y_cell < y_plug_boundary,
+                                     plug_temperature, background_temperature)
+        ds['tracer1'] = xr.where(y_cell < y_plug_boundary, 1.0, 0.0)
+        ds['salinity'] = background_salinity * xr.ones_like(y_cell)
+        normalVelocity = xr.zeros_like(ds_mesh.xEdge)
+        normalVelocity, _ = xr.broadcast(normalVelocity, ds.refBottomDepth)
+        normalVelocity = normalVelocity.transpose('nEdges', 'nVertLevels')
+        normalVelocity = normalVelocity.expand_dims(dim='Time', axis=0)
+        ds['normalVelocity'] = normalVelocity
+        ds['fCell'] = coriolis_parameter * xr.ones_like(ds.xCell)
+        ds['fEdge'] = coriolis_parameter * xr.ones_like(ds.xEdge)
+        ds['fVertex'] = coriolis_parameter * xr.ones_like(ds.xVertex)
+
+        write_netcdf(ds, 'initial_state.nc')
+
+        # Define the tidal boundary condition over 1-cell width
+        y_tidal_boundary = y_max - dc_edge_min / 2.
+        tidal_forcing_mask = xr.where(y_cell > y_tidal_boundary, 1.0, 0.0)
+        if tidal_forcing_mask.sum() <= 0:
+            raise ValueError('Input mask for tidal case is not set!')
+        ds_forcing['tidalInputMask'] = tidal_forcing_mask
+        write_netcdf(ds_forcing, 'forcing.nc')

@@ -34,13 +34,17 @@ defines a step for setting up the initial state for each test case.
 
 First, a mesh appropriate for the resolution is generated using
 :py:func:`mpas_tools.planar_hex.make_planar_hex_mesh()`.  Then, the mesh is
-culled to remove periodicity in the y direction. MPAS-Ocean is then run in init
-mode. If the vertical coordinate is ``sigma``, the vertical grid configured
-accordingly during init mode. During this init mode run, ssh is initialized
-using the tidal forcing config options, and temperature and salinity are set
-to constant values by default. (Namelist options may be modified to produce a
-plug of different temperature values from the background, but this is not
-employed in this test case.)
+culled to remove periodicity in the y direction. The vertical grid is
+configured according to the config options in the ``vertial_grid`` section.
+The bottom depth is then set according to config options
+``right_bottom_depth`` and ``left_bottom_depth``. The initial layer
+thicknesses are set to the minimum thickness and the initial state is set to
+a constant value by default according to the config options
+``background_temperature`` and ``background_salinity``. Optionally, a mass of
+warmer water can be initialized over part of the domain, a "plug," using
+config options ``plug_width_frac`` and ``plug_width_temperature``. For current
+configurations, tracer tendencies are off and these tracer options do not
+affect the flow.
 
 forward
 ~~~~~~~
@@ -50,7 +54,9 @@ defines a step for running MPAS-Ocean from the initial condition produced in
 the ``initial_state`` step. If ``damping_coeff`` is provided as an argument to 
 the constructor, the associate namelist option
 (``config_Rayleigh_damping_coeff``) will be given this value. MPAS-Ocean is run
-in ``run()``.
+in ``run()``. The time step is determined as a function of resolution by the
+config option ``dt_per_km``. The number of tasks is determined as a function
+of resolution by ``ntasks_baseline`` and ``min_tasks``.
 
 viz
 ~~~
@@ -111,16 +117,6 @@ Both ``sigma`` and ``single_layer`` coordinate types are supported. For
  ``config_Rayleigh_damping_coeff`` equal to 0.01. The ``single_layer`` case
 runs at one value of the implicit bottom drag coefficient. 
 
-
-.. _dev_ocean_drying_slope_ramp:
-
-ramp
-----
-
-The :py:class:`compass.ocean.tests.drying_slope.ramp.Ramp` is identical to the
-default class except it sets ``ramp`` to ``True`` for the forward step to enable
-the ramp feature for wetting and drying.
-.. _dev_ocean_drying_slope_log_law:
 
 loglaw
 ------

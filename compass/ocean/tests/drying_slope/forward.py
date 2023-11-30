@@ -74,10 +74,10 @@ class Forward(Step):
                             target=f'{input_path}/culled_mesh.nc')
 
         self.add_input_file(filename='init.nc',
-                            target=f'{input_path}/ocean.nc')
+                            target=f'{input_path}/initial_state.nc')
 
         self.add_input_file(filename='forcing.nc',
-                            target=f'{input_path}/init_mode_forcing_data.nc')
+                            target=f'{input_path}/forcing.nc')
 
         self.add_input_file(filename='graph.info',
                             target=f'{input_path}/culled_graph.info')
