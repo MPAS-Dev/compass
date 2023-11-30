@@ -23,3 +23,11 @@ script was last sourced.  The load script will reinstall compass into the conda
 environment when it is sourced in the root of the compass branch.
 
 You can view the documentation by opening ``_build/html/index.html``.
+From any machine, you can scp the ``html`` directory to your local computer for
+viewing.
+On NERSC, you can conveniently make use of their
+`web Science Gateway <https://docs.nersc.gov/services/science-gateways/#web-methods-for-data>`_
+to avoid transferring data.  By copying your compiled documentation to
+an appropriately named subdirectory at
+``/global/cfs/cdirs/myproj/www``, it can then be viewed from a browser at
+``https://portal.nersc.gov/cfs/myproj/``.
