@@ -3,7 +3,7 @@ from compass.landice.tests.mismipplus.setup_mesh import SetupMesh
 from compass.testcase import TestCase
 
 
-class MakeMeshTest(TestCase):
+class MeshGen(TestCase):
     """
     Mock test case for create the MISMIP+ mesh and initial conditions
 
@@ -18,13 +18,11 @@ class MakeMeshTest(TestCase):
 
         Parameters
         ----------
-        test_group : compass.landice.test.mismipplus.setup_mesh
+        test_group : compass.landice.test.mismipplus.mesh_gen
             The test group that this test case belongs to
 
-        resolution : int
-            The distance between horizontal (x-y) grid points
         """
-        name = "MakeMeshTest"
+        name = "mesh_gen"
 
         super().__init__(test_group=test_group, name=name)
 

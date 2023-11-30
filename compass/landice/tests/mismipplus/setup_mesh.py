@@ -30,7 +30,7 @@ class SetupMesh(Step):
             The test case this step belongs to
 
         resolution : int
-            The resolution of the test case
+            The distance between horizontal grid points
         """
         # Defined resolutions, the value of `resolution` in the configuration
         # file needs to a key in the dictionary, or added manually.
@@ -50,8 +50,8 @@ class SetupMesh(Step):
         assert key in resolution_params
 
         super().__init__(test_case=test_case,
-                         name=f'{key}_setupmesh',
-                         subdir=f"{key}/setupmesh")
+                         name=f'{key}_mesh_gen',
+                         subdir=f"{key}/mesh_gen")
 
         # Files to be created as part of the this step
         for filename in ['mpas_grid.nc', 'graph.info', 'landice_grid.nc']:
@@ -220,7 +220,7 @@ def _setup_MISMPPlus_IC(config, logger, filename):
 
     Parameters
     ----------
-    config : compass.config.CompassConfigParser
+    config : comass.config.CompassConfigParser
         Configuration options for this test case
 
     logger : logging.Logger
@@ -241,11 +241,14 @@ def _setup_MISMPPlus_IC(config, logger, filename):
     # Read parameters from the .cfg file
     section = config['mismipplus']
     nVertLevels = section.getint('levels')
-
     init_thickness = section.getfloat('init_thickness')
 
     # open the file
     src = xr.open_dataset(filename)
+
+    # Use `.loc[:]` for setting the initial conditions  since we are setting
+    # the fields with scalar values. This ensures values are properly broadcast
+    # against the fields coordinates
 
     # Set the bedTopography
     src['bedTopography'].loc[:] = __mismipplus_bed(src.xCell, src.yCell)
@@ -261,21 +264,18 @@ def _setup_MISMPPlus_IC(config, logger, filename):
     # Boolean masks for indices which correspond to the N/S boundary of mesh
     mask = (src.yCell == src.yCell.min()) | (src.yCell == src.yCell.max())
     # Set the velocity boundary conditions
-    src['dirichletVelocityMask'].loc[:] = xr.where(mask, 1, 0)
+    src['dirichletVelocityMask'].loc[:] = xr.where(mask, 1, 0).variable
 
-    # SKIPPING setting the initial velocities because they are already zero.
+    # Skipping WHL step of setting the initial velocities to zero
+    # since they are already zero.
 
     # convert to MPAS units
     C /= spy**(1.0 / 3.0)
 
-    # Use `.loc[:]` for setting `effectivePressure` and
-    # `layerThicknessFractions` since we are setting the fields with scalar
-    # values. Needed to maintain the existing variables dimension/coords
-
     # Set the effectivePressure using a Weertman power law
     src['effectivePressure'].loc[:] = C
 
-    # the layerThicknessFractions, so that layers are evenly distributed
+    # Set the layerThicknessFractions so that layers are evenly distributed
     src['layerThicknessFractions'].loc[:] = 1.0 / float(nVertLevels)
 
     # Write the dataset to disk

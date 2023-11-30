@@ -6,6 +6,8 @@ from compass.validate import compare_variables
 class SmokeTest(TestCase):
     """
     A test case for running a smoke test of the MISMIP+ configuration
+
+    This test case  uses a pre-made mesh file.
     """
 
     def __init__(self, test_group):
