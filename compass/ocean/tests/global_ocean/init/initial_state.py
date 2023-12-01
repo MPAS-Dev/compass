@@ -222,13 +222,12 @@ class InitialState(Step):
         with open('smooth_depth_in', 'w') as file:
             file.write(text)
 
-        check_call(args=['ocean_smooth_topo_before_init'],
+        check_call(args=['ocean_smooth_topo_before_init_skip_land_ice'],
                    logger=self.logger)
 
         with (xr.open_dataset('topography_culled.nc') as ds_topo):
             with xr.open_dataset('topography_orig_and_smooth.nc') as ds_smooth:
-                for field in ['bed_elevation', 'landIceDraftObserved',
-                              'landIceThkObserved']:
+                for field in ['bed_elevation']:
                     attrs = ds_topo[field].attrs
                     ds_topo[field] = ds_smooth[f'{field}New']
                     ds_topo[field].attrs = attrs
