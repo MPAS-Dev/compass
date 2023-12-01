@@ -15,10 +15,21 @@ class SetupMesh(Step):
     """
     A step for creating a mesh and initial condition for MISMIP+ test cases
 
-    Parameters
+    Attributes
     ----------
     resolution : int
-        The resolution of the test case
+        The resolution of the test case, as defined configuration file at the
+        when `compass setup` is run.
+
+    nx : int
+        The number of cells in the x direction
+
+    ny : int
+        The number of cells in the y direction
+
+    dc : int
+        The distance in meters between adjacent cell centers.
+
     """
     def __init__(self, test_case, resolution):
         """

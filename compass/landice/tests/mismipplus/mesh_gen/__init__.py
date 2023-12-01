@@ -5,12 +5,7 @@ from compass.testcase import TestCase
 
 class MeshGen(TestCase):
     """
-    Mock test case for create the MISMIP+ mesh and initial conditions
-
-    Attributes
-    ----------
-    resolution : int
-        The resolution of the mesh (as defined configuration file)
+    Test case for create the MISMIP+ mesh and initial conditions
     """
     def __init__(self, test_group):
         """
