@@ -16,6 +16,7 @@ from jinja2 import Template
 from mache import MachineInfo
 from mache import discover_machine as mache_discover_machine
 from mache.spack import get_spack_script, make_spack_env
+from packaging import version
 from shared import (
     check_call,
     get_conda_base,
@@ -209,7 +210,9 @@ def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
         check_supported('petsc', machine, compiler, mpi, source_path)
 
     if env_type == 'dev':
-        spack_env = f'dev_compass_{compass_version}{env_suffix}'
+        ver = version.parse(compass_version)
+        release_version = '.'.join(str(vr) for vr in ver.release)
+        spack_env = f'dev_compass_{release_version}{env_suffix}'
     elif env_type == 'test_release':
         spack_env = f'test_compass_{compass_version}{env_suffix}'
     else:
