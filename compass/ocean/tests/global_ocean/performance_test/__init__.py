@@ -28,7 +28,7 @@ class PerformanceTest(ForwardTestCase):
         init : compass.ocean.tests.global_ocean.init.Init
             The test case that produces the initial condition for this run
 
-        time_integrator : {'split_explicit', 'RK4'}
+        time_integrator : {'split_explicit_ab2', 'RK4'}
             The time integrator to use for the forward run
         """
         super().__init__(test_group=test_group, mesh=mesh, init=init,

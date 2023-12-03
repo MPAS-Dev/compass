@@ -44,14 +44,14 @@ class DynamicAdjustment(ForwardTestCase):
         init : compass.ocean.tests.global_ocean.init.Init
             The test case that produces the initial condition for this run
 
-        time_integrator : {'split_explicit', 'RK4'}
+        time_integrator : {'split_explicit_ab2', 'RK4'}
             The time integrator to use for the forward run
         """
         super().__init__(test_group=test_group, mesh=mesh, init=init,
                          time_integrator=time_integrator,
                          name='dynamic_adjustment')
 
-        if time_integrator == 'split_explicit':
+        if time_integrator == 'split_explicit_ab2':
             yaml_filename = 'dynamic_adjustment.yaml'
         else:
             yaml_filename = f'dynamic_adjustment_{time_integrator}.yaml'
@@ -145,7 +145,7 @@ class DynamicAdjustment(ForwardTestCase):
         required = ['run_duration', 'output_interval', 'restart_interval']
         if not get_dt_from_min_res:
             required.append('dt')
-            if time_integrator == 'split_explicit':
+            if time_integrator == 'split_explicit_ab2':
                 required.append('btr_dt')
         for option in required:
             if option not in options:

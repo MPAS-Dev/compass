@@ -63,7 +63,7 @@ class GlobalOcean(TestGroup):
         """ Add test cases for the given mesh(es) """
 
         default_ic = 'WOA23'
-        default_time_int = 'split_explicit'
+        default_time_int = 'split_explicit_ab2'
 
         for mesh_name in mesh_names:
             mesh_test = Mesh(test_group=self, mesh_name=mesh_name,
