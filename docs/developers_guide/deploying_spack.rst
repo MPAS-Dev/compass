@@ -24,6 +24,10 @@ If system modules change in E3SM, we try to stay in sync:
 
 * mkl (or other linear algebra libs)
 
+When we update the mache version in compass, we also need to bump the compass
+version (typically either the major or the minor version) and then re-deploy
+shared spack environments on each supported machine.
+
 Spack
 -----
 
@@ -39,6 +43,9 @@ Spack is for libraries used by MPAS and tools that need system MPI:
 
 * Netlib LAPACK
 
+When we update the versions of any of these libraries in compass, we also need
+to bump the compass version (typically either the major or the minor version)
+and then re-deploy shared spack environments on each supported machine.
 
 Conda
 -----
@@ -47,6 +54,10 @@ Conda (via conda-forge) is used for python packages and related dependencies
 that don’t need system MPI. Conda environments aren’t shared between
 developers because the compass you’re developing is part of the conda
 environment.
+
+When we update the constraints on conda dependencies, we also need to bump the
+compass alpha, beta or rc version.  We do not need to re-deploy spack
+environments on share machines because they remain unaffected.
 
 Mache
 =====
@@ -127,14 +138,18 @@ by compass.  Here, we will use ``<fork>`` as a stand-in for the fork of mache
 to use (e.g. ``E3SM-Project/mache``) and ``<branch>`` as the stand-in for a branch on
 that fork (e.g. ``main``).
 
-We also need to make sure there is a spack branch for the version of mache.
-This is a branch off of the develop branch on
+We also need to make sure there is a spack branch for the version of compass.
+The spack branch is a branch off of the develop branch on
 `E3SM’s spack repo <https://github.com/E3SM-Project/spack>`_ that has any
-updates to packages required for this version of mache and compass. The
-spack branch will omit any alpha, beta or rc suffix on the mache version
-because it is intended to be the spack branch we will use once the ``mache``
-release happens.  In this example, we will work with the branch
+updates to packages required for this version of mache.  The remote branch
+is named after the release version of mache (omitting any alpha, beta or rc
+suffix because it is intended to be the spack branch we will use once the
+``mache`` release happens).  In this example, we will work with the branch
 `spack_for_mache_1.12.0 <https://github.com/E3SM-Project/spack/tree/spack_for_mache_1.12.0>`_.
+The local clone is instead named after the compass version (again any omitting
+alpha, beta or rc) plus the compiler and MPI library because we have discovered
+two users cannot make modifications to the same git clone.  Giving each clone
+of the spack branch a unique name ensures that they are independent.
 
 Here's how to get a branch of compass we're testing (``simplify_local_mache``
 in this case) as a local worktree:
@@ -280,7 +295,7 @@ Here is an example:
         --recreate
 
 Troubleshooting spack
-------------------------------
+---------------------
 
 If you encounter an error like:
 .. code-block:: none
