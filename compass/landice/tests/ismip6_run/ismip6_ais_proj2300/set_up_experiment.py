@@ -228,8 +228,13 @@ class SetUpExperiment(Step):
             slm_input_ice = section.get('slm_input_ice')
             slm_input_earth = section.get('slm_input_earth')
             slm_input_others = section.get('slm_input_others')
-            # nglv = section.getint('nglv')
+            nglv = section.getint('nglv')
 
+            # complate the full paths to the SLM inputs
+            slm_input_ice = os.path.join(slm_input_ice,
+                                         f'GL{nglv}/ice_noGrIS_GL{nglv}/')
+            slm_input_others = os.path.join(slm_input_others,
+                                            f'GL{nglv}/')
             # incorporate the SLM config in the landice namelist
             options = {'config_uplift_method': "'sealevelmodel'"}
             self.add_namelist_options(options=options,
@@ -239,7 +244,7 @@ class SetUpExperiment(Step):
             template = Template(resources.read_text
                                 (resource_location,
                                  'namelist.sealevel.template'))
-            text = template.render(slm_input_ice=slm_input_ice,
+            text = template.render(nglv=int(nglv), slm_input_ice=slm_input_ice,
                                    slm_input_earth=slm_input_earth,
                                    slm_input_others=slm_input_others)
 
