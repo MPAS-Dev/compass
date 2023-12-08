@@ -52,17 +52,17 @@ class SetupMesh(Step):
 
         # With the defined resolution, make the associated key for the param
         # dictionary (necessary b/c unstructured hex meshes)
-        key = f'{resolution}km'
+        resolution_key = f'{resolution}km'
 
         # Ensure the resolution passed in the configuration file is defined
         # within the parameter dictionary. If this is not the case, either:
         #   1. choose an already defined resolution
         #   2. add the appropriate parameter values to the dict.
-        assert key in resolution_params
+        assert resolution_key in resolution_params
 
         super().__init__(test_case=test_case,
-                         name=f'{key}_mesh_gen',
-                         subdir=f"{key}/mesh_gen")
+                         name=f'{resolution_key}_mesh_gen',
+                         subdir=f"{resolution_key}/mesh_gen")
 
         # Files to be created as part of the this step
         for filename in ['mpas_grid.nc', 'graph.info', 'landice_grid.nc']:
@@ -70,7 +70,7 @@ class SetupMesh(Step):
 
         # unpack the mesh parameters for the given resolution as set as
         # attributes
-        self.nx, self.ny, self.dc = resolution_params[key].values()
+        self.nx, self.ny, self.dc = resolution_params[resolution_key].values()
 
         self.resolution = resolution
 
