@@ -90,11 +90,12 @@ class LTSRegionsStep(Step):
         use_progress_bar = self.log_filename is None
         label_mesh(fine_region, mesh='culled_mesh.nc',
                    graph_info='culled_graph.info', num_interface=2,
+                   num_interface_adjacent=2,
                    logger=self.logger, use_progress_bar=use_progress_bar)
 
 
 def label_mesh(fine_region, mesh, graph_info, num_interface,  # noqa: C901
-               logger, use_progress_bar):
+               num_interface_adjacent, logger, use_progress_bar):
 
     # read in mesh data
     ds = xr.open_dataset(mesh)
@@ -118,6 +119,7 @@ def label_mesh(fine_region, mesh, graph_info, num_interface,  # noqa: C901
 
     # first layer of cells with label 5
     changed_cells = [[], []]
+    border_cells = []
     for iedge in range(0, n_edges):
         cell1 = cells_on_edge[iedge, 0] - 1
         cell2 = cells_on_edge[iedge, 1] - 1
@@ -125,20 +127,20 @@ def label_mesh(fine_region, mesh, graph_info, num_interface,  # noqa: C901
         if (cell1 != -1 and cell2 != -1):
             if (lts_rgn[cell1] == 1 and lts_rgn[cell2] == 2):
 
-                lts_rgn[cell2] = 5
-                changed_cells[0].append(cell2)
-
-            elif (lts_rgn[cell1] == 2 and lts_rgn[cell2] == 1):
-
                 lts_rgn[cell1] = 5
                 changed_cells[0].append(cell1)
 
-    # second and third layer of cells with label 5
+            elif (lts_rgn[cell1] == 2 and lts_rgn[cell2] == 1):
+
+                lts_rgn[cell2] = 5
+                changed_cells[0].append(cell2)
+
+    border_cells = changed_cells[0]
+
+    # num_interface_adjacent - 1 layers of cells with label 5
     # only looping over cells changed during loop for previous layer
-    # at the end of this loop, changed_cells[0] will have the list of cells
-    # sharing edegs with the coarse cells
     logger.info('Labeling interface-adjacent fine cells...')
-    for i in range(0, 2):  # this loop creates 2 layers
+    for i in range(0, num_interface_adjacent - 1):
         changed_cells[(i + 1) % 2] = []
 
         for icell in changed_cells[i % 2]:
@@ -149,17 +151,19 @@ def label_mesh(fine_region, mesh, graph_info, num_interface,  # noqa: C901
                     cell2 = cells_on_edge[iedge - 1, 1] - 1
 
                     if (cell1 != -1 and cell2 != -1):
-                        if (lts_rgn[cell1] == 5 and lts_rgn[cell2] == 2):
+                        if (lts_rgn[cell1] == 5 and lts_rgn[cell2] == 1):
 
                             lts_rgn[cell2] = 5
                             changed_cells[(i + 1) % 2].append(cell2)
 
-                        elif (lts_rgn[cell1] == 2 and lts_rgn[cell2] == 5):
+                        elif (lts_rgn[cell1] == 1 and lts_rgn[cell2] == 5):
 
                             lts_rgn[cell1] = 5
                             changed_cells[(i + 1) % 2].append(cell1)
 
-    # n layers of interface region with label 4
+    changed_cells[0] = border_cells
+
+    # num_interface layers of interface region with label 4
     logger.info('Labeling interface cells...')
     for i in range(0, num_interface):
         changed_cells[(i + 1) % 2] = []
@@ -200,7 +204,7 @@ def label_mesh(fine_region, mesh, graph_info, num_interface,  # noqa: C901
 
     changed_cells[0] = changed_cells[num_interface % 2]
 
-    # n layers of interface region with label 3
+    # num_interface layers of interface region with label 3
     for i in range(0, num_interface):
         changed_cells[(i + 1) % 2] = []
 
@@ -213,9 +217,9 @@ def label_mesh(fine_region, mesh, graph_info, num_interface,  # noqa: C901
 
                     if (cell1 != -1 and cell2 != -1):
                         # for the first layer, need to check neighbors are
-                        # 5 and 2
-                        # for further layers, need to check neighbors are
                         # 3 and 2
+                        # for further layers, need to check neighbors are
+                        # 4 and 2
                         if (i == 0):
                             if (lts_rgn[cell1] == 3 and lts_rgn[cell2] == 2):
 
