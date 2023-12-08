@@ -18,8 +18,8 @@ class SetupMesh(Step):
     Attributes
     ----------
     resolution : int
-        The resolution of the test case, as defined configuration file at the
-        when `compass setup` is run.
+        The resolution of the test case, as defined in the configuration file
+        at the time when `compass setup` is run.
 
     nx : int
         The number of cells in the x direction
@@ -37,7 +37,7 @@ class SetupMesh(Step):
 
         Parameters
         ----------
-        testcase : compass.TestCase
+        test_case : compass.TestCase
             The test case this step belongs to
 
         resolution : int
@@ -51,7 +51,7 @@ class SetupMesh(Step):
                              '1km': {'nx': 566, 'ny': 84, 'dc': 1154.700538}}
 
         # With the defined resolution, make the associated key for the param
-        # dictionary (neccessary b/c unstructured hex meshes)
+        # dictionary (necessary b/c unstructured hex meshes)
         key = f'{resolution}km'
 
         # Ensure the resolution passed in the configuration file is defined
@@ -134,7 +134,7 @@ class SetupMesh(Step):
 
 def center_trough(ds_mesh):
     """
-    Shift the orgin so that the bed trough is center about the Y-axis and the
+    Shift the origin so that the bed trough is centered about the Y-axis and the
     X-axis is shifted all the way to the left.
 
     Parameters
@@ -263,7 +263,7 @@ def _setup_MISMPPlus_IC(config, logger, filename):
 
     # Use `.loc[:]` for setting the initial conditions  since we are setting
     # the fields with scalar values. This ensures values are properly broadcast
-    # against the fields coordinates
+    # against the field's coordinates
 
     # Set the bedTopography
     src['bedTopography'].loc[:] = _mismipplus_bed(src.xCell, src.yCell)

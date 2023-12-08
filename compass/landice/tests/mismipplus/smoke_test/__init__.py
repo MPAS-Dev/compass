@@ -7,7 +7,9 @@ class SmokeTest(TestCase):
     """
     A test case for running a smoke test of the MISMIP+ configuration
 
-    This test case  uses a pre-made mesh file.
+    This test case performs a forward simulation for a short duration
+    using a pre-made mesh file with a 2 km MISMIP+
+    spin-up that has previously been run to steady state
     """
 
     def __init__(self, test_group):

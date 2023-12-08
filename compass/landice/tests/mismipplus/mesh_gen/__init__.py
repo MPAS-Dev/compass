@@ -13,7 +13,7 @@ class MeshGen(TestCase):
 
         Parameters
         ----------
-        test_group : compass.landice.test.mismipplus.mesh_gen
+        test_group : compass.landice.test.mismipplus
             The test group that this test case belongs to
 
         """
