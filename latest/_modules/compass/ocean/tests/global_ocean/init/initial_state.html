@@ -114,8 +114,14 @@
              
   <h1>Source code for compass.ocean.tests.global_ocean.init.initial_state</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">importlib.resources</span> <span class="kn">import</span> <span class="n">contents</span>
+<span class="kn">from</span> <span class="nn">importlib.resources</span> <span class="kn">import</span> <span class="n">contents</span><span class="p">,</span> <span class="n">read_text</span>
 
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">from</span> <span class="nn">jinja2</span> <span class="kn">import</span> <span class="n">Template</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
+
+<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span>
 <span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">run_model</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.plot</span> <span class="kn">import</span> <span class="n">plot_initial_state</span><span class="p">,</span> <span class="n">plot_vertical_grid</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.metadata</span> <span class="kn">import</span> <span class="p">(</span>
@@ -198,7 +204,7 @@
 
         <span class="n">cull_step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;cull_mesh&#39;</span><span class="p">]</span>
         <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cull_step</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;topography_culled.nc&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;topography_culled.nc&#39;</span><span class="p">,</span>
                             <span class="n">work_dir_target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
@@ -287,6 +293,8 @@
 <span class="sd">        Run this step of the testcase</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_smooth_topography</span><span class="p">()</span>
+
         <span class="n">interfaces</span> <span class="o">=</span> <span class="n">generate_1d_grid</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
 
         <span class="n">write_1d_grid</span><span class="p">(</span><span class="n">interfaces</span><span class="o">=</span><span class="n">interfaces</span><span class="p">,</span> <span class="n">out_filename</span><span class="o">=</span><span class="s1">&#39;vertical_grid.nc&#39;</span><span class="p">)</span>
@@ -311,7 +319,47 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">openmp_threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;init_threads&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span>
                                            <span class="s1">&#39;init_cpus_per_task&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">min_cpus_per_task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_cpus_per_task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span>
+
+    <span class="k">def</span> <span class="nf">_smooth_topography</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Smooth the topography using a Gaussian filter &quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">]</span>
+        <span class="n">num_passes</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;topo_smooth_num_passes&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">num_passes</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># just symlink the culled topography to be the topography used for</span>
+            <span class="c1"># the initial condition</span>
+            <span class="n">symlink</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s1">&#39;topography_culled.nc&#39;</span><span class="p">,</span> <span class="n">link_name</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">distance_limit</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;topo_smooth_distance_limit&#39;</span><span class="p">)</span>
+        <span class="n">std_deviation</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;topo_smooth_std_deviation&#39;</span><span class="p">)</span>
+
+        <span class="n">template</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">read_text</span><span class="p">(</span>
+            <span class="s1">&#39;compass.ocean.tests.global_ocean.init&#39;</span><span class="p">,</span> <span class="s1">&#39;smooth_topo.template&#39;</span><span class="p">))</span>
+
+        <span class="n">text</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">num_passes</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">num_passes</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                               <span class="n">distance_limit</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">distance_limit</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                               <span class="n">std_deviation</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">std_deviation</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># add trailing end line</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;smooth_depth_in&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ocean_smooth_topo_before_init&#39;</span><span class="p">],</span>
+                   <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="p">(</span><span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;topography_culled.nc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds_topo</span><span class="p">):</span>
+            <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;topography_orig_and_smooth.nc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds_smooth</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bed_elevation&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceDraftObserved&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;landIceThkObserved&#39;</span><span class="p">]:</span>
+                    <span class="n">attrs</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span>
+                    <span class="n">ds_topo</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_smooth</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s1">New&#39;</span><span class="p">]</span>
+                    <span class="n">ds_topo</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">attrs</span>
+
+            <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_topo</span><span class="p">,</span> <span class="s1">&#39;topography.nc&#39;</span><span class="p">)</span></div>
 
 </pre></div>
 
