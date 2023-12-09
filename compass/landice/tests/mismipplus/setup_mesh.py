@@ -1,5 +1,3 @@
-import warnings
-
 import numpy as np
 import xarray as xr
 from mpas_tools.io import write_netcdf
@@ -55,10 +53,16 @@ class SetupMesh(Step):
         resolution_key = f'{resolution}km'
 
         # Ensure the resolution passed in the configuration file is defined
-        # within the parameter dictionary. If this is not the case, either:
-        #   1. choose an already defined resolution
-        #   2. add the appropriate parameter values to the dict.
-        assert resolution_key in resolution_params
+        # within the resolution parameter dictionary.
+        assert_error_msg = (f"Resolution of {resolution} km is not defined in"
+                            f" the `resolution_params` dictionary. Valid"
+                            f" options  are {list(resolution_params.keys())}."
+                            f" Either choose one of the existing resolutions"
+                            f" or add the appropriate parameter values (i.e."
+                            f" nx, ny, dx) to the dictionary for"
+                            f" the resolution you want.")
+
+        assert resolution_key in resolution_params, assert_error_msg
 
         super().__init__(test_case=test_case,
                          name=f'{resolution_key}_mesh_gen',
@@ -89,15 +93,15 @@ class SetupMesh(Step):
         # check if the resolution has been changed since the `compass setup`
         # command was run
         if self.resolution != resolution:
-            warnings.warn(f'Resolution was set at {self.resolution:2d}km when'
-                          f' `compass setup` was called. Since then the'
-                          f' resolution in the configuration file has been'
-                          f' changed to {resolution:2d}km. Changing resolution'
-                          f' at runtime is not supported. Change the'
-                          f' resolution value in the configuration file within'
-                          f' the python module and rerun the `compass setup`'
-                          f' command in order to create a mesh at a resolution'
-                          f' of {resolution:2d}km')
+            raise Exception(f'Resolution was set at {self.resolution:2d}km'
+                            f' when `compass setup` was called. Since then,'
+                            f' the resolution in the configuration file has'
+                            f' been changed to {resolution:2d}km. Changing'
+                            f' resolution at runtime is not supported. Change'
+                            f' the resolution value in the configuration file'
+                            f' within the python module and rerun the `compass'
+                            f' setup` command in order to create a mesh at a'
+                            f' resolution of {resolution:2d}km')
 
         ds_mesh = make_planar_hex_mesh(nx=self.nx, ny=self.ny, dc=self.dc,
                                        nonperiodic_x=True,
@@ -111,14 +115,16 @@ class SetupMesh(Step):
 
         write_netcdf(ds_mesh, 'mpas_grid.nc')
 
-        # using `.get(...)`, instead of `.getint(...)` since variable needs
+        # using `.get(...)`, instead of `.getint(...)` since variables need
         # to be string anyway for subprocess call
         levels = section.get('levels')
+        vertMethod = section.get('vetical_layer_distribution')
 
         args = ['create_landice_grid_from_generic_MPAS_grid.py',
                 '-i', 'mpas_grid.nc',
                 '-o', 'landice_grid.nc',
                 '-l', levels,
+                '-v', vertMethod,
                 '--diri',
                 '--thermal']
 
@@ -134,8 +140,8 @@ class SetupMesh(Step):
 
 def center_trough(ds_mesh):
     """
-    Shift the origin so that the bed trough is centered about the Y-axis and the
-    X-axis is shifted all the way to the left.
+    Shift the origin so that the bed trough is centered about the Y-axis and
+    the X-axis is shifted all the way to the left.
 
     Parameters
     ----------
@@ -255,7 +261,6 @@ def _setup_MISMPPlus_IC(config, logger, filename):
 
     # Read parameters from the .cfg file
     section = config['mesh']
-    nVertLevels = section.getint('levels')
     init_thickness = section.getfloat('init_thickness')
 
     # open the file
@@ -276,9 +281,16 @@ def _setup_MISMPPlus_IC(config, logger, filename):
     # Set the surface mass balance
     src['sfcMassBal'].loc[:] = xr.where(src.xCell > xcalve, accum, -100.)
 
+    # create the calving mask
+    mask = src.xCell > xcalve
+    # create the calvingMask data array and add Time dimension along axis 0
+    calvingMask = xr.where(mask, 1, 0).expand_dims({"Time": 1}, axis=0)
+    # assign data array to dataset and ensure it's a 32 bit int field
+    src['calvingMask'] = calvingMask.astype('int32')
+
     # Boolean masks for indices which correspond to the N/S boundary of mesh
     mask = (src.yCell == src.yCell.min()) | (src.yCell == src.yCell.max())
-    # Set the velocity boundary conditions
+    # Set free slip boundary conditions for velocity along N/S boundary
     # NOTE: `.variable` is needed so that coordinates are properly broadcast
     #        due to a bug in xarray, which was resolved as of 2023.9.0
     src['dirichletVelocityMask'].loc[:] = xr.where(mask, 1, 0).variable
@@ -291,9 +303,6 @@ def _setup_MISMPPlus_IC(config, logger, filename):
 
     # Set the effectivePressure using a Weertman power law
     src['effectivePressure'].loc[:] = C
-
-    # Set the layerThicknessFractions so that layers are evenly distributed
-    src['layerThicknessFractions'].loc[:] = 1.0 / float(nVertLevels)
 
     # Write the dataset to disk
     write_netcdf(src, filename)
