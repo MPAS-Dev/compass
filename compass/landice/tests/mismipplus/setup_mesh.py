@@ -279,7 +279,7 @@ def _setup_MISMPPlus_IC(config, logger, filename):
     # Convert SMB from m/yr to kg/m2/s
     accum *= rhoi / spy
     # Set the surface mass balance
-    src['sfcMassBal'].loc[:] = xr.where(src.xCell > xcalve, accum, -100.)
+    src['sfcMassBal'].loc[:] = accum
 
     # create the calving mask
     mask = src.xCell > xcalve
