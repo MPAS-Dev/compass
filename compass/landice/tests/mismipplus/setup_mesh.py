@@ -39,31 +39,10 @@ class SetupMesh(Step):
             The test case this step belongs to
 
         resolution : int
-            The distance between horizontal grid points
+            The nominal distance [m] between horizontal grid points
         """
-        # Defined resolutions, the value of `resolution` in the configuration
-        # file needs to a key in the dictionary, or added manually.
-        resolution_params = {'8km': {'nx': 73, 'ny': 14, 'dc': 9237.604307},
-                             '4km': {'nx': 144, 'ny': 24, 'dc': 4618.802154},
-                             '2km': {'nx': 284, 'ny': 44, 'dc': 2309.401077},
-                             '1km': {'nx': 566, 'ny': 84, 'dc': 1154.700538}}
 
-        # With the defined resolution, make the associated key for the param
-        # dictionary (necessary b/c unstructured hex meshes)
-        resolution_key = f'{resolution}km'
-
-        # Ensure the resolution passed in the configuration file is defined
-        # within the resolution parameter dictionary.
-        assert_error_msg = (f"Resolution of {resolution} km is not defined in"
-                            f" the `resolution_params` dictionary. Valid"
-                            f" options  are {list(resolution_params.keys())}."
-                            f" Either choose one of the existing resolutions"
-                            f" or add the appropriate parameter values (i.e."
-                            f" nx, ny, dx) to the dictionary for"
-                            f" the resolution you want.")
-
-        assert resolution_key in resolution_params, assert_error_msg
-
+        resolution_key = f'{resolution:d}m'
         super().__init__(test_case=test_case,
                          name=f'{resolution_key}_mesh_gen',
                          subdir=f"{resolution_key}/mesh_gen")
@@ -71,10 +50,6 @@ class SetupMesh(Step):
         # Files to be created as part of the this step
         for filename in ['mpas_grid.nc', 'graph.info', 'landice_grid.nc']:
             self.add_output_file(filename=filename)
-
-        # unpack the mesh parameters for the given resolution as set as
-        # attributes
-        self.nx, self.ny, self.dc = resolution_params[resolution_key].values()
 
         self.resolution = resolution
 
@@ -87,6 +62,7 @@ class SetupMesh(Step):
 
         section = config['mesh']
 
+        gutterLength = 0.0
         # read the resolution from the .cfg file at runtime
         resolution = section.getint('resolution')
 
@@ -103,10 +79,16 @@ class SetupMesh(Step):
                             f' setup` command in order to create a mesh at a'
                             f' resolution of {resolution:2d}km')
 
-        ds_mesh = make_planar_hex_mesh(nx=self.nx, ny=self.ny, dc=self.dc,
+        nx, ny, dc = calculateMeshParams(nominal_resolution=resolution,
+                                         Lx=640e3,
+                                         Ly=80e3,
+                                         gutterLength=gutterLength)
+
+        ds_mesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc,
                                        nonperiodic_x=True,
                                        nonperiodic_y=True)
 
+        ds_mesh = mark_cull_cells_for_MISMIP(ds_mesh)
         ds_mesh = cull(ds_mesh, logger=logger)
         ds_mesh = convert(ds_mesh, logger=logger)
 
@@ -138,6 +120,153 @@ class SetupMesh(Step):
                             filename='landice_grid.nc')
 
 
+def calculateMeshParams(nominal_resolution,
+                        Lx=640e3,
+                        Ly=80e3,
+                        gutterLength=0.0):
+    """
+    Calculate the appropriate parameters for use by `make_planar_hex_mesh`
+    from the desired nominal resolution (e.g. 8e3, 4e3, 2e3, 1e3...).
+
+    Parameters
+    ----------
+    nominal_resolution : int
+        Desired mesh resolution in [m] without consideration of the hex meshes
+
+    Lx : float
+        Domain length in x direction [m]
+
+    Ly : float
+        Domain length in y direction [m]
+
+    gutterLength : float
+        Desired gutter length [m] on the eastern domain. Default value of 0.0
+        will ensure there are two extra cell for the gutter.
+    """
+
+    def calculate_ny(nominal_resolution, Ly):
+        """
+
+        Parameters
+        ----------
+        nominal_resolution : int
+            Desired mesh resolution in [m] without consideration of hex meshes
+
+        Ly : float
+            Domain length in y direction [m]
+        """
+
+        # Find amplitude of dual mesh (i.e. `dy`) using the nomial resolution
+        nominal_dy = np.sqrt(3.) / 2. * nominal_resolution
+
+        # find the number of y rows (`ny`) from the `nominal_dy`
+        nominal_ny = Ly / nominal_dy
+
+        # find the acutal number of y rows (`ny`) by rounding the `nominal_ny`
+        # to the nearest _even_ integer. `make_planar_hex_mesh` requires that
+        # `ny` be even
+        ny = np.ceil(nominal_ny / 2.) * 2
+
+        return int(ny)
+
+    def calculate_dc(Ly, ny):
+        """
+        Calcuate the edge length that conforms to the desired `ny`
+
+        Parameters
+        ----------
+        Ly : float
+            Length [m] of y domain
+        ny : int
+            number of gridcells along the y-axis
+        """
+
+        # from the new ny, calculate the new dy
+        dy = Ly / ny
+
+        # from the dy, which results in an even integer number of y-rows,
+        # where the cell center to cell center distance along y direction will
+        # be exactly Ly, recalculate the dc.
+        dc = 2. * dy / np.sqrt(3.)
+
+        return dc
+
+    def calculate_nx(Lx, dc, gutterLength):
+        """
+        Caluculate the number of x gridcell, per the required `dc` with
+        considerations for the requested gutter length
+
+        Parameters
+        ----------
+        Lx : float
+            Length [m] of x domain
+
+        dc : float
+            Edge length [m]
+
+        gutterLength: float
+            Desired gutter length [m] on the eastern domain. A value of 0.0
+            will result in two extra cell for the gutter.
+        """
+
+        if gutterLength == 0.0:
+            nx = np.ceil(Lx / dc)
+            # The modulo condition below ensures there is exactly one cell
+            # past the the desired domain length. So, when no gutter
+            # infromation is provided, add an extra column to make
+            # the default gutter length 2
+            nx += 1
+        else:
+            # ammend the domain length to account for the gutter
+            Lx += gutterLength
+            nx = np.ceil(Lx / dc)
+
+        # Just rounding `nx` up to the nearest `int` doesn't gurantee that the
+        # domain will fully span [0, Lx]. If dc/2 (i.e. `dx`) is less than the
+        # than the remainder of `Lx / dc` even the rounded up `nx` will fall
+        # short of the desired domain length. If that's the case add an extra
+        # x cell so the domain is inclusive of the calving front.
+        if Lx % dc > dc / 2.:
+            nx += 1
+
+        return int(nx)
+
+    ny = calculate_ny(nominal_resolution, Ly)
+    dc = calculate_dc(Ly, ny)
+    nx = calculate_nx(Lx, dc, gutterLength)
+
+    # add two to `ny` accomodate MISMIP+ specific culling requirments.
+    # This ensures, after the culling, that the cell center too cell center
+    # distance in the y-direction is exactly equal to `Ly`. This must be done
+    # after the other parameters (i.e. `dc` and `nx`) are calculated or else
+    # those calculations will be thrown off.
+    return nx, ny + 2, dc
+
+
+def mark_cull_cells_for_MISMIP(ds_mesh):
+    """
+
+    Parameters
+    ----------
+    ds_mesh : xarray.Dataset
+    """
+
+    # get the edge length [m] from the attributes
+    dc = ds_mesh.dc
+    # calculate the amplitude (i.e. `dy`) [m] of the dual mesh
+    dy = np.sqrt(3.) / 2. * dc
+    # Get the y position of the top row
+    yMax = ds_mesh.yCell.max()
+
+    # find the first interior row along the top of the domain
+    mask = np.isclose(ds_mesh.yCell, yMax - dy, rtol=0.02)
+
+    # add first interior row along northern boudnary to the cells to be culled
+    ds_mesh['cullCell'] = xr.where(mask, 1, ds_mesh.cullCell)
+
+    return ds_mesh
+
+
 def center_trough(ds_mesh):
     """
     Shift the origin so that the bed trough is centered about the Y-axis and
@@ -145,7 +274,7 @@ def center_trough(ds_mesh):
 
     Parameters
     ----------
-    ds_mesh : xr.core.dataset.Datatset
+    ds_mesh : xarray.Datatset
         The mesh to be shifted
     """
 
@@ -171,27 +300,35 @@ def center_trough(ds_mesh):
     # Reduce the cell areas by half along the N/S boundary
 
     # Boolean mask for indices which correspond to the N/S boundary of mesh
-    mask = ((ds_mesh.yCell == ds_mesh.yCell.min()) |
-            (ds_mesh.yCell == ds_mesh.yCell.max()))
+    # `np.isclose` is needed when comparing floats to avoid roundoff errors
+    mask = (np.isclose(ds_mesh.yCell, ds_mesh.yCell.min(), rtol=0.01) |
+            np.isclose(ds_mesh.yCell, ds_mesh.yCell.max(), rtol=0.01))
 
     ds_mesh['areaCell'] = xr.where(mask,
                                    ds_mesh.areaCell * 0.5,
                                    ds_mesh.areaCell)
 
-    # Needed of reducing the edge lengths by half along the N/S boundary.
-    # Values returned by `np.unique` will be sorted.
-    unique_ys_edge = np.unique(ds_mesh.yEdge.data)
+    if ds_mesh.dvEdge.all():
+        dc = float(ds_mesh.dcEdge[0])
+
+    # get the distance between edges
+    de = 0.5 * dc * np.sin(np.pi / 3)
+    # find the min and max (i.e. N/S boundary) edges
+    yMin = ds_mesh.yEdge.min()
+    yMax = ds_mesh.yEdge.max()
 
     # Boolean mask for edge indices on the N/S boundary of the mesh
-    mask = ((ds_mesh.yEdge == unique_ys_edge[0]) |
-            (ds_mesh.yEdge == unique_ys_edge[-1]))
+    mask = (np.isclose(ds_mesh.yEdge, yMin, rtol=0.01) |
+            np.isclose(ds_mesh.yEdge, yMax, rtol=0.01))
     # WHL: zero out the edges on the boundary
     #      (not necessary because velocity will also be zero)
     ds_mesh['dvEdge'] = xr.where(mask, 0.0, ds_mesh.dvEdge)
 
-    # Boolean mask for the indexed of edges between N/S boundary cells
-    mask = ((ds_mesh.yEdge == unique_ys_edge[1]) |
-            (ds_mesh.yEdge == unique_ys_edge[-2]))
+    # Boolean mask for the indexed of edges N/S of  boundary cell centers,
+    # using a 2% relative threshold to account for accumulated roundoff
+    # from min calculation
+    mask = (np.isclose(ds_mesh.yEdge, yMin + de, rtol=0.02) |
+            np.isclose(ds_mesh.yEdge, yMax - de, rtol=0.02))
     # cut length in half for edges between boundary cells
     ds_mesh['dvEdge'] = xr.where(mask, ds_mesh.dvEdge * 0.5, ds_mesh.dvEdge)
 
@@ -266,9 +403,10 @@ def _setup_MISMPPlus_IC(config, logger, filename):
     # open the file
     src = xr.open_dataset(filename)
 
-    # Use `.loc[:]` for setting the initial conditions  since we are setting
-    # the fields with scalar values. This ensures values are properly broadcast
-    # against the field's coordinates
+    # Use `.loc[:]` for setting the initial conditions since we are setting
+    # the fields with scalar values and/or fields with a reduced number of
+    # dimensions. This ensures values are properly broadcast and aligned
+    # against the field's coordinates.
 
     # Set the bedTopography
     src['bedTopography'].loc[:] = _mismipplus_bed(src.xCell, src.yCell)
@@ -289,7 +427,13 @@ def _setup_MISMPPlus_IC(config, logger, filename):
     src['calvingMask'] = calvingMask.astype('int32')
 
     # Boolean masks for indices which correspond to the N/S boundary of mesh
-    mask = (src.yCell == src.yCell.min()) | (src.yCell == src.yCell.max())
+    mask = (np.isclose(src.yCell, src.yCell.min(), rtol=0.01) |
+            np.isclose(src.yCell, src.yCell.max(), rtol=0.02))
+    # NOTE: np.isclose returns a np.array. Due to the bug in xarray (<=2023.8)
+    #       mask variable needs to converted to an xarray object in order for
+    #       the `.variable` attribute to exist (which is needed to fix the
+    #       bug in the broadcasting/alignment when `.loc[:]` is used.)
+    mask = xr.DataArray(mask, dims='nCells')
     # Set free slip boundary conditions for velocity along N/S boundary
     # NOTE: `.variable` is needed so that coordinates are properly broadcast
     #        due to a bug in xarray, which was resolved as of 2023.9.0
