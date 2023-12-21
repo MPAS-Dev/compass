@@ -991,8 +991,8 @@ def interp_ais_bedmachine(self, data_path, mali_scrip, nProcs, dest_file):
             '--destination', mali_scrip,
             '--weight', 'BedMachine_to_MPAS_weights.nc',
             '--method', 'conserve',
-            "-i", "-64bit_offset",
-            "--dst_regional", "--src_regional", '--netcdf4']
+            "--netcdf4",
+            "--dst_regional", "--src_regional", '--ignore_unmapped']
     check_call(args, logger=logger)
 
     # Perform actual interpolation using the weights
@@ -1049,7 +1049,7 @@ def interp_ais_measures(self, data_path, mali_scrip, nProcs, dest_file):
             '--destination', mali_scrip,
             '--weight', 'measures_to_MPAS_weights.nc',
             '--method', 'conserve',
-            "-i", "-64bit_offset", '--netcdf4',
+            "--netcdf4",
             "--dst_regional", "--src_regional", '--ignore_unmapped']
     check_call(args, logger=logger)
 
