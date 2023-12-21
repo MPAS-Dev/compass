@@ -264,7 +264,7 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
     high_bed = section.getfloat('high_bed')
 
     # convert km to m
-    cull_distance = float(section.get('cull_distance')) * 1.e3
+    cull_distance = section.getfloat('cull_distance') * 1.e3
 
     # Cell spacing function based on union of masks
     if section.get('use_bed') == 'True':
@@ -369,8 +369,16 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
     # cell size in the final mesh. There may be a more rigorous way to set
     # that distance.
     if dist_to_edge is not None:
+        assert (3. * cull_distance < max(high_dist, high_dist_bed)), \
+            ('cull_distance is set to be larger than 3x the max of high_dist '
+             'and high_dist_bed, which means max_spac is not being applied to '
+             'the regions of the mesh that will be culled, which means the '
+             'mesh generation is likely to be substantially slower '
+             'than necessary.  Please fix or relax this constraint.')
         mask = np.logical_and(
             thk == 0.0, dist_to_edge > (3. * cull_distance))
+        logger.info('Setting cell_width in outer regions to max_spac '
+                    f'for {mask.sum()} cells')
         cell_width[mask] = max_spac
 
     return cell_width
