@@ -1,8 +1,11 @@
+import os
+
 import netCDF4
 from mpas_tools.logging import check_call
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
 
 from compass.landice.mesh import (
+    add_bedmachine_thk_to_ais_gridded_data,
     build_cell_width,
     build_mali_mesh,
     clean_up_after_interp,
@@ -65,24 +68,29 @@ class Mesh(Step):
         section_name = 'mesh'
 
         source_gridded_dataset = 'antarctica_8km_2020_01_29.nc'
+        bedmachine_path = os.path.join(
+            data_path,
+            'BedMachineAntarctica_2020-07-15_v02_edits_floodFill_extrap_fillVostok.nc')  # noqa
 
+        bm_updated_gridded_dataset = add_bedmachine_thk_to_ais_gridded_data(
+            self, source_gridded_dataset, bedmachine_path)
         logger.info('calling build_cell_width')
         cell_width, x1, y1, geom_points, geom_edges, floodFillMask = \
             build_cell_width(
                 self, section_name=section_name,
-                gridded_dataset=source_gridded_dataset)
+                gridded_dataset=bm_updated_gridded_dataset)
 
         # Preprocess the gridded AIS source datasets to work
         # with the rest of the workflow
         logger.info('calling preprocess_ais_data')
         preprocessed_gridded_dataset = preprocess_ais_data(
-            self, source_gridded_dataset, floodFillMask)
+            self, bm_updated_gridded_dataset, floodFillMask)
 
         # Now build the base mesh and perform the standard interpolation
         build_mali_mesh(
             self, cell_width, x1, y1, geom_points, geom_edges,
             mesh_name=self.mesh_filename, section_name=section_name,
-            gridded_dataset=source_gridded_dataset,
+            gridded_dataset=bm_updated_gridded_dataset,
             projection='ais-bedmap2', geojson_file=None)
 
         # Now that we have base mesh with standard interpolation

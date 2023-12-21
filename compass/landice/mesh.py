@@ -13,7 +13,7 @@ from mpas_tools.logging import check_call
 from mpas_tools.mesh.conversion import convert, cull
 from mpas_tools.mesh.creation import build_planar_mesh
 from netCDF4 import Dataset
-from scipy.interpolate import NearestNDInterpolator
+from scipy.interpolate import NearestNDInterpolator, interpn
 
 
 def mpas_flood_fill(seed_mask, grow_mask, cellsOnCell, nEdgesOnCell,
@@ -820,6 +820,69 @@ def make_region_masks(self, mesh_filename, mask_filename, cores, tags):
             '--format', mpas_tools.io.default_format,
             '--engine', mpas_tools.io.default_engine]
     check_call(args, logger=logger)
+
+
+def add_bedmachine_thk_to_ais_gridded_data(self, source_gridded_dataset,
+                                           bedmachine_path):
+    """
+    Copy BedMachine thickness to AIS reference gridded dataset.
+    Rreplace thickness field in the compilation dataset with the one we
+    will be using from BedMachine for actual thickness interpolation
+    There are significant inconsistencies between the masking of the two,
+    particularly along the Antarctic Peninsula, that lead to funky
+    mesh extent and culling if we use the thickness from 8km composite
+    dataset to define the cullMask but then actually interpolate thickness
+    from BedMachine.
+    This function uses bilinear interpolation to interpolate from the 500 m
+    resolution of BedMachine to the 8 km resolution of the reference dataset.
+    It is not particularly accurate, but is fast and adequate for generating
+    the flood filled mask for culling the mesh.  Highly accurate conservative
+    remapping is performed later for actually interpolating BedMachine
+    thickness to the final MALI mesh.
+
+    Parameters
+    ----------
+    source_gridded_dataset : str
+        name of NetCDF file containing original AIS gridded datasets
+
+    bedmachine_path : str
+        path to BedMachine dataset
+
+    Returns
+    -------
+    gridded_dataset_with_bm_thk : str
+        name of NetCDF file with gridded dataset with BedMachine thk added
+    """
+
+    logger = self.logger
+
+    tic = time.perf_counter()
+    bm_data = Dataset(bedmachine_path, 'r')
+    bm_x = bm_data.variables['x'][:]
+    bm_y = bm_data.variables['y'][:]
+    bm_mask = bm_data.variables['iceMask'][:]
+    bm_thk = bm_data.variables['thk'][:]
+    # bedmachine includes a mask with: 0=ocean, 1=land, 2=grd ice
+    #                                  3=flt ice, 4=vostok
+    # We only want to keep thickness where the mask has ice;
+    # this is necessary because thickness has been extrapolated.
+    bm_thk *= (bm_mask > 1.5)
+    gridded_dataset_with_bm_thk = \
+        f"{source_gridded_dataset.split('.')[:-1][0]}_BedMachineThk.nc"
+    copyfile(source_gridded_dataset, gridded_dataset_with_bm_thk)
+    gg = Dataset(gridded_dataset_with_bm_thk, 'r+')
+    gg_x = gg.variables['x1'][:]
+    gg_y = gg.variables['y1'][:]
+    gg_xx, gg_yy = np.meshgrid(gg_x, gg_y)
+    gg_thk = interpn((bm_x, bm_y), bm_thk, (gg_xx, gg_yy),
+                     bounds_error=False, fill_value=0.0)
+    gg.variables['thk'][0, :, :] = gg_thk
+    gg.close()
+    bm_data.close()
+    toc = time.perf_counter()
+    logger.info('Finished interpolating BedMachine thickness to reference '
+                f'grid in {toc - tic} seconds')
+    return gridded_dataset_with_bm_thk
 
 
 def preprocess_ais_data(self, source_gridded_dataset,
