@@ -1,11 +1,15 @@
-from shutil import copyfile
-
 import netCDF4
+from mpas_tools.logging import check_call
+from mpas_tools.scrip.from_mpas import scrip_from_mpas
 
 from compass.landice.mesh import (
     build_cell_width,
     build_mali_mesh,
+    clean_up_after_interp,
+    interp_ais_bedmachine,
+    interp_ais_measures,
     make_region_masks,
+    preprocess_ais_data,
 )
 from compass.model import make_graph_file
 from compass.step import Step
@@ -53,30 +57,81 @@ class Mesh(Step):
         Run this step of the test case
         """
         logger = self.logger
+        config = self.config
+        section_ais = config['antarctica']
+        data_path = section_ais.get('data_path')
+        nProcs = section_ais.get('nProcs')
+
         section_name = 'mesh'
+
+        source_gridded_dataset = 'antarctica_8km_2020_01_29.nc'
 
         logger.info('calling build_cell_width')
         cell_width, x1, y1, geom_points, geom_edges, floodFillMask = \
             build_cell_width(
                 self, section_name=section_name,
-                gridded_dataset='antarctica_8km_2024_01_29.nc')
+                gridded_dataset=source_gridded_dataset)
 
-        # Apply floodFillMask to thickness field to help with culling
-        copyfile('antarctica_8km_2024_01_29.nc',
-                 'antarctica_8km_2024_01_29_floodFillMask.nc')
-        gg = netCDF4.Dataset('antarctica_8km_2024_01_29_floodFillMask.nc',
-                             'r+')
-        gg.variables['thk'][0, :, :] *= floodFillMask
-        gg.variables['vx'][0, :, :] *= floodFillMask
-        gg.variables['vy'][0, :, :] *= floodFillMask
-        gg.close()
+        # Preprocess the gridded AIS source datasets to work
+        # with the rest of the workflow
+        logger.info('calling preprocess_ais_data')
+        preprocessed_gridded_dataset = preprocess_ais_data(
+            self, source_gridded_dataset, floodFillMask)
 
+        # Now build the base mesh and perform the standard interpolation
         build_mali_mesh(
             self, cell_width, x1, y1, geom_points, geom_edges,
             mesh_name=self.mesh_filename, section_name=section_name,
-            gridded_dataset='antarctica_8km_2024_01_29_floodFillMask.nc',
+            gridded_dataset=source_gridded_dataset,
             projection='ais-bedmap2', geojson_file=None)
 
+        # Now that we have base mesh with standard interpolation
+        # perform advanced interpolation for specific fields
+        # that require more careful treatment
+
+        # Add iceMask for later trimming if not already in file.
+        # It should be automatically added as of MPAS-Tools commit
+        # df90de2c434ed24bbbaf9ca353c2a91de1140654
+        # Aug 8, 2022, but safest to double check here.
+        data = netCDF4.Dataset(self.mesh_filename, 'r+')
+        if 'iceMask' not in data.variables:
+            data.createVariable('iceMask', 'f', ('Time', 'nCells'))
+            data.variables['iceMask'][:] = 0.
+        data.close()
+
+        # interpolate fields from composite dataset
+        # Note: this was already done in build_mali_mesh() using
+        # bilinear interpolation.  Redoing it here again is unlikely
+        # not needed.  Also, it should be assessed if bilinear or
+        # barycentric used here is preferred for this application.
+        # Current thinking is they are both equally appropriate.
+        logger.info('calling interpolate_to_mpasli_grid.py')
+        args = ['interpolate_to_mpasli_grid.py', '-s',
+                preprocessed_gridded_dataset,
+                '-d',
+                self.mesh_filename,
+                '-m', 'd', '-v',
+                'floatingBasalMassBal', 'basalHeatFlux', 'sfcMassBal',
+                'surfaceAirTemperature', 'observedThicknessTendency',
+                'observedThicknessTendencyUncertainty', 'thickness']
+        check_call(args, logger=logger)
+
+        # Create scrip file for the newly generated mesh
+        logger.info('creating scrip file for destination mesh')
+        dst_scrip_file = f"{self.mesh_filename.split('.')[:-1][0]}_scrip.nc"
+        scrip_from_mpas(self.mesh_filename, dst_scrip_file)
+
+        # Now perform bespoke interpolation of geometry and velocity data
+        # from their respective sources
+        interp_ais_bedmachine(self, data_path, dst_scrip_file, nProcs,
+                              self.mesh_filename)
+        interp_ais_measures(self, data_path, dst_scrip_file, nProcs,
+                            self.mesh_filename)
+
+        # perform some final cleanup details
+        clean_up_after_interp(self.mesh_filename)
+
+        # create graph file
         logger.info('creating graph.info')
         make_graph_file(mesh_filename=self.mesh_filename,
                         graph_filename='graph.info')
