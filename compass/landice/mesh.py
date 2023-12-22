@@ -862,11 +862,15 @@ def add_bedmachine_thk_to_ais_gridded_data(self, source_gridded_dataset,
     bm_y = bm_data.variables['y'][:]
     bm_mask = bm_data.variables['iceMask'][:]
     bm_thk = bm_data.variables['thk'][:]
+    # but this transformation gives the desired results.
     # bedmachine includes a mask with: 0=ocean, 1=land, 2=grd ice
     #                                  3=flt ice, 4=vostok
     # We only want to keep thickness where the mask has ice;
     # this is necessary because thickness has been extrapolated.
     bm_thk *= (bm_mask > 1.5)
+    # The two datasets are oriented differently.
+    # It's unclear to me what the correct way to account for it is,
+    bm_thk = np.flipud(np.rot90(bm_thk))
     gridded_dataset_with_bm_thk = \
         f"{source_gridded_dataset.split('.')[:-1][0]}_BedMachineThk.nc"
     copyfile(source_gridded_dataset, gridded_dataset_with_bm_thk)
