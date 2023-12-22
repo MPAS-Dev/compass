@@ -57,11 +57,9 @@ class Forward(Step):
 
         if use_lts:
             self.add_namelist_options(
-                {'config_time_integrator': "'LTS'"})
-            self.add_namelist_options(
-                {'config_dt_scaling_LTS': "4"})
-            self.add_namelist_options(
-                {'config_number_of_time_levels': "4"})
+                {'config_time_integrator': "'LTS'",
+                 'config_dt_scaling_LTS': "4",
+                 'config_number_of_time_levels': "4"})
 
             self.add_streams_file('compass.ocean.tests.dam_break.lts',
                                   'streams.forward')

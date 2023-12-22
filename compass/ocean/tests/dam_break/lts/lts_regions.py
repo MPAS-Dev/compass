@@ -1,4 +1,3 @@
-import math
 import os
 
 import netCDF4 as nc
@@ -309,8 +308,8 @@ def label_mesh(init, mesh, graph_info, num_interface,  # noqa: C901
 
     max_area = max(area_cell)
     min_area = min(area_cell)
-    max_width = 2 * np.sqrt(max_area / math.pi) / 1000
-    min_width = 2 * np.sqrt(min_area / math.pi) / 1000
+    max_width = 2 * np.sqrt(max_area / np.pi) / 1000
+    min_width = 2 * np.sqrt(min_area / np.pi) / 1000
     area_ratio = max_area / min_area
     width_ratio = max_width / min_width
     number_ratio = coarse_cells / fine_cells
