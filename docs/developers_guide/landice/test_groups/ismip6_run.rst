@@ -5,6 +5,7 @@ ismip6_run
 
 The ``ismip6_run`` test group (:py:class:`compass.landice.tests.ismip6_run`)
 sets up experiments from the ISMIP6 experimental protocol.
+Additionally, the test group has an option to setup coupled MALI-Sea Level Model (SLM) simulations.
 (see :ref:`landice_ismip6_run`).
 
 framework
@@ -18,7 +19,7 @@ ismip6_ais_proj2300
 -------------------
 
 The :py:class:`compass.landice.tests.ismip6_run.ismip6_ais_proj2300.Ismip6AisProj2300`
-sets up an ensemble of ISMIP6 Antarctica 2300
+sets up an ensemble of ISMIP6 Antarctica 2300 (standalone MALI and coupled MALI-SLM)
 simulations.  The constructor (``__init__``) does nothing other than
 allow the ``ismip6_ais_proj2300`` test case to be listed by ``compass list``
 without having all individual experiments listed in a verbose listing.
@@ -54,5 +55,7 @@ submitted as an independent slurm job.
 Finally, a symlink to the compass load script is added to the run work
 directory, which compass does not do by default.
 
-The ``run`` method runs MALI for the given experiment.
+The ``run`` runs MALI for the given experiment. It also builds mapping files
+between MALI and the SLM by calling a local method ``_build_mapping_files``
+if the SLM option in the config file is enabled.
 
