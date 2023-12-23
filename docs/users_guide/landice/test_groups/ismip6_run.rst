@@ -89,6 +89,22 @@ for new runs
     # Whether facemelting should be included in the runs
     include_face_melting = False
 
+    # True if running coupled MALI-sea level model simulation
+    sea_level_model = True
+
+    # NOTE: for the directories related to the sea-level model input/outputs, the slash '/' at the end of the directory name is necessary.
+    # Path to the base directory containing globally defined ice thickness field for the sea-level model
+    slm_input_ice = /global/cfs/cdirs/fanssie/MALI_projects/SeaLevelModel_Inputs/icemodel/
+
+    # Path to the directory containing earth model for the sea-level model
+    slm_input_earth = /global/cfs/cdirs/fanssie/MALI_projects/SeaLevelModel_Inputs/earthmodel/
+
+    # Path to the diectory containing other input files (present-day global topography and sea-level model grid files)
+    slm_input_others = /global/cfs/cdirs/fanssie/MALI_projects/SeaLevelModel_Inputs/others/
+
+    # number of gauss-legendre nodes in latitude (typically an integer multiple of 512)
+    nglv = 2048
+
 Additionally, a user should also include the following options (and possibly
 others) that will be used for submitting the jobs for each ensemble member
 (set to appropriate values for their usage situation):
