@@ -34,9 +34,9 @@ your needs.
 .. code-block:: bash
 
   # this one will take a while the first time
-  ./conda/configure_compass_env.py --conda $HOME/mambaforge
+  ./conda/configure_compass_env.py --conda $HOME/miniforge
 
-If you don't already have Mambaforge installed in the directory pointed to by
+If you don't already have Miniforge3 installed in the directory pointed to by
 ``--conda``, it will be installed automatically for you.  If all goes well, you
 will have a file named ``load_dev_compass_1.0.0*.sh``, where the details of the
 ``*`` depend on your specific machine and compilers.  For example, on

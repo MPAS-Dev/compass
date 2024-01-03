@@ -181,7 +181,7 @@ probably via a
 In this case, the ``parallel_executable`` is ``mpirun``.
 
 To install the ``compass`` package into a conda environment, you will first
-need to install `Mambaforge <https://github.com/conda-forge/miniforge#mambaforge>`_
+need to install `Miniforge3 <https://github.com/conda-forge/miniforge?tab=readme-ov-file#miniforge3>`_
 (if it is not already installed).  Then, you will run one of the following
 three commands, depending on how you would like to handle MPI support in the
 conda packages.

@@ -22,7 +22,7 @@ from shared import (
     get_conda_base,
     get_logger,
     get_spack_base,
-    install_miniconda,
+    install_miniforge,
     log_message,
     parse_args,
 )
@@ -42,7 +42,7 @@ def get_config(config_file, machine):
             config.read(str(machine_config))
 
         machine_config = os.path.join(here, '..', 'compass', 'machines',
-                                      '{}.cfg'.format(machine))
+                                      f'{machine}.cfg')
         config.read(machine_config)
 
     if config_file is not None:
@@ -229,10 +229,9 @@ def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
     env_path = os.path.join(conda_base, 'envs', env_name)
 
     source_activation_scripts = \
-        f'source {conda_base}/etc/profile.d/conda.sh && ' \
-        f'source {conda_base}/etc/profile.d/mamba.sh'
+        f'source {conda_base}/etc/profile.d/conda.sh'
 
-    activate_env = f'{source_activation_scripts} && mamba activate {env_name}'
+    activate_env = f'{source_activation_scripts} && conda activate {env_name}'
 
     return python, recreate, conda_mpi, activ_suffix, env_suffix, \
         activ_path, env_path, env_name, activate_env, spack_env
@@ -244,7 +243,7 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
                     local_conda_build, logger, local_mache):
 
     if env_type != 'dev':
-        install_miniconda(conda_base, activate_base, logger)
+        install_miniforge(conda_base, activate_base, logger)
 
     if conda_mpi == 'nompi':
         mpi_prefix = 'nompi'
@@ -268,8 +267,7 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
 
     activate_env = \
         f'source {conda_base}/etc/profile.d/conda.sh &&' \
-        f'source {conda_base}/etc/profile.d/mamba.sh &&' \
-        f'mamba activate {env_name}'
+        f'conda activate {env_name}'
 
     with open(f'{conda_template_path}/spec-file.template', 'r') as f:
         template = Template(f.read())
@@ -299,7 +297,7 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
             # install dev dependencies and compass itself
             commands = \
                 f'{activate_base} && ' \
-                f'mamba create -y -n {env_name} {channels} ' \
+                f'conda create -y -n {env_name} {channels} ' \
                 f'--file {spec_filename} {packages}'
             check_call(commands, logger=logger)
 
@@ -314,7 +312,7 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
             version_conda = version.replace('-', '')
             packages = f'{packages} "compass={version_conda}={mpi_prefix}_*"'
             commands = f'{activate_base} && ' \
-                       f'mamba create -y -n {env_name} {channels} {packages}'
+                       f'conda create -y -n {env_name} {channels} {packages}'
             check_call(commands, logger=logger)
     else:
         if env_type == 'dev':
@@ -322,7 +320,7 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
             # install dev dependencies and compass itself
             commands = \
                 f'{activate_base} && ' \
-                f'mamba install -y -n {env_name} {channels} ' \
+                f'conda install -y -n {env_name} {channels} ' \
                 f'--file {spec_filename} {packages}'
             check_call(commands, logger=logger)
 
@@ -929,10 +927,9 @@ def main():  # noqa: C901
     conda_base = os.path.abspath(conda_base)
 
     source_activation_scripts = \
-        f'source {conda_base}/etc/profile.d/conda.sh && ' \
-        f'source {conda_base}/etc/profile.d/mamba.sh'
+        f'source {conda_base}/etc/profile.d/conda.sh'
 
-    activate_base = f'{source_activation_scripts} && mamba activate'
+    activate_base = f'{source_activation_scripts} && conda activate'
 
     compilers, mpis = get_compilers_mpis(config, machine, args.compilers,
                                          args.mpis, source_path)
@@ -995,7 +992,6 @@ def main():  # noqa: C901
             if local_mache:
                 print('Install local mache\n')
                 commands = f'source {conda_base}/etc/profile.d/conda.sh && ' \
-                           f'source {conda_base}/etc/profile.d/mamba.sh && ' \
                            f'conda activate {conda_env_name} && ' \
                            'cd ../build_mache/mache && ' \
                            'python -m pip install .'

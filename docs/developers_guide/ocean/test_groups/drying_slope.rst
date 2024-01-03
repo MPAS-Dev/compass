@@ -16,7 +16,7 @@ framework
 The shared config options for the ``drying_slope`` test group are described
 in :ref:`ocean_drying_slope` in the User's Guide.
 
-Additionally, the test group has shared ``namelist.init`` and 
+Additionally, the test group has shared ``namelist.init`` and
 ``namelist.forward`` files with a few common namelist options related to run
 duration, bottom drag, and tidal forcing options, as well as shared
 ``streams.init`` and ``streams.forward`` files that defines ``mesh``, ``input``,
@@ -51,7 +51,7 @@ forward
 
 The class :py:class:`compass.ocean.tests.drying_slope.forward.Forward`
 defines a step for running MPAS-Ocean from the initial condition produced in
-the ``initial_state`` step. If ``damping_coeff`` is provided as an argument to 
+the ``initial_state`` step. If ``damping_coeff`` is provided as an argument to
 the constructor, the associate namelist option
 (``config_Rayleigh_damping_coeff``) will be given this value. MPAS-Ocean is run
 in ``run()``. The time step is determined as a function of resolution by the
@@ -66,11 +66,11 @@ defines a visualization step which serves the purpose of validation. This
 validation is tailored for the default config options and the two Rayleigh
 damping coefficients set by the default sigma-coordinate test case, 0.0025 and
 0.01. One plot verifies that the time evolution of the ssh forcing at the
-boundary matches the analytical solution intended to drive the test case. 
+boundary matches the analytical solution intended to drive the test case.
 Another plot compares the time evolution of the ssh profile across the channel
 between the analytical solution, MPAS-Ocean and ROMS. Similar plots are used
 to create a movie showing the solution from MPAS-Ocean at more fine-grained
-time intervals. 
+time intervals.
 
 analysis
 ~~~~~~~~
@@ -92,7 +92,7 @@ test performs two 12-hour runs on 4 cores. It doesn't contain any
 types are supported. For ``sigma`` coordinates, this case is hard-coded to run
 two cases at different values of ``config_Rayleigh_damping_coeff``, 0.0025 and
 0.01, for which there is comparison data. The ``single_layer`` case runs at one
-value of the implicit bottom drag coefficient. 
+value of the implicit bottom drag coefficient.
 
 .. _dev_ocean_drying_slope_convergence:
 
@@ -114,8 +114,8 @@ test performs two 12-hour runs on 1 and 12 cores, respectively.
 This class accepts resolution and coordinate type ``coord_type`` as arguments.
 Both ``sigma`` and ``single_layer`` coordinate types are supported. For
 ``sigma`` coordinates, this case is hard-coded to run with
- ``config_Rayleigh_damping_coeff`` equal to 0.01. The ``single_layer`` case
-runs at one value of the implicit bottom drag coefficient. 
+``config_Rayleigh_damping_coeff`` equal to 0.01. The ``single_layer`` case
+runs at one value of the implicit bottom drag coefficient.
 
 
 loglaw

@@ -54,18 +54,18 @@ package because these don't get added automatically.
 
 Whether you are on one of the :ref:`dev_supported_machines` or an "unknown"
 machine, you will need to specify a path where
-`Mambaforge <https://github.com/conda-forge/miniforge#mambaforge>`_ either has
+`Miniforge3 <https://github.com/conda-forge/miniforge?tab=readme-ov-file#miniforge3>`_ either has
 already been installed or an empty directory where the script can install it.
 You must have write permission in the base environment (if it exists).
 
 .. note::
 
     We have found that an existing Miniconda3 installation **does not** always
-    work well for ``compass``, so please start with Mambaforge instead.
+    work well for ``compass``, so please start with Miniforge3 instead.
 
 .. note::
 
-    It is *very* important that you not use a shared installation of Mambaforge
+    It is *very* important that you not use a shared installation of Miniforge3
     or Miniconda3 such as the base environment for E3SM-Unified for ``compass``
     development. Most developers will not have write access to shared
     environments, meaning that you will get write-permission errors when you
@@ -76,8 +76,8 @@ You must have write permission in the base environment (if it exists).
     would be creating your compass development environment in a shared space,
     which could cause confusion.
 
-    Please use your own personal installation of Mambaforge for development,
-    letting ``configure_compass_env.py`` download and install Mambaforge for
+    Please use your own personal installation of Miniforge3 for development,
+    letting ``configure_compass_env.py`` download and install Miniforge3 for
     you if you don't already have it installed.
 
 Supported machines
@@ -91,8 +91,8 @@ If you are on one of the :ref:`dev_supported_machines`, run:
         -c <compiler> [--mpi <mpi>] [-m <machine>] [--with_albany] \
         [--with_petsc]
 
-The ``<base_path_to_install_or_update_conda>`` is typically ``~/mambaforge``.
-This is the location where you would like to install Mambaforge or where it is
+The ``<base_path_to_install_or_update_conda>`` is typically ``~/miniforge3``.
+This is the location where you would like to install Miniforge3 or where it is
 already installed. If you have limited space in your home directory, you may
 want to give another path.  If you already have it installed, that path will
 be used to add (or update) the compass test environment.
@@ -142,8 +142,8 @@ workstation, you will need to specify which flavor of MPI you want to use
 
   ./conda/configure_compass_env.py --conda <conda_path> --mpi <mpi>
 
-Again, the ``<conda_path>`` is typically ``~/mambaforge``, and is the location
-where you would like to install Mambaforge or where it is already installed.
+Again, the ``<conda_path>`` is typically ``~/miniforge3``, and is the location
+where you would like to install Miniforge3 or where it is already installed.
 If you already have it installed, that path will be used to add (or update) the
 compass test environment.
 
@@ -169,7 +169,7 @@ in :ref:`config_files`.
 What the script does
 ~~~~~~~~~~~~~~~~~~~~
 
-In addition to installing Mambaforge and creating the conda environment for
+In addition to installing Miniforge3 and creating the conda environment for
 you, this script will also:
 
 * install the ``compass`` package from the local branch in "development" mode
