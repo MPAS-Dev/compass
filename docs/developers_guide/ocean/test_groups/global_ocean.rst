@@ -768,20 +768,18 @@ the higher surface resolution of the 80-layer RRS vertical coordinate.
     config_rx1_min_layer_thickness = 0.1
 
 
-.. _dev_ocean_global_ocean_sowisc12to60:
+.. _dev_ocean_global_ocean_sowisc12to30:
 
-SO12to60 and SOwISC12to60
+SO12to30 and SOwISC12to30
 +++++++++++++++++++++++++
 
-The ``SO12to60`` and ``SOwISC12to60`` meshes are Southern Ocean regionally
-refined meshes with 12-km resolution around the Southern Ocean and Antarctica,
-45-km at southern mid-latitudes, 30-km at the equator and in the North
-Atlantic, 60-km resolution in the North Pacific, and 35-km resolution in the
-Arctic.
+The ``SO12to30`` and ``SOwISC12to30`` meshes are Southern Ocean regionally
+refined meshes with 12-km resolution around the Southern Ocean and Antarctica
+and have 30-km resoltuion elsewhere.
 
 The class
-:py:class:`compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60BaseMesh` defines
-the resolution for the meshes. The ``compass.ocean.tests.global_ocean.mesh.so12to60``
+:py:class:`compass.ocean.tests.global_ocean.mesh.so12to30.SO12to30BaseMesh` defines
+the resolution for the meshes. The ``compass.ocean.tests.global_ocean.mesh.so12to30``
 module includes namelist options appropriate for forward simulations with
 split-explicit (but not RK4) time integration on these meshes.  These set the time
 step and default run duration for short runs with these meshes.
@@ -824,24 +822,21 @@ The default config options for these meshes are:
     prefix = SO
     # a description of the mesh and initial condition
     mesh_description = MPAS Southern Ocean regionally refined mesh for E3SM version
-                       ${e3sm_version} with enhanced resolution (${min_res} km) around
-                       Antarctica, 45-km resolution in the mid southern latitudes,
-                       30-km resolution in a 15-degree band around the equator, 60-km
-                       resolution in northern mid latitudes, 30 km in the north
-                       Atlantic and 35 km in the Arctic.  This mesh has <<<levels>>>
-                       vertical levels and includes cavities under the ice shelves
-                       around Antarctica.
+                    ${e3sm_version} with enhanced resolution (${min_res} km) around
+                    Antarctica and 30 km elsewhere.  This mesh has <<<levels>>>
+                    vertical levels and includes cavities under the ice shelves
+                    around Antarctica.
     # E3SM version that the mesh is intended for
     e3sm_version = 3
     # The revision number of the mesh, which should be incremented each time the
     # mesh is revised
-    mesh_revision = 1
+    mesh_revision = 2
     # the minimum (finest) resolution in the mesh
     min_res = 12
     # the maximum (coarsest) resolution in the mesh, can be the same as min_res
-    max_res = 60
+    max_res = 30
     # The URL of the pull request documenting the creation of the mesh
-    pull_request = https://github.com/MPAS-Dev/compass/pull/460
+    pull_request = https://github.com/MPAS-Dev/compass/pull/752
 
 
     # config options related to initial condition and diagnostics support files
@@ -850,6 +845,7 @@ The default config options for these meshes are:
 
     # CMIP6 grid resolution
     cmip6_grid_res = 180x360
+
 
 The vertical grid is an ``index_tanh_dz`` profile (see
 :ref:`dev_ocean_framework_vertical`) with 64 vertical levels ranging in

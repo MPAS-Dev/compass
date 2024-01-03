@@ -7,7 +7,7 @@ This tutorial presents a step-by-step guide to adding a new mesh to the
 ``global_ocean`` test group in ``compass`` (see the :ref:`glossary` for
 definitions of some relevant terms).  In this tutorial, I will add a new
 mesh called YAM ("yet another mesh") that is based on techniques used to build
-the existing :ref:`dev_ocean_global_ocean_sowisc12to60` as well as
+the existing :ref:`dev_ocean_global_ocean_sowisc12to30` as well as
 :ref:`dev_ocean_global_ocean_wc14` meshes.
 
 .. _dev_tutorial_add_rrm_getting_started:
@@ -164,7 +164,7 @@ Next, we need to add this mesh to the list of known meshes:
 
     ...
 
-    from compass.ocean.tests.global_ocean.mesh.so12to60 import SO12to60BaseMesh
+    from compass.ocean.tests.global_ocean.mesh.so12to30 import SO12to30BaseMesh
     from compass.ocean.tests.global_ocean.mesh.wc14 import WC14BaseMesh
     from compass.ocean.tests.global_ocean.mesh.yam10to60 import YAM10to60BaseMesh
     from compass.ocean.tests.global_ocean.metadata import (
