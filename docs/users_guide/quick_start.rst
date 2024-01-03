@@ -64,7 +64,7 @@ other machines
 ~~~~~~~~~~~~~~
 
 To install your own ``compass`` conda environment on other machines, first,
-install `Mambaforge <https://github.com/conda-forge/miniforge#mambaforge>`_
+install `Miniforge3 <https://github.com/conda-forge/miniforge?tab=readme-ov-file#miniforge3>`_
 (if it is not already installed), then create a new conda environment (called
 ``compass`` in this example) as follows:
 
