@@ -8,7 +8,7 @@ from shared import (
     check_call,
     get_conda_base,
     get_logger,
-    install_miniconda,
+    install_miniforge,
     parse_args,
 )
 
@@ -48,11 +48,11 @@ def setup_install_env(env_name, activate_base, use_local, logger, recreate,
     if recreate or not os.path.exists(env_path):
         print('Setting up a conda environment for installing compass\n')
         commands = f'{activate_base} && ' \
-                   f'mamba create -y -n {env_name} {channels} {packages}'
+                   f'conda create -y -n {env_name} {channels} {packages}'
     else:
         print('Updating conda environment for installing compass\n')
         commands = f'{activate_base} && ' \
-                   f'mamba install -y -n {env_name} {channels} {packages}'
+                   f'conda install -y -n {env_name} {channels} {packages}'
 
     check_call(commands, logger=logger)
 
@@ -75,8 +75,7 @@ def main():
     env_name = 'compass_bootstrap'
 
     source_activation_scripts = \
-        f'source {conda_base}/etc/profile.d/conda.sh && ' \
-        f'source {conda_base}/etc/profile.d/mamba.sh'
+        f'source {conda_base}/etc/profile.d/conda.sh'
 
     activate_base = f'{source_activation_scripts} && conda activate'
 
@@ -94,8 +93,8 @@ def main():
         logger = get_logger(log_filename='conda/logs/prebootstrap.log',
                             name=__name__)
 
-    # install miniconda if needed
-    install_miniconda(conda_base, activate_base, logger)
+    # install miniforge if needed
+    install_miniforge(conda_base, activate_base, logger)
 
     local_mache = args.mache_fork is not None and args.mache_branch is not None
     if local_mache:

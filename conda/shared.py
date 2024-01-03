@@ -147,28 +147,27 @@ def check_call(commands, env=None, logger=None):
         raise subprocess.CalledProcessError(process.returncode, commands)
 
 
-def install_miniconda(conda_base, activate_base, logger):
+def install_miniforge(conda_base, activate_base, logger):
     if not os.path.exists(conda_base):
-        print('Installing Mambaforge')
+        print('Installing Miniforge3')
         if platform.system() == 'Linux':
             system = 'Linux'
         elif platform.system() == 'Darwin':
             system = 'MacOSX'
         else:
             system = 'Linux'
-        miniconda = f'Mambaforge-{system}-x86_64.sh'
-        url = f'https://github.com/conda-forge/miniforge/releases/latest/download/{miniconda}'  # noqa: E501
+        miniforge = f'Miniforge3-{system}-x86_64.sh'
+        url = f'https://github.com/conda-forge/miniforge/releases/latest/download/{miniforge}'  # noqa: E501
         print(url)
         req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-        f = urlopen(req)
-        html = f.read()
-        with open(miniconda, 'wb') as outfile:
-            outfile.write(html)
-        f.close()
+        with urlopen(req) as f:
+            html = f.read()
+            with open(miniforge, 'wb') as outfile:
+                outfile.write(html)
 
-        command = f'/bin/bash {miniconda} -b -p {conda_base}'
+        command = f'/bin/bash {miniforge} -b -p {conda_base}'
         check_call(command, logger=logger)
-        os.remove(miniconda)
+        os.remove(miniforge)
 
     backup_bashrc()
 
@@ -181,8 +180,8 @@ def install_miniconda(conda_base, activate_base, logger):
     check_call(commands, logger=logger)
 
     commands = f'{activate_base} && ' \
-               f'mamba update -y --all && ' \
-               f'mamba init'
+               f'conda update -y --all && ' \
+               f'conda init'
 
     check_call(commands, logger=logger)
 
