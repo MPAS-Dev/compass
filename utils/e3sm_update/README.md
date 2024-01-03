@@ -15,7 +15,7 @@ Instructions
    compiler and mpi library, e.g.:
    ```shell
    ./conda/configure_compass_env.py --env_name compass_e3sm_update \
-       --compiler intel --mpi openmpi --conda ~/mambaforge/
+       --compiler intel --mpi openmpi --conda ~/miniforge3/
    ```
 
 2. Copy `example.cfg` to the base of the branch:
