@@ -62,11 +62,6 @@ class RunModel(Step):
                          ntasks=ntasks, min_tasks=min_tasks,
                          openmp_threads=openmp_threads)
 
-        # download and link the mesh
-        self.mesh_file = 'MISMIP_2km_20220502.nc'
-        self.add_input_file(filename=self.mesh_file, target=self.mesh_file,
-                            database='')
-
         for suffix in suffixes:
             self.add_namelist_file(
                 'compass.landice.tests.mismipplus', 'namelist.landice',

@@ -30,6 +30,13 @@ class SmokeTest(TestCase):
 
         step = RunModel(test_case=self, name=name, subdir='simulation',
                         ntasks=ntasks, min_tasks=min_tasks, openmp_threads=1)
+
+        # download and link the mesh
+        step.mesh_file = 'landice_grid.nc'
+        step.add_input_file(filename=step.mesh_file,
+                            target='MISMIP_2km_20220502.nc',
+                            database='')
+
         self.add_step(step)
 
     # no configure() method is needed

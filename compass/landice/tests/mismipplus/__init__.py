@@ -1,5 +1,5 @@
-from compass.landice.tests.mismipplus.mesh_gen import MeshGen
 from compass.landice.tests.mismipplus.smoke_test import SmokeTest
+from compass.landice.tests.mismipplus.spin_up import SpinUp
 from compass.testgroup import TestGroup
 
 
@@ -16,5 +16,4 @@ class MISMIPplus(TestGroup):
 
         self.add_test_case(SmokeTest(test_group=self))
 
-        # Test case for setting up mesh and I.C.'s for MISMIP
-        self.add_test_case(MeshGen(test_group=self))
+        self.add_test_case(SpinUp(test_group=self))

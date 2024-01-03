@@ -3,9 +3,10 @@ from compass.landice.tests.mismipplus.setup_mesh import SetupMesh
 from compass.testcase import TestCase
 
 
-class MeshGen(TestCase):
+class SpinUp(TestCase):
     """
-    Test case for create the MISMIP+ mesh and initial conditions
+    Test case for create the MISMIP+ mesh, initial conditions,
+    input files, and runs a short segment of the spin up experiments
     """
     def __init__(self, test_group):
         """
@@ -17,15 +18,14 @@ class MeshGen(TestCase):
             The test group that this test case belongs to
 
         """
-        name = "mesh_gen"
+        name = "spin_up"
 
         super().__init__(test_group=test_group, name=name)
 
         config = CompassConfigParser()
-        module = 'compass.landice.tests.mismipplus.mesh_gen'
+        module = 'compass.landice.tests.mismipplus.spin_up'
         # add from config
         config.add_from_package(module, 'mesh_gen.cfg')
-
         resolution = config.getint('mesh', 'resolution')
 
         # Setting up steps of test case
