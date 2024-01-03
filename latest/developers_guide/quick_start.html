@@ -171,17 +171,17 @@ out a new branch or create a new worktree with <code class="docutils literal not
 package because these don’t get added automatically.</p>
 <p>Whether you are on one of the <a class="reference internal" href="machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a> or an “unknown”
 machine, you will need to specify a path where
-<a class="reference external" href="https://github.com/conda-forge/miniforge#mambaforge">Mambaforge</a> either has
+<a class="reference external" href="https://github.com/conda-forge/miniforge?tab=readme-ov-file#miniforge3">Miniforge3</a> either has
 already been installed or an empty directory where the script can install it.
 You must have write permission in the base environment (if it exists).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>We have found that an existing Miniconda3 installation <strong>does not</strong> always
-work well for <code class="docutils literal notranslate"><span class="pre">compass</span></code>, so please start with Mambaforge instead.</p>
+work well for <code class="docutils literal notranslate"><span class="pre">compass</span></code>, so please start with Miniforge3 instead.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>It is <em>very</em> important that you not use a shared installation of Mambaforge
+<p>It is <em>very</em> important that you not use a shared installation of Miniforge3
 or Miniconda3 such as the base environment for E3SM-Unified for <code class="docutils literal notranslate"><span class="pre">compass</span></code>
 development. Most developers will not have write access to shared
 environments, meaning that you will get write-permission errors when you
@@ -190,8 +190,8 @@ environment.</p>
 <p>For anyone who does have write permission to a shared environment, you
 would be creating your compass development environment in a shared space,
 which could cause confusion.</p>
-<p>Please use your own personal installation of Mambaforge for development,
-letting <code class="docutils literal notranslate"><span class="pre">configure_compass_env.py</span></code> download and install Mambaforge for
+<p>Please use your own personal installation of Miniforge3 for development,
+letting <code class="docutils literal notranslate"><span class="pre">configure_compass_env.py</span></code> download and install Miniforge3 for
 you if you don’t already have it installed.</p>
 </div>
 <section id="supported-machines">
@@ -202,8 +202,8 @@ you if you don’t already have it installed.</p>
 <span class="w">    </span><span class="o">[</span>--with_petsc<span class="o">]</span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">&lt;base_path_to_install_or_update_conda&gt;</span></code> is typically <code class="docutils literal notranslate"><span class="pre">~/mambaforge</span></code>.
-This is the location where you would like to install Mambaforge or where it is
+<p>The <code class="docutils literal notranslate"><span class="pre">&lt;base_path_to_install_or_update_conda&gt;</span></code> is typically <code class="docutils literal notranslate"><span class="pre">~/miniforge3</span></code>.
+This is the location where you would like to install Miniforge3 or where it is
 already installed. If you have limited space in your home directory, you may
 want to give another path.  If you already have it installed, that path will
 be used to add (or update) the compass test environment.</p>
@@ -245,8 +245,8 @@ workstation, you will need to specify which flavor of MPI you want to use
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./conda/configure_compass_env.py<span class="w"> </span>--conda<span class="w"> </span>&lt;conda_path&gt;<span class="w"> </span>--mpi<span class="w"> </span>&lt;mpi&gt;
 </pre></div>
 </div>
-<p>Again, the <code class="docutils literal notranslate"><span class="pre">&lt;conda_path&gt;</span></code> is typically <code class="docutils literal notranslate"><span class="pre">~/mambaforge</span></code>, and is the location
-where you would like to install Mambaforge or where it is already installed.
+<p>Again, the <code class="docutils literal notranslate"><span class="pre">&lt;conda_path&gt;</span></code> is typically <code class="docutils literal notranslate"><span class="pre">~/miniforge3</span></code>, and is the location
+where you would like to install Miniforge3 or where it is already installed.
 If you already have it installed, that path will be used to add (or update) the
 compass test environment.</p>
 <p>We only support one set of compilers for Mac and Linux (<code class="docutils literal notranslate"><span class="pre">gnu</span></code> for Linux and
@@ -268,7 +268,7 @@ with the developers.</p>
 </section>
 <section id="what-the-script-does">
 <h3>What the script does<a class="headerlink" href="#what-the-script-does" title="Link to this heading">¶</a></h3>
-<p>In addition to installing Mambaforge and creating the conda environment for
+<p>In addition to installing Miniforge3 and creating the conda environment for
 you, this script will also:</p>
 <ul class="simple">
 <li><p>install the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package from the local branch in “development” mode

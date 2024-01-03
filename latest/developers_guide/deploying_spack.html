@@ -276,24 +276,24 @@ git<span class="w"> </span>worktree<span class="w"> </span>add<span class="w"> <
 </pre></div>
 </div>
 <p>You will also need a local installation of
-<a class="reference external" href="https://github.com/conda-forge/miniforge#mambaforge">Mambaforge</a>.
+<a class="reference external" href="https://github.com/conda-forge/miniforge?tab=readme-ov-file#miniforge3">Miniforge</a>.
 Compass can do this for you if you haven’t already installed it.  If you want
 to download it manually, use the Linux x86_64 version for all our supported
 machines.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>We have found that an existing Miniconda3 installation <strong>does not</strong> always
-work well for compass, so please start with Mambaforge instead.</p>
+work well for compass, so please start with Miniforge3 instead.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>You definitely need your own local Mambaforge installation – you can’t use
+<p>You definitely need your own local Miniforge3 installation – you can’t use
 a system version or a shared one like E3SM-Unified.</p>
 </div>
-<p>Define a location where Mambaforge is installed or where you want to install
+<p>Define a location where Miniforge3 is installed or where you want to install
 it:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># change to your conda installation</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">CONDA_BASE</span><span class="o">=</span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/mambaforge
+<span class="nb">export</span><span class="w"> </span><span class="nv">CONDA_BASE</span><span class="o">=</span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/miniforge
 </pre></div>
 </div>
 <p>Okay, we’re finally ready to do a test spack build for compass.
@@ -314,7 +314,7 @@ To do this, we call the <code class="docutils literal notranslate"><span class="
 </pre></div>
 </div>
 <p>The directory you point to with <code class="docutils literal notranslate"><span class="pre">--conda</span></code> either doesn’t exist or contains
-your existing installation of Mambaforge.</p>
+your existing installation of Miniforge3.</p>
 <p>When you supply <code class="docutils literal notranslate"><span class="pre">--mache_fork</span></code> and <code class="docutils literal notranslate"><span class="pre">--mache_branch</span></code>, compass will clone
 a fork of the <code class="docutils literal notranslate"><span class="pre">mache</span></code> repo and check out the requested branch, then install
 that version of mache into both the compass installation conda environment and
