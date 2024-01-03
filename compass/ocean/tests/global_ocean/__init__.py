@@ -43,7 +43,7 @@ class GlobalOcean(TestGroup):
 
         self._add_tests(mesh_names=['ARRM10to60', 'ARRMwISC10to60'])
 
-        self._add_tests(mesh_names=['SO12to60', 'SOwISC12to60'])
+        self._add_tests(mesh_names=['SO12to30', 'SOwISC12to30'])
 
         self._add_tests(mesh_names=['WC14', 'WCwISC14'])
 
