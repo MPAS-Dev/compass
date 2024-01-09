@@ -281,25 +281,33 @@ def label_mesh(init, mesh, graph_info, num_interface,  # noqa: C901
     newf = ""
     with open(graph_info, 'r') as f:
         lines = f.readlines()
-        # this is to have fine, coarse and interface be separate for METIS
-        # newf += lines[0].strip() + " 010 3 \n"
+        # OLD METIS SETUP: fine and interface are separate for METIS
+        # CURRENT METIS SETUP: fine and interface are together for METIS
 
-        # this is to have fine, and interface be together for METIS
+        # OLD METIS SETUP:
+        # newf += lines[0].strip() + " 010 3 \n"
+        # CURRENT METIS SETUP:
         newf += lines[0].strip() + " 010 2 \n"
+
         for icell in range(1, len(lines)):
             if (lts_rgn[icell - 1] == 1 or lts_rgn[icell - 1] == 5):  # fine
-
+                # OLD METIS SETUP:
                 # newf+= "0 1 0 " + lines[icell].strip() + "\n"
+                # CURRENT METIS SETUP:
                 newf += "0 1 " + lines[icell].strip() + "\n"
                 fine_cells = fine_cells + 1
 
             elif (lts_rgn[icell - 1] == 2):  # coarse
+                # OLD METIS SETUP:
                 # newf+= "1 0 0 " + lines[icell].strip() + "\n"
+                # CURRENT METIS SETUP:
                 newf += "1 0 " + lines[icell].strip() + "\n"
                 coarse_cells = coarse_cells + 1
 
             else:  # interface 1 and 2
+                # OLD METIS SETUP:
                 # newf+= "0 0 1 " + lines[icell].strip() + "\n"
+                # CURRENT METIS SETUP:
                 newf += "0 1 " + lines[icell].strip() + "\n"
                 coarse_cells = coarse_cells + 1
 
