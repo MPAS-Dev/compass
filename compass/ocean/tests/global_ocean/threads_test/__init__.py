@@ -1,6 +1,8 @@
+from compass.ocean.tests.global_ocean.forward import (
+    ForwardStep,
+    ForwardTestCase,
+)
 from compass.validate import compare_variables
-from compass.ocean.tests.global_ocean.forward import ForwardTestCase, \
-    ForwardStep
 
 
 class ThreadsTest(ForwardTestCase):
@@ -24,7 +26,7 @@ class ThreadsTest(ForwardTestCase):
         init : compass.ocean.tests.global_ocean.init.Init
             The test case that produces the initial condition for this run
 
-        time_integrator : {'split_explicit', 'RK4'}
+        time_integrator : {'split_explicit_ab2', 'RK4'}
             The time integrator to use for the forward run
         """
         super().__init__(test_group=test_group, mesh=mesh, init=init,

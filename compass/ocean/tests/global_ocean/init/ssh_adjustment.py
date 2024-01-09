@@ -19,7 +19,7 @@ class SshAdjustment(ForwardStep):
             The test case this step belongs to
         """
         super().__init__(test_case=test_case, mesh=test_case.mesh,
-                         time_integrator='split_explicit',
+                         time_integrator='split_explicit_ab2',
                          name='ssh_adjustment')
 
         self.add_namelist_options({'config_AM_globalStats_enable': '.false.'})

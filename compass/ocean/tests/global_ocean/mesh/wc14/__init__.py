@@ -1,13 +1,14 @@
-import numpy as np
-import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
-
+import matplotlib.pyplot as plt
 import mpas_tools.mesh.creation.mesh_definition_tools as mdt
-from mpas_tools.mesh.creation.signed_distance import \
-    signed_distance_from_geojson, mask_from_geojson
+import numpy as np
 from geometric_features import read_feature_collection
 from mpas_tools.cime.constants import constants
+from mpas_tools.mesh.creation.signed_distance import (
+    mask_from_geojson,
+    signed_distance_from_geojson,
+)
 from mpas_tools.viz.colormaps import register_sci_viz_colormaps
 
 from compass.mesh import QuasiUniformSphericalMeshStep
@@ -25,7 +26,7 @@ class WC14BaseMesh(QuasiUniformSphericalMeshStep):
         inputs = ['coastline_CUSP.geojson',
                   'land_mask_Kamchatka.geojson',
                   'land_mask_Mexico.geojson',
-                  'namelist.split_explicit',
+                  'namelist.split_explicit_ab2',
                   'region_Arctic_Ocean.geojson',
                   'region_Bering_Sea.geojson',
                   'region_Bering_Sea_reduced.geojson',
@@ -58,8 +59,8 @@ class WC14BaseMesh(QuasiUniformSphericalMeshStep):
         dlon = 0.1
         dlat = dlon
         earth_radius = constants['SHR_CONST_REARTH']
-        print('\nCreating cellWidth on a lat-lon grid of: {0:.2f} x {0:.2f} '
-              'degrees'.format(dlon, dlat))
+        print(f'\nCreating cellWidth on a lat-lon grid of: '
+              f'{dlon:.2f} x {dlat:.2f} degrees')
         print('This can be set higher for faster test generation\n')
         nlon = int(360. / dlon) + 1
         nlat = int(180. / dlat) + 1
@@ -144,16 +145,16 @@ class WC14BaseMesh(QuasiUniformSphericalMeshStep):
                                                       earth_radius,
                                                       max_length=0.25)
         maskSmoothEast = 0.5 * (
-                    1 + np.tanh((transitionOffset - signedDistance) /
-                                (transitionWidth / 2.)))
+            1 + np.tanh((transitionOffset - signedDistance) /
+                        (transitionWidth / 2.)))
 
         fc = read_feature_collection('region_Bering_Sea_reduced.geojson')
         signedDistance = signed_distance_from_geojson(fc, lon, lat,
                                                       earth_radius,
                                                       max_length=0.25)
         maskSmoothWest = 0.5 * (
-                    1 + np.tanh((transitionOffset - signedDistance) /
-                                (transitionWidth / 2.)))
+            1 + np.tanh((transitionOffset - signedDistance) /
+                        (transitionWidth / 2.)))
 
         fc = read_feature_collection('land_mask_Kamchatka.geojson')
         maskWest = mask_from_geojson(fc, lon, lat)

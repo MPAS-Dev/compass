@@ -26,7 +26,7 @@ class RestartTest(ForwardTestCase):
         init : compass.ocean.tests.global_ocean.init.Init
             The test case that produces the initial condition for this run
 
-        time_integrator : {'split_explicit', 'RK4'}
+        time_integrator : {'split_explicit_ab2', 'RK4'}
             The time integrator to use for the forward run
         """
         super().__init__(test_group=test_group, mesh=mesh, init=init,
@@ -34,7 +34,7 @@ class RestartTest(ForwardTestCase):
                          name='restart_test')
         module = __name__
 
-        restart_time = {'split_explicit': '0001-01-01_04:00:00',
+        restart_time = {'split_explicit_ab2': '0001-01-01_04:00:00',
                         'RK4': '0001-01-01_00:10:00'}
         restart_filename = '../restarts/rst.{}.nc'.format(
             restart_time[time_integrator].replace(':', '.'))

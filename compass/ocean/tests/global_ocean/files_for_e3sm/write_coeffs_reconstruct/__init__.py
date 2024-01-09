@@ -30,7 +30,7 @@ class WriteCoeffsReconstruct(ForwardStep, FilesForE3SMStep):
             The test case that produces the initial condition for this run
         """
         super().__init__(test_case=test_case, mesh=mesh, init=init,
-                         time_integrator='split_explicit',
+                         time_integrator='split_explicit_ab2',
                          name='write_coeffs_reconstruct')
 
         package = 'compass.ocean.tests.global_ocean.files_for_e3sm.' \

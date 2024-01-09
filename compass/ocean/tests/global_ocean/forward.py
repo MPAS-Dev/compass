@@ -24,7 +24,7 @@ class ForwardStep(Step):
     init : compass.ocean.tests.global_ocean.init.Init
         The test case that produces the initial condition for this run
 
-    time_integrator : {'split_explicit', 'RK4'}
+    time_integrator : {'split_explicit_ab2', 'RK4'}
         The time integrator to use for the forward run
 
     dynamic_ntasks : bool
@@ -51,7 +51,7 @@ class ForwardStep(Step):
         mesh : compass.ocean.tests.global_ocean.mesh.Mesh
             The test case that produces the mesh for this run
 
-        time_integrator : {'split_explicit', 'RK4'}
+        time_integrator : {'split_explicit_ab2', 'RK4'}
             The time integrator to use for the forward run
 
         init : compass.ocean.tests.global_ocean.init.Init, optional
@@ -173,7 +173,7 @@ class ForwardStep(Step):
 
         if self.get_dt_from_min_res:
             dt, btr_dt = self._get_dts()
-            if self.time_integrator == 'split_explicit':
+            if self.time_integrator == 'split_explicit_ab2':
                 self.add_namelist_options({'config_dt': dt,
                                            'config_btr_dt': btr_dt})
             else:
@@ -201,7 +201,7 @@ class ForwardStep(Step):
         """
         if self.get_dt_from_min_res:
             dt, btr_dt = self._get_dts()
-            if self.time_integrator == 'split_explicit':
+            if self.time_integrator == 'split_explicit_ab2':
                 self.update_namelist_at_runtime({'config_dt': dt,
                                                  'config_btr_dt': btr_dt})
             else:
@@ -252,7 +252,7 @@ class ForwardTestCase(TestCase):
     init : compass.ocean.tests.global_ocean.init.Init
         The test case that produces the initial condition for this run
 
-    time_integrator : {'split_explicit', 'RK4'}
+    time_integrator : {'split_explicit_ab2', 'RK4'}
         The time integrator to use for the forward run
     """
 
@@ -271,7 +271,7 @@ class ForwardTestCase(TestCase):
         init : compass.ocean.tests.global_ocean.init.Init
             The test case that produces the initial condition for this run
 
-        time_integrator : {'split_explicit', 'RK4'}
+        time_integrator : {'split_explicit_ab2', 'RK4'}
             The time integrator to use for the forward run
 
         name : str
@@ -295,7 +295,7 @@ def get_forward_subdir(init_subdir, time_integrator, name):
     Get the subdirectory for a test case that is based on a forward run with
     a time integrator
     """
-    if time_integrator == 'split_explicit':
+    if time_integrator == 'split_explicit_ab2':
         # this is the default so we won't make a subdir for the time
         # integrator
         subdir = os.path.join(init_subdir, name)
