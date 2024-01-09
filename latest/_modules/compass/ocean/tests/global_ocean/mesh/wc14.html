@@ -113,16 +113,17 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.global_ocean.mesh.wc14</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
+<span></span><span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
 <span class="kn">import</span> <span class="nn">cartopy.feature</span> <span class="k">as</span> <span class="nn">cfeature</span>
-
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">mpas_tools.mesh.creation.mesh_definition_tools</span> <span class="k">as</span> <span class="nn">mdt</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.mesh.creation.signed_distance</span> <span class="kn">import</span> \
-    <span class="n">signed_distance_from_geojson</span><span class="p">,</span> <span class="n">mask_from_geojson</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">read_feature_collection</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.mesh.creation.signed_distance</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">mask_from_geojson</span><span class="p">,</span>
+    <span class="n">signed_distance_from_geojson</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.viz.colormaps</span> <span class="kn">import</span> <span class="n">register_sci_viz_colormaps</span>
 
 <span class="kn">from</span> <span class="nn">compass.mesh</span> <span class="kn">import</span> <span class="n">QuasiUniformSphericalMeshStep</span>
@@ -142,7 +143,7 @@
         <span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;coastline_CUSP.geojson&#39;</span><span class="p">,</span>
                   <span class="s1">&#39;land_mask_Kamchatka.geojson&#39;</span><span class="p">,</span>
                   <span class="s1">&#39;land_mask_Mexico.geojson&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;namelist.split_explicit&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;namelist.split_explicit_ab2&#39;</span><span class="p">,</span>
                   <span class="s1">&#39;region_Arctic_Ocean.geojson&#39;</span><span class="p">,</span>
                   <span class="s1">&#39;region_Bering_Sea.geojson&#39;</span><span class="p">,</span>
                   <span class="s1">&#39;region_Bering_Sea_reduced.geojson&#39;</span><span class="p">,</span>
@@ -177,8 +178,8 @@
         <span class="n">dlon</span> <span class="o">=</span> <span class="mf">0.1</span>
         <span class="n">dlat</span> <span class="o">=</span> <span class="n">dlon</span>
         <span class="n">earth_radius</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_REARTH&#39;</span><span class="p">]</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Creating cellWidth on a lat-lon grid of: </span><span class="si">{0:.2f}</span><span class="s1"> x </span><span class="si">{0:.2f}</span><span class="s1"> &#39;</span>
-              <span class="s1">&#39;degrees&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dlon</span><span class="p">,</span> <span class="n">dlat</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Creating cellWidth on a lat-lon grid of: &#39;</span>
+              <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dlon</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> x </span><span class="si">{</span><span class="n">dlat</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> degrees&#39;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;This can be set higher for faster test generation</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">nlon</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">360.</span> <span class="o">/</span> <span class="n">dlon</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="n">nlat</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">180.</span> <span class="o">/</span> <span class="n">dlat</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
@@ -263,16 +264,16 @@
                                                       <span class="n">earth_radius</span><span class="p">,</span>
                                                       <span class="n">max_length</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
         <span class="n">maskSmoothEast</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span>
-                    <span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">((</span><span class="n">transitionOffset</span> <span class="o">-</span> <span class="n">signedDistance</span><span class="p">)</span> <span class="o">/</span>
-                                <span class="p">(</span><span class="n">transitionWidth</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)))</span>
+            <span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">((</span><span class="n">transitionOffset</span> <span class="o">-</span> <span class="n">signedDistance</span><span class="p">)</span> <span class="o">/</span>
+                        <span class="p">(</span><span class="n">transitionWidth</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)))</span>
 
         <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">&#39;region_Bering_Sea_reduced.geojson&#39;</span><span class="p">)</span>
         <span class="n">signedDistance</span> <span class="o">=</span> <span class="n">signed_distance_from_geojson</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span>
                                                       <span class="n">earth_radius</span><span class="p">,</span>
                                                       <span class="n">max_length</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
         <span class="n">maskSmoothWest</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span>
-                    <span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">((</span><span class="n">transitionOffset</span> <span class="o">-</span> <span class="n">signedDistance</span><span class="p">)</span> <span class="o">/</span>
-                                <span class="p">(</span><span class="n">transitionWidth</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)))</span>
+            <span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">((</span><span class="n">transitionOffset</span> <span class="o">-</span> <span class="n">signedDistance</span><span class="p">)</span> <span class="o">/</span>
+                        <span class="p">(</span><span class="n">transitionWidth</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)))</span>
 
         <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">&#39;land_mask_Kamchatka.geojson&#39;</span><span class="p">)</span>
         <span class="n">maskWest</span> <span class="o">=</span> <span class="n">mask_from_geojson</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span>

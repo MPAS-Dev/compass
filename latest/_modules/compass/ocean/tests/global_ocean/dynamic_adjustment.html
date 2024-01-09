@@ -162,14 +162,14 @@
 <span class="sd">        init : compass.ocean.tests.global_ocean.init.Init</span>
 <span class="sd">            The test case that produces the initial condition for this run</span>
 
-<span class="sd">        time_integrator : {&#39;split_explicit&#39;, &#39;RK4&#39;}</span>
+<span class="sd">        time_integrator : {&#39;split_explicit_ab2&#39;, &#39;RK4&#39;}</span>
 <span class="sd">            The time integrator to use for the forward run</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
                          <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">,</span>
                          <span class="n">name</span><span class="o">=</span><span class="s1">&#39;dynamic_adjustment&#39;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">time_integrator</span> <span class="o">==</span> <span class="s1">&#39;split_explicit&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">time_integrator</span> <span class="o">==</span> <span class="s1">&#39;split_explicit_ab2&#39;</span><span class="p">:</span>
             <span class="n">yaml_filename</span> <span class="o">=</span> <span class="s1">&#39;dynamic_adjustment.yaml&#39;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">yaml_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;dynamic_adjustment_</span><span class="si">{</span><span class="n">time_integrator</span><span class="si">}</span><span class="s1">.yaml&#39;</span>
@@ -267,7 +267,7 @@
         <span class="n">required</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;run_duration&#39;</span><span class="p">,</span> <span class="s1">&#39;output_interval&#39;</span><span class="p">,</span> <span class="s1">&#39;restart_interval&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">get_dt_from_min_res</span><span class="p">:</span>
             <span class="n">required</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;dt&#39;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">time_integrator</span> <span class="o">==</span> <span class="s1">&#39;split_explicit&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">time_integrator</span> <span class="o">==</span> <span class="s1">&#39;split_explicit_ab2&#39;</span><span class="p">:</span>
                 <span class="n">required</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;btr_dt&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">required</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">option</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>

@@ -140,7 +140,7 @@
 <span class="sd">    init : compass.ocean.tests.global_ocean.init.Init</span>
 <span class="sd">        The test case that produces the initial condition for this run</span>
 
-<span class="sd">    time_integrator : {&#39;split_explicit&#39;, &#39;RK4&#39;}</span>
+<span class="sd">    time_integrator : {&#39;split_explicit_ab2&#39;, &#39;RK4&#39;}</span>
 <span class="sd">        The time integrator to use for the forward run</span>
 
 <span class="sd">    dynamic_ntasks : bool</span>
@@ -169,7 +169,7 @@
 <span class="sd">        mesh : compass.ocean.tests.global_ocean.mesh.Mesh</span>
 <span class="sd">            The test case that produces the mesh for this run</span>
 
-<span class="sd">        time_integrator : {&#39;split_explicit&#39;, &#39;RK4&#39;}</span>
+<span class="sd">        time_integrator : {&#39;split_explicit_ab2&#39;, &#39;RK4&#39;}</span>
 <span class="sd">            The time integrator to use for the forward run</span>
 
 <span class="sd">        init : compass.ocean.tests.global_ocean.init.Init, optional</span>
@@ -294,7 +294,7 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dt_from_min_res</span><span class="p">:</span>
             <span class="n">dt</span><span class="p">,</span> <span class="n">btr_dt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dts</span><span class="p">()</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_integrator</span> <span class="o">==</span> <span class="s1">&#39;split_explicit&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_integrator</span> <span class="o">==</span> <span class="s1">&#39;split_explicit_ab2&#39;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">({</span><span class="s1">&#39;config_dt&#39;</span><span class="p">:</span> <span class="n">dt</span><span class="p">,</span>
                                            <span class="s1">&#39;config_btr_dt&#39;</span><span class="p">:</span> <span class="n">btr_dt</span><span class="p">})</span>
             <span class="k">else</span><span class="p">:</span>
@@ -323,7 +323,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dt_from_min_res</span><span class="p">:</span>
             <span class="n">dt</span><span class="p">,</span> <span class="n">btr_dt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dts</span><span class="p">()</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_integrator</span> <span class="o">==</span> <span class="s1">&#39;split_explicit&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_integrator</span> <span class="o">==</span> <span class="s1">&#39;split_explicit_ab2&#39;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">({</span><span class="s1">&#39;config_dt&#39;</span><span class="p">:</span> <span class="n">dt</span><span class="p">,</span>
                                                  <span class="s1">&#39;config_btr_dt&#39;</span><span class="p">:</span> <span class="n">btr_dt</span><span class="p">})</span>
             <span class="k">else</span><span class="p">:</span>
@@ -380,7 +380,7 @@
 <span class="sd">    init : compass.ocean.tests.global_ocean.init.Init</span>
 <span class="sd">        The test case that produces the initial condition for this run</span>
 
-<span class="sd">    time_integrator : {&#39;split_explicit&#39;, &#39;RK4&#39;}</span>
+<span class="sd">    time_integrator : {&#39;split_explicit_ab2&#39;, &#39;RK4&#39;}</span>
 <span class="sd">        The time integrator to use for the forward run</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -401,7 +401,7 @@
 <span class="sd">        init : compass.ocean.tests.global_ocean.init.Init</span>
 <span class="sd">            The test case that produces the initial condition for this run</span>
 
-<span class="sd">        time_integrator : {&#39;split_explicit&#39;, &#39;RK4&#39;}</span>
+<span class="sd">        time_integrator : {&#39;split_explicit_ab2&#39;, &#39;RK4&#39;}</span>
 <span class="sd">            The time integrator to use for the forward run</span>
 
 <span class="sd">        name : str</span>
@@ -430,7 +430,7 @@
 <span class="sd">    Get the subdirectory for a test case that is based on a forward run with</span>
 <span class="sd">    a time integrator</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">time_integrator</span> <span class="o">==</span> <span class="s1">&#39;split_explicit&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">time_integrator</span> <span class="o">==</span> <span class="s1">&#39;split_explicit_ab2&#39;</span><span class="p">:</span>
         <span class="c1"># this is the default so we won&#39;t make a subdir for the time</span>
         <span class="c1"># integrator</span>
         <span class="n">subdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">init_subdir</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
