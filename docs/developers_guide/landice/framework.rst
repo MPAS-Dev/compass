@@ -31,8 +31,8 @@ mesh
 
 The landice framework module :py:mod:`compass.landice.mesh` provides functions
 used by all ``mesh_gen`` tests cases, which currently exist within the
-``antarctica``, ``greenland``, ``humboldt``, ``kangerlussuaq``, ``koge_bugt_s``,
-and ``thwaites`` test groups. These functions include:
+``antarctica``, ``crane``, ``greenland``, ``humboldt``, ``kangerlussuaq``,
+``koge_bugt_s``, and ``thwaites`` test groups. These functions include:
 
 :py:func:`compass.landice.mesh.gridded_flood_fill()` applies a flood-fill algorithm
 to the gridded dataset in order to separate the ice sheet from peripheral ice.

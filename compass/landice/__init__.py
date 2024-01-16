@@ -1,6 +1,7 @@
 from compass.landice.tests.antarctica import Antarctica
 from compass.landice.tests.calving_dt_convergence import CalvingDtConvergence
 from compass.landice.tests.circular_shelf import CircularShelf
+from compass.landice.tests.crane import Crane
 from compass.landice.tests.dome import Dome
 from compass.landice.tests.eismint2 import Eismint2
 from compass.landice.tests.ensemble_generator import EnsembleGenerator
@@ -31,6 +32,7 @@ class Landice(MpasCore):
         self.add_test_group(Antarctica(mpas_core=self))
         self.add_test_group(CalvingDtConvergence(mpas_core=self))
         self.add_test_group(CircularShelf(mpas_core=self))
+        self.add_test_group(Crane(mpas_core=self))
         self.add_test_group(Dome(mpas_core=self))
         self.add_test_group(Eismint2(mpas_core=self))
         self.add_test_group(EnsembleGenerator(mpas_core=self))
