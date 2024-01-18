@@ -29,7 +29,7 @@ class SetupMesh(Step):
         The distance in meters between adjacent cell centers.
 
     """
-    def __init__(self, test_case, resolution):
+    def __init__(self, test_case, name, subdir, resolution):
         """
         Create the step
 
@@ -38,14 +38,19 @@ class SetupMesh(Step):
         test_case : compass.TestCase
             The test case this step belongs to
 
+        name : str
+            the name of the test case
+
+        subdir : str
+            the subdirectory for the step.  The default is ``name``
+
         resolution : int
             The nominal distance [m] between horizontal grid points
         """
 
-        resolution_key = f'{resolution:d}m'
         super().__init__(test_case=test_case,
-                         name=f'{resolution_key}_mesh_gen',
-                         subdir=f"{resolution_key}/mesh_gen")
+                         name=name,
+                         subdir=subdir)
 
         # Files to be created as part of the this step
         for filename in ['mpas_grid.nc', 'graph.info', 'landice_grid.nc']:
@@ -57,14 +62,25 @@ class SetupMesh(Step):
         """
         Run this step of the test case
         """
+
+        # hard coded parameters
+        Lx = 640e3  # [m]
+        Ly = 80e3   # [m]
+
         logger = self.logger
         config = self.config
 
         section = config['mesh']
 
-        gutterLength = 0.0
         # read the resolution from the .cfg file at runtime
-        resolution = section.getint('resolution')
+        resolution = section.getfloat('resolution')
+        # read the gutter lenth from the .cfg file
+        gutterLength = section.getfloat('gutter_length')
+        # ensure that the requested `gutterLength` is valid. Otherwise set
+        # the value to zero, such that the default `gutterLength` of two
+        # gridcells is used.
+        if (gutterLength < 2. * resolution) and (gutterLength != 0.):
+            gutterLength = 0.
 
         # check if the resolution has been changed since the `compass setup`
         # command was run
@@ -80,8 +96,8 @@ class SetupMesh(Step):
                             f' resolution of {resolution:2d}km')
 
         nx, ny, dc = calculateMeshParams(nominal_resolution=resolution,
-                                         Lx=640e3,
-                                         Ly=80e3,
+                                         Lx=Lx,
+                                         Ly=Ly,
                                          gutterLength=gutterLength)
 
         ds_mesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc,
@@ -291,24 +307,27 @@ def center_trough(ds_mesh):
         ds_mesh[f'x{loc}'] = ds_mesh[f'x{loc}'] + xShift
         ds_mesh[f'y{loc}'] = ds_mesh[f'y{loc}'] + yShift
 
+    ##########################################################################
     # WHL :
     #   Need to adjust geometry along top and bottom boundaries to get flux
     #   correct there. Essentially, we only want to model the interior half of
     #   those cells. Adding this here because we only want to do this if it
     #   hasn't been done before. This method is assuming a periodic_hex mesh!
-
-    # Reduce the cell areas by half along the N/S boundary
+    ##########################################################################
 
     # Boolean mask for indices which correspond to the N/S boundary of mesh
     # `np.isclose` is needed when comparing floats to avoid roundoff errors
     mask = (np.isclose(ds_mesh.yCell, ds_mesh.yCell.min(), rtol=0.01) |
             np.isclose(ds_mesh.yCell, ds_mesh.yCell.max(), rtol=0.01))
 
+    # Reduce the cell areas by half along the N/S boundary
     ds_mesh['areaCell'] = xr.where(mask,
                                    ds_mesh.areaCell * 0.5,
                                    ds_mesh.areaCell)
 
-    if ds_mesh.dvEdge.all():
+    # `mesh.dcEdge` is a vector. So, ensure that all values equal before we
+    # arbitrarily select a value from the array to use in the `de` calculation
+    if ds_mesh.dcEdge.all():
         dc = float(ds_mesh.dcEdge[0])
 
     # get the distance between edges

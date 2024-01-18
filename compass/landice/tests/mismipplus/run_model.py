@@ -1,3 +1,6 @@
+import os
+
+from compass.landice.tests.mismipplus.tasks import get_ntasks_from_cell_count
 from compass.model import make_graph_file, run_model
 from compass.step import Step
 
@@ -16,7 +19,7 @@ class RunModel(Step):
         twice, the second time with ``namelist.landice.rst`` and
         ``streams.landice.rst``
     """
-    def __init__(self, test_case, name='run_model', subdir=None,
+    def __init__(self, test_case, name, subdir, resolution,
                  ntasks=1, min_tasks=None, openmp_threads=1, suffixes=None):
         """
         Create a new test case
@@ -31,6 +34,9 @@ class RunModel(Step):
 
         subdir : str, optional
             the subdirectory for the step.  The default is ``name``
+
+        resolution : int
+            The nominal distance [m] between horizontal grid points
 
         ntasks : int, optional
             the number of tasks the step would ideally use.  If fewer tasks
@@ -58,7 +64,10 @@ class RunModel(Step):
         self.suffixes = suffixes
         if min_tasks is None:
             min_tasks = ntasks
-        super().__init__(test_case=test_case, name=name, subdir=subdir,
+
+        super().__init__(test_case=test_case,
+                         name=name,
+                         subdir=subdir,
                          ntasks=ntasks, min_tasks=min_tasks,
                          openmp_threads=openmp_threads)
 
@@ -80,7 +89,39 @@ class RunModel(Step):
         self.add_output_file(filename='output.nc')
         self.add_output_file(filename='globalStats.nc')
 
-    # no setup() is needed
+    def setup(self):
+        """
+        Set the number of MPI tasks based on a tentative scaling of
+        a the `ncells_at_1km_res` heuristic from the config file
+        based on the desired resolution.
+        """
+
+        config = self.config
+        # find optimal and minimum number of task for the desired resolution
+        ntasks, min_tasks = get_ntasks_from_cell_count(config,
+                                                       at_setup=True,
+                                                       mesh_filename="")
+        # set values as attributes
+        self.ntasks, self.min_tasks = (ntasks, min_tasks)
+
+        super().setup()
+
+    def constrain_resources(self, available_resources):
+        """
+        Update resources at runtime from config options
+        """
+
+        config = self.config
+        mesh_filename = os.path.join(self.work_dir, 'landice_grid.nc')
+
+        # find optimal and minimum number of task for the cell count
+        ntasks, min_tasks = get_ntasks_from_cell_count(
+            config, at_setup=False, mesh_filename=mesh_filename)
+
+        # set values as attributes
+        self.ntasks, self.min_tasks = (ntasks, min_tasks)
+
+        super().constrain_resources(available_resources)
 
     def run(self):
         """
@@ -88,6 +129,7 @@ class RunModel(Step):
         """
         make_graph_file(mesh_filename=self.mesh_file,
                         graph_filename='graph.info')
+
         for suffix in self.suffixes:
             run_model(step=self, namelist='namelist.{}'.format(suffix),
                       streams='streams.{}'.format(suffix))

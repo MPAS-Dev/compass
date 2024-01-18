@@ -25,11 +25,12 @@ class SmokeTest(TestCase):
         name = 'smoke_test'
         super().__init__(test_group=test_group, name=name)
 
-        ntasks = 36
-        min_tasks = 4
-
-        step = RunModel(test_case=self, name=name, subdir='simulation',
-                        ntasks=ntasks, min_tasks=min_tasks, openmp_threads=1)
+        resolution = '2000m'
+        step = RunModel(test_case=self,
+                        name=name,
+                        subdir='simulation',
+                        resolution=resolution,
+                        openmp_threads=1)
 
         # download and link the mesh
         step.mesh_file = 'landice_grid.nc'
