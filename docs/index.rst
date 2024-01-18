@@ -40,7 +40,8 @@ Compass makes extensive use of the
 `Jigsaw <https://github.com/dengwirda/jigsaw>`_ and
 `Jigsaw-Python <https://github.com/dengwirda/jigsaw-python>`_ tools to make all
 but the simplest meshes for our test cases and E3SM initial conditions.  These
-tools, whithout which Compass would not be possible, are developed primarily by
+tools, without which Compass' mesh generation capabilities
+would not be possible, are developed primarily by
 `Darren Engwirda <https://dengwirda.github.io/>`_.
 
 .. toctree::
