@@ -128,7 +128,19 @@ make<span class="w"> </span>html
 for the api docs to build successfully if you have added new modules since the load
 script was last sourced.  The load script will reinstall compass into the conda
 environment when it is sourced in the root of the compass branch.</p>
-<p>You can view the documentation by opening <code class="docutils literal notranslate"><span class="pre">_build/html/index.html</span></code>.</p>
+<p>You can view the documentation by opening <code class="docutils literal notranslate"><span class="pre">_build/html/index.html</span></code>.
+From any machine, you can scp the <code class="docutils literal notranslate"><span class="pre">html</span></code> directory to your local computer for
+viewing.</p>
+<p>On NERSC, you can conveniently make use of their
+<a class="reference external" href="https://docs.nersc.gov/services/science-gateways/#web-methods-for-data">web Science Gateway</a>
+to avoid transferring data.  By copying your compiled documentation to
+an appropriately named subdirectory at
+<code class="docutils literal notranslate"><span class="pre">/global/cfs/cdirs/&lt;myproj&gt;/www/</span></code> and then running <code class="docutils literal notranslate"><span class="pre">chmod</span> <span class="pre">-R</span> <span class="pre">ugo+rX</span> <span class="pre">.</span></code> on that directory
+(and perhaps its parent directories), it can then be viewed from a browser at
+<code class="docutils literal notranslate"><span class="pre">https://portal.nersc.gov/cfs/&lt;myproj&gt;/</span></code>.</p>
+<p>LCRC also has a web portal.  You can copy the compiled documentation to a subdirectory in
+<code class="docutils literal notranslate"><span class="pre">/lcrc/group/e3sm/public_html/diagnostic_output/&lt;username&gt;/</span></code>.  Then, you can
+view it at <code class="docutils literal notranslate"><span class="pre">https://web.lcrc.anl.gov/public/e3sm/diagnostic_output/&lt;username&gt;/</span></code></p>
 </section>
 
 
