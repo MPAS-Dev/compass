@@ -9,6 +9,7 @@ import shutil
 import socket
 import stat
 import subprocess
+import time
 from configparser import ConfigParser
 
 import progressbar
@@ -213,13 +214,16 @@ def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
         ver = version.parse(compass_version)
         release_version = '.'.join(str(vr) for vr in ver.release)
         spack_env = f'dev_compass_{release_version}{env_suffix}'
+        compass_env = f'dev_compass_{compass_version}{env_suffix}'
     elif env_type == 'test_release':
         spack_env = f'test_compass_{compass_version}{env_suffix}'
+        compass_env = spack_env
     else:
         spack_env = f'compass_{compass_version}{env_suffix}'
+        compass_env = spack_env
 
     if env_name is None or env_type != 'dev':
-        env_name = spack_env
+        env_name = compass_env
 
     # add the compiler and MPI library to the spack env name
     spack_env = f'{spack_env}_{compiler}_{mpi}{lib_suffix}'
@@ -240,7 +244,7 @@ def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
 def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
                     python, source_path, conda_template_path, conda_base,
                     env_name, env_path, activate_base, use_local,
-                    local_conda_build, logger, local_mache):
+                    local_conda_build, logger, local_mache, update_jigsaw):
 
     if env_type != 'dev':
         install_miniforge(conda_base, activate_base, logger)
@@ -291,7 +295,10 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
     else:
         spec_filename = None
 
-    if not os.path.exists(env_path) or recreate:
+    if not os.path.exists(env_path):
+        recreate = True
+
+    if recreate:
         print(f'creating {env_name}')
         if env_type == 'dev':
             # install dev dependencies and compass itself
@@ -300,13 +307,6 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
                 f'conda create -y -n {env_name} {channels} ' \
                 f'--file {spec_filename} {packages}'
             check_call(commands, logger=logger)
-
-            commands = \
-                f'{activate_env} && ' \
-                f'cd {source_path} && ' \
-                f'python -m pip install -e .'
-            check_call(commands, logger=logger)
-
         else:
             # conda packages don't like dashes
             version_conda = version.replace('-', '')
@@ -323,16 +323,56 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
                 f'conda install -y -n {env_name} {channels} ' \
                 f'--file {spec_filename} {packages}'
             check_call(commands, logger=logger)
-
-            commands = \
-                f'{activate_env} && ' \
-                f'cd {source_path} && ' \
-                f'python -m pip install -e .'
-            check_call(commands, logger=logger)
         else:
             print(f'{env_name} already exists')
 
     if env_type == 'dev':
+        # remove conda jigsaw and jigsaw-python
+        t0 = time.time()
+        commands = \
+            f'{activate_env} && ' \
+            f'conda remove -y --force-remove jigsaw jigsawpy'
+        check_call(commands, logger=logger)
+
+        commands = \
+            f'{activate_env} && ' \
+            f'cd {source_path} && ' \
+            f'git submodule update --init jigsaw-python'
+        check_call(commands, logger=logger)
+
+        if recreate or update_jigsaw:
+            print('Building JIGSAW\n')
+            commands = \
+                f'{activate_env} && ' \
+                f'conda install -y cxx-compiler && ' \
+                f'cd {source_path}/jigsaw-python && ' \
+                f'python setup.py build_external'
+            check_call(commands, logger=logger)
+
+            print('Installing JIGSAW and JIGSAW-Python\n')
+            commands = \
+                f'{activate_env} && ' \
+                f'cd {source_path}/jigsaw-python && ' \
+                f'python -m pip install --no-deps -e . && ' \
+                f'cp jigsawpy/_bin/* ${{CONDA_PREFIX}}/bin'
+            check_call(commands, logger=logger)
+
+            t1 = time.time()
+            total = t1 - t0
+            message = f'JIGSAW install took {total} s.'
+            if logger is None:
+                print(message)
+            else:
+                logger.info(message)
+
+        # install (or reinstall) compass in edit mode
+        print('Installing compass\n')
+        commands = \
+            f'{activate_env} && ' \
+            f'cd {source_path} && ' \
+            f'python -m pip install -e .'
+        check_call(commands, logger=logger)
+
         print('Installing pre-commit\n')
         commands = \
             f'{activate_env} && ' \
@@ -987,7 +1027,8 @@ def main():  # noqa: C901
                 env_type, recreate, mpi, conda_mpi, compass_version,
                 python, source_path, conda_template_path, conda_base,
                 conda_env_name, conda_env_path, activate_base, args.use_local,
-                args.local_conda_build, logger, local_mache)
+                args.local_conda_build, logger, local_mache,
+                args.update_jigsaw)
 
             if local_mache:
                 print('Install local mache\n')

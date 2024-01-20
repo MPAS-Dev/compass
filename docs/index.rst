@@ -1,10 +1,10 @@
-compass
+Compass
 =======
 
-Configuration Of Model for Prediction Across Scales Setups (``compass``) is
+Configuration Of Model for Prediction Across Scales Setups (Compass) is
 a python package that provides an automated system to set up test cases for
 Model for Prediction Across Scales (MPAS) components.  The development version
-of ``compass`` will be kept closely synchronized with the
+of Compass will be kept closely synchronized with the
 `E3SM repo <https://github.com/E3SM-Project/E3SM>`_ and
 `MALI-Dev repo <https://github.com/MALI-Dev/E3SM>`_. Release
 versions will be compatible with specific tags of the MPAS components.
@@ -16,25 +16,33 @@ MPAS code.  Many compass test cases, such as those under the
 use data sets from observations to create create global and regional meshes,
 initial conditions, and boundary conditions.
 
-``compass`` will be the tool used to create new land-ice and ocean meshes and
+Compass will be the tool used to create new land-ice and ocean meshes and
 initial conditions for future versions of `E3SM <https://e3sm.org/>`_, just as
 :ref:`legacy_compass` has been used to create meshes and initial conditions for
 `E3SM v1 <https://e3sm.org/model/e3sm-model-description/v1-description/>`_
 and `v2 <https://e3sm.org/research/science-campaigns/v2-planned-campaign/>`_.
-We note that ``compass`` does *not* provide the tools for creating many of the
+We note that Compass does *not* provide the tools for creating many of the
 files needed for full E3SM coupling, a process that requires expert help from
 the E3SM development team.
 
 The ``compass`` python package defines the test cases along with the commands
 to list and set up both test cases and test suites (groups of test cases).
-``compass`` currently supports the ``landice`` and ``ocean`` dynamical cores
+Compass currently supports the ``landice`` and ``ocean`` dynamical cores
 for MPAS.  Nearly all test cases include calls that launch one of these
 dynamical cores.  These runs are configured with namelists and streams files,
-and one of the benefits of using ``compass`` over attempting to run one of the
-MPAS components directly is that ``compass`` begins with default values for all
+and one of the benefits of using Compass over attempting to run one of the
+MPAS components directly is that Compass begins with default values for all
 namelists and streams, modifying only those options where the default is not
 appropriate. In this way, compass requires little alteration as the MPAS
 components themselves evolves and new functionality is added.
+
+Compass makes extensive use of the
+`Jigsaw <https://github.com/dengwirda/jigsaw>`_ and
+`Jigsaw-Python <https://github.com/dengwirda/jigsaw-python>`_ tools to make all
+but the simplest meshes for our test cases and E3SM initial conditions.  These
+tools, without which Compass' mesh generation capabilities
+would not be possible, are developed primarily by
+`Darren Engwirda <https://dengwirda.github.io/>`_.
 
 .. toctree::
    :caption: User's guide

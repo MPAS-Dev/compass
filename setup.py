@@ -24,7 +24,7 @@ install_requires = \
      'gsw',
      'h5py',
      'ipython',
-     'jigsawpy==0.3.3',
+     'jigsawpy',
      'jupyter',
      'lxml',
      'matplotlib',
