@@ -172,6 +172,11 @@ What the script does
 In addition to installing Miniforge3 and creating the conda environment for
 you, this script will also:
 
+* install `Jigsaw <https://github.com/dengwirda/jigsaw>`_ and
+  `Jigsaw-Python <https://github.com/dengwirda/jigsaw-python>`_ from source
+  from the `jigsaw-python` submodule. These tools are used to create many of
+  the meshes used in Compass.
+
 * install the ``compass`` package from the local branch in "development" mode
   so changes you make to the repo are immediately reflected in the conda
   environment.
@@ -214,14 +219,18 @@ Optional flags
 ``--python``
     Select a particular python version (the default is currently 3.8)
 
-``--env-name``
+``--env_name``
     Set the name of the environment (and the prefix for the activation script)
     to something other than the default (``dev_compass_<version>`` or
     ``dev_compass_<version>_<mpi>``).
 
-``--with-albany``
-    Install Albany for full MALI support (currently only with ``gnu``
-    compilers)
+``--update_jigsaw``
+    Used to reinstall Jigsaw and Jigsaw-Python into the conda environment if
+    you have made changes to the Jigsaw (c++) code in the ``jigsaw-python``
+    submodule. You should not need to reinstall Jigsaw-Python if you have made
+    changes only to the python code in ``jigsaw-python``, as the python package
+    is installed in
+    `edit mode <https://setuptools.pypa.io/en/latest/userguide/development_mode.html>`_.
 
 Activating the environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

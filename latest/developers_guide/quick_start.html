@@ -271,6 +271,10 @@ with the developers.</p>
 <p>In addition to installing Miniforge3 and creating the conda environment for
 you, this script will also:</p>
 <ul class="simple">
+<li><p>install <a class="reference external" href="https://github.com/dengwirda/jigsaw">Jigsaw</a> and
+<a class="reference external" href="https://github.com/dengwirda/jigsaw-python">Jigsaw-Python</a> from source
+from the <cite>jigsaw-python</cite> submodule. These tools are used to create many of
+the meshes used in Compass.</p></li>
 <li><p>install the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package from the local branch in “development” mode
 so changes you make to the repo are immediately reflected in the conda
 environment.</p></li>
@@ -307,12 +311,16 @@ the expected packages are available.</p></li>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">--python</span></code></dt><dd><p>Select a particular python version (the default is currently 3.8)</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--env-name</span></code></dt><dd><p>Set the name of the environment (and the prefix for the activation script)
+<dt><code class="docutils literal notranslate"><span class="pre">--env_name</span></code></dt><dd><p>Set the name of the environment (and the prefix for the activation script)
 to something other than the default (<code class="docutils literal notranslate"><span class="pre">dev_compass_&lt;version&gt;</span></code> or
 <code class="docutils literal notranslate"><span class="pre">dev_compass_&lt;version&gt;_&lt;mpi&gt;</span></code>).</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--with-albany</span></code></dt><dd><p>Install Albany for full MALI support (currently only with <code class="docutils literal notranslate"><span class="pre">gnu</span></code>
-compilers)</p>
+<dt><code class="docutils literal notranslate"><span class="pre">--update_jigsaw</span></code></dt><dd><p>Used to reinstall Jigsaw and Jigsaw-Python into the conda environment if
+you have made changes to the Jigsaw (c++) code in the <code class="docutils literal notranslate"><span class="pre">jigsaw-python</span></code>
+submodule. You should not need to reinstall Jigsaw-Python if you have made
+changes only to the python code in <code class="docutils literal notranslate"><span class="pre">jigsaw-python</span></code>, as the python package
+is installed in
+<a class="reference external" href="https://setuptools.pypa.io/en/latest/userguide/development_mode.html">edit mode</a>.</p>
 </dd>
 </dl>
 </section>
