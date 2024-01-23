@@ -6,6 +6,21 @@ ANONYMOUS:
   Problem:
     Dirichlet BCs:
       SDBC on NS dirichlet for DOF U1 prescribe Field: dirichlet_field
+    LandIce BCs:
+      BC 0:
+        Side Set Name: basalside
+        Type: Basal Friction
+        Basal Friction Coefficient:
+          Type: Power Law
+          Mu Type: Constant
+          Mu Coefficient: 1.0
+          Power Exponent: 0.3333333333
+          Effective Pressure Type: Field
+          Zero Beta On Floating Ice: true
+    LandIce Viscosity:
+      Type: 'Glen''s Law'
+      Flow Rate Type: Uniform
+      Glen's Law A: 6.338e-25
 
 # Discretization Description
 #  Discretization:
