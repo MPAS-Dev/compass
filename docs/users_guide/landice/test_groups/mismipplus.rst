@@ -9,7 +9,7 @@ Model Intercomparison Project Plus (MISMIP+;
 `Asay-Davis et al., 2016 <https://gmd.copernicus.org/articles/9/2471/2016/gmd-9-2471-2016.pdf>`_).
 To date, the spinup and ``Ice0`` are the only expeirments currently supported. 
 In the future, additional test cases may be added for the missing MISMIP+ 
-experiments (ie. ``Ice1r``, ``Ice1ra``, ``Ice1rr``, ``Ice2r``, ``Ice2r``, ``Ice2ra``, 
+experiments (i.e. ``Ice1r``, ``Ice1ra``, ``Ice1rr``, ``Ice2r``, ``Ice2r``, ``Ice2ra``, 
 ``Ice2rr``; Table 2. `Asay-Davis et al., 2016 <https://gmd.copernicus.org/articles/9/2471/2016/gmd-9-2471-2016.pdf>`_).
 
 shared config options 
@@ -33,9 +33,9 @@ Both ``mismipplus`` test cases share the following config options:
     ncells_at_1km_res = 61382
 
 The config options are all aimed at dynamically calculating the optimal number 
-of ``ntasks`` for the ``run_model`` step based, on the resolution requested 
+of ``ntasks`` for the ``run_model`` step based on the resolution requested 
 by the test case. For more information about how ``ntasks`` is calculated see 
-:ref:`dev_landice_mismipplus_tasks` in the developers guide. 
+:ref:`dev_landice_mismipplus_tasks` in the developers guide page.
 
 .. _landice_mismipplus_smoke_test:
 
@@ -105,5 +105,5 @@ site-specific complications arising from using an actual glacier geometry.
     # How to distribute vertical layers. Options are "glimmer" or "uniform".
     # "glimmer" will distribute the layer non-uniformily following
     # Eqn. (15) from Rutt et al. 2009.
-
+    vetical_layer_distribution = glimmer 
 
