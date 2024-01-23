@@ -85,15 +85,15 @@ class SetupMesh(Step):
         # check if the resolution has been changed since the `compass setup`
         # command was run
         if self.resolution != resolution:
-            raise Exception(f'Resolution was set at {self.resolution:2d}km'
+            raise Exception(f'Resolution was set at {self.resolution:2d}m'
                             f' when `compass setup` was called. Since then,'
                             f' the resolution in the configuration file has'
-                            f' been changed to {resolution:2d}km. Changing'
+                            f' been changed to {resolution:2d}m. Changing'
                             f' resolution at runtime is not supported. Change'
                             f' the resolution value in the configuration file'
                             f' within the python module and rerun the `compass'
                             f' setup` command in order to create a mesh at a'
-                            f' resolution of {resolution:2d}km')
+                            f' resolution of {resolution:2d}m')
 
         nx, ny, dc = calculateMeshParams(nominal_resolution=resolution,
                                          Lx=Lx,

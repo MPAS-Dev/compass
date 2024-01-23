@@ -25,10 +25,11 @@ class SmokeTest(TestCase):
         name = 'smoke_test'
         super().__init__(test_group=test_group, name=name)
 
-        resolution = '2000m'
+        resolution = 2000
+        resolution_key = f'{resolution}m'
         step = RunModel(test_case=self,
                         name=name,
-                        subdir='simulation',
+                        subdir=resolution_key,
                         resolution=resolution,
                         openmp_threads=1)
 
