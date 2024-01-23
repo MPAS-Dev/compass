@@ -12,6 +12,12 @@ from compass.step import Step
 class SetupMesh(Step):
     """
     A step for creating a mesh and initial condition for MISMIP+ test cases
+    Experimental protocol described in:
+    Asay-Davis, et al. 2016. "Experimental Design for Three Interrelated
+    Marine Ice Sheet and Ocean Model Intercomparison Projects:
+    MISMIP v.3 (MISMIP+), ISOMIP v.2 (ISOMIP+) and MISOMIP v.1 (MISOMIP1)."
+    Geoscientific Model Development 9 (7): 2471–97.
+    https://doi.org/10.5194/gmd-9-2471-2016.
 
     Attributes
     ----------
@@ -108,7 +114,7 @@ class SetupMesh(Step):
         ds_mesh = cull(ds_mesh, logger=logger)
         ds_mesh = convert(ds_mesh, logger=logger)
 
-        # custom function to shift the orgin for the MISMIP+ experiments
+        # custom function to shift the origin for the MISMIP+ experiments
         ds_mesh = center_trough(ds_mesh)
 
         write_netcdf(ds_mesh, 'mpas_grid.nc')
@@ -172,13 +178,13 @@ def calculateMeshParams(nominal_resolution,
             Domain length in y direction [m]
         """
 
-        # Find amplitude of dual mesh (i.e. `dy`) using the nomial resolution
+        # Find amplitude of dual mesh (i.e. `dy`) using the nominal resolution
         nominal_dy = np.sqrt(3.) / 2. * nominal_resolution
 
         # find the number of y rows (`ny`) from the `nominal_dy`
         nominal_ny = Ly / nominal_dy
 
-        # find the acutal number of y rows (`ny`) by rounding the `nominal_ny`
+        # find the actual number of y rows (`ny`) by rounding the `nominal_ny`
         # to the nearest _even_ integer. `make_planar_hex_mesh` requires that
         # `ny` be even
         ny = np.ceil(nominal_ny / 2.) * 2
@@ -187,7 +193,7 @@ def calculateMeshParams(nominal_resolution,
 
     def calculate_dc(Ly, ny):
         """
-        Calcuate the edge length that conforms to the desired `ny`
+        Calculate the cell spacing that conforms to the desired `ny`
 
         Parameters
         ----------
@@ -229,11 +235,11 @@ def calculateMeshParams(nominal_resolution,
             nx = np.ceil(Lx / dc)
             # The modulo condition below ensures there is exactly one cell
             # past the the desired domain length. So, when no gutter
-            # infromation is provided, add an extra column to make
+            # information is provided, add an extra column to make
             # the default gutter length 2
             nx += 1
         else:
-            # ammend the domain length to account for the gutter
+            # amend the domain length to account for the gutter
             Lx += gutterLength
             nx = np.ceil(Lx / dc)
 
@@ -251,8 +257,8 @@ def calculateMeshParams(nominal_resolution,
     dc = calculate_dc(Ly, ny)
     nx = calculate_nx(Lx, dc, gutterLength)
 
-    # add two to `ny` accomodate MISMIP+ specific culling requirments.
-    # This ensures, after the culling, that the cell center too cell center
+    # add two to `ny` to accomodate MISMIP+ specific culling requirments.
+    # This ensures, after the culling, that the cell center to cell center
     # distance in the y-direction is exactly equal to `Ly`. This must be done
     # after the other parameters (i.e. `dc` and `nx`) are calculated or else
     # those calculations will be thrown off.

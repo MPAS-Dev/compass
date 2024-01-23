@@ -36,7 +36,7 @@ class RunModel(Step):
             the subdirectory for the step.  The default is ``name``
 
         resolution : int
-            The nominal distance [m] between horizontal grid points
+            The nominal distance [m] between horizontal grid points (dcEdge)
 
         ntasks : int, optional
             the number of tasks the step would ideally use.  If fewer tasks
