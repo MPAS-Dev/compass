@@ -417,13 +417,13 @@ def _setup_MISMPPlus_IC(config, logger, filename):
     # Hard code some parameters from Table 1. of Asay-Davis et al. 2016
     accum = 0.3       # m^{-1}
     C = 3.160e6       # Pa m^{-1/3} s^{1/3}
-    rhoi = 918        # kg m^{-3}
     spy = 31556926    # s a^{-1}
     xcalve = 640.e3   # m
 
     # Read parameters from the .cfg file
     section = config['mesh']
-    init_thickness = section.getfloat('init_thickness')
+    rhoi = section.getfloat('ice_density')               # kg m^{-3}
+    init_thickness = section.getfloat('init_thickness')  # m
 
     # open the file
     src = xr.open_dataset(filename)

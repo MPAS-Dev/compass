@@ -54,5 +54,8 @@ class SpinUp(TestCase):
         # modify the namelist options and streams file
         step.add_streams_file(package, 'streams.spin_up')
         step.add_namelist_file(package, 'namelist.spin_up')
+        # read the density value from config file and update the namelist
+        ice_density = config['mesh'].getfloat('ice_density')
+        step.add_namelist_options({'config_ice_density': f'{ice_density}'})
 
         self.add_step(step)
