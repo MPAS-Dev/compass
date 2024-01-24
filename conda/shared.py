@@ -69,6 +69,10 @@ def parse_args(bootstrap):
                         help="If this flag is included, OPENMP=false will "
                              "be added to the load script.  By default, MPAS "
                              "builds will be with OpenMP (OPENMP=true).")
+    parser.add_argument("--with_alphabetalab", dest="with_alphabetalab",
+                        action='store_true',
+                        help="Whether to install alphaBetaLab from its "
+                             "submodule.")
     parser.add_argument("--verbose", dest="verbose",
                         action='store_true',
                         help="Print all output to the terminal, rather than "

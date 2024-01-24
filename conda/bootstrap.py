@@ -244,7 +244,8 @@ def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
 def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
                     python, source_path, conda_template_path, conda_base,
                     env_name, env_path, activate_base, use_local,
-                    local_conda_build, logger, local_mache, update_jigsaw):
+                    local_conda_build, logger, local_mache, update_jigsaw,
+                    with_alphabetalab):
 
     if env_type != 'dev':
         install_miniforge(conda_base, activate_base, logger)
@@ -327,6 +328,17 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
             print(f'{env_name} already exists')
 
     if env_type == 'dev':
+        if with_alphabetalab:
+            print('Installing AlphaBetaLab\n')
+            commands = \
+                f'{activate_env} && ' \
+                f'cd {source_path} && ' \
+                f'git submodule update --init alphaBetaLab &&' \
+                f'cd {source_path}/alphaBetaLab&& ' \
+                f'conda install -y --file dev-spec.txt && ' \
+                f'python -m pip install --no-deps -e .'
+            check_call(commands, logger=logger)
+
         if recreate or update_jigsaw:
             # remove conda jigsaw and jigsaw-python
             t0 = time.time()
@@ -1035,7 +1047,7 @@ def main():  # noqa: C901
                 python, source_path, conda_template_path, conda_base,
                 conda_env_name, conda_env_path, activate_base, args.use_local,
                 args.local_conda_build, logger, local_mache,
-                args.update_jigsaw)
+                args.update_jigsaw, args.with_alphabetalab)
 
             if local_mache:
                 print('Install local mache\n')
