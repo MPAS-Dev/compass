@@ -327,24 +327,24 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
             print(f'{env_name} already exists')
 
     if env_type == 'dev':
-        # remove conda jigsaw and jigsaw-python
-        t0 = time.time()
-        commands = \
-            f'{activate_env} && ' \
-            f'conda remove -y --force-remove jigsaw jigsawpy'
-        check_call(commands, logger=logger)
-
-        commands = \
-            f'{activate_env} && ' \
-            f'cd {source_path} && ' \
-            f'git submodule update --init jigsaw-python'
-        check_call(commands, logger=logger)
-
         if recreate or update_jigsaw:
+            # remove conda jigsaw and jigsaw-python
+            t0 = time.time()
+            commands = \
+                f'{activate_env} && ' \
+                f'conda remove -y --force-remove jigsaw jigsawpy'
+            check_call(commands, logger=logger)
+
+            commands = \
+                f'{activate_env} && ' \
+                f'cd {source_path} && ' \
+                f'git submodule update --init jigsaw-python'
+            check_call(commands, logger=logger)
+
             print('Building JIGSAW\n')
             commands = \
                 f'{activate_env} && ' \
-                f'conda install -y cxx-compiler && ' \
+                f'conda install -y cmake cxx-compiler && ' \
                 f'cd {source_path}/jigsaw-python && ' \
                 f'python setup.py build_external'
             check_call(commands, logger=logger)
@@ -370,6 +370,7 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
         commands = \
             f'{activate_env} && ' \
             f'cd {source_path} && ' \
+            f'rm -rf compass.egg-info && ' \
             f'python -m pip install -e .'
         check_call(commands, logger=logger)
 
@@ -395,6 +396,11 @@ def get_env_vars(machine, compiler, mpilib):
                    f'export I_MPI_CXX=icpc\n' \
                    f'export I_MPI_F77=ifort\n' \
                    f'export I_MPI_F90=ifort\n'
+
+    if machine == 'anvil':
+        # Anvil seems to need libs from here to build successfully
+        env_vars = f'{env_vars}' \
+                   f'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib64\n'
 
     if machine.startswith('conda'):
         # we're using parallelio so we don't have ADIOS support
@@ -631,6 +637,7 @@ def write_load_compass(template_path, activ_path, conda_base, env_type,
                # update the compass installation to point here
                mkdir -p conda/logs
                echo Reinstalling compass package in edit mode...
+               rm -rf compass.egg-info
                python -m pip install -e . &> conda/logs/install_compass.log
                echo Done.
                echo
