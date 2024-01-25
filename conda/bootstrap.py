@@ -354,8 +354,8 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
             check_call(commands, logger=logger)
 
             print('Building JIGSAW\n')
+            # add build tools to deployment env, not compass env
             commands = \
-                f'{activate_env} && ' \
                 f'conda install -y cmake cxx-compiler && ' \
                 f'cd {source_path}/jigsaw-python && ' \
                 f'python setup.py build_external'
@@ -371,7 +371,7 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
 
             t1 = time.time()
             total = t1 - t0
-            message = f'JIGSAW install took {total} s.'
+            message = f'JIGSAW install took {total:.1f} s.'
             if logger is None:
                 print(message)
             else:
