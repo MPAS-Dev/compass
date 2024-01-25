@@ -22,6 +22,7 @@ class LTSRegionsStep(Step):
         The culled mesh step containing input files to this step
     """
     def __init__(self, test_case, cull_mesh_step,
+                 num_interface_adjacent,
                  name='lts_regions', subdir='lts_regions'):
         """
         Create a new step
@@ -46,6 +47,7 @@ class LTSRegionsStep(Step):
             self.add_output_file(filename=file)
 
         self.cull_mesh_step = cull_mesh_step
+        self.num_interface_adjacent = num_interface_adjacent
 
     def setup(self):
         """
@@ -90,7 +92,7 @@ class LTSRegionsStep(Step):
         use_progress_bar = self.log_filename is None
         label_mesh(fine_region, mesh='culled_mesh.nc',
                    graph_info='culled_graph.info', num_interface=2,
-                   num_interface_adjacent=2,
+                   num_interface_adjacent=self.num_interface_adjacent,
                    logger=self.logger, use_progress_bar=use_progress_bar)
 
 

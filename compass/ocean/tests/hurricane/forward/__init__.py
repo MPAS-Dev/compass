@@ -41,8 +41,10 @@ class Forward(TestCase):
         """
         mesh_name = mesh.mesh_name
 
-        if use_lts:
+        if use_lts == 'LTS':
             name = f'{storm}_lts'
+        elif use_lts == 'FB_LTS':
+            name = f'{storm}_fblts'
         else:
             name = storm
         subdir = os.path.join(mesh_name, name)
