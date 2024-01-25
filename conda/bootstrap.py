@@ -354,8 +354,8 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
             check_call(commands, logger=logger)
 
             print('Building JIGSAW\n')
+            # add build tools to deployment env, not compass env
             commands = \
-                f'{activate_env} && ' \
                 f'conda install -y cmake cxx-compiler && ' \
                 f'cd {source_path}/jigsaw-python && ' \
                 f'python setup.py build_external'
@@ -371,7 +371,7 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
 
             t1 = time.time()
             total = t1 - t0
-            message = f'JIGSAW install took {total} s.'
+            message = f'JIGSAW install took {total:.1f} s.'
             if logger is None:
                 print(message)
             else:
@@ -408,11 +408,6 @@ def get_env_vars(machine, compiler, mpilib):
                    f'export I_MPI_CXX=icpc\n' \
                    f'export I_MPI_F77=ifort\n' \
                    f'export I_MPI_F90=ifort\n'
-
-    if machine == 'anvil':
-        # Anvil seems to need libs from here to build successfully
-        env_vars = f'{env_vars}' \
-                   f'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib64\n'
 
     if machine.startswith('conda'):
         # we're using parallelio so we don't have ADIOS support
