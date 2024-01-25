@@ -39,7 +39,7 @@ the mesh generation options are adjusted through the config file.
     # distance from ice margin to cull (km).
     # Set to a value <= 0 if you do not want
     # to cull based on distance from margin.
-    cull_distance = 10.0
+    cull_distance = -1.0
     
     # mesh density parameters
     # minimum cell spacing (meters)
