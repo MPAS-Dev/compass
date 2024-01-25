@@ -409,11 +409,6 @@ def get_env_vars(machine, compiler, mpilib):
                    f'export I_MPI_F77=ifort\n' \
                    f'export I_MPI_F90=ifort\n'
 
-    if machine == 'anvil':
-        # Anvil seems to need libs from here to build successfully
-        env_vars = f'{env_vars}' \
-                   f'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib64\n'
-
     if machine.startswith('conda'):
         # we're using parallelio so we don't have ADIOS support
         env_vars = \
