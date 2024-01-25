@@ -45,8 +45,10 @@ class Init(TestCase):
         self.mesh = mesh
         self.use_lts = use_lts
 
-        if use_lts:
+        if use_lts == 'LTS':
             name = 'init_lts'
+        elif use_lts == 'FB_LTS':
+            name = 'init_fblts'
         else:
             name = 'init'
         mesh_name = mesh.mesh_name

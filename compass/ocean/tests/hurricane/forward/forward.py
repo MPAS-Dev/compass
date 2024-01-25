@@ -49,12 +49,21 @@ class ForwardStep(Step):
 
         super().__init__(test_case=test_case, name=name)
 
-        if use_lts:
+        if use_lts == 'LTS':
 
             self.add_namelist_file(
                 'compass.ocean.tests.hurricane.lts.forward', 'namelist.ocean')
             self.add_streams_file(
                 'compass.ocean.tests.hurricane.lts.forward', 'streams.ocean')
+
+        elif use_lts == 'FB_LTS':
+
+            self.add_namelist_file(
+                'compass.ocean.tests.hurricane.fblts.forward',
+                'namelist.ocean')
+            self.add_streams_file(
+                'compass.ocean.tests.hurricane.fblts.forward',
+                'streams.ocean')
 
         else:
 
