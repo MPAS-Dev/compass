@@ -6,7 +6,7 @@ from compass.testcase import TestCase
 
 class SpinUp(TestCase):
     """
-    Test case for create the MISMIP+ mesh, initial conditions,
+    Test case for creating the MISMIP+ mesh, initial conditions,
     input files, and runs a short segment of the spin up experiments
     """
     def __init__(self, test_group):
