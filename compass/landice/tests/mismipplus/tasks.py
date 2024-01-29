@@ -31,13 +31,8 @@ def get_ntasks_from_cell_count(config, at_setup, mesh_filename):
     """
 
     if at_setup:
-        # get the desired resolution from config file
-        resolution = config.getfloat("mesh", "resolution")
-        # get the reference number of cells as 1000m resolution
-        ncells_at_1km_res = config.getfloat("mismipplus", "ncells_at_1km_res")
-        # approximate the number of cells for the desired resolution
-        cell_count = int(ncells_at_1km_res * (1000 / resolution)**2)
-        # TODO: Account for extra cells when gutter is requested
+        # get cell count by scaling the heuristic from the config file
+        cell_count = _approx_cell_count(config)
     else:
         # get cell count from mesh
         with xr.open_dataset(mesh_filename) as ds:
@@ -76,9 +71,8 @@ def _approx_cell_count(config):
     resolution = config.getfloat("mesh", "resolution")
     # get the requested gutter length
     gutterLength = config.getfloat("mesh", "gutter_length")
-    # ensure that the requested `gutterLength` is valid. Otherwise set
-    # the value to zero, such that the default `gutterLength` of two
-    # gridcells is used.
+    # ensure that the requested `gutterLength` is valid.
+    # Otherwise set the value to zero
     if (gutterLength < 2. * resolution) and (gutterLength != 0.):
         gutterLength = 0.
 
@@ -93,4 +87,7 @@ def _approx_cell_count(config):
         new_area = (Lx + gutterLength) * Ly
         # scale by the approx cell count by the relative area increase
         # due to presence of the gutter
-        cell_count *= ref_area / new_area
+        cell_count *= new_area / ref_area
+
+    # return the approximate cell count as deterimned at `setup` stage.
+    return cell_count
