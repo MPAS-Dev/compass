@@ -403,7 +403,7 @@ def _setup_MISMPPlus_IC(config, logger, filename):
 
     Parameters
     ----------
-    config : comass.config.CompassConfigParser
+    config : compass.config.CompassConfigParser
         Configuration options for this test case
 
     logger : logging.Logger

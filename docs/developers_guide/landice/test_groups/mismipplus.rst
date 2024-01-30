@@ -36,7 +36,7 @@ of rows are culled along the North/South boundaries such that the ragged
 layout of mesh rows is symetric in the y direction. 
 
 The ``resolution`` parameter from the ``[mesh]`` section of the configuration
-file is the nominal resolution, where the actual resolution is itteratively 
+file is the nominal resolution, where the actual resolution is iteratively 
 calculated so that the cell center to cell center distance along the y-axis 
 of the mesh is exactly equal to the vertical domain length (80 km). 
  
@@ -66,10 +66,10 @@ The idea is that we want to run MALI with about 300 cells per core
 with as many as 5000 cells per core (the default ``max_cells_per_core``).
 
 A complication of using this function is that the number of cells in a mesh
-is not know unitl the :py:class:`compass.landice.tests.mismipplus.setup_mesh.SetupMesh`
+is not known until the :py:class:`compass.landice.tests.mismipplus.setup_mesh.SetupMesh`
 step has been run (i.e. at ``compass run``) for a given ``resolution``, but we 
 need to know how many cores and nodes we will use at setup 
-(i.e. at ``compass setup ...``) since thats when the job script is created. 
+(i.e. at ``compass setup ...``) since that is when the job script is created. 
 So, there is a config option  ``ncells_at_1km_res`` that is used to estimate 
 the number of cells in the mesh at a given ``resolution`` during setup.  
 Then, the actual number of cells is used at runtime, once it is known, 
