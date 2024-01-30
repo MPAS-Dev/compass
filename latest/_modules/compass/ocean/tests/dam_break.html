@@ -133,10 +133,13 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;dam_break&#39;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.12</span><span class="p">]:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">Default</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">Ramp</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span></div>
+            <span class="k">for</span> <span class="n">use_lts</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                    <span class="n">Default</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                            <span class="n">use_lts</span><span class="o">=</span><span class="n">use_lts</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                    <span class="n">Ramp</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                         <span class="n">use_lts</span><span class="o">=</span><span class="n">use_lts</span><span class="p">))</span></div>
 </div>
 
 </pre></div>

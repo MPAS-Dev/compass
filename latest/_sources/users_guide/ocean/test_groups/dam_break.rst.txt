@@ -51,3 +51,11 @@ ramp
 the factor that scales velocities and velocity tendencies is ramped over a
 given layer thickness range rather than a binary switch at the minimum
 thickness. ``RES`` is either 40cm or 120cm.
+
+lts
+---
+
+Both the ``default`` and ``ramp`` test cases can be run with the ``lts`` variant
+which uses local time-stepping (LTS) as time integrator. Note that the tests
+verify the ability of the LTS scheme to run correctly with wetting and drying
+and are not designed to leverage the LTS capability of producing faster runs.

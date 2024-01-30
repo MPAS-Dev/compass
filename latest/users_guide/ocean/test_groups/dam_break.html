@@ -59,6 +59,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#default">default</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ramp">ramp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lts">lts</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="drying_slope.html">drying_slope</a></li>
@@ -187,6 +188,13 @@ against experimental data and ROMS solutions. <code class="docutils literal notr
 the factor that scales velocities and velocity tendencies is ramped over a
 given layer thickness range rather than a binary switch at the minimum
 thickness. <code class="docutils literal notranslate"><span class="pre">RES</span></code> is either 40cm or 120cm.</p>
+</section>
+<section id="lts">
+<h2>lts<a class="headerlink" href="#lts" title="Link to this heading">¶</a></h2>
+<p>Both the <code class="docutils literal notranslate"><span class="pre">default</span></code> and <code class="docutils literal notranslate"><span class="pre">ramp</span></code> test cases can be run with the <code class="docutils literal notranslate"><span class="pre">lts</span></code> variant
+which uses local time-stepping (LTS) as time integrator. Note that the tests
+verify the ability of the LTS scheme to run correctly with wetting and drying
+and are not designed to leverage the LTS capability of producing faster runs.</p>
 </section>
 </section>
 

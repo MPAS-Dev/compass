@@ -136,7 +136,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Viz.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.viz.Viz.html#compass.ocean.tests.parabolic_bowl.viz.Viz.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolutions</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolutions</span><span class="p">,</span> <span class="n">use_lts</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the step</span>
 
@@ -148,6 +148,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;viz&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="o">=</span> <span class="n">resolutions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_lts</span> <span class="o">=</span> <span class="n">use_lts</span>
 
         <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">resolutions</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;output_</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km.nc&#39;</span><span class="p">,</span>
@@ -329,9 +330,15 @@
 <span class="sd">        Plot convergence curves</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+        <span class="n">ramp_name</span> <span class="o">=</span> <span class="s1">&#39;ramp&#39;</span>
+        <span class="n">noramp_name</span> <span class="o">=</span> <span class="s1">&#39;noramp&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_lts</span><span class="p">:</span>
+            <span class="n">ramp_name</span> <span class="o">=</span> <span class="s1">&#39;ramp_lts&#39;</span>
+            <span class="n">noramp_name</span> <span class="o">=</span> <span class="s1">&#39;noramp_lts&#39;</span>
+
         <span class="n">comparisons</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">cases</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;standard_ramp&#39;</span><span class="p">:</span> <span class="s1">&#39;../../../standard/ramp/viz&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;standard_noramp&#39;</span><span class="p">:</span> <span class="s1">&#39;../../../standard/noramp/viz&#39;</span><span class="p">}</span>
+        <span class="n">cases</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;standard_ramp&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;../../../standard/</span><span class="si">{</span><span class="n">ramp_name</span><span class="si">}</span><span class="s1">/viz&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;standard_noramp&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;../../../standard/</span><span class="si">{</span><span class="n">noramp_name</span><span class="si">}</span><span class="s1">/viz&#39;</span><span class="p">}</span>
         <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="n">cases</span><span class="p">:</span>
             <span class="n">include</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">:</span>

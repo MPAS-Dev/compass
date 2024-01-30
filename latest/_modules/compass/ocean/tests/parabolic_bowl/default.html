@@ -117,6 +117,7 @@
 <span class="kn">from</span> <span class="nn">compass.config</span> <span class="kn">import</span> <span class="n">CompassConfigParser</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.parabolic_bowl.forward</span> <span class="kn">import</span> <span class="n">Forward</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.parabolic_bowl.initial_state</span> <span class="kn">import</span> <span class="n">InitialState</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.parabolic_bowl.lts.lts_regions</span> <span class="kn">import</span> <span class="n">LTSRegions</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.parabolic_bowl.viz</span> <span class="kn">import</span> <span class="n">Viz</span>
 <span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
 <span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
@@ -136,7 +137,7 @@
 
 <div class="viewcode-block" id="Default.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.default.Default.html#compass.ocean.tests.parabolic_bowl.default.Default.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">ramp_type</span><span class="p">,</span> <span class="n">wetdry</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">ramp_type</span><span class="p">,</span> <span class="n">wetdry</span><span class="p">,</span> <span class="n">use_lts</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the test case</span>
 
@@ -150,22 +151,32 @@
 
 <span class="sd">        wetdry : str</span>
 <span class="sd">            The type of wetting and drying used (``standard``, ``subgrid``)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">wetdry</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">ramp_type</span><span class="si">}</span><span class="s1">&#39;</span>
 
-        <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">wetdry</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">ramp_type</span><span class="si">}</span><span class="s1">&#39;</span>
+<span class="sd">        use_lts : bool</span>
+<span class="sd">            Whether local time-stepping is used</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">use_lts</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">wetdry</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">ramp_type</span><span class="si">}</span><span class="s1">_lts&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">wetdry</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">ramp_type</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="k">if</span> <span class="n">use_lts</span><span class="p">:</span>
+            <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">wetdry</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">ramp_type</span><span class="si">}</span><span class="s1">_lts&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">wetdry</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">ramp_type</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span> <span class="o">=</span> <span class="n">wetdry</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ramp_type</span> <span class="o">=</span> <span class="n">ramp_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_lts</span> <span class="o">=</span> <span class="n">use_lts</span>
 
         <span class="c1"># add the steps with default resolutions so they can be listed</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">CompassConfigParser</span><span class="p">()</span>
         <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.parabolic_bowl&#39;</span><span class="p">,</span>
                                 <span class="s1">&#39;parabolic_bowl.cfg&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_setup_steps</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_setup_steps</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">use_lts</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Default.configure">
@@ -175,8 +186,9 @@
 <span class="sd">        Set config options for the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">use_lts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_lts</span>
         <span class="c1"># set up the steps again in case a user has provided new resolutions</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_setup_steps</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_setup_steps</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">use_lts</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">update_cores</span><span class="p">()</span></div>
 
@@ -222,7 +234,7 @@
                        <span class="n">comment</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Minimum core count for </span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1"> mesh&#39;</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_setup_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_setup_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">use_lts</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; setup steps given resolutions &quot;&quot;&quot;</span>
 
         <span class="n">default_resolutions</span> <span class="o">=</span> <span class="s1">&#39;20, 10, 5&#39;</span>
@@ -249,16 +261,24 @@
 
             <span class="n">res_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">km&#39;</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">InitialState</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                                       <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;initial_state_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                                       <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
-                                       <span class="n">wetdry</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span><span class="p">))</span>
+            <span class="n">init_step</span> <span class="o">=</span> <span class="n">InitialState</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                                     <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;initial_state_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                                     <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                                     <span class="n">wetdry</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">init_step</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">use_lts</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">LTSRegions</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                                         <span class="n">init_step</span><span class="o">=</span><span class="n">init_step</span><span class="p">,</span>
+                                         <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;lts_regions_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                                         <span class="n">subdir</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;lts_regions_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Forward</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                                   <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;forward_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                                  <span class="n">use_lts</span><span class="o">=</span><span class="n">use_lts</span><span class="p">,</span>
                                   <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
                                   <span class="n">ramp_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ramp_type</span><span class="p">,</span>
                                   <span class="n">wetdry</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Viz</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolutions</span><span class="o">=</span><span class="n">resolutions</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Viz</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolutions</span><span class="o">=</span><span class="n">resolutions</span><span class="p">,</span>
+                          <span class="n">use_lts</span><span class="o">=</span><span class="n">use_lts</span><span class="p">))</span>
 
 <div class="viewcode-block" id="Default.validate">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.default.Default.validate.html#compass.ocean.tests.parabolic_bowl.default.Default.validate">[docs]</a>

@@ -127,7 +127,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Forward.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.forward.Forward.html#compass.ocean.tests.parabolic_bowl.forward.Forward.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span>
+                 <span class="n">name</span><span class="p">,</span> <span class="n">use_lts</span><span class="p">,</span>
                  <span class="n">ramp_type</span><span class="o">=</span><span class="s1">&#39;ramp&#39;</span><span class="p">,</span> <span class="n">coord_type</span><span class="o">=</span><span class="s1">&#39;single_layer&#39;</span><span class="p">,</span>
                  <span class="n">wetdry</span><span class="o">=</span><span class="s1">&#39;standard&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -142,16 +143,19 @@
 <span class="sd">            The resolution of the test case</span>
 
 <span class="sd">        name : str</span>
-<span class="sd">            the name of the test case</span>
+<span class="sd">            The name of the test case</span>
+
+<span class="sd">        use_lts : bool</span>
+<span class="sd">            Whether local time-stepping is used</span>
 
 <span class="sd">        subdir : str, optional</span>
-<span class="sd">            the subdirectory for the step.  The default is ``name``</span>
+<span class="sd">            The subdirectory for the step.  The default is ``name``</span>
 
 <span class="sd">        coord_type : str, optional</span>
-<span class="sd">            vertical coordinate configuration</span>
+<span class="sd">            Vertical coordinate configuration</span>
 
 <span class="sd">        ramp_type : str, optional</span>
-<span class="sd">            vertical coordinate configuration</span>
+<span class="sd">            Vertical coordinate configuration</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
@@ -169,18 +173,32 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.parabolic_bowl&#39;</span><span class="p">,</span>
                                    <span class="s1">&#39;namelist.ramp.forward&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.parabolic_bowl&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">use_lts</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span>
+                <span class="p">{</span><span class="s1">&#39;config_time_integrator&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;LTS&#39;&quot;</span><span class="p">,</span>
+                 <span class="s1">&#39;config_dt_scaling_LTS&#39;</span><span class="p">:</span> <span class="s2">&quot;4&quot;</span><span class="p">,</span>
+                 <span class="s1">&#39;config_number_of_time_levels&#39;</span><span class="p">:</span> <span class="s2">&quot;4&quot;</span><span class="p">,</span>
+                 <span class="s1">&#39;config_pressure_gradient_type&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;ssh_gradient&#39;&quot;</span><span class="p">})</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.parabolic_bowl.lts&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+            <span class="n">input_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;../lts_regions_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span>
+                                <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/lts_mesh.nc&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
+                                <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/lts_graph.info&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
+                                <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/lts_ocean.nc&#39;</span><span class="p">)</span>
 
-        <span class="n">input_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;../initial_state_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc&#39;</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/ocean.nc&#39;</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/culled_graph.info&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.parabolic_bowl&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+            <span class="n">input_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;../initial_state_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span>
+                                <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
+                                <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/ocean.nc&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
+                                <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/culled_graph.info&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
 
