@@ -1,10 +1,10 @@
-from compass.landice.tests.issunguata_sermia.mesh import Mesh
+from compass.landice.tests.isunnguata_sermia.mesh import Mesh
 from compass.testcase import TestCase
 
 
 class MeshGen(TestCase):
     """
-    The MeshGen test case for the issunguata_sermia test group simply
+    The MeshGen test case for the isunnguata_sermia test group simply
     creates the mesh and initial condition.
 
     """
@@ -15,7 +15,7 @@ class MeshGen(TestCase):
 
         Parameters
         ----------
-        test_group : compass.landice.tests.issunguata_sermia.IssunguataSermia
+        test_group : compass.landice.tests.isunnguata_sermia.IsunnguataSermia
             The test group that this test case belongs to
 
         """

@@ -1,18 +1,18 @@
-.. _landice_issunguata_sermia:
+.. _landice_isunnguata_sermia:
 
-issunguata_sermia
+isunnguata_sermia
 =============
 
-The ``landice/issunguata_sermia`` test group includes a test case for creating a
-mesh for Issunguata Sermia, Greenland. The optimization for basal friction
+The ``landice/isunnguata_sermia`` test group includes a test case for creating a
+mesh for Isunnguata Sermia, Greenland. The optimization for basal friction
 happens outside of COMPASS because it requires expert usage and takes a
 larger amount of computing resources than COMPASS is typically run with.
 
-.. figure:: images/issunguata_sermia_1to10km.png
+.. figure:: images/isunnguata_sermia_1to10km.png
    :width: 777 px
    :align: center
 
-   Ice thickness in meters on Issunguata Sermia 1-10km variable resolution mesh.
+   Ice thickness in meters on Isunnguata Sermia 1-10km variable resolution mesh.
 
 The test group includes a single test case that creates the variable resolution mesh.
 
@@ -24,13 +24,13 @@ the mesh generation options are adjusted through the config file.
 
 .. code-block:: cfg
 
-    # config options for issunguata sermia test cases
+    # config options for isunnguata sermia test cases
     [mesh]
     
     # number of levels in the mesh
     levels = 10
     
-    # Bounds of issunguata sermia domain
+    # Bounds of isunnguata sermia domain
     x_min = -263230.
     x_max = 130000.
     y_min = -2600000
@@ -72,6 +72,6 @@ the mesh generation options are adjusted through the config file.
 mesh_gen
 --------
 
-``landice/issunguata_sermia/mesh_gen`` creates a variable resolution mesh.
+``landice/isunnguata_sermia/mesh_gen`` creates a variable resolution mesh.
 The default is 1-10km resolution with mesh density determined by
 observed ice speed. There is no model integration step.
