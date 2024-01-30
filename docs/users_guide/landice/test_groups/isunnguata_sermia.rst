@@ -1,7 +1,7 @@
 .. _landice_isunnguata_sermia:
 
 isunnguata_sermia
-=============
+=================
 
 The ``landice/isunnguata_sermia`` test group includes a test case for creating a
 mesh for Isunnguata Sermia, Greenland. The optimization for basal friction

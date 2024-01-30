@@ -1,7 +1,7 @@
 .. _dev_landice_isunnguata_sermia:
 
 isunnguata_sermia
-=============
+=================
 
 The ``isunnguata_sermia`` test group (:py:class:`compass.landice.tests.isunnguata_sermia.IsunnguataSermia`)
 creates a variable resolution (default 1-10 km) mesh for a regional domain of Isunnguata Sermia, Greenland
