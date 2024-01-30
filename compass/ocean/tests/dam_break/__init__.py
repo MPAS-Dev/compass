@@ -16,10 +16,7 @@ class DamBreak(TestGroup):
         super().__init__(mpas_core=mpas_core, name='dam_break')
 
         for resolution in [0.04, 0.12]:
-            for use_lts in [True, False]:
-                self.add_test_case(
-                    Default(test_group=self, resolution=resolution,
-                            use_lts=use_lts))
-                self.add_test_case(
-                    Ramp(test_group=self, resolution=resolution,
-                         use_lts=use_lts))
+            self.add_test_case(
+                Default(test_group=self, resolution=resolution))
+            self.add_test_case(
+                Ramp(test_group=self, resolution=resolution))
