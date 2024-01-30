@@ -30,15 +30,15 @@ class Mesh(Step):
         self.add_output_file(filename='graph.info')
         self.add_output_file(filename='Isunnguata_Sermia.nc')
         self.add_input_file(
-            filename='greenland_1km_2020_04_20.epsg3413.icesheetonly.nc',
-            target='greenland_1km_2020_04_20.epsg3413.icesheetonly.nc',
+            filename='greenland_1km_2024_01_29.epsg3413.icesheetonly.nc',
+            target='greenland_1km_2024_01_29.epsg3413.icesheetonly.nc',
             database='')
         self.add_input_file(filename='Isunnguata_Sermia.geojson',
                             package='compass.landice.tests.isunnguata_sermia',
                             target='Isunnguata_Sermia.geojson',
                             database=None)
-        self.add_input_file(filename='greenland_2km_2020_04_20.epsg3413.nc',
-                            target='greenland_2km_2020_04_20.epsg3413.nc',
+        self.add_input_file(filename='greenland_2km_2024_01_29.epsg3413.nc',
+                            target='greenland_2km_2024_01_29.epsg3413.nc',
                             database='')
 
     # no setup() method is needed
@@ -55,12 +55,12 @@ class Mesh(Step):
         cell_width, x1, y1, geom_points, geom_edges, floodMask = \
             build_cell_width(
                 self, section_name=section_name,
-                gridded_dataset='greenland_2km_2020_04_20.epsg3413.nc')
+                gridded_dataset='greenland_2km_2024_01_29.epsg3413.nc')
 
         build_mali_mesh(
             self, cell_width, x1, y1, geom_points, geom_edges,
             mesh_name=mesh_name, section_name=section_name,
-            gridded_dataset='greenland_1km_2020_04_20.epsg3413.icesheetonly.nc',  # noqa
+            gridded_dataset='greenland_1km_2024_01_29.epsg3413.icesheetonly.nc',  # noqa
             projection='gis-gimp', geojson_file='Isunnguata_Sermia.geojson')
 
         logger.info('creating graph.info')
