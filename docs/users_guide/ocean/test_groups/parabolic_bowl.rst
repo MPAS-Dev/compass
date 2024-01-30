@@ -169,3 +169,11 @@ viz
 The visualization step can be configured to plot the timeseries for an 
 arbitrary set of coordinates by setting ``points``. Also, the interval
 between contour plot time snaps can be controlled with ``plot_interval``.
+
+lts
+~~~
+
+Both the ``ramp`` and ``noramp`` test cases can be run with the ``lts`` variant
+which uses local time-stepping (LTS) as time integrator. Note that the tests
+verify the ability of the LTS scheme to run correctly with wetting and drying
+and are not designed to leverage the LTS capability of producing faster runs.

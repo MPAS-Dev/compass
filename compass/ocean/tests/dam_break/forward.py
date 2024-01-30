@@ -7,7 +7,8 @@ class Forward(Step):
     A step for performing forward MPAS-Ocean runs as part of dam break
     test cases.
     """
-    def __init__(self, test_case, resolution, name='forward', subdir=None,
+    def __init__(self, test_case, resolution, use_lts,
+                 name='forward', subdir=None,
                  ntasks=1, min_tasks=None, openmp_threads=1):
         """
         Create a new test case
@@ -19,6 +20,9 @@ class Forward(Step):
 
         resolution : str
             The resolution of the test case
+
+        use_lts : bool
+            Whether local time-stepping is used
 
         name : str
             the name of the test case
@@ -50,18 +54,36 @@ class Forward(Step):
 
         self.add_namelist_file('compass.ocean.tests.dam_break',
                                'namelist.forward')
-        self.add_streams_file('compass.ocean.tests.dam_break',
-                              'streams.forward')
 
-        input_path = '../initial_state'
-        self.add_input_file(filename='mesh.nc',
-                            target=f'{input_path}/culled_mesh.nc')
+        if use_lts:
+            self.add_namelist_options(
+                {'config_time_integrator': "'LTS'",
+                 'config_dt_scaling_LTS': "4",
+                 'config_number_of_time_levels': "4",
+                 'config_pressure_gradient_type': "'ssh_gradient'"})
 
-        self.add_input_file(filename='init.nc',
-                            target=f'{input_path}/ocean.nc')
+            self.add_streams_file('compass.ocean.tests.dam_break.lts',
+                                  'streams.forward')
+            input_path = '../lts_regions'
+            self.add_input_file(filename='mesh.nc',
+                                target=f'{input_path}/lts_mesh.nc')
+            self.add_input_file(filename='graph.info',
+                                target=f'{input_path}/lts_graph.info')
+            self.add_input_file(filename='init.nc',
+                                target=f'{input_path}/lts_ocean.nc')
 
-        self.add_input_file(filename='graph.info',
-                            target=f'{input_path}/culled_graph.info')
+        else:
+            self.add_streams_file('compass.ocean.tests.dam_break',
+                                  'streams.forward')
+            input_path = '../initial_state'
+            self.add_input_file(filename='mesh.nc',
+                                target=f'{input_path}/culled_mesh.nc')
+
+            self.add_input_file(filename='init.nc',
+                                target=f'{input_path}/ocean.nc')
+
+            self.add_input_file(filename='graph.info',
+                                target=f'{input_path}/culled_graph.info')
 
         self.add_model_as_input()
 

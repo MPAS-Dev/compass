@@ -1,10 +1,11 @@
-import xarray
-import numpy
-import matplotlib.pyplot as plt
-import pandas as pd
-from scipy import spatial
-from PIL import Image
 from collections import OrderedDict
+
+import matplotlib.pyplot as plt
+import numpy
+import pandas as pd
+import xarray
+from PIL import Image
+from scipy import spatial
 
 from compass.step import Step
 
@@ -87,22 +88,22 @@ class Viz(Step):
 
         ii = 0
 
-        fig = plt.figure()
         for cell in station:
             ii += 1
-            ax = plt.subplot(3, 2, ii+1)
+            ax = plt.subplot(3, 2, ii + 1)
 
             # MPAS-O simulation results
-            mpaso = plt.plot(numpy.arange(0, dt*nt, dt), wct[:, station[cell]],
+            mpaso = plt.plot(numpy.arange(0, dt * nt, dt),
+                             wct[:, station[cell]],
                              color='#228B22', linewidth=2, alpha=0.6)
 
             # Measured data
-            data = pd.read_csv('Station'+cell+'.csv', header=None)
+            data = pd.read_csv('Station' + cell + '.csv', header=None)
             measured = plt.scatter(data[0], data[1], 4,
                                    marker='o', color='k')
 
             # ROMS simulation results (Warner et al., 2013)
-            roms_data = pd.read_csv(cell+'-sim.csv', header=None)
+            roms_data = pd.read_csv(cell + '-sim.csv', header=None)
             roms = plt.scatter(roms_data[0], roms_data[1], 4,
                                marker='v', color='b')
 
@@ -110,7 +111,7 @@ class Viz(Step):
             plt.xticks(numpy.arange(0, 11, 2))
             plt.ylim(0, 0.7)
             plt.yticks(numpy.arange(0, 0.7, 0.2))
-            plt.text(3.5, 0.55, 'Station '+cell)
+            plt.text(3.5, 0.55, 'Station ' + cell)
 
             if ii % 2 == 0:
                 plt.ylabel('h (m)')

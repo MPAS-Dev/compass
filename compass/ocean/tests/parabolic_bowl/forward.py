@@ -9,7 +9,8 @@ class Forward(Step):
     A step for performing forward MPAS-Ocean runs as part of parabolic bowl
     test cases.
     """
-    def __init__(self, test_case, resolution, name,
+    def __init__(self, test_case, resolution,
+                 name, use_lts,
                  ramp_type='ramp', coord_type='single_layer',
                  wetdry='standard'):
         """
@@ -24,16 +25,19 @@ class Forward(Step):
             The resolution of the test case
 
         name : str
-            the name of the test case
+            The name of the test case
+
+        use_lts : bool
+            Whether local time-stepping is used
 
         subdir : str, optional
-            the subdirectory for the step.  The default is ``name``
+            The subdirectory for the step.  The default is ``name``
 
         coord_type : str, optional
-            vertical coordinate configuration
+            Vertical coordinate configuration
 
         ramp_type : str, optional
-            vertical coordinate configuration
+            Vertical coordinate configuration
         """
 
         self.resolution = resolution
@@ -51,18 +55,32 @@ class Forward(Step):
             self.add_namelist_file('compass.ocean.tests.parabolic_bowl',
                                    'namelist.ramp.forward')
 
-        self.add_streams_file('compass.ocean.tests.parabolic_bowl',
-                              'streams.forward')
+        if use_lts:
+            self.add_namelist_options(
+                {'config_time_integrator': "'LTS'",
+                 'config_dt_scaling_LTS': "4",
+                 'config_number_of_time_levels': "4",
+                 'config_pressure_gradient_type': "'ssh_gradient'"})
+            self.add_streams_file('compass.ocean.tests.parabolic_bowl.lts',
+                                  'streams.forward')
+            input_path = f'../lts_regions_{res_name}'
+            self.add_input_file(filename='mesh.nc',
+                                target=f'{input_path}/lts_mesh.nc')
+            self.add_input_file(filename='graph.info',
+                                target=f'{input_path}/lts_graph.info')
+            self.add_input_file(filename='init.nc',
+                                target=f'{input_path}/lts_ocean.nc')
 
-        input_path = f'../initial_state_{res_name}'
-        self.add_input_file(filename='mesh.nc',
-                            target=f'{input_path}/culled_mesh.nc')
-
-        self.add_input_file(filename='init.nc',
-                            target=f'{input_path}/ocean.nc')
-
-        self.add_input_file(filename='graph.info',
-                            target=f'{input_path}/culled_graph.info')
+        else:
+            self.add_streams_file('compass.ocean.tests.parabolic_bowl',
+                                  'streams.forward')
+            input_path = f'../initial_state_{res_name}'
+            self.add_input_file(filename='mesh.nc',
+                                target=f'{input_path}/culled_mesh.nc')
+            self.add_input_file(filename='init.nc',
+                                target=f'{input_path}/ocean.nc')
+            self.add_input_file(filename='graph.info',
+                                target=f'{input_path}/culled_graph.info')
 
         self.add_model_as_input()
 

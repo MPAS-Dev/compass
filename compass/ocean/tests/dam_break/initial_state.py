@@ -1,13 +1,10 @@
 import xarray
-import numpy
-import matplotlib.pyplot as plt
-
-from mpas_tools.planar_hex import make_planar_hex_mesh
 from mpas_tools.io import write_netcdf
 from mpas_tools.mesh.conversion import convert, cull
+from mpas_tools.planar_hex import make_planar_hex_mesh
 
-from compass.step import Step
 from compass.model import run_model
+from compass.step import Step
 
 
 class InitialState(Step):
@@ -15,7 +12,7 @@ class InitialState(Step):
     A step for creating a mesh and initial condition for dam break test
     cases
     """
-    def __init__(self, test_case):
+    def __init__(self, test_case, use_lts):
         """
         Create the step
 
@@ -27,8 +24,14 @@ class InitialState(Step):
         super().__init__(test_case=test_case, name='initial_state', ntasks=1,
                          min_tasks=1, openmp_threads=1)
 
-        self.add_namelist_file('compass.ocean.tests.dam_break',
-                               'namelist.init', mode='init')
+        self.use_lts = use_lts
+
+        if use_lts:
+            self.add_namelist_file('compass.ocean.tests.dam_break.lts',
+                                   'namelist.init', mode='init')
+        else:
+            self.add_namelist_file('compass.ocean.tests.dam_break',
+                                   'namelist.init', mode='init')
 
         self.add_streams_file('compass.ocean.tests.dam_break',
                               'streams.init', mode='init')
@@ -52,7 +55,7 @@ class InitialState(Step):
         dc = section.getfloat('dc')
 
         self.update_namelist_at_runtime(
-           {'config_dam_break_dc': f'{dc}'})
+            {'config_dam_break_dc': f'{dc}'})
 
         logger.info(' * Make planar hex mesh')
         dsMesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc, nonperiodic_x=True,
