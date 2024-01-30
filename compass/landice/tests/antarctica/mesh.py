@@ -42,8 +42,8 @@ class Mesh(Step):
         self.add_output_file(filename=f'{self.mesh_filename[:-3]}_'
                                       f'ismip6_regionMasks.nc')
         self.add_input_file(
-            filename='antarctica_8km_2020_10_20.nc',
-            target='antarctica_8km_2020_10_20.nc',
+            filename='antarctica_8km_2024_01_29.nc',
+            target='antarctica_8km_2024_01_29.nc',
             database='')
 
     # no setup() method is needed
@@ -59,12 +59,12 @@ class Mesh(Step):
         cell_width, x1, y1, geom_points, geom_edges, floodFillMask = \
             build_cell_width(
                 self, section_name=section_name,
-                gridded_dataset='antarctica_8km_2020_10_20.nc')
+                gridded_dataset='antarctica_8km_2024_01_29.nc')
 
         # Apply floodFillMask to thickness field to help with culling
-        copyfile('antarctica_8km_2020_10_20.nc',
-                 'antarctica_8km_2020_10_20_floodFillMask.nc')
-        gg = netCDF4.Dataset('antarctica_8km_2020_10_20_floodFillMask.nc',
+        copyfile('antarctica_8km_2024_01_29.nc',
+                 'antarctica_8km_2024_01_29_floodFillMask.nc')
+        gg = netCDF4.Dataset('antarctica_8km_2024_01_29_floodFillMask.nc',
                              'r+')
         gg.variables['thk'][0, :, :] *= floodFillMask
         gg.variables['vx'][0, :, :] *= floodFillMask
@@ -74,7 +74,7 @@ class Mesh(Step):
         build_mali_mesh(
             self, cell_width, x1, y1, geom_points, geom_edges,
             mesh_name=self.mesh_filename, section_name=section_name,
-            gridded_dataset='antarctica_8km_2020_10_20_floodFillMask.nc',
+            gridded_dataset='antarctica_8km_2024_01_29_floodFillMask.nc',
             projection='ais-bedmap2', geojson_file=None)
 
         logger.info('creating graph.info')

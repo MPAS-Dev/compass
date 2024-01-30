@@ -20,15 +20,15 @@ class Mesh(Step):
 
         self.add_output_file(filename='graph.info')
         self.add_output_file(filename='Thwaites.nc')
-        self.add_input_file(filename='antarctica_8km_2020_10_20.nc',
-                            target='antarctica_8km_2020_10_20.nc',
+        self.add_input_file(filename='antarctica_8km_2024_01_29.nc',
+                            target='antarctica_8km_2024_01_29.nc',
                             database='')
         self.add_input_file(filename='thwaites_minimal.geojson',
                             package='compass.landice.tests.thwaites',
                             target='thwaites_minimal.geojson',
                             database=None)
-        self.add_input_file(filename='antarctica_1km_2020_10_20_ASE.nc',
-                            target='antarctica_1km_2020_10_20_ASE.nc',
+        self.add_input_file(filename='antarctica_1km_2024_01_29_ASE.nc',
+                            target='antarctica_1km_2024_01_29_ASE.nc',
                             database='')
 
     # no setup() method is needed
@@ -45,12 +45,12 @@ class Mesh(Step):
         cell_width, x1, y1, geom_points, geom_edges, floodMask = \
             build_cell_width(
                 self, section_name=section_name,
-                gridded_dataset='antarctica_8km_2020_10_20.nc')
+                gridded_dataset='antarctica_8km_2024_01_29.nc')
 
         build_mali_mesh(
             self, cell_width, x1, y1, geom_points, geom_edges,
             mesh_name=mesh_name, section_name=section_name,
-            gridded_dataset='antarctica_1km_2020_10_20_ASE.nc',
+            gridded_dataset='antarctica_1km_2024_01_29_ASE.nc',
             projection='ais-bedmap2', geojson_file='thwaites_minimal.geojson',
             cores=self.cpus_per_task)
 
