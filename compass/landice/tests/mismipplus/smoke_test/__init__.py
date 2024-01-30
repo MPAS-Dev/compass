@@ -53,6 +53,11 @@ class SmokeTest(TestCase):
         # Comparing against itself to for a smoke test
         # (This allows the potential to compare against a baseline)
         variables = ['thickness', 'surfaceSpeed']
+
+        # access the work_dir for the step, even though validation
+        # operates at the case level
+        output_path = self.steps["smoke_test"].work_dir
+
         compare_variables(test_case=self, variables=variables,
-                          filename1='simulation/output.nc',
-                          filename2='simulation/output.nc')
+                          filename1=f'{output_path}/output.nc',
+                          filename2=f'{output_path}/output.nc')

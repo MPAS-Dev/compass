@@ -1,7 +1,14 @@
+from configparser import NoOptionError
+
 import xarray as xr
 
 # Following from:
 #   compass/ocean/tests/global_ocean/tasks.py
+
+# number of cells at 1000m resolution (with no gutter present). This is used
+# as heuristic to scale the number of cells with resolution, in order to
+# constrain the resoucres (i.e. `ntasks`) based on the mesh size.
+ncells_at_1km_res = 61382
 
 
 def get_ntasks_from_cell_count(config, at_setup, mesh_filename):
@@ -69,15 +76,21 @@ def _approx_cell_count(config):
 
     # get the desired resolution from config file
     resolution = config.getfloat("mesh", "resolution")
-    # get the requested gutter length
-    gutterLength = config.getfloat("mesh", "gutter_length")
-    # ensure that the requested `gutterLength` is valid.
-    # Otherwise set the value to zero
-    if (gutterLength < 2. * resolution) and (gutterLength != 0.):
+
+    try:
+        # (try to) get the requested gutter length
+        gutterLength = config.getfloat("mesh", "gutter_length")
+        # ensure that the requested `gutterLength` is valid.
+        # Otherwise set the value to zero
+        if (gutterLength < 2. * resolution) and (gutterLength != 0.):
+            gutterLength = 0.
+    except NoOptionError:
+        print("`gutter_length` not found the the `[mesh]` section of .cfg"
+              " file. Either this option does not apply to the test case"
+              " (i.e. `SmokeTest`) or the option is missing and assumed"
+              " to be 0.")
         gutterLength = 0.
 
-    # get the reference number of cells as 1000m resolution
-    ncells_at_1km_res = config.getfloat("mismipplus", "ncells_at_1km_res")
     # approximate the number of cells for the desired resolution
     cell_count = int(ncells_at_1km_res * (1000 / resolution)**2)
 
