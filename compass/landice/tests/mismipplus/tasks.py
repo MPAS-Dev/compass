@@ -1,5 +1,3 @@
-from configparser import NoOptionError
-
 import xarray as xr
 
 # Following from:
@@ -11,22 +9,25 @@ import xarray as xr
 ncells_at_1km_res = 61382
 
 
-def get_ntasks_from_cell_count(config, at_setup, mesh_filename):
+def get_ntasks_from_cell_count(config, cell_count):
     """
-    Computes `ntasks` and `min_tasks` based on mesh size (i.e. nCells)
+    Computes `ntasks` and `min_tasks` based on mesh size (i.e. cell_count)
 
     Parameters
     ----------
     config : compass.config.CompassConfigParser
         Configuration options for the test case the step belongs to
 
-    at_setup: bool
-        Whether this method is being run during setup of the step, as
-        opposed to at runtime
+    cell_count : int
+        Number of horizontal cells in the mesh. The value of this parameter is
+        caclulated (or approximated) using the functions below.
 
-    mesh_filename : str
-        A file containing the MPAS mesh (specifically `nCells`) if
-        `at_setup == False`
+    resolution: float
+        Nominal resolution (m) requested at the time of ``compass setup``.
+
+    gutter_length: float
+        Lenght (m) to extend the eastern edge of the domain by. See config
+        file for more info.
 
     Returns
     -------
@@ -36,14 +37,6 @@ def get_ntasks_from_cell_count(config, at_setup, mesh_filename):
     min_tasks : int
         The minimum number of tasks
     """
-
-    if at_setup:
-        # get cell count by scaling the heuristic from the config file
-        cell_count = _approx_cell_count(config)
-    else:
-        # get cell count from mesh
-        with xr.open_dataset(mesh_filename) as ds:
-            cell_count = ds.sizes['nCells']
 
     # read MPI related parameters from configuration file
     cores_per_node = config.getfloat('parallel', 'cores_per_node')
@@ -62,11 +55,45 @@ def get_ntasks_from_cell_count(config, at_setup, mesh_filename):
     return ntasks, min_tasks
 
 
-def _approx_cell_count(config):
+def exact_cell_count(mesh_filename):
+    """
+    Get the number of cells from an already generated mesh file.
+
+    Parameters
+    ----------
+    mesh_filename : str
+        A file containing the MPAS mesh (specifically `nCells`)
+
+    Returns
+    -------
+    cell_count : int
+        the number of cells in the mesh
+    """
+    # get cell count from mesh
+    with xr.open_dataset(mesh_filename) as ds:
+        cell_count = ds.sizes['nCells']
+
+    return cell_count
+
+
+def approx_cell_count(resolution, gutter_length):
     """
     Approximate the number of cells based on the resolution ratio squared
     times the number of cells at 1km resolution. Also do a crude area scaling
     to account for the additional cells from the gutter (if present).
+
+    Parameters
+    ----------
+    resolution : float
+        The nominal resolution requested in the configuration file.
+
+    gutterLength: float
+        Desired gutter length [m] on the eastern domain.
+
+    Returns
+    -------
+    cell_count : int
+        the number of cells in the mesh
     """
     # Fixed domain lenghts [m] (without gutter)
     Lx = 640e3
@@ -74,30 +101,18 @@ def _approx_cell_count(config):
     # Reference domain area [m^2]
     ref_area = Lx * Ly
 
-    # get the desired resolution from config file
-    resolution = config.getfloat("mesh", "resolution")
-
-    try:
-        # (try to) get the requested gutter length
-        gutterLength = config.getfloat("mesh", "gutter_length")
-        # ensure that the requested `gutterLength` is valid.
-        # Otherwise set the value to zero
-        if (gutterLength < 2. * resolution) and (gutterLength != 0.):
-            gutterLength = 0.
-    except NoOptionError:
-        print("`gutter_length` not found the the `[mesh]` section of .cfg"
-              " file. Either this option does not apply to the test case"
-              " (i.e. `SmokeTest`) or the option is missing and assumed"
-              " to be 0.")
-        gutterLength = 0.
+    # ensure that the requested `gutter_length` is valid.
+    # Otherwise set the value to zero
+    if (gutter_length < 2. * resolution) and (gutter_length != 0.):
+        gutter_length = 0.
 
     # approximate the number of cells for the desired resolution
     cell_count = int(ncells_at_1km_res * (1000 / resolution)**2)
 
     # Account for extra cells when gutter is requested
-    if gutterLength != 0.:
+    if gutter_length != 0.:
         # calculate the area of the domain with the gutter
-        new_area = (Lx + gutterLength) * Ly
+        new_area = (Lx + gutter_length) * Ly
         # scale by the approx cell count by the relative area increase
         # due to presence of the gutter
         cell_count *= new_area / ref_area

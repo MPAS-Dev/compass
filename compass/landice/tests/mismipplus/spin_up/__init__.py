@@ -1,4 +1,5 @@
 from compass.config import CompassConfigParser
+from compass.landice.tests import mismipplus
 from compass.landice.tests.mismipplus.run_model import RunModel
 from compass.landice.tests.mismipplus.setup_mesh import SetupMesh
 from compass.testcase import TestCase
@@ -23,27 +24,13 @@ class SpinUp(TestCase):
 
         super().__init__(test_group=test_group, name=name)
 
-        config = CompassConfigParser()
-        module = 'compass.landice.tests.mismipplus.spin_up'
-        # add from config
-        config.add_from_package(module, 'spin_up.cfg')
-        resolution = int(config.getfloat('mesh', 'resolution'))
-
-        resolution_key = f'{resolution:d}m'
-
         # Mesh generation step
         step_name = 'setup_mesh'
-        self.add_step(SetupMesh(test_case=self,
-                                name=f'{resolution_key}_{step_name}',
-                                subdir=f'{resolution_key}/{step_name}',
-                                resolution=resolution))
+        self.add_step(SetupMesh(test_case=self, name=step_name))
 
         # Simulation step
         step_name = 'run_model'
-        step = RunModel(test_case=self,
-                        name=f'{resolution_key}_{step_name}',
-                        subdir=f'{resolution_key}/{step_name}',
-                        resolution=resolution)
+        step = RunModel(test_case=self, name=step_name)
 
         # add the mesh file from the previous step as dependency
         step.mesh_file = 'landice_grid.nc'
@@ -54,8 +41,29 @@ class SpinUp(TestCase):
         # modify the namelist options and streams file
         step.add_streams_file(package, 'streams.spin_up')
         step.add_namelist_file(package, 'namelist.spin_up')
-        # read the density value from config file and update the namelist
-        ice_density = config['mesh'].getfloat('ice_density')
-        step.add_namelist_options({'config_ice_density': f'{ice_density}'})
 
         self.add_step(step)
+
+    def configure(self):
+        """
+        Set up the directory structure, based on the requested resolution.
+        """
+        # get the config options from the TestCase, which
+        config = self.config
+
+        # get the resolution from the parsed config file(s)
+        resolution = config.getfloat('mesh', 'resolution')
+
+        # loop over the steps of the `TestCase` and create a consistent
+        # directory structure based on the value of `resolution` at the time
+        # of compass setup.
+        for step_name, step in self.steps.items():
+
+            # set up the directory structure
+            mismipplus.configure(step, config, resolution)
+
+            # read the density value from config file and update the namelist
+            if step_name == "run_model":
+                ice_density = config['mesh'].getfloat('ice_density')
+                step.add_namelist_options(
+                    {'config_ice_density': f'{ice_density}'})

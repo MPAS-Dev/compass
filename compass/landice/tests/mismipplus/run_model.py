@@ -1,6 +1,10 @@
 import os
 
-from compass.landice.tests.mismipplus.tasks import get_ntasks_from_cell_count
+from compass.landice.tests.mismipplus.tasks import (
+    approx_cell_count,
+    exact_cell_count,
+    get_ntasks_from_cell_count,
+)
 from compass.model import make_graph_file, run_model
 from compass.step import Step
 
@@ -18,9 +22,13 @@ class RunModel(Step):
         the ``restart_run`` step of the ``restart_test`` runs the model
         twice, the second time with ``namelist.landice.rst`` and
         ``streams.landice.rst``
+
+    resolution : int
+        The nominal distance [m] between horizontal grid points (dcEdge) at
+        the time of ``compass setup``
     """
-    def __init__(self, test_case, name, subdir, resolution,
-                 ntasks=1, min_tasks=None, openmp_threads=1, suffixes=None):
+    def __init__(self, test_case, name, subdir=None, ntasks=1,
+                 min_tasks=None, openmp_threads=1, suffixes=None):
         """
         Create a new test case
 
@@ -29,14 +37,11 @@ class RunModel(Step):
         test_case : compass.TestCase
             The test case this step belongs to
 
-        name : str, optional
+        name : str
             the name of the test case
 
         subdir : str, optional
             the subdirectory for the step.  The default is ``name``
-
-        resolution : int
-            The nominal distance [m] between horizontal grid points (dcEdge)
 
         ntasks : int, optional
             the number of tasks the step would ideally use.  If fewer tasks
@@ -97,10 +102,23 @@ class RunModel(Step):
         """
 
         config = self.config
+        # get the resolution from the parsed config file(s)
+        resolution = config.getfloat('mesh', 'resolution')
+
+        # default gutter_length is 0. This encompasses `SmokeTest`, which does
+        # not use the gutter_length option.
+        gutter_length = 0.0
+
+        if self.test_case.name == "spin_up":
+            gutter_length = config.getfloat('mesh', 'gutter_length')
+
+        # approximate the number of cells in the mesh, based on the requested
+        # resolution and gutter_length.
+        cell_count = approx_cell_count(resolution, gutter_length)
+
         # find optimal and minimum number of task for the desired resolution
-        ntasks, min_tasks = get_ntasks_from_cell_count(config,
-                                                       at_setup=True,
-                                                       mesh_filename="")
+        ntasks, min_tasks = get_ntasks_from_cell_count(config, cell_count)
+
         # set values as attributes
         self.ntasks, self.min_tasks = (ntasks, min_tasks)
 
@@ -112,11 +130,15 @@ class RunModel(Step):
         """
 
         config = self.config
+
         mesh_filename = os.path.join(self.work_dir, 'landice_grid.nc')
 
+        # find the number of cells from the mesh created as part of the
+        # `setup_mesh` step.
+        cell_count = exact_cell_count(mesh_filename)
+
         # find optimal and minimum number of task for the cell count
-        ntasks, min_tasks = get_ntasks_from_cell_count(
-            config, at_setup=False, mesh_filename=mesh_filename)
+        ntasks, min_tasks = get_ntasks_from_cell_count(config, cell_count)
 
         # set values as attributes
         self.ntasks, self.min_tasks = (ntasks, min_tasks)
@@ -127,6 +149,16 @@ class RunModel(Step):
         """
         Run this step of the test case
         """
+
+        config = self.config
+
+        if self.test_case.name == "spin_up":
+            # read the density value from config file and update
+            # namelist. This will only work for the `SpinUp` test case.
+            ice_density = config['mesh'].getfloat('ice_density')
+            self.update_namelist_at_runtime(
+                {'config_ice_density': f'{ice_density}'})
+
         make_graph_file(mesh_filename=self.mesh_file,
                         graph_filename='graph.info')
 

@@ -21,7 +21,7 @@ class SetupMesh(Step):
 
     Attributes
     ----------
-    resolution : int
+    resolution : float
         The resolution of the test case, as defined in the configuration file
         at the time when `compass setup` is run.
 
@@ -35,7 +35,7 @@ class SetupMesh(Step):
         The distance in meters between adjacent cell centers.
 
     """
-    def __init__(self, test_case, name, subdir, resolution):
+    def __init__(self, test_case, name, subdir=None):
         """
         Create the step
 
@@ -47,11 +47,8 @@ class SetupMesh(Step):
         name : str
             the name of the test case
 
-        subdir : str
+        subdir : str, optional
             the subdirectory for the step.  The default is ``name``
-
-        resolution : int
-            The nominal distance [m] between horizontal grid points
         """
 
         super().__init__(test_case=test_case,
@@ -61,8 +58,6 @@ class SetupMesh(Step):
         # Files to be created as part of the this step
         for filename in ['mpas_grid.nc', 'graph.info', 'landice_grid.nc']:
             self.add_output_file(filename=filename)
-
-        self.resolution = resolution
 
     def run(self):
         """
@@ -91,15 +86,15 @@ class SetupMesh(Step):
         # check if the resolution has been changed since the `compass setup`
         # command was run
         if self.resolution != resolution:
-            raise Exception(f'Resolution was set at {self.resolution:2d}m'
+            raise Exception(f'Resolution was set at {self.resolution:4.0f}m'
                             f' when `compass setup` was called. Since then,'
                             f' the resolution in the configuration file has'
-                            f' been changed to {resolution:2d}m. Changing'
+                            f' been changed to {resolution:4.0f}m. Changing'
                             f' resolution at runtime is not supported. Change'
                             f' the resolution value in the configuration file'
                             f' within the python module and rerun the `compass'
                             f' setup` command in order to create a mesh at a'
-                            f' resolution of {resolution:2d}m')
+                            f' resolution of {resolution:4.0f}m')
 
         nx, ny, dc = calculateMeshParams(nominal_resolution=resolution,
                                          Lx=Lx,
