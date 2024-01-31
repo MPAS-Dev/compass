@@ -30,6 +30,10 @@ class InitialState(Step):
         self.add_namelist_file('compass.ocean.tests.parabolic_bowl',
                                'namelist.init', mode='init')
 
+        if wetdry == 'subgrid':
+            self.add_namelist_file('compass.ocean.tests.parabolic_bowl',
+                                   'namelist.subgrid.init', mode='init')
+
         self.add_streams_file('compass.ocean.tests.parabolic_bowl',
                               'streams.init', mode='init')
 
