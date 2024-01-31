@@ -20,15 +20,15 @@ class Mesh(Step):
 
         self.add_output_file(filename='graph.info')
         self.add_output_file(filename='Crane.nc')
-        self.add_input_file(filename='antarctica_8km_2020_10_20.nc',
-                            target='antarctica_8km_2020_10_20.nc',
+        self.add_input_file(filename='antarctica_8km_2024_01_29.nc',
+                            target='antarctica_8km_2024_01_29.nc',
                             database='')
         self.add_input_file(filename='Crane.geojson',
                             package='compass.landice.tests.crane',
                             target='Crane.geojson',
                             database=None)
-        self.add_input_file(filename='antarctica_1km_2020_10_20_AP.nc',
-                            target='antarctica_1km_2020_10_20_AP.nc',
+        self.add_input_file(filename='antarctica_1km_2024_01_29_AP.nc',
+                            target='antarctica_1km_2024_01_29_AP.nc',
                             database='')
 
     # no setup() method is needed
@@ -45,12 +45,12 @@ class Mesh(Step):
         cell_width, x1, y1, geom_points, geom_edges, floodMask = \
             build_cell_width(
                 self, section_name=section_name,
-                gridded_dataset='antarctica_8km_2020_10_20.nc')
+                gridded_dataset='antarctica_8km_2024_01_29.nc')
 
         build_mali_mesh(
             self, cell_width, x1, y1, geom_points, geom_edges,
             mesh_name=mesh_name, section_name=section_name,
-            gridded_dataset='antarctica_1km_2020_10_20_AP.nc',
+            gridded_dataset='antarctica_1km_2024_01_29_AP.nc',
             projection='ais-bedmap2', geojson_file='Crane.geojson',
             cores=self.cpus_per_task)
 
