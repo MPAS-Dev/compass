@@ -18,7 +18,7 @@ class Viz(Step):
     Attributes
     ----------
     """
-    def __init__(self, test_case, resolutions, use_lts):
+    def __init__(self, test_case, ramp_type, wetdry, resolutions, use_lts):
         """
         Create the step
 
@@ -31,6 +31,8 @@ class Viz(Step):
 
         self.resolutions = resolutions
         self.use_lts = use_lts
+        self.wetdry = wetdry
+        self.ramp_type = ramp_type
 
         for res in resolutions:
             self.add_input_file(filename=f'output_{res}km.nc',
@@ -93,6 +95,7 @@ class Viz(Step):
             if i == len(points) - 1:
                 lines, labels = ax[i].get_legend_handles_labels()
 
+        fig.suptitle(f'{self.wetdry} ({self.ramp_type})')
         fig.tight_layout()
         fig.subplots_adjust(bottom=0.2)
         fig.legend(lines, labels,
@@ -185,7 +188,8 @@ class Viz(Step):
             cb = fig.colorbar(cm, ax=ax[-1], shrink=0.6)
             cb.set_label('ssh (m)')
             t = round((time[i] - time[0]).total_seconds() / 86400., 2)
-            fig.suptitle(f'ssh solution at t={t} days')
+            fig.suptitle((f'{self.wetdry} ({self.ramp_type}) '
+                          f'ssh solution at t={t} days'))
             fig.savefig(f'solution_{i:03d}.png')
             plt.close()
 

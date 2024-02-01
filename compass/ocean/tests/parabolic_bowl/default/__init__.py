@@ -152,7 +152,10 @@ class Default(TestCase):
                                   resolution=resolution,
                                   ramp_type=self.ramp_type,
                                   wetdry=self.wetdry))
-        self.add_step(Viz(test_case=self, resolutions=resolutions,
+        self.add_step(Viz(test_case=self,
+                          ramp_type=self.ramp_type,
+                          wetdry=self.wetdry,
+                          resolutions=resolutions,
                           use_lts=use_lts))
 
     def validate(self):
