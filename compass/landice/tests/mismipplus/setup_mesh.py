@@ -76,12 +76,12 @@ class SetupMesh(Step):
         # read the resolution from the .cfg file at runtime
         resolution = section.getfloat('resolution')
         # read the gutter lenth from the .cfg file
-        gutterLength = section.getfloat('gutter_length')
-        # ensure that the requested `gutterLength` is valid. Otherwise set
-        # the value to zero, such that the default `gutterLength` of two
+        gutter_length = section.getfloat('gutter_length')
+        # ensure that the requested `gutter_length` is valid. Otherwise set
+        # the value to zero, such that the default `gutter_length` of two
         # gridcells is used.
-        if (gutterLength < 2. * resolution) and (gutterLength != 0.):
-            gutterLength = 0.
+        if (gutter_length < 2. * resolution) and (gutter_length != 0.):
+            gutter_length = 0.
 
         # check if the resolution has been changed since the `compass setup`
         # command was run
@@ -96,10 +96,10 @@ class SetupMesh(Step):
                             f' setup` command in order to create a mesh at a'
                             f' resolution of {resolution:4.0f}m')
 
-        nx, ny, dc = calculateMeshParams(nominal_resolution=resolution,
-                                         Lx=Lx,
-                                         Ly=Ly,
-                                         gutterLength=gutterLength)
+        nx, ny, dc = calculate_mesh_params(nominal_resolution=resolution,
+                                           Lx=Lx,
+                                           Ly=Ly,
+                                           gutter_length=gutter_length)
 
         ds_mesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc,
                                        nonperiodic_x=True,
@@ -137,10 +137,10 @@ class SetupMesh(Step):
                             filename='landice_grid.nc')
 
 
-def calculateMeshParams(nominal_resolution,
-                        Lx=640e3,
-                        Ly=80e3,
-                        gutterLength=0.0):
+def calculate_mesh_params(nominal_resolution,
+                          Lx=640e3,
+                          Ly=80e3,
+                          gutter_length=0.0):
     """
     Calculate the appropriate parameters for use by `make_planar_hex_mesh`
     from the desired nominal resolution (e.g. 8e3, 4e3, 2e3, 1e3...).
@@ -156,7 +156,7 @@ def calculateMeshParams(nominal_resolution,
     Ly : float
         Domain length in y direction [m]
 
-    gutterLength : float
+    gutter_length : float
         Desired gutter length [m] on the eastern domain. Default value of 0.0
         will ensure there are two extra cell for the gutter.
     """
@@ -208,7 +208,7 @@ def calculateMeshParams(nominal_resolution,
 
         return dc
 
-    def calculate_nx(Lx, dc, gutterLength):
+    def calculate_nx(Lx, dc, gutter_length):
         """
         Caluculate the number of x gridcell, per the required `dc` with
         considerations for the requested gutter length
@@ -221,12 +221,12 @@ def calculateMeshParams(nominal_resolution,
         dc : float
             Edge length [m]
 
-        gutterLength: float
+        gutter_length: float
             Desired gutter length [m] on the eastern domain. A value of 0.0
             will result in two extra cell for the gutter.
         """
 
-        if gutterLength == 0.0:
+        if gutter_length == 0.0:
             nx = np.ceil(Lx / dc)
             # The modulo condition below ensures there is exactly one cell
             # past the the desired domain length. So, when no gutter
@@ -235,7 +235,7 @@ def calculateMeshParams(nominal_resolution,
             nx += 1
         else:
             # amend the domain length to account for the gutter
-            Lx += gutterLength
+            Lx += gutter_length
             nx = np.ceil(Lx / dc)
 
         # Just rounding `nx` up to the nearest `int` doesn't gurantee that the
@@ -250,7 +250,7 @@ def calculateMeshParams(nominal_resolution,
 
     ny = calculate_ny(nominal_resolution, Ly)
     dc = calculate_dc(Ly, ny)
-    nx = calculate_nx(Lx, dc, gutterLength)
+    nx = calculate_nx(Lx, dc, gutter_length)
 
     # add two to `ny` to accomodate MISMIP+ specific culling requirments.
     # This ensures, after the culling, that the cell center to cell center
@@ -273,10 +273,10 @@ def mark_cull_cells_for_MISMIP(ds_mesh):
     # calculate the amplitude (i.e. `dy`) [m] of the dual mesh
     dy = np.sqrt(3.) / 2. * dc
     # Get the y position of the top row
-    yMax = ds_mesh.yCell.max()
+    y_max = ds_mesh.yCell.max()
 
     # find the first interior row along the top of the domain
-    mask = np.isclose(ds_mesh.yCell, yMax - dy, rtol=0.02)
+    mask = np.isclose(ds_mesh.yCell, y_max - dy, rtol=0.02)
 
     # add first interior row along northern boudnary to the cells to be culled
     ds_mesh['cullCell'] = xr.where(mask, 1, ds_mesh.cullCell)
@@ -296,17 +296,17 @@ def center_trough(ds_mesh):
     """
 
     # Get the center of y-axis (i.e. half distance)
-    yCenter = (ds_mesh.yCell.max() + ds_mesh.yCell.min()) / 2.
+    y_center = (ds_mesh.yCell.max() + ds_mesh.yCell.min()) / 2.
 
     # Shift x-axis so that the x-origin is all the way to the left
-    xShift = -1.0 * ds_mesh.xCell.min()
+    x_shift = -1.0 * ds_mesh.xCell.min()
     # Shift y-axis so that it's centered about the MISMIP+ bed trough
-    yShift = 4.e4 - yCenter
+    y_shift = 4.e4 - y_center
 
     # Shift all spatial points by calculated shift
     for loc in ['Cell', 'Edge', 'Vertex']:
-        ds_mesh[f'x{loc}'] = ds_mesh[f'x{loc}'] + xShift
-        ds_mesh[f'y{loc}'] = ds_mesh[f'y{loc}'] + yShift
+        ds_mesh[f'x{loc}'] = ds_mesh[f'x{loc}'] + x_shift
+        ds_mesh[f'y{loc}'] = ds_mesh[f'y{loc}'] + y_shift
 
     ##########################################################################
     # WHL :
@@ -334,12 +334,12 @@ def center_trough(ds_mesh):
     # get the distance between edges
     de = 0.5 * dc * np.sin(np.pi / 3)
     # find the min and max (i.e. N/S boundary) edges
-    yMin = ds_mesh.yEdge.min()
-    yMax = ds_mesh.yEdge.max()
+    y_min = ds_mesh.yEdge.min()
+    y_max = ds_mesh.yEdge.max()
 
     # Boolean mask for edge indices on the N/S boundary of the mesh
-    mask = (np.isclose(ds_mesh.yEdge, yMin, rtol=0.01) |
-            np.isclose(ds_mesh.yEdge, yMax, rtol=0.01))
+    mask = (np.isclose(ds_mesh.yEdge, y_min, rtol=0.01) |
+            np.isclose(ds_mesh.yEdge, y_max, rtol=0.01))
     # WHL: zero out the edges on the boundary
     #      (not necessary because velocity will also be zero)
     ds_mesh['dvEdge'] = xr.where(mask, 0.0, ds_mesh.dvEdge)
@@ -347,8 +347,8 @@ def center_trough(ds_mesh):
     # Boolean mask for the indexed of edges N/S of  boundary cell centers,
     # using a 2% relative threshold to account for accumulated roundoff
     # from min calculation
-    mask = (np.isclose(ds_mesh.yEdge, yMin + de, rtol=0.02) |
-            np.isclose(ds_mesh.yEdge, yMax - de, rtol=0.02))
+    mask = (np.isclose(ds_mesh.yEdge, y_min + de, rtol=0.02) |
+            np.isclose(ds_mesh.yEdge, y_max - de, rtol=0.02))
     # cut length in half for edges between boundary cells
     ds_mesh['dvEdge'] = xr.where(mask, ds_mesh.dvEdge * 0.5, ds_mesh.dvEdge)
 

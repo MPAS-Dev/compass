@@ -87,7 +87,7 @@ def approx_cell_count(resolution, gutter_length):
     resolution : float
         The nominal resolution requested in the configuration file.
 
-    gutterLength: float
+    gutter_length: float
         Desired gutter length [m] on the eastern domain.
 
     Returns
