@@ -86,15 +86,15 @@ class SetupMesh(Step):
         # check if the resolution has been changed since the `compass setup`
         # command was run
         if self.resolution != resolution:
-            raise Exception(f'Resolution was set at {self.resolution:4.0f}m'
-                            f' when `compass setup` was called. Since then,'
-                            f' the resolution in the configuration file has'
-                            f' been changed to {resolution:4.0f}m. Changing'
-                            f' resolution at runtime is not supported. Change'
-                            f' the resolution value in the configuration file'
-                            f' within the python module and rerun the `compass'
-                            f' setup` command in order to create a mesh at a'
-                            f' resolution of {resolution:4.0f}m')
+            raise ValueError(f'Resolution was set at {self.resolution:4.0f}m'
+                             f' when `compass setup` was called. Since then,'
+                             f' the resolution in the configuration file has'
+                             f' been changed to {resolution:4.0f}m. Changing'
+                             f' resolution at runtime is not supported. Change'
+                             f' the resolution value in the configuration file'
+                             f' within the python module and rerun the'
+                             f' `compass setup` command in order to create'
+                             f' a mesh at a resolution of {resolution:4.0f}m')
 
         nx, ny, dc = calculate_mesh_params(nominal_resolution=resolution,
                                            Lx=Lx,
@@ -331,7 +331,10 @@ def center_trough(ds_mesh):
     if ds_mesh.dcEdge.all():
         dc = float(ds_mesh.dcEdge[0])
 
-    # get the distance between edges
+    # get the distance between edges. Since all meshes are generated with the
+    # `make_planar_hex_mesh` function, all triangles (in the dual mesh) will
+    # be equilateral, which makes our use of `3` in the denominator below
+    # a valid assumption.
     de = 0.5 * dc * np.sin(np.pi / 3)
     # find the min and max (i.e. N/S boundary) edges
     y_min = ds_mesh.yEdge.min()

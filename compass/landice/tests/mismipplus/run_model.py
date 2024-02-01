@@ -23,12 +23,11 @@ class RunModel(Step):
         twice, the second time with ``namelist.landice.rst`` and
         ``streams.landice.rst``
 
-    resolution : int
-        The nominal distance [m] between horizontal grid points (dcEdge) at
-        the time of ``compass setup``
+    resolution : float
+        The nominal distance [m] between horizontal grid points (dcEdge).
     """
-    def __init__(self, test_case, name, subdir=None, ntasks=1,
-                 min_tasks=None, openmp_threads=1, suffixes=None):
+    def __init__(self, test_case, name, subdir=None, resolution=None,
+                 ntasks=1, min_tasks=None, openmp_threads=1, suffixes=None):
         """
         Create a new test case
 
@@ -42,6 +41,12 @@ class RunModel(Step):
 
         subdir : str, optional
             the subdirectory for the step.  The default is ``name``
+
+        resolution : float, optional
+            The nominal distance [m] between horizontal grid points (dcEdge).
+            For the ``SpinUp`` testcase no value should be passed. Instead the
+            value will be parsed from the configuration options at the
+            time of ``compass setup``.
 
         ntasks : int, optional
             the number of tasks the step would ideally use.  If fewer tasks
@@ -67,6 +72,11 @@ class RunModel(Step):
         if suffixes is None:
             suffixes = ['landice']
         self.suffixes = suffixes
+
+        if resolution is None:
+            resolution = 0.0
+        self.resolution = resolution
+
         if min_tasks is None:
             min_tasks = ntasks
 
@@ -102,8 +112,8 @@ class RunModel(Step):
         """
 
         config = self.config
-        # get the resolution from the parsed config file(s)
-        resolution = config.getfloat('mesh', 'resolution')
+        # use the resolution at the time of ``compass setup``
+        resolution = self.resolution
 
         # default gutter_length is 0. This encompasses `SmokeTest`, which does
         # not use the gutter_length option.

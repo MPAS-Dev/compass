@@ -1,3 +1,5 @@
+import os
+
 from compass.config import CompassConfigParser
 from compass.landice.tests import mismipplus
 from compass.landice.tests.mismipplus.run_model import RunModel
@@ -59,8 +61,26 @@ class SpinUp(TestCase):
         # of compass setup.
         for step_name, step in self.steps.items():
 
-            # set up the directory structure
-            mismipplus.configure(step, config, resolution)
+            # format resolution for creating subdirectory structure
+            resolution_key = f'{resolution:4.0f}m'
+            step.subdir = f'{resolution_key}/{step.name}'
+
+            # set the path attribute, based on the subdir attribute set above.
+            step.path = os.path.join(step.mpas_core.name,
+                                     step.test_group.name,
+                                     step.test_case.subdir,
+                                     step.subdir)
+
+            # NOTE: we do not set the `step.work_dir` attribute, since it
+            # will be set by `compass setup`` by joining the work dir
+            # provided through the command line interface and the
+            # `step.path` set above.
+
+            # store the resolution (at the time of `compass setup`) as an
+            # attribute. This is needed to prevent the changing of resolution
+            # between `compass setup` and `compas run`, which could result
+            # in a mesh having a different resolution than the dir it sits in.
+            step.resolution = resolution
 
             # read the density value from config file and update the namelist
             if step_name == "run_model":

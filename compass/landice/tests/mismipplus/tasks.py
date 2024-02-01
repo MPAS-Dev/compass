@@ -22,13 +22,6 @@ def get_ntasks_from_cell_count(config, cell_count):
         Number of horizontal cells in the mesh. The value of this parameter is
         caclulated (or approximated) using the functions below.
 
-    resolution: float
-        Nominal resolution (m) requested at the time of ``compass setup``.
-
-    gutter_length: float
-        Lenght (m) to extend the eastern edge of the domain by. See config
-        file for more info.
-
     Returns
     -------
     ntasks : int
