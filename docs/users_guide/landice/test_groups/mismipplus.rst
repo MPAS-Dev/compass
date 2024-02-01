@@ -27,11 +27,6 @@ Both ``mismipplus`` test cases share the following config options:
     # the approximate maximum number of cells per core
     max_cells_per_core = 5000
     
-    # number of cells at 1000m resolution (with no gutter present). This is 
-    # used as huerisitc to scale the number of cells with resolution, in 
-    # order to constrain the resoucres (i.e. `ntasks`) based on the mesh size.
-    ncells_at_1km_res = 61382
-
 The config options are all aimed at dynamically calculating the optimal number 
 of ``ntasks`` for the ``run_model`` step based on the resolution requested 
 by the test case. For more information about how ``ntasks`` is calculated see 
@@ -45,16 +40,8 @@ smoke_test
 ``landice/mismipplus/smoke_test`` runs the MISMIP+ ``Ice0`` experiment for 
 five years using a spun-up 
 `2km mesh <https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/MISMIP_2km_20220502.nc>`_.
-The simulation is run with the adaptive timestepper on. 
-
-.. code-block:: cfg
-   
-    # config options for the smoke test
-    [mesh]
-    
-    # Resolution (m) of the spun up testcase, in longtime archiving. 
-    resolution = 2000.
-
+The simulation is run with the adaptive timestepper on.
+There are no configuration options for this test case.
 Currently 2000m is the only resolution supported. In the future, the 
 ``spin_up`` test case will be used to generate new versions of the
 mesh at 8000m, 4000m, 2000m, and 1000m resolutions. 
@@ -78,32 +65,31 @@ site-specific complications arising from using an actual glacier geometry.
     # config options for the mesh (i.e. initial condition) setup
     [mesh]
     
-    # nominal edge length (m). resolution is "nominal" since the true edge 
-    # length will be interactively determined such that the cell center to 
-    # cell center distance in the y direction is exactly the y domain 
-    # length (80 km).
+    # Nominal cell spacing (m). Resolution is "nominal" since the true cell spacing
+    # will be determined such that the cell center to cell center length of the
+    # entire domain in the y direction is exactly the required y domain length (80 km).
     resolution = 8000.
     
-    # length (m) to extend the eastern domain boundary by. Will be needed for 
-    # simulations that use a dynamic calving law, where the claving front will
-    # be irregularly shaped. Any value less than `2*resolution` will ignored,
-    # as the default gutter length is 2 gridcells.
+    # length (m) to extend the eastern domain boundary by. Needed for simulations
+    # that use a dynamic calving law, where the calving front will be irregularly
+    # shaped. Any value less than `2*resolution` will be ignored, as the default
+    # gutter length is 2 gridcells.
     gutter_length = 0.
     
-    # ice density (kg m^{-3}). MISMIP+ uses 918 
-    # (Table 1. Asay-Davis et al. 2016), but MALI defaults to 910. 
-    # The user can choose if they want to stricly follow MISMIP+ or use 
-    # the default MALI value.
+    # ice density (kg m^{-3}). MISMIP+ uses 918 (Table 1. Asay-Davis et al. 2016),
+    # but MALI defaults to 910. The user can choose if they want to strictly follow
+    # MISMIP+ or use the default MALI value.
     ice_density = 918.
+    
+    # Initial ice thickness (m). The MISMIP+ protocol does not specify an initial
+    # ice thickness for the spinup experiment. Therefore the user is allowed to
+    # choose their desired value.
+    init_thickness = 100.
     
     # Number of vertical levels
     levels = 10
     
-    # Initial ice thickness (m)
-    init_thickness = 100.
-    
     # How to distribute vertical layers. Options are "glimmer" or "uniform".
-    # "glimmer" will distribute the layer non-uniformily following
+    # "glimmer" will distribute the layer non-uniformly following
     # Eqn. (15) from Rutt et al. 2009.
-    vetical_layer_distribution = glimmer 
-
+    vetical_layer_distribution = glimmer
