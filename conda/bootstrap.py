@@ -355,8 +355,9 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
 
             print('Building JIGSAW\n')
             # add build tools to deployment env, not compass env
+            jigsaw_build_deps = 'cxx-compiler cmake libnetcdf=4.9.2'
             commands = \
-                f'conda install -y cmake cxx-compiler && ' \
+                f'conda install -y {jigsaw_build_deps} && ' \
                 f'cd {source_path}/jigsaw-python && ' \
                 f'python setup.py build_external'
             check_call(commands, logger=logger)
