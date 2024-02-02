@@ -171,11 +171,17 @@ class ExtractRegion(Step):
                     f'{dest_file_name}_extra_var.nc']
             check_call(args, logger=logger)
             # drop some extra vars that ncremap adds
-            args = ['ncks', '-O', '-C', '-x', '-v',
-                    'lat,lon,lat_vertices,lon_vertices,area',
-                    f'{dest_file_name}_extra_var.nc',
-                    f'{dest_file_name}_vars_only.nc']
-            check_call(args, logger=logger)
+            ds_out = xarray.open_dataset(f'{dest_file_name}_extra_var.nc')
+            ds_out = ds_out.drop_vars(['lat', 'lon', 'lat_vertices',
+                                       'lon_vertices', 'area'])
+            # drop variables on vertices or edges, which will not have been
+            # remapped properly
+            drop_list = []
+            for varname, da in ds_out.data_vars.items():
+                if 'nVertices' in da.dims or 'nEdges' in da.dims:
+                    drop_list.append(varname)
+            ds_out = ds_out.drop_vars(drop_list)
+            write_netcdf(ds_out, f'{dest_file_name}_vars_only.nc')
 
             # now combine the remapped variables with the mesh fields
             # that don't get remapped
