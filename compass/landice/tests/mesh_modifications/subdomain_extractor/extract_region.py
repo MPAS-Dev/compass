@@ -1,8 +1,12 @@
+import shutil
+import sys
+
 import numpy as np
 import xarray
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 from mpas_tools.mesh.conversion import convert, cull
+from pyremap import MpasCellMeshDescriptor, Remapper
 
 from compass.landice.mesh import mpas_flood_fill
 from compass.model import make_graph_file
@@ -27,7 +31,9 @@ class ExtractRegion(Step):
         """
         super().__init__(test_case=test_case, name='extract_region')
 
-    # no setup() method is needed
+    def setup(self):
+        self.ntasks = 128
+        self.mintasks = 1
 
     def run(self):
         """
@@ -46,11 +52,12 @@ class ExtractRegion(Step):
         mesh_projection = section.get('mesh_projection')
         extend_mesh = section.getboolean('extend_ocean_buffer')
         grow_iters = section.getint('grow_iters')
+        interp_method = section.get('interp_method')
 
         # get needed dims from source mesh
-        dsMesh = xarray.open_dataset(source_file_path)
-        nCells = dsMesh.dims['nCells']
-        levels = dsMesh.dims['nVertLevels']
+        ds_src = xarray.open_dataset(source_file_path)
+        nCells = ds_src.sizes['nCells']
+        levels = ds_src.sizes['nVertLevels']
 
         # create cull mask
         logger.info('creating cull mask file')
@@ -61,15 +68,15 @@ class ExtractRegion(Step):
         if extend_mesh:
             # Grow the mask into the ocean, because the standard regions
             # may end at the ice terminus.
-            thickness = dsMesh['thickness'][:].values
-            bed = dsMesh['bedTopography'][:].values
+            thickness = ds_src['thickness'][:].values
+            bed = ds_src['bedTopography'][:].values
             oceanMask = np.squeeze((thickness[0, :] == 0.0) * (bed[0, :] <=
                                                                0.0))
             floatMask = np.squeeze(((thickness[0, :] * 910.0 / 1028.0 +
                                      bed[0, :]) < 0.0) *
                                    (thickness[0, :] > 0))
-            conc = dsMesh['cellsOnCell'][:].values
-            neonc = dsMesh['nEdgesOnCell'][:].values
+            conc = ds_src['cellsOnCell'][:].values
+            neonc = ds_src['nEdgesOnCell'][:].values
 
             # First grow forward to capture any adjacent ice shelf
             print('Starting floating ice fill')
@@ -98,11 +105,11 @@ class ExtractRegion(Step):
 
         # cull the mesh
         logger.info('culling and converting mesh')
-        dsMesh = cull(dsMesh, dsInverse=dsMaskOut, logger=logger)
+        ds_out = cull(ds_src, dsInverse=dsMaskOut, logger=logger)
 
         # convert mesh
-        dsMesh = convert(dsMesh, logger=logger)
-        write_netcdf(dsMesh, f'{source_file_name}_culled.nc')
+        ds_out = convert(ds_out, logger=logger)
+        write_netcdf(ds_out, f'{source_file_name}_culled.nc')
 
         # mark horns for culling
         logger.info('Marking horns for culling')
@@ -112,33 +119,92 @@ class ExtractRegion(Step):
 
         # cull again
         logger.info('culling and converting mesh')
-        dsMesh = xarray.open_dataset(f'{source_file_name}_culled.nc')
-        dsMesh = cull(dsMesh, logger=logger)
-        dsMesh = convert(dsMesh, logger=logger)
-        write_netcdf(dsMesh, f'{source_file_name}_culled_dehorned.nc')
-
-        # create landice mesh
-        logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')
-        args = ['create_landice_grid_from_generic_MPAS_grid.py',
-                '-i', f'{source_file_name}_culled_dehorned.nc',
-                '-o', dest_file_name,
-                '-l', f'{levels}', '-v', 'glimmer',
-                '--beta', '--thermal', '--obs', '--diri']
-        check_call(args, logger=logger)
+        ds_out = xarray.open_dataset(f'{source_file_name}_culled.nc')
+        ds_out = cull(ds_out, logger=logger)
+        ds_out = convert(ds_out, logger=logger)
+        dest_mesh_only_name = 'dest_mesh_only.nc'
+        write_netcdf(ds_out, dest_mesh_only_name)
 
         # set lat/lon
         logger.info('calling set_lat_lon_fields_in_planar_grid.py')
         args = ['set_lat_lon_fields_in_planar_grid.py',
-                '-f', dest_file_name, '-p', mesh_projection]
+                '-f', dest_mesh_only_name, '-p', mesh_projection]
         check_call(args, logger=logger)
 
-        # interpolate to new mesh using nearest neighbor to ensure we get
-        # identical values
-        logger.info('calling interpolate_to_mpasli_grid.py')
-        args = ['interpolate_to_mpasli_grid.py',
-                '-s', source_file_path,
-                '-d', dest_file_name, '-m', 'n']
-        check_call(args, logger=logger)
+        if interp_method == 'ncremap':
+            # remap data from the original file to the culled mesh using
+            # pyremap with nearest neighbor interpolation
+            in_descriptor = MpasCellMeshDescriptor(source_file_path,
+                                                   'src_mesh')
+            out_descriptor = MpasCellMeshDescriptor(dest_mesh_only_name,
+                                                    'dst_mesh')
+
+            mapping_filename = 'map_src_to_dst_nstd.nc'
+
+            logger.info(f'Creating the mapping file {mapping_filename}...')
+            remapper = Remapper(in_descriptor, out_descriptor,
+                                mapping_filename)
+
+            parallel_executable = config.get('parallel',
+                                             'parallel_executable')
+            remapper.build_mapping_file(method='neareststod',
+                                        mpiTasks=self.ntasks,
+                                        tempdir=self.work_dir, logger=logger,
+                                        esmf_parallel_exec=parallel_executable)  # noqa
+            logger.info('done.')
+
+            logger.info('Remapping mesh file...')
+            # ncremap requires the spatial dimension to be the last one,
+            # which MALI does not exclusively follow.  So we have to
+            # permute dimensions before calling ncremap, and then permute back
+            args = ['ncpdq', '-O', '-a',
+                    'Time,nVertInterfaces,nVertLevels,nRegions,nISMIP6OceanLayers,nEdges,nCells',  # noqa
+                    source_file_path, f'{source_file_name}_permuted.nc']
+            check_call(args, logger=logger)
+            args = ['ncremap', '-m', mapping_filename,
+                    f'{source_file_name}_permuted.nc',
+                    f'{dest_file_name}_permuted.nc']
+            check_call(args, logger=logger)
+            args = ['ncpdq', '-O', '-a',
+                    'Time,nCells,nEdges,nVertInterfaces,nVertLevels,nRegions,nISMIP6OceanLayers',  # noqa
+                    f'{dest_file_name}_permuted.nc',
+                    f'{dest_file_name}_extra_var.nc']
+            check_call(args, logger=logger)
+            # drop some extra vars that ncremap adds
+            args = ['ncks', '-O', '-C', '-x', '-v',
+                    'lat,lon,lat_vertices,lon_vertices,area',
+                    f'{dest_file_name}_extra_var.nc',
+                    f'{dest_file_name}_vars_only.nc']
+            check_call(args, logger=logger)
+
+            # now combine the remapped variables with the mesh fields
+            # that don't get remapped
+            shutil.copyfile(dest_mesh_only_name, dest_file_name)
+            args = ['ncks', '-A', f'{dest_file_name}_vars_only.nc',
+                    dest_file_name]
+            check_call(args, logger=logger)
+
+            logger.info('done.')
+
+        elif interp_method == 'mali_interp':
+            # create landice mesh
+            logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')  # noqa
+            args = ['create_landice_grid_from_generic_MPAS_grid.py',
+                    '-i', f'{source_file_name}_culled_dehorned.nc',
+                    '-o', dest_file_name,
+                    '-l', f'{levels}', '-v', 'glimmer',
+                    '--beta', '--thermal', '--obs', '--diri']
+            check_call(args, logger=logger)
+
+            # interpolate to new mesh using nearest neighbor to ensure we get
+            # identical values
+            logger.info('calling interpolate_to_mpasli_grid.py')
+            args = ['interpolate_to_mpasli_grid.py',
+                    '-s', source_file_path,
+                    '-d', dest_file_name, '-m', 'n']
+            check_call(args, logger=logger)
+        else:
+            sys.exit(f"Unknown interp_method of {interp_method}")
 
         # mark Dirichlet boundaries
         logger.info('Marking domain boundaries dirichlet')
