@@ -47,10 +47,11 @@ class ExtractRegion(Step):
         section = config['subdomain']
         source_file_path = section.get('source_file')
         source_file_name = os.path.basename(source_file_path)
-        source_file_basename = source_file_name.split('.nc')[:-1][0]
+        source_file_rootname = source_file_name.rsplit('.nc', 1)[0]
         region_mask_file = section.get('region_mask_file')
         region_number = section.getint('region_number')
         dest_file_name = section.get('dest_file_name')
+        dest_file_rootname = dest_file_name.rsplit('.nc', 1)[0]
         mesh_projection = section.get('mesh_projection')
         extend_mesh = section.getboolean('extend_ocean_buffer')
         grow_iters = section.getint('grow_iters')
@@ -60,6 +61,10 @@ class ExtractRegion(Step):
         extra_file3 = section.get('extra_file3')
         extra_file4 = section.get('extra_file4')
         extra_file5 = section.get('extra_file5')
+
+        # create a tmp dir for intermediate files
+        tmpdir = os.path.join(self.work_dir, 'tmp')
+        os.makedirs(tmpdir, exist_ok=True)
 
         # get needed dims from source mesh
         ds_src = xarray.open_dataset(source_file_path)
@@ -86,7 +91,7 @@ class ExtractRegion(Step):
             neonc = ds_src['nEdgesOnCell'][:].values
 
             # First grow forward to capture any adjacent ice shelf
-            print('Starting floating ice fill')
+            logger.info('Starting floating ice fill')
             keepMask = mpas_flood_fill(keepMask, floatMask, conc, neonc)
 
             # Don't grow into other regions.
@@ -94,10 +99,10 @@ class ExtractRegion(Step):
             # either has no region assigned to it OR is open ocean.
             # We also want to fill into any *adjacent* floating ice, due to
             # some funky region boundaries near ice-shelf fronts.
-            print('Starting ocean grow fill')
+            logger.info('Starting ocean grow fill')
             noRegionMask = (np.squeeze(regionCellMasks.sum(axis=1)) == 0)
             growMask = np.logical_or(noRegionMask, oceanMask)
-            print(f'sum norregion={growMask.sum()}, {growMask.shape}')
+            logger.info(f'sum norregion={growMask.sum()}, {growMask.shape}')
             keepMask = mpas_flood_fill(keepMask, growMask, conc, neonc,
                                        grow_iters=grow_iters)
 
@@ -108,7 +113,7 @@ class ExtractRegion(Step):
         dsMaskOut = xarray.Dataset(data_vars=outdata)
         # For troubleshooting, one may want to inspect the mask, so write out
         # (otherwise not necessary to save to disk)
-        write_netcdf(dsMaskOut, 'cull_mask.nc')
+        write_netcdf(dsMaskOut, os.path.join(tmpdir, 'cull_mask.nc'))
 
         # cull the mesh
         logger.info('culling and converting mesh')
@@ -116,20 +121,23 @@ class ExtractRegion(Step):
 
         # convert mesh
         ds_out = convert(ds_out, logger=logger)
-        write_netcdf(ds_out, f'{source_file_basename}_culled.nc')
+        write_netcdf(ds_out,
+                     os.path.join(tmpdir,
+                                  f'{source_file_rootname}_culled.nc'))
 
         # mark horns for culling
         logger.info('Marking horns for culling')
         args = ['mark_horns_for_culling.py', '-f',
-                f'{source_file_basename}_culled.nc']
+                os.path.join(tmpdir, f'{source_file_rootname}_culled.nc')]
         check_call(args, logger=logger)
 
         # cull again
         logger.info('culling and converting mesh')
-        ds_out = xarray.open_dataset(f'{source_file_basename}_culled.nc')
+        ds_out = xarray.open_dataset(
+            os.path.join(tmpdir, f'{source_file_rootname}_culled.nc'))
         ds_out = cull(ds_out, logger=logger)
         ds_out = convert(ds_out, logger=logger)
-        dest_mesh_only_name = 'dest_mesh_only.nc'
+        dest_mesh_only_name = os.path.join(tmpdir, 'dest_mesh_only.nc')
         write_netcdf(ds_out, dest_mesh_only_name)
 
         # set lat/lon
@@ -146,7 +154,7 @@ class ExtractRegion(Step):
             out_descriptor = MpasCellMeshDescriptor(dest_mesh_only_name,
                                                     'dst_mesh')
 
-            mapping_filename = 'map_src_to_dst_nstd.nc'
+            mapping_filename = os.path.join(tmpdir, 'map_src_to_dst_nstd.nc')
 
             logger.info(f'Creating the mapping file {mapping_filename}...')
             remapper = Remapper(in_descriptor, out_descriptor,
@@ -162,16 +170,18 @@ class ExtractRegion(Step):
 
             logger.info('Remapping mesh file...')
 
-            _remap_with_ncremap(source_file_path,
-                                f'{dest_file_name}_vars_only.nc',
-                                mapping_filename,
-                                logger)
+            _remap_with_ncremap(
+                source_file_path,
+                os.path.join(tmpdir, f'{dest_file_rootname}_vars_only.nc'),
+                mapping_filename, logger, tmpdir)
 
             # now combine the remapped variables with the mesh fields
             # that don't get remapped
             shutil.copyfile(dest_mesh_only_name, dest_file_name)
-            args = ['ncks', '-A', f'{dest_file_name}_vars_only.nc',
-                    dest_file_name]
+            args = [
+                'ncks', '-A',
+                os.path.join(tmpdir, f'{dest_file_rootname}_vars_only.nc'),
+                dest_file_name]
             check_call(args, logger=logger)
 
             logger.info('done.')
@@ -181,7 +191,7 @@ class ExtractRegion(Step):
             # create landice mesh
             logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')  # noqa
             args = ['create_landice_grid_from_generic_MPAS_grid.py',
-                    '-i', 'dest_mesh_only.nc',
+                    '-i', os.path.join(tmpdir, 'dest_mesh_only.nc'),
                     '-o', dest_file_name,
                     '-l', f'{levels}', '-v', 'glimmer',
                     '--beta', '--thermal', '--obs', '--diri']
@@ -213,14 +223,17 @@ class ExtractRegion(Step):
                 if interp_method != "ncremap":
                     sys.exit("Error: interpolating ancillary files is only "
                              "supported when interp_method=ncremap")
+                dst_file = \
+                    f'{dest_file_rootname}_{os.path.basename(extra_file)}'
                 _remap_with_ncremap(extra_file,
-                                    f'{source_file_basename}_{extra_file}',
+                                    dst_file,
                                     mapping_filename,
-                                    logger)
-                logger.info(f'Created {source_file_basename}_{extra_file}')
+                                    logger, tmpdir)
+                logger.info(f'Created {dst_file}')
 
 
-def _remap_with_ncremap(src_path, dst_file, mapping_filename, logger):
+def _remap_with_ncremap(src_path, dst_file, mapping_filename, logger,
+                        tmpdir='.'):
     """
     Remaps a file using ncremap
 
@@ -238,30 +251,34 @@ def _remap_with_ncremap(src_path, dst_file, mapping_filename, logger):
     logger
         logger object
 
+    tmpdir : str
+        temp dir to write intermediate files, optional
+
     Returns
     -------
     """
 
-    src_file_name = os.path.basename(src_path).split('.nc')[:-1][0]
+    src_file_rootname = os.path.basename(src_path).rsplit('.nc', 1)[0]
 
     # ncremap requires the spatial dimension to be the last one,
     # which MALI does not exclusively follow.  So we have to
     # permute dimensions before calling ncremap, and then permute back
     args = ['ncpdq', '-O', '-a',
             'Time,nVertInterfaces,nVertLevels,nRegions,nISMIP6OceanLayers,nEdges,nCells',  # noqa
-            src_path, f'{src_file_name}_permuted.nc']
+            src_path, os.path.join(tmpdir, f'{src_file_rootname}_permuted.nc')]
     check_call(args, logger=logger)
     args = ['ncremap', '-m', mapping_filename,
-            f'{src_file_name}_permuted.nc',
-            f'{dst_file}_permuted.nc']
+            os.path.join(tmpdir, f'{src_file_rootname}_permuted.nc'),
+            os.path.join(tmpdir, f'{dst_file}_permuted.nc')]
     check_call(args, logger=logger)
     args = ['ncpdq', '-O', '-a',
             'Time,nCells,nEdges,nVertInterfaces,nVertLevels,nRegions,nISMIP6OceanLayers',  # noqa
-            f'{dst_file}_permuted.nc',
-            f'{dst_file}_extra_var.nc']
+            os.path.join(tmpdir, f'{dst_file}_permuted.nc'),
+            os.path.join(tmpdir, f'{dst_file}_extra_var.nc')]
     check_call(args, logger=logger)
     # drop some extra vars that ncremap adds
-    ds_out = xarray.open_dataset(f'{dst_file}_extra_var.nc')
+    ds_out = xarray.open_dataset(os.path.join(tmpdir,
+                                              f'{dst_file}_extra_var.nc'))
     ds_out = ds_out.drop_vars(['lat', 'lon', 'lat_vertices',
                                'lon_vertices', 'area'])
     # drop variables on vertices or edges, which will not have been
