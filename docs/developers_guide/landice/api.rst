@@ -434,6 +434,7 @@ Landice Framework
    iceshelf_melt.calc_mean_TF
 
    mesh.gridded_flood_fill
+   mesh.mpas_flood_fill
    mesh.set_rectangular_geom_points_and_edges
    mesh.set_cell_width
    mesh.get_dist_to_edge_and_gl

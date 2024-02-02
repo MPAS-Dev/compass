@@ -13,13 +13,27 @@ subdomain_extractor
 -------------------
 
 ``landice/mesh_modifications/subdomain_extractor`` extracts a subdomain from a
-larger domain.  The extraction is defined by a specified region in a
-regionCellMask file.  In the future, this test could be extended to optionally
-use a GeoJSON file for defining the culling mask instead.
-The user should modify the default config for their application.
+larger domain.  The region to be extracted can be defined be either a region_mask
+file with a region number or with a geojson file.
 
-In the future, the ability to apply the extractor to forcing files as well may
-be added.
+If using a region_mask file, there is the option of extending the mask into the open
+ocean by a specified number of cells.  This was implemented because many region
+masks end at the present-day ice front, which would leave no gutter on the
+subdomain mesh.  It is recommended to first try the subdomain extraction without
+the ocean extension, and if results are clipped too close to the ice front, then
+try adding an ocean buffer.  If results with the ocean buffer do not achieve
+the desired effect, one should switch to the geojson method and manually create
+or modify the region, e.g. in QGIS.
+
+There are two methods available for performing the remapping: using ncremap
+or standard MALI interpolation methods.  The standard MALI interpolation method
+is faster and potentially less fragile, as it relies on fewer underlying tools.
+However, the ncremap option provides the ability to additionally remap up to five
+ancillary files (e.g. SMB, TF, basal melt param, von Mises parameter files).
+The MALI interpolation method can likely be run quickly on a login node, but the
+ncremap method will likely need a compute node.
+
+The user should modify the default config for their application.
 
 config options
 ~~~~~~~~~~~~~~
@@ -35,10 +49,17 @@ the test case.
     # path to file from which to extract subdomain
     source_file = TO BE SUPPLIED BY USER
 
-    # path to region mask file for source_file
+    # method for defining region
+    # one of 'region_mask_file' or 'geojson'
+    region_definition = region_mask_file
+
+    # path to geojson file to be used if region_definition='geojson'
+    geojson_file = TO BE SUPPLIED BY USER
+
+    # path to region mask file for if region_definition='region_mask_file'
     region_mask_file = TO BE SUPPLIED BY USER
 
-    # region number to extract
+    # region number to extract if region_definition='region_mask_file'
     region_number = 1
 
     # filename for the subdomain to be generated
@@ -61,3 +82,22 @@ the test case.
     # Should be equal to approximately the number of ocean buffer cells in the
     # source_file
     grow_iters = 15
+
+    # method for performing interpolation
+    # 'ncremap' uses pyremap to call ESMF_RegridWeightGen to generate a
+    # nstd weight file and then uses ncremap to perform remapping.
+    # This method supports interpolating ancillary files (below)
+    # but likely needs to be run on a compute node and is more fragile.
+    # 'mali_interp' uses the MALI interpolation script interpolate_to_mpasli_grid.py
+    # This method does not support ancillary files but may be more robust
+    # and can likely be run quickly on a login node.
+    interp_method = ncremap
+
+    # optional forcing files that could also be interpolated
+    # e.g. SMB or TF files
+    # interpolating these files requires using the 'ncremap' interp_method
+    extra_file1 = None
+    extra_file2 = None
+    extra_file3 = None
+    extra_file4 = None
+    extra_file5 = None
