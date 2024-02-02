@@ -4,6 +4,7 @@ from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 from mpas_tools.mesh.conversion import convert, cull
 
+from compass.landice.mesh import mpas_flood_fill
 from compass.model import make_graph_file
 from compass.step import Step
 
@@ -59,12 +60,7 @@ class ExtractRegion(Step):
         keepMask = regionCellMasks[:, region_number - 1]
         if extend_mesh:
             # Grow the mask into the ocean, because the standard regions
-            # may end at the ice terminus.  Don't grow into other regions.
-            # The area to grow into is region adjacent to the domain that
-            # either has no region assigned to it OR is open ocean.
-            # We also want to fill into any *adjacent* floating ice, due to
-            # some funky region boundaries near ice-shelf fronts.
-            noRegionMask = (np.squeeze(regionCellMasks.sum(axis=1)) == 0)
+            # may end at the ice terminus.
             thickness = dsMesh['thickness'][:].values
             bed = dsMesh['bedTopography'][:].values
             oceanMask = np.squeeze((thickness[0, :] == 0.0) * (bed[0, :] <=
@@ -72,45 +68,24 @@ class ExtractRegion(Step):
             floatMask = np.squeeze(((thickness[0, :] * 910.0 / 1028.0 +
                                      bed[0, :]) < 0.0) *
                                    (thickness[0, :] > 0))
-            growMask = np.logical_or(noRegionMask, oceanMask)
-            print(f'sum norregion={growMask.sum()}, {growMask.shape}')
             conc = dsMesh['cellsOnCell'][:].values
             neonc = dsMesh['nEdgesOnCell'][:].values
 
             # First grow forward to capture any adjacent ice shelf
             print('Starting floating ice fill')
-            iter = 0
-            nMaskCells = keepMask.sum()
-            while True:
-                maskInd = np.nonzero(keepMask == 1)[0]
-                print(f'iter={iter}, keepMask size={keepMask.sum()}')
-                newKeepMask = keepMask.copy()
-                for iCell in maskInd:
-                    neighs = conc[iCell, :neonc[iCell]] - 1
-                    neighs = neighs[neighs >= 0]  # drop garbage cell
-                    for jCell in neighs:
-                        if floatMask[jCell] == 1:
-                            newKeepMask[jCell] = 1
-                keepMask = newKeepMask.copy()
-                nMaskCellsNew = keepMask.sum()
-                if nMaskCellsNew == nMaskCells:
-                    break
-                nMaskCells = nMaskCellsNew
-                iter += 1
+            keepMask = mpas_flood_fill(keepMask, floatMask, conc, neonc)
 
+            # Don't grow into other regions.
+            # The area to grow into is region adjacent to the domain that
+            # either has no region assigned to it OR is open ocean.
+            # We also want to fill into any *adjacent* floating ice, due to
+            # some funky region boundaries near ice-shelf fronts.
             print('Starting ocean grow fill')
-            # find cells at current ocean bdy
-            for iter in range(grow_iters):
-                maskInd = np.nonzero(keepMask == 1)[0]
-                print(f'iter={iter}, keepMask size={keepMask.sum()}')
-                newKeepMask = keepMask.copy()
-                for iCell in maskInd:
-                    neighs = conc[iCell, :neonc[iCell]] - 1
-                    neighs = neighs[neighs >= 0]  # drop garbage cell
-                    for jCell in neighs:
-                        if growMask[jCell] == 1:
-                            newKeepMask[jCell] = 1
-                keepMask = newKeepMask.copy()
+            noRegionMask = (np.squeeze(regionCellMasks.sum(axis=1)) == 0)
+            growMask = np.logical_or(noRegionMask, oceanMask)
+            print(f'sum norregion={growMask.sum()}, {growMask.shape}')
+            keepMask = mpas_flood_fill(keepMask, growMask, conc, neonc,
+                                       grow_iters=grow_iters)
 
         # To call 'cull' with an inverse mask, we need a dataset with the
         # mask saved to the field regionCellMasks

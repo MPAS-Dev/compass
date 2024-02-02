@@ -1,3 +1,4 @@
+import sys
 import time
 
 import jigsawpy
@@ -10,6 +11,61 @@ from mpas_tools.logging import check_call
 from mpas_tools.mesh.conversion import convert, cull
 from mpas_tools.mesh.creation import build_planar_mesh
 from netCDF4 import Dataset
+
+
+def mpas_flood_fill(seed_mask, grow_mask, cellsOnCell, nEdgesOnCell,
+                    grow_iters=sys.maxsize):
+    """
+    Flood-fill for mpas meshes using mpas cells.
+
+    Parameters
+    ----------
+    seed_mask : numpy.ndarray
+        Integer array of locations from which to flood fill
+        0 = invalid, 1 = valid
+
+    grow_mask : numpy.ndarray
+        Integer array of locations valid for growing into
+        0 = invalid, 1 = valid
+
+    cellsOnCell : numpy.ndarray
+        cellsOnCell array from the mpas mesh
+
+    nEdgesOnCell : numpy.ndarray
+        nEdgesOnCell array from the mpas mesh
+
+    grow_iters : integer
+        optional argument limiting the number of iterations
+        over which to extend the mask
+
+    Returns
+    -------
+    keep_mask : numpy.ndarray
+        mask calculated by the flood fill routine,
+        where cells connected to seed_mask
+        are 1 and everything else is 0.
+    """
+
+    iter = 0
+    keep_mask = seed_mask.copy()
+    n_mask_cells = keep_mask.sum()
+    for iter in range(grow_iters):
+        mask_ind = np.nonzero(keep_mask == 1)[0]
+        print(f'iter={iter}, keep_mask size={keep_mask.sum()}')
+        new_keep_mask = keep_mask.copy()
+        for iCell in mask_ind:
+            neighs = cellsOnCell[iCell, :nEdgesOnCell[iCell]] - 1
+            neighs = neighs[neighs >= 0]  # drop garbage cell
+            for jCell in neighs:
+                if grow_mask[jCell] == 1:
+                    new_keep_mask[jCell] = 1
+        keep_mask = new_keep_mask.copy()
+        n_mask_cells_new = keep_mask.sum()
+        if n_mask_cells_new == n_mask_cells:
+            break
+        n_mask_cells = n_mask_cells_new
+        iter += 1
+    return keep_mask
 
 
 def gridded_flood_fill(field, iStart=None, jStart=None):
