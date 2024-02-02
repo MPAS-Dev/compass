@@ -1,3 +1,4 @@
+import os
 import shutil
 import sys
 
@@ -45,7 +46,8 @@ class ExtractRegion(Step):
         config = self.config
         section = config['subdomain']
         source_file_path = section.get('source_file')
-        source_file_name = source_file_path.split('/')[-1]
+        source_file_name = os.path.basename(source_file_path)
+        source_file_basename = source_file_name.split('.nc')[:-1][0]
         region_mask_file = section.get('region_mask_file')
         region_number = section.getint('region_number')
         dest_file_name = section.get('dest_file_name')
@@ -53,6 +55,11 @@ class ExtractRegion(Step):
         extend_mesh = section.getboolean('extend_ocean_buffer')
         grow_iters = section.getint('grow_iters')
         interp_method = section.get('interp_method')
+        extra_file1 = section.get('extra_file1')
+        extra_file2 = section.get('extra_file2')
+        extra_file3 = section.get('extra_file3')
+        extra_file4 = section.get('extra_file4')
+        extra_file5 = section.get('extra_file5')
 
         # get needed dims from source mesh
         ds_src = xarray.open_dataset(source_file_path)
@@ -109,17 +116,17 @@ class ExtractRegion(Step):
 
         # convert mesh
         ds_out = convert(ds_out, logger=logger)
-        write_netcdf(ds_out, f'{source_file_name}_culled.nc')
+        write_netcdf(ds_out, f'{source_file_basename}_culled.nc')
 
         # mark horns for culling
         logger.info('Marking horns for culling')
         args = ['mark_horns_for_culling.py', '-f',
-                f'{source_file_name}_culled.nc']
+                f'{source_file_basename}_culled.nc']
         check_call(args, logger=logger)
 
         # cull again
         logger.info('culling and converting mesh')
-        ds_out = xarray.open_dataset(f'{source_file_name}_culled.nc')
+        ds_out = xarray.open_dataset(f'{source_file_basename}_culled.nc')
         ds_out = cull(ds_out, logger=logger)
         ds_out = convert(ds_out, logger=logger)
         dest_mesh_only_name = 'dest_mesh_only.nc'
@@ -154,34 +161,11 @@ class ExtractRegion(Step):
             logger.info('done.')
 
             logger.info('Remapping mesh file...')
-            # ncremap requires the spatial dimension to be the last one,
-            # which MALI does not exclusively follow.  So we have to
-            # permute dimensions before calling ncremap, and then permute back
-            args = ['ncpdq', '-O', '-a',
-                    'Time,nVertInterfaces,nVertLevels,nRegions,nISMIP6OceanLayers,nEdges,nCells',  # noqa
-                    source_file_path, f'{source_file_name}_permuted.nc']
-            check_call(args, logger=logger)
-            args = ['ncremap', '-m', mapping_filename,
-                    f'{source_file_name}_permuted.nc',
-                    f'{dest_file_name}_permuted.nc']
-            check_call(args, logger=logger)
-            args = ['ncpdq', '-O', '-a',
-                    'Time,nCells,nEdges,nVertInterfaces,nVertLevels,nRegions,nISMIP6OceanLayers',  # noqa
-                    f'{dest_file_name}_permuted.nc',
-                    f'{dest_file_name}_extra_var.nc']
-            check_call(args, logger=logger)
-            # drop some extra vars that ncremap adds
-            ds_out = xarray.open_dataset(f'{dest_file_name}_extra_var.nc')
-            ds_out = ds_out.drop_vars(['lat', 'lon', 'lat_vertices',
-                                       'lon_vertices', 'area'])
-            # drop variables on vertices or edges, which will not have been
-            # remapped properly
-            drop_list = []
-            for varname, da in ds_out.data_vars.items():
-                if 'nVertices' in da.dims or 'nEdges' in da.dims:
-                    drop_list.append(varname)
-            ds_out = ds_out.drop_vars(drop_list)
-            write_netcdf(ds_out, f'{dest_file_name}_vars_only.nc')
+
+            _remap_with_ncremap(source_file_path,
+                                f'{dest_file_name}_vars_only.nc',
+                                mapping_filename,
+                                logger)
 
             # now combine the remapped variables with the mesh fields
             # that don't get remapped
@@ -191,12 +175,13 @@ class ExtractRegion(Step):
             check_call(args, logger=logger)
 
             logger.info('done.')
+            logger.info(f'Created {dest_file_name}')
 
         elif interp_method == 'mali_interp':
             # create landice mesh
             logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')  # noqa
             args = ['create_landice_grid_from_generic_MPAS_grid.py',
-                    '-i', f'{source_file_name}_culled_dehorned.nc',
+                    '-i', 'dest_mesh_only.nc',
                     '-o', dest_file_name,
                     '-l', f'{levels}', '-v', 'glimmer',
                     '--beta', '--thermal', '--obs', '--diri']
@@ -210,7 +195,7 @@ class ExtractRegion(Step):
                     '-d', dest_file_name, '-m', 'n']
             check_call(args, logger=logger)
         else:
-            sys.exit(f"Unknown interp_method of {interp_method}")
+            sys.exit(f"Error: Unknown interp_method of {interp_method}")
 
         # mark Dirichlet boundaries
         logger.info('Marking domain boundaries dirichlet')
@@ -221,3 +206,69 @@ class ExtractRegion(Step):
         logger.info('creating graph.info')
         make_graph_file(mesh_filename=dest_file_name,
                         graph_filename='graph.info')
+
+        for extra_file in [extra_file1, extra_file2, extra_file3,
+                           extra_file4, extra_file5]:
+            if extra_file != "None":
+                if interp_method != "ncremap":
+                    sys.exit("Error: interpolating ancillary files is only "
+                             "supported when interp_method=ncremap")
+                _remap_with_ncremap(extra_file,
+                                    f'{source_file_basename}_{extra_file}',
+                                    mapping_filename,
+                                    logger)
+                logger.info(f'Created {source_file_basename}_{extra_file}')
+
+
+def _remap_with_ncremap(src_path, dst_file, mapping_filename, logger):
+    """
+    Remaps a file using ncremap
+
+    Parameters
+    ----------
+    src_path : str
+        path to source file
+
+    dst_file : str
+        name of the destination file that should be created
+
+    mapping_filename : str
+        name of already generated mapping file
+
+    logger
+        logger object
+
+    Returns
+    -------
+    """
+
+    src_file_name = os.path.basename(src_path).split('.nc')[:-1][0]
+
+    # ncremap requires the spatial dimension to be the last one,
+    # which MALI does not exclusively follow.  So we have to
+    # permute dimensions before calling ncremap, and then permute back
+    args = ['ncpdq', '-O', '-a',
+            'Time,nVertInterfaces,nVertLevels,nRegions,nISMIP6OceanLayers,nEdges,nCells',  # noqa
+            src_path, f'{src_file_name}_permuted.nc']
+    check_call(args, logger=logger)
+    args = ['ncremap', '-m', mapping_filename,
+            f'{src_file_name}_permuted.nc',
+            f'{dst_file}_permuted.nc']
+    check_call(args, logger=logger)
+    args = ['ncpdq', '-O', '-a',
+            'Time,nCells,nEdges,nVertInterfaces,nVertLevels,nRegions,nISMIP6OceanLayers',  # noqa
+            f'{dst_file}_permuted.nc',
+            f'{dst_file}_extra_var.nc']
+    check_call(args, logger=logger)
+    # drop some extra vars that ncremap adds
+    ds_out = xarray.open_dataset(f'{dst_file}_extra_var.nc')
+    ds_out = ds_out.drop_vars(['lat', 'lon', 'lat_vertices',
+                               'lon_vertices', 'area'])
+    # drop variables on vertices or edges, which will not have been
+    # remapped properly
+    drop_list = []
+    for varname, da in ds_out.data_vars.items():
+        if 'nVertices' in da.dims or 'nEdges' in da.dims:
+            drop_list.append(varname)
+    ds_out = ds_out.drop_vars(drop_list)
+    write_netcdf(ds_out, dst_file)
