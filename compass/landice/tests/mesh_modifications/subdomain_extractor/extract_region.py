@@ -2,6 +2,7 @@ import os
 import shutil
 import sys
 
+import mpas_tools
 import numpy as np
 import xarray
 from mpas_tools.io import write_netcdf
@@ -48,6 +49,8 @@ class ExtractRegion(Step):
         source_file_path = section.get('source_file')
         source_file_name = os.path.basename(source_file_path)
         source_file_rootname = source_file_name.rsplit('.nc', 1)[0]
+        region_definition = section.get('region_definition')
+        geojson_file = section.get('geojson_file')
         region_mask_file = section.get('region_mask_file')
         region_number = section.getint('region_number')
         dest_file_name = section.get('dest_file_name')
@@ -72,48 +75,62 @@ class ExtractRegion(Step):
         levels = ds_src.sizes['nVertLevels']
 
         # create cull mask
-        logger.info('creating cull mask file')
-        dsMask = xarray.open_dataset(region_mask_file)
-        regionCellMasks = dsMask['regionCellMasks'][:].values
-        # get region mask for the requested region
-        keepMask = regionCellMasks[:, region_number - 1]
-        if extend_mesh:
-            # Grow the mask into the ocean, because the standard regions
-            # may end at the ice terminus.
-            thickness = ds_src['thickness'][:].values
-            bed = ds_src['bedTopography'][:].values
-            oceanMask = np.squeeze((thickness[0, :] == 0.0) * (bed[0, :] <=
-                                                               0.0))
-            floatMask = np.squeeze(((thickness[0, :] * 910.0 / 1028.0 +
-                                     bed[0, :]) < 0.0) *
-                                   (thickness[0, :] > 0))
-            conc = ds_src['cellsOnCell'][:].values
-            neonc = ds_src['nEdgesOnCell'][:].values
+        if region_definition == 'geojson':
+            args = ['compute_mpas_region_masks',
+                    '-m', source_file_path,
+                    '-o', 'cull_mask.nc',
+                    '-g', geojson_file,
+                    '--process_count', f'{self.ntasks}',
+                    '--format', mpas_tools.io.default_format,
+                    '--engine', mpas_tools.io.default_engine]
+            check_call(args, logger=logger)
+            dsMaskOut = xarray.open_dataset('cull_mask.nc')
 
-            # First grow forward to capture any adjacent ice shelf
-            logger.info('Starting floating ice fill')
-            keepMask = mpas_flood_fill(keepMask, floatMask, conc, neonc)
+        elif region_definition == 'region_mask_file':
+            logger.info('creating cull mask file')
+            dsMask = xarray.open_dataset(region_mask_file)
+            regionCellMasks = dsMask['regionCellMasks'][:].values
+            # get region mask for the requested region
+            keepMask = regionCellMasks[:, region_number - 1]
+            if extend_mesh:
+                # Grow the mask into the ocean, because the standard regions
+                # may end at the ice terminus.
+                thickness = ds_src['thickness'][:].values
+                bed = ds_src['bedTopography'][:].values
+                oceanMask = np.squeeze((thickness[0, :] == 0.0) * (bed[0, :] <=
+                                                                   0.0))
+                floatMask = np.squeeze(((thickness[0, :] * 910.0 / 1028.0 +
+                                         bed[0, :]) < 0.0) *
+                                       (thickness[0, :] > 0))
+                conc = ds_src['cellsOnCell'][:].values
+                neonc = ds_src['nEdgesOnCell'][:].values
 
-            # Don't grow into other regions.
-            # The area to grow into is region adjacent to the domain that
-            # either has no region assigned to it OR is open ocean.
-            # We also want to fill into any *adjacent* floating ice, due to
-            # some funky region boundaries near ice-shelf fronts.
-            logger.info('Starting ocean grow fill')
-            noRegionMask = (np.squeeze(regionCellMasks.sum(axis=1)) == 0)
-            growMask = np.logical_or(noRegionMask, oceanMask)
-            logger.info(f'sum norregion={growMask.sum()}, {growMask.shape}')
-            keepMask = mpas_flood_fill(keepMask, growMask, conc, neonc,
-                                       grow_iters=grow_iters)
+                # First grow forward to capture any adjacent ice shelf
+                logger.info('Starting floating ice fill')
+                keepMask = mpas_flood_fill(keepMask, floatMask, conc, neonc)
 
-        # To call 'cull' with an inverse mask, we need a dataset with the
-        # mask saved to the field regionCellMasks
-        outdata = {'regionCellMasks': (('nCells', 'nRegions'),
-                                       keepMask.reshape(nCells, 1))}
-        dsMaskOut = xarray.Dataset(data_vars=outdata)
-        # For troubleshooting, one may want to inspect the mask, so write out
-        # (otherwise not necessary to save to disk)
-        write_netcdf(dsMaskOut, os.path.join(tmpdir, 'cull_mask.nc'))
+                # Don't grow into other regions.
+                # The area to grow into is region adjacent to the domain that
+                # either has no region assigned to it OR is open ocean.
+                # We also want to fill into any *adjacent* floating ice, due to
+                # some funky region boundaries near ice-shelf fronts.
+                logger.info('Starting ocean grow fill')
+                noRegionMask = (np.squeeze(regionCellMasks.sum(axis=1)) == 0)
+                growMask = np.logical_or(noRegionMask, oceanMask)
+                keepMask = mpas_flood_fill(keepMask, growMask, conc, neonc,
+                                           grow_iters=grow_iters)
+
+            # To call 'cull' with an inverse mask, we need a dataset with the
+            # mask saved to the field regionCellMasks
+            outdata = {'regionCellMasks': (('nCells', 'nRegions'),
+                                           keepMask.reshape(nCells, 1))}
+            dsMaskOut = xarray.Dataset(data_vars=outdata)
+            # For troubleshooting, one may want to inspect the mask,
+            # so write out (otherwise not necessary to save to disk)
+            write_netcdf(dsMaskOut, os.path.join(tmpdir, 'cull_mask.nc'))
+        else:
+            sys.exit('ERROR: unknown value for region_definition='
+                     f'{region_definition}')
 
         # cull the mesh
         logger.info('culling and converting mesh')
