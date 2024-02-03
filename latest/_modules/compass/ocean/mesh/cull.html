@@ -289,12 +289,19 @@
         <span class="n">convert_to_cdf5</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span>
                                             <span class="s1">&#39;convert_culled_mesh_to_cdf5&#39;</span><span class="p">)</span>
 
+        <span class="n">latitude_threshold</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span>
+                                             <span class="s1">&#39;latitude_threshold&#39;</span><span class="p">)</span>
+
+        <span class="n">sweep_count</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;sweep_count&#39;</span><span class="p">)</span>
+
         <span class="n">cull_mesh</span><span class="p">(</span><span class="n">with_critical_passages</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
                   <span class="n">use_progress_bar</span><span class="o">=</span><span class="n">use_progress_bar</span><span class="p">,</span>
                   <span class="n">preserve_floodplain</span><span class="o">=</span><span class="n">preserve_floodplain</span><span class="p">,</span>
                   <span class="n">with_cavities</span><span class="o">=</span><span class="n">with_ice_shelf_cavities</span><span class="p">,</span>
                   <span class="n">process_count</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span><span class="p">,</span>
-                  <span class="n">convert_to_cdf5</span><span class="o">=</span><span class="n">convert_to_cdf5</span><span class="p">)</span>
+                  <span class="n">convert_to_cdf5</span><span class="o">=</span><span class="n">convert_to_cdf5</span><span class="p">,</span>
+                  <span class="n">latitude_threshold</span><span class="o">=</span><span class="n">latitude_threshold</span><span class="p">,</span>
+                  <span class="n">sweep_count</span><span class="o">=</span><span class="n">sweep_count</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">do_inject_bathymetry</span><span class="p">:</span>
             <span class="n">inject_bathymetry</span><span class="p">(</span><span class="n">mesh_file</span><span class="o">=</span><span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">)</span></div>
@@ -307,7 +314,8 @@
 <span class="k">def</span> <span class="nf">cull_mesh</span><span class="p">(</span><span class="n">with_cavities</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">with_critical_passages</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
               <span class="n">custom_critical_passages</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">custom_land_blockages</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
               <span class="n">preserve_floodplain</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_progress_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-              <span class="n">process_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">convert_to_cdf5</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+              <span class="n">process_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">convert_to_cdf5</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">latitude_threshold</span><span class="o">=</span><span class="mf">43.</span><span class="p">,</span>
+              <span class="n">sweep_count</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    First step of initializing the global ocean:</span>
 
@@ -368,22 +376,30 @@
 <span class="sd">    process_count : int, optional</span>
 <span class="sd">        The number of cores to use to create masks (``None`` to use all</span>
 <span class="sd">        available cores)</span>
+
 <span class="sd">    convert_to_cdf5 : bool, optional</span>
 <span class="sd">        Convert the culled mesh to PNetCDF CDF-5 format</span>
+
+<span class="sd">    latitude_threshold : float, optional</span>
+<span class="sd">        Minimum latitude, in degrees, for masking land-locked cells</span>
+
+<span class="sd">    sweep_count : int, optional</span>
+<span class="sd">        Maximum number of sweeps to search for land-locked cells</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">LoggingContext</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span> <span class="k">as</span> <span class="n">logger</span><span class="p">:</span>
         <span class="n">_cull_mesh_with_logging</span><span class="p">(</span>
             <span class="n">logger</span><span class="p">,</span> <span class="n">with_cavities</span><span class="p">,</span> <span class="n">with_critical_passages</span><span class="p">,</span>
             <span class="n">custom_critical_passages</span><span class="p">,</span> <span class="n">custom_land_blockages</span><span class="p">,</span>
             <span class="n">preserve_floodplain</span><span class="p">,</span> <span class="n">use_progress_bar</span><span class="p">,</span> <span class="n">process_count</span><span class="p">,</span>
-            <span class="n">convert_to_cdf5</span><span class="p">)</span></div>
+            <span class="n">convert_to_cdf5</span><span class="p">,</span> <span class="n">latitude_threshold</span><span class="p">,</span> <span class="n">sweep_count</span><span class="p">)</span></div>
 
 
 
 <span class="k">def</span> <span class="nf">_cull_mesh_with_logging</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">with_cavities</span><span class="p">,</span> <span class="n">with_critical_passages</span><span class="p">,</span>
                             <span class="n">custom_critical_passages</span><span class="p">,</span> <span class="n">custom_land_blockages</span><span class="p">,</span>
                             <span class="n">preserve_floodplain</span><span class="p">,</span> <span class="n">use_progress_bar</span><span class="p">,</span>
-                            <span class="n">process_count</span><span class="p">,</span> <span class="n">convert_to_cdf5</span><span class="p">):</span>
+                            <span class="n">process_count</span><span class="p">,</span> <span class="n">convert_to_cdf5</span><span class="p">,</span> <span class="n">latitude_threshold</span><span class="p">,</span>
+                            <span class="n">sweep_count</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Cull the mesh once the logger is defined for sure &quot;&quot;&quot;</span>
 
     <span class="n">critical_passages</span> <span class="o">=</span> <span class="n">with_critical_passages</span> <span class="ow">or</span> \
@@ -414,9 +430,9 @@
 
     <span class="n">dsBaseMesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
     <span class="n">dsLandMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;land_mask.nc&#39;</span><span class="p">)</span>
-    <span class="n">dsLandMask</span> <span class="o">=</span> <span class="n">add_land_locked_cells_to_mask</span><span class="p">(</span><span class="n">dsLandMask</span><span class="p">,</span> <span class="n">dsBaseMesh</span><span class="p">,</span>
-                                               <span class="n">latitude_threshold</span><span class="o">=</span><span class="mf">43.0</span><span class="p">,</span>
-                                               <span class="n">nSweeps</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">dsLandMask</span> <span class="o">=</span> <span class="n">add_land_locked_cells_to_mask</span><span class="p">(</span>
+        <span class="n">dsLandMask</span><span class="p">,</span> <span class="n">dsBaseMesh</span><span class="p">,</span> <span class="n">latitude_threshold</span><span class="o">=</span><span class="n">latitude_threshold</span><span class="p">,</span>
+        <span class="n">nSweeps</span><span class="o">=</span><span class="n">sweep_count</span><span class="p">)</span>
     <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsLandMask</span><span class="p">,</span> <span class="s1">&#39;land_mask_with_land_locked_cells.nc&#39;</span><span class="p">)</span>
 
     <span class="c1"># create seed points for a flood fill of the ocean</span>
@@ -552,6 +568,10 @@
                                     <span class="n">mask_filename</span><span class="o">=</span><span class="s1">&#39;ice_coverage.nc&#39;</span><span class="p">)</span>
 
         <span class="n">dsMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;ice_coverage.nc&#39;</span><span class="p">)</span>
+
+        <span class="n">dsMask</span> <span class="o">=</span> <span class="n">add_land_locked_cells_to_mask</span><span class="p">(</span>
+            <span class="n">dsMask</span><span class="p">,</span> <span class="n">dsCulledMesh</span><span class="p">,</span> <span class="n">latitude_threshold</span><span class="o">=</span><span class="n">latitude_threshold</span><span class="p">,</span>
+            <span class="n">nSweeps</span><span class="o">=</span><span class="n">sweep_count</span><span class="p">)</span>
 
         <span class="n">landIceMask</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">regionCellMasks</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nRegions</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">dsLandIceMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
