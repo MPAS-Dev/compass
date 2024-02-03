@@ -17,12 +17,16 @@ from compass.landice.ais_observations import ais_basin_info
 # --------------
 # general settings
 # --------------
-target_year = 1.0  # model year from start at which to calculate statistics
-label_runs = False
+target_year = 50.0  # model year from start at which to calculate statistics
+# model year from start defining start of time interval over which to
+# calculate rates of change
+start_year_rate = 0.0
+label_runs = True
 filter_runs = False
 plot_time_series = True
-plot_single_param_sensitivies = True
-plot_pairwise_param_sensitivities = True
+plot_single_param_sensitivies = False
+plot_pairwise_param_sensitivities = False
+plot_qoi_histograms = True
 plot_maps = False
 lw = 0.5  # linewidth for ensemble plots
 
@@ -66,15 +70,27 @@ qoi_info = {
     'VAF change': {
         'title': f'VAF change at year {target_year}',
         'units': 'Gt'},
+    'VAF change rate': {
+        'title': f'VAF change rate between year {start_year_rate} and {target_year}',  # noqa
+        'units': 'Gt/yr'},
     'total area change': {
         'title': f'Total area change at year {target_year}',
         'units': 'km$^2$'},
+    'total area change rate': {
+        'title': f'Total area change rate between year {start_year_rate} and {target_year}',  # noqa
+        'units': 'km$^2$/yr'},
     'grd area change': {
         'title': f'Grounded area change at year {target_year}',
         'units': 'km$^2$'},
+    'grd area change rate': {
+        'title': f'Grounded area change rate between year {start_year_rate} and {target_year}',  # noqa
+        'units': 'km$^2$/yr'},
     'grd vol change': {
         'title': f'Grounded vol change at year {target_year}',
         'units': 'Gt'},
+    'grd vol change rate': {
+        'title': f'Grounded vol change rate between year {start_year_rate} and {target_year}',  # noqa
+        'units': 'Gt/yr'},
     'GL flux': {
         'title': f'Grounding line flux at year {target_year}',
         'units': 'Gt/yr'},
@@ -93,6 +109,7 @@ qoi_info = {
         'title': f'Speed error over '
                  f'grounded ice at year {target_year}',
         'units': 'std. devs.'}}
+n_qoi = len(qoi_info)
 
 # Initialize some common attributes to be set later
 for qoi in qoi_info:
@@ -324,13 +341,28 @@ for idx, run in enumerate(runs):
         if len(indices) > 0:
             n_at_target_yr += 1
             ii = indices[0]
-            print(f'{run} using year {years[ii]}')
+            jj = np.nonzero(years >= start_year_rate)[0][0]
+            print(f'{run} using year {years[ii]}. '
+                  f'Using start year for rates of {years[jj]}. '
+                  f'Max year is {years[-1]}.')
+
+            # find index to start year of rate calculations
+            rate_dt = years[ii] - years[jj]
+
             qoi_info['VAF change']['values'][idx] = VAF[ii] - VAF[0]
+            qoi_info['VAF change rate']['values'][idx] = \
+                (VAF[ii] - VAF[jj]) / rate_dt
             qoi_info['grd vol change']['values'][idx] = grdVol[ii] - grdVol[0]
+            qoi_info['grd vol change rate']['values'][idx] = \
+                (grdVol[ii] - grdVol[jj]) / rate_dt
             qoi_info['grd area change']['values'][idx] = (grdArea[ii] -
                                                           grdArea[0])
+            qoi_info['grd area change rate']['values'][idx] = \
+                (grdArea[ii] - grdArea[jj]) / rate_dt
             qoi_info['total area change']['values'][idx] = (iceArea[ii] -
                                                             iceArea[0])
+            qoi_info['total area change rate']['values'][idx] = \
+                (iceArea[ii] - iceArea[jj]) / rate_dt
             qoi_info['GL flux']['values'][idx] = groundingLineFlux[ii]
             qoi_info['melt flux']['values'][idx] = BMB[ii]
 
@@ -390,8 +422,14 @@ for idx, run in enumerate(runs):
             # plot 1
             ax_ts_vaf.plot(years, VAF - VAF[0], linewidth=lw, color=col,
                            alpha=alph)
+            if label_runs:
+                ax_ts_vaf.annotate(run, (years[-1], VAF[-1] - VAF[0]),
+                                   fontsize=6)
             ax_ts_grvol.plot(years, grdVol - grdVol[0], linewidth=lw,
                              color=col, alpha=alph)
+            if label_runs:
+                ax_ts_grvol.annotate(run, (years[-1], grdVol[-1] - grdVol[0]),
+                                     fontsize=6)
             # ignore first entry which is 0
             ax_ts_glf.plot(years[1:], groundingLineFlux[1:], linewidth=lw,
                            color=col, alpha=alph)
@@ -405,8 +443,15 @@ for idx, run in enumerate(runs):
             # plot 2
             ax_ts_ta.plot(years, totalArea - totalArea[0], linewidth=lw,
                           color=col, alpha=alph)
+            if label_runs:
+                ax_ts_ta.annotate(run,
+                                  (years[-1], totalArea[-1] - totalArea[0]),
+                                  fontsize=6)
             ax_ts_ga.plot(years, grdArea - grdArea[0], linewidth=lw,
                           color=col, alpha=alph)
+            if label_runs:
+                ax_ts_ga.annotate(run, (years[-1], grdArea[-1] - grdArea[0]),
+                                  fontsize=6)
             ax_ts_fa.plot(years, fltArea, linewidth=lw, color=col, alpha=alph)
             # ignore first entry which is 0
             ax_ts_bmb.plot(years[1:], BMB[1:], linewidth=lw,
@@ -548,8 +593,8 @@ if plot_single_param_sensitivies:
         if param_info[param]['active']:
             fig = plt.figure(fig_offset + fig_num, figsize=(13, 8),
                              facecolor='w')
-            nrow = 3
-            ncol = 3
+            ncol = int(np.ceil(n_qoi**0.5))
+            nrow = int(np.ceil(n_qoi / ncol))
             fig.suptitle(f'{param} sensitivities')
             # create subplot for each QOI
             n_sub = 1
@@ -593,8 +638,8 @@ if plot_pairwise_param_sensitivities:
                 if count2 > count1 and param_info[param2]['active']:
                     fig = plt.figure(fig_offset + fig_num, figsize=(13, 8),
                                      facecolor='w')
-                    nrow = 3
-                    ncol = 3
+                    ncol = int(np.ceil(n_qoi**0.5))
+                    nrow = int(np.ceil(n_qoi / ncol))
                     fig.suptitle(f'{param1} vs. {param2} sensitivities')
                     # create subplot for each QOI
                     n_sub = 1
@@ -639,5 +684,27 @@ if plot_pairwise_param_sensitivities:
                     fig.savefig(
                         f'figure_pairwise_sensitivity_{param1}_{param2}.png')
                     fig_num += 1
+
+# --------------
+# QOI histograms
+# --------------
+
+if plot_qoi_histograms:
+    print("Plotting QOI histograms")
+    fig = plt.figure(300, figsize=(13, 8), facecolor='w')
+    fig.suptitle('QOI histograms')
+    ncol = int(np.ceil(n_qoi**0.5))
+    nrow = int(np.ceil(n_qoi / ncol))
+    n_sub = 0
+    for qoi in qoi_info:
+        n_sub += 1
+        ax = fig.add_subplot(nrow, ncol, n_sub)
+        plt.title(qoi_info[qoi]['title'])
+        plt.xlabel(f'{qoi} ({qoi_info[qoi]["units"]})')
+        plt.ylabel('count')
+        qvalues = qoi_info[qoi]['values']
+        ax.hist(qvalues)
+    fig.tight_layout()
+    fig.savefig('figure_qoi_histograms.png')
 
 plt.show()
