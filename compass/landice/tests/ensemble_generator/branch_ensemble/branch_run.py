@@ -113,16 +113,15 @@ class BranchRun(Step):
                     self.work_dir)
 
         # set up namelist
-        options = {'config_do_restart': '.true.',
-                   'config_start_time': "'file'",
-                   'config_stop_time': "'2300-01-01_00:00:00'",
-                   'config_grounded_von_Mises_threshold_stress': '1.0e9',
-                   'config_min_adaptive_timestep': '21600',
-                   'config_calving_error_threshold': '1.0e9',
-                   'config_front_mass_bal_grounded': "'ismip6'",
-                   'config_use_3d_thermal_forcing_for_face_melt': '.true.'}
+        # start with the namelist from the spinup
+        # Note: this differs from most compass tests, which would start with
+        # the default namelist from the mpas build dir
         namelist = compass.namelist.ingest(os.path.join(spinup_dir,
                                                         'namelist.landice'))
+        # use the namelist in this module to update the spinup namelist
+        options = compass.namelist.parse_replacements(
+            'compass.landice.tests.ensemble_generator.branch_ensemble',
+            'namelist.landice')
         namelist = compass.namelist.replace(namelist, options)
         compass.namelist.write(namelist, os.path.join(self.work_dir,
                                                       'namelist.landice'))
