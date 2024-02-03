@@ -153,6 +153,8 @@ class BranchRun(Step):
         self.add_model_as_input()
 
         # set job name to run number so it will get set in batch script
+        # Note: currently, for this to work right, one has to delete/comment
+        # the call to write_job_script at line 316-7 in compass/setup.py
         self.config.set('job', 'job_name', f'uq_{self.name}')
         machine = self.config.get('deploy', 'machine')
         pre_run_cmd = ('LOGDIR=previous_logs_`date +"%Y-%m-%d_%H-%M-%S"`;'
