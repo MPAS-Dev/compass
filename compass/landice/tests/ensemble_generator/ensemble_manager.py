@@ -1,8 +1,10 @@
+import glob
 import os
 from importlib.resources import path
 
 from mpas_tools.logging import check_call
 
+import compass.namelist
 from compass.io import symlink
 from compass.step import Step
 
@@ -63,8 +65,24 @@ class EnsembleManager(Step):
             # Get step object from 'steps' dictionary
             runStep = self.test_case.steps[run]
             os.chdir(runStep.work_dir)
-            # TODO: assess if this run is unrun, partially run, or complete,
-            # and adjust accordingly
+
+            # Skip run if an error is detected
+            err_files = glob.glob('log.landice.*.err')
+            if len(err_files) > 0:
+                print(f'{run} created an error log file in the '
+                      'previous job and will not be restarted.')
+                continue
+            # Skip run if completed
+            if os.path.isfile('restart_timestamp'):
+                with open('restart_timestamp') as f:
+                    curr_time = f.readline().strip()
+                namelist = compass.namelist.ingest('namelist.landice')
+                stop_time = (namelist['time_management']
+                             ['config_stop_time'].strip().strip("'"))
+                if curr_time == stop_time:
+                    print(f'{run} has reached stop time.  Skipping.')
+                    continue
+            # If we didn't skip this run, submit it
             check_call(['sbatch', 'job_script.sh'], logger)
-            logger.info(f'Run {run} submitted.')
+            logger.info(f'{run} submitted.')
         logger.info('All runs submitted.')
