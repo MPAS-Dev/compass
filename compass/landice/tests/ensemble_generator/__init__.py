@@ -1,8 +1,8 @@
 from compass.landice.tests.ensemble_generator.branch_ensemble import (
     BranchEnsemble,
 )
-from compass.landice.tests.ensemble_generator.control_ensemble import (
-    ControlEnsemble,
+from compass.landice.tests.ensemble_generator.spinup_ensemble import (
+    SpinupEnsemble,
 )
 from compass.testgroup import TestGroup
 
@@ -20,5 +20,5 @@ class EnsembleGenerator(TestGroup):
         super().__init__(mpas_core=mpas_core,
                          name='ensemble_generator')
 
-        self.add_test_case(ControlEnsemble(test_group=self))
+        self.add_test_case(SpinupEnsemble(test_group=self))
         self.add_test_case(BranchEnsemble(test_group=self))

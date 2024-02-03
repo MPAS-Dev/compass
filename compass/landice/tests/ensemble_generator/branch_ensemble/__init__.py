@@ -61,7 +61,7 @@ class BranchEnsemble(TestCase):
         config = self.config
         section = config['branch_ensemble']
 
-        control_test_dir = section.get('control_test_dir')
+        spinup_test_dir = section.get('spinup_test_dir')
         branch_year = section.getint('branch_year')
 
         # Determine start and end run numbers being requested
@@ -81,7 +81,7 @@ class BranchEnsemble(TestCase):
         for run_num in range(self.start_run, self.end_run + 1):
             run_name = f'run{run_num:03}'
             if (filtered_runs[run_num] and
-                os.path.isfile(os.path.join(control_test_dir, run_name,
+                os.path.isfile(os.path.join(spinup_test_dir, run_name,
                                             f'rst.{branch_year}-01-01.nc'))):
                 if os.path.exists(os.path.join(self.work_dir, run_name)):
                     print(f"WARNING: {run_name} path already exists; "

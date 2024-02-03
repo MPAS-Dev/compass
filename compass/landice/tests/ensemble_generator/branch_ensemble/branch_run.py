@@ -88,14 +88,14 @@ class BranchRun(Step):
         config = self.config
         section = config['branch_ensemble']
 
-        control_test_dir = section.get('control_test_dir')
+        spinup_test_dir = section.get('spinup_test_dir')
         branch_year = section.getint('branch_year')
 
-        ctrl_dir = os.path.join(os.path.join(control_test_dir, self.name))
+        spinup_dir = os.path.join(os.path.join(spinup_test_dir, self.name))
 
         # copy over the following:
         # restart file - but change year
-        rst_file = os.path.join(ctrl_dir, f'rst.{branch_year:04}-01-01.nc')
+        rst_file = os.path.join(spinup_dir, f'rst.{branch_year:04}-01-01.nc')
         shutil.copy(rst_file, os.path.join(self.work_dir,
                                            'rst.2015-01-01.nc'))
         f = netCDF4.Dataset(os.path.join(self.work_dir,
@@ -109,7 +109,7 @@ class BranchRun(Step):
             f.write('2015-01-01_00:00:00')
 
         # yaml file
-        shutil.copy(os.path.join(ctrl_dir, 'albany_input.yaml'),
+        shutil.copy(os.path.join(spinup_dir, 'albany_input.yaml'),
                     self.work_dir)
 
         # set up namelist
@@ -121,7 +121,7 @@ class BranchRun(Step):
                    'config_calving_error_threshold': '1.0e9',
                    'config_front_mass_bal_grounded': "'ismip6'",
                    'config_use_3d_thermal_forcing_for_face_melt': '.true.'}
-        namelist = compass.namelist.ingest(os.path.join(ctrl_dir,
+        namelist = compass.namelist.ingest(os.path.join(spinup_dir,
                                                         'namelist.landice'))
         namelist = compass.namelist.replace(namelist, options)
         compass.namelist.write(namelist, os.path.join(self.work_dir,
@@ -140,10 +140,10 @@ class BranchRun(Step):
                               template_replacements=stream_replacements)
 
         # copy run_info file
-        shutil.copy(os.path.join(ctrl_dir, 'run_info.cfg'), self.work_dir)
+        shutil.copy(os.path.join(spinup_dir, 'run_info.cfg'), self.work_dir)
 
         # copy graph files
-        shutil.copy(os.path.join(ctrl_dir, 'graph.info'), self.work_dir)
+        shutil.copy(os.path.join(spinup_dir, 'graph.info'), self.work_dir)
 
         # save number of tasks to use
         # eventually compass could determine this, but for now we want
