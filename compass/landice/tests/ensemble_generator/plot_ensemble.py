@@ -155,9 +155,6 @@ def filter_run():
             filter_info = ais_basin_info[basin]['filter criteria'][criterion]
             min_val = filter_info['values'][0]
             max_val = filter_info['values'][1]
-            if filter_info['rate'] is True:
-                min_val *= target_year
-                max_val *= target_year
             if qoi_val < min_val or qoi_val > max_val:
                 valid_run = False
         # if run marked invalid, set all qoi to nan
