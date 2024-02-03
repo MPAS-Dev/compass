@@ -3,7 +3,7 @@
 ensemble_generator
 ==================
 
-The ``landice/ensemble_generator`` test group creates ensemble of MALI
+The ``landice/ensemble_generator`` test group creates ensembles of MALI
 simulations with different parameter values.  The ensemble framework
 sets up a user-defined number of simulations with parameter values selected
 from either uniform sampling or a space-filling Sobol sequence.
@@ -49,7 +49,8 @@ Additional parameters can be easily added in the future.
 ``compass setup`` will set up the simulations and the ensemble manager.
 ``compass run`` from the test case work directory will submit each run as a
 separate slurm job.
-Individual runs can be run independently through ``compass run`` executed in the
+Individual runs can be run independently through the job script or
+``compass run`` executed in the
 run directory.  (E.g., if you want to test or debug a run without running the
 entire ensemble.)
 
@@ -60,17 +61,26 @@ target year.  The visualization script plots a small number of quantities of
 interest as a function of each active parameter.  It also plots pairwise
 parameter sensitivities for each pair of parameters being varied.  Finally,
 it plots time-series plots for the quantities of interest for all runs in the
-ensemble.
+ensemble.  There are a number of options in the visualization script that
+can be manually set near the top of script.
 
 Future improvements may include:
 
 * enabling the ensemble manager to identify runs that need to be restarted
-  so the restarts do not need to be managed manually
+  so the restarts in the spinup_ensemble do not need to be managed manually
 
 * safety checks or warnings before submitting ensembles that will use large
   amounts of computing resources
 
-The test group includes a single test case for creating an ensemble.
+The test group includes two test cases:
+
+* ``spinup_ensemble``: a set of simulations from the same initial condition
+  but with different parameter values.  This could either be fixed climate
+  relaxation spinup or forced by time-evolving historical conditions.
+
+* ``branch_ensemble``: a set of simulations branched from each member of the
+  spinup_ensemble in a specified year with a different forcing.  Multiple
+  branch ensembles can be branched from one spinup_ensemble
 
 config options
 --------------
@@ -239,16 +249,24 @@ jobs for each ensemble member.
    [job]
    wall_time = 1:30:00
 
-ensemble
---------
+Note that currently there is not functionality
+to automatically enable restart settings if runs in the spinup_ensemble
+do not reach the desired year.  This could be added in the future, but to
+date it has been practical to set ``wall_time`` long enough to ensure this
+is not a problem.  Runs in a branch_ensemble are set as restarts from the
+spinup_ensemble runs, so there is no need to change settings if runs
+need to be continued beyond the first job.
 
-``landice/ensemble_generator/ensemble`` uses the ensemble framework to create
-and ensemble of simulations integrated from 2000 to 2100.  The test case
+spinup_ensemble
+---------------
+
+``landice/ensemble_generator/spinup_ensemble`` uses the ensemble framework to create
+an ensemble of simulations integrated over a specified time range.  The test case
 can be applied to any domain and set of input files.  If the default namelist
 and streams settings are not appropriate, they can be adjusted or a new test
 case can be set up mirroring the existing one.
 
-The model configuration uses:
+The default model configuration uses:
 
 * first-order velocity solver
 
@@ -264,11 +282,53 @@ The model configuration uses:
 The initial condition and forcing files are specified in the
 ``ensemble_generator.cfg`` file or a user modification of it.
 
+branch_ensemble
+---------------
+
+``landice/ensemble_generator/branch_ensemble`` uses the ensemble framework to create
+an ensemble of simulations that are branched from corresponding runs of the
+``spinup_ensemble`` at a specified year with a different forcing.  In general,
+any namelist or streams modifications can be applied to the branch runs.
+
+The branch_ensemble test-case-specific config options are:
+
+.. code-block:: cfg
+
+   # config options for setting up an ensemble
+
+   # config options for branching an ensemble
+   [branch_ensemble]
+
+   # start and end numbers for runs to set up and run
+   # branch runs.
+   # It is assumed that spinup runs have already been
+   # conducted for these runs.
+   start_run = 0
+   end_run = 3
+
+   # Path to thermal forcing file for the mesh to be used in the branch run
+   TF_file_path = /global/cfs/cdirs/fanssie/MALI_projects/Amery_UQ/Amery_4to20km_from_whole_AIS/forcing/ocean_thermal_forcing/UKESM1-0-LL_SSP585/1995-2300/Amery_4to20km_TF_UKESM1-0-LL_SSP585_2300.nc
+
+   # Path to SMB forcing file for the mesh to be used in the branch run
+   SMB_file_path = /global/cfs/cdirs/fanssie/MALI_projects/Amery_UQ/Amery_4to20km_from_whole_AIS/forcing/atmosphere_forcing/UKESM1-0-LL_SSP585/1995-2300/Amery_4to20km_SMB_UKESM1-0-LL_SSP585_2300_noBareLandAdvance.nc
+
+   # location of spinup ensemble to branch from
+   spinup_test_dir = /pscratch/sd/h/hoffman2/AMERY_corrected_forcing_6param_ensemble_2023-03-18/landice/ensemble_generator/ensemble
+
+   # year of spinup simulation from which to branch runs
+   branch_year = 2050
+
+   # whether to only set up branch runs for filtered runs or all runs
+   set_up_filtered_only = True
+
+   # path to pickle file containing filtering information generated by plot_ensemble.py
+   ensemble_pickle_file = None
+
 Steps for setting up and running an ensmble
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. With a compass conda environment set up, run, e.g.,
-   ``compass setup -t landice/ensemble_generator/ensemble -w WORK_DIR_PATH -f USER.cfg``
+   ``compass setup -t landice/ensemble_generator/spinup_ensemble -w WORK_DIR_PATH -f USER.cfg``
    where ``WORK_DIR_PATH`` is a location that can store the whole
    ensemble (typically a scratch drive) and ``USER.cfg`` is the
    user-defined config described in the previous section that includes
@@ -279,7 +339,7 @@ Steps for setting up and running an ensmble
 
 2. After ``compass setup`` completes and all runs are set up, go to the
    ``WORK_DIR_PATH`` and change to the
-   ``landice/ensemble_generator/ensemble`` subdirectory.
+   ``landice/ensemble_generator/spinup_ensemble`` subdirectory.
    From there you will see subdirectories for each run, a subdirectory for the
    ``ensemble_manager`` and symlink to the visualization script.
 
@@ -290,12 +350,13 @@ Steps for setting up and running an ensmble
 4. Each run will have its own batch job that can be monitored with ``squeue``
    or similar commands.
 
-5. When the ensemble has completed, you can assess the result through the
+5. When the ensemble has completed, or as it is progressing,
+   you can assess the result through the
    basic visualization script ``plot_ensemble.py``.  The script will skip runs
    that are incomplete or failed, so you can run it while an ensemble is
    still running to assess progress.
 
-6. If you want to add additional ensemble members, adjust
+6. If you want to run add additional ensemble members, adjust
    ``start_run`` and ``end_run`` in your config file and redo steps 1-5.
    The ensemble_manager will always be set to run the most recent run
    numbers defined in the config when ``compass setup`` was run.
@@ -304,3 +365,7 @@ Steps for setting up and running an ensmble
 
 It is also possible to run an individual run manually by changing to the run
 directory and submitting the job script yourself with ``sbatch``.
+
+Setting up and running a branch ensemble follows the same steps.  Multiple
+branch ensembles (e.g., with different climate forcing scenarios) can be
+conducted from one spinup ensemble.

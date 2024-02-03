@@ -90,12 +90,13 @@ methods perform minimal operations.  The ``run`` method submits each run in
 the ensemble as a slurm job.  Eventually the ``ensemble_manager`` will be able
 to assess if runs need restarts and modify them to be submitted as such.
 
-ensemble
---------
+spinup_ensemble
+---------------
 
-The :py:class:`compass.landice.tests.ensemble_generator.ensemble.Ensemble`
-uses the framework described above to set up an ensemble of
-simulations.  The constructor simply adds the ensemble manager as the only step.
+The :py:class:`compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble`
+uses the framework described above to set up an ensemble of spinup or historical
+simulations from a common initial condition.
+The constructor simply adds the ensemble manager as the only step.
 This allows the test case to be listed by ``compass list`` without having all
 ensemble members listed in a verbose listing.  Because there may be dozens of
 ensemble members, it is better to wait to have them added until the setup
@@ -112,7 +113,9 @@ Finally, each run is now added to the test case as a step to run,
 because they were not automatically added by compass during the test
 case constructor phase.
 
-There are no ``run`` or ``validate`` steps required.  The ensemble manager
+The ``run`` step simply sets up a graph file and runs the model.
+
+The ensemble manager
 handles "running" ensemble members by submitting them as slurm jobs.
 This is a major difference in how this test case functions from most
 compass test cases.
@@ -120,3 +123,24 @@ The visualization script ``plot_ensemble.py`` is symlinked in the test
 case work directory and can be run manually to assess the status of the
 ensemble, but there is not a formal analysis step that can be run through
 compass.
+
+branch_ensemble
+---------------
+
+The :py:class:`compass.landice.tests.ensemble_generator.branch_ensemble.BranchEnsemble`
+sets up an ensemble of runs each of which are branched from an ensemble
+member of a previously run spinup ensemble.
+The constructor adds the ensemble_manager as a step, as with the spinup_ensemble.
+
+The ``configure`` method searches over the range of runs requested and assesses if
+the corresponding spinup_ensemble member reached the requested branch time.
+If so, and if the branch_ensemble memebr directory does not already exist, that
+run is added as a step.  Within each run (step), the restart file from the branch
+year is copied to the branch run directory.  The time stamp is reassigned to
+2015 (this could be made a cfg option in the future).  Also copied over are
+the namelist and albany_input.yamlm files.  The namelist is updated with
+settings specific to the branch ensemble, and a streams file specific to the
+branch run is added.  Finally, details for managing runs are set up, including
+a job script.
+
+As in the spinup_ensemble, the ``run`` step just runs the model.

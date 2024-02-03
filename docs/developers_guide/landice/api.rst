@@ -175,8 +175,8 @@ ensemble_generator
    ensemble_member.EnsembleMember.setup
    ensemble_member.EnsembleMember.run
 
-   control_ensemble.ControlEnsemble
-   control_ensemble.ControlEnsemble.configure
+   spinup_ensemble.SpinupEnsemble
+   spinup_ensemble.SpinupEnsemble.configure
 
    branch_ensemble.BranchEnsemble
    branch_ensemble.BranchEnsemble.configure
