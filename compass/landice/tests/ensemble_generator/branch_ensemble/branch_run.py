@@ -115,7 +115,12 @@ class BranchRun(Step):
         # set up namelist
         options = {'config_do_restart': '.true.',
                    'config_start_time': "'file'",
-                   'config_stop_time': "'2300-01-01_00:00:00'"}
+                   'config_stop_time': "'2300-01-01_00:00:00'",
+                   'config_grounded_von_Mises_threshold_stress': '1.0e9',
+                   'config_min_adaptive_timestep': '21600',
+                   'config_calving_error_threshold': '1.0e9',
+                   'config_front_mass_bal_grounded': "'ismip6'",
+                   'config_use_3d_thermal_forcing_for_face_melt': '.true.'}
         namelist = compass.namelist.ingest(os.path.join(ctrl_dir,
                                                         'namelist.landice'))
         namelist = compass.namelist.replace(namelist, options)
@@ -151,9 +156,14 @@ class BranchRun(Step):
         # set job name to run number so it will get set in batch script
         self.config.set('job', 'job_name', f'uq_{self.name}')
         machine = self.config.get('deploy', 'machine')
+        pre_run_cmd = ('LOGDIR=previous_logs_`date +"%Y-%m-%d_%H-%M-%S"`;'
+                       'mkdir $LOGDIR; cp log* $LOGDIR; date')
+        post_run_cmd = "date"
         write_job_script(self.config, machine,
                          target_cores=self.ntasks, min_cores=self.min_tasks,
-                         work_dir=self.work_dir)
+                         work_dir=self.work_dir,
+                         pre_run_commands=pre_run_cmd,
+                         post_run_commands=post_run_cmd)
 
         # COMPASS does not create symlinks for the load script in step dirs,
         # so use the standard approach for creating that symlink in each
