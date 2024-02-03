@@ -83,11 +83,15 @@ class BranchEnsemble(TestCase):
             if (filtered_runs[run_num] and
                 os.path.isfile(os.path.join(control_test_dir, run_name,
                                             f'rst.{branch_year}-01-01.nc'))):
-                print(f"Adding {run_name}")
-                # use this run
-                self.add_step(BranchRun(test_case=self, run_num=run_num))
-                # Note: do not add to steps_to_run, because ensemble_manager
-                # will handle submitting and running the runs
+                if os.path.exists(os.path.join(self.work_dir, run_name)):
+                    print(f"WARNING: {run_name} path already exists; "
+                          "skipping.  ")
+                else:
+                    print(f"Adding {run_name}")
+                    # use this run
+                    self.add_step(BranchRun(test_case=self, run_num=run_num))
+                    # Note: do not add to steps_to_run; ensemble_manager
+                    # will handle submitting and running the runs
 
         # Have compass run only run the run_manager but not any actual runs.
         # This is because the individual runs will be submitted as jobs
