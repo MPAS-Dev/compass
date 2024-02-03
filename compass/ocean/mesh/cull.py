@@ -166,12 +166,19 @@ class CullMeshStep(Step):
         convert_to_cdf5 = config.getboolean('spherical_mesh',
                                             'convert_culled_mesh_to_cdf5')
 
+        latitude_threshold = config.getfloat('spherical_mesh',
+                                             'latitude_threshold')
+
+        sweep_count = config.getint('spherical_mesh', 'sweep_count')
+
         cull_mesh(with_critical_passages=True, logger=logger,
                   use_progress_bar=use_progress_bar,
                   preserve_floodplain=preserve_floodplain,
                   with_cavities=with_ice_shelf_cavities,
                   process_count=self.cpus_per_task,
-                  convert_to_cdf5=convert_to_cdf5)
+                  convert_to_cdf5=convert_to_cdf5,
+                  latitude_threshold=latitude_threshold,
+                  sweep_count=sweep_count)
 
         if do_inject_bathymetry:
             inject_bathymetry(mesh_file='culled_mesh.nc')
@@ -180,7 +187,8 @@ class CullMeshStep(Step):
 def cull_mesh(with_cavities=False, with_critical_passages=False,
               custom_critical_passages=None, custom_land_blockages=None,
               preserve_floodplain=False, logger=None, use_progress_bar=True,
-              process_count=1, convert_to_cdf5=False):
+              process_count=1, convert_to_cdf5=False, latitude_threshold=43.,
+              sweep_count=20):
     """
     First step of initializing the global ocean:
 
@@ -241,21 +249,29 @@ def cull_mesh(with_cavities=False, with_critical_passages=False,
     process_count : int, optional
         The number of cores to use to create masks (``None`` to use all
         available cores)
+
     convert_to_cdf5 : bool, optional
         Convert the culled mesh to PNetCDF CDF-5 format
+
+    latitude_threshold : float, optional
+        Minimum latitude, in degrees, for masking land-locked cells
+
+    sweep_count : int, optional
+        Maximum number of sweeps to search for land-locked cells
     """
     with LoggingContext(name=__name__, logger=logger) as logger:
         _cull_mesh_with_logging(
             logger, with_cavities, with_critical_passages,
             custom_critical_passages, custom_land_blockages,
             preserve_floodplain, use_progress_bar, process_count,
-            convert_to_cdf5)
+            convert_to_cdf5, latitude_threshold, sweep_count)
 
 
 def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
                             custom_critical_passages, custom_land_blockages,
                             preserve_floodplain, use_progress_bar,
-                            process_count, convert_to_cdf5):
+                            process_count, convert_to_cdf5, latitude_threshold,
+                            sweep_count):
     """ Cull the mesh once the logger is defined for sure """
 
     critical_passages = with_critical_passages or \
@@ -286,9 +302,9 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
 
     dsBaseMesh = xr.open_dataset('base_mesh.nc')
     dsLandMask = xr.open_dataset('land_mask.nc')
-    dsLandMask = add_land_locked_cells_to_mask(dsLandMask, dsBaseMesh,
-                                               latitude_threshold=43.0,
-                                               nSweeps=20)
+    dsLandMask = add_land_locked_cells_to_mask(
+        dsLandMask, dsBaseMesh, latitude_threshold=latitude_threshold,
+        nSweeps=sweep_count)
     write_netcdf(dsLandMask, 'land_mask_with_land_locked_cells.nc')
 
     # create seed points for a flood fill of the ocean
@@ -424,6 +440,10 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
                                     mask_filename='ice_coverage.nc')
 
         dsMask = xr.open_dataset('ice_coverage.nc')
+
+        dsMask = add_land_locked_cells_to_mask(
+            dsMask, dsCulledMesh, latitude_threshold=latitude_threshold,
+            nSweeps=sweep_count)
 
         landIceMask = dsMask.regionCellMasks.isel(nRegions=0)
         dsLandIceMask = xr.Dataset()
