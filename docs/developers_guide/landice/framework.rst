@@ -34,8 +34,38 @@ used by all ``mesh_gen`` tests cases, which currently exist within the
 ``antarctica``, ``crane``, ``greenland``, ``humboldt``, ``kangerlussuaq``,
 ``koge_bugt_s``, and ``thwaites`` test groups. These functions include:
 
+:py:func:`compass.landice.mesh.add_bedmachine_thk_to_ais_gridded_data()`
+copies BedMachine thickness to the AIS reference gridded dataset.
+It replaces thickness field in the compilation dataset with the one we
+will be using from BedMachine for actual thickness interpolation
+There are significant inconsistencies between the masking of the two,
+particularly along the Antarctic Peninsula, that lead to funky
+mesh extent and culling if we use the thickness from 8km composite
+dataset to define the cullMask but then actually interpolate thickness
+from BedMachine.
+This function uses bilinear interpolation to interpolate from the 500 m
+resolution of BedMachine to the 8 km resolution of the reference dataset.
+It is not particularly accurate, but is fast and adequate for generating
+the flood filled mask for culling the mesh.  Highly accurate conservative
+remapping is performed later for actually interpolating BedMachine
+thickness to the final MALI mesh.
+
+:py:func:`compass.landice.mesh.clean_up_after_interp()` performs some final
+clean up steps after interpolation for the AIS mesh case.
+
 :py:func:`compass.landice.mesh.gridded_flood_fill()` applies a flood-fill algorithm
 to the gridded dataset in order to separate the ice sheet from peripheral ice.
+
+:py:func:`compass.landice.mesh.interp_ais_bedmachine()` interpolates BedMachine
+thickness and bedTopography dataset to a MALI mesh, accounting for masking of
+the ice extent to avoid interpolation ramps.
+
+:py:func:`compass.landice.mesh.interp_ais_interp_ais_measures()` interpolates
+MEASURES ice velocity dataset to a MALI mesh, accounting for masking at the ice
+edge and extrapolation.
+
+:py:func:`compass.landice.mesh.preprocess_ais_data()` performs adjustments to
+gridded AIS datasets needed for rest of compass workflow to utilize them.
 
 :py:func:`compass.landice.mesh.set_rectangular_geom_points_and_edges()` sets node
 and edge coordinates to pass to py:func:`mpas_tools.mesh.creation.build_mesh.build_planar_mesh()`.
