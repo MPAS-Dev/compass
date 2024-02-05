@@ -347,6 +347,22 @@ ismip6_run
    ismip6_ais_proj2300.set_up_experiment.SetUpExperiment.setup
    ismip6_ais_proj2300.set_up_experiment.SetUpExperiment.run
 
+isunnguata_sermia
+~~~~~~~~~~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.isunnguata_sermia
+
+.. autosummary::
+   :toctree: generated/
+
+   IsunnguataSermia
+
+   mesh_gen.MeshGen
+   mesh_gen.MeshGen.run
+
+   mesh.Mesh
+   mesh.Mesh.run
+
 kangerlussuaq
 ~~~~~~~~~~~~~
 
