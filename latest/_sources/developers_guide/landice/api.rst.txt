@@ -67,6 +67,23 @@ circular_shelf
    visualize.visualize_circular_shelf
 
 
+crane
+~~~~
+
+.. currentmodule:: compass.landice.tests.crane
+
+.. autosummary::
+   :toctree: generated/
+
+   Crane
+
+   mesh_gen.MeshGen
+   mesh_gen.MeshGen.run
+
+   mesh.Mesh
+   mesh.Mesh.run
+
+
 dome
 ~~~~
 

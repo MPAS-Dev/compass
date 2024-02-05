@@ -15,6 +15,7 @@ physics but that are not run routinely.
    antarctica
    calving_dt_convergence
    circular_shelf
+   crane
    dome
    eismint2
    ensemble_generator
