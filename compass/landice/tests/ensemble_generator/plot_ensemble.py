@@ -26,7 +26,7 @@ filter_runs = False
 plot_time_series = True
 plot_single_param_sensitivies = False
 plot_pairwise_param_sensitivities = False
-plot_qoi_histograms = True
+plot_qoi_histograms = False
 plot_maps = False
 lw = 0.5  # linewidth for ensemble plots
 
@@ -123,7 +123,7 @@ run_nums = np.ones((nRuns,), dtype=int) * -1
 basin = None
 ens_cfg = configparser.ConfigParser()
 # Check for presence of two possible cfg file names
-ens_cfg_file1 = 'ensemble.cfg'
+ens_cfg_file1 = 'spinup_ensemble.cfg'
 ens_cfg_file2 = 'branch_ensemble.cfg'
 if os.path.isfile(ens_cfg_file1):
     ens_cfg_file = ens_cfg_file1
