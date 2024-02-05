@@ -10,6 +10,7 @@ Test groups
    antarctica
    calving_dt_convergence
    circular_shelf
+   crane
    dome
    ensemble_generator
    enthalpy_benchmark
