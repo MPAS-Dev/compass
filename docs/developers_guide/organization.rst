@@ -1675,7 +1675,7 @@ should have cached outputs, the suffix ``c`` can be added to the test number:
     compass setup -n 90c 91c 92 ...
 
 In this example, test cases 90 and 91 (``mesh`` and ``init`` test cases from
-the ``SOwISC12to60`` global ocean mesh, in this case) are set up with cached
+the ``SOwISC12to30`` global ocean mesh, in this case) are set up with cached
 outputs in all steps and 92 (``performance_test``) is not.  This approach is
 efficient but does not provide any control of which steps use cached outputs
 and which do not.

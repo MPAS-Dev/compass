@@ -233,8 +233,8 @@ test cases and steps
    mesh.rrs6to18.RRS6to18BaseMesh
    mesh.rrs6to18.RRS6to18BaseMesh.build_cell_width_lat_lon
 
-   mesh.so12to60.SO12to60BaseMesh
-   mesh.so12to60.SO12to60BaseMesh.build_cell_width_lat_lon
+   mesh.so12to30.SO12to30BaseMesh
+   mesh.so12to30.SO12to30BaseMesh.build_cell_width_lat_lon
 
    mesh.wc14.WC14BaseMesh
    mesh.wc14.WC14BaseMesh.build_cell_width_lat_lon

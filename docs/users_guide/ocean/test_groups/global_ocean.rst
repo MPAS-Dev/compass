@@ -431,24 +431,23 @@ ice-shelf cavities around Antarctica, whereas the RRS6to18 mesh does not.
    :width: 500 px
    :align: center
 
-.. _global_ocean_mesh_sowisc12to60:
+.. _global_ocean_mesh_sowisc12to30:
 
-SO12to60 and SOwISC12to60
+SO12to30 and SOwISC12to30
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The Southern Ocean 12- to 60-km mesh with ice-shelf cavities (SOwISC12to60),
+The Southern Ocean 12- to 30-km mesh with ice-shelf cavities (SOwISC12to30),
 sometimes called the Southern Ocean regionally refined mesh (SORRM), is
 the main simulation mesh for the
 `E3SM v2 Cryosphere Science Campaign <https://e3sm.org/research/cryosphere-ocean/v2-cryosphere-research/>`_
 and E3SM v3 Polar Processes, Sea-Level Rise, and Coastal Impacts Campaign.
 
-The SO12to60 is the same mesh but without ice-shelf cavities.
-The mesh has 12 km resolution around Antarctica, tapering to 45 km in mid
-Southern latitudes, 30 km at the equator and in the North Atlantic, 60 km
-in the North Pacific, and 35 km in the Arctic.  The mesh includes the
-:ref:`global_ocean_ice_shelf_cavities` around Antarctica in the ocean domain.
+The SO12to30 is the same mesh but without ice-shelf cavities.
+The mesh has 12-km resolution around Antarctica and 30-km resolution elsewhere.
+The mesh includes the :ref:`global_ocean_ice_shelf_cavities` around Antarctica
+in the ocean domain.
 
-.. image:: images/sowisc12to60.png
+.. image:: images/sowisc12to30.png
    :width: 500 px
    :align: center
 
