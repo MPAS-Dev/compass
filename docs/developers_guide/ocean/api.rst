@@ -202,6 +202,8 @@ test cases and steps
    files_for_e3sm.remap_sea_surface_salinity_restoring.RemapSeaSurfaceSalinityRestoring.run
    files_for_e3sm.remap_iceberg_climatology.RemapIcebergClimatology
    files_for_e3sm.remap_iceberg_climatology.RemapIcebergClimatology.run
+   files_for_e3sm.remap_tidal_mixing.RemapTidalMixing
+   files_for_e3sm.remap_tidal_mixing.RemapTidalMixing.run
    files_for_e3sm.write_coeffs_reconstruct.WriteCoeffsReconstruct
    files_for_e3sm.write_coeffs_reconstruct.WriteCoeffsReconstruct.run
 
