@@ -8,6 +8,7 @@ from netCDF4 import Dataset
 from compass.ocean.vertical.grid_1d.index_tanh_dz import (
     create_index_tanh_dz_grid,
 )
+from compass.ocean.vertical.grid_1d.linear_dz import create_linear_dz_grid
 from compass.ocean.vertical.grid_1d.tanh_dz import create_tanh_dz_grid
 
 
@@ -32,6 +33,13 @@ def generate_1d_grid(config):
     if grid_type == 'uniform':
         vert_levels = section.getint('vert_levels')
         interfaces = _generate_uniform(vert_levels)
+    elif grid_type == 'linear_dz':
+        vert_levels = section.getint('vert_levels')
+        bottom_depth = section.getfloat('bottom_depth')
+        linear_dz_rate = section.getfloat('linear_dz_rate')
+        interfaces = create_linear_dz_grid(vert_levels,
+                                           bottom_depth,
+                                           linear_dz_rate)
     elif grid_type == 'tanh_dz':
         vert_levels = section.getint('vert_levels')
         min_layer_thickness = section.getfloat('min_layer_thickness')
