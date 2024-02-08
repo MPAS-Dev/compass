@@ -28,6 +28,9 @@ from compass.ocean.tests.global_ocean.files_for_e3sm.remap_iceberg_climatology i
 from compass.ocean.tests.global_ocean.files_for_e3sm.remap_sea_surface_salinity_restoring import (  # noqa: E501
     RemapSeaSurfaceSalinityRestoring,
 )
+from compass.ocean.tests.global_ocean.files_for_e3sm.remap_tidal_mixing import (  # noqa: E501
+    RemapTidalMixing,
+)
 from compass.ocean.tests.global_ocean.files_for_e3sm.scrip import Scrip
 from compass.ocean.tests.global_ocean.files_for_e3sm.seaice_graph_partition import (  # noqa: E501
     SeaiceGraphPartition,
@@ -117,6 +120,8 @@ class FilesForE3SM(TestCase):
 
         self.add_step(RemapIcebergClimatology(
             test_case=self))
+
+        self.add_step(RemapTidalMixing(test_case=self))
 
         if mesh is not None and init is not None:
             self.add_step(WriteCoeffsReconstruct(
