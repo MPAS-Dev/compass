@@ -241,7 +241,8 @@ class IsomipPlusTest(TestCase):
 
         if planar:
             nx = round(800 / resolution)
-            ny = round(100 / resolution)
+            # ny has to be even
+            ny = 2 * round(100 / resolution / 2)
             dc = 1e3 * resolution
             # Width of the thin film region
             nx_thin_film = 10
