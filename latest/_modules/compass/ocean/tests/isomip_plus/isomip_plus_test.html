@@ -362,7 +362,8 @@
 
         <span class="k">if</span> <span class="n">planar</span><span class="p">:</span>
             <span class="n">nx</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="mi">800</span> <span class="o">/</span> <span class="n">resolution</span><span class="p">)</span>
-            <span class="n">ny</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">/</span> <span class="n">resolution</span><span class="p">)</span>
+            <span class="c1"># ny has to be even</span>
+            <span class="n">ny</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">/</span> <span class="n">resolution</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
             <span class="n">dc</span> <span class="o">=</span> <span class="mf">1e3</span> <span class="o">*</span> <span class="n">resolution</span>
             <span class="c1"># Width of the thin film region</span>
             <span class="n">nx_thin_film</span> <span class="o">=</span> <span class="mi">10</span>
