@@ -1,10 +1,10 @@
-import numpy as np
-
 import mpas_tools.mesh.creation.mesh_definition_tools as mdt
-from mpas_tools.mesh.creation.signed_distance import \
-    signed_distance_from_geojson
+import numpy as np
 from geometric_features import read_feature_collection
 from mpas_tools.cime.constants import constants
+from mpas_tools.mesh.creation.signed_distance import (
+    signed_distance_from_geojson,
+)
 
 from compass.mesh import QuasiUniformSphericalMeshStep
 
@@ -46,8 +46,8 @@ class SO12to60BaseMesh(QuasiUniformSphericalMeshStep):
         dlon = 0.1
         dlat = dlon
         earth_radius = constants['SHR_CONST_REARTH']
-        nlon = int(360./dlon) + 1
-        nlat = int(180./dlat) + 1
+        nlon = int(360. / dlon) + 1
+        nlat = int(180. / dlat) + 1
         lon = np.linspace(-180., 180., nlon)
         lat = np.linspace(-90., 90., nlat)
 

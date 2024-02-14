@@ -6,6 +6,10 @@ from compass.ocean.mesh.cull import CullMeshStep
 from compass.ocean.mesh.remap_topography import RemapTopography
 from compass.ocean.tests.global_ocean.mesh.arrm10to60 import ARRM10to60BaseMesh
 from compass.ocean.tests.global_ocean.mesh.ec30to60 import EC30to60BaseMesh
+from compass.ocean.tests.global_ocean.mesh.fris01to60 import FRIS01to60BaseMesh
+from compass.ocean.tests.global_ocean.mesh.fris02to60 import FRIS02to60BaseMesh
+from compass.ocean.tests.global_ocean.mesh.fris04to60 import FRIS04to60BaseMesh
+from compass.ocean.tests.global_ocean.mesh.fris08to60 import FRIS08to60BaseMesh
 from compass.ocean.tests.global_ocean.mesh.kuroshio import KuroshioBaseMesh
 from compass.ocean.tests.global_ocean.mesh.qu import (
     IcosMeshFromConfigStep,
@@ -13,10 +17,6 @@ from compass.ocean.tests.global_ocean.mesh.qu import (
 )
 from compass.ocean.tests.global_ocean.mesh.rrs6to18 import RRS6to18BaseMesh
 from compass.ocean.tests.global_ocean.mesh.so12to60 import SO12to60BaseMesh
-from compass.ocean.tests.global_ocean.mesh.fris01to60 import FRIS01to60BaseMesh
-from compass.ocean.tests.global_ocean.mesh.fris02to60 import FRIS02to60BaseMesh
-from compass.ocean.tests.global_ocean.mesh.fris04to60 import FRIS04to60BaseMesh
-from compass.ocean.tests.global_ocean.mesh.fris08to60 import FRIS08to60BaseMesh
 from compass.ocean.tests.global_ocean.mesh.wc14 import WC14BaseMesh
 from compass.ocean.tests.global_ocean.metadata import (
     get_author_and_email_from_git,

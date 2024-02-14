@@ -1,10 +1,10 @@
-import numpy as np
-
 import mpas_tools.mesh.creation.mesh_definition_tools as mdt
-from mpas_tools.mesh.creation.signed_distance import \
-    signed_distance_from_geojson
+import numpy as np
 from geometric_features import read_feature_collection
 from mpas_tools.cime.constants import constants
+from mpas_tools.mesh.creation.signed_distance import (
+    signed_distance_from_geojson,
+)
 
 from compass.mesh import QuasiUniformSphericalMeshStep
 
@@ -30,8 +30,9 @@ class FRIS01to60BaseMesh(QuasiUniformSphericalMeshStep):
         self.add_input_file(filename='fris_v1_peninsula_12km_v2.geojson',
                             package=self.__module__)
 
-        self.add_input_file(filename='fris_v1_peninsula_12km_transition.geojson',
-                            package=self.__module__)
+        self.add_input_file(
+            filename='fris_v1_peninsula_12km_transition.geojson',
+            package=self.__module__)
 
         self.add_input_file(filename='fris_v1.geojson',
                             package=self.__module__)
@@ -58,8 +59,8 @@ class FRIS01to60BaseMesh(QuasiUniformSphericalMeshStep):
         dlon = 0.1
         dlat = dlon
         earth_radius = constants['SHR_CONST_REARTH']
-        nlon = int(360./dlon) + 1
-        nlat = int(180./dlat) + 1
+        nlon = int(360. / dlon) + 1
+        nlat = int(180. / dlat) + 1
         lon = np.linspace(-180., 180., nlon)
         lat = np.linspace(-90., 90., nlat)
 
@@ -164,7 +165,8 @@ class FRIS01to60BaseMesh(QuasiUniformSphericalMeshStep):
         cellWidth = dx_min * (1 - weights) + cellWidth * weights
 
         # Add 12 km transition correction west of the peninsula
-        fc = read_feature_collection('fris_v1_peninsula_12km_transition.geojson')
+        fc = read_feature_collection(
+            'fris_v1_peninsula_12km_transition.geojson')
 
         so_signed_distance = signed_distance_from_geojson(fc, lon, lat,
                                                           earth_radius,
@@ -187,7 +189,8 @@ class FRIS01to60BaseMesh(QuasiUniformSphericalMeshStep):
                                                           earth_radius,
                                                           max_length=0.25)
 
-        # Equivalent to 100 km (0 should be enough given the setup but to be safe)
+        # Equivalent to 100 km (0 should be enough given the setup but to be
+        # safe)
         trans_width = 100e3
         trans_start = 0
         dx_min = dx_min_fris
