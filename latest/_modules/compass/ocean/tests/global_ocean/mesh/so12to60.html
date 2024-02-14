@@ -113,13 +113,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.global_ocean.mesh.so12to60</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
-<span class="kn">import</span> <span class="nn">mpas_tools.mesh.creation.mesh_definition_tools</span> <span class="k">as</span> <span class="nn">mdt</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.mesh.creation.signed_distance</span> <span class="kn">import</span> \
-    <span class="n">signed_distance_from_geojson</span>
+<span></span><span class="kn">import</span> <span class="nn">mpas_tools.mesh.creation.mesh_definition_tools</span> <span class="k">as</span> <span class="nn">mdt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">read_feature_collection</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.mesh.creation.signed_distance</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">signed_distance_from_geojson</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">compass.mesh</span> <span class="kn">import</span> <span class="n">QuasiUniformSphericalMeshStep</span>
 
@@ -165,8 +165,8 @@
         <span class="n">dlon</span> <span class="o">=</span> <span class="mf">0.1</span>
         <span class="n">dlat</span> <span class="o">=</span> <span class="n">dlon</span>
         <span class="n">earth_radius</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_REARTH&#39;</span><span class="p">]</span>
-        <span class="n">nlon</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">360.</span><span class="o">/</span><span class="n">dlon</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="n">nlat</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">180.</span><span class="o">/</span><span class="n">dlat</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">nlon</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">360.</span> <span class="o">/</span> <span class="n">dlon</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">nlat</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">180.</span> <span class="o">/</span> <span class="n">dlat</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="n">lon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">180.</span><span class="p">,</span> <span class="mf">180.</span><span class="p">,</span> <span class="n">nlon</span><span class="p">)</span>
         <span class="n">lat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">90.</span><span class="p">,</span> <span class="mf">90.</span><span class="p">,</span> <span class="n">nlat</span><span class="p">)</span>
 
