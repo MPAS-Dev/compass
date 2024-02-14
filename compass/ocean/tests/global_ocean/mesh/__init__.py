@@ -6,6 +6,10 @@ from compass.ocean.mesh.cull import CullMeshStep
 from compass.ocean.mesh.remap_topography import RemapTopography
 from compass.ocean.tests.global_ocean.mesh.arrm10to60 import ARRM10to60BaseMesh
 from compass.ocean.tests.global_ocean.mesh.ec30to60 import EC30to60BaseMesh
+from compass.ocean.tests.global_ocean.mesh.fris01to60 import FRIS01to60BaseMesh
+from compass.ocean.tests.global_ocean.mesh.fris02to60 import FRIS02to60BaseMesh
+from compass.ocean.tests.global_ocean.mesh.fris04to60 import FRIS04to60BaseMesh
+from compass.ocean.tests.global_ocean.mesh.fris08to60 import FRIS08to60BaseMesh
 from compass.ocean.tests.global_ocean.mesh.kuroshio import KuroshioBaseMesh
 from compass.ocean.tests.global_ocean.mesh.qu import (
     IcosMeshFromConfigStep,
@@ -96,6 +100,14 @@ class Mesh(TestCase):
             base_mesh_step = RRS6to18BaseMesh(self, name=name, subdir=subdir)
         elif mesh_name in ['SO12to60', 'SOwISC12to60']:
             base_mesh_step = SO12to60BaseMesh(self, name=name, subdir=subdir)
+        elif mesh_name in ['FRIS01to60', 'FRISwISC01to60']:
+            base_mesh_step = FRIS01to60BaseMesh(self, name=name, subdir=subdir)
+        elif mesh_name in ['FRIS02to60', 'FRISwISC02to60']:
+            base_mesh_step = FRIS02to60BaseMesh(self, name=name, subdir=subdir)
+        elif mesh_name in ['FRIS04to60', 'FRISwISC04to60']:
+            base_mesh_step = FRIS04to60BaseMesh(self, name=name, subdir=subdir)
+        elif mesh_name in ['FRIS08to60', 'FRISwISC08to60']:
+            base_mesh_step = FRIS08to60BaseMesh(self, name=name, subdir=subdir)
         elif mesh_name.startswith('Kuroshio'):
             base_mesh_step = KuroshioBaseMesh(self, name=name, subdir=subdir)
         elif mesh_name in ['WC14', 'WCwISC14']:

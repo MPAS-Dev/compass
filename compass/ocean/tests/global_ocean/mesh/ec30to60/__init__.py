@@ -1,5 +1,5 @@
-import numpy as np
 import mpas_tools.mesh.creation.mesh_definition_tools as mdt
+import numpy as np
 
 from compass.mesh import QuasiUniformSphericalMeshStep
 
@@ -28,8 +28,8 @@ class EC30to60BaseMesh(QuasiUniformSphericalMeshStep):
 
         dlon = 10.
         dlat = 0.1
-        nlon = int(360./dlon) + 1
-        nlat = int(180./dlat) + 1
+        nlon = int(360. / dlon) + 1
+        nlat = int(180. / dlat) + 1
         lon = np.linspace(-180., 180., nlon)
         lat = np.linspace(-90., 90., nlat)
 

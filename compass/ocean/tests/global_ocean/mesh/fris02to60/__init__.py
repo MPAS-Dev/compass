@@ -9,7 +9,7 @@ from mpas_tools.mesh.creation.signed_distance import (
 from compass.mesh import QuasiUniformSphericalMeshStep
 
 
-class SO12to60BaseMesh(QuasiUniformSphericalMeshStep):
+class FRIS02to60BaseMesh(QuasiUniformSphericalMeshStep):
     """
     A step for creating SO12to60 meshes
     """
@@ -22,6 +22,19 @@ class SO12to60BaseMesh(QuasiUniformSphericalMeshStep):
                             package=self.__module__)
 
         self.add_input_file(filename='high_res_region.geojson',
+                            package=self.__module__)
+
+        self.add_input_file(filename='fris_v1_transition.geojson',
+                            package=self.__module__)
+
+        self.add_input_file(filename='fris_v1_peninsula_12km_v2.geojson',
+                            package=self.__module__)
+
+        self.add_input_file(
+            filename='fris_v1_peninsula_12km_transition.geojson',
+            package=self.__module__)
+
+        self.add_input_file(filename='fris_v1.geojson',
                             package=self.__module__)
 
         super().setup()
@@ -109,6 +122,78 @@ class SO12to60BaseMesh(QuasiUniformSphericalMeshStep):
         trans_width = 1600e3
         trans_start = 500e3
         dx_min = 12.
+
+        weights = 0.5 * (1 + np.tanh((so_signed_distance - trans_start) /
+                                     trans_width))
+
+        cellWidth = dx_min * (1 - weights) + cellWidth * weights
+
+        # Add high res FRIS region transition
+        dx_min_fris = 2.  # minimum resolution within the FRIS cavity
+
+        fc = read_feature_collection('fris_v1_transition.geojson')
+
+        so_signed_distance = signed_distance_from_geojson(fc, lon, lat,
+                                                          earth_radius,
+                                                          max_length=0.25)
+
+        # Equivalent to 600 km
+        trans_width = 600e3
+        trans_start = 0
+        dx_min = dx_min_fris
+
+        weights = 0.5 * (1 + np.tanh((so_signed_distance - trans_start) /
+                                     trans_width))
+
+        cellWidth = dx_min * (1 - weights) + cellWidth * weights
+
+        # Add 12 km sharp correction west of the peninsula
+        fc = read_feature_collection('fris_v1_peninsula_12km_v2.geojson')
+
+        so_signed_distance = signed_distance_from_geojson(fc, lon, lat,
+                                                          earth_radius,
+                                                          max_length=0.25)
+
+        # Equivalent to 10 km
+        trans_width = 10e3
+        trans_start = 0
+        dx_min = 12.
+
+        weights = 0.5 * (1 + np.tanh((so_signed_distance - trans_start) /
+                                     trans_width))
+
+        cellWidth = dx_min * (1 - weights) + cellWidth * weights
+
+        # Add 12 km transition correction west of the peninsula
+        fc = read_feature_collection(
+            'fris_v1_peninsula_12km_transition.geojson')
+
+        so_signed_distance = signed_distance_from_geojson(fc, lon, lat,
+                                                          earth_radius,
+                                                          max_length=0.25)
+
+        # Equivalent to 150 km
+        trans_width = 150e3
+        trans_start = 0
+        dx_min = 12.
+
+        weights = 0.5 * (1 + np.tanh((so_signed_distance - trans_start) /
+                                     trans_width))
+
+        cellWidth = dx_min * (1 - weights) + cellWidth * weights
+
+        # Add high res FRIS region inner
+        fc = read_feature_collection('fris_v1.geojson')
+
+        so_signed_distance = signed_distance_from_geojson(fc, lon, lat,
+                                                          earth_radius,
+                                                          max_length=0.25)
+
+        # Equivalent to 100 km (0 should be enough given the setup but to be
+        # safe)
+        trans_width = 100e3
+        trans_start = 0
+        dx_min = dx_min_fris
 
         weights = 0.5 * (1 + np.tanh((so_signed_distance - trans_start) /
                                      trans_width))

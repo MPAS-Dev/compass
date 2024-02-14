@@ -53,6 +53,11 @@ class GlobalOcean(TestGroup):
         # Kuroshio meshes without ice-shelf cavities
         self._add_tests(mesh_names=['Kuroshio12to60', 'Kuroshio8to60'])
 
+        self._add_tests(mesh_names=['FRISwISC01to60'])
+        self._add_tests(mesh_names=['FRISwISC02to60'])
+        self._add_tests(mesh_names=['FRISwISC04to60'])
+        self._add_tests(mesh_names=['FRISwISC08to60'])
+
         # A test case for making E3SM support files from an existing mesh
         self.add_test_case(FilesForE3SM(test_group=self))
 
