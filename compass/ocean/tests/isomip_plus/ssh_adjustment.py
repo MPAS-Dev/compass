@@ -1,6 +1,5 @@
-import time
-
 from compass.ocean.iceshelf import adjust_ssh
+from compass.ocean.time import get_time_interval_string
 from compass.step import Step
 
 
@@ -86,14 +85,11 @@ class SshAdjustment(Step):
         dt_per_km = config.getfloat('isomip_plus', 'dt_per_km')
         dt_btr_per_km = config.getfloat('isomip_plus', 'dt_btr_per_km')
 
-        # https://stackoverflow.com/a/1384565/7728169
-        # Note: this will drop any fractional seconds, which is usually okay
-        dt = time.strftime('%H:%M:%S', time.gmtime(dt_per_km * resolution))
-        btr_dt = time.strftime(
-            '%H:%M:%S', time.gmtime(dt_btr_per_km * resolution))
+        dt = get_time_interval_string(seconds=dt_per_km * resolution)
+        btr_dt = get_time_interval_string(seconds=dt_btr_per_km * resolution)
 
-        options = dict(config_dt="'{}'".format(dt),
-                       config_btr_dt="'{}'".format(btr_dt))
+        options = dict(config_dt=f"'{dt}'",
+                       config_btr_dt=f"'{btr_dt}'")
         self.update_namelist_at_runtime(options)
 
         iteration_count = config.getint('ssh_adjustment', 'iterations')
