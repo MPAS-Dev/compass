@@ -49,8 +49,7 @@ class E3smToCmipMaps(FilesForE3SMStep):
         Run this step of the testcase
         """
         super().run()
-        # more verbose creation date for clarity
-        creation_date = f'20{self.creation_date}'
+        creation_date = self.creation_date
         make_e3sm_to_cmip_maps(self.config, self.logger, self.mesh_short_name,
                                creation_date, self.ntasks)
 
