@@ -125,6 +125,7 @@ class CullMeshStep(Step):
             self.add_input_file(filename='topography.nc',
                                 work_dir_target=target)
             self.add_output_file('topography_culled.nc')
+            self.add_output_file('map_culled_to_base.nc')
 
         config = self.config
         self.cpus_per_task = config.getint('spherical_mesh',
@@ -265,6 +266,39 @@ def cull_mesh(with_cavities=False, with_critical_passages=False,
             custom_critical_passages, custom_land_blockages,
             preserve_floodplain, use_progress_bar, process_count,
             convert_to_cdf5, latitude_threshold, sweep_count)
+
+
+def write_map_culled_to_base(base_mesh_filename, culled_mesh_filename,
+                             out_filename):
+    ds_base = xr.open_dataset(base_mesh_filename)
+    ncells_base = ds_base.sizes['nCells']
+    lon_base = ds_base.lonCell.values
+    lat_base = ds_base.latCell.values
+
+    ds_culled = xr.open_dataset(culled_mesh_filename)
+    ncells_culled = ds_culled.sizes['nCells']
+    lon_culled = ds_culled.lonCell.values
+    lat_culled = ds_culled.latCell.values
+
+    # create a map from lat-lon pairs to base-mesh cell indices
+    map_base = dict()
+    for cell_index in range(ncells_base):
+        lon = lon_base[cell_index]
+        lat = lat_base[cell_index]
+        map_base[(lon, lat)] = cell_index
+
+    # create a map from culled- to base-mesh cell indices
+    map_culled_to_base = list()
+    for cell_index in range(ncells_culled):
+        lon = lon_culled[cell_index]
+        lat = lat_culled[cell_index]
+        # each (lon, lat) for a culled cell *must* be in the base mesh
+        map_culled_to_base.append(map_base[(lon, lat)])
+
+    ds_map_culled_to_base = xr.Dataset()
+    ds_map_culled_to_base['mapCulledToBase'] = (('nCells',),
+                                                map_culled_to_base)
+    write_netcdf(ds_map_culled_to_base, out_filename)
 
 
 def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
@@ -425,6 +459,9 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
         check_call(args, logger=logger)
 
     if has_remapped_topo:
+        write_map_culled_to_base(base_mesh_filename='base_mesh.nc',
+                                 culled_mesh_filename='culeed_mesh.nc',
+                                 out_filename='map_culled_to_base.nc')
         _cull_topo()
 
     if with_cavities:
@@ -471,30 +508,8 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
 
 
 def _cull_topo():
-    ds_base = xr.open_dataset('base_mesh.nc')
-    ncells_base = ds_base.sizes['nCells']
-    lon_base = ds_base.lonCell.values
-    lat_base = ds_base.latCell.values
-
-    ds_culled = xr.open_dataset('culled_mesh.nc')
-    ncells_culled = ds_culled.sizes['nCells']
-    lon_culled = ds_culled.lonCell.values
-    lat_culled = ds_culled.latCell.values
-
-    # create a map from lat-lon pairs to base-mesh cell indices
-    map_base = dict()
-    for cell_index in range(ncells_base):
-        lon = lon_base[cell_index]
-        lat = lat_base[cell_index]
-        map_base[(lon, lat)] = cell_index
-
-    # create a map from culled- to base-mesh cell indices
-    map_culled_to_base = list()
-    for cell_index in range(ncells_culled):
-        lon = lon_culled[cell_index]
-        lat = lat_culled[cell_index]
-        # each (lon, lat) for a culled cell *must* be in the base mesh
-        map_culled_to_base.append(map_base[(lon, lat)])
+    ds_map = xr.open_dataset('map_culled_to_base.nc')
+    map_culled_to_base = ds_map.mapCulledToBase.values
 
     ds_topo = xr.open_dataset('topography.nc')
     ds_topo = ds_topo.isel(nCells=map_culled_to_base)
