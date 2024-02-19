@@ -109,25 +109,20 @@ class FilesForE3SMStep(Step):
         """
         setup input files based on config options
         """
+        config = self.config
         self.add_input_file(filename='README', target='../README')
 
-        initial_state_filename = self.config.get(
-            'files_for_e3sm', 'ocean_initial_state_filename')
-        if initial_state_filename != 'autodetect':
-            initial_state_filename = os.path.normpath(os.path.join(
-                self.test_case.work_dir, initial_state_filename))
-            self.add_input_file(filename='initial_state.nc',
-                                target=initial_state_filename)
+        for prefix in ['base_mesh', 'initial_state', 'restart']:
+            filename = config.get('files_for_e3sm',
+                                  f'ocean_{prefix}_filename')
+            if filename != 'autodetect':
+                filename = os.path.normpath(os.path.join(
+                    self.test_case.work_dir, filename))
+                self.add_input_file(filename='base_mesh.nc',
+                                    target=filename)
 
-        restart_filename = self.config.get('files_for_e3sm',
-                                           'ocean_restart_filename')
-        if restart_filename != 'autodetect':
-            restart_filename = os.path.normpath(os.path.join(
-                self.test_case.work_dir, restart_filename))
-            self.add_input_file(filename='restart.nc', target=restart_filename)
-
-        with_ice_shelf_cavities = self.config.get('files_for_e3sm',
-                                                  'with_ice_shelf_cavities')
+        with_ice_shelf_cavities = config.get('files_for_e3sm',
+                                             'with_ice_shelf_cavities')
         if with_ice_shelf_cavities != 'autodetect':
             self.with_ice_shelf_cavities = \
                 (with_ice_shelf_cavities.lower() == 'true')
@@ -138,7 +133,7 @@ class FilesForE3SMStep(Step):
         Run this step of the testcase
         """
         config = self.config
-        for prefix in ['initial_state', 'restart']:
+        for prefix in ['base_mesh', 'initial_state', 'restart']:
             if not os.path.exists(f'{prefix}.nc'):
                 filename = config.get('files_for_e3sm',
                                       f'ocean_{prefix}_filename')

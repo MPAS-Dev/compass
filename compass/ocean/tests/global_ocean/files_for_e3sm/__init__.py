@@ -149,6 +149,13 @@ class FilesForE3SM(TestCase):
             graph_filename = os.path.abspath(graph_filename)
             config.set('files_for_e3sm', 'graph_filename', graph_filename)
 
+            base_mesh_filename = os.path.join(
+                self.base_work_dir, mesh.steps['base_mesh'].path,
+                'base_mesh.nc')
+            base_mesh_filename = os.path.abspath(base_mesh_filename)
+            config.set('files_for_e3sm', 'base_mesh_filename',
+                       base_mesh_filename)
+
         if init is not None:
             if mesh.with_ice_shelf_cavities:
                 initial_state_filename = \
