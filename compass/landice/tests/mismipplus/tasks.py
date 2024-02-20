@@ -1,5 +1,6 @@
 import xarray as xr
 
+
 # Following from:
 #   compass/ocean/tests/global_ocean/tasks.py
 
@@ -20,7 +21,7 @@ def get_ntasks_from_cell_count(config, cell_count):
 
     cell_count : int
         Number of horizontal cells in the mesh. The value of this parameter is
-        caclulated (or approximated) using the functions below.
+        calculated (or approximated) using the functions below.
 
     Returns
     -------
@@ -62,7 +63,8 @@ def exact_cell_count(mesh_filename):
     cell_count : int
         the number of cells in the mesh
     """
-    # get cell count from mesh
+
+     # get cell count from mesh
     with xr.open_dataset(mesh_filename) as ds:
         cell_count = ds.sizes['nCells']
 
@@ -88,6 +90,7 @@ def approx_cell_count(resolution, gutter_length):
     cell_count : int
         the number of cells in the mesh
     """
+
     # Fixed domain lenghts [m] (without gutter)
     Lx = 640e3
     Ly = 80e3

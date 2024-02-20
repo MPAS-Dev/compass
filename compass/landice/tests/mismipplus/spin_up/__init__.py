@@ -20,8 +20,8 @@ class SpinUp(TestCase):
         ----------
         test_group : compass.landice.test.mismipplus
             The test group that this test case belongs to
-
         """
+
         name = "spin_up"
 
         super().__init__(test_group=test_group, name=name)
@@ -50,7 +50,8 @@ class SpinUp(TestCase):
         """
         Set up the directory structure, based on the requested resolution.
         """
-        # get the config options from the TestCase, which
+
+         # get the config options from the TestCase, which
         config = self.config
 
         # get the resolution from the parsed config file(s)
@@ -78,7 +79,7 @@ class SpinUp(TestCase):
 
             # store the resolution (at the time of `compass setup`) as an
             # attribute. This is needed to prevent the changing of resolution
-            # between `compass setup` and `compas run`, which could result
+            # between `compass setup` and `compass run`, which could result
             # in a mesh having a different resolution than the dir it sits in.
             step.resolution = resolution
 

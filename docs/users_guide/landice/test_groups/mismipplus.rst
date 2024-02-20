@@ -4,10 +4,10 @@ mismipplus
 ==========
 
 The ``mismipplus`` test group (:py:class:`compass/landice/tests/mismipplus`)
-implements a limited number of the expeirments from the Marine Ice Sheet 
+implements a limited number of the experiments from the Marine Ice Sheet 
 Model Intercomparison Project Plus (MISMIP+; 
 `Asay-Davis et al., 2016 <https://gmd.copernicus.org/articles/9/2471/2016/gmd-9-2471-2016.pdf>`_).
-To date, the spinup and ``Ice0`` are the only expeirments currently supported. 
+To date, the spinup and ``Ice0`` are the only experiments currently supported. 
 In the future, additional test cases may be added for the missing MISMIP+ 
 experiments (i.e. ``Ice1r``, ``Ice1ra``, ``Ice1rr``, ``Ice2r``, ``Ice2r``, ``Ice2ra``, 
 ``Ice2rr``; Table 2. `Asay-Davis et al., 2016 <https://gmd.copernicus.org/articles/9/2471/2016/gmd-9-2471-2016.pdf>`_).
