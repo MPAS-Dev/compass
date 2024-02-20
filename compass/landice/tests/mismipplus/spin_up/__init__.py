@@ -51,7 +51,7 @@ class SpinUp(TestCase):
         Set up the directory structure, based on the requested resolution.
         """
 
-         # get the config options from the TestCase, which
+        # get the config options from the TestCase, which
         config = self.config
 
         # get the resolution from the parsed config file(s)

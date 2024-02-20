@@ -1,6 +1,5 @@
 import xarray as xr
 
-
 # Following from:
 #   compass/ocean/tests/global_ocean/tasks.py
 
@@ -33,18 +32,22 @@ def get_ntasks_from_cell_count(config, cell_count):
     """
 
     # read MPI related parameters from configuration file
-    cores_per_node = config.getfloat('parallel', 'cores_per_node')
-    max_cells_per_core = config.getfloat('mismipplus', 'max_cells_per_core')
-    goal_cells_per_core = config.getfloat('mismipplus', 'goal_cells_per_core')
+    cores_per_node = config.getint('parallel', 'cores_per_node')
+    max_cells_per_core = config.getint('mismipplus', 'max_cells_per_core')
+    goal_cells_per_core = config.getint('mismipplus', 'goal_cells_per_core')
 
     # from Xylar: machines (e.g. Perlmutter) seem to be happier with ntasks
     #             that are multiples of 4
-    min_tasks = max(1, 4 * round(cell_count / (4 * max_cells_per_core)))
-    ntasks = max(1, 4 * round(cell_count / (4 * goal_cells_per_core)))
+    min_tasks = max(
+        1, 4 * round(float(cell_count) / (4 * float(max_cells_per_core))))
+    ntasks = max(
+        1, 4 * round(float(cell_count) / (4 * float(goal_cells_per_core))))
+
     # if ntasks exceeds the number of cores per node, round to the nearest
     # multiple of `cores_per_node`.
     if ntasks > cores_per_node:
-        ntasks = int(cores_per_node) * round(ntasks / cores_per_node)
+        ntasks = int(
+            cores_per_node) * round(float(ntasks) / float(cores_per_node))
 
     return ntasks, min_tasks
 
@@ -64,7 +67,7 @@ def exact_cell_count(mesh_filename):
         the number of cells in the mesh
     """
 
-     # get cell count from mesh
+    # get cell count from mesh
     with xr.open_dataset(mesh_filename) as ds:
         cell_count = ds.sizes['nCells']
 

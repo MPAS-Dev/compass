@@ -465,11 +465,14 @@ def _setup_MISMPPlus_IC(config, logger, filename):
     # Skipping WHL step of setting the initial velocities to zero
     # since they are already zero.
 
-    # convert to MPAS units
+    # convert to MPAS units (m yr^{-1})^(1-1/n)
     C /= spy**(1.0 / 3.0)
 
-    # Set the effectivePressure using a Weertman power law
-    src['effectivePressure'].loc[:] = C
+    # Set the basal traction parameter for Weetman sliding law
+    src['muFriction'].loc[:] = C
+
+    # Set the effectivePressure to constant and uniform value
+    src['effectivePressure'].loc[:] = 1.0
 
     # Write the dataset to disk
     write_netcdf(src, filename)

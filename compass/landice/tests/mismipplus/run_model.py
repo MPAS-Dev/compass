@@ -73,6 +73,15 @@ class RunModel(Step):
             suffixes = ['landice']
         self.suffixes = suffixes
 
+        # The condition below will only be true for the `SpinUp` testcase
+        # where resolution is not know at the time of object construction
+        # (e.g. `compass list`), but instead is parsed from the config file
+        # when `compass setup` is executed. For the `SpinUp` testcase the
+        # resolution will be parsed by the testcases `configure`` method,
+        # where the attribute value is also overwritten to properly reflect
+        # the requested value. A default value is initialized here to
+        # follow best python practices and have all the attributes be set
+        # in the constructor.
         if resolution is None:
             resolution = 0.0
         self.resolution = resolution
