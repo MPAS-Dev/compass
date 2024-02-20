@@ -603,7 +603,7 @@ given ``<mesh>`` are:
 * ``ocean/global_ocean/<mesh>/EN4_1900/init``
 
 For meshes with ice-shelf cavities, ``init`` also interpolates the
-`Adusumilli et al. (2020) <https://doi.org/10.1038/s41561-020-0616-z>`_
+`Paolo et al. (2023) <https://doi.org/10.5194/tc-17-3409-2023>`_
 annual mean Antarctic melt rates to the MPAS mesh for use in subsequent test
 cases and possible incorporation as a forcing dataset in E3SM. The ``init``
 test case also performs an ``ssh_adjustment`` step as described in

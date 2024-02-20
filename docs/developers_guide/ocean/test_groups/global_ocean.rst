@@ -977,7 +977,7 @@ ecosystem input data files.
 
 The class :py:class:`compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt`
 defines a step that remaps melt rates from the satellite-derived dataset
-from `Adusumilli et al. (2020) <https://doi.org/10.1038/s41561-020-0616-z>`_.
+from `Paolo et al. (2023) <https://doi.org/10.5194/tc-17-3409-2023>`_.
 
 The class :py:class:`compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment`
 defines a step to adjust the ``landIcePressure`` variable to be in closer to
@@ -1365,7 +1365,7 @@ The test case is made up of 10 steps:
 
 :py:class:`compass.ocean.tests.global_ocean.files_for_e3sm.remap_ice_shelf_melt.RemapIceShelfMelt`
     is used to remap ice-shelf melt rates from the dataset of
-    `Adusumilli et al. (2020) <https://doi.org/10.1038/s41561-020-0616-z>`_
+    `Paolo et al. (2023) <https://doi.org/10.5194/tc-17-3409-2023>`_
     to the MPAS mesh.  This dataset is used in E3SM for ``DISMF`` (data
     ice-shelf melt flux) compsets.
 

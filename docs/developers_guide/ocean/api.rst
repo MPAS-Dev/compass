@@ -215,6 +215,7 @@ test cases and steps
    init.initial_state.InitialState.run
    init.remap_ice_shelf_melt.RemapIceShelfMelt
    init.remap_ice_shelf_melt.RemapIceShelfMelt.run
+   init.remap_ice_shelf_melt.remap_paolo
    init.remap_ice_shelf_melt.remap_adusumilli
    init.ssh_adjustment.SshAdjustment
    init.ssh_adjustment.SshAdjustment.setup
