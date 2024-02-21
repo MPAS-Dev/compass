@@ -100,7 +100,7 @@ def remap_paolo(in_filename, base_mesh_filename, culled_mesh_filename,
                 map_culled_to_base_filename=None):
     """
     Remap the Paolo et al. (2023; https://doi.org/10.5194/tc-17-3409-2023)
-    melt rates at 1 km resolution to an MPAS mesh
+    melt rates at ~2 km resolution to an MPAS mesh
 
     Parameters
     ----------
@@ -163,8 +163,9 @@ def remap_paolo(in_filename, base_mesh_filename, culled_mesh_filename,
 
     lx = np.abs(1e-3 * (x[-1] - x[0])).values
     ly = np.abs(1e-3 * (y[-1] - y[0])).values
+    dx = np.abs(1e-3 * (x[1] - x[0])).values
 
-    in_grid_name = f'{lx}x{ly}km_0.5km_Antarctic_stereo'
+    in_grid_name = f'{lx:.1f}x{ly:.1f}km_{dx:.3f}km_Antarctic_stereo'
 
     projection = pyproj.Proj('+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0 '
                              '+k_0=1.0 +x_0=0.0 +y_0=0.0 +ellps=WGS84')
@@ -172,29 +173,6 @@ def remap_paolo(in_filename, base_mesh_filename, culled_mesh_filename,
     logger.info('Creating the source grid descriptor...')
     in_descriptor = ProjectionGridDescriptor.create(
         projection=projection, x=x.values, y=y.values, meshName=in_grid_name)
-    logger.info('done.')
-
-    logger.info('Creating the source xarray dataset...')
-    ds = xr.Dataset()
-
-    # convert to the units and variable names expected in MPAS-O
-
-    # Paolo et al. (2023) ice density (from attributes)
-    rho_ice = 917.
-    s_per_yr = 365. * constants['SHR_CONST_CDAY']
-    latent_heat_of_fusion = constants['SHR_CONST_LATICE']
-    ds['x'] = x
-    ds['y'] = y
-    field = 'dataLandIceFreshwaterFlux'
-    # original field is negative for melt
-    ds[field] = -melt_rate * rho_ice / s_per_yr
-    ds[field].attrs['units'] = 'kg m^-2 s^-1'
-    field = 'dataLandIceHeatFlux'
-    ds[field] = (latent_heat_of_fusion *
-                 ds.dataLandIceFreshwaterFlux)
-    ds[field].attrs['units'] = 'W m^-2'
-    logger.info('Writing the source dataset...')
-    write_netcdf(ds, 'Paolo_2023_ismf_1992-2017_v1.0.nc')
     logger.info('done.')
 
     out_descriptor = MpasCellMeshDescriptor(base_mesh_filename, mesh_name)
@@ -207,13 +185,91 @@ def remap_paolo(in_filename, base_mesh_filename, culled_mesh_filename,
 
     remapper.build_mapping_file(method=method, mpiTasks=mpi_tasks,
                                 tempdir=mapping_directory, logger=logger,
-                                esmf_parallel_exec=parallel_executable)
+                                esmf_parallel_exec=parallel_executable,
+                                include_logs=True)
     logger.info('done.')
+
+    dx = np.abs(in_descriptor.xCorner[1:] - in_descriptor.xCorner[:-1])
+    dy = np.abs(in_descriptor.yCorner[1:] - in_descriptor.yCorner[:-1])
+    dx, dy = np.meshgrid(dx, dy)
+    planar_area = xr.DataArray(dims=('y', 'x'), data=dx * dy)
+
+    with xr.open_dataset(mapping_filename) as ds_map:
+        earth_radius = constants['SHR_CONST_REARTH']
+        map_src_area = ds_map.area_a.values * earth_radius**2
+        map_dst_area = ds_map.area_b.values * earth_radius**2
+        sphere_area = xr.DataArray(
+            dims=('y', 'x'), data=map_src_area.reshape(planar_area.shape))
+
+    logger.info('Creating the source xarray dataset...')
+    ds = xr.Dataset()
+
+    # convert to the units and variable names expected in MPAS-O
+
+    # Paolo et al. (2023) ice density (from attributes)
+    rho_ice = 917.
+    s_per_yr = 365. * constants['SHR_CONST_CDAY']
+    latent_heat_of_fusion = constants['SHR_CONST_LATICE']
+    ds['x'] = x
+    ds['y'] = y
+    area_ratio = planar_area / sphere_area
+    logger.info(f'min projected area ratio: {area_ratio.min().values}')
+    logger.info(f'max projected area ratio: {area_ratio.max().values}')
+    logger.info('')
+
+    # original field is negative for melt
+    fwf = -melt_rate * rho_ice / s_per_yr
+    field = 'dataLandIceFreshwaterFlux'
+    ds[field] = area_ratio * fwf
+    ds[field].attrs['units'] = 'kg m^-2 s^-1'
+    field = 'dataLandIceHeatFlux'
+    ds[field] = (latent_heat_of_fusion *
+                 ds.dataLandIceFreshwaterFlux)
+    ds[field].attrs['units'] = 'W m^-2'
+    logger.info('Writing the source dataset...')
+    write_netcdf(ds, 'Paolo_2023_ismf_1992-2017_v1.0.nc')
+    logger.info('done.')
+    logger.info('')
+
+    planar_flux = (fwf * planar_area).sum().values
+    sphere_flux = (ds.dataLandIceFreshwaterFlux * sphere_area).sum().values
+
+    logger.info(f'Area of a cell (m^2):             {planar_area[0,0]:.1f}')
+    logger.info(f'Total flux on plane (kg/s):       {planar_flux:.1f}')
+    logger.info(f'Total flux on sphere (kg/s):      {sphere_flux:.1f}')
+    logger.info('')
 
     logger.info('Remapping...')
     ds_remap = remapper.remap(
         ds, renormalizationThreshold=renormalization_threshold)
     logger.info('done.')
+    logger.info('')
+
+    with xr.open_dataset(base_mesh_filename) as ds_mesh:
+        mpas_area_cell = ds_mesh.areaCell
+        sphere_area_cell = xr.DataArray(
+            dims=('nCells',), data=map_dst_area)
+
+    area_ratio = sphere_area_cell / mpas_area_cell
+    logger.info(f'min MPAS area ratio: {area_ratio.min().values}')
+    logger.info(f'max MPAS area ratio: {area_ratio.max().values}')
+    logger.info('')
+
+    sphere_fwf = ds_remap.dataLandIceFreshwaterFlux
+
+    field = 'dataLandIceFreshwaterFlux'
+    ds_remap[field] = area_ratio * sphere_fwf
+    ds_remap[field].attrs['units'] = 'kg m^-2 s^-1'
+    field = 'dataLandIceHeatFlux'
+    ds_remap[field] = area_ratio * ds_remap[field]
+    ds_remap[field].attrs['units'] = 'W m^-2'
+
+    mpas_flux = (ds_remap.dataLandIceFreshwaterFlux *
+                 mpas_area_cell).sum().values
+    sphere_flux = (sphere_fwf * sphere_area_cell).sum().values
+
+    logger.info(f'Total flux w/ MPAS area (kg/s):   {mpas_flux:.1f}')
+    logger.info(f'Total flux w/ sphere area (kg/s): {sphere_flux:.1f}')
 
     if map_culled_to_base_filename is None:
         map_culled_to_base_filename = 'map_culled_to_base.nc'
@@ -436,11 +492,11 @@ def _reroute_missing_flux(base_mesh_filename, map_culled_to_base_filename,
     count = np.sum(reroute_mask.values)
     logger.info(f'Rerouting fluxes from {count} cells')
     fwf_land_ice = (land_ice_mask * fwf * area).sum().values
-    logger.info(f'Captured flux (kg/s):         {fwf_land_ice:.1f}')
+    logger.info(f'Captured flux (kg/s):             {fwf_land_ice:.1f}')
     fwf_rerouted = fw_mass_rerouted.sum().values
-    logger.info(f'Rerouted flux (kg/s):         {fwf_rerouted:.1f}')
+    logger.info(f'Rerouted flux (kg/s):             {fwf_rerouted:.1f}')
     fwf_total = (fwf * area).sum().values
-    logger.info(f'Total flux (kg/s):            {fwf_total:.1f}')
+    logger.info(f'Total flux (kg/s):                {fwf_total:.1f}')
     ds_to_route = xr.Dataset()
     ds_to_route['rerouteMask'] = reroute_mask
     write_netcdf(ds_to_route, 'route_mask.nc')
@@ -481,4 +537,5 @@ def _reroute_missing_flux(base_mesh_filename, map_culled_to_base_filename,
 
     fwf_total = (ds_out.dataLandIceFreshwaterFlux *
                  area.isel(nCells=map_culled_to_base)).sum().values
-    logger.info(f'Total after rerouting (kg/s): {fwf_total:.1f}')
+    logger.info(f'Total after rerouting (kg/s):     {fwf_total:.1f}')
+    logger.info('')
