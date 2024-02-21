@@ -68,7 +68,7 @@ circular_shelf
 
 
 crane
-~~~~
+~~~~~
 
 .. currentmodule:: compass.landice.tests.crane
 
