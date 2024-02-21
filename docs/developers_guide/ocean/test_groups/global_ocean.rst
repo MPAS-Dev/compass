@@ -863,8 +863,7 @@ WC14 and WCwISC14
 The ``WC14`` and ``WCwISC14`` meshes are the Water Cycle regionally refined
 meshes for E3SM v3.  They have higher resolution (~14-km) around the continental
 US, the Arctic Ocean, and a section of the North Atlantic containing the Gulf
-Stream. The resolution elsewhere varies between 35 km at the South Pole to 60
-km at mid latitudes, with a band of 30-km resolution around the equator.
+Stream. The resolution is uniformly about 30 km elsewhere.
 
 The class :py:class:`compass.ocean.tests.global_ocean.mesh.wc14.WC14BaseMesh`
 defines the resolution for the meshes. The
@@ -922,9 +921,9 @@ The default config options for these meshes are:
     # the minimum (finest) resolution in the mesh
     min_res = 14
     # the maximum (coarsest) resolution in the mesh, can be the same as min_res
-    max_res = 60
+    max_res = 30
     # The URL of the pull request documenting the creation of the mesh
-    pull_request = https://github.com/MPAS-Dev/MPAS-Model/pull/628
+    pull_request = https://github.com/MPAS-Dev/MPAS-Model/pull/780
 
 
     # config options related to initial condition and diagnostics support files
