@@ -1380,6 +1380,12 @@ The test case is made up of 10 steps:
     the MPAS mesh.  This dataset is used in E3SM for compsets with data iceberg
     freshwater fluxes (``DIB``).
 
+:py:class:`compass.ocean.tests.global_ocean.files_for_e3sm.remap_tidal_mixing.RemapTidalMixing`
+    is used to remap the RMS tidal velocity taken from the
+    `CATS 2008 <https://www.usap-dc.org/view/dataset/601235>`_ tidal model to
+    the MPAS mesh.  This RMS tidal velocity field can optionally be used in
+    the sub-ice-shelf melt parameterization.
+
 :py:class:`compass.ocean.tests.global_ocean.files_for_e3sm.write_coeffs_reconstruct.WriteCoeffsReconstruct`
     is used to do a one-time-step forward run to write out coefficients
     ``coeff_reconstruct`` for reconstructing vector fields at cell centers from
