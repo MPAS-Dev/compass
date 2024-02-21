@@ -176,8 +176,18 @@
 
         <span class="n">scrip_from_mpas</span><span class="p">(</span><span class="s1">&#39;restart.nc&#39;</span><span class="p">,</span> <span class="n">local_filename</span><span class="p">)</span>
 
+        <span class="n">diagnostic_grids_dir</span> <span class="o">=</span> \
+            <span class="s1">&#39;../assembled_files/diagnostics/grids&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">diagnostic_grids_dir</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">FileExistsError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
         <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">local_filename</span><span class="p">),</span>
                 <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ocean_inputdata_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">scrip_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">local_filename</span><span class="p">),</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">diagnostic_grids_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">scrip_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
             <span class="n">local_filename</span> <span class="o">=</span> <span class="s1">&#39;ocean.mask.scrip.nc&#39;</span>
@@ -187,7 +197,10 @@
                             <span class="n">useLandIceMask</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
             <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">local_filename</span><span class="p">),</span>
-                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ocean_inputdata_dir</span><span class="si">}</span><span class="s1">//</span><span class="si">{</span><span class="n">scrip_mask_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ocean_inputdata_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">scrip_mask_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">local_filename</span><span class="p">),</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">diagnostic_grids_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">scrip_mask_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 </div>
 
 </pre></div>
