@@ -54,8 +54,18 @@ class Scrip(FilesForE3SMStep):
 
         scrip_from_mpas('restart.nc', local_filename)
 
+        diagnostic_grids_dir = \
+            '../assembled_files/diagnostics/grids'
+        try:
+            os.makedirs(diagnostic_grids_dir)
+        except FileExistsError:
+            pass
+
         symlink(os.path.abspath(local_filename),
                 f'{self.ocean_inputdata_dir}/{scrip_filename}')
+
+        symlink(os.path.abspath(local_filename),
+                f'{diagnostic_grids_dir}/{scrip_filename}')
 
         if with_ice_shelf_cavities:
             local_filename = 'ocean.mask.scrip.nc'
@@ -65,4 +75,7 @@ class Scrip(FilesForE3SMStep):
                             useLandIceMask=True)
 
             symlink(os.path.abspath(local_filename),
-                    f'{self.ocean_inputdata_dir}//{scrip_mask_filename}')
+                    f'{self.ocean_inputdata_dir}/{scrip_mask_filename}')
+
+            symlink(os.path.abspath(local_filename),
+                    f'{diagnostic_grids_dir}/{scrip_mask_filename}')
