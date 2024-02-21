@@ -12,6 +12,11 @@ class E3smToCmipMaps(FilesForE3SMStep):
     """
     A step for creating mapping files from the MPAS-Ocean mesh to a standard
     CMIP6 mesh
+
+    Attributes
+    ----------
+    map_types : list
+        A list of map types to generate
     """
     def __init__(self, test_case):
         """
@@ -40,9 +45,12 @@ class E3smToCmipMaps(FilesForE3SMStep):
             target='cmip6_720x1440_scrip.20181001.nc',
             database='map_database')
 
-        self.add_output_file(filename='map_mpas_to_cmip6_aave.nc')
-        self.add_output_file(filename='map_mpas_to_cmip6_mono.nc')
-        self.add_output_file(filename='map_mpas_to_cmip6_nco.nc')
+        self.map_types = ['esmfaave', 'ncoaave', 'traave', 'trfv2',
+                          'esmfbilin', 'ncoidw', 'trbilin', 'trintbilin']
+
+        for map_type in self.map_types:
+            filename = f'map_mpas_to_cmip6_{map_type}.nc'
+            self.add_output_file(filename=filename)
 
     def run(self):
         """
@@ -51,11 +59,11 @@ class E3smToCmipMaps(FilesForE3SMStep):
         super().run()
         creation_date = self.creation_date
         make_e3sm_to_cmip_maps(self.config, self.logger, self.mesh_short_name,
-                               creation_date, self.ntasks)
+                               creation_date, self.ntasks, self.map_types)
 
 
 def make_e3sm_to_cmip_maps(config, logger, mesh_short_name, creation_date,
-                           ntasks):
+                           ntasks, map_types):
     """
     Make mapping file from the MPAS-Ocean mesh to the CMIP6 grid
 
@@ -75,6 +83,11 @@ def make_e3sm_to_cmip_maps(config, logger, mesh_short_name, creation_date,
 
     ntasks : int
         The number of parallel tasks to use for remapping
+
+    map_types : list
+        A list of one or more of the available map types: 'esmfaave',
+        'ncoaave', 'traave', 'trfv2', 'esmfbilin', 'ncoidw', 'trbilin',
+        'trintbilin'
     """
 
     link_dir = '../assembled_files/diagnostics/maps'
@@ -106,18 +119,18 @@ def make_e3sm_to_cmip_maps(config, logger, mesh_short_name, creation_date,
         raise ValueError(f'Unexpected parallel system: {parallel_system}')
     parallel_command = ' '.join(parallel_command)
 
-    map_methods = dict(aave='conserve', mono='fv2fv_flx', nco='nco')
-    for suffix, map_method in map_methods.items():
-        local_map_filename = f'map_mpas_to_cmip6_{suffix}.nc'
+    for map_type in map_types:
+        local_map_filename = f'map_mpas_to_cmip6_{map_type}.nc'
         args = ['ncremap', f'--mpi_pfx={parallel_command}',
-                f'--alg_typ={map_method}',
+                f'--alg_typ={map_type}',
                 f'--grd_src={src_scrip_filename}',
                 f'--grd_dst={dst_scrip_filename}',
                 f'--map={local_map_filename}']
         check_call(args, logger=logger)
 
         map_filename = \
-            f'map_{mesh_short_name}_to_cmip6_{cmip6_grid_res}_{suffix}.{creation_date}.nc'  # noqa: E501
+            f'map_{mesh_short_name}_to_cmip6_{cmip6_grid_res}_{map_type}.' \
+            f'{creation_date}.nc'
 
         symlink(os.path.abspath(local_map_filename),
                 f'{link_dir}/{map_filename}')
