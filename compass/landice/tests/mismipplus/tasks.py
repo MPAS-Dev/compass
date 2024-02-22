@@ -38,16 +38,13 @@ def get_ntasks_from_cell_count(config, cell_count):
 
     # from Xylar: machines (e.g. Perlmutter) seem to be happier with ntasks
     #             that are multiples of 4
-    min_tasks = max(
-        1, 4 * round(float(cell_count) / (4 * float(max_cells_per_core))))
-    ntasks = max(
-        1, 4 * round(float(cell_count) / (4 * float(goal_cells_per_core))))
+    min_tasks = max(1, 4 * round(cell_count / (4 * max_cells_per_core)))
+    ntasks = max(1, 4 * round(cell_count / (4 * goal_cells_per_core)))
 
     # if ntasks exceeds the number of cores per node, round to the nearest
     # multiple of `cores_per_node`.
     if ntasks > cores_per_node:
-        ntasks = int(
-            cores_per_node) * round(float(ntasks) / float(cores_per_node))
+        ntasks = cores_per_node * round(ntasks / cores_per_node)
 
     return ntasks, min_tasks
 
