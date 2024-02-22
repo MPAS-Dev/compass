@@ -1,6 +1,5 @@
 import os
 import shutil
-import time
 
 import numpy as np
 import xarray
@@ -8,6 +7,7 @@ import xarray
 from compass.model import run_model
 from compass.ocean.tests.isomip_plus.evap import update_evaporation_flux
 from compass.ocean.tests.isomip_plus.viz.plot import MoviePlotter
+from compass.ocean.time import get_time_interval_string
 from compass.step import Step
 
 
@@ -148,11 +148,8 @@ class Forward(Step):
         dt_per_km = config.getfloat('isomip_plus', 'dt_per_km')
         dt_btr_per_km = config.getfloat('isomip_plus', 'dt_btr_per_km')
 
-        # https://stackoverflow.com/a/1384565/7728169
-        # Note: this will drop any fractional seconds, which is usually okay
-        dt = time.strftime('%H:%M:%S', time.gmtime(dt_per_km * resolution))
-        btr_dt = time.strftime(
-            '%H:%M:%S', time.gmtime(dt_btr_per_km * resolution))
+        dt = get_time_interval_string(seconds=dt_per_km * resolution)
+        btr_dt = get_time_interval_string(seconds=dt_btr_per_km * resolution)
 
         options = dict(config_dt=f"'{dt}'",
                        config_btr_dt=f"'{btr_dt}'")
