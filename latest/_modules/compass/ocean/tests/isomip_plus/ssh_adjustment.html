@@ -112,9 +112,8 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.isomip_plus.ssh_adjustment</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">time</span>
-
-<span class="kn">from</span> <span class="nn">compass.ocean.iceshelf</span> <span class="kn">import</span> <span class="n">adjust_ssh</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.ocean.iceshelf</span> <span class="kn">import</span> <span class="n">adjust_ssh</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.time</span> <span class="kn">import</span> <span class="n">get_time_interval_string</span>
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
 
@@ -210,14 +209,11 @@
         <span class="n">dt_per_km</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;dt_per_km&#39;</span><span class="p">)</span>
         <span class="n">dt_btr_per_km</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;dt_btr_per_km&#39;</span><span class="p">)</span>
 
-        <span class="c1"># https://stackoverflow.com/a/1384565/7728169</span>
-        <span class="c1"># Note: this will drop any fractional seconds, which is usually okay</span>
-        <span class="n">dt</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span><span class="p">(</span><span class="n">dt_per_km</span> <span class="o">*</span> <span class="n">resolution</span><span class="p">))</span>
-        <span class="n">btr_dt</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span>
-            <span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span><span class="p">(</span><span class="n">dt_btr_per_km</span> <span class="o">*</span> <span class="n">resolution</span><span class="p">))</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">get_time_interval_string</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">dt_per_km</span> <span class="o">*</span> <span class="n">resolution</span><span class="p">)</span>
+        <span class="n">btr_dt</span> <span class="o">=</span> <span class="n">get_time_interval_string</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">dt_btr_per_km</span> <span class="o">*</span> <span class="n">resolution</span><span class="p">)</span>
 
-        <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config_dt</span><span class="o">=</span><span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dt</span><span class="p">),</span>
-                       <span class="n">config_btr_dt</span><span class="o">=</span><span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">btr_dt</span><span class="p">))</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config_dt</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">dt</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
+                       <span class="n">config_btr_dt</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">btr_dt</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
 
         <span class="n">iteration_count</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ssh_adjustment&#39;</span><span class="p">,</span> <span class="s1">&#39;iterations&#39;</span><span class="p">)</span>
