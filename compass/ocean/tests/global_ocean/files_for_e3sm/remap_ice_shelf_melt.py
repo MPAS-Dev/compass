@@ -81,11 +81,13 @@ class RemapIceShelfMelt(FilesForE3SMStep):
 
             parallel_executable = config.get('parallel', 'parallel_executable')
 
-            mesh_filename = 'initial_state.nc'
+            base_mesh_filename = 'base_mesh.nc'
+            culled_mesh_filename = 'initial_state.nc'
             mesh_name = self.mesh_short_name
             land_ice_mask_filename = 'initial_state.nc'
 
-            remap_adusumilli(in_filename, mesh_filename, mesh_name,
+            remap_adusumilli(in_filename, base_mesh_filename,
+                             culled_mesh_filename, mesh_name,
                              land_ice_mask_filename, remapped_filename,
                              logger=logger, mpi_tasks=ntasks,
                              parallel_executable=parallel_executable)

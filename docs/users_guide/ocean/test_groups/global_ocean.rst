@@ -200,6 +200,10 @@ Note that meshes and test cases may modify these options, as noted below.
     # directory of an ocean restart file on the given mesh
     ocean_restart_filename = autodetect
 
+   # the base mesh before culling for remapping and rerouting data ice-shelf melt
+   # fluxes
+   base_mesh_filename = autodetect
+
     # the initial state used to extract the ocean and sea-ice meshes
     ocean_initial_state_filename = ${ocean_restart_filename}
 
@@ -882,14 +886,17 @@ graph partition files for MPAS-Seaice, either weren't created with the initial
 condition or they are out of date.  The ``ocean/global_ocean/files_for_e3sm``
 test case is useful for creating these files.
 
-The user should create a local symlink to an E3SM initial condition for
-MPAS-Ocean for the desired mesh.  Then, the config options in
-``files_for_e3sm.cfg`` should be edited.  In this example, we have
-created a local link to the ``ocean.EC30to60E2r3.210210.nc`` initial
-condition and the ``mpas-o.graph.info.200904`` graph file in the test case
-directory.  The mesh name has also been set to the E3SM short name for this
-mesh ``EC30to60E2r3``.  We indicate that the mesh does not include ice-shelf
-cavities, which means we don't compute masks for ice-shelf melt rates.
+The user should create local symlinks to an E3SM initial condition, a graph
+file, and a base-mesh file for MPAS-Ocean for the desired mesh.  Then, the
+config options in ``files_for_e3sm.cfg`` should be edited.  In this example,
+we have created a local link to the ``mpaso.IcoswISC30E3r5.20231120.nc``
+initial condition and the ``mpas-o.graph.info.20231120`` graph file in the
+test case directory.  We also created a symlink to the base mesh (found in the
+``share/meshes/mpas/ocean`` subdirectory within the ``inputdata`` diretory on
+a given E3SM supported machine). The mesh name has also been set to the E3SM
+short name for this mesh ``IcoswISC30E3r5``.  We indicate that the mesh
+includes ice-shelf cavities, which means we include processing related to
+ice-shelf melt rates.
 
 We also need to provide several options in the ``[global_ocean]`` section of
 the config file so the metadata added to the initial conditions will be
@@ -899,33 +906,33 @@ correct.
 
     [global_ocean]
 
-    prefix = EC
+    prefix = Icos
 
-    mesh_description = MPAS Eddy Closure mesh for E3SM version ${e3sm_version} with
-                       enhanced resolution around the equator (30 km), South pole
-                       (35 km), Greenland (${min_res} km), ${max_res}-km resolution
-                       at mid latitudes, and <<<levels>>> vertical levels
+   mesh_description = MPAS subdivided icosahedral mesh for E3SM version
+                     ${e3sm_version} at ${min_res}-km global resolution with
+                     <<<levels>>> vertical level
 
-    bathy_description = Bathymetry is from GEBCO 2022, combined with BedMachine
-                        Antarctica v2 around Antarctica.
+    bathy_description = Bathymetry is from GEBCO 2023, combined with
+                        BedMachine Antarctica v3 around Antarctica.
 
-    init_description = Polar science center Hydrographic Climatology (PHC)
+    init_description = World Ocean Atlas 2023 climatology 1991-2020
 
-    e3sm_version = 2
-    mesh_revision = 3
+    e3sm_version = 3
+    mesh_revision = 5
     min_res = 30
-    max_res = 60
-    pull_request = https://github.com/MPAS-Dev/MPAS-Model/pull/669
-    creation_date = 230311
+    max_res = 30
+    pull_request = https://github.com/MPAS-Dev/compass/pull/735
+    creation_date = 20240219
     author = Xylar Asay-Davis
     email = xylar@lanl.gov
 
     [files_for_e3sm]
 
-    mesh_short_name = EC30to60E2r3
-    ocean_restart_filename = ocean.EC30to60E2r3.210210.nc
-    graph_filename = mpas-o.graph.info.200904
-    with_ice_shelf_cavities = False
+    mesh_short_name = IcoswISC30E3r5
+    ocean_restart_filename = mpaso.IcoswISC30E3r5.20231120.nc
+    ocean_base_mesh_filename = IcoswISC30E3r5_base.20240219.nc
+    graph_filename = mpas-o.graph.info.20231120
+    with_ice_shelf_cavities = True
 
 The resulting files are symlinked in a subdirectory of the test case called
 ``assembled_files``.  This directory contains subdirectories with the same

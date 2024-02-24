@@ -120,3 +120,8 @@ class OceanMesh(FilesForE3SMStep):
 
         symlink(os.path.abspath(dest_filename),
                 f'{self.ocean_mesh_dir}/{dest_filename}')
+
+        dest_filename = f'{self.mesh_short_name}_base.{self.creation_date}.nc'
+
+        symlink(os.path.abspath('base_mesh.nc'),
+                f'{self.ocean_mesh_dir}/{dest_filename}')
