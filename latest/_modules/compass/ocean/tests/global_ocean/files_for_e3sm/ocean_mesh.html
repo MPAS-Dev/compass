@@ -241,6 +241,11 @@
             <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">dest_filename</span><span class="p">)</span>
 
         <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">dest_filename</span><span class="p">),</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ocean_mesh_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">dest_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">dest_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_short_name</span><span class="si">}</span><span class="s1">_base.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">creation_date</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+
+        <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">),</span>
                 <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ocean_mesh_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">dest_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 </div>
 

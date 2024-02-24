@@ -245,6 +245,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">,</span>
                                 <span class="n">work_dir_target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="s1">&#39;topography_culled.nc&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="s1">&#39;map_culled_to_base.nc&#39;</span><span class="p">)</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span>
@@ -393,6 +394,39 @@
             <span class="n">preserve_floodplain</span><span class="p">,</span> <span class="n">use_progress_bar</span><span class="p">,</span> <span class="n">process_count</span><span class="p">,</span>
             <span class="n">convert_to_cdf5</span><span class="p">,</span> <span class="n">latitude_threshold</span><span class="p">,</span> <span class="n">sweep_count</span><span class="p">)</span></div>
 
+
+
+<span class="k">def</span> <span class="nf">write_map_culled_to_base</span><span class="p">(</span><span class="n">base_mesh_filename</span><span class="p">,</span> <span class="n">culled_mesh_filename</span><span class="p">,</span>
+                             <span class="n">out_filename</span><span class="p">):</span>
+    <span class="n">ds_base</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">base_mesh_filename</span><span class="p">)</span>
+    <span class="n">ncells_base</span> <span class="o">=</span> <span class="n">ds_base</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]</span>
+    <span class="n">lon_base</span> <span class="o">=</span> <span class="n">ds_base</span><span class="o">.</span><span class="n">lonCell</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">lat_base</span> <span class="o">=</span> <span class="n">ds_base</span><span class="o">.</span><span class="n">latCell</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">ds_culled</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">culled_mesh_filename</span><span class="p">)</span>
+    <span class="n">ncells_culled</span> <span class="o">=</span> <span class="n">ds_culled</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]</span>
+    <span class="n">lon_culled</span> <span class="o">=</span> <span class="n">ds_culled</span><span class="o">.</span><span class="n">lonCell</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">lat_culled</span> <span class="o">=</span> <span class="n">ds_culled</span><span class="o">.</span><span class="n">latCell</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1"># create a map from lat-lon pairs to base-mesh cell indices</span>
+    <span class="n">map_base</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">cell_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ncells_base</span><span class="p">):</span>
+        <span class="n">lon</span> <span class="o">=</span> <span class="n">lon_base</span><span class="p">[</span><span class="n">cell_index</span><span class="p">]</span>
+        <span class="n">lat</span> <span class="o">=</span> <span class="n">lat_base</span><span class="p">[</span><span class="n">cell_index</span><span class="p">]</span>
+        <span class="n">map_base</span><span class="p">[(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)]</span> <span class="o">=</span> <span class="n">cell_index</span>
+
+    <span class="c1"># create a map from culled- to base-mesh cell indices</span>
+    <span class="n">map_culled_to_base</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">cell_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ncells_culled</span><span class="p">):</span>
+        <span class="n">lon</span> <span class="o">=</span> <span class="n">lon_culled</span><span class="p">[</span><span class="n">cell_index</span><span class="p">]</span>
+        <span class="n">lat</span> <span class="o">=</span> <span class="n">lat_culled</span><span class="p">[</span><span class="n">cell_index</span><span class="p">]</span>
+        <span class="c1"># each (lon, lat) for a culled cell *must* be in the base mesh</span>
+        <span class="n">map_culled_to_base</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">map_base</span><span class="p">[(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)])</span>
+
+    <span class="n">ds_map_culled_to_base</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+    <span class="n">ds_map_culled_to_base</span><span class="p">[</span><span class="s1">&#39;mapCulledToBase&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nCells&#39;</span><span class="p">,),</span>
+                                                <span class="n">map_culled_to_base</span><span class="p">)</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_map_culled_to_base</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_cull_mesh_with_logging</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">with_cavities</span><span class="p">,</span> <span class="n">with_critical_passages</span><span class="p">,</span>
@@ -553,6 +587,9 @@
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">has_remapped_topo</span><span class="p">:</span>
+        <span class="n">write_map_culled_to_base</span><span class="p">(</span><span class="n">base_mesh_filename</span><span class="o">=</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span>
+                                 <span class="n">culled_mesh_filename</span><span class="o">=</span><span class="s1">&#39;culeed_mesh.nc&#39;</span><span class="p">,</span>
+                                 <span class="n">out_filename</span><span class="o">=</span><span class="s1">&#39;map_culled_to_base.nc&#39;</span><span class="p">)</span>
         <span class="n">_cull_topo</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">with_cavities</span><span class="p">:</span>
@@ -599,30 +636,8 @@
 
 
 <span class="k">def</span> <span class="nf">_cull_topo</span><span class="p">():</span>
-    <span class="n">ds_base</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
-    <span class="n">ncells_base</span> <span class="o">=</span> <span class="n">ds_base</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]</span>
-    <span class="n">lon_base</span> <span class="o">=</span> <span class="n">ds_base</span><span class="o">.</span><span class="n">lonCell</span><span class="o">.</span><span class="n">values</span>
-    <span class="n">lat_base</span> <span class="o">=</span> <span class="n">ds_base</span><span class="o">.</span><span class="n">latCell</span><span class="o">.</span><span class="n">values</span>
-
-    <span class="n">ds_culled</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">)</span>
-    <span class="n">ncells_culled</span> <span class="o">=</span> <span class="n">ds_culled</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]</span>
-    <span class="n">lon_culled</span> <span class="o">=</span> <span class="n">ds_culled</span><span class="o">.</span><span class="n">lonCell</span><span class="o">.</span><span class="n">values</span>
-    <span class="n">lat_culled</span> <span class="o">=</span> <span class="n">ds_culled</span><span class="o">.</span><span class="n">latCell</span><span class="o">.</span><span class="n">values</span>
-
-    <span class="c1"># create a map from lat-lon pairs to base-mesh cell indices</span>
-    <span class="n">map_base</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">cell_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ncells_base</span><span class="p">):</span>
-        <span class="n">lon</span> <span class="o">=</span> <span class="n">lon_base</span><span class="p">[</span><span class="n">cell_index</span><span class="p">]</span>
-        <span class="n">lat</span> <span class="o">=</span> <span class="n">lat_base</span><span class="p">[</span><span class="n">cell_index</span><span class="p">]</span>
-        <span class="n">map_base</span><span class="p">[(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)]</span> <span class="o">=</span> <span class="n">cell_index</span>
-
-    <span class="c1"># create a map from culled- to base-mesh cell indices</span>
-    <span class="n">map_culled_to_base</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">cell_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ncells_culled</span><span class="p">):</span>
-        <span class="n">lon</span> <span class="o">=</span> <span class="n">lon_culled</span><span class="p">[</span><span class="n">cell_index</span><span class="p">]</span>
-        <span class="n">lat</span> <span class="o">=</span> <span class="n">lat_culled</span><span class="p">[</span><span class="n">cell_index</span><span class="p">]</span>
-        <span class="c1"># each (lon, lat) for a culled cell *must* be in the base mesh</span>
-        <span class="n">map_culled_to_base</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">map_base</span><span class="p">[(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)])</span>
+    <span class="n">ds_map</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;map_culled_to_base.nc&#39;</span><span class="p">)</span>
+    <span class="n">map_culled_to_base</span> <span class="o">=</span> <span class="n">ds_map</span><span class="o">.</span><span class="n">mapCulledToBase</span><span class="o">.</span><span class="n">values</span>
 
     <span class="n">ds_topo</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">)</span>
     <span class="n">ds_topo</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nCells</span><span class="o">=</span><span class="n">map_culled_to_base</span><span class="p">)</span>

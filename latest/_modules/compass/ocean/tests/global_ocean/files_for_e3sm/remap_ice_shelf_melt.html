@@ -203,11 +203,13 @@
 
             <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;parallel_executable&#39;</span><span class="p">)</span>
 
-            <span class="n">mesh_filename</span> <span class="o">=</span> <span class="s1">&#39;initial_state.nc&#39;</span>
+            <span class="n">base_mesh_filename</span> <span class="o">=</span> <span class="s1">&#39;base_mesh.nc&#39;</span>
+            <span class="n">culled_mesh_filename</span> <span class="o">=</span> <span class="s1">&#39;initial_state.nc&#39;</span>
             <span class="n">mesh_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_short_name</span>
             <span class="n">land_ice_mask_filename</span> <span class="o">=</span> <span class="s1">&#39;initial_state.nc&#39;</span>
 
-            <span class="n">remap_adusumilli</span><span class="p">(</span><span class="n">in_filename</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span>
+            <span class="n">remap_adusumilli</span><span class="p">(</span><span class="n">in_filename</span><span class="p">,</span> <span class="n">base_mesh_filename</span><span class="p">,</span>
+                             <span class="n">culled_mesh_filename</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span>
                              <span class="n">land_ice_mask_filename</span><span class="p">,</span> <span class="n">remapped_filename</span><span class="p">,</span>
                              <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="n">mpi_tasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span>
                              <span class="n">parallel_executable</span><span class="o">=</span><span class="n">parallel_executable</span><span class="p">)</span>

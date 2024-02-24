@@ -275,6 +275,13 @@
             <span class="n">graph_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">graph_filename</span><span class="p">)</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span> <span class="s1">&#39;graph_filename&#39;</span><span class="p">,</span> <span class="n">graph_filename</span><span class="p">)</span>
 
+            <span class="n">base_mesh_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">base_work_dir</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;base_mesh&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
+                <span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
+            <span class="n">base_mesh_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">base_mesh_filename</span><span class="p">)</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span> <span class="s1">&#39;base_mesh_filename&#39;</span><span class="p">,</span>
+                       <span class="n">base_mesh_filename</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">init</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
                 <span class="n">initial_state_filename</span> <span class="o">=</span> \

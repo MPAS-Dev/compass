@@ -120,7 +120,9 @@
 <span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
 <span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">,</span> <span class="n">ProjectionGridDescriptor</span><span class="p">,</span> <span class="n">Remapper</span>
+<span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">KDTree</span>
 
+<span class="kn">from</span> <span class="nn">compass.ocean.mesh.cull</span> <span class="kn">import</span> <span class="n">write_map_culled_to_base</span>
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
 
@@ -152,15 +154,24 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;remap_ice_shelf_melt&#39;</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
                          <span class="n">min_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="n">mesh_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">get_cull_mesh_path</span><span class="p">()</span>
+        <span class="n">base_mesh_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;base_mesh&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
+        <span class="n">culled_mesh_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;cull_mesh&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span>
-            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc&#39;</span><span class="p">)</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_mesh_path</span><span class="si">}</span><span class="s1">/base_mesh.nc&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">,</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">culled_mesh_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;map_culled_to_base.nc&#39;</span><span class="p">,</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">culled_mesh_path</span><span class="si">}</span><span class="s1">/map_culled_to_base.nc&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;land_ice_mask.nc&#39;</span><span class="p">,</span>
-            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/land_ice_mask.nc&#39;</span><span class="p">)</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">culled_mesh_path</span><span class="si">}</span><span class="s1">/land_ice_mask.nc&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;Adusumilli_2020_iceshelf_melt_rates_2010-2018_v0.h5&#39;</span><span class="p">,</span>
@@ -189,25 +200,30 @@
 
         <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;parallel_executable&#39;</span><span class="p">)</span>
 
-        <span class="n">mesh_filename</span> <span class="o">=</span> <span class="s1">&#39;mesh.nc&#39;</span>
+        <span class="n">base_mesh_filename</span> <span class="o">=</span> <span class="s1">&#39;base_mesh.nc&#39;</span>
+        <span class="n">culled_mesh_filename</span> <span class="o">=</span> <span class="s1">&#39;culled_mesh.nc&#39;</span>
         <span class="n">land_ice_mask_filename</span> <span class="o">=</span> <span class="s1">&#39;land_ice_mask.nc&#39;</span>
+        <span class="n">map_culled_to_base_filename</span> <span class="o">=</span> <span class="s1">&#39;map_culled_to_base.nc&#39;</span>
         <span class="n">mesh_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">mesh_name</span>
 
-        <span class="n">remap_adusumilli</span><span class="p">(</span><span class="n">in_filename</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span>
-                         <span class="n">land_ice_mask_filename</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">,</span>
-                         <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="n">mpi_tasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span>
-                         <span class="n">parallel_executable</span><span class="o">=</span><span class="n">parallel_executable</span><span class="p">)</span></div>
+        <span class="n">remap_adusumilli</span><span class="p">(</span>
+            <span class="n">in_filename</span><span class="p">,</span> <span class="n">base_mesh_filename</span><span class="p">,</span> <span class="n">culled_mesh_filename</span><span class="p">,</span>
+            <span class="n">mesh_name</span><span class="p">,</span> <span class="n">land_ice_mask_filename</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">,</span>
+            <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="n">mpi_tasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span>
+            <span class="n">parallel_executable</span><span class="o">=</span><span class="n">parallel_executable</span><span class="p">,</span>
+            <span class="n">map_culled_to_base_filename</span><span class="o">=</span><span class="n">map_culled_to_base_filename</span><span class="p">)</span></div>
 </div>
 
 
 
 <div class="viewcode-block" id="remap_adusumilli">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.remap_adusumilli.html#compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.remap_adusumilli">[docs]</a>
-<span class="k">def</span> <span class="nf">remap_adusumilli</span><span class="p">(</span><span class="n">in_filename</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span>
-                     <span class="n">land_ice_mask_filename</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
+<span class="k">def</span> <span class="nf">remap_adusumilli</span><span class="p">(</span><span class="n">in_filename</span><span class="p">,</span> <span class="n">base_mesh_filename</span><span class="p">,</span> <span class="n">culled_mesh_filename</span><span class="p">,</span>
+                     <span class="n">mesh_name</span><span class="p">,</span> <span class="n">land_ice_mask_filename</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
                      <span class="n">mapping_directory</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;conserve&#39;</span><span class="p">,</span>
                      <span class="n">renormalization_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mpi_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                     <span class="n">parallel_executable</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                     <span class="n">parallel_executable</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">map_culled_to_base_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Remap the Adusumilli et al. (2020) melt rates at 1 km resolution to an MPAS</span>
 <span class="sd">    mesh</span>
@@ -217,8 +233,11 @@
 <span class="sd">    in_filename : str</span>
 <span class="sd">        The original Adusumilli et al. (2020) melt rates</span>
 
-<span class="sd">    mesh_filename : str</span>
-<span class="sd">        The MPAS mesh</span>
+<span class="sd">    base_mesh_filename : str</span>
+<span class="sd">        The base MPAS mesh before land is culled</span>
+
+<span class="sd">    culled_mesh_filename : str</span>
+<span class="sd">        The MPAS mesh after land has been culled</span>
 
 <span class="sd">    mesh_name : str</span>
 <span class="sd">        The name of the mesh (e.g. oEC60to30wISC), used in the name of the</span>
@@ -253,6 +272,10 @@
 <span class="sd">    parallel_executable : {&#39;srun&#39;, &#39;mpirun&#39;}, optional</span>
 <span class="sd">        The name of the parallel executable to use to launch ESMF tools.</span>
 <span class="sd">        But default, &#39;mpirun&#39; from the conda environment is used</span>
+
+<span class="sd">    map_culled_to_base_filename : str, optional</span>
+<span class="sd">        A file with indices that map from the culled to the base MPAS mesh. If</span>
+<span class="sd">        not provided, they will be computed</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Reading </span><span class="si">{</span><span class="n">in_filename</span><span class="si">}</span><span class="s1">...&#39;</span><span class="p">)</span>
@@ -298,10 +321,10 @@
     <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;Adusumilli_2020_ismf_2010-2018_v0.nc&#39;</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;done.&#39;</span><span class="p">)</span>
 
-    <span class="n">out_descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">)</span>
+    <span class="n">out_descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span><span class="n">base_mesh_filename</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">)</span>
 
     <span class="n">mapping_filename</span> <span class="o">=</span> \
-        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mapping_directory</span><span class="si">}</span><span class="s1">/map_</span><span class="si">{</span><span class="n">in_grid_name</span><span class="si">}</span><span class="s1">_to_</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mapping_directory</span><span class="si">}</span><span class="s1">/map_</span><span class="si">{</span><span class="n">in_grid_name</span><span class="si">}</span><span class="s1">_to_</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">_base.nc&#39;</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Creating the mapping file </span><span class="si">{</span><span class="n">mapping_filename</span><span class="si">}</span><span class="s1">...&#39;</span><span class="p">)</span>
     <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span><span class="n">in_descriptor</span><span class="p">,</span> <span class="n">out_descriptor</span><span class="p">,</span> <span class="n">mapping_filename</span><span class="p">)</span>
@@ -316,26 +339,130 @@
         <span class="n">ds</span><span class="p">,</span> <span class="n">renormalizationThreshold</span><span class="o">=</span><span class="n">renormalization_threshold</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;done.&#39;</span><span class="p">)</span>
 
-    <span class="n">ds_mask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">land_ice_mask_filename</span><span class="p">)</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="n">ds_mask</span><span class="o">.</span><span class="n">landIceMask</span>
+    <span class="k">if</span> <span class="n">map_culled_to_base_filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">map_culled_to_base_filename</span> <span class="o">=</span> <span class="s1">&#39;map_culled_to_base.nc&#39;</span>
+        <span class="n">write_map_culled_to_base</span><span class="p">(</span><span class="n">base_mesh_filename</span><span class="o">=</span><span class="n">base_mesh_filename</span><span class="p">,</span>
+                                 <span class="n">culled_mesh_filename</span><span class="o">=</span><span class="n">culled_mesh_filename</span><span class="p">,</span>
+                                 <span class="n">out_filename</span><span class="o">=</span><span class="n">map_culled_to_base_filename</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;dataLandIceFreshwaterFlux&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;dataLandIceHeatFlux&#39;</span><span class="p">]:</span>
-        <span class="c1"># zero out the field where it&#39;s currently NaN, and mask only to</span>
-        <span class="c1"># regions with land ice</span>
-        <span class="n">ds_remap</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="n">mask</span> <span class="o">*</span> <span class="n">ds_remap</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ds_remap</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">notnull</span><span class="p">(),</span> <span class="mf">0.</span><span class="p">)</span>
+    <span class="n">_land_ice_mask_on_base_mesh</span><span class="p">(</span>
+        <span class="n">base_mesh_filename</span><span class="o">=</span><span class="n">base_mesh_filename</span><span class="p">,</span>
+        <span class="n">land_ice_mask_filename</span><span class="o">=</span><span class="n">land_ice_mask_filename</span><span class="p">,</span>
+        <span class="n">map_culled_to_base_filename</span><span class="o">=</span><span class="n">map_culled_to_base_filename</span><span class="p">)</span>
 
-        <span class="c1"># add a time dimension</span>
-        <span class="k">if</span> <span class="s1">&#39;Time&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds_remap</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
-            <span class="n">ds_remap</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_remap</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-
-    <span class="c1"># deal with melting beyond the land-ice mask</span>
-
+    <span class="n">ds_mask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;land_ice_mask_on_base.nc&#39;</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">ds_mask</span><span class="o">.</span><span class="n">landIceFloatingMask</span>
+    <span class="n">ds_remap</span><span class="p">[</span><span class="s1">&#39;landIceFloatingMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mask</span>
     <span class="n">ds_remap</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;history&#39;</span><span class="p">)</span>
 
-    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_remap</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">)</span></div>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_remap</span><span class="p">,</span> <span class="s1">&#39;ismf_remapped_to_base.nc&#39;</span><span class="p">)</span>
 
+    <span class="c1"># deal with melting beyond the land-ice mask</span>
+    <span class="n">_reroute_missing_flux</span><span class="p">(</span><span class="n">base_mesh_filename</span><span class="p">,</span> <span class="n">map_culled_to_base_filename</span><span class="p">,</span>
+                          <span class="n">out_filename</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">_land_ice_mask_on_base_mesh</span><span class="p">(</span><span class="n">base_mesh_filename</span><span class="p">,</span> <span class="n">land_ice_mask_filename</span><span class="p">,</span>
+                                <span class="n">map_culled_to_base_filename</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Map the land-ice mask back to the base mesh &quot;&quot;&quot;</span>
+
+    <span class="n">ds_map</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">map_culled_to_base_filename</span><span class="p">)</span>
+    <span class="n">map_culled_to_base</span> <span class="o">=</span> <span class="n">ds_map</span><span class="o">.</span><span class="n">mapCulledToBase</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">ds_base</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">base_mesh_filename</span><span class="p">)</span>
+    <span class="n">ncells_base</span> <span class="o">=</span> <span class="n">ds_base</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]</span>
+
+    <span class="n">ds_culled_mask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">land_ice_mask_filename</span><span class="p">)</span>
+    <span class="n">culled_land_ice_mask</span> <span class="o">=</span> <span class="n">ds_culled_mask</span><span class="o">.</span><span class="n">landIceFloatingMask</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">base_land_ice_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ncells_base</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">base_land_ice_mask</span><span class="p">[</span><span class="n">map_culled_to_base</span><span class="p">]</span> <span class="o">=</span> <span class="n">culled_land_ice_mask</span>
+    <span class="n">ds_base_mask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+    <span class="n">ds_base_mask</span><span class="p">[</span><span class="s1">&#39;landIceFloatingMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="n">base_land_ice_mask</span><span class="p">)</span>
+
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_base_mask</span><span class="p">,</span> <span class="s1">&#39;land_ice_mask_on_base.nc&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_reroute_missing_flux</span><span class="p">(</span><span class="n">base_mesh_filename</span><span class="p">,</span> <span class="n">map_culled_to_base_filename</span><span class="p">,</span>
+                          <span class="n">out_filename</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    For each flux cell not within an ice shelf, find the closest ice-shelf cell</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ds_ismf_base</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;ismf_remapped_to_base.nc&#39;</span><span class="p">)</span>
+    <span class="n">land_ice_mask</span> <span class="o">=</span> <span class="n">ds_ismf_base</span><span class="o">.</span><span class="n">landIceFloatingMask</span>
+    <span class="n">fwf</span> <span class="o">=</span> <span class="n">ds_ismf_base</span><span class="o">.</span><span class="n">dataLandIceFreshwaterFlux</span>
+    <span class="n">fwf</span> <span class="o">=</span> <span class="n">fwf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">fwf</span><span class="o">.</span><span class="n">notnull</span><span class="p">(),</span> <span class="mf">0.</span><span class="p">)</span>
+    <span class="n">hf</span> <span class="o">=</span> <span class="n">ds_ismf_base</span><span class="o">.</span><span class="n">dataLandIceHeatFlux</span>
+    <span class="n">hf</span> <span class="o">=</span> <span class="n">hf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">hf</span><span class="o">.</span><span class="n">notnull</span><span class="p">(),</span> <span class="mf">0.</span><span class="p">)</span>
+    <span class="n">flux_mask</span> <span class="o">=</span> <span class="n">fwf</span> <span class="o">!=</span> <span class="mf">0.</span>
+    <span class="n">fluxes_to_reroute</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">flux_mask</span><span class="p">,</span>
+                                       <span class="n">land_ice_mask</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">ds_base</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">base_mesh_filename</span><span class="p">)</span>
+    <span class="n">ncells_base</span> <span class="o">=</span> <span class="n">ds_base</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]</span>
+    <span class="n">base_xyz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncells_base</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">base_xyz</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_base</span><span class="o">.</span><span class="n">xCell</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">base_xyz</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_base</span><span class="o">.</span><span class="n">yCell</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">base_xyz</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_base</span><span class="o">.</span><span class="n">zCell</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">area</span> <span class="o">=</span> <span class="n">ds_base</span><span class="o">.</span><span class="n">areaCell</span>
+
+    <span class="n">land_ice_xyz</span> <span class="o">=</span> <span class="n">base_xyz</span><span class="p">[</span><span class="n">land_ice_mask</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">land_ice_cell_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">ncells_base</span><span class="p">)[</span><span class="n">land_ice_mask</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">reroute_mask</span> <span class="o">=</span> <span class="n">fluxes_to_reroute</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="n">fw_mass_rerouted</span> <span class="o">=</span> <span class="p">(</span><span class="n">fwf</span> <span class="o">*</span> <span class="n">area</span><span class="p">)</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nCells</span><span class="o">=</span><span class="n">fluxes_to_reroute</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">heat_rerouted</span> <span class="o">=</span> <span class="p">(</span><span class="n">hf</span> <span class="o">*</span> <span class="n">area</span><span class="p">)</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nCells</span><span class="o">=</span><span class="n">fluxes_to_reroute</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="n">count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">reroute_mask</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Rerouting fluxes from </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s1"> cells&#39;</span><span class="p">)</span>
+    <span class="n">fwf_land_ice</span> <span class="o">=</span> <span class="p">(</span><span class="n">land_ice_mask</span> <span class="o">*</span> <span class="n">fwf</span> <span class="o">*</span> <span class="n">area</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Captured flux (kg/s):         </span><span class="si">{</span><span class="n">fwf_land_ice</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">fwf_rerouted</span> <span class="o">=</span> <span class="n">fw_mass_rerouted</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Rerouted flux (kg/s):         </span><span class="si">{</span><span class="n">fwf_rerouted</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">fwf_total</span> <span class="o">=</span> <span class="p">(</span><span class="n">fwf</span> <span class="o">*</span> <span class="n">area</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Total flux (kg/s):            </span><span class="si">{</span><span class="n">fwf_total</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">ds_to_route</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+    <span class="n">ds_to_route</span><span class="p">[</span><span class="s1">&#39;rerouteMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reroute_mask</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_to_route</span><span class="p">,</span> <span class="s1">&#39;route_mask.nc&#39;</span><span class="p">)</span>
+
+    <span class="n">reroute_xyz</span> <span class="o">=</span> <span class="n">base_xyz</span><span class="p">[</span><span class="n">fluxes_to_reroute</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">:]</span>
+
+    <span class="c1"># we want to find closest land-ice cell to a given reroute cell</span>
+    <span class="n">tree</span> <span class="o">=</span> <span class="n">KDTree</span><span class="p">(</span><span class="n">land_ice_xyz</span><span class="p">)</span>
+
+    <span class="c1"># todo: may need to be more sophisticated with workers based on ntasks,</span>
+    <span class="c1"># etc.</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">indices</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">reroute_xyz</span><span class="p">,</span> <span class="n">workers</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">ds_map</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">map_culled_to_base_filename</span><span class="p">)</span>
+    <span class="n">map_culled_to_base</span> <span class="o">=</span> <span class="n">ds_map</span><span class="o">.</span><span class="n">mapCulledToBase</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">fwf_rerouted</span> <span class="o">=</span> <span class="n">land_ice_mask</span><span class="o">.</span><span class="n">values</span> <span class="o">*</span> <span class="n">fwf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">fwf</span><span class="o">.</span><span class="n">notnull</span><span class="p">(),</span> <span class="mf">0.</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">hf_rerouted</span> <span class="o">=</span> <span class="n">land_ice_mask</span><span class="o">.</span><span class="n">values</span> <span class="o">*</span> <span class="n">hf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">hf</span><span class="o">.</span><span class="n">notnull</span><span class="p">(),</span> <span class="mf">0.</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+    <span class="k">for</span> <span class="n">rerouted_index</span><span class="p">,</span> <span class="n">land_ice_index</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">indices</span><span class="p">):</span>
+        <span class="n">icell</span> <span class="o">=</span> <span class="n">land_ice_cell_indices</span><span class="p">[</span><span class="n">land_ice_index</span><span class="p">]</span>
+        <span class="n">fwf_rerouted</span><span class="p">[</span><span class="n">icell</span><span class="p">]</span> <span class="o">+=</span> <span class="n">fw_mass_rerouted</span><span class="p">[</span><span class="n">rerouted_index</span><span class="p">]</span> <span class="o">/</span> <span class="n">area</span><span class="p">[</span><span class="n">icell</span><span class="p">]</span>
+        <span class="n">hf_rerouted</span><span class="p">[</span><span class="n">icell</span><span class="p">]</span> <span class="o">+=</span> <span class="n">heat_rerouted</span><span class="p">[</span><span class="n">rerouted_index</span><span class="p">]</span> <span class="o">/</span> <span class="n">area</span><span class="p">[</span><span class="n">icell</span><span class="p">]</span>
+
+    <span class="c1"># now, go from base to culled mesh</span>
+    <span class="n">fwf_rerouted</span> <span class="o">=</span> <span class="n">fwf_rerouted</span><span class="p">[</span><span class="n">map_culled_to_base</span><span class="p">]</span>
+    <span class="n">hf_rerouted</span> <span class="o">=</span> <span class="n">hf_rerouted</span><span class="p">[</span><span class="n">map_culled_to_base</span><span class="p">]</span>
+
+    <span class="n">ds_out</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+    <span class="n">field</span> <span class="o">=</span> <span class="s1">&#39;dataLandIceFreshwaterFlux&#39;</span>
+    <span class="n">ds_out</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="n">fwf_rerouted</span><span class="p">)</span>
+    <span class="n">ds_out</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_out</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">ds_out</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;kg m^-2 s^-1&#39;</span>
+    <span class="n">field</span> <span class="o">=</span> <span class="s1">&#39;dataLandIceHeatFlux&#39;</span>
+    <span class="n">ds_out</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="n">hf_rerouted</span><span class="p">)</span>
+    <span class="n">ds_out</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_out</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">ds_out</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;W m^-2&#39;</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">)</span>
+
+    <span class="n">fwf_total</span> <span class="o">=</span> <span class="p">(</span><span class="n">ds_out</span><span class="o">.</span><span class="n">dataLandIceFreshwaterFlux</span> <span class="o">*</span>
+                 <span class="n">area</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nCells</span><span class="o">=</span><span class="n">map_culled_to_base</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Total after rerouting (kg/s): </span><span class="si">{</span><span class="n">fwf_total</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 
            </div>
