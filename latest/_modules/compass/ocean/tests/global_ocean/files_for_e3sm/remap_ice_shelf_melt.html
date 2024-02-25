@@ -120,7 +120,7 @@
     <span class="n">FilesForE3SMStep</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">remap_adusumilli</span><span class="p">,</span>
+    <span class="n">remap_paolo</span><span class="p">,</span>
 <span class="p">)</span>
 
 
@@ -153,13 +153,13 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;remap_ice_shelf_melt&#39;</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
                          <span class="n">min_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init</span> <span class="o">=</span> <span class="n">init</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;prescribed_ismf_adusumilli2020.nc&#39;</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;prescribed_ismf_paolo2023.nc&#39;</span>
         <span class="k">if</span> <span class="n">init</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;Adusumilli_2020_iceshelf_melt_rates_2010-2018_v0.h5&#39;</span><span class="p">,</span>
-                <span class="n">target</span><span class="o">=</span><span class="s1">&#39;Adusumilli_2020_iceshelf_melt_rates_2010-2018_v0.h5&#39;</span><span class="p">,</span>
+                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;Paolo_2023_ANT_G1920V01_IceShelfMelt.nc&#39;</span><span class="p">,</span>
+                <span class="n">target</span><span class="o">=</span><span class="s1">&#39;Paolo_2023_ANT_G1920V01_IceShelfMelt.nc&#39;</span><span class="p">,</span>
                 <span class="n">database</span><span class="o">=</span><span class="s1">&#39;initial_condition_database&#39;</span><span class="p">,</span>
-                <span class="n">url</span><span class="o">=</span><span class="s1">&#39;http://library.ucsd.edu/dc/object/bb0448974g/_3_1.h5&#39;</span><span class="p">)</span>
+                <span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://its-live-data.s3.amazonaws.com/height_change/Antarctica/Floating/ANT_G1920V01_IceShelfMelt.nc&#39;</span><span class="p">)</span>    <span class="c1"># noqa: E501</span>
         <span class="k">elif</span> <span class="s1">&#39;remap_ice_shelf_melt&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">steps</span><span class="p">:</span>
             <span class="n">melt_path</span> <span class="o">=</span> \
                 <span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;remap_ice_shelf_melt&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
@@ -174,7 +174,7 @@
 <span class="sd">        setup input files based on config options</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;prescribed_ismf_adusumilli2020.nc&#39;</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;prescribed_ismf_paolo2023.nc&#39;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
 
@@ -189,7 +189,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
             <span class="k">return</span>
 
-        <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;prescribed_ismf_adusumilli2020&#39;</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;prescribed_ismf_paolo2023&#39;</span>
         <span class="n">suffix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_short_name</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">creation_date</span><span class="si">}</span><span class="s1">&#39;</span>
 
         <span class="n">remapped_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">.nc&#39;</span>
@@ -199,7 +199,7 @@
             <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
             <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
             <span class="n">ntasks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span>
-            <span class="n">in_filename</span> <span class="o">=</span> <span class="s1">&#39;Adusumilli_2020_iceshelf_melt_rates_2010-2018_v0.h5&#39;</span>
+            <span class="n">in_filename</span> <span class="o">=</span> <span class="s1">&#39;Paolo_2023_ANT_G1920V01_IceShelfMelt.nc&#39;</span>
 
             <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;parallel_executable&#39;</span><span class="p">)</span>
 
@@ -208,11 +208,11 @@
             <span class="n">mesh_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_short_name</span>
             <span class="n">land_ice_mask_filename</span> <span class="o">=</span> <span class="s1">&#39;initial_state.nc&#39;</span>
 
-            <span class="n">remap_adusumilli</span><span class="p">(</span><span class="n">in_filename</span><span class="p">,</span> <span class="n">base_mesh_filename</span><span class="p">,</span>
-                             <span class="n">culled_mesh_filename</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span>
-                             <span class="n">land_ice_mask_filename</span><span class="p">,</span> <span class="n">remapped_filename</span><span class="p">,</span>
-                             <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="n">mpi_tasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span>
-                             <span class="n">parallel_executable</span><span class="o">=</span><span class="n">parallel_executable</span><span class="p">)</span>
+            <span class="n">remap_paolo</span><span class="p">(</span><span class="n">in_filename</span><span class="p">,</span> <span class="n">base_mesh_filename</span><span class="p">,</span>
+                        <span class="n">culled_mesh_filename</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span>
+                        <span class="n">land_ice_mask_filename</span><span class="p">,</span> <span class="n">remapped_filename</span><span class="p">,</span>
+                        <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="n">mpi_tasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span>
+                        <span class="n">parallel_executable</span><span class="o">=</span><span class="n">parallel_executable</span><span class="p">)</span>
 
         <span class="n">symlink</span><span class="p">(</span>
             <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">remapped_filename</span><span class="p">),</span>
