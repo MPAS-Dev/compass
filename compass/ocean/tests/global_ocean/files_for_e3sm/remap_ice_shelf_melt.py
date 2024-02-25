@@ -5,7 +5,7 @@ from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step import 
     FilesForE3SMStep,
 )
 from compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt import (
-    remap_adusumilli,
+    remap_paolo,
 )
 
 
@@ -34,13 +34,13 @@ class RemapIceShelfMelt(FilesForE3SMStep):
         super().__init__(test_case, name='remap_ice_shelf_melt', ntasks=512,
                          min_tasks=1)
         self.init = init
-        filename = 'prescribed_ismf_adusumilli2020.nc'
+        filename = 'prescribed_ismf_paolo2023.nc'
         if init is None:
             self.add_input_file(
-                filename='Adusumilli_2020_iceshelf_melt_rates_2010-2018_v0.h5',
-                target='Adusumilli_2020_iceshelf_melt_rates_2010-2018_v0.h5',
+                filename='Paolo_2023_ANT_G1920V01_IceShelfMelt.nc',
+                target='Paolo_2023_ANT_G1920V01_IceShelfMelt.nc',
                 database='initial_condition_database',
-                url='http://library.ucsd.edu/dc/object/bb0448974g/_3_1.h5')
+                url='https://its-live-data.s3.amazonaws.com/height_change/Antarctica/Floating/ANT_G1920V01_IceShelfMelt.nc')    # noqa: E501
         elif 'remap_ice_shelf_melt' in self.init.steps:
             melt_path = \
                 self.init.steps['remap_ice_shelf_melt'].path
@@ -54,7 +54,7 @@ class RemapIceShelfMelt(FilesForE3SMStep):
         setup input files based on config options
         """
         super().setup()
-        filename = 'prescribed_ismf_adusumilli2020.nc'
+        filename = 'prescribed_ismf_paolo2023.nc'
         if self.with_ice_shelf_cavities:
             self.add_output_file(filename=filename)
 
@@ -67,7 +67,7 @@ class RemapIceShelfMelt(FilesForE3SMStep):
         if not self.with_ice_shelf_cavities:
             return
 
-        prefix = 'prescribed_ismf_adusumilli2020'
+        prefix = 'prescribed_ismf_paolo2023'
         suffix = f'{self.mesh_short_name}.{self.creation_date}'
 
         remapped_filename = f'{prefix}.nc'
@@ -77,7 +77,7 @@ class RemapIceShelfMelt(FilesForE3SMStep):
             logger = self.logger
             config = self.config
             ntasks = self.ntasks
-            in_filename = 'Adusumilli_2020_iceshelf_melt_rates_2010-2018_v0.h5'
+            in_filename = 'Paolo_2023_ANT_G1920V01_IceShelfMelt.nc'
 
             parallel_executable = config.get('parallel', 'parallel_executable')
 
@@ -86,11 +86,11 @@ class RemapIceShelfMelt(FilesForE3SMStep):
             mesh_name = self.mesh_short_name
             land_ice_mask_filename = 'initial_state.nc'
 
-            remap_adusumilli(in_filename, base_mesh_filename,
-                             culled_mesh_filename, mesh_name,
-                             land_ice_mask_filename, remapped_filename,
-                             logger=logger, mpi_tasks=ntasks,
-                             parallel_executable=parallel_executable)
+            remap_paolo(in_filename, base_mesh_filename,
+                        culled_mesh_filename, mesh_name,
+                        land_ice_mask_filename, remapped_filename,
+                        logger=logger, mpi_tasks=ntasks,
+                        parallel_executable=parallel_executable)
 
         symlink(
             os.path.abspath(remapped_filename),

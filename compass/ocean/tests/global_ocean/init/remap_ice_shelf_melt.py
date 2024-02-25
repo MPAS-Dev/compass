@@ -31,7 +31,7 @@ class RemapIceShelfMelt(Step):
 
         mesh : compass.ocean.tests.global_ocean.mesh.Mesh
             The test case that produces the mesh for this run
-        """  # noqa: E501
+        """
         super().__init__(test_case, name='remap_ice_shelf_melt', ntasks=512,
                          min_tasks=1)
 
@@ -55,12 +55,12 @@ class RemapIceShelfMelt(Step):
             work_dir_target=f'{culled_mesh_path}/land_ice_mask.nc')
 
         self.add_input_file(
-            filename='Adusumilli_2020_iceshelf_melt_rates_2010-2018_v0.h5',
-            target='Adusumilli_2020_iceshelf_melt_rates_2010-2018_v0.h5',
+            filename='Paolo_2023_ANT_G1920V01_IceShelfMelt.nc',
+            target='Paolo_2023_ANT_G1920V01_IceShelfMelt.nc',
             database='initial_condition_database',
-            url='http://library.ucsd.edu/dc/object/bb0448974g/_3_1.h5')
+            url='https://its-live-data.s3.amazonaws.com/height_change/Antarctica/Floating/ANT_G1920V01_IceShelfMelt.nc')    # noqa: E501
 
-        self.add_output_file(filename='prescribed_ismf_adusumilli2020.nc')
+        self.add_output_file(filename='prescribed_ismf_paolo2023.nc')
 
         self.mesh = mesh
 
@@ -72,9 +72,9 @@ class RemapIceShelfMelt(Step):
         config = self.config
         ntasks = self.ntasks
 
-        in_filename = 'Adusumilli_2020_iceshelf_melt_rates_2010-2018_v0.h5'
+        in_filename = 'Paolo_2023_ANT_G1920V01_IceShelfMelt.nc'
 
-        out_filename = 'prescribed_ismf_adusumilli2020.nc'
+        out_filename = 'prescribed_ismf_paolo2023.nc'
 
         parallel_executable = config.get('parallel', 'parallel_executable')
 
@@ -84,12 +84,214 @@ class RemapIceShelfMelt(Step):
         map_culled_to_base_filename = 'map_culled_to_base.nc'
         mesh_name = self.mesh.mesh_name
 
-        remap_adusumilli(
+        remap_paolo(
             in_filename, base_mesh_filename, culled_mesh_filename,
             mesh_name, land_ice_mask_filename, out_filename,
             logger=logger, mpi_tasks=ntasks,
             parallel_executable=parallel_executable,
             map_culled_to_base_filename=map_culled_to_base_filename)
+
+
+def remap_paolo(in_filename, base_mesh_filename, culled_mesh_filename,
+                mesh_name, land_ice_mask_filename, out_filename, logger,
+                mapping_directory='.', method='conserve',
+                renormalization_threshold=None, mpi_tasks=1,
+                parallel_executable=None,
+                map_culled_to_base_filename=None):
+    """
+    Remap the Paolo et al. (2023; https://doi.org/10.5194/tc-17-3409-2023)
+    melt rates at ~2 km resolution to an MPAS mesh
+
+    Parameters
+    ----------
+    in_filename : str
+        The original Paolo et al. (2023) melt rates
+
+    base_mesh_filename : str
+        The base MPAS mesh before land is culled
+
+    culled_mesh_filename : str
+        The MPAS mesh after land has been culled
+
+    mesh_name : str
+        The name of the mesh (e.g. oEC60to30wISC), used in the name of the
+        mapping file
+
+    land_ice_mask_filename : str
+        A file containing the variable ``landIceMask`` on the MPAS mesh
+
+    out_filename : str
+        The melt rates interpolated to the MPAS mesh with ocean sensible heat
+        fluxes added on (assuming insulating ice)
+
+    logger : logging.Logger
+        A logger for output from the step
+
+    mapping_directory : str
+        The directory where the mapping file should be stored (if it is to be
+        computed) or where it already exists (if not)
+
+    method : {'bilinear', 'neareststod', 'conserve'}, optional
+        The method of interpolation used, see documentation for
+        `ESMF_RegridWeightGen` for details.
+
+    renormalization_threshold : float, optional
+        The minimum weight of a destination cell after remapping, below
+        which it is masked out, or ``None`` for no renormalization and
+        masking.
+
+    mpi_tasks : int, optional
+        The number of MPI tasks to use to compute the mapping file
+
+    parallel_executable : {'srun', 'mpirun'}, optional
+        The name of the parallel executable to use to launch ESMF tools.
+        But default, 'mpirun' from the conda environment is used
+
+    map_culled_to_base_filename : str, optional
+        A file with indices that map from the culled to the base MPAS mesh. If
+        not provided, they will be computed
+    """
+
+    logger.info(f'Reading {in_filename}...')
+    with xr.open_dataset(in_filename) as ds_in:
+
+        x = ds_in.x
+        y = ds_in.y
+        melt_rate = ds_in.melt_mean
+        melt_rate = melt_rate.where(melt_rate.notnull(), 0.)
+        logger.info('done.')
+
+    lx = np.abs(1e-3 * (x[-1] - x[0])).values
+    ly = np.abs(1e-3 * (y[-1] - y[0])).values
+    dx = np.abs(1e-3 * (x[1] - x[0])).values
+
+    in_grid_name = f'{lx:.1f}x{ly:.1f}km_{dx:.3f}km_Antarctic_stereo'
+
+    projection = pyproj.Proj('+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0 '
+                             '+k_0=1.0 +x_0=0.0 +y_0=0.0 +ellps=WGS84')
+
+    logger.info('Creating the source grid descriptor...')
+    in_descriptor = ProjectionGridDescriptor.create(
+        projection=projection, x=x.values, y=y.values, meshName=in_grid_name)
+    logger.info('done.')
+
+    out_descriptor = MpasCellMeshDescriptor(base_mesh_filename, mesh_name)
+
+    mapping_filename = \
+        f'{mapping_directory}/map_{in_grid_name}_to_{mesh_name}_base.nc'
+
+    logger.info(f'Creating the mapping file {mapping_filename}...')
+    remapper = Remapper(in_descriptor, out_descriptor, mapping_filename)
+
+    remapper.build_mapping_file(method=method, mpiTasks=mpi_tasks,
+                                tempdir=mapping_directory, logger=logger,
+                                esmf_parallel_exec=parallel_executable,
+                                include_logs=True)
+    logger.info('done.')
+
+    dx = np.abs(in_descriptor.xCorner[1:] - in_descriptor.xCorner[:-1])
+    dy = np.abs(in_descriptor.yCorner[1:] - in_descriptor.yCorner[:-1])
+    dx, dy = np.meshgrid(dx, dy)
+    planar_area = xr.DataArray(dims=('y', 'x'), data=dx * dy)
+
+    with xr.open_dataset(mapping_filename) as ds_map:
+        earth_radius = constants['SHR_CONST_REARTH']
+        map_src_area = ds_map.area_a.values * earth_radius**2
+        map_dst_area = ds_map.area_b.values * earth_radius**2
+        sphere_area = xr.DataArray(
+            dims=('y', 'x'), data=map_src_area.reshape(planar_area.shape))
+
+    logger.info('Creating the source xarray dataset...')
+    ds = xr.Dataset()
+
+    # convert to the units and variable names expected in MPAS-O
+
+    # Paolo et al. (2023) ice density (from attributes)
+    rho_ice = 917.
+    s_per_yr = 365. * constants['SHR_CONST_CDAY']
+    latent_heat_of_fusion = constants['SHR_CONST_LATICE']
+    ds['x'] = x
+    ds['y'] = y
+    area_ratio = planar_area / sphere_area
+    logger.info(f'min projected area ratio: {area_ratio.min().values}')
+    logger.info(f'max projected area ratio: {area_ratio.max().values}')
+    logger.info('')
+
+    # original field is negative for melt
+    fwf = -melt_rate * rho_ice / s_per_yr
+    field = 'dataLandIceFreshwaterFlux'
+    ds[field] = area_ratio * fwf
+    ds[field].attrs['units'] = 'kg m^-2 s^-1'
+    field = 'dataLandIceHeatFlux'
+    ds[field] = (latent_heat_of_fusion *
+                 ds.dataLandIceFreshwaterFlux)
+    ds[field].attrs['units'] = 'W m^-2'
+    logger.info('Writing the source dataset...')
+    write_netcdf(ds, 'Paolo_2023_ismf_1992-2017_v1.0.nc')
+    logger.info('done.')
+    logger.info('')
+
+    planar_flux = (fwf * planar_area).sum().values
+    sphere_flux = (ds.dataLandIceFreshwaterFlux * sphere_area).sum().values
+
+    logger.info(f'Area of a cell (m^2):             {planar_area[0,0]:.1f}')
+    logger.info(f'Total flux on plane (kg/s):       {planar_flux:.1f}')
+    logger.info(f'Total flux on sphere (kg/s):      {sphere_flux:.1f}')
+    logger.info('')
+
+    logger.info('Remapping...')
+    ds_remap = remapper.remap(
+        ds, renormalizationThreshold=renormalization_threshold)
+    logger.info('done.')
+    logger.info('')
+
+    with xr.open_dataset(base_mesh_filename) as ds_mesh:
+        mpas_area_cell = ds_mesh.areaCell
+        sphere_area_cell = xr.DataArray(
+            dims=('nCells',), data=map_dst_area)
+
+    area_ratio = sphere_area_cell / mpas_area_cell
+    logger.info(f'min MPAS area ratio: {area_ratio.min().values}')
+    logger.info(f'max MPAS area ratio: {area_ratio.max().values}')
+    logger.info('')
+
+    sphere_fwf = ds_remap.dataLandIceFreshwaterFlux
+
+    field = 'dataLandIceFreshwaterFlux'
+    ds_remap[field] = area_ratio * sphere_fwf
+    ds_remap[field].attrs['units'] = 'kg m^-2 s^-1'
+    field = 'dataLandIceHeatFlux'
+    ds_remap[field] = area_ratio * ds_remap[field]
+    ds_remap[field].attrs['units'] = 'W m^-2'
+
+    mpas_flux = (ds_remap.dataLandIceFreshwaterFlux *
+                 mpas_area_cell).sum().values
+    sphere_flux = (sphere_fwf * sphere_area_cell).sum().values
+
+    logger.info(f'Total flux w/ MPAS area (kg/s):   {mpas_flux:.1f}')
+    logger.info(f'Total flux w/ sphere area (kg/s): {sphere_flux:.1f}')
+
+    if map_culled_to_base_filename is None:
+        map_culled_to_base_filename = 'map_culled_to_base.nc'
+        write_map_culled_to_base(base_mesh_filename=base_mesh_filename,
+                                 culled_mesh_filename=culled_mesh_filename,
+                                 out_filename=map_culled_to_base_filename)
+
+    _land_ice_mask_on_base_mesh(
+        base_mesh_filename=base_mesh_filename,
+        land_ice_mask_filename=land_ice_mask_filename,
+        map_culled_to_base_filename=map_culled_to_base_filename)
+
+    ds_mask = xr.open_dataset('land_ice_mask_on_base.nc')
+    mask = ds_mask.landIceFloatingMask
+    ds_remap['landIceFloatingMask'] = mask
+    ds_remap.attrs.pop('history')
+
+    write_netcdf(ds_remap, 'ismf_remapped_to_base.nc')
+
+    # deal with melting beyond the land-ice mask
+    _reroute_missing_flux(base_mesh_filename, map_culled_to_base_filename,
+                          out_filename, logger)
 
 
 def remap_adusumilli(in_filename, base_mesh_filename, culled_mesh_filename,
@@ -99,8 +301,8 @@ def remap_adusumilli(in_filename, base_mesh_filename, culled_mesh_filename,
                      parallel_executable=None,
                      map_culled_to_base_filename=None):
     """
-    Remap the Adusumilli et al. (2020) melt rates at 1 km resolution to an MPAS
-    mesh
+    Remap the Adusumilli et al. (2020) melt rates at 0.5 km resolution to an
+    MPAS mesh
 
     Parameters
     ----------
@@ -290,11 +492,11 @@ def _reroute_missing_flux(base_mesh_filename, map_culled_to_base_filename,
     count = np.sum(reroute_mask.values)
     logger.info(f'Rerouting fluxes from {count} cells')
     fwf_land_ice = (land_ice_mask * fwf * area).sum().values
-    logger.info(f'Captured flux (kg/s):         {fwf_land_ice:.1f}')
+    logger.info(f'Captured flux (kg/s):             {fwf_land_ice:.1f}')
     fwf_rerouted = fw_mass_rerouted.sum().values
-    logger.info(f'Rerouted flux (kg/s):         {fwf_rerouted:.1f}')
+    logger.info(f'Rerouted flux (kg/s):             {fwf_rerouted:.1f}')
     fwf_total = (fwf * area).sum().values
-    logger.info(f'Total flux (kg/s):            {fwf_total:.1f}')
+    logger.info(f'Total flux (kg/s):                {fwf_total:.1f}')
     ds_to_route = xr.Dataset()
     ds_to_route['rerouteMask'] = reroute_mask
     write_netcdf(ds_to_route, 'route_mask.nc')
@@ -335,4 +537,5 @@ def _reroute_missing_flux(base_mesh_filename, map_culled_to_base_filename,
 
     fwf_total = (ds_out.dataLandIceFreshwaterFlux *
                  area.isel(nCells=map_culled_to_base)).sum().values
-    logger.info(f'Total after rerouting (kg/s): {fwf_total:.1f}')
+    logger.info(f'Total after rerouting (kg/s):     {fwf_total:.1f}')
+    logger.info('')
