@@ -1550,7 +1550,7 @@ metadata to include in the output files:
     forward_max_disk = 1000
 
     ## metadata related to the mesh
-    # the prefix (e.g. QU, EC, WC, SO)
+    # the prefix (e.g. QU, EC, NARRM, SO)
     prefix = EC
     # a description of the mesh and initial condition
     mesh_description = MPAS Eddy Closure mesh for E3SM version ${e3sm_version} with

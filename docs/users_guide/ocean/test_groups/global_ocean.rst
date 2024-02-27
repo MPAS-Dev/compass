@@ -102,7 +102,7 @@ Note that meshes and test cases may modify these options, as noted below.
     ## metadata related to the mesh
     # whether to add metadata to output files
     add_metadata = True
-    # the prefix (e.g. QU, EC, WC, SO)
+    # the prefix (e.g. QU, EC, NARRM, SO)
     prefix = PREFIX
     # a description of the mesh
     mesh_description = <<<Missing>>>
@@ -456,20 +456,20 @@ in the North Pacific, and 35 km in the Arctic.  The mesh includes the
    :width: 500 px
    :align: center
 
-.. _global_ocean_mesh_wc14:
+.. _global_ocean_mesh_narrm14:
 
-WC14 and WCwISC14
-^^^^^^^^^^^^^^^^^
+NARRM14 and NARRMwISC14
+^^^^^^^^^^^^^^^^^^^^^^^
 
-The Water Cycle 14- to 30-km mesh (WC14) is a regionally refined mesh for
-several
+The North American Regionally Refined 14- to 30-km Mesh (NARRM14) is a
+mesh for several
 `E3SM v3 Science Campaigns <https://e3sm.org/research/science-campaigns/v3-v4-campaign-goals/>`_.
 
 The mesh has 14 km resolution around the continental US, Arctic Ocean and parts
 of the North Atlantic, with 30 km uniform resolution elsewhere around the
 globe.
 
-.. image:: images/wc14.png
+.. image:: images/narrm14.png
    :width: 500 px
    :align: center
 
