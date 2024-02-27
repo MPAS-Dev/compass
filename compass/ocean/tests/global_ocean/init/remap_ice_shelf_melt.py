@@ -223,8 +223,8 @@ def remap_paolo(in_filename, base_mesh_filename, culled_mesh_filename,
     ds[field] = area_ratio * fwf
     ds[field].attrs['units'] = 'kg m^-2 s^-1'
     field = 'dataLandIceHeatFlux'
-    ds[field] = (latent_heat_of_fusion *
-                 ds.dataLandIceFreshwaterFlux)
+    ds[field] = -(latent_heat_of_fusion *
+                  ds.dataLandIceFreshwaterFlux)
     ds[field].attrs['units'] = 'W m^-2'
     logger.info('Writing the source dataset...')
     write_netcdf(ds, 'Paolo_2023_ismf_1992-2017_v1.0.nc')
@@ -233,10 +233,12 @@ def remap_paolo(in_filename, base_mesh_filename, culled_mesh_filename,
 
     planar_flux = (fwf * planar_area).sum().values
     sphere_flux = (ds.dataLandIceFreshwaterFlux * sphere_area).sum().values
+    heat_flux = (ds.dataLandIceHeatFlux * sphere_area).sum().values
 
     logger.info(f'Area of a cell (m^2):             {planar_area[0,0]:.1f}')
     logger.info(f'Total flux on plane (kg/s):       {planar_flux:.1f}')
     logger.info(f'Total flux on sphere (kg/s):      {sphere_flux:.1f}')
+    logger.info(f'Total heat flux on sphere (W):    {heat_flux:.1f}')
     logger.info('')
 
     logger.info('Remapping...')
@@ -391,8 +393,8 @@ def remap_adusumilli(in_filename, base_mesh_filename, culled_mesh_filename,
     ds['y'] = (('y',), y)
     ds['dataLandIceFreshwaterFlux'] = (('y', 'x'),
                                        melt_rate * rho_ice / s_per_yr)
-    ds['dataLandIceHeatFlux'] = (latent_heat_of_fusion *
-                                 ds.dataLandIceFreshwaterFlux)
+    ds['dataLandIceHeatFlux'] = -(latent_heat_of_fusion *
+                                  ds.dataLandIceFreshwaterFlux)
     logger.info('Writing the source dataset...')
     write_netcdf(ds, 'Adusumilli_2020_ismf_2010-2018_v0.nc')
     logger.info('done.')
