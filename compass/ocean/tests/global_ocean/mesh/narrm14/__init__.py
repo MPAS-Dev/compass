@@ -14,9 +14,9 @@ from mpas_tools.viz.colormaps import register_sci_viz_colormaps
 from compass.mesh import QuasiUniformSphericalMeshStep
 
 
-class WC14BaseMesh(QuasiUniformSphericalMeshStep):
+class NARRM14BaseMesh(QuasiUniformSphericalMeshStep):
     """
-    A step for creating WC14 mesh
+    A step for creating NARRM14 mesh
     """
     def setup(self):
         """
