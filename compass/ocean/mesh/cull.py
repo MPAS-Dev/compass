@@ -460,7 +460,7 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
 
     if has_remapped_topo:
         write_map_culled_to_base(base_mesh_filename='base_mesh.nc',
-                                 culled_mesh_filename='culeed_mesh.nc',
+                                 culled_mesh_filename='culled_mesh.nc',
                                  out_filename='map_culled_to_base.nc')
         _cull_topo()
 
