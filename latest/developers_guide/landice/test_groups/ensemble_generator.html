@@ -70,7 +70,8 @@
 <li class="toctree-l3"><a class="reference internal" href="dome.html">dome</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">ensemble_generator</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#framework">framework</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ensemble">ensemble</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#spinup-ensemble">spinup_ensemble</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#branch-ensemble">branch_ensemble</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="enthalpy_benchmark.html">enthalpy_benchmark</a></li>
@@ -215,11 +216,12 @@ the ensemble as a slurm job.  Eventually the <code class="docutils literal notra
 to assess if runs need restarts and modify them to be submitted as such.</p>
 </section>
 </section>
-<section id="ensemble">
-<h2>ensemble<a class="headerlink" href="#ensemble" title="Link to this heading">¶</a></h2>
-<p>The <a class="reference internal" href="../generated/compass.landice.tests.ensemble_generator.ensemble.Ensemble.html#compass.landice.tests.ensemble_generator.ensemble.Ensemble" title="compass.landice.tests.ensemble_generator.ensemble.Ensemble"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ensemble_generator.ensemble.Ensemble</span></code></a>
-uses the framework described above to set up an ensemble of
-simulations.  The constructor simply adds the ensemble manager as the only step.
+<section id="spinup-ensemble">
+<h2>spinup_ensemble<a class="headerlink" href="#spinup-ensemble" title="Link to this heading">¶</a></h2>
+<p>The <a class="reference internal" href="../generated/compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble.html#compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble" title="compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble</span></code></a>
+uses the framework described above to set up an ensemble of spinup or historical
+simulations from a common initial condition.
+The constructor simply adds the ensemble manager as the only step.
 This allows the test case to be listed by <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">list</span></code> without having all
 ensemble members listed in a verbose listing.  Because there may be dozens of
 ensemble members, it is better to wait to have them added until the setup
@@ -234,7 +236,8 @@ passed to the <code class="docutils literal notranslate"><span class="pre">Ensem
 Finally, each run is now added to the test case as a step to run,
 because they were not automatically added by compass during the test
 case constructor phase.</p>
-<p>There are no <code class="docutils literal notranslate"><span class="pre">run</span></code> or <code class="docutils literal notranslate"><span class="pre">validate</span></code> steps required.  The ensemble manager
+<p>The <code class="docutils literal notranslate"><span class="pre">run</span></code> step simply sets up a graph file and runs the model.</p>
+<p>The ensemble manager
 handles “running” ensemble members by submitting them as slurm jobs.
 This is a major difference in how this test case functions from most
 compass test cases.
@@ -242,6 +245,24 @@ The visualization script <code class="docutils literal notranslate"><span class=
 case work directory and can be run manually to assess the status of the
 ensemble, but there is not a formal analysis step that can be run through
 compass.</p>
+</section>
+<section id="branch-ensemble">
+<h2>branch_ensemble<a class="headerlink" href="#branch-ensemble" title="Link to this heading">¶</a></h2>
+<p>The <a class="reference internal" href="../generated/compass.landice.tests.ensemble_generator.branch_ensemble.BranchEnsemble.html#compass.landice.tests.ensemble_generator.branch_ensemble.BranchEnsemble" title="compass.landice.tests.ensemble_generator.branch_ensemble.BranchEnsemble"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ensemble_generator.branch_ensemble.BranchEnsemble</span></code></a>
+sets up an ensemble of runs each of which are branched from an ensemble
+member of a previously run spinup ensemble.
+The constructor adds the ensemble_manager as a step, as with the spinup_ensemble.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">configure</span></code> method searches over the range of runs requested and assesses if
+the corresponding spinup_ensemble member reached the requested branch time.
+If so, and if the branch_ensemble memebr directory does not already exist, that
+run is added as a step.  Within each run (step), the restart file from the branch
+year is copied to the branch run directory.  The time stamp is reassigned to
+2015 (this could be made a cfg option in the future).  Also copied over are
+the namelist and albany_input.yamlm files.  The namelist is updated with
+settings specific to the branch ensemble, and a streams file specific to the
+branch run is added.  Finally, details for managing runs are set up, including
+a job script.</p>
+<p>As in the spinup_ensemble, the <code class="docutils literal notranslate"><span class="pre">run</span></code> step just runs the model.</p>
 </section>
 </section>
 

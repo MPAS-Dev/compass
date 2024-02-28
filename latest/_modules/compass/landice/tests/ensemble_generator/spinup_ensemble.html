@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.landice.tests.ensemble_generator.ensemble &mdash; compass latest documentation</title>
+  <title>compass.landice.tests.ensemble_generator.spinup_ensemble &mdash; compass latest documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=19f00094" />
 
@@ -102,7 +102,7 @@
           <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
           <li class="breadcrumb-item"><a href="../../../landice.html">compass.landice</a></li>
           <li class="breadcrumb-item"><a href="../ensemble_generator.html">compass.landice.tests.ensemble_generator</a></li>
-      <li class="breadcrumb-item active">compass.landice.tests.ensemble_generator.ensemble</li>
+      <li class="breadcrumb-item active">compass.landice.tests.ensemble_generator.spinup_ensemble</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -111,7 +111,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for compass.landice.tests.ensemble_generator.ensemble</h1><div class="highlight"><pre>
+  <h1>Source code for compass.landice.tests.ensemble_generator.spinup_ensemble</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -128,16 +128,16 @@
 <span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
 
 
-<div class="viewcode-block" id="Ensemble">
-<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.ensemble.Ensemble.html#compass.landice.tests.ensemble_generator.ensemble.Ensemble">[docs]</a>
-<span class="k">class</span> <span class="nc">Ensemble</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="SpinupEnsemble">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble.html#compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble">[docs]</a>
+<span class="k">class</span> <span class="nc">SpinupEnsemble</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A test case for performing an ensemble of</span>
 <span class="sd">    simulations for uncertainty quantification studies.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Ensemble.__init__">
-<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.ensemble.Ensemble.html#compass.landice.tests.ensemble_generator.ensemble.Ensemble.__init__">[docs]</a>
+<div class="viewcode-block" id="SpinupEnsemble.__init__">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble.html#compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the test case</span>
@@ -148,7 +148,7 @@
 <span class="sd">            The test group that this test case belongs to</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;ensemble&#39;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;spinup_ensemble&#39;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
         <span class="c1"># We don&#39;t want to initialize all the individual runs</span>
@@ -156,8 +156,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">EnsembleManager</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="Ensemble.configure">
-<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.ensemble.Ensemble.configure.html#compass.landice.tests.ensemble_generator.ensemble.Ensemble.configure">[docs]</a>
+<div class="viewcode-block" id="SpinupEnsemble.configure">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble.configure.html#compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble.configure">[docs]</a>
     <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Configure a parameter ensemble of MALI simulations.</span>
@@ -296,7 +296,6 @@
         <span class="k">for</span> <span class="n">run_num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_run</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_run</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">EnsembleMember</span><span class="p">(</span>
                 <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_num</span><span class="o">=</span><span class="n">run_num</span><span class="p">,</span>
-                <span class="n">test_resources_location</span><span class="o">=</span><span class="s1">&#39;compass.landice.tests.ensemble_generator.ensemble&#39;</span><span class="p">,</span>  <span class="c1"># noqa</span>
                 <span class="n">basal_fric_exp</span><span class="o">=</span><span class="n">param_dict</span><span class="p">[</span><span class="s1">&#39;fric_exp&#39;</span><span class="p">][</span><span class="s1">&#39;vec&#39;</span><span class="p">][</span><span class="n">run_num</span><span class="p">],</span>
                 <span class="n">mu_scale</span><span class="o">=</span><span class="n">param_dict</span><span class="p">[</span><span class="s1">&#39;mu_scale&#39;</span><span class="p">][</span><span class="s1">&#39;vec&#39;</span><span class="p">][</span><span class="n">run_num</span><span class="p">],</span>
                 <span class="n">stiff_scale</span><span class="o">=</span><span class="n">param_dict</span><span class="p">[</span><span class="s1">&#39;stiff_scale&#39;</span><span class="p">][</span><span class="s1">&#39;vec&#39;</span><span class="p">][</span><span class="n">run_num</span><span class="p">],</span>

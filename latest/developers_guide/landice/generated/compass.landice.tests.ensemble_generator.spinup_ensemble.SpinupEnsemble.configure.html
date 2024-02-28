@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.run &mdash; compass latest documentation</title>
+  <title>compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble.configure &mdash; compass latest documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
 
@@ -19,8 +19,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble" href="compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble.html" />
-    <link rel="prev" title="compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.setup" href="compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.setup.html" /> 
+    <link rel="next" title="compass.landice.tests.ensemble_generator.branch_ensemble.BranchEnsemble" href="compass.landice.tests.ensemble_generator.branch_ensemble.BranchEnsemble.html" />
+    <link rel="prev" title="compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble" href="compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -117,9 +117,9 @@
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../api.html">API reference</a></li>
           <li class="breadcrumb-item"><a href="../api.html">landice</a></li>
-      <li class="breadcrumb-item active">compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.run</li>
+      <li class="breadcrumb-item active">compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble.configure</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/developers_guide/landice/generated/compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.run.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/developers_guide/landice/generated/compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble.configure.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -127,13 +127,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="compass-landice-tests-ensemble-generator-ensemble-member-ensemblemember-run">
-<h1>compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.run<a class="headerlink" href="#compass-landice-tests-ensemble-generator-ensemble-member-ensemblemember-run" title="Link to this heading">¶</a></h1>
+  <section id="compass-landice-tests-ensemble-generator-spinup-ensemble-spinupensemble-configure">
+<h1>compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble.configure<a class="headerlink" href="#compass-landice-tests-ensemble-generator-spinup-ensemble-spinupensemble-configure" title="Link to this heading">¶</a></h1>
 <dl class="py method">
-<dt class="sig sig-object py" id="compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.run">
-<span class="sig-prename descclassname"><span class="pre">EnsembleMember.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/tests/ensemble_generator/ensemble_member.html#EnsembleMember.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.run" title="Link to this definition">¶</a></dt>
-<dd><p>Run this member of the ensemble.
-Eventually we want this function to handle restarts.</p>
+<dt class="sig sig-object py" id="compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble.configure">
+<span class="sig-prename descclassname"><span class="pre">SpinupEnsemble.</span></span><span class="sig-name descname"><span class="pre">configure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/tests/ensemble_generator/spinup_ensemble.html#SpinupEnsemble.configure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble.configure" title="Link to this definition">¶</a></dt>
+<dd><p>Configure a parameter ensemble of MALI simulations.</p>
+<p>Start by identifying the start and end run numbers to set up
+from the config.</p>
+<p>Next, read a pre-defined unit parameter vector that can be used
+for assigning parameter values to each ensemble member.</p>
+<p>The main work is using the unit parameter vector to set parameter
+values for each parameter to be varied, over prescribed ranges.</p>
+<p>Then create the ensemble member as a step in the test case by calling
+the EnsembleMember constructor.</p>
+<p>Finally, add this step to the test case’s step_to_run.  This normally
+happens automatically if steps are added to the test case in the test
+case constructor, but because we waited to add these steps until this
+configure phase, we must explicitly add the steps to steps_to_run.</p>
 </dd></dl>
 
 </section>
@@ -142,8 +153,8 @@ Eventually we want this function to handle restarts.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.setup.html" class="btn btn-neutral float-left" title="compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.setup" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble.html" class="btn btn-neutral float-right" title="compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble.html" class="btn btn-neutral float-left" title="compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.landice.tests.ensemble_generator.branch_ensemble.BranchEnsemble.html" class="btn btn-neutral float-right" title="compass.landice.tests.ensemble_generator.branch_ensemble.BranchEnsemble" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

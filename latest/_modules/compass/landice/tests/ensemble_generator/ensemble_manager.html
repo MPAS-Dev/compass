@@ -112,11 +112,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice.tests.ensemble_generator.ensemble_manager</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">importlib.resources</span> <span class="kn">import</span> <span class="n">path</span>
 
 <span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
 
+<span class="kn">import</span> <span class="nn">compass.namelist</span>
 <span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span>
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
@@ -187,10 +189,26 @@
             <span class="c1"># Get step object from &#39;steps&#39; dictionary</span>
             <span class="n">runStep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_case</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
             <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">runStep</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
-            <span class="c1"># TODO: assess if this run is unrun, partially run, or complete,</span>
-            <span class="c1"># and adjust accordingly</span>
+
+            <span class="c1"># Skip run if an error is detected</span>
+            <span class="n">err_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;log.landice.*.err&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">err_files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1"> created an error log file in the &#39;</span>
+                      <span class="s1">&#39;previous job and will not be restarted.&#39;</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="c1"># Skip run if completed</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s1">&#39;restart_timestamp&#39;</span><span class="p">):</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;restart_timestamp&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">curr_time</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">namelist</span> <span class="o">=</span> <span class="n">compass</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">ingest</span><span class="p">(</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
+                <span class="n">stop_time</span> <span class="o">=</span> <span class="p">(</span><span class="n">namelist</span><span class="p">[</span><span class="s1">&#39;time_management&#39;</span><span class="p">]</span>
+                             <span class="p">[</span><span class="s1">&#39;config_stop_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">curr_time</span> <span class="o">==</span> <span class="n">stop_time</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1"> has reached stop time.  Skipping.&#39;</span><span class="p">)</span>
+                    <span class="k">continue</span>
+            <span class="c1"># If we didn&#39;t skip this run, submit it</span>
             <span class="n">check_call</span><span class="p">([</span><span class="s1">&#39;sbatch&#39;</span><span class="p">,</span> <span class="s1">&#39;job_script.sh&#39;</span><span class="p">],</span> <span class="n">logger</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Run </span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1"> submitted.&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1"> submitted.&#39;</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;All runs submitted.&#39;</span><span class="p">)</span></div>
 </div>
 

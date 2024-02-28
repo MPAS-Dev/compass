@@ -144,10 +144,6 @@
 <span class="sd">    ntasks : integer</span>
 <span class="sd">        the number of parallel (MPI) tasks the step would ideally use</span>
 
-<span class="sd">    test_resources_location : str</span>
-<span class="sd">        path to the python package that contains the resources to be</span>
-<span class="sd">        used for the test (namelist, streams, albany input file)</span>
-
 <span class="sd">    input_file_name : str</span>
 <span class="sd">        name of the input file that was read from the config</span>
 
@@ -176,7 +172,6 @@
 <div class="viewcode-block" id="EnsembleMember.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.html#compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">run_num</span><span class="p">,</span>
-                 <span class="n">test_resources_location</span><span class="p">,</span>
                  <span class="n">basal_fric_exp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">mu_scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">stiff_scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -195,10 +190,6 @@
 
 <span class="sd">        run_num : integer</span>
 <span class="sd">            the run number for this ensemble member</span>
-
-<span class="sd">        test_resources_location : str</span>
-<span class="sd">            path to the python package that contains the resources to be</span>
-<span class="sd">            used for the test (namelist, streams, albany input file)</span>
 
 <span class="sd">        basal_fric_exp : float</span>
 <span class="sd">            value of basal friction exponent to use</span>
@@ -223,7 +214,6 @@
 <span class="sd">            value of deltaT to use in ISMIP6 ice-shelf basal melt param.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">run_num</span> <span class="o">=</span> <span class="n">run_num</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">test_resources_location</span> <span class="o">=</span> <span class="n">test_resources_location</span>
 
         <span class="c1"># store assigned param values for this run</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">basal_fric_exp</span> <span class="o">=</span> <span class="n">basal_fric_exp</span>
@@ -258,6 +248,8 @@
                   <span class="s2">&quot;&#39;compass setup&#39; again to set this experiment up.&quot;</span><span class="p">)</span>
             <span class="k">return</span>
 
+        <span class="n">resource_module</span> <span class="o">=</span> <span class="s1">&#39;compass.landice.tests.ensemble_generator&#39;</span>
+
         <span class="c1"># Get config for info needed for setting up simulation</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;ensemble&#39;</span><span class="p">]</span>
@@ -278,14 +270,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span>
 
         <span class="c1"># Set up base run configuration</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_resources_location</span><span class="p">,</span>
-                               <span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">resource_module</span><span class="p">,</span> <span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
 
         <span class="c1"># copy over albany yaml file</span>
         <span class="c1"># cannot use add_input functionality because need to modify the file</span>
         <span class="c1"># in this function, and inputs don&#39;t get processed until after this</span>
         <span class="c1"># function</span>
-        <span class="k">with</span> <span class="n">resources</span><span class="o">.</span><span class="n">path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_resources_location</span><span class="p">,</span>
+        <span class="k">with</span> <span class="n">resources</span><span class="o">.</span><span class="n">path</span><span class="p">(</span><span class="n">resource_module</span><span class="p">,</span>
                             <span class="s1">&#39;albany_input.yaml&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">package_path</span><span class="p">:</span>
             <span class="n">target</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">package_path</span><span class="p">)</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
@@ -381,7 +372,7 @@
         <span class="c1"># store accumulated namelist and streams options</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
                                   <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_resources_location</span><span class="p">,</span> <span class="s1">&#39;streams.landice&#39;</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">resource_module</span><span class="p">,</span> <span class="s1">&#39;streams.landice&#39;</span><span class="p">,</span>
                               <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.landice&#39;</span><span class="p">,</span>
                               <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">)</span>
 

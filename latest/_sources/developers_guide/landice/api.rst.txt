@@ -192,8 +192,11 @@ ensemble_generator
    ensemble_member.EnsembleMember.setup
    ensemble_member.EnsembleMember.run
 
-   ensemble.Ensemble
-   ensemble.Ensemble.configure
+   spinup_ensemble.SpinupEnsemble
+   spinup_ensemble.SpinupEnsemble.configure
+
+   branch_ensemble.BranchEnsemble
+   branch_ensemble.BranchEnsemble.configure
 
 greenland
 ~~~~~~~~~

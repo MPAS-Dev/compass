@@ -111,7 +111,12 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice.tests.ensemble_generator</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.landice.tests.ensemble_generator.ensemble</span> <span class="kn">import</span> <span class="n">Ensemble</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.landice.tests.ensemble_generator.branch_ensemble</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BranchEnsemble</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">compass.landice.tests.ensemble_generator.spinup_ensemble</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SpinupEnsemble</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
 
 
@@ -132,7 +137,8 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span>
                          <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ensemble_generator&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">Ensemble</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">SpinupEnsemble</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">BranchEnsemble</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span></div>
 </div>
 
 </pre></div>
