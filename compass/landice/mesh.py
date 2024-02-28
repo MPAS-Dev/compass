@@ -864,7 +864,7 @@ def add_bedmachine_thk_to_ais_gridded_data(self, source_gridded_dataset,
     bm_thk = bm_data.variables['thk'][:]
     # BedMachine v2 includes a mask with: 0=ocean, 1=land, 2=grd ice
     #                                  3=flt ice, 4=vostok
-    # NOTE: Later versions of BedMachine may not have the same mask values! 
+    # NOTE: Later versions of BedMachine may not have the same mask values!
     # We only want to keep thickness where the mask has ice;
     # this is necessary because thickness has been extrapolated.
     bm_thk *= (bm_mask > 1.5)
@@ -1031,13 +1031,13 @@ def interp_ais_bedmachine(self, data_path, mali_scrip, nProcs, dest_file):
     logger = self.logger
 
     logger.info('creating scrip file for BedMachine dataset')
+    # Note: writing scrip file to workdir
     args = ['create_SCRIP_file_from_planar_rectangular_grid.py',
             '-i',
             os.path.join(data_path,
                          'BedMachineAntarctica_2020-07-15_v02_edits_floodFill_extrap_fillVostok.nc'),  # noqa
             '-s',
-            os.path.join(data_path,
-                         'BedMachineAntarctica_2020-07-15_v02.scrip.nc'),
+            'BedMachineAntarctica_2020-07-15_v02.scrip.nc',
             '-p', 'ais-bedmap2',
             '-r', '2']
     check_call(args, logger=logger)
@@ -1048,8 +1048,7 @@ def interp_ais_bedmachine(self, data_path, mali_scrip, nProcs, dest_file):
     logger.info('generating gridded dataset -> MPAS weights')
     args = ['srun', '-n', nProcs, 'ESMF_RegridWeightGen',
             '--source',
-            os.path.join(data_path,
-                         'BedMachineAntarctica_2020-07-15_v02.scrip.nc'),
+            'BedMachineAntarctica_2020-07-15_v02.scrip.nc',
             '--destination', mali_scrip,
             '--weight', 'BedMachine_to_MPAS_weights.nc',
             '--method', 'conserve',
@@ -1091,13 +1090,13 @@ def interp_ais_measures(self, data_path, mali_scrip, nProcs, dest_file):
     logger = self.logger
 
     logger.info('creating scrip file for velocity dataset')
+    # Note: writing scrip file to workdir
     args = ['create_SCRIP_file_from_planar_rectangular_grid.py',
             '-i',
             os.path.join(data_path,
                          'antarctica_ice_velocity_450m_v2_edits_extrap.nc'),
             '-s',
-            os.path.join(data_path,
-                         'antarctica_ice_velocity_450m_v2.scrip.nc'),
+            'antarctica_ice_velocity_450m_v2.scrip.nc',
             '-p', 'ais-bedmap2',
             '-r', '2']
     check_call(args, logger=logger)
@@ -1106,8 +1105,7 @@ def interp_ais_measures(self, data_path, mali_scrip, nProcs, dest_file):
     logger.info('generating gridded dataset -> MPAS weights')
     args = ['srun', '-n', nProcs, 'ESMF_RegridWeightGen',
             '--source',
-            os.path.join(data_path,
-                         'antarctica_ice_velocity_450m_v2.scrip.nc'),
+            'antarctica_ice_velocity_450m_v2.scrip.nc',
             '--destination', mali_scrip,
             '--weight', 'measures_to_MPAS_weights.nc',
             '--method', 'conserve',
