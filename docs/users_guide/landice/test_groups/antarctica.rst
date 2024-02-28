@@ -71,7 +71,8 @@ the mesh generation options are adjusted through the config file.
 
     [antarctica]
     # path to directory containing BedMachine and Measures datasets
-    data_path = /usr/projects/climate/trhille/data/AIS
+    # (default value is for Perlmutter)
+    data_path = /global/cfs/cdirs/fanssie/standard_datasets/AIS_datasets
 
     # number of processors to use for ESMF_RegridWeightGen
     nProcs = 128
