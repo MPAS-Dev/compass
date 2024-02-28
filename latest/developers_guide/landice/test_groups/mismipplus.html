@@ -80,8 +80,8 @@
 <li class="toctree-l3"><a class="reference internal" href="kangerlussuaq.html">kangerlussuaq</a></li>
 <li class="toctree-l3"><a class="reference internal" href="koge_bugt_s.html">koge_bugt_s</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">mismipplus</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#framework">framework</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#smoke-test">smoke_test</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#framework">Framework</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-cases">Test cases</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="thwaites.html">thwaites</a></li>
@@ -145,34 +145,82 @@
   <section id="mismipplus">
 <span id="dev-landice-mismipplus"></span><h1>mismipplus<a class="headerlink" href="#mismipplus" title="Link to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">mismipplus</span></code> test group (<a class="reference internal" href="../generated/compass.landice.tests.mismipplus.MISMIPplus.html#compass.landice.tests.mismipplus.MISMIPplus" title="compass.landice.tests.mismipplus.MISMIPplus"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.mismipplus.MISMIPplus</span></code></a>)
-performs a short smoke test of the MISMIP+ mesh
+performs a limited number of the MISMIP+ experiments
 (see <a class="reference internal" href="../../../users_guide/landice/test_groups/mismipplus.html#landice-mismipplus"><span class="std std-ref">mismipplus</span></a>).  Here, we describe the shared framework for
-this test group and the 1 test case.</p>
+this test group and the two test cases.</p>
 <section id="framework">
-<span id="dev-landice-mismipplus-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Link to this heading">¶</a></h2>
-<p>There are no shared config options for the <code class="docutils literal notranslate"><span class="pre">mismipplus</span></code> test group.</p>
-<p>The mismipplus test should only be run with the FO velocity solver,
-or with a data velocity field.
-Running with the FO solver requires building MALI with the Albany
-library.</p>
+<span id="dev-landice-mismipplus-framework"></span><h2>Framework<a class="headerlink" href="#framework" title="Link to this heading">¶</a></h2>
+<p>The shared config options for the <code class="docutils literal notranslate"><span class="pre">mismipplus</span></code> test group
+are described in <a class="reference internal" href="../../../users_guide/landice/test_groups/mismipplus.html#landice-mismipplus"><span class="std std-ref">mismipplus</span></a> in the User’s Guide.</p>
+<p>Test cases within the <code class="docutils literal notranslate"><span class="pre">mismipplus</span></code> group should only be run with the
+FO velocity solver, or with a data velocity field. Running with the FO solver
+requires building MALI with the Albany library.</p>
 <p>The test group has a shared <code class="docutils literal notranslate"><span class="pre">namelist.landice</span></code> file with
-a few common namelist options related to time step and run duration,
+a few common namelist options related to model numerics,
 and a shared <code class="docutils literal notranslate"><span class="pre">streams.landice</span></code> file that defines <code class="docutils literal notranslate"><span class="pre">input</span></code>, <code class="docutils literal notranslate"><span class="pre">restart</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">output</span></code> streams.
-There also is an <code class="docutils literal notranslate"><span class="pre">albany_input.yaml</span></code> file for running the FO solver.</p>
+<code class="docutils literal notranslate"><span class="pre">output</span></code>, and <code class="docutils literal notranslate"><span class="pre">globalStatsOutPut</span></code> streams. There also is an
+<code class="docutils literal notranslate"><span class="pre">albany_input.yaml</span></code> file that is needed for running the FO solver.</p>
+<section id="setup-mesh">
+<h3>setup_mesh<a class="headerlink" href="#setup-mesh" title="Link to this heading">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.landice.tests.mismipplus.setup_mesh.SetupMesh.html#compass.landice.tests.mismipplus.setup_mesh.SetupMesh" title="compass.landice.tests.mismipplus.setup_mesh.SetupMesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.mismipplus.setup_mesh.SetupMesh</span></code></a>
+defines a step for creating the mesh/initial conditions for a MISMIP+ spinup
+simulation. This step is only used by the <code class="docutils literal notranslate"><span class="pre">spin_up</span></code> test case. An odd number
+of rows are culled along the North/South boundaries such that the ragged
+layout of mesh rows is symmetric in the y direction.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">resolution</span></code> parameter from the <code class="docutils literal notranslate"><span class="pre">[mesh]</span></code> section of the configuration
+file is the nominal resolution, where the actual resolution is iteratively
+calculated so that the cell center to cell center distance along the y-axis
+of the mesh is exactly equal to the vertical domain length (80 km).</p>
+</section>
 <section id="run-model">
 <h3>run_model<a class="headerlink" href="#run-model" title="Link to this heading">¶</a></h3>
 <p>The class <a class="reference internal" href="../generated/compass.landice.tests.mismipplus.run_model.RunModel.html#compass.landice.tests.mismipplus.run_model.RunModel" title="compass.landice.tests.mismipplus.run_model.RunModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.mismipplus.run_model.RunModel</span></code></a>
-defines a step for running MALI using an initial condition downloaded from
-the shared data server.</p>
+defines a step for setting up the input files (i.e. streams, namelist,
+<code class="docutils literal notranslate"><span class="pre">albany_input.yaml</span></code>) needed to run MALI. The initial condition can either
+be downloaded from the shared data server (for the
+<a class="reference internal" href="../../../users_guide/landice/test_groups/mismipplus.html#landice-mismipplus-smoke-test"><span class="std std-ref">smoke_test</span></a> testcase) or generated by the
+<a class="reference internal" href="../generated/compass.landice.tests.mismipplus.setup_mesh.SetupMesh.html#compass.landice.tests.mismipplus.setup_mesh.SetupMesh" title="compass.landice.tests.mismipplus.setup_mesh.SetupMesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.mismipplus.setup_mesh.SetupMesh</span></code></a> step
+(for the <a class="reference internal" href="../../../users_guide/landice/test_groups/mismipplus.html#landice-mismipplus-spin-up"><span class="std std-ref">spin_up</span></a> testcase).</p>
 </section>
+<section id="tasks">
+<span id="dev-landice-mismipplus-tasks"></span><h3>tasks<a class="headerlink" href="#tasks" title="Link to this heading">¶</a></h3>
+<p>The function <a class="reference internal" href="../generated/compass.landice.tests.mismipplus.tasks.get_ntasks_from_cell_count.html#compass.landice.tests.mismipplus.tasks.get_ntasks_from_cell_count" title="compass.landice.tests.mismipplus.tasks.get_ntasks_from_cell_count"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.tests.mismipplus.tasks.get_ntasks_from_cell_count()</span></code></a>
+can be used to compute a good number of MPI tasks (both the target and the
+minimum) for MALI to use based on the <code class="docutils literal notranslate"><span class="pre">goal_cells_per_core</span></code> and
+<code class="docutils literal notranslate"><span class="pre">max_cells_per_core</span></code> config options as well as the number of cells in a mesh.
+The idea is that we want to run MALI with about 300 cells per core
+(the default value of <code class="docutils literal notranslate"><span class="pre">goal_cells_per_core</span></code>) but that we would be okay
+with as many as 5000 cells per core (the default <code class="docutils literal notranslate"><span class="pre">max_cells_per_core</span></code>).</p>
+<p>A complication of using this function is that the number of cells in a mesh
+is not known until the <a class="reference internal" href="../generated/compass.landice.tests.mismipplus.setup_mesh.SetupMesh.html#compass.landice.tests.mismipplus.setup_mesh.SetupMesh" title="compass.landice.tests.mismipplus.setup_mesh.SetupMesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.mismipplus.setup_mesh.SetupMesh</span></code></a>
+step has been run (i.e. at <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code>) for a given <code class="docutils literal notranslate"><span class="pre">resolution</span></code>, but we
+need to know how many cores and nodes we will use at setup
+(i.e. at <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span> <span class="pre">...</span></code>) since that is when the job script is created.
+That’s why there is both <code class="docutils literal notranslate"><span class="pre">exact_cell_count()</span></code> and <code class="docutils literal notranslate"><span class="pre">approx_cell_count()</span></code>
+within the <code class="docutils literal notranslate"><span class="pre">tasks</span></code> module. <a class="reference internal" href="../generated/compass.landice.tests.mismipplus.tasks.approx_cell_count.html#compass.landice.tests.mismipplus.tasks.approx_cell_count" title="compass.landice.tests.mismipplus.tasks.approx_cell_count"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.tests.mismipplus.tasks.approx_cell_count()</span></code></a>
+is called at <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code> when the exact number of gridcells is
+unknown, but can be approximated by scaling a heuristic by the requested
+resolution. Whereas, at <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> the number of gridcells is precisely
+known and can be queried using <a class="reference internal" href="../generated/compass.landice.tests.mismipplus.tasks.exact_cell_count.html#compass.landice.tests.mismipplus.tasks.exact_cell_count" title="compass.landice.tests.mismipplus.tasks.exact_cell_count"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.tests.mismipplus.tasks.exact_cell_count()</span></code></a>,
+which is then used to determine <code class="docutils literal notranslate"><span class="pre">ntasks</span></code> for MALI runs at various resolutions.</p>
+</section>
+</section>
+<section id="test-cases">
+<span id="dev-landice-mismipplus-testcases"></span><h2>Test cases<a class="headerlink" href="#test-cases" title="Link to this heading">¶</a></h2>
+<section id="spin-up">
+<span id="dev-landice-mismipplus-spin-up"></span><h3>spin_up<a class="headerlink" href="#spin-up" title="Link to this heading">¶</a></h3>
+<p>The <a class="reference internal" href="../generated/compass.landice.tests.mismipplus.spin_up.SpinUp.html#compass.landice.tests.mismipplus.spin_up.SpinUp" title="compass.landice.tests.mismipplus.spin_up.SpinUp"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.mismipplus.spin_up.SpinUp</span></code></a> case will
+generate a new MISMIP+ mesh at the requested <code class="docutils literal notranslate"><span class="pre">resolution</span></code>
+(from the <code class="docutils literal notranslate"><span class="pre">[mesh]</span></code> section of the config file) and setup the files to run
+a 20,000 year spinup run.</p>
 </section>
 <section id="smoke-test">
-<h2>smoke_test<a class="headerlink" href="#smoke-test" title="Link to this heading">¶</a></h2>
+<span id="dev-landice-mismipplus-smoke-test"></span><h3>smoke_test<a class="headerlink" href="#smoke-test" title="Link to this heading">¶</a></h3>
 <p>The <a class="reference internal" href="../generated/compass.landice.tests.mismipplus.smoke_test.SmokeTest.html#compass.landice.tests.mismipplus.smoke_test.SmokeTest" title="compass.landice.tests.mismipplus.smoke_test.SmokeTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.mismipplus.smoke_test.SmokeTest</span></code></a>
-performs a 5 year run.  There is a validation step that compares the output
-file against itself.  This is to allow the test to be compared against a
-baseline if desired.</p>
+performs a 5 year version of the <cite>Ice0</cite> experiment. There is a validation step
+that compares the output file against itself.  This is to allow the test to be
+compared against a baseline if desired.</p>
+</section>
 </section>
 </section>
 

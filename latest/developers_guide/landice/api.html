@@ -790,20 +790,57 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mismipplus.MISMIPplus.html#compass.landice.tests.mismipplus.MISMIPplus" title="compass.landice.tests.mismipplus.MISMIPplus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MISMIPplus</span></code></a>(mpas_core)</p></td>
 <td><p>A test group for MISMIP+ test cases.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mismipplus.smoke_test.SmokeTest.html#compass.landice.tests.mismipplus.smoke_test.SmokeTest" title="compass.landice.tests.mismipplus.smoke_test.SmokeTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smoke_test.SmokeTest</span></code></a>(test_group)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mismipplus.smoke_test.SmokeTest.html#compass.landice.tests.mismipplus.smoke_test.SmokeTest" title="compass.landice.tests.mismipplus.smoke_test.SmokeTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smoke_test.SmokeTest</span></code></a>(test_group, resolution)</p></td>
 <td><p>A test case for running a smoke test of the MISMIP+ configuration</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mismipplus.smoke_test.SmokeTest.run.html#compass.landice.tests.mismipplus.smoke_test.SmokeTest.run" title="compass.landice.tests.mismipplus.smoke_test.SmokeTest.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smoke_test.SmokeTest.run</span></code></a>()</p></td>
-<td><p>This method is deprecated.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mismipplus.smoke_test.SmokeTest.validate.html#compass.landice.tests.mismipplus.smoke_test.SmokeTest.validate" title="compass.landice.tests.mismipplus.smoke_test.SmokeTest.validate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smoke_test.SmokeTest.validate</span></code></a>()</p></td>
+<td><p>Test cases can override this method to perform validation of variables and timers</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mismipplus.run_model.RunModel.html#compass.landice.tests.mismipplus.run_model.RunModel" title="compass.landice.tests.mismipplus.run_model.RunModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_model.RunModel</span></code></a>(test_case[, name, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mismipplus.spin_up.SpinUp.html#compass.landice.tests.mismipplus.spin_up.SpinUp" title="compass.landice.tests.mismipplus.spin_up.SpinUp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spin_up.SpinUp</span></code></a>(test_group)</p></td>
+<td><p>Test case for creating the MISMIP+ mesh, initial conditions, input files, and runs a short segment of the spin up experiments</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mismipplus.spin_up.SpinUp.configure.html#compass.landice.tests.mismipplus.spin_up.SpinUp.configure" title="compass.landice.tests.mismipplus.spin_up.SpinUp.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spin_up.SpinUp.configure</span></code></a>()</p></td>
+<td><p>Set up the directory structure, based on the requested resolution.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mismipplus.setup_mesh.SetupMesh.html#compass.landice.tests.mismipplus.setup_mesh.SetupMesh" title="compass.landice.tests.mismipplus.setup_mesh.SetupMesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_mesh.SetupMesh</span></code></a>(test_case, name[, subdir])</p></td>
+<td><p>A step for creating a mesh and initial condition for MISMIP+ test cases Experimental protocol described in: Asay-Davis, et al. 2016.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mismipplus.setup_mesh.SetupMesh.run.html#compass.landice.tests.mismipplus.setup_mesh.SetupMesh.run" title="compass.landice.tests.mismipplus.setup_mesh.SetupMesh.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_mesh.SetupMesh.run</span></code></a>()</p></td>
+<td><p>Run this step of the test case</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mismipplus.setup_mesh.calculate_mesh_params.html#compass.landice.tests.mismipplus.setup_mesh.calculate_mesh_params" title="compass.landice.tests.mismipplus.setup_mesh.calculate_mesh_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_mesh.calculate_mesh_params</span></code></a>(...[, Lx, ...])</p></td>
+<td><p>Calculate the appropriate parameters for use by <cite>make_planar_hex_mesh</cite> from the desired nominal resolution (e.g. 8e3, 4e3, 2e3, 1e3...).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mismipplus.setup_mesh.mark_cull_cells_for_MISMIP.html#compass.landice.tests.mismipplus.setup_mesh.mark_cull_cells_for_MISMIP" title="compass.landice.tests.mismipplus.setup_mesh.mark_cull_cells_for_MISMIP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_mesh.mark_cull_cells_for_MISMIP</span></code></a>(ds_mesh)</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">param ds_mesh<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mismipplus.setup_mesh.center_trough.html#compass.landice.tests.mismipplus.setup_mesh.center_trough" title="compass.landice.tests.mismipplus.setup_mesh.center_trough"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_mesh.center_trough</span></code></a>(ds_mesh)</p></td>
+<td><p>Shift the origin so that the bed trough is centered about the Y-axis and the X-axis is shifted all the way to the left.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mismipplus.run_model.RunModel.html#compass.landice.tests.mismipplus.run_model.RunModel" title="compass.landice.tests.mismipplus.run_model.RunModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_model.RunModel</span></code></a>(test_case, name[, ...])</p></td>
 <td><p>A step for performing forward MALI runs as part of MISMIP+ test cases.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mismipplus.run_model.RunModel.setup.html#compass.landice.tests.mismipplus.run_model.RunModel.setup" title="compass.landice.tests.mismipplus.run_model.RunModel.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_model.RunModel.setup</span></code></a>()</p></td>
-<td><p>Set up the test case in the work directory, including downloading any dependencies.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mismipplus.run_model.RunModel.setup.html#compass.landice.tests.mismipplus.run_model.RunModel.setup" title="compass.landice.tests.mismipplus.run_model.RunModel.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_model.RunModel.setup</span></code></a>()</p></td>
+<td><p>Set the number of MPI tasks based on a tentative scaling of a the <cite>ncells_at_1km_res</cite> heuristic from the config file based on the desired resolution.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mismipplus.run_model.RunModel.constrain_resources.html#compass.landice.tests.mismipplus.run_model.RunModel.constrain_resources" title="compass.landice.tests.mismipplus.run_model.RunModel.constrain_resources"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_model.RunModel.constrain_resources</span></code></a>(...)</p></td>
+<td><p>Update resources at runtime from config options</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mismipplus.run_model.RunModel.run.html#compass.landice.tests.mismipplus.run_model.RunModel.run" title="compass.landice.tests.mismipplus.run_model.RunModel.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_model.RunModel.run</span></code></a>()</p></td>
 <td><p>Run this step of the test case</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mismipplus.tasks.get_ntasks_from_cell_count.html#compass.landice.tests.mismipplus.tasks.get_ntasks_from_cell_count" title="compass.landice.tests.mismipplus.tasks.get_ntasks_from_cell_count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tasks.get_ntasks_from_cell_count</span></code></a>(config, ...)</p></td>
+<td><p>Computes <cite>ntasks</cite> and <cite>min_tasks</cite> based on mesh size (i.e. cell_count).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mismipplus.tasks.exact_cell_count.html#compass.landice.tests.mismipplus.tasks.exact_cell_count" title="compass.landice.tests.mismipplus.tasks.exact_cell_count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tasks.exact_cell_count</span></code></a>(mesh_filename)</p></td>
+<td><p>Get the number of cells from an already generated mesh file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mismipplus.tasks.approx_cell_count.html#compass.landice.tests.mismipplus.tasks.approx_cell_count" title="compass.landice.tests.mismipplus.tasks.approx_cell_count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tasks.approx_cell_count</span></code></a>(resolution, ...)</p></td>
+<td><p>Approximate the number of cells based on the resolution ratio squared times the number of cells at 1km resolution.</p></td>
 </tr>
 </tbody>
 </table>

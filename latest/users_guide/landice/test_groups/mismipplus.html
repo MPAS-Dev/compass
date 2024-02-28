@@ -70,7 +70,9 @@
 <li class="toctree-l3"><a class="reference internal" href="kangerlussuaq.html">kangerlussuaq</a></li>
 <li class="toctree-l3"><a class="reference internal" href="koge_bugt_s.html">koge_bugt_s</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">mismipplus</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#shared-config-options">shared config options</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#smoke-test">smoke_test</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#spin-up">spin_up</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="thwaites.html">thwaites</a></li>
@@ -144,26 +146,84 @@
              
   <section id="mismipplus">
 <span id="landice-mismipplus"></span><h1>mismipplus<a class="headerlink" href="#mismipplus" title="Link to this heading">¶</a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">landice/mismipplus</span></code> test group runs tests with a 2km
-<a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/MISMIP_2km_20220502.nc">MISMIP+ mesh</a>.
-The purpose of this test group is to provide a commonly used idealized
-glacier configuration that includes an ice shelf.
-The mesh and initial condition are already generated.  In the future,
-additional test cases may be added for generating a new version of the
-mesh at different resolutions and using different data sources.
-See the
-<a class="reference external" href="https://tc.copernicus.org/articles/14/2283/2020/">MISMIP+ description paper</a>
-for more details.  Note that the 2km mesh is not the most accurate resolution
-used by MALI, but provides a convenient trade off between computational cost
-and accuracy for running tests.</p>
-<p>The test group only includes a single test - a smoke test.
-More tests may be added later.
-There are no config options.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">mismipplus</span></code> test group (<code class="xref py py-class docutils literal notranslate"><span class="pre">compass/landice/tests/mismipplus</span></code>)
+implements a limited number of the experiments from the Marine Ice Sheet
+Model Intercomparison Project Plus (MISMIP+;
+<a class="reference external" href="https://gmd.copernicus.org/articles/9/2471/2016/gmd-9-2471-2016.pdf">Asay-Davis et al., 2016</a>).
+To date, the spinup and <code class="docutils literal notranslate"><span class="pre">Ice0</span></code> are the only experiments currently supported.
+In the future, additional test cases may be added for the missing MISMIP+
+experiments (i.e. <code class="docutils literal notranslate"><span class="pre">Ice1r</span></code>, <code class="docutils literal notranslate"><span class="pre">Ice1ra</span></code>, <code class="docutils literal notranslate"><span class="pre">Ice1rr</span></code>, <code class="docutils literal notranslate"><span class="pre">Ice2r</span></code>, <code class="docutils literal notranslate"><span class="pre">Ice2r</span></code>, <code class="docutils literal notranslate"><span class="pre">Ice2ra</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Ice2rr</span></code>; Table 2. <a class="reference external" href="https://gmd.copernicus.org/articles/9/2471/2016/gmd-9-2471-2016.pdf">Asay-Davis et al., 2016</a>).</p>
+<section id="shared-config-options">
+<h2>shared config options<a class="headerlink" href="#shared-config-options" title="Link to this heading">¶</a></h2>
+<p>Both <code class="docutils literal notranslate"><span class="pre">mismipplus</span></code> test cases share the following config options:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[mismipplus]</span>
+
+<span class="c1"># the number of cells per core to aim for</span>
+<span class="na">goal_cells_per_core</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">300</span>
+
+<span class="c1"># the approximate maximum number of cells per core</span>
+<span class="na">max_cells_per_core</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5000</span>
+</pre></div>
+</div>
+<p>The config options are all aimed at dynamically calculating the optimal number
+of <code class="docutils literal notranslate"><span class="pre">ntasks</span></code> for the <code class="docutils literal notranslate"><span class="pre">run_model</span></code> step based on the resolution requested
+by the test case. For more information about how <code class="docutils literal notranslate"><span class="pre">ntasks</span></code> is calculated see
+<a class="reference internal" href="../../../developers_guide/landice/test_groups/mismipplus.html#dev-landice-mismipplus-tasks"><span class="std std-ref">tasks</span></a> in the developers guide page.</p>
+</section>
 <section id="smoke-test">
-<h2>smoke_test<a class="headerlink" href="#smoke-test" title="Link to this heading">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">landice/mismipplus/smoke_test</span></code> runs the MISMIP+ test mesh for 5 years
-with the adaptive timestepper on.  It is meant as a baseline configuration
-that could be adjusted to specific needs.</p>
+<span id="landice-mismipplus-smoke-test"></span><h2>smoke_test<a class="headerlink" href="#smoke-test" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">landice/mismipplus/smoke_test</span></code> runs the MISMIP+ <code class="docutils literal notranslate"><span class="pre">Ice0</span></code> experiment for
+five years using a spun-up
+<a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/MISMIP_2km_20220502.nc">2km mesh</a>.
+The simulation is run with the adaptive timestepper on.
+There are no configuration options for this test case.
+Currently 2000m is the only resolution supported. In the future, the
+<code class="docutils literal notranslate"><span class="pre">spin_up</span></code> test case will be used to generate new versions of the
+mesh at 8000m, 4000m, 2000m, and 1000m resolutions.</p>
+</section>
+<section id="spin-up">
+<span id="landice-mismipplus-spin-up"></span><h2>spin_up<a class="headerlink" href="#spin-up" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">landice/mismipplus/spin_up</span></code> generates the files needed to run a 20,000 year
+spin-up using the standard MISMIP+ initial conditions outline in
+<a class="reference external" href="https://gmd.copernicus.org/articles/9/2471/2016/gmd-9-2471-2016.pdf">section 2.1 of (Asay-Davis et al., 2016)</a>.
+The purpose of this test case is generate a semi-realistic glacier geometry
+that includes an ice shelf, which can be used to the subsequent MISMIP+
+experiments and/or additional experiments that require 3-D complexity without
+site-specific complications arising from using an actual glacier geometry.</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for the mesh (i.e. initial condition) setup</span>
+<span class="k">[mesh]</span>
+
+<span class="c1"># Nominal cell spacing (m). Resolution is &quot;nominal&quot; since the true cell spacing</span>
+<span class="c1"># will be determined such that the cell center to cell center length of the</span>
+<span class="c1"># entire domain in the y direction is exactly the required y domain length (80 km).</span>
+<span class="na">resolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8000.</span>
+
+<span class="c1"># length (m) to extend the eastern domain boundary by. Needed for simulations</span>
+<span class="c1"># that use a dynamic calving law, where the calving front will be irregularly</span>
+<span class="c1"># shaped. Any value less than `2*resolution` will be ignored, as the default</span>
+<span class="c1"># gutter length is 2 gridcells.</span>
+<span class="na">gutter_length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.</span>
+
+<span class="c1"># ice density (kg m^{-3}). MISMIP+ uses 918 (Table 1. Asay-Davis et al. 2016),</span>
+<span class="c1"># but MALI defaults to 910. The user can choose if they want to strictly follow</span>
+<span class="c1"># MISMIP+ or use the default MALI value.</span>
+<span class="na">ice_density</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">918.</span>
+
+<span class="c1"># Initial ice thickness (m). The MISMIP+ protocol does not specify an initial</span>
+<span class="c1"># ice thickness for the spinup experiment. Therefore the user is allowed to</span>
+<span class="c1"># choose their desired value.</span>
+<span class="na">init_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100.</span>
+
+<span class="c1"># Number of vertical levels</span>
+<span class="na">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span>
+
+<span class="c1"># How to distribute vertical layers. Options are &quot;glimmer&quot; or &quot;uniform&quot;.</span>
+<span class="c1"># &quot;glimmer&quot; will distribute the layer non-uniformly following</span>
+<span class="c1"># Eqn. (15) from Rutt et al. 2009.</span>
+<span class="na">vetical_layer_distribution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">glimmer</span>
+</pre></div>
+</div>
 </section>
 </section>
 

@@ -111,8 +111,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice.tests.mismipplus</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.mismipplus.smoke_test</span> <span class="kn">import</span> <span class="n">SmokeTest</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.landice.tests.mismipplus.smoke_test</span> <span class="kn">import</span> <span class="n">SmokeTest</span>
+<span class="kn">from</span> <span class="nn">compass.landice.tests.mismipplus.spin_up</span> <span class="kn">import</span> <span class="n">SpinUp</span>
+<span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
 
 
 <div class="viewcode-block" id="MISMIPplus">
@@ -120,7 +121,6 @@
 <span class="k">class</span> <span class="nc">MISMIPplus</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A test group for MISMIP+ test cases.</span>
-<span class="sd">    This test group uses a pre-made mesh file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="MISMIPplus.__init__">
 <a class="viewcode-back" href="../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.MISMIPplus.html#compass.landice.tests.mismipplus.MISMIPplus.__init__">[docs]</a>
@@ -131,7 +131,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;mismipplus&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">SmokeTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">SpinUp</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2000</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">SmokeTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                                         <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span></div>
 </div>
 
 </pre></div>

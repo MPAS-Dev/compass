@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.landice.tests.mismipplus.setup_mesh &mdash; compass latest documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+              <div class="version">
+                latest
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../landice.html">compass.landice</a></li>
+          <li class="breadcrumb-item"><a href="../mismipplus.html">compass.landice.tests.mismipplus</a></li>
+      <li class="breadcrumb-item active">compass.landice.tests.mismipplus.setup_mesh</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.landice.tests.mismipplus.setup_mesh</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.mesh.conversion</span> <span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">cull</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.planar_hex</span> <span class="kn">import</span> <span class="n">make_planar_hex_mesh</span>
+
+<span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">make_graph_file</span>
+<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+
+
+<div class="viewcode-block" id="SetupMesh">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.setup_mesh.SetupMesh.html#compass.landice.tests.mismipplus.setup_mesh.SetupMesh">[docs]</a>
+<span class="k">class</span> <span class="nc">SetupMesh</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A step for creating a mesh and initial condition for MISMIP+ test cases</span>
+<span class="sd">    Experimental protocol described in:</span>
+<span class="sd">    Asay-Davis, et al. 2016. &quot;Experimental Design for Three Interrelated</span>
+<span class="sd">    Marine Ice Sheet and Ocean Model Intercomparison Projects:</span>
+<span class="sd">    MISMIP v.3 (MISMIP+), ISOMIP v.2 (ISOMIP+) and MISOMIP v.1 (MISOMIP1).&quot;</span>
+<span class="sd">    Geoscientific Model Development 9 (7): 2471–97.</span>
+<span class="sd">    https://doi.org/10.5194/gmd-9-2471-2016.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    resolution : float</span>
+<span class="sd">        The resolution of the test case, as defined in the configuration file</span>
+<span class="sd">        at the time when `compass setup` is run.</span>
+
+<span class="sd">    nx : int</span>
+<span class="sd">        The number of cells in the x direction</span>
+
+<span class="sd">    ny : int</span>
+<span class="sd">        The number of cells in the y direction</span>
+
+<span class="sd">    dc : int</span>
+<span class="sd">        The distance in meters between adjacent cell centers.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SetupMesh.__init__">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.setup_mesh.SetupMesh.html#compass.landice.tests.mismipplus.setup_mesh.SetupMesh.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the step</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.TestCase</span>
+<span class="sd">            The test case this step belongs to</span>
+
+<span class="sd">        name : str</span>
+<span class="sd">            the name of the test case</span>
+
+<span class="sd">        subdir : str, optional</span>
+<span class="sd">            the subdirectory for the step.  The default is ``name``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span>
+                         <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                         <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
+
+        <span class="c1"># Files to be created as part of the this step</span>
+        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;mpas_grid.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;graph.info&#39;</span><span class="p">,</span> <span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SetupMesh.run">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.setup_mesh.SetupMesh.run.html#compass.landice.tests.mismipplus.setup_mesh.SetupMesh.run">[docs]</a>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run this step of the test case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># hard coded parameters</span>
+        <span class="n">Lx</span> <span class="o">=</span> <span class="mf">640e3</span>  <span class="c1"># [m]</span>
+        <span class="n">Ly</span> <span class="o">=</span> <span class="mf">80e3</span>   <span class="c1"># [m]</span>
+
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;mesh&#39;</span><span class="p">]</span>
+
+        <span class="c1"># read the resolution from the .cfg file at runtime</span>
+        <span class="n">resolution</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;resolution&#39;</span><span class="p">)</span>
+        <span class="c1"># read the gutter lenth from the .cfg file</span>
+        <span class="n">gutter_length</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;gutter_length&#39;</span><span class="p">)</span>
+        <span class="c1"># ensure that the requested `gutter_length` is valid. Otherwise set</span>
+        <span class="c1"># the value to zero, such that the default `gutter_length` of two</span>
+        <span class="c1"># gridcells is used.</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">gutter_length</span> <span class="o">&lt;</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">resolution</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">gutter_length</span> <span class="o">!=</span> <span class="mf">0.</span><span class="p">):</span>
+            <span class="n">gutter_length</span> <span class="o">=</span> <span class="mf">0.</span>
+
+        <span class="c1"># check if the resolution has been changed since the `compass setup`</span>
+        <span class="c1"># command was run</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">!=</span> <span class="n">resolution</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Resolution was set at </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="si">:</span><span class="s1">4.0f</span><span class="si">}</span><span class="s1">m&#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39; when `compass setup` was called. Since then,&#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39; the resolution in the configuration file has&#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39; been changed to </span><span class="si">{</span><span class="n">resolution</span><span class="si">:</span><span class="s1">4.0f</span><span class="si">}</span><span class="s1">m. Changing&#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39; resolution at runtime is not supported. Change&#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39; the resolution value in the configuration file&#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39; within the python module and rerun the&#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39; `compass setup` command in order to create&#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39; a mesh at a resolution of </span><span class="si">{</span><span class="n">resolution</span><span class="si">:</span><span class="s1">4.0f</span><span class="si">}</span><span class="s1">m&#39;</span><span class="p">)</span>
+
+        <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">dc</span> <span class="o">=</span> <span class="n">calculate_mesh_params</span><span class="p">(</span><span class="n">nominal_resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                                           <span class="n">Lx</span><span class="o">=</span><span class="n">Lx</span><span class="p">,</span>
+                                           <span class="n">Ly</span><span class="o">=</span><span class="n">Ly</span><span class="p">,</span>
+                                           <span class="n">gutter_length</span><span class="o">=</span><span class="n">gutter_length</span><span class="p">)</span>
+
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">make_planar_hex_mesh</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="o">=</span><span class="n">ny</span><span class="p">,</span> <span class="n">dc</span><span class="o">=</span><span class="n">dc</span><span class="p">,</span>
+                                       <span class="n">nonperiodic_x</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                       <span class="n">nonperiodic_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">mark_cull_cells_for_MISMIP</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">)</span>
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+        <span class="c1"># custom function to shift the origin for the MISMIP+ experiments</span>
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">center_trough</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">)</span>
+
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="s1">&#39;mpas_grid.nc&#39;</span><span class="p">)</span>
+
+        <span class="c1"># using `.get(...)`, instead of `.getint(...)` since variables need</span>
+        <span class="c1"># to be string anyway for subprocess call</span>
+        <span class="n">levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;levels&#39;</span><span class="p">)</span>
+        <span class="n">vertMethod</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;vetical_layer_distribution&#39;</span><span class="p">)</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;create_landice_grid_from_generic_MPAS_grid.py&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas_grid.nc&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span>
+                <span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="n">vertMethod</span><span class="p">,</span>
+                <span class="s1">&#39;--diri&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;--thermal&#39;</span><span class="p">]</span>
+
+        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+
+        <span class="n">make_graph_file</span><span class="p">(</span><span class="n">mesh_filename</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">,</span>
+                        <span class="n">graph_filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">)</span>
+
+        <span class="c1"># create the initial conditions for the MISMIP+ spinup expr</span>
+        <span class="n">_setup_MISMPPlus_IC</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
+                            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="calculate_mesh_params">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.setup_mesh.calculate_mesh_params.html#compass.landice.tests.mismipplus.setup_mesh.calculate_mesh_params">[docs]</a>
+<span class="k">def</span> <span class="nf">calculate_mesh_params</span><span class="p">(</span><span class="n">nominal_resolution</span><span class="p">,</span>
+                          <span class="n">Lx</span><span class="o">=</span><span class="mf">640e3</span><span class="p">,</span>
+                          <span class="n">Ly</span><span class="o">=</span><span class="mf">80e3</span><span class="p">,</span>
+                          <span class="n">gutter_length</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the appropriate parameters for use by `make_planar_hex_mesh`</span>
+<span class="sd">    from the desired nominal resolution (e.g. 8e3, 4e3, 2e3, 1e3...).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    nominal_resolution : int</span>
+<span class="sd">        Desired mesh resolution in [m] without consideration of the hex meshes</span>
+
+<span class="sd">    Lx : float</span>
+<span class="sd">        Domain length in x direction [m]</span>
+
+<span class="sd">    Ly : float</span>
+<span class="sd">        Domain length in y direction [m]</span>
+
+<span class="sd">    gutter_length : float</span>
+<span class="sd">        Desired gutter length [m] on the eastern domain. Default value of 0.0</span>
+<span class="sd">        will ensure there are two extra cell for the gutter.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">calculate_ny</span><span class="p">(</span><span class="n">nominal_resolution</span><span class="p">,</span> <span class="n">Ly</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nominal_resolution : int</span>
+<span class="sd">            Desired mesh resolution in [m] without consideration of hex meshes</span>
+
+<span class="sd">        Ly : float</span>
+<span class="sd">            Domain length in y direction [m]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Find amplitude of dual mesh (i.e. `dy`) using the nominal resolution</span>
+        <span class="n">nominal_dy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">3.</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">nominal_resolution</span>
+
+        <span class="c1"># find the number of y rows (`ny`) from the `nominal_dy`</span>
+        <span class="n">nominal_ny</span> <span class="o">=</span> <span class="n">Ly</span> <span class="o">/</span> <span class="n">nominal_dy</span>
+
+        <span class="c1"># find the actual number of y rows (`ny`) by rounding the `nominal_ny`</span>
+        <span class="c1"># to the nearest _even_ integer. `make_planar_hex_mesh` requires that</span>
+        <span class="c1"># `ny` be even</span>
+        <span class="n">ny</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">nominal_ny</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">ny</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">calculate_dc</span><span class="p">(</span><span class="n">Ly</span><span class="p">,</span> <span class="n">ny</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate the cell spacing that conforms to the desired `ny`</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Ly : float</span>
+<span class="sd">            Length [m] of y domain</span>
+<span class="sd">        ny : int</span>
+<span class="sd">            number of gridcells along the y-axis</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># from the new ny, calculate the new dy</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="n">Ly</span> <span class="o">/</span> <span class="n">ny</span>
+
+        <span class="c1"># from the dy, which results in an even integer number of y-rows,</span>
+        <span class="c1"># where the cell center to cell center distance along y direction will</span>
+        <span class="c1"># be exactly Ly, recalculate the dc.</span>
+        <span class="n">dc</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">dy</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">3.</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">dc</span>
+
+    <span class="k">def</span> <span class="nf">calculate_nx</span><span class="p">(</span><span class="n">Lx</span><span class="p">,</span> <span class="n">dc</span><span class="p">,</span> <span class="n">gutter_length</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Caluculate the number of x gridcell, per the required `dc` with</span>
+<span class="sd">        considerations for the requested gutter length</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Lx : float</span>
+<span class="sd">            Length [m] of x domain</span>
+
+<span class="sd">        dc : float</span>
+<span class="sd">            Edge length [m]</span>
+
+<span class="sd">        gutter_length: float</span>
+<span class="sd">            Desired gutter length [m] on the eastern domain. A value of 0.0</span>
+<span class="sd">            will result in two extra cell for the gutter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">gutter_length</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="n">nx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">Lx</span> <span class="o">/</span> <span class="n">dc</span><span class="p">)</span>
+            <span class="c1"># The modulo condition below ensures there is exactly one cell</span>
+            <span class="c1"># past the the desired domain length. So, when no gutter</span>
+            <span class="c1"># information is provided, add an extra column to make</span>
+            <span class="c1"># the default gutter length 2</span>
+            <span class="n">nx</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># amend the domain length to account for the gutter</span>
+            <span class="n">Lx</span> <span class="o">+=</span> <span class="n">gutter_length</span>
+            <span class="n">nx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">Lx</span> <span class="o">/</span> <span class="n">dc</span><span class="p">)</span>
+
+        <span class="c1"># Just rounding `nx` up to the nearest `int` doesn&#39;t gurantee that the</span>
+        <span class="c1"># domain will fully span [0, Lx]. If dc/2 (i.e. `dx`) is less than the</span>
+        <span class="c1"># than the remainder of `Lx / dc` even the rounded up `nx` will fall</span>
+        <span class="c1"># short of the desired domain length. If that&#39;s the case add an extra</span>
+        <span class="c1"># x cell so the domain is inclusive of the calving front.</span>
+        <span class="k">if</span> <span class="n">Lx</span> <span class="o">%</span> <span class="n">dc</span> <span class="o">&gt;</span> <span class="n">dc</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">:</span>
+            <span class="n">nx</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>
+
+    <span class="n">ny</span> <span class="o">=</span> <span class="n">calculate_ny</span><span class="p">(</span><span class="n">nominal_resolution</span><span class="p">,</span> <span class="n">Ly</span><span class="p">)</span>
+    <span class="n">dc</span> <span class="o">=</span> <span class="n">calculate_dc</span><span class="p">(</span><span class="n">Ly</span><span class="p">,</span> <span class="n">ny</span><span class="p">)</span>
+    <span class="n">nx</span> <span class="o">=</span> <span class="n">calculate_nx</span><span class="p">(</span><span class="n">Lx</span><span class="p">,</span> <span class="n">dc</span><span class="p">,</span> <span class="n">gutter_length</span><span class="p">)</span>
+
+    <span class="c1"># add two to `ny` to accomodate MISMIP+ specific culling requirments.</span>
+    <span class="c1"># This ensures, after the culling, that the cell center to cell center</span>
+    <span class="c1"># distance in the y-direction is exactly equal to `Ly`. This must be done</span>
+    <span class="c1"># after the other parameters (i.e. `dc` and `nx`) are calculated or else</span>
+    <span class="c1"># those calculations will be thrown off.</span>
+    <span class="k">return</span> <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dc</span></div>
+
+
+
+<div class="viewcode-block" id="mark_cull_cells_for_MISMIP">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.setup_mesh.mark_cull_cells_for_MISMIP.html#compass.landice.tests.mismipplus.setup_mesh.mark_cull_cells_for_MISMIP">[docs]</a>
+<span class="k">def</span> <span class="nf">mark_cull_cells_for_MISMIP</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ds_mesh : xarray.Dataset</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># get the edge length [m] from the attributes</span>
+    <span class="n">dc</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">dc</span>
+    <span class="c1"># calculate the amplitude (i.e. `dy`) [m] of the dual mesh</span>
+    <span class="n">dy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">3.</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">dc</span>
+    <span class="c1"># Get the y position of the top row</span>
+    <span class="n">y_max</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">yCell</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+
+    <span class="c1"># find the first interior row along the top of the domain</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">ds_mesh</span><span class="o">.</span><span class="n">yCell</span><span class="p">,</span> <span class="n">y_max</span> <span class="o">-</span> <span class="n">dy</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+
+    <span class="c1"># add first interior row along northern boudnary to the cells to be culled</span>
+    <span class="n">ds_mesh</span><span class="p">[</span><span class="s1">&#39;cullCell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">cullCell</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ds_mesh</span></div>
+
+
+
+<div class="viewcode-block" id="center_trough">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.setup_mesh.center_trough.html#compass.landice.tests.mismipplus.setup_mesh.center_trough">[docs]</a>
+<span class="k">def</span> <span class="nf">center_trough</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Shift the origin so that the bed trough is centered about the Y-axis and</span>
+<span class="sd">    the X-axis is shifted all the way to the left.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ds_mesh : xarray.Datatset</span>
+<span class="sd">        The mesh to be shifted</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Get the center of y-axis (i.e. half distance)</span>
+    <span class="n">y_center</span> <span class="o">=</span> <span class="p">(</span><span class="n">ds_mesh</span><span class="o">.</span><span class="n">yCell</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">yCell</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">/</span> <span class="mf">2.</span>
+
+    <span class="c1"># Shift x-axis so that the x-origin is all the way to the left</span>
+    <span class="n">x_shift</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">xCell</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+    <span class="c1"># Shift y-axis so that it&#39;s centered about the MISMIP+ bed trough</span>
+    <span class="n">y_shift</span> <span class="o">=</span> <span class="mf">4.e4</span> <span class="o">-</span> <span class="n">y_center</span>
+
+    <span class="c1"># Shift all spatial points by calculated shift</span>
+    <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Cell&#39;</span><span class="p">,</span> <span class="s1">&#39;Edge&#39;</span><span class="p">,</span> <span class="s1">&#39;Vertex&#39;</span><span class="p">]:</span>
+        <span class="n">ds_mesh</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;x</span><span class="si">{</span><span class="n">loc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;x</span><span class="si">{</span><span class="n">loc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">x_shift</span>
+        <span class="n">ds_mesh</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;y</span><span class="si">{</span><span class="n">loc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;y</span><span class="si">{</span><span class="n">loc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">y_shift</span>
+
+    <span class="c1">##########################################################################</span>
+    <span class="c1"># WHL :</span>
+    <span class="c1">#   Need to adjust geometry along top and bottom boundaries to get flux</span>
+    <span class="c1">#   correct there. Essentially, we only want to model the interior half of</span>
+    <span class="c1">#   those cells. Adding this here because we only want to do this if it</span>
+    <span class="c1">#   hasn&#39;t been done before. This method is assuming a periodic_hex mesh!</span>
+    <span class="c1">##########################################################################</span>
+
+    <span class="c1"># Boolean mask for indices which correspond to the N/S boundary of mesh</span>
+    <span class="c1"># `np.isclose` is needed when comparing floats to avoid roundoff errors</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">ds_mesh</span><span class="o">.</span><span class="n">yCell</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">yCell</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span> <span class="o">|</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">ds_mesh</span><span class="o">.</span><span class="n">yCell</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">yCell</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.01</span><span class="p">))</span>
+
+    <span class="c1"># Reduce the cell areas by half along the N/S boundary</span>
+    <span class="n">ds_mesh</span><span class="p">[</span><span class="s1">&#39;areaCell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span>
+                                   <span class="n">ds_mesh</span><span class="o">.</span><span class="n">areaCell</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">,</span>
+                                   <span class="n">ds_mesh</span><span class="o">.</span><span class="n">areaCell</span><span class="p">)</span>
+
+    <span class="c1"># `mesh.dcEdge` is a vector. So, ensure that all values equal before we</span>
+    <span class="c1"># arbitrarily select a value from the array to use in the `de` calculation</span>
+    <span class="k">if</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">dcEdge</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+        <span class="n">dc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ds_mesh</span><span class="o">.</span><span class="n">dcEdge</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c1"># get the distance between edges. Since all meshes are generated with the</span>
+    <span class="c1"># `make_planar_hex_mesh` function, all triangles (in the dual mesh) will</span>
+    <span class="c1"># be equilateral, which makes our use of `3` in the denominator below</span>
+    <span class="c1"># a valid assumption.</span>
+    <span class="n">de</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">dc</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="c1"># find the min and max (i.e. N/S boundary) edges</span>
+    <span class="n">y_min</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">yEdge</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+    <span class="n">y_max</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">yEdge</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+
+    <span class="c1"># Boolean mask for edge indices on the N/S boundary of the mesh</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">ds_mesh</span><span class="o">.</span><span class="n">yEdge</span><span class="p">,</span> <span class="n">y_min</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span> <span class="o">|</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">ds_mesh</span><span class="o">.</span><span class="n">yEdge</span><span class="p">,</span> <span class="n">y_max</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.01</span><span class="p">))</span>
+    <span class="c1"># WHL: zero out the edges on the boundary</span>
+    <span class="c1">#      (not necessary because velocity will also be zero)</span>
+    <span class="n">ds_mesh</span><span class="p">[</span><span class="s1">&#39;dvEdge&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">dvEdge</span><span class="p">)</span>
+
+    <span class="c1"># Boolean mask for the indexed of edges N/S of  boundary cell centers,</span>
+    <span class="c1"># using a 2% relative threshold to account for accumulated roundoff</span>
+    <span class="c1"># from min calculation</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">ds_mesh</span><span class="o">.</span><span class="n">yEdge</span><span class="p">,</span> <span class="n">y_min</span> <span class="o">+</span> <span class="n">de</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span> <span class="o">|</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">ds_mesh</span><span class="o">.</span><span class="n">yEdge</span><span class="p">,</span> <span class="n">y_max</span> <span class="o">-</span> <span class="n">de</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.02</span><span class="p">))</span>
+    <span class="c1"># cut length in half for edges between boundary cells</span>
+    <span class="n">ds_mesh</span><span class="p">[</span><span class="s1">&#39;dvEdge&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">dvEdge</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">dvEdge</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ds_mesh</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">_mismipplus_bed</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Equations 1-4 from Asay-Davis et al. (2016).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : xarray.DataArray</span>
+<span class="sd">        x cell coordinates</span>
+
+<span class="sd">    y : xarray.DataArray</span>
+<span class="sd">        y cell coordinates</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="mf">1.e3</span>      <span class="c1"># m to km</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">/</span> <span class="mf">1.e3</span>      <span class="c1"># m to km</span>
+    <span class="n">B0</span> <span class="o">=</span> <span class="o">-</span><span class="mf">150.</span>        <span class="c1"># m</span>
+    <span class="n">B2</span> <span class="o">=</span> <span class="o">-</span><span class="mf">728.8</span>       <span class="c1"># m</span>
+    <span class="n">B4</span> <span class="o">=</span> <span class="mf">343.91</span>       <span class="c1"># m</span>
+    <span class="n">B6</span> <span class="o">=</span> <span class="o">-</span><span class="mf">50.57</span>       <span class="c1"># m</span>
+    <span class="n">x_bar</span> <span class="o">=</span> <span class="mf">300.</span>      <span class="c1"># km</span>
+    <span class="n">x_tilde</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">x_bar</span>
+    <span class="n">dc</span> <span class="o">=</span> <span class="mf">500.</span>         <span class="c1"># m</span>
+    <span class="n">fc</span> <span class="o">=</span> <span class="mf">4.</span>           <span class="c1"># km</span>
+    <span class="n">wc</span> <span class="o">=</span> <span class="mf">24.</span>          <span class="c1"># km</span>
+    <span class="n">Ly</span> <span class="o">=</span> <span class="mf">80.</span>          <span class="c1"># km</span>
+    <span class="n">Bmax</span> <span class="o">=</span> <span class="o">-</span><span class="mf">720.</span>      <span class="c1"># m</span>
+
+    <span class="n">B_x</span> <span class="o">=</span> <span class="n">B0</span> <span class="o">+</span> <span class="n">B2</span> <span class="o">*</span> <span class="n">x_tilde</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">B4</span> <span class="o">*</span> <span class="n">x_tilde</span><span class="o">**</span><span class="mi">4</span> <span class="o">+</span> <span class="n">B6</span> <span class="o">*</span> <span class="n">x_tilde</span><span class="o">**</span><span class="mi">6</span>
+    <span class="n">B_y</span> <span class="o">=</span> <span class="n">dc</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">Ly</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">wc</span><span class="p">)</span> <span class="o">/</span> <span class="n">fc</span><span class="p">))</span> <span class="o">+</span>\
+        <span class="n">dc</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">Ly</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">wc</span><span class="p">)</span> <span class="o">/</span> <span class="n">fc</span><span class="p">))</span>
+
+    <span class="n">Bsum</span> <span class="o">=</span> <span class="n">B_x</span> <span class="o">+</span> <span class="n">B_y</span>
+
+    <span class="n">z_b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">Bsum</span><span class="p">,</span> <span class="n">Bmax</span><span class="p">)</span>  <span class="c1"># Eqn 1. (Asay-Davis et al. 2016)</span>
+
+    <span class="k">return</span> <span class="n">z_b</span>
+
+
+<span class="k">def</span> <span class="nf">_setup_MISMPPlus_IC</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add the inital condition for the MISMIP+ spinup to the given MPAS mesh file</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : compass.config.CompassConfigParser</span>
+<span class="sd">        Configuration options for this test case</span>
+
+<span class="sd">    logger : logging.Logger</span>
+<span class="sd">        A logger for output from the step</span>
+
+<span class="sd">    filename : str</span>
+<span class="sd">        NetCDF file to place the MISMIP+ ICs in</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Hard code some parameters from Table 1. of Asay-Davis et al. 2016</span>
+    <span class="n">accum</span> <span class="o">=</span> <span class="mf">0.3</span>       <span class="c1"># m^{-1}</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="mf">3.160e6</span>       <span class="c1"># Pa m^{-1/3} s^{1/3}</span>
+    <span class="n">spy</span> <span class="o">=</span> <span class="mi">31556926</span>    <span class="c1"># s a^{-1}</span>
+    <span class="n">xcalve</span> <span class="o">=</span> <span class="mf">640.e3</span>   <span class="c1"># m</span>
+
+    <span class="c1"># Read parameters from the .cfg file</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;mesh&#39;</span><span class="p">]</span>
+    <span class="n">rhoi</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;ice_density&#39;</span><span class="p">)</span>               <span class="c1"># kg m^{-3}</span>
+    <span class="n">init_thickness</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;init_thickness&#39;</span><span class="p">)</span>  <span class="c1"># m</span>
+
+    <span class="c1"># open the file</span>
+    <span class="n">src</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="c1"># Use `.loc[:]` for setting the initial conditions since we are setting</span>
+    <span class="c1"># the fields with scalar values and/or fields with a reduced number of</span>
+    <span class="c1"># dimensions. This ensures values are properly broadcast and aligned</span>
+    <span class="c1"># against the field&#39;s coordinates.</span>
+
+    <span class="c1"># Set the bedTopography</span>
+    <span class="n">src</span><span class="p">[</span><span class="s1">&#39;bedTopography&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">_mismipplus_bed</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">xCell</span><span class="p">,</span> <span class="n">src</span><span class="o">.</span><span class="n">yCell</span><span class="p">)</span>
+
+    <span class="c1"># Set the ice thickness</span>
+    <span class="n">src</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">xCell</span> <span class="o">&lt;</span> <span class="n">xcalve</span><span class="p">,</span> <span class="n">init_thickness</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+
+    <span class="c1"># Convert SMB from m/yr to kg/m2/s</span>
+    <span class="n">accum</span> <span class="o">*=</span> <span class="n">rhoi</span> <span class="o">/</span> <span class="n">spy</span>
+    <span class="c1"># Set the surface mass balance</span>
+    <span class="n">src</span><span class="p">[</span><span class="s1">&#39;sfcMassBal&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">accum</span>
+
+    <span class="c1"># create the calving mask</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">xCell</span> <span class="o">&gt;</span> <span class="n">xcalve</span>
+    <span class="c1"># create the calvingMask data array and add Time dimension along axis 0</span>
+    <span class="n">calvingMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">({</span><span class="s2">&quot;Time&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># assign data array to dataset and ensure it&#39;s a 32 bit int field</span>
+    <span class="n">src</span><span class="p">[</span><span class="s1">&#39;calvingMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">calvingMask</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int32&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Boolean masks for indices which correspond to the N/S boundary of mesh</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">yCell</span><span class="p">,</span> <span class="n">src</span><span class="o">.</span><span class="n">yCell</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span> <span class="o">|</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">yCell</span><span class="p">,</span> <span class="n">src</span><span class="o">.</span><span class="n">yCell</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.02</span><span class="p">))</span>
+    <span class="c1"># NOTE: np.isclose returns a np.array. Due to the bug in xarray (&lt;=2023.8)</span>
+    <span class="c1">#       mask variable needs to converted to an xarray object in order for</span>
+    <span class="c1">#       the `.variable` attribute to exist (which is needed to fix the</span>
+    <span class="c1">#       bug in the broadcasting/alignment when `.loc[:]` is used.)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span>
+    <span class="c1"># Set free slip boundary conditions for velocity along N/S boundary</span>
+    <span class="c1"># NOTE: `.variable` is needed so that coordinates are properly broadcast</span>
+    <span class="c1">#        due to a bug in xarray, which was resolved as of 2023.9.0</span>
+    <span class="n">src</span><span class="p">[</span><span class="s1">&#39;dirichletVelocityMask&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">variable</span>
+
+    <span class="c1"># Skipping WHL step of setting the initial velocities to zero</span>
+    <span class="c1"># since they are already zero.</span>
+
+    <span class="c1"># convert to MPAS units (m yr^{-1})^(1-1/n)</span>
+    <span class="n">C</span> <span class="o">/=</span> <span class="n">spy</span><span class="o">**</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="mf">3.0</span><span class="p">)</span>
+
+    <span class="c1"># Set the basal traction parameter for Weetman sliding law</span>
+    <span class="n">src</span><span class="p">[</span><span class="s1">&#39;muFriction&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">C</span>
+
+    <span class="c1"># Set the effectivePressure to constant and uniform value</span>
+    <span class="n">src</span><span class="p">[</span><span class="s1">&#39;effectivePressure&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+    <span class="c1"># Write the dataset to disk</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Successfully added MISMIP+ initial conditions to: </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

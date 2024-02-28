@@ -112,7 +112,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice.tests.mismipplus.run_model</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">make_graph_file</span><span class="p">,</span> <span class="n">run_model</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">compass.landice.tests.mismipplus.tasks</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">approx_cell_count</span><span class="p">,</span>
+    <span class="n">exact_cell_count</span><span class="p">,</span>
+    <span class="n">get_ntasks_from_cell_count</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">make_graph_file</span><span class="p">,</span> <span class="n">run_model</span>
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
 
@@ -131,10 +138,13 @@
 <span class="sd">        the ``restart_run`` step of the ``restart_test`` runs the model</span>
 <span class="sd">        twice, the second time with ``namelist.landice.rst`` and</span>
 <span class="sd">        ``streams.landice.rst``</span>
+
+<span class="sd">    resolution : float</span>
+<span class="sd">        The nominal distance [m] between horizontal grid points (dcEdge).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="RunModel.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.run_model.RunModel.html#compass.landice.tests.mismipplus.run_model.RunModel.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;run_model&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">suffixes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new test case</span>
@@ -144,11 +154,17 @@
 <span class="sd">        test_case : compass.TestCase</span>
 <span class="sd">            The test case this step belongs to</span>
 
-<span class="sd">        name : str, optional</span>
+<span class="sd">        name : str</span>
 <span class="sd">            the name of the test case</span>
 
 <span class="sd">        subdir : str, optional</span>
 <span class="sd">            the subdirectory for the step.  The default is ``name``</span>
+
+<span class="sd">        resolution : float, optional</span>
+<span class="sd">            The nominal distance [m] between horizontal grid points (dcEdge).</span>
+<span class="sd">            For the ``SpinUp`` testcase no value should be passed. Instead the</span>
+<span class="sd">            value will be parsed from the configuration options at the</span>
+<span class="sd">            time of ``compass setup``.</span>
 
 <span class="sd">        ntasks : int, optional</span>
 <span class="sd">            the number of tasks the step would ideally use.  If fewer tasks</span>
@@ -174,16 +190,28 @@
         <span class="k">if</span> <span class="n">suffixes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">suffixes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;landice&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">suffixes</span> <span class="o">=</span> <span class="n">suffixes</span>
+
+        <span class="c1"># The condition below will only be true for the `SpinUp` testcase</span>
+        <span class="c1"># where resolution is not know at the time of object construction</span>
+        <span class="c1"># (e.g. `compass list`), but instead is parsed from the config file</span>
+        <span class="c1"># when `compass setup` is executed. For the `SpinUp` testcase the</span>
+        <span class="c1"># resolution will be parsed by the testcases `configure`` method,</span>
+        <span class="c1"># where the attribute value is also overwritten to properly reflect</span>
+        <span class="c1"># the requested value. A default value is initialized here to</span>
+        <span class="c1"># follow best python practices and have all the attributes be set</span>
+        <span class="c1"># in the constructor.</span>
+        <span class="k">if</span> <span class="n">resolution</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">resolution</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
+
         <span class="k">if</span> <span class="n">min_tasks</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">min_tasks</span> <span class="o">=</span> <span class="n">ntasks</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">,</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span>
+                         <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                         <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">,</span>
                          <span class="n">ntasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="n">min_tasks</span><span class="p">,</span>
                          <span class="n">openmp_threads</span><span class="o">=</span><span class="n">openmp_threads</span><span class="p">)</span>
-
-        <span class="c1"># download and link the mesh</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span> <span class="o">=</span> <span class="s1">&#39;MISMIP_2km_20220502.nc&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span><span class="p">,</span>
-                            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="n">suffixes</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
@@ -204,7 +232,62 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;globalStats.nc&#39;</span><span class="p">)</span></div>
 
 
-    <span class="c1"># no setup() is needed</span>
+<div class="viewcode-block" id="RunModel.setup">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.run_model.RunModel.setup.html#compass.landice.tests.mismipplus.run_model.RunModel.setup">[docs]</a>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the number of MPI tasks based on a tentative scaling of</span>
+<span class="sd">        a the `ncells_at_1km_res` heuristic from the config file</span>
+<span class="sd">        based on the desired resolution.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="c1"># use the resolution at the time of ``compass setup``</span>
+        <span class="n">resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span>
+
+        <span class="c1"># default gutter_length is 0. This encompasses `SmokeTest`, which does</span>
+        <span class="c1"># not use the gutter_length option.</span>
+        <span class="n">gutter_length</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_case</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;spin_up&quot;</span><span class="p">:</span>
+            <span class="n">gutter_length</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;gutter_length&#39;</span><span class="p">)</span>
+
+        <span class="c1"># approximate the number of cells in the mesh, based on the requested</span>
+        <span class="c1"># resolution and gutter_length.</span>
+        <span class="n">cell_count</span> <span class="o">=</span> <span class="n">approx_cell_count</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">gutter_length</span><span class="p">)</span>
+
+        <span class="c1"># find optimal and minimum number of task for the desired resolution</span>
+        <span class="n">ntasks</span><span class="p">,</span> <span class="n">min_tasks</span> <span class="o">=</span> <span class="n">get_ntasks_from_cell_count</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">cell_count</span><span class="p">)</span>
+
+        <span class="c1"># set values as attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="p">(</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">min_tasks</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="RunModel.constrain_resources">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.run_model.RunModel.constrain_resources.html#compass.landice.tests.mismipplus.run_model.RunModel.constrain_resources">[docs]</a>
+    <span class="k">def</span> <span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_resources</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update resources at runtime from config options</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+
+        <span class="n">mesh_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">)</span>
+
+        <span class="c1"># find the number of cells from the mesh created as part of the</span>
+        <span class="c1"># `setup_mesh` step.</span>
+        <span class="n">cell_count</span> <span class="o">=</span> <span class="n">exact_cell_count</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">)</span>
+
+        <span class="c1"># find optimal and minimum number of task for the cell count</span>
+        <span class="n">ntasks</span><span class="p">,</span> <span class="n">min_tasks</span> <span class="o">=</span> <span class="n">get_ntasks_from_cell_count</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">cell_count</span><span class="p">)</span>
+
+        <span class="c1"># set values as attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="p">(</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">min_tasks</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">constrain_resources</span><span class="p">(</span><span class="n">available_resources</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="RunModel.run">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.run_model.RunModel.run.html#compass.landice.tests.mismipplus.run_model.RunModel.run">[docs]</a>
@@ -212,8 +295,19 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_case</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;spin_up&quot;</span><span class="p">:</span>
+            <span class="c1"># read the density value from config file and update</span>
+            <span class="c1"># namelist. This will only work for the `SpinUp` test case.</span>
+            <span class="n">ice_density</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;mesh&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;ice_density&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span>
+                <span class="p">{</span><span class="s1">&#39;config_ice_density&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ice_density</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">})</span>
+
         <span class="n">make_graph_file</span><span class="p">(</span><span class="n">mesh_filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_file</span><span class="p">,</span>
                         <span class="n">graph_filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">)</span>
+
         <span class="k">for</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">suffixes</span><span class="p">:</span>
             <span class="n">run_model</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">namelist</span><span class="o">=</span><span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">),</span>
                       <span class="n">streams</span><span class="o">=</span><span class="s1">&#39;streams.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span></div>

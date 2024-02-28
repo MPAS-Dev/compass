@@ -112,9 +112,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice.tests.mismipplus.smoke_test</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
-<span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.landice.tests</span> <span class="kn">import</span> <span class="n">mismipplus</span>
 <span class="kn">from</span> <span class="nn">compass.landice.tests.mismipplus.run_model</span> <span class="kn">import</span> <span class="n">RunModel</span>
+<span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
+<span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
 
 
 <div class="viewcode-block" id="SmokeTest">
@@ -122,11 +123,15 @@
 <span class="k">class</span> <span class="nc">SmokeTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A test case for running a smoke test of the MISMIP+ configuration</span>
+
+<span class="sd">    This test case performs a forward simulation for a short duration</span>
+<span class="sd">    using a pre-made mesh file with a 2 km MISMIP+</span>
+<span class="sd">    spin-up that has previously been run to steady state</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SmokeTest.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.smoke_test.SmokeTest.html#compass.landice.tests.mismipplus.smoke_test.SmokeTest.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the test case</span>
 
@@ -135,22 +140,35 @@
 <span class="sd">        test_group : compass.landice.tests.mismipplus.MISMIPplus</span>
 <span class="sd">            The test group that this test case belongs to</span>
 
+<span class="sd">        resolution : float</span>
+<span class="sd">            The resolution of the test case. Valid options are defined in the</span>
+<span class="sd">            test group constructor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;smoke_test&#39;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">resolution</span><span class="si">:</span><span class="s2">4.0f</span><span class="si">}</span><span class="s2">m&quot;</span>
 
-        <span class="n">ntasks</span> <span class="o">=</span> <span class="mi">36</span>
-        <span class="n">min_tasks</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
-        <span class="n">step</span> <span class="o">=</span> <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="s1">&#39;simulation&#39;</span><span class="p">,</span>
-                        <span class="n">ntasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="n">min_tasks</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">step_name</span> <span class="o">=</span> <span class="s1">&#39;run_model&#39;</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">step_name</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
+
+        <span class="c1"># download and link the mesh, eventually this will need to be</span>
+        <span class="c1"># resolution aware. ``configure`` method is probably a better place</span>
+        <span class="c1"># for parsing and adding the correct IC file based on resolution.</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">mesh_file</span> <span class="o">=</span> <span class="s1">&#39;landice_grid.nc&#39;</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">mesh_file</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;MISMIP_2km_20220502.nc&#39;</span><span class="p">,</span>
+                            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span></div>
 
 
-    <span class="c1"># no configure() method is needed</span>
+    <span class="c1"># no configure() method is needed (for now)</span>
 
     <span class="c1"># no run() method is needed</span>
 
+<div class="viewcode-block" id="SmokeTest.validate">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.smoke_test.SmokeTest.validate.html#compass.landice.tests.mismipplus.smoke_test.SmokeTest.validate">[docs]</a>
     <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test cases can override this method to perform validation of variables</span>
@@ -159,9 +177,15 @@
         <span class="c1"># Comparing against itself to for a smoke test</span>
         <span class="c1"># (This allows the potential to compare against a baseline)</span>
         <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">,</span> <span class="s1">&#39;surfaceSpeed&#39;</span><span class="p">]</span>
+
+        <span class="c1"># access the work_dir for the step, even though validation</span>
+        <span class="c1"># operates at the case level</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s2">&quot;run_model&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">work_dir</span>
+
         <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;simulation/output.nc&#39;</span><span class="p">,</span>
-                          <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;simulation/output.nc&#39;</span><span class="p">)</span></div>
+                          <span class="n">filename1</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s1">/output.nc&#39;</span><span class="p">,</span>
+                          <span class="n">filename2</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s1">/output.nc&#39;</span><span class="p">)</span></div>
+</div>
 
 </pre></div>
 
