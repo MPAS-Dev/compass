@@ -67,7 +67,7 @@ class Mesh(Step):
 
         section_name = 'mesh'
 
-        source_gridded_dataset = 'antarctica_8km_2020_01_29.nc'
+        source_gridded_dataset = 'antarctica_8km_2024_01_29.nc'
         bedmachine_path = os.path.join(
             data_path,
             'BedMachineAntarctica_2020-07-15_v02_edits_floodFill_extrap_fillVostok.nc')  # noqa
