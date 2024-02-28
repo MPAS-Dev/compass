@@ -989,7 +989,7 @@ def preprocess_ais_data(self, source_gridded_dataset,
     data.variables['vErr'][:] = np.sqrt(data.variables['ex'][:]**2 +
                                         data.variables['ey'][:]**2)
 
-    data.variables['bheatflx'][:] *= -1.e-3  # correct units and sign
+    data.variables['bheatflx'][:] *= 1.e-3  # correct units
     data.variables['bheatflx'].units = 'W m-2'
 
     data.variables['subm'][:] *= -1.0  # correct basal melting sign
