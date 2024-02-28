@@ -111,7 +111,8 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice.mesh</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">time</span>
+<span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
 
 <span class="kn">import</span> <span class="nn">jigsawpy</span>
 <span class="kn">import</span> <span class="nn">mpas_tools.io</span>
@@ -123,6 +124,64 @@
 <span class="kn">from</span> <span class="nn">mpas_tools.mesh.conversion</span> <span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">cull</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.mesh.creation</span> <span class="kn">import</span> <span class="n">build_planar_mesh</span>
 <span class="kn">from</span> <span class="nn">netCDF4</span> <span class="kn">import</span> <span class="n">Dataset</span>
+
+
+<div class="viewcode-block" id="mpas_flood_fill">
+<a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.mesh.mpas_flood_fill.html#compass.landice.mesh.mpas_flood_fill">[docs]</a>
+<span class="k">def</span> <span class="nf">mpas_flood_fill</span><span class="p">(</span><span class="n">seed_mask</span><span class="p">,</span> <span class="n">grow_mask</span><span class="p">,</span> <span class="n">cellsOnCell</span><span class="p">,</span> <span class="n">nEdgesOnCell</span><span class="p">,</span>
+                    <span class="n">grow_iters</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">maxsize</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Flood-fill for mpas meshes using mpas cells.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    seed_mask : numpy.ndarray</span>
+<span class="sd">        Integer array of locations from which to flood fill</span>
+<span class="sd">        0 = invalid, 1 = valid</span>
+
+<span class="sd">    grow_mask : numpy.ndarray</span>
+<span class="sd">        Integer array of locations valid for growing into</span>
+<span class="sd">        0 = invalid, 1 = valid</span>
+
+<span class="sd">    cellsOnCell : numpy.ndarray</span>
+<span class="sd">        cellsOnCell array from the mpas mesh</span>
+
+<span class="sd">    nEdgesOnCell : numpy.ndarray</span>
+<span class="sd">        nEdgesOnCell array from the mpas mesh</span>
+
+<span class="sd">    grow_iters : integer</span>
+<span class="sd">        optional argument limiting the number of iterations</span>
+<span class="sd">        over which to extend the mask</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    keep_mask : numpy.ndarray</span>
+<span class="sd">        mask calculated by the flood fill routine,</span>
+<span class="sd">        where cells connected to seed_mask</span>
+<span class="sd">        are 1 and everything else is 0.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">iter</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">keep_mask</span> <span class="o">=</span> <span class="n">seed_mask</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">n_mask_cells</span> <span class="o">=</span> <span class="n">keep_mask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="k">for</span> <span class="nb">iter</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">grow_iters</span><span class="p">):</span>
+        <span class="n">mask_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">keep_mask</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;iter=</span><span class="si">{</span><span class="nb">iter</span><span class="si">}</span><span class="s1">, keep_mask size=</span><span class="si">{</span><span class="n">keep_mask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">new_keep_mask</span> <span class="o">=</span> <span class="n">keep_mask</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">iCell</span> <span class="ow">in</span> <span class="n">mask_ind</span><span class="p">:</span>
+            <span class="n">neighs</span> <span class="o">=</span> <span class="n">cellsOnCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">,</span> <span class="p">:</span><span class="n">nEdgesOnCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">]]</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">neighs</span> <span class="o">=</span> <span class="n">neighs</span><span class="p">[</span><span class="n">neighs</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">]</span>  <span class="c1"># drop garbage cell</span>
+            <span class="k">for</span> <span class="n">jCell</span> <span class="ow">in</span> <span class="n">neighs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">grow_mask</span><span class="p">[</span><span class="n">jCell</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">new_keep_mask</span><span class="p">[</span><span class="n">jCell</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">keep_mask</span> <span class="o">=</span> <span class="n">new_keep_mask</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">n_mask_cells_new</span> <span class="o">=</span> <span class="n">keep_mask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">n_mask_cells_new</span> <span class="o">==</span> <span class="n">n_mask_cells</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">n_mask_cells</span> <span class="o">=</span> <span class="n">n_mask_cells_new</span>
+        <span class="nb">iter</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">keep_mask</span></div>
+
 
 
 <div class="viewcode-block" id="gridded_flood_fill">

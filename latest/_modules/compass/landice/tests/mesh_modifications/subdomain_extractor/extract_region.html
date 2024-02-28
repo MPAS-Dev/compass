@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.landice.tests.mesh_modifications.subdomain_extractor.extract_region &mdash; compass latest documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+              <div class="version">
+                latest
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../../landice.html">compass.landice</a></li>
+          <li class="breadcrumb-item"><a href="../../mesh_modifications.html">compass.landice.tests.mesh_modifications</a></li>
+          <li class="breadcrumb-item"><a href="../subdomain_extractor.html">compass.landice.tests.mesh_modifications.subdomain_extractor</a></li>
+      <li class="breadcrumb-item active">compass.landice.tests.mesh_modifications.subdomain_extractor.extract_region</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.landice.tests.mesh_modifications.subdomain_extractor.extract_region</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">import</span> <span class="nn">mpas_tools</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">xarray</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.mesh.conversion</span> <span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">cull</span>
+<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">,</span> <span class="n">Remapper</span>
+
+<span class="kn">from</span> <span class="nn">compass.landice.mesh</span> <span class="kn">import</span> <span class="n">mpas_flood_fill</span>
+<span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">make_graph_file</span>
+<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+
+
+<div class="viewcode-block" id="ExtractRegion">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.mesh_modifications.subdomain_extractor.extract_region.ExtractRegion.html#compass.landice.tests.mesh_modifications.subdomain_extractor.extract_region.ExtractRegion">[docs]</a>
+<span class="k">class</span> <span class="nc">ExtractRegion</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A step for extracting a regional domain from a larger domain</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ExtractRegion.__init__">
+<a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.mesh_modifications.subdomain_extractor.extract_region.ExtractRegion.html#compass.landice.tests.mesh_modifications.subdomain_extractor.extract_region.ExtractRegion.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the step</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.TestCase</span>
+<span class="sd">            The test case this step belongs to</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;extract_region&#39;</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="mi">128</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mintasks</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run this step of the test case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+
+        <span class="c1"># Get info from config file</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;subdomain&#39;</span><span class="p">]</span>
+        <span class="n">source_file_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;source_file&#39;</span><span class="p">)</span>
+        <span class="n">source_file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">source_file_path</span><span class="p">)</span>
+        <span class="n">source_file_rootname</span> <span class="o">=</span> <span class="n">source_file_name</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.nc&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">region_definition</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;region_definition&#39;</span><span class="p">)</span>
+        <span class="n">geojson_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;geojson_file&#39;</span><span class="p">)</span>
+        <span class="n">region_mask_file</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;region_mask_file&#39;</span><span class="p">)</span>
+        <span class="n">region_number</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;region_number&#39;</span><span class="p">)</span>
+        <span class="n">dest_file_name</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;dest_file_name&#39;</span><span class="p">)</span>
+        <span class="n">dest_file_rootname</span> <span class="o">=</span> <span class="n">dest_file_name</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.nc&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">mesh_projection</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mesh_projection&#39;</span><span class="p">)</span>
+        <span class="n">extend_mesh</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;extend_ocean_buffer&#39;</span><span class="p">)</span>
+        <span class="n">grow_iters</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;grow_iters&#39;</span><span class="p">)</span>
+        <span class="n">interp_method</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;interp_method&#39;</span><span class="p">)</span>
+        <span class="n">extra_file1</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;extra_file1&#39;</span><span class="p">)</span>
+        <span class="n">extra_file2</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;extra_file2&#39;</span><span class="p">)</span>
+        <span class="n">extra_file3</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;extra_file3&#39;</span><span class="p">)</span>
+        <span class="n">extra_file4</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;extra_file4&#39;</span><span class="p">)</span>
+        <span class="n">extra_file5</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;extra_file5&#39;</span><span class="p">)</span>
+
+        <span class="c1"># create a tmp dir for intermediate files</span>
+        <span class="n">tmpdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;tmp&#39;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># get needed dims from source mesh</span>
+        <span class="n">ds_src</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">source_file_path</span><span class="p">)</span>
+        <span class="n">nCells</span> <span class="o">=</span> <span class="n">ds_src</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]</span>
+        <span class="n">levels</span> <span class="o">=</span> <span class="n">ds_src</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
+
+        <span class="c1"># create cull mask</span>
+        <span class="k">if</span> <span class="n">region_definition</span> <span class="o">==</span> <span class="s1">&#39;geojson&#39;</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;compute_mpas_region_masks&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">source_file_path</span><span class="p">,</span>
+                    <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;cull_mask.nc&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="n">geojson_file</span><span class="p">,</span>
+                    <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_format</span><span class="p">,</span>
+                    <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_engine</span><span class="p">]</span>
+            <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+            <span class="n">dsMaskOut</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;cull_mask.nc&#39;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">region_definition</span> <span class="o">==</span> <span class="s1">&#39;region_mask_file&#39;</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;creating cull mask file&#39;</span><span class="p">)</span>
+            <span class="n">dsMask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">region_mask_file</span><span class="p">)</span>
+            <span class="n">regionCellMasks</span> <span class="o">=</span> <span class="n">dsMask</span><span class="p">[</span><span class="s1">&#39;regionCellMasks&#39;</span><span class="p">][:]</span><span class="o">.</span><span class="n">values</span>
+            <span class="c1"># get region mask for the requested region</span>
+            <span class="n">keepMask</span> <span class="o">=</span> <span class="n">regionCellMasks</span><span class="p">[:,</span> <span class="n">region_number</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">extend_mesh</span><span class="p">:</span>
+                <span class="c1"># Grow the mask into the ocean, because the standard regions</span>
+                <span class="c1"># may end at the ice terminus.</span>
+                <span class="n">thickness</span> <span class="o">=</span> <span class="n">ds_src</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">][:]</span><span class="o">.</span><span class="n">values</span>
+                <span class="n">bed</span> <span class="o">=</span> <span class="n">ds_src</span><span class="p">[</span><span class="s1">&#39;bedTopography&#39;</span><span class="p">][:]</span><span class="o">.</span><span class="n">values</span>
+                <span class="n">oceanMask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">((</span><span class="n">thickness</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">bed</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">&lt;=</span>
+                                                                   <span class="mf">0.0</span><span class="p">))</span>
+                <span class="n">floatMask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(((</span><span class="n">thickness</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">*</span> <span class="mf">910.0</span> <span class="o">/</span> <span class="mf">1028.0</span> <span class="o">+</span>
+                                         <span class="n">bed</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">*</span>
+                                       <span class="p">(</span><span class="n">thickness</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span>
+                <span class="n">conc</span> <span class="o">=</span> <span class="n">ds_src</span><span class="p">[</span><span class="s1">&#39;cellsOnCell&#39;</span><span class="p">][:]</span><span class="o">.</span><span class="n">values</span>
+                <span class="n">neonc</span> <span class="o">=</span> <span class="n">ds_src</span><span class="p">[</span><span class="s1">&#39;nEdgesOnCell&#39;</span><span class="p">][:]</span><span class="o">.</span><span class="n">values</span>
+
+                <span class="c1"># First grow forward to capture any adjacent ice shelf</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Starting floating ice fill&#39;</span><span class="p">)</span>
+                <span class="n">keepMask</span> <span class="o">=</span> <span class="n">mpas_flood_fill</span><span class="p">(</span><span class="n">keepMask</span><span class="p">,</span> <span class="n">floatMask</span><span class="p">,</span> <span class="n">conc</span><span class="p">,</span> <span class="n">neonc</span><span class="p">)</span>
+
+                <span class="c1"># Don&#39;t grow into other regions.</span>
+                <span class="c1"># The area to grow into is region adjacent to the domain that</span>
+                <span class="c1"># either has no region assigned to it OR is open ocean.</span>
+                <span class="c1"># We also want to fill into any *adjacent* floating ice, due to</span>
+                <span class="c1"># some funky region boundaries near ice-shelf fronts.</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Starting ocean grow fill&#39;</span><span class="p">)</span>
+                <span class="n">noRegionMask</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">regionCellMasks</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">growMask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">noRegionMask</span><span class="p">,</span> <span class="n">oceanMask</span><span class="p">)</span>
+                <span class="n">keepMask</span> <span class="o">=</span> <span class="n">mpas_flood_fill</span><span class="p">(</span><span class="n">keepMask</span><span class="p">,</span> <span class="n">growMask</span><span class="p">,</span> <span class="n">conc</span><span class="p">,</span> <span class="n">neonc</span><span class="p">,</span>
+                                           <span class="n">grow_iters</span><span class="o">=</span><span class="n">grow_iters</span><span class="p">)</span>
+
+            <span class="c1"># To call &#39;cull&#39; with an inverse mask, we need a dataset with the</span>
+            <span class="c1"># mask saved to the field regionCellMasks</span>
+            <span class="n">outdata</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;regionCellMasks&#39;</span><span class="p">:</span> <span class="p">((</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nRegions&#39;</span><span class="p">),</span>
+                                           <span class="n">keepMask</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nCells</span><span class="p">,</span> <span class="mi">1</span><span class="p">))}</span>
+            <span class="n">dsMaskOut</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">data_vars</span><span class="o">=</span><span class="n">outdata</span><span class="p">)</span>
+            <span class="c1"># For troubleshooting, one may want to inspect the mask,</span>
+            <span class="c1"># so write out (otherwise not necessary to save to disk)</span>
+            <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMaskOut</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s1">&#39;cull_mask.nc&#39;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;ERROR: unknown value for region_definition=&#39;</span>
+                     <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">region_definition</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># cull the mesh</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;culling and converting mesh&#39;</span><span class="p">)</span>
+        <span class="n">ds_out</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">ds_src</span><span class="p">,</span> <span class="n">dsInverse</span><span class="o">=</span><span class="n">dsMaskOut</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+        <span class="c1"># convert mesh</span>
+        <span class="n">ds_out</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span>
+                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span>
+                                  <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">source_file_rootname</span><span class="si">}</span><span class="s1">_culled.nc&#39;</span><span class="p">))</span>
+
+        <span class="c1"># mark horns for culling</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Marking horns for culling&#39;</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mark_horns_for_culling.py&#39;</span><span class="p">,</span> <span class="s1">&#39;-f&#39;</span><span class="p">,</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">source_file_rootname</span><span class="si">}</span><span class="s1">_culled.nc&#39;</span><span class="p">)]</span>
+        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+        <span class="c1"># cull again</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;culling and converting mesh&#39;</span><span class="p">)</span>
+        <span class="n">ds_out</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">source_file_rootname</span><span class="si">}</span><span class="s1">_culled.nc&#39;</span><span class="p">))</span>
+        <span class="n">ds_out</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">ds_out</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">dest_mesh_only_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s1">&#39;dest_mesh_only.nc&#39;</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="n">dest_mesh_only_name</span><span class="p">)</span>
+
+        <span class="c1"># set lat/lon</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;calling set_lat_lon_fields_in_planar_grid.py&#39;</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;set_lat_lon_fields_in_planar_grid.py&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="n">dest_mesh_only_name</span><span class="p">,</span> <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="n">mesh_projection</span><span class="p">]</span>
+        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">interp_method</span> <span class="o">==</span> <span class="s1">&#39;ncremap&#39;</span><span class="p">:</span>
+            <span class="c1"># remap data from the original file to the culled mesh using</span>
+            <span class="c1"># pyremap with nearest neighbor interpolation</span>
+            <span class="n">in_descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span><span class="n">source_file_path</span><span class="p">,</span>
+                                                   <span class="s1">&#39;src_mesh&#39;</span><span class="p">)</span>
+            <span class="n">out_descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span><span class="n">dest_mesh_only_name</span><span class="p">,</span>
+                                                    <span class="s1">&#39;dst_mesh&#39;</span><span class="p">)</span>
+
+            <span class="n">mapping_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s1">&#39;map_src_to_dst_nstd.nc&#39;</span><span class="p">)</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Creating the mapping file </span><span class="si">{</span><span class="n">mapping_filename</span><span class="si">}</span><span class="s1">...&#39;</span><span class="p">)</span>
+            <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span><span class="n">in_descriptor</span><span class="p">,</span> <span class="n">out_descriptor</span><span class="p">,</span>
+                                <span class="n">mapping_filename</span><span class="p">)</span>
+
+            <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span>
+                                             <span class="s1">&#39;parallel_executable&#39;</span><span class="p">)</span>
+            <span class="n">remapper</span><span class="o">.</span><span class="n">build_mapping_file</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;neareststod&#39;</span><span class="p">,</span>
+                                        <span class="n">mpiTasks</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="p">,</span>
+                                        <span class="n">tempdir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
+                                        <span class="n">esmf_parallel_exec</span><span class="o">=</span><span class="n">parallel_executable</span><span class="p">)</span>  <span class="c1"># noqa</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;done.&#39;</span><span class="p">)</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Remapping mesh file...&#39;</span><span class="p">)</span>
+
+            <span class="n">_remap_with_ncremap</span><span class="p">(</span>
+                <span class="n">source_file_path</span><span class="p">,</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dest_file_rootname</span><span class="si">}</span><span class="s1">_vars_only.nc&#39;</span><span class="p">),</span>
+                <span class="n">mapping_filename</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">tmpdir</span><span class="p">)</span>
+
+            <span class="c1"># now combine the remapped variables with the mesh fields</span>
+            <span class="c1"># that don&#39;t get remapped</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">dest_mesh_only_name</span><span class="p">,</span> <span class="n">dest_file_name</span><span class="p">)</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="s1">&#39;ncks&#39;</span><span class="p">,</span> <span class="s1">&#39;-A&#39;</span><span class="p">,</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dest_file_rootname</span><span class="si">}</span><span class="s1">_vars_only.nc&#39;</span><span class="p">),</span>
+                <span class="n">dest_file_name</span><span class="p">]</span>
+            <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;done.&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Created </span><span class="si">{</span><span class="n">dest_file_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">interp_method</span> <span class="o">==</span> <span class="s1">&#39;mali_interp&#39;</span><span class="p">:</span>
+            <span class="c1"># create landice mesh</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;calling create_landice_grid_from_generic_MPAS_grid.py&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;create_landice_grid_from_generic_MPAS_grid.py&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s1">&#39;dest_mesh_only.nc&#39;</span><span class="p">),</span>
+                    <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">dest_file_name</span><span class="p">,</span>
+                    <span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">levels</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;glimmer&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;--beta&#39;</span><span class="p">,</span> <span class="s1">&#39;--thermal&#39;</span><span class="p">,</span> <span class="s1">&#39;--obs&#39;</span><span class="p">,</span> <span class="s1">&#39;--diri&#39;</span><span class="p">]</span>
+            <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+            <span class="c1"># interpolate to new mesh using nearest neighbor to ensure we get</span>
+            <span class="c1"># identical values</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;calling interpolate_to_mpasli_grid.py&#39;</span><span class="p">)</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;interpolate_to_mpasli_grid.py&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="n">source_file_path</span><span class="p">,</span>
+                    <span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="n">dest_file_name</span><span class="p">,</span> <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">]</span>
+            <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: Unknown interp_method of </span><span class="si">{</span><span class="n">interp_method</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># mark Dirichlet boundaries</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Marking domain boundaries dirichlet&#39;</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mark_domain_boundaries_dirichlet.py&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="n">dest_file_name</span><span class="p">]</span>
+        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;creating graph.info&#39;</span><span class="p">)</span>
+        <span class="n">make_graph_file</span><span class="p">(</span><span class="n">mesh_filename</span><span class="o">=</span><span class="n">dest_file_name</span><span class="p">,</span>
+                        <span class="n">graph_filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">extra_file</span> <span class="ow">in</span> <span class="p">[</span><span class="n">extra_file1</span><span class="p">,</span> <span class="n">extra_file2</span><span class="p">,</span> <span class="n">extra_file3</span><span class="p">,</span>
+                           <span class="n">extra_file4</span><span class="p">,</span> <span class="n">extra_file5</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">extra_file</span> <span class="o">!=</span> <span class="s2">&quot;None&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">interp_method</span> <span class="o">!=</span> <span class="s2">&quot;ncremap&quot;</span><span class="p">:</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;Error: interpolating ancillary files is only &quot;</span>
+                             <span class="s2">&quot;supported when interp_method=ncremap&quot;</span><span class="p">)</span>
+                <span class="n">dst_file</span> <span class="o">=</span> \
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dest_file_rootname</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">extra_file</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="n">_remap_with_ncremap</span><span class="p">(</span><span class="n">extra_file</span><span class="p">,</span>
+                                    <span class="n">dst_file</span><span class="p">,</span>
+                                    <span class="n">mapping_filename</span><span class="p">,</span>
+                                    <span class="n">logger</span><span class="p">,</span> <span class="n">tmpdir</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Created </span><span class="si">{</span><span class="n">dst_file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">_remap_with_ncremap</span><span class="p">(</span><span class="n">src_path</span><span class="p">,</span> <span class="n">dst_file</span><span class="p">,</span> <span class="n">mapping_filename</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
+                        <span class="n">tmpdir</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Remaps a file using ncremap</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    src_path : str</span>
+<span class="sd">        path to source file</span>
+
+<span class="sd">    dst_file : str</span>
+<span class="sd">        name of the destination file that should be created</span>
+
+<span class="sd">    mapping_filename : str</span>
+<span class="sd">        name of already generated mapping file</span>
+
+<span class="sd">    logger</span>
+<span class="sd">        logger object</span>
+
+<span class="sd">    tmpdir : str</span>
+<span class="sd">        temp dir to write intermediate files, optional</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">src_file_rootname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">src_path</span><span class="p">)</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.nc&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># ncremap requires the spatial dimension to be the last one,</span>
+    <span class="c1"># which MALI does not exclusively follow.  So we have to</span>
+    <span class="c1"># permute dimensions before calling ncremap, and then permute back</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ncpdq&#39;</span><span class="p">,</span> <span class="s1">&#39;-O&#39;</span><span class="p">,</span> <span class="s1">&#39;-a&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;Time,nVertInterfaces,nVertLevels,nRegions,nISMIP6OceanLayers,nEdges,nCells&#39;</span><span class="p">,</span>  <span class="c1"># noqa</span>
+            <span class="n">src_path</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">src_file_rootname</span><span class="si">}</span><span class="s1">_permuted.nc&#39;</span><span class="p">)]</span>
+    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ncremap&#39;</span><span class="p">,</span> <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">mapping_filename</span><span class="p">,</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">src_file_rootname</span><span class="si">}</span><span class="s1">_permuted.nc&#39;</span><span class="p">),</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dst_file</span><span class="si">}</span><span class="s1">_permuted.nc&#39;</span><span class="p">)]</span>
+    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ncpdq&#39;</span><span class="p">,</span> <span class="s1">&#39;-O&#39;</span><span class="p">,</span> <span class="s1">&#39;-a&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;Time,nCells,nEdges,nVertInterfaces,nVertLevels,nRegions,nISMIP6OceanLayers&#39;</span><span class="p">,</span>  <span class="c1"># noqa</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dst_file</span><span class="si">}</span><span class="s1">_permuted.nc&#39;</span><span class="p">),</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dst_file</span><span class="si">}</span><span class="s1">_extra_var.nc&#39;</span><span class="p">)]</span>
+    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    <span class="c1"># drop some extra vars that ncremap adds</span>
+    <span class="n">ds_out</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span>
+                                              <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dst_file</span><span class="si">}</span><span class="s1">_extra_var.nc&#39;</span><span class="p">))</span>
+    <span class="n">ds_out</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">([</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="s1">&#39;lat_vertices&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;lon_vertices&#39;</span><span class="p">,</span> <span class="s1">&#39;area&#39;</span><span class="p">])</span>
+    <span class="c1"># drop variables on vertices or edges, which will not have been</span>
+    <span class="c1"># remapped properly</span>
+    <span class="n">drop_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">varname</span><span class="p">,</span> <span class="n">da</span> <span class="ow">in</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">data_vars</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="s1">&#39;nVertices&#39;</span> <span class="ow">in</span> <span class="n">da</span><span class="o">.</span><span class="n">dims</span> <span class="ow">or</span> <span class="s1">&#39;nEdges&#39;</span> <span class="ow">in</span> <span class="n">da</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="n">drop_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">varname</span><span class="p">)</span>
+    <span class="n">ds_out</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="n">drop_list</span><span class="p">)</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="n">dst_file</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

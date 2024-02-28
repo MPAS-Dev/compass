@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.landice.mesh.gridded_flood_fill &mdash; compass latest documentation</title>
+  <title>compass.landice.tests.mesh_modifications.subdomain_extractor.SubdomainExtractor &mdash; compass latest documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
 
@@ -19,8 +19,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="compass.landice.mesh.mpas_flood_fill" href="compass.landice.mesh.mpas_flood_fill.html" />
-    <link rel="prev" title="compass.landice.iceshelf_melt.calc_mean_TF" href="compass.landice.iceshelf_melt.calc_mean_TF.html" /> 
+    <link rel="next" title="compass.landice.tests.mesh_modifications.subdomain_extractor.extract_region.ExtractRegion" href="compass.landice.tests.mesh_modifications.subdomain_extractor.extract_region.ExtractRegion.html" />
+    <link rel="prev" title="compass.landice.tests.mesh_modifications.MeshModifications" href="compass.landice.tests.mesh_modifications.MeshModifications.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -73,8 +73,8 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../../api.html#mpas-cores">MPAS Cores</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html">landice</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="compass.landice.Landice.html">compass.landice.Landice</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api.html#test-groups">Test Groups</a></li>
-<li class="toctree-l4 current"><a class="reference internal" href="../api.html#landice-framework">Landice Framework</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../api.html#test-groups">Test Groups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api.html#landice-framework">Landice Framework</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../ocean/api.html">ocean</a></li>
@@ -117,9 +117,9 @@
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../api.html">API reference</a></li>
           <li class="breadcrumb-item"><a href="../api.html">landice</a></li>
-      <li class="breadcrumb-item active">compass.landice.mesh.gridded_flood_fill</li>
+      <li class="breadcrumb-item active">compass.landice.tests.mesh_modifications.subdomain_extractor.SubdomainExtractor</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/developers_guide/landice/generated/compass.landice.mesh.gridded_flood_fill.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/developers_guide/landice/generated/compass.landice.tests.mesh_modifications.subdomain_extractor.SubdomainExtractor.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -127,33 +127,46 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="compass-landice-mesh-gridded-flood-fill">
-<h1>compass.landice.mesh.gridded_flood_fill<a class="headerlink" href="#compass-landice-mesh-gridded-flood-fill" title="Link to this heading">¶</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="compass.landice.mesh.gridded_flood_fill">
-<span class="sig-prename descclassname"><span class="pre">compass.landice.mesh.</span></span><span class="sig-name descname"><span class="pre">gridded_flood_fill</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iStart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jStart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/mesh.html#gridded_flood_fill"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.mesh.gridded_flood_fill" title="Link to this definition">¶</a></dt>
-<dd><p>Generic flood-fill routine to create mask of connected elements
-in the desired input array (field) from a gridded dataset. This
-is generally used to remove glaciers and ice-fields that are not
-connected to the ice sheet. Note that there may be more efficient
-algorithms.</p>
+  <section id="compass-landice-tests-mesh-modifications-subdomain-extractor-subdomainextractor">
+<h1>compass.landice.tests.mesh_modifications.subdomain_extractor.SubdomainExtractor<a class="headerlink" href="#compass-landice-tests-mesh-modifications-subdomain-extractor-subdomainextractor" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="compass.landice.tests.mesh_modifications.subdomain_extractor.SubdomainExtractor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compass.landice.tests.mesh_modifications.subdomain_extractor.</span></span><span class="sig-name descname"><span class="pre">SubdomainExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_group</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/tests/mesh_modifications/subdomain_extractor.html#SubdomainExtractor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.tests.mesh_modifications.subdomain_extractor.SubdomainExtractor" title="Link to this definition">¶</a></dt>
+<dd><p>A class for a test case that extracts a subdomain from a larger domain</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="compass.landice.tests.mesh_modifications.subdomain_extractor.SubdomainExtractor.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_group</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/tests/mesh_modifications/subdomain_extractor.html#SubdomainExtractor.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.tests.mesh_modifications.subdomain_extractor.SubdomainExtractor.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Create the test case</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>field</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a>) – Array from gridded dataset to use for flood-fill.
-Usually ice thickness.</p></li>
-<li><p><strong>iStart</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – x index from which to start flood fill for field.
-Defaults to the center x coordinate.</p></li>
-<li><p><strong>jStart</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – y index from which to start flood fill.
-Defaults to the center y coordinate.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>flood_mask</strong> (<em>numpy.ndarray</em>) – mask calculated by the flood fill routine,
-where cells connected to the ice sheet (or main feature)
-are 1 and everything else is 0.</p>
+<dd class="field-odd"><p><strong>test_group</strong> (<a class="reference internal" href="compass.landice.tests.mesh_modifications.MeshModifications.html#compass.landice.tests.mesh_modifications.MeshModifications" title="compass.landice.tests.mesh_modifications.MeshModifications"><em>compass.landice.tests.mesh_modifications.MeshModifications</em></a>) – The test group that this test case belongs to</p>
 </dd>
 </dl>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#compass.landice.tests.mesh_modifications.subdomain_extractor.SubdomainExtractor.__init__" title="compass.landice.tests.mesh_modifications.subdomain_extractor.SubdomainExtractor.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(test_group)</p></td>
+<td><p>Create the test case</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_step</span></code>(step[, run_by_default])</p></td>
+<td><p>Add a step to the test case</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_validation</span></code>()</p></td>
+<td><p>Check the test case's &quot;validation&quot; dictionary to see if validation failed.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure</span></code>()</p></td>
+<td><p>Modify the configuration options for this test case.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>()</p></td>
+<td><p>This method is deprecated.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate</span></code>()</p></td>
+<td><p>Test cases can override this method to perform validation of variables and timers</p></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </section>
@@ -162,8 +175,8 @@ are 1 and everything else is 0.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="compass.landice.iceshelf_melt.calc_mean_TF.html" class="btn btn-neutral float-left" title="compass.landice.iceshelf_melt.calc_mean_TF" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="compass.landice.mesh.mpas_flood_fill.html" class="btn btn-neutral float-right" title="compass.landice.mesh.mpas_flood_fill" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.landice.tests.mesh_modifications.MeshModifications.html" class="btn btn-neutral float-left" title="compass.landice.tests.mesh_modifications.MeshModifications" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.landice.tests.mesh_modifications.subdomain_extractor.extract_region.ExtractRegion.html" class="btn btn-neutral float-right" title="compass.landice.tests.mesh_modifications.subdomain_extractor.extract_region.ExtractRegion" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

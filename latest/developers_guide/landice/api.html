@@ -783,6 +783,22 @@
 </tbody>
 </table>
 </section>
+<section id="mesh-modifications">
+<h3>mesh_modifications<a class="headerlink" href="#mesh-modifications" title="Link to this heading">¶</a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_modifications.MeshModifications.html#compass.landice.tests.mesh_modifications.MeshModifications" title="compass.landice.tests.mesh_modifications.MeshModifications"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeshModifications</span></code></a>(mpas_core)</p></td>
+<td><p>A test group for automating modifications to existing meshes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_modifications.subdomain_extractor.SubdomainExtractor.html#compass.landice.tests.mesh_modifications.subdomain_extractor.SubdomainExtractor" title="compass.landice.tests.mesh_modifications.subdomain_extractor.SubdomainExtractor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subdomain_extractor.SubdomainExtractor</span></code></a>(...)</p></td>
+<td><p>A class for a test case that extracts a subdomain from a larger domain</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_modifications.subdomain_extractor.extract_region.ExtractRegion.html#compass.landice.tests.mesh_modifications.subdomain_extractor.extract_region.ExtractRegion" title="compass.landice.tests.mesh_modifications.subdomain_extractor.extract_region.ExtractRegion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subdomain_extractor.extract_region.ExtractRegion</span></code></a>(...)</p></td>
+<td><p>A step for extracting a regional domain from a larger domain</p></td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="mismipplus">
 <h3>mismipplus<a class="headerlink" href="#mismipplus" title="Link to this heading">¶</a></h3>
 <table class="autosummary longtable docutils align-default">
@@ -905,22 +921,25 @@
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.mesh.gridded_flood_fill.html#compass.landice.mesh.gridded_flood_fill" title="compass.landice.mesh.gridded_flood_fill"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.gridded_flood_fill</span></code></a>(field[, iStart, jStart])</p></td>
 <td><p>Generic flood-fill routine to create mask of connected elements in the desired input array (field) from a gridded dataset.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.mesh.set_rectangular_geom_points_and_edges.html#compass.landice.mesh.set_rectangular_geom_points_and_edges" title="compass.landice.mesh.set_rectangular_geom_points_and_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.set_rectangular_geom_points_and_edges</span></code></a>(...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.mesh.mpas_flood_fill.html#compass.landice.mesh.mpas_flood_fill" title="compass.landice.mesh.mpas_flood_fill"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.mpas_flood_fill</span></code></a>(seed_mask, grow_mask, ...)</p></td>
+<td><p>Flood-fill for mpas meshes using mpas cells.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.mesh.set_rectangular_geom_points_and_edges.html#compass.landice.mesh.set_rectangular_geom_points_and_edges" title="compass.landice.mesh.set_rectangular_geom_points_and_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.set_rectangular_geom_points_and_edges</span></code></a>(...)</p></td>
 <td><p>Set node and edge coordinates to pass to <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.mesh.creation.build_mesh.build_planar_mesh.html#mpas_tools.mesh.creation.build_mesh.build_planar_mesh" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.mesh.creation.build_mesh.build_planar_mesh()</span></code></a>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.mesh.set_cell_width.html#compass.landice.mesh.set_cell_width" title="compass.landice.mesh.set_cell_width"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.set_cell_width</span></code></a>(self, section_name, thk)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.mesh.set_cell_width.html#compass.landice.mesh.set_cell_width" title="compass.landice.mesh.set_cell_width"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.set_cell_width</span></code></a>(self, section_name, thk)</p></td>
 <td><p>Set cell widths based on settings in config file to pass to <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.mesh.creation.build_mesh.build_planar_mesh.html#mpas_tools.mesh.creation.build_mesh.build_planar_mesh" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.mesh.creation.build_mesh.build_planar_mesh()</span></code></a>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.mesh.get_dist_to_edge_and_gl.html#compass.landice.mesh.get_dist_to_edge_and_gl" title="compass.landice.mesh.get_dist_to_edge_and_gl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.get_dist_to_edge_and_gl</span></code></a>(self, thk, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.mesh.get_dist_to_edge_and_gl.html#compass.landice.mesh.get_dist_to_edge_and_gl" title="compass.landice.mesh.get_dist_to_edge_and_gl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.get_dist_to_edge_and_gl</span></code></a>(self, thk, ...)</p></td>
 <td><p>Calculate distance from each point to ice edge and grounding line, to be used in mesh density functions in <a class="reference internal" href="generated/compass.landice.mesh.set_cell_width.html#compass.landice.mesh.set_cell_width" title="compass.landice.mesh.set_cell_width"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.set_cell_width()</span></code></a>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.mesh.build_cell_width.html#compass.landice.mesh.build_cell_width" title="compass.landice.mesh.build_cell_width"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.build_cell_width</span></code></a>(self, section_name, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.mesh.build_cell_width.html#compass.landice.mesh.build_cell_width" title="compass.landice.mesh.build_cell_width"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.build_cell_width</span></code></a>(self, section_name, ...)</p></td>
 <td><p>Determine MPAS mesh cell size based on user-defined density function.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.mesh.build_mali_mesh.html#compass.landice.mesh.build_mali_mesh" title="compass.landice.mesh.build_mali_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.build_mali_mesh</span></code></a>(self, cell_width, x1, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.mesh.build_mali_mesh.html#compass.landice.mesh.build_mali_mesh" title="compass.landice.mesh.build_mali_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.build_mali_mesh</span></code></a>(self, cell_width, x1, ...)</p></td>
 <td><p>Create the MALI mesh based on final cell widths determined by <a class="reference internal" href="generated/compass.landice.mesh.build_cell_width.html#compass.landice.mesh.build_cell_width" title="compass.landice.mesh.build_cell_width"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.build_cell_width()</span></code></a>, using Jigsaw and MPAS-Tools functions.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.mesh.make_region_masks.html#compass.landice.mesh.make_region_masks" title="compass.landice.mesh.make_region_masks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.make_region_masks</span></code></a>(self, mesh_filename, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.mesh.make_region_masks.html#compass.landice.mesh.make_region_masks" title="compass.landice.mesh.make_region_masks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.make_region_masks</span></code></a>(self, mesh_filename, ...)</p></td>
 <td><p>Create masks for ice-sheet subregions based on data in <code class="docutils literal notranslate"><span class="pre">MPAS-Dev/geometric_fatures</span></code>.</p></td>
 </tr>
 </tbody>

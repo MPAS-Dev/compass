@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>antarctica &mdash; compass latest documentation</title>
+  <title>mesh_modifications &mdash; compass latest documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
 
@@ -19,8 +19,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="calving_dt_convergence" href="calving_dt_convergence.html" />
-    <link rel="prev" title="Test groups" href="index.html" /> 
+    <link rel="next" title="mismipplus" href="mismipplus.html" />
+    <link rel="prev" title="koge_bugt_s" href="koge_bugt_s.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -63,11 +63,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../organization.html">Organization of Tests</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Landice core</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">Test groups</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">antarctica</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#framework">framework</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#mesh-gen">mesh_gen</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="antarctica.html">antarctica</a></li>
 <li class="toctree-l3"><a class="reference internal" href="calving_dt_convergence.html">calving_dt_convergence</a></li>
 <li class="toctree-l3"><a class="reference internal" href="circular_shelf.html">circular_shelf</a></li>
 <li class="toctree-l3"><a class="reference internal" href="crane.html">crane</a></li>
@@ -83,7 +79,12 @@
 <li class="toctree-l3"><a class="reference internal" href="isunnguata_sermia.html">isunnguata_sermia</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kangerlussuaq.html">kangerlussuaq</a></li>
 <li class="toctree-l3"><a class="reference internal" href="koge_bugt_s.html">koge_bugt_s</a></li>
-<li class="toctree-l3"><a class="reference internal" href="mesh_modifications.html">mesh_modifications</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">mesh_modifications</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#framework">framework</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#subdomain-extractor">subdomain_extractor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#extract-region">extract_region</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="mismipplus.html">mismipplus</a></li>
 <li class="toctree-l3"><a class="reference internal" href="thwaites.html">thwaites</a></li>
 </ul>
@@ -133,9 +134,9 @@
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Landice core</a></li>
           <li class="breadcrumb-item"><a href="index.html">Test groups</a></li>
-      <li class="breadcrumb-item active">antarctica</li>
+      <li class="breadcrumb-item active">mesh_modifications</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/developers_guide/landice/test_groups/antarctica.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/developers_guide/landice/test_groups/mesh_modifications.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -143,27 +144,49 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="antarctica">
-<span id="dev-landice-antarctica"></span><h1>antarctica<a class="headerlink" href="#antarctica" title="Link to this heading">¶</a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">antarctica</span></code> test group (<a class="reference internal" href="../generated/compass.landice.tests.antarctica.Antarctica.html#compass.landice.tests.antarctica.Antarctica" title="compass.landice.tests.antarctica.Antarctica"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.antarctica.Antarctica</span></code></a>)
-creates a variable resolution 8-80 km mesh for the whole region of Antarctica.
-(see <a class="reference internal" href="../../../users_guide/landice/test_groups/antarctica.html#landice-antarctica"><span class="std std-ref">antarctica</span></a>). Here, we describe framework for this test group.</p>
+  <section id="mesh-modifications">
+<span id="id1"></span><h1>mesh_modifications<a class="headerlink" href="#mesh-modifications" title="Link to this heading">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">mesh_modifications</span></code> test group includes test cases for modifying
+existing meshes.
+(see <a class="reference internal" href="../../../users_guide/landice/test_groups/mesh_modifications.html#mesh-modifications"><span class="std std-ref">mesh_modifications</span></a>).</p>
+<p>It currently contains one test case for extracting a subdomain from an
+existing larger domain.</p>
 <section id="framework">
-<span id="dev-landice-antarctica-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Link to this heading">¶</a></h2>
-<p>The config options for the <code class="docutils literal notranslate"><span class="pre">antarctica</span></code> test group are described
-in <a class="reference internal" href="../../../users_guide/landice/test_groups/antarctica.html#landice-antarctica"><span class="std std-ref">antarctica</span></a> in the User’s Guide.</p>
-<section id="mesh">
-<h3>mesh<a class="headerlink" href="#mesh" title="Link to this heading">¶</a></h3>
-<p>The class <a class="reference internal" href="../generated/compass.landice.tests.antarctica.mesh.Mesh.html#compass.landice.tests.antarctica.mesh.Mesh" title="compass.landice.tests.antarctica.mesh.Mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.antarctica.mesh.Mesh</span></code></a>
-defines a step for creating a variable resolution Antarctica mesh.
-This is used by the <code class="docutils literal notranslate"><span class="pre">mesh_gen</span></code> test case.</p>
+<h2>framework<a class="headerlink" href="#framework" title="Link to this heading">¶</a></h2>
+<p>There is no shared framework for this test group.</p>
 </section>
+<section id="subdomain-extractor">
+<h2>subdomain_extractor<a class="headerlink" href="#subdomain-extractor" title="Link to this heading">¶</a></h2>
+<p>The class <a class="reference internal" href="../generated/compass.landice.tests.mesh_modifications.subdomain_extractor.SubdomainExtractor.html#compass.landice.tests.mesh_modifications.subdomain_extractor.SubdomainExtractor" title="compass.landice.tests.mesh_modifications.subdomain_extractor.SubdomainExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.mesh_modifications.subdomain_extractor.SubdomainExtractor</span></code></a>
+extracts a subdomain from a larger domain.  It simply calls the class
+<a class="reference internal" href="../generated/compass.landice.tests.mesh_modifications.subdomain_extractor.extract_region.ExtractRegion.html#compass.landice.tests.mesh_modifications.subdomain_extractor.extract_region.ExtractRegion" title="compass.landice.tests.mesh_modifications.subdomain_extractor.extract_region.ExtractRegion"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.mesh_modifications.subdomain_extractor.extract_region.ExtractRegion</span></code></a>.</p>
 </section>
-<section id="mesh-gen">
-<h2>mesh_gen<a class="headerlink" href="#mesh-gen" title="Link to this heading">¶</a></h2>
-<p>The <a class="reference internal" href="../generated/compass.landice.tests.antarctica.mesh_gen.MeshGen.html#compass.landice.tests.antarctica.mesh_gen.MeshGen" title="compass.landice.tests.antarctica.mesh_gen.MeshGen"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.antarctica.mesh_gen.MeshGen</span></code></a>
-calls the <a class="reference internal" href="../generated/compass.landice.tests.antarctica.mesh.Mesh.html#compass.landice.tests.antarctica.mesh.Mesh" title="compass.landice.tests.antarctica.mesh.Mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.antarctica.mesh.Mesh</span></code></a> to create
-the 8-80 km variable resolution Antarctica mesh.</p>
+<section id="extract-region">
+<h2>extract_region<a class="headerlink" href="#extract-region" title="Link to this heading">¶</a></h2>
+<p>The <a class="reference internal" href="../generated/compass.landice.tests.mesh_modifications.subdomain_extractor.extract_region.ExtractRegion.html#compass.landice.tests.mesh_modifications.subdomain_extractor.extract_region.ExtractRegion" title="compass.landice.tests.mesh_modifications.subdomain_extractor.extract_region.ExtractRegion"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.mesh_modifications.subdomain_extractor.extract_region.ExtractRegion</span></code></a>
+class performs the operations to extract a region subdomain from a larger
+domain.  Using user-supplied config information, it performs the following
+steps:</p>
+<ul class="simple">
+<li><p>create a cull mask, either from a region mask with specified region number
+or from a geojson file</p></li>
+<li><p>optionally extend culling mask a certain number of cells into the ocean
+along the ice-shelf front if using a region mask</p></li>
+<li><p>cull mesh, convert mesh, mark horns for culling, cull again</p></li>
+<li><p>set lat/lon fields in mesh based on specified projection</p></li>
+<li><p>interpolate fields from source mesh to subdomain mesh using
+nearest neighbor interpolation.
+This can be done either with the <code class="docutils literal notranslate"><span class="pre">interpolate_to_mpasli_grid.py</span></code> script
+or using <code class="docutils literal notranslate"><span class="pre">ncremap</span></code>.  The ncremap method is slower and potentially more
+fragile (depends on more external tools), but if used allows the option
+to remap additional files (e.g. forcing files).</p></li>
+<li><p>mark domain boundary cells as Dirichlet velocity conditions</p></li>
+<li><p>create a graph file for the subdomain mesh</p></li>
+<li><p>optionally remap additional files that use the same source mesh</p></li>
+</ul>
+<p>The method using ncremap uses pyremap to create the mapping file
+and then calls ncremap with some pre and post processing steps.
+Those operations happen in a helper function nameed <code class="docutils literal notranslate"><span class="pre">_remap_with_ncremap</span></code>.</p>
 </section>
 </section>
 
@@ -171,8 +194,8 @@ the 8-80 km variable resolution Antarctica mesh.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="Test groups" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="calving_dt_convergence.html" class="btn btn-neutral float-right" title="calving_dt_convergence" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="koge_bugt_s.html" class="btn btn-neutral float-left" title="koge_bugt_s" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mismipplus.html" class="btn btn-neutral float-right" title="mismipplus" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
