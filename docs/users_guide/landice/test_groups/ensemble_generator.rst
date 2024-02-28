@@ -72,6 +72,10 @@ Future improvements may include:
 * safety checks or warnings before submitting ensembles that will use large
   amounts of computing resources
 
+* a method for maintaining namelist, streams, and albany_input.yaml files for
+  different ensembles.  Currently, these input files are specific to the Amery
+  Ice Shelf ensemble run in 2023.
+
 The test group includes two test cases:
 
 * ``spinup_ensemble``: a set of simulations from the same initial condition
@@ -95,7 +99,6 @@ The test-case-specific config options are:
 
 .. code-block:: cfg
 
-   # config options for setting up an ensemble
    [ensemble]
 
    # start and end numbers for runs to set up and run
@@ -115,16 +118,16 @@ The test-case-specific config options are:
    # for a single parameter sensitivity study.  It will sample uniformly across
    # all dimensions simultaneously, thus sampling only a small fraction of
    # parameter space
-   sampling_method = uniform
+   sampling_method = sobol
 
-   # maximum number of sample considered.
+   # maximum number of samples to be considered.
    # max_samples needs to be greater or equal to (end_run + 1)
    # When using uniform sampling, max_samples should equal (end_run + 1).
-   # When using Sobol sequence, max_samples ought to be a multiple of 2.
+   # When using Sobol sequence, max_samples ought to be a power of 2.
    # max_samples should not be changed after the first set of ensemble.
    # So, when using Sobol sequence, max_samples might be set larger than
    # (end_run + 1) if you plan to add more samples to the ensemble later.
-   max_samples = 4
+   max_samples = 1024
 
    # basin for comparing model results with observational estimates in
    # visualization script.
@@ -132,7 +135,7 @@ The test-case-specific config options are:
    # If desired basin does not exist, it can be added to that dataset.
    # (They need not be mutually exclusive.)
    # If a basin is not provided, observational comparisons will not be made.
-   basin =  None
+   basin = ISMIP6BasinBC
 
    # fraction of CFL-limited time step to be used by the adaptive timestepper
    # This value is explicitly included here to force the user to consciously
@@ -154,30 +157,28 @@ The test-case-specific config options are:
    # Eventually this could be hard-coded to use files on the input data
    # server, but initially we want flexibility to experiment with different
    # inputs and forcings
-   input_file_path = /global/cfs/cdirs/fanssie/MALI_projects/Thwaites_UQ/Thwaites_4to20km_r02_20230126/relaxation/Thwaites_4to20km_r02_20230126_withStiffness_10yrRelax.nc
+   input_file_path = /global/cfs/cdirs/fanssie/MALI_projects/Amery_UQ/Amery_4to20km_from_whole_AIS/Amery.nc
 
    # the value of the friction exponent used for the calculation of muFriction
    # in the input file
    orig_fric_exp = 0.2
 
    # Path to ISMIP6 ice-shelf basal melt parameter input file.
-   basal_melt_param_file_path = /global/cfs/cdirs/fanssie/MALI_projects/Thwaites_UQ/Thwaites_4to20km_r02_20230126/forcing/basal_melt/parameterizations/Thwaites_4to20km_r02_20230126_basin_and_coeff_gamma0_DeltaT_quadratic_non_local_median.nc
+   basal_melt_param_file_path = /global/cfs/cdirs/fanssie/MALI_projects/Amery_UQ/Amery_4to20km_from_whole_AIS/forcing/basal_melt/parameterizations/Amery_4to20km_basin_and_coeff_gamma0_DeltaT_quadratic_non_local_median_allBasin2.nc
 
    # Path to thermal forcing file for the mesh to be used
-   TF_file_path = /global/cfs/cdirs/fanssie/MALI_projects/Thwaites_UQ/Thwaites_4to20km_r02_20230126/forcing/ocean_thermal_forcing/obs/Thwaites_4to20km_r02_20230126_obs_TF_1995-2017_8km_x_60m_no_xtime.nc
+   TF_file_path = /global/cfs/cdirs/fanssie/MALI_projects/Amery_UQ/Amery_4to20km_from_whole_AIS/forcing/ocean_thermal_forcing/obs/Amery_4to20km_obs_TF_1995-2017_8km_x_60m.nc
 
    # Path to SMB forcing file for the mesh to be used
-   SMB_file_path = /global/cfs/cdirs/fanssie/MALI_projects/Thwaites_UQ/Thwaites_4to20km_r02_20230126/forcing/atmosphere_forcing/RACMO_climatology_1995-2017/Thwaites_4to20km_r02_202
-   30126_RACMO2.3p2_ANT27_smb_climatology_1995-2017.nc
+   SMB_file_path = /global/cfs/cdirs/fanssie/MALI_projects/Amery_UQ/Amery_4to20km_from_whole_AIS/forcing/atmosphere_forcing/RACMO_climatology_1995-2017/Amery_4to20km_RACMO2.3p2_ANT27_smb_climatology_1995-2017_no_xtime_noBareLandAdvance.nc
 
    # number of tasks that each ensemble member should be run with
    # Eventually, compass could determine this, but we want explicit control for now
-   # ntasks=32 for cori
    ntasks = 128
 
    # whether basal friction exponent is being varied
    # [unitless]
-   use_fric_exp = False
+   use_fric_exp = True
    # min value to vary over
    fric_exp_min = 0.1
    # max value to vary over
@@ -195,17 +196,17 @@ The test-case-specific config options are:
    # [unitless: 1.0=no scaling]
    use_stiff_scale = True
    # min value to vary over
-   stiff_scale_min = 0.5
+   stiff_scale_min = 0.8
    # max value to vary over
-   stiff_scale_max = 1.5
+   stiff_scale_max = 1.2
 
    # whether the von Mises threshold stress (sigma_max) is being varied
    # [units: Pa]
-   use_von_mises_threshold = False
+   use_von_mises_threshold = True
    # min value to vary over
-   von_mises_threshold_min = 100.0e3
+   von_mises_threshold_min = 80.0e3
    # max value to vary over
-   von_mises_threshold_max = 300.0e3
+   von_mises_threshold_max = 180.0e3
 
    # whether the calving speed limit is being varied
    # [units: km/yr]
@@ -217,7 +218,7 @@ The test-case-specific config options are:
 
    # whether ocean melt parameterization coefficient is being varied
    # [units: m/yr]
-   use_gamma0  = False
+   use_gamma0 = True
    # min value to vary over
    gamma0_min = 9620.0
    # max value to vary over
@@ -225,14 +226,14 @@ The test-case-specific config options are:
 
    # whether target ice-shelf basal melt flux is being varied
    # [units: Gt/yr]
-   use_meltflux = False
+   use_meltflux = True
    # min value to vary over
-   meltflux_min = 90.5
+   meltflux_min = 12.
    # max value to vary over
-   meltflux_max = 114.5
+   meltflux_max = 58.
    # ice-shelf area associated with target melt rates
    # [units: m^2]
-   iceshelf_area_obs = 4411.0e6
+   iceshelf_area_obs = 60654.e6
 
 A user should copy the default config file to a user-defined config file
 before setting up the test case and any necessary adjustments made.
@@ -369,3 +370,7 @@ directory and submitting the job script yourself with ``sbatch``.
 Setting up and running a branch ensemble follows the same steps.  Multiple
 branch ensembles (e.g., with different climate forcing scenarios) can be
 conducted from one spinup ensemble.
+
+It is intended that a single MALI executable is used for all simulations in an
+ensemble.  If the version of the code is updated, it is up to the user to anticipate
+undesirable consequences.

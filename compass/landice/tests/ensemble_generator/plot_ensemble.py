@@ -279,7 +279,8 @@ observedSurfaceVelocityX = DSinput['observedSurfaceVelocityX'].values[0, :]
 observedSurfaceVelocityY = DSinput['observedSurfaceVelocityY'].values[0, :]
 obsSpdUnc = DSinput['observedSurfaceVelocityUncertainty'].values[0, :]
 obsSpd = (observedSurfaceVelocityX**2 + observedSurfaceVelocityY**2)**0.5
-obsSpdUnc += obsSpd * 0.25
+# May want to set speed uncertainty a function of speed, e.g.,
+# obsSpdUnc += obsSpd * 0.25
 DSinput.close()
 
 # --------------
@@ -329,8 +330,15 @@ for idx, run in enumerate(runs):
             / 1.0e12  # Gt/yr
         GLMigFlux = f.variables['groundingLineMigrationFlux'][:] \
             / 1.0e12  # Gt/yr
+        # Apply smoothing to GL migration flux, because it is very noisy.
+        # w is the width of a window over time levels to use for smoothing.
+        # May need to play with this to get nice looking GL flux plots.
+        # The convolution is a boxcar filter with width w.
+        # (Note: if w is larger than the length of your time series, an error
+        # will occur.)
         w = 50
         GLMigFlux2 = np.convolve(GLMigFlux, np.ones(w), 'same') / w
+        # GLflux2 includes both the groundingLineFlux and the migration flux
         GLflux2 = groundingLineFlux + GLMigFlux2
 
         # Only process qois for runs that have reached target year
