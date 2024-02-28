@@ -23,5 +23,6 @@ Test groups
    isunnguata_sermia
    kangerlussuaq
    koge_bugt_s
+   mesh_modifications
    mismipplus
    thwaites

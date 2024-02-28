@@ -395,6 +395,20 @@ koge_bugt_s
    mesh.Mesh
    mesh.Mesh.run
 
+mesh_modifications
+~~~~~~~~~~~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.mesh_modifications
+
+.. autosummary::
+   :toctree: generated/
+
+   MeshModifications
+
+   subdomain_extractor.SubdomainExtractor
+
+   subdomain_extractor.extract_region.ExtractRegion
+ 
 mismipplus
 ~~~~~~~~~~
 
@@ -468,6 +482,7 @@ Landice Framework
    iceshelf_melt.calc_mean_TF
 
    mesh.gridded_flood_fill
+   mesh.mpas_flood_fill
    mesh.set_rectangular_geom_points_and_edges
    mesh.set_cell_width
    mesh.get_dist_to_edge_and_gl
