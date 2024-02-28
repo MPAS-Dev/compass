@@ -487,7 +487,7 @@ Landice Framework
    mesh.interp_ais_bedmachine
    mesh.interp_ais_measures
    mesh.mpas_flood_fill
-   mesh,preprocess_ais_data
+   mesh.preprocess_ais_data
    mesh.set_rectangular_geom_points_and_edges
    mesh.set_cell_width
    mesh.get_dist_to_edge_and_gl

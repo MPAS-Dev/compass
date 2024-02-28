@@ -109,7 +109,7 @@ class Mesh(Step):
 
         # interpolate fields from composite dataset
         # Note: this was already done in build_mali_mesh() using
-        # bilinear interpolation.  Redoing it here again is unlikely
+        # bilinear interpolation.  Redoing it here again is likely
         # not needed.  Also, it should be assessed if bilinear or
         # barycentric used here is preferred for this application.
         # Current thinking is they are both equally appropriate.

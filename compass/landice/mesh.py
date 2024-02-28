@@ -826,8 +826,8 @@ def add_bedmachine_thk_to_ais_gridded_data(self, source_gridded_dataset,
                                            bedmachine_path):
     """
     Copy BedMachine thickness to AIS reference gridded dataset.
-    Rreplace thickness field in the compilation dataset with the one we
-    will be using from BedMachine for actual thickness interpolation
+    Replace thickness field in the compilation dataset with the one we
+    will be using from BedMachine for actual thickness interpolation.
     There are significant inconsistencies between the masking of the two,
     particularly along the Antarctic Peninsula, that lead to funky
     mesh extent and culling if we use the thickness from 8km composite
@@ -862,14 +862,13 @@ def add_bedmachine_thk_to_ais_gridded_data(self, source_gridded_dataset,
     bm_y = bm_data.variables['y'][:]
     bm_mask = bm_data.variables['iceMask'][:]
     bm_thk = bm_data.variables['thk'][:]
-    # but this transformation gives the desired results.
-    # bedmachine includes a mask with: 0=ocean, 1=land, 2=grd ice
+    # BedMachine v2 includes a mask with: 0=ocean, 1=land, 2=grd ice
     #                                  3=flt ice, 4=vostok
+    # NOTE: Later versions of BedMachine may not have the same mask values! 
     # We only want to keep thickness where the mask has ice;
     # this is necessary because thickness has been extrapolated.
     bm_thk *= (bm_mask > 1.5)
-    # The two datasets are oriented differently.
-    # It's unclear to me what the correct way to account for it is,
+    # The two datasets are oriented differently, so align them.
     bm_thk = np.flipud(np.rot90(bm_thk))
     gridded_dataset_with_bm_thk = \
         f"{source_gridded_dataset.split('.')[:-1][0]}_BedMachineThk.nc"
@@ -921,8 +920,7 @@ def preprocess_ais_data(self, source_gridded_dataset,
     gg.variables['vy'][0, :, :] *= floodFillMask
     gg.close()
 
-    # Now deal with the peculiarities of the AIS dataset. This section
-    # could be separated into its own function
+    # Now deal with the peculiarities of the AIS dataset.
     preprocessed_gridded_dataset = \
         f"{file_with_flood_fill.split('.')[:-1][0]}_filledFields.nc"
     copyfile(file_with_flood_fill,
@@ -955,7 +953,7 @@ def preprocess_ais_data(self, source_gridded_dataset,
     for field in ['thk', 'bheatflx', 'vx', 'vy',
                   'ex', 'ey', 'thkerr', 'dhdt']:
         tic = time.perf_counter()
-        logger.info('Beginning building interpolator for {}'.format(field))
+        logger.info(f"Beginning building interpolator for {field}")
         if field in ['thk', 'thkerr']:
             mask = cellsWithIce.ravel()
         elif field == 'bheatflx':
@@ -972,19 +970,16 @@ def preprocess_ais_data(self, source_gridded_dataset,
             list(zip(xx[mask], yy[mask])),
             data.variables[field][:].ravel()[mask])
         toc = time.perf_counter()
-        logger.info('Finished building interpolator in {} seconds'.format(
-            toc - tic))
+        logger.info(f"Finished building interpolator in {toc - tic} seconds")
 
         tic = time.perf_counter()
-        logger.info('Beginning interpolation for {}'.format(field))
+        logger.info(f"Beginning interpolation for {field}")
         data.variables[field][0, :] = interp(xGrid, yGrid)
         toc = time.perf_counter()
-        logger.info('Interpolation completed in {} seconds'.format(
-            toc - tic))
+        logger.info(f"Interpolation completed in {toc - tic} seconds")
 
     bigToc = time.perf_counter()
-    logger.info('All interpolations completed in {} seconds'.format(
-        bigToc - bigTic))
+    logger.info(f"All interpolations completed in {bigToc - bigTic} seconds.")
 
     # Now perform some additional clean up adjustments to the dataset
     data.createVariable('dHdtErr', 'f', ('time', 'y1', 'x1'))
