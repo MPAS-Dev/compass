@@ -1,7 +1,7 @@
 <streams>
 
 <immutable_stream name="input"
-                  filename_template="MISMIP_2km_20220502.nc"/>
+                  filename_template="landice_grid.nc"/>
 
 <immutable_stream name="restart"
                   type="input;output"
@@ -24,14 +24,10 @@
     <var name="bedTopography"/>
     <var name="upperSurface"/>
     <var name="cellMask"/>
-    <var name="edgeMask"/>
     <var name="surfaceSpeed"/>
     <var name="basalSpeed"/>
-    <var name="calvingVelocity"/>
-    <var name="calvingThickness"/>
-    <var name="vonMisesStress"/>
-    <var name="calvingCFLdt"/>
     <var name="daysSinceStart"/>
+    <var name="dHdt"/>
 </stream>
 
 <stream name="globalStatsOutput"
@@ -39,7 +35,7 @@
         filename_template="globalStats.nc"
         filename_interval="none"
         clobber_mode="truncate"
-                  reference_time="0000-01-01_00:00:00"
+                  reference_time="0001-01-01_00:00:00"
         output_interval="0000-00-00_01:00:00"
         packages="globalStatsAMPKG"
         runtime_format="single_file">
@@ -52,6 +48,7 @@
     <var name="allowableDtDCFL"/>
     <var name="calvingCFLdt"/>
     <var name="dtCalvingCFLratio"/>
+    <var name="albanyVelocityError"/>
     <var_struct name="globalStatsAM"/>
 </stream>
 

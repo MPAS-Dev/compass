@@ -406,11 +406,26 @@ mismipplus
    MISMIPplus
 
    smoke_test.SmokeTest
-   smoke_test.SmokeTest.run
+   smoke_test.SmokeTest.validate
 
+   spin_up.SpinUp
+   spin_up.SpinUp.configure
+    
+   setup_mesh.SetupMesh
+   setup_mesh.SetupMesh.run
+   
+   setup_mesh.calculate_mesh_params
+   setup_mesh.mark_cull_cells_for_MISMIP
+   setup_mesh.center_trough
+    
    run_model.RunModel
    run_model.RunModel.setup
+   run_model.RunModel.constrain_resources
    run_model.RunModel.run
+
+   tasks.get_ntasks_from_cell_count
+   tasks.exact_cell_count
+   tasks.approx_cell_count 
 
 thwaites
 ~~~~~~~~
