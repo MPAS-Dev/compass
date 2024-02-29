@@ -1,5 +1,7 @@
+import os
 import sys
 import time
+from shutil import copyfile
 
 import jigsawpy
 import mpas_tools.io
@@ -11,6 +13,7 @@ from mpas_tools.logging import check_call
 from mpas_tools.mesh.conversion import convert, cull
 from mpas_tools.mesh.creation import build_planar_mesh
 from netCDF4 import Dataset
+from scipy.interpolate import NearestNDInterpolator, interpn
 
 
 def mpas_flood_fill(seed_mask, grow_mask, cellsOnCell, nEdgesOnCell,
@@ -261,7 +264,7 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
     high_bed = section.getfloat('high_bed')
 
     # convert km to m
-    cull_distance = float(section.get('cull_distance')) * 1.e3
+    cull_distance = section.getfloat('cull_distance') * 1.e3
 
     # Cell spacing function based on union of masks
     if section.get('use_bed') == 'True':
@@ -366,8 +369,16 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
     # cell size in the final mesh. There may be a more rigorous way to set
     # that distance.
     if dist_to_edge is not None:
+        assert (3. * cull_distance < max(high_dist, high_dist_bed)), \
+            ('cull_distance is set to be larger than 3x the max of high_dist '
+             'and high_dist_bed, which means max_spac is not being applied to '
+             'the regions of the mesh that will be culled, which means the '
+             'mesh generation is likely to be substantially slower '
+             'than necessary.  Please fix or relax this constraint.')
         mask = np.logical_and(
             thk == 0.0, dist_to_edge > (3. * cull_distance))
+        logger.info('Setting cell_width in outer regions to max_spac '
+                    f'for {mask.sum()} cells')
         cell_width[mask] = max_spac
 
     return cell_width
@@ -809,3 +820,338 @@ def make_region_masks(self, mesh_filename, mask_filename, cores, tags):
             '--format', mpas_tools.io.default_format,
             '--engine', mpas_tools.io.default_engine]
     check_call(args, logger=logger)
+
+
+def add_bedmachine_thk_to_ais_gridded_data(self, source_gridded_dataset,
+                                           bedmachine_path):
+    """
+    Copy BedMachine thickness to AIS reference gridded dataset.
+    Replace thickness field in the compilation dataset with the one we
+    will be using from BedMachine for actual thickness interpolation.
+    There are significant inconsistencies between the masking of the two,
+    particularly along the Antarctic Peninsula, that lead to funky
+    mesh extent and culling if we use the thickness from 8km composite
+    dataset to define the cullMask but then actually interpolate thickness
+    from BedMachine.
+    This function uses bilinear interpolation to interpolate from the 500 m
+    resolution of BedMachine to the 8 km resolution of the reference dataset.
+    It is not particularly accurate, but is fast and adequate for generating
+    the flood filled mask for culling the mesh.  Highly accurate conservative
+    remapping is performed later for actually interpolating BedMachine
+    thickness to the final MALI mesh.
+
+    Parameters
+    ----------
+    source_gridded_dataset : str
+        name of NetCDF file containing original AIS gridded datasets
+
+    bedmachine_path : str
+        path to BedMachine dataset
+
+    Returns
+    -------
+    gridded_dataset_with_bm_thk : str
+        name of NetCDF file with gridded dataset with BedMachine thk added
+    """
+
+    logger = self.logger
+
+    tic = time.perf_counter()
+    bm_data = Dataset(bedmachine_path, 'r')
+    bm_x = bm_data.variables['x'][:]
+    bm_y = bm_data.variables['y'][:]
+    bm_mask = bm_data.variables['iceMask'][:]
+    bm_thk = bm_data.variables['thk'][:]
+    # BedMachine v2 includes a mask with: 0=ocean, 1=land, 2=grd ice
+    #                                  3=flt ice, 4=vostok
+    # NOTE: Later versions of BedMachine may not have the same mask values!
+    # We only want to keep thickness where the mask has ice;
+    # this is necessary because thickness has been extrapolated.
+    bm_thk *= (bm_mask > 1.5)
+    # The two datasets are oriented differently, so align them.
+    bm_thk = np.flipud(np.rot90(bm_thk))
+    gridded_dataset_with_bm_thk = \
+        f"{source_gridded_dataset.split('.')[:-1][0]}_BedMachineThk.nc"
+    copyfile(source_gridded_dataset, gridded_dataset_with_bm_thk)
+    gg = Dataset(gridded_dataset_with_bm_thk, 'r+')
+    gg_x = gg.variables['x1'][:]
+    gg_y = gg.variables['y1'][:]
+    gg_xx, gg_yy = np.meshgrid(gg_x, gg_y)
+    gg_thk = interpn((bm_x, bm_y), bm_thk, (gg_xx, gg_yy),
+                     bounds_error=False, fill_value=0.0)
+    gg.variables['thk'][0, :, :] = gg_thk
+    gg.close()
+    bm_data.close()
+    toc = time.perf_counter()
+    logger.info('Finished interpolating BedMachine thickness to reference '
+                f'grid in {toc - tic} seconds')
+    return gridded_dataset_with_bm_thk
+
+
+def preprocess_ais_data(self, source_gridded_dataset,
+                        floodFillMask):
+    """
+    Perform adjustments to gridded AIS datasets needed
+    for rest of compass workflow to utilize them
+
+    Parameters
+    ----------
+    source_gridded_dataset : str
+        name of NetCDF file containing original AIS gridded datasets
+
+    floodFillMask : numpy.ndarray
+        0/1 mask of flood filled ice region
+
+    Returns
+    -------
+    preprocessed_gridded_dataset : str
+        name of NetCDF file with preprocessed version of gridded dataset
+    """
+
+    logger = self.logger
+
+    # Apply floodFillMask to thickness field to help with culling
+    file_with_flood_fill = \
+        f"{source_gridded_dataset.split('.')[:-1][0]}_floodFillMask.nc"
+    copyfile(source_gridded_dataset, file_with_flood_fill)
+    gg = Dataset(file_with_flood_fill, 'r+')
+    gg.variables['thk'][0, :, :] *= floodFillMask
+    gg.variables['vx'][0, :, :] *= floodFillMask
+    gg.variables['vy'][0, :, :] *= floodFillMask
+    gg.close()
+
+    # Now deal with the peculiarities of the AIS dataset.
+    preprocessed_gridded_dataset = \
+        f"{file_with_flood_fill.split('.')[:-1][0]}_filledFields.nc"
+    copyfile(file_with_flood_fill,
+             preprocessed_gridded_dataset)
+    data = Dataset(preprocessed_gridded_dataset, 'r+')
+    data.set_auto_mask(False)
+    x1 = data.variables["x1"][:]
+    y1 = data.variables["y1"][:]
+    cellsWithIce = data.variables["thk"][:].ravel() > 0.
+    data.createVariable('iceMask', 'f', ('time', 'y1', 'x1'))
+    data.variables['iceMask'][:] = data.variables["thk"][:] > 0.
+
+    # Note: dhdt is only reported over grounded ice, so we will have to
+    # either update the dataset to include ice shelves or give them values of
+    # 0 with reasonably large uncertainties.
+    dHdt = data.variables["dhdt"][:]
+    dHdtErr = 0.05 * dHdt  # assign arbitrary uncertainty of 5%
+    # Where dHdt data are missing, set large uncertainty
+    dHdtErr[dHdt > 1.e30] = 1.
+
+    # Extrapolate fields beyond region with ice to avoid interpolation
+    # artifacts of undefined values outside the ice domain
+    # Do this by creating a nearest neighbor interpolator of the valid data
+    # to recover the actual data within the ice domain and assign nearest
+    # neighbor values outside the ice domain
+    xGrid, yGrid = np.meshgrid(x1, y1)
+    xx = xGrid.ravel()
+    yy = yGrid.ravel()
+    bigTic = time.perf_counter()
+    for field in ['thk', 'bheatflx', 'vx', 'vy',
+                  'ex', 'ey', 'thkerr', 'dhdt']:
+        tic = time.perf_counter()
+        logger.info(f"Beginning building interpolator for {field}")
+        if field in ['thk', 'thkerr']:
+            mask = cellsWithIce.ravel()
+        elif field == 'bheatflx':
+            mask = np.logical_and(
+                data.variables[field][:].ravel() < 1.0e9,
+                data.variables[field][:].ravel() != 0.0)
+        elif field in ['vx', 'vy', 'ex', 'ey', 'dhdt']:
+            mask = np.logical_and(
+                data.variables[field][:].ravel() < 1.0e9,
+                cellsWithIce.ravel() > 0)
+        else:
+            mask = cellsWithIce
+        interp = NearestNDInterpolator(
+            list(zip(xx[mask], yy[mask])),
+            data.variables[field][:].ravel()[mask])
+        toc = time.perf_counter()
+        logger.info(f"Finished building interpolator in {toc - tic} seconds")
+
+        tic = time.perf_counter()
+        logger.info(f"Beginning interpolation for {field}")
+        data.variables[field][0, :] = interp(xGrid, yGrid)
+        toc = time.perf_counter()
+        logger.info(f"Interpolation completed in {toc - tic} seconds")
+
+    bigToc = time.perf_counter()
+    logger.info(f"All interpolations completed in {bigToc - bigTic} seconds.")
+
+    # Now perform some additional clean up adjustments to the dataset
+    data.createVariable('dHdtErr', 'f', ('time', 'y1', 'x1'))
+    data.variables['dHdtErr'][:] = dHdtErr
+
+    data.createVariable('vErr', 'f', ('time', 'y1', 'x1'))
+    data.variables['vErr'][:] = np.sqrt(data.variables['ex'][:]**2 +
+                                        data.variables['ey'][:]**2)
+
+    data.variables['bheatflx'][:] *= 1.e-3  # correct units
+    data.variables['bheatflx'].units = 'W m-2'
+
+    data.variables['subm'][:] *= -1.0  # correct basal melting sign
+    data.variables['subm_ss'][:] *= -1.0
+
+    data.renameVariable('dhdt', 'dHdt')
+    data.renameVariable('thkerr', 'topgerr')
+
+    data.createVariable('x', 'f', ('x1'))
+    data.createVariable('y', 'f', ('y1'))
+    data.variables['x'][:] = x1
+    data.variables['y'][:] = y1
+
+    data.close()
+
+    return preprocessed_gridded_dataset
+
+
+def interp_ais_bedmachine(self, data_path, mali_scrip, nProcs, dest_file):
+    """
+    Interpolates BedMachine thickness and bedTopography dataset
+    to a MALI mesh
+
+    Parameters
+    ----------
+    data_path : str
+        path to AIS datasets, including BedMachine
+
+    mali_scrip : str
+        name of scrip file corresponding to destination MALI mesh
+
+    nProcs : int
+        number of processors to use for generating remapping weights
+
+    dest_file: str
+        MALI input file to which data should be remapped
+    """
+
+    logger = self.logger
+
+    logger.info('creating scrip file for BedMachine dataset')
+    # Note: writing scrip file to workdir
+    args = ['create_SCRIP_file_from_planar_rectangular_grid.py',
+            '-i',
+            os.path.join(data_path,
+                         'BedMachineAntarctica_2020-07-15_v02_edits_floodFill_extrap_fillVostok.nc'),  # noqa
+            '-s',
+            'BedMachineAntarctica_2020-07-15_v02.scrip.nc',
+            '-p', 'ais-bedmap2',
+            '-r', '2']
+    check_call(args, logger=logger)
+
+    # Generate remapping weights
+    # Testing shows 5 badger/grizzly nodes works well.
+    # 2 nodes is too few. I have not tested anything in between.
+    logger.info('generating gridded dataset -> MPAS weights')
+    args = ['srun', '-n', nProcs, 'ESMF_RegridWeightGen',
+            '--source',
+            'BedMachineAntarctica_2020-07-15_v02.scrip.nc',
+            '--destination', mali_scrip,
+            '--weight', 'BedMachine_to_MPAS_weights.nc',
+            '--method', 'conserve',
+            "--netcdf4",
+            "--dst_regional", "--src_regional", '--ignore_unmapped']
+    check_call(args, logger=logger)
+
+    # Perform actual interpolation using the weights
+    logger.info('calling interpolate_to_mpasli_grid.py')
+    args = ['interpolate_to_mpasli_grid.py', '-s',
+            os.path.join(data_path,
+                         'BedMachineAntarctica_2020-07-15_v02_edits_floodFill_extrap_fillVostok.nc'),  # noqa
+            '-d', dest_file,
+            '-m', 'e',
+            '-w', 'BedMachine_to_MPAS_weights.nc']
+    check_call(args, logger=logger)
+
+
+def interp_ais_measures(self, data_path, mali_scrip, nProcs, dest_file):
+    """
+    Interpolates MEASURES ice velocity dataset
+    to a MALI mesh
+
+    Parameters
+    ----------
+    data_path : str
+        path to AIS datasets, including BedMachine
+
+    mali_scrip : str
+        name of scrip file corresponding to destination MALI mesh
+
+    nProcs : int
+        number of processors to use for generating remapping weights
+
+    dest_file: str
+        MALI input file to which data should be remapped
+    """
+
+    logger = self.logger
+
+    logger.info('creating scrip file for velocity dataset')
+    # Note: writing scrip file to workdir
+    args = ['create_SCRIP_file_from_planar_rectangular_grid.py',
+            '-i',
+            os.path.join(data_path,
+                         'antarctica_ice_velocity_450m_v2_edits_extrap.nc'),
+            '-s',
+            'antarctica_ice_velocity_450m_v2.scrip.nc',
+            '-p', 'ais-bedmap2',
+            '-r', '2']
+    check_call(args, logger=logger)
+
+    # Generate remapping weights
+    logger.info('generating gridded dataset -> MPAS weights')
+    args = ['srun', '-n', nProcs, 'ESMF_RegridWeightGen',
+            '--source',
+            'antarctica_ice_velocity_450m_v2.scrip.nc',
+            '--destination', mali_scrip,
+            '--weight', 'measures_to_MPAS_weights.nc',
+            '--method', 'conserve',
+            "--netcdf4",
+            "--dst_regional", "--src_regional", '--ignore_unmapped']
+    check_call(args, logger=logger)
+
+    logger.info('calling interpolate_to_mpasli_grid.py')
+    args = ['interpolate_to_mpasli_grid.py',
+            '-s',
+            os.path.join(data_path,
+                         'antarctica_ice_velocity_450m_v2_edits_extrap.nc'),
+            '-d', dest_file,
+            '-m', 'e',
+            '-w', 'measures_to_MPAS_weights.nc',
+            '-v', 'observedSurfaceVelocityX',
+                  'observedSurfaceVelocityY',
+                  'observedSurfaceVelocityUncertainty']
+    check_call(args, logger=logger)
+
+
+def clean_up_after_interp(fname):
+    """
+    Perform some final clean up steps after interpolation
+
+    Parameters
+    ----------
+    fname : str
+        name of file on which to perform clean up
+    """
+
+    # Create a backup in case clean-up goes awry
+    backup_name = f"{fname.split('.')[:-1][0]}_backup.nc"
+    copyfile(fname, backup_name)
+
+    # Clean up: trim to iceMask and set large velocity
+    # uncertainties where appropriate.
+    data = Dataset(fname, 'r+')
+    data.set_auto_mask(False)
+    data.variables['thickness'][:] *= (data.variables['iceMask'][:] > 1.5)
+
+    mask = np.logical_or(
+        np.isnan(data.variables['observedSurfaceVelocityUncertainty'][:]),
+        data.variables['thickness'][:] < 1.0)
+    mask = np.logical_or(
+        mask,
+        data.variables['observedSurfaceVelocityUncertainty'][:] == 0.0)
+    data.variables['observedSurfaceVelocityUncertainty'][0, mask[0, :]] = 1.0
+    data.close()
