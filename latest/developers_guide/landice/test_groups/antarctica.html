@@ -146,7 +146,7 @@
   <section id="antarctica">
 <span id="dev-landice-antarctica"></span><h1>antarctica<a class="headerlink" href="#antarctica" title="Link to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">antarctica</span></code> test group (<a class="reference internal" href="../generated/compass.landice.tests.antarctica.Antarctica.html#compass.landice.tests.antarctica.Antarctica" title="compass.landice.tests.antarctica.Antarctica"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.antarctica.Antarctica</span></code></a>)
-creates a variable resolution 8-80 km mesh for the whole region of Antarctica.
+creates a variable resolution 4-20 km mesh for the whole region of Antarctica.
 (see <a class="reference internal" href="../../../users_guide/landice/test_groups/antarctica.html#landice-antarctica"><span class="std std-ref">antarctica</span></a>). Here, we describe framework for this test group.</p>
 <section id="framework">
 <span id="dev-landice-antarctica-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Link to this heading">¶</a></h2>
@@ -163,7 +163,24 @@ This is used by the <code class="docutils literal notranslate"><span class="pre"
 <h2>mesh_gen<a class="headerlink" href="#mesh-gen" title="Link to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="../generated/compass.landice.tests.antarctica.mesh_gen.MeshGen.html#compass.landice.tests.antarctica.mesh_gen.MeshGen" title="compass.landice.tests.antarctica.mesh_gen.MeshGen"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.antarctica.mesh_gen.MeshGen</span></code></a>
 calls the <a class="reference internal" href="../generated/compass.landice.tests.antarctica.mesh.Mesh.html#compass.landice.tests.antarctica.mesh.Mesh" title="compass.landice.tests.antarctica.mesh.Mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.antarctica.mesh.Mesh</span></code></a> to create
-the 8-80 km variable resolution Antarctica mesh.</p>
+the variable resolution Antarctica mesh.  It makes extensive use of
+functions in <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.mesh</span></code>.</p>
+<p>The mesh generation is based around an 8 km reference dataset, which
+is updated in a number of ways directly from high resolution source
+data.  In the future, a complete workflow from source datasets may
+replace this hybrid method.</p>
+<p>First, <code class="docutils literal notranslate"><span class="pre">add_bedmachine_thk_to_ais_gridded_data</span></code> is used to update
+the thickness field in the reference dataset with that from BedMachine
+for the purposes of defining an ice-sheet extent and mesh resolution
+(not the actual thickness interpolation).</p>
+<p>Second, <code class="docutils literal notranslate"><span class="pre">build_cell_width</span></code> is called in the standard way to define the
+resolution density function.</p>
+<p>Third, <code class="docutils literal notranslate"><span class="pre">preprocess_ais_data</span></code> is called to perform a series of adjustments
+to the AIS datasets needed to work with the rest of the workflow.</p>
+<p>From here, dataset interpolation happens, starting with the standard
+interpolation script applied to the standard dataset, followed by bespoke
+interpolation of the high resolution BedMachine and MEASURES datasets.
+The step completes with some clean up and creation of a graph file.</p>
 </section>
 </section>
 

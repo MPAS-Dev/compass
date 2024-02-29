@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.landice.mesh.gridded_flood_fill &mdash; compass latest documentation</title>
+  <title>compass.landice.mesh.clean_up_after_interp &mdash; compass latest documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
 
@@ -19,8 +19,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="compass.landice.mesh.interp_ais_bedmachine" href="compass.landice.mesh.interp_ais_bedmachine.html" />
-    <link rel="prev" title="compass.landice.mesh.clean_up_after_interp" href="compass.landice.mesh.clean_up_after_interp.html" /> 
+    <link rel="next" title="compass.landice.mesh.gridded_flood_fill" href="compass.landice.mesh.gridded_flood_fill.html" />
+    <link rel="prev" title="compass.landice.mesh.add_bedmachine_thk_to_ais_gridded_data" href="compass.landice.mesh.add_bedmachine_thk_to_ais_gridded_data.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -117,9 +117,9 @@
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../api.html">API reference</a></li>
           <li class="breadcrumb-item"><a href="../api.html">landice</a></li>
-      <li class="breadcrumb-item active">compass.landice.mesh.gridded_flood_fill</li>
+      <li class="breadcrumb-item active">compass.landice.mesh.clean_up_after_interp</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/developers_guide/landice/generated/compass.landice.mesh.gridded_flood_fill.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/developers_guide/landice/generated/compass.landice.mesh.clean_up_after_interp.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -127,31 +127,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="compass-landice-mesh-gridded-flood-fill">
-<h1>compass.landice.mesh.gridded_flood_fill<a class="headerlink" href="#compass-landice-mesh-gridded-flood-fill" title="Link to this heading">¶</a></h1>
+  <section id="compass-landice-mesh-clean-up-after-interp">
+<h1>compass.landice.mesh.clean_up_after_interp<a class="headerlink" href="#compass-landice-mesh-clean-up-after-interp" title="Link to this heading">¶</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="compass.landice.mesh.gridded_flood_fill">
-<span class="sig-prename descclassname"><span class="pre">compass.landice.mesh.</span></span><span class="sig-name descname"><span class="pre">gridded_flood_fill</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iStart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jStart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/mesh.html#gridded_flood_fill"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.mesh.gridded_flood_fill" title="Link to this definition">¶</a></dt>
-<dd><p>Generic flood-fill routine to create mask of connected elements
-in the desired input array (field) from a gridded dataset. This
-is generally used to remove glaciers and ice-fields that are not
-connected to the ice sheet. Note that there may be more efficient
-algorithms.</p>
+<dt class="sig sig-object py" id="compass.landice.mesh.clean_up_after_interp">
+<span class="sig-prename descclassname"><span class="pre">compass.landice.mesh.</span></span><span class="sig-name descname"><span class="pre">clean_up_after_interp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/mesh.html#clean_up_after_interp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.mesh.clean_up_after_interp" title="Link to this definition">¶</a></dt>
+<dd><p>Perform some final clean up steps after interpolation</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>field</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>numpy.ndarray</em></a>) – Array from gridded dataset to use for flood-fill.
-Usually ice thickness.</p></li>
-<li><p><strong>iStart</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – x index from which to start flood fill for field.
-Defaults to the center x coordinate.</p></li>
-<li><p><strong>jStart</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – y index from which to start flood fill.
-Defaults to the center y coordinate.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>flood_mask</strong> (<em>numpy.ndarray</em>) – mask calculated by the flood fill routine,
-where cells connected to the ice sheet (or main feature)
-are 1 and everything else is 0.</p>
+<dd class="field-odd"><p><strong>fname</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – name of file on which to perform clean up</p>
 </dd>
 </dl>
 </dd></dl>
@@ -162,8 +146,8 @@ are 1 and everything else is 0.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="compass.landice.mesh.clean_up_after_interp.html" class="btn btn-neutral float-left" title="compass.landice.mesh.clean_up_after_interp" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="compass.landice.mesh.interp_ais_bedmachine.html" class="btn btn-neutral float-right" title="compass.landice.mesh.interp_ais_bedmachine" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.landice.mesh.add_bedmachine_thk_to_ais_gridded_data.html" class="btn btn-neutral float-left" title="compass.landice.mesh.add_bedmachine_thk_to_ais_gridded_data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.landice.mesh.gridded_flood_fill.html" class="btn btn-neutral float-right" title="compass.landice.mesh.gridded_flood_fill" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

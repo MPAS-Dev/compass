@@ -152,8 +152,33 @@ forcing file.</p>
 used by all <code class="docutils literal notranslate"><span class="pre">mesh_gen</span></code> tests cases, which currently exist within the
 <code class="docutils literal notranslate"><span class="pre">antarctica</span></code>, <code class="docutils literal notranslate"><span class="pre">crane</span></code>, <code class="docutils literal notranslate"><span class="pre">greenland</span></code>, <code class="docutils literal notranslate"><span class="pre">humboldt</span></code>, <code class="docutils literal notranslate"><span class="pre">kangerlussuaq</span></code>,
 <code class="docutils literal notranslate"><span class="pre">koge_bugt_s</span></code>, and <code class="docutils literal notranslate"><span class="pre">thwaites</span></code> test groups. These functions include:</p>
+<p><a class="reference internal" href="generated/compass.landice.mesh.add_bedmachine_thk_to_ais_gridded_data.html#compass.landice.mesh.add_bedmachine_thk_to_ais_gridded_data" title="compass.landice.mesh.add_bedmachine_thk_to_ais_gridded_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.add_bedmachine_thk_to_ais_gridded_data()</span></code></a>
+copies BedMachine thickness to the AIS reference gridded dataset.
+It replaces thickness field in the compilation dataset with the one we
+will be using from BedMachine for actual thickness interpolation
+There are significant inconsistencies between the masking of the two,
+particularly along the Antarctic Peninsula, that lead to funky
+mesh extent and culling if we use the thickness from 8km composite
+dataset to define the cullMask but then actually interpolate thickness
+from BedMachine.
+This function uses bilinear interpolation to interpolate from the 500 m
+resolution of BedMachine to the 8 km resolution of the reference dataset.
+It is not particularly accurate, but is fast and adequate for generating
+the flood filled mask for culling the mesh.  Highly accurate conservative
+remapping is performed later for actually interpolating BedMachine
+thickness to the final MALI mesh.</p>
+<p><a class="reference internal" href="generated/compass.landice.mesh.clean_up_after_interp.html#compass.landice.mesh.clean_up_after_interp" title="compass.landice.mesh.clean_up_after_interp"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.clean_up_after_interp()</span></code></a> performs some final
+clean up steps after interpolation for the AIS mesh case.</p>
 <p><a class="reference internal" href="generated/compass.landice.mesh.gridded_flood_fill.html#compass.landice.mesh.gridded_flood_fill" title="compass.landice.mesh.gridded_flood_fill"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.gridded_flood_fill()</span></code></a> applies a flood-fill algorithm
 to the gridded dataset in order to separate the ice sheet from peripheral ice.</p>
+<p><a class="reference internal" href="generated/compass.landice.mesh.interp_ais_bedmachine.html#compass.landice.mesh.interp_ais_bedmachine" title="compass.landice.mesh.interp_ais_bedmachine"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.interp_ais_bedmachine()</span></code></a> interpolates BedMachine
+thickness and bedTopography dataset to a MALI mesh, accounting for masking of
+the ice extent to avoid interpolation ramps.</p>
+<p><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.interp_ais_interp_ais_measures()</span></code> interpolates
+MEASURES ice velocity dataset to a MALI mesh, accounting for masking at the ice
+edge and extrapolation.</p>
+<p><a class="reference internal" href="generated/compass.landice.mesh.preprocess_ais_data.html#compass.landice.mesh.preprocess_ais_data" title="compass.landice.mesh.preprocess_ais_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.preprocess_ais_data()</span></code></a> performs adjustments to
+gridded AIS datasets needed for rest of compass workflow to utilize them.</p>
 <p><a class="reference internal" href="generated/compass.landice.mesh.set_rectangular_geom_points_and_edges.html#compass.landice.mesh.set_rectangular_geom_points_and_edges" title="compass.landice.mesh.set_rectangular_geom_points_and_edges"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.set_rectangular_geom_points_and_edges()</span></code></a> sets node
 and edge coordinates to pass to py:func:<cite>mpas_tools.mesh.creation.build_mesh.build_planar_mesh()</cite>.</p>
 <p><a class="reference internal" href="generated/compass.landice.mesh.set_cell_width.html#compass.landice.mesh.set_cell_width" title="compass.landice.mesh.set_cell_width"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.set_cell_width()</span></code></a> sets cell widths based on settings

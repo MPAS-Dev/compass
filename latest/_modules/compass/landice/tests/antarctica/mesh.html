@@ -112,14 +112,21 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice.tests.antarctica.mesh</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">shutil</span> <span class="kn">import</span> <span class="n">copyfile</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">import</span> <span class="nn">netCDF4</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.scrip.from_mpas</span> <span class="kn">import</span> <span class="n">scrip_from_mpas</span>
 
 <span class="kn">from</span> <span class="nn">compass.landice.mesh</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">add_bedmachine_thk_to_ais_gridded_data</span><span class="p">,</span>
     <span class="n">build_cell_width</span><span class="p">,</span>
     <span class="n">build_mali_mesh</span><span class="p">,</span>
+    <span class="n">clean_up_after_interp</span><span class="p">,</span>
+    <span class="n">interp_ais_bedmachine</span><span class="p">,</span>
+    <span class="n">interp_ais_measures</span><span class="p">,</span>
     <span class="n">make_region_masks</span><span class="p">,</span>
+    <span class="n">preprocess_ais_data</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">make_graph_file</span>
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
@@ -174,30 +181,86 @@
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">section_ais</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;antarctica&#39;</span><span class="p">]</span>
+        <span class="n">data_path</span> <span class="o">=</span> <span class="n">section_ais</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data_path&#39;</span><span class="p">)</span>
+        <span class="n">nProcs</span> <span class="o">=</span> <span class="n">section_ais</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;nProcs&#39;</span><span class="p">)</span>
+
         <span class="n">section_name</span> <span class="o">=</span> <span class="s1">&#39;mesh&#39;</span>
 
+        <span class="n">source_gridded_dataset</span> <span class="o">=</span> <span class="s1">&#39;antarctica_8km_2024_01_29.nc&#39;</span>
+        <span class="n">bedmachine_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">data_path</span><span class="p">,</span>
+            <span class="s1">&#39;BedMachineAntarctica_2020-07-15_v02_edits_floodFill_extrap_fillVostok.nc&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
+
+        <span class="n">bm_updated_gridded_dataset</span> <span class="o">=</span> <span class="n">add_bedmachine_thk_to_ais_gridded_data</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">source_gridded_dataset</span><span class="p">,</span> <span class="n">bedmachine_path</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;calling build_cell_width&#39;</span><span class="p">)</span>
         <span class="n">cell_width</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">geom_points</span><span class="p">,</span> <span class="n">geom_edges</span><span class="p">,</span> <span class="n">floodFillMask</span> <span class="o">=</span> \
             <span class="n">build_cell_width</span><span class="p">(</span>
                 <span class="bp">self</span><span class="p">,</span> <span class="n">section_name</span><span class="o">=</span><span class="n">section_name</span><span class="p">,</span>
-                <span class="n">gridded_dataset</span><span class="o">=</span><span class="s1">&#39;antarctica_8km_2024_01_29.nc&#39;</span><span class="p">)</span>
+                <span class="n">gridded_dataset</span><span class="o">=</span><span class="n">bm_updated_gridded_dataset</span><span class="p">)</span>
 
-        <span class="c1"># Apply floodFillMask to thickness field to help with culling</span>
-        <span class="n">copyfile</span><span class="p">(</span><span class="s1">&#39;antarctica_8km_2024_01_29.nc&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;antarctica_8km_2024_01_29_floodFillMask.nc&#39;</span><span class="p">)</span>
-        <span class="n">gg</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="s1">&#39;antarctica_8km_2024_01_29_floodFillMask.nc&#39;</span><span class="p">,</span>
-                             <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
-        <span class="n">gg</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;thk&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">*=</span> <span class="n">floodFillMask</span>
-        <span class="n">gg</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;vx&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">*=</span> <span class="n">floodFillMask</span>
-        <span class="n">gg</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;vy&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">*=</span> <span class="n">floodFillMask</span>
-        <span class="n">gg</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="c1"># Preprocess the gridded AIS source datasets to work</span>
+        <span class="c1"># with the rest of the workflow</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;calling preprocess_ais_data&#39;</span><span class="p">)</span>
+        <span class="n">preprocessed_gridded_dataset</span> <span class="o">=</span> <span class="n">preprocess_ais_data</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">bm_updated_gridded_dataset</span><span class="p">,</span> <span class="n">floodFillMask</span><span class="p">)</span>
 
+        <span class="c1"># Now build the base mesh and perform the standard interpolation</span>
         <span class="n">build_mali_mesh</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">cell_width</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">geom_points</span><span class="p">,</span> <span class="n">geom_edges</span><span class="p">,</span>
             <span class="n">mesh_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_filename</span><span class="p">,</span> <span class="n">section_name</span><span class="o">=</span><span class="n">section_name</span><span class="p">,</span>
-            <span class="n">gridded_dataset</span><span class="o">=</span><span class="s1">&#39;antarctica_8km_2024_01_29_floodFillMask.nc&#39;</span><span class="p">,</span>
+            <span class="n">gridded_dataset</span><span class="o">=</span><span class="n">bm_updated_gridded_dataset</span><span class="p">,</span>
             <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;ais-bedmap2&#39;</span><span class="p">,</span> <span class="n">geojson_file</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
+        <span class="c1"># Now that we have base mesh with standard interpolation</span>
+        <span class="c1"># perform advanced interpolation for specific fields</span>
+        <span class="c1"># that require more careful treatment</span>
+
+        <span class="c1"># Add iceMask for later trimming if not already in file.</span>
+        <span class="c1"># It should be automatically added as of MPAS-Tools commit</span>
+        <span class="c1"># df90de2c434ed24bbbaf9ca353c2a91de1140654</span>
+        <span class="c1"># Aug 8, 2022, but safest to double check here.</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_filename</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;iceMask&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;iceMask&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;nCells&#39;</span><span class="p">))</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;iceMask&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="c1"># interpolate fields from composite dataset</span>
+        <span class="c1"># Note: this was already done in build_mali_mesh() using</span>
+        <span class="c1"># bilinear interpolation.  Redoing it here again is likely</span>
+        <span class="c1"># not needed.  Also, it should be assessed if bilinear or</span>
+        <span class="c1"># barycentric used here is preferred for this application.</span>
+        <span class="c1"># Current thinking is they are both equally appropriate.</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;calling interpolate_to_mpasli_grid.py&#39;</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;interpolate_to_mpasli_grid.py&#39;</span><span class="p">,</span> <span class="s1">&#39;-s&#39;</span><span class="p">,</span>
+                <span class="n">preprocessed_gridded_dataset</span><span class="p">,</span>
+                <span class="s1">&#39;-d&#39;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mesh_filename</span><span class="p">,</span>
+                <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;-v&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;floatingBasalMassBal&#39;</span><span class="p">,</span> <span class="s1">&#39;basalHeatFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;sfcMassBal&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;surfaceAirTemperature&#39;</span><span class="p">,</span> <span class="s1">&#39;observedThicknessTendency&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;observedThicknessTendencyUncertainty&#39;</span><span class="p">,</span> <span class="s1">&#39;thickness&#39;</span><span class="p">]</span>
+        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+        <span class="c1"># Create scrip file for the newly generated mesh</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;creating scrip file for destination mesh&#39;</span><span class="p">)</span>
+        <span class="n">dst_scrip_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">_scrip.nc&quot;</span>
+        <span class="n">scrip_from_mpas</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_filename</span><span class="p">,</span> <span class="n">dst_scrip_file</span><span class="p">)</span>
+
+        <span class="c1"># Now perform bespoke interpolation of geometry and velocity data</span>
+        <span class="c1"># from their respective sources</span>
+        <span class="n">interp_ais_bedmachine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_path</span><span class="p">,</span> <span class="n">dst_scrip_file</span><span class="p">,</span> <span class="n">nProcs</span><span class="p">,</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">mesh_filename</span><span class="p">)</span>
+        <span class="n">interp_ais_measures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_path</span><span class="p">,</span> <span class="n">dst_scrip_file</span><span class="p">,</span> <span class="n">nProcs</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">mesh_filename</span><span class="p">)</span>
+
+        <span class="c1"># perform some final cleanup details</span>
+        <span class="n">clean_up_after_interp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_filename</span><span class="p">)</span>
+
+        <span class="c1"># create graph file</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;creating graph.info&#39;</span><span class="p">)</span>
         <span class="n">make_graph_file</span><span class="p">(</span><span class="n">mesh_filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_filename</span><span class="p">,</span>
                         <span class="n">graph_filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">)</span>

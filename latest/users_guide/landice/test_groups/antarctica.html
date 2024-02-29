@@ -158,44 +158,88 @@ mesh for Antarctica.</p>
 <h2>config options<a class="headerlink" href="#config-options" title="Link to this heading">¶</a></h2>
 <p>The test group uses the following default config options.  At this point only
 the mesh generation options are adjusted through the config file.</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[antarctica]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for antarctica test cases</span>
+<span class="k">[mesh]</span>
 
 <span class="c1"># number of levels in the mesh</span>
 <span class="na">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5</span>
 
+<span class="c1"># Bounds of Antarctic mesh</span>
+<span class="na">x_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-3333500.</span>
+<span class="na">x_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3330500.</span>
+<span class="na">y_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-3333500.</span>
+<span class="na">y_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3330500.</span>
+
 <span class="c1"># distance from ice margin to cull (km).</span>
 <span class="c1"># Set to a value &lt;= 0 if you do not want</span>
 <span class="c1"># to cull based on distance from margin.</span>
-<span class="na">cull_distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">70.0</span>
+<span class="na">cull_distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">50.0</span>
 
 <span class="c1"># mesh density parameters</span>
 <span class="c1"># minimum cell spacing (meters)</span>
-<span class="na">min_spac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8.e3</span>
+<span class="na">min_spac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4.e3</span>
 <span class="c1"># maximum cell spacing (meters)</span>
-<span class="na">max_spac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8.e4</span>
+<span class="na">max_spac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2.e4</span>
 <span class="c1"># log10 of max speed (m/yr) for cell spacing</span>
 <span class="na">high_log_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2.5</span>
 <span class="c1"># log10 of min speed (m/yr) for cell spacing</span>
-<span class="na">low_log_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.75</span>
-<span class="c1"># distance at which cell spacing = max_spac (meters)</span>
-<span class="na">high_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e5</span>
-<span class="c1"># distance within which cell spacing = min_spac (meters)</span>
-<span class="na">low_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e4</span>
+<span class="na">low_log_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.5</span>
+<span class="c1"># distance to ice edge or grounding line at which cell spacing = max_spac (meters)</span>
+<span class="na">high_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2.e5</span>
+<span class="c1"># distance to ice edge or grounding line within which cell spacing = min_spac (meters)</span>
+<span class="na">low_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4.e4</span>
+
+<span class="c1"># These will not be applied unless use_bed = True.</span>
+<span class="c1"># They are taken from the humboldt.mesh_gen test case</span>
+<span class="c1"># and have not been evaluated for Antarctica.</span>
+<span class="c1"># distance at which bed topography has no effect</span>
+<span class="na">high_dist_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e5</span>
+<span class="c1"># distance within which bed topography has maximum effect</span>
+<span class="na">low_dist_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">7.5e4</span>
+<span class="c1"># Bed elev beneath which cell spacing is minimized</span>
+<span class="na">low_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">50.0</span>
+<span class="c1"># Bed elev above which cell spacing is maximized</span>
+<span class="na">high_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100.0</span>
 
 <span class="c1"># mesh density functions</span>
 <span class="na">use_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
 <span class="na">use_dist_to_grounding_line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
 <span class="na">use_dist_to_edge</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+<span class="na">use_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+
+<span class="k">[antarctica]</span>
+<span class="c1"># path to directory containing BedMachine and Measures datasets</span>
+<span class="c1"># (default value is for Perlmutter)</span>
+<span class="na">data_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/standard_datasets/AIS_datasets</span>
+
+<span class="c1"># number of processors to use for ESMF_RegridWeightGen</span>
+<span class="na">nProcs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">128</span>
 </pre></div>
 </div>
 </section>
 <section id="mesh-gen">
 <h2>mesh_gen<a class="headerlink" href="#mesh-gen" title="Link to this heading">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">landice/antarctica/mesh_gen</span></code> creates a 8-80km variable resolution mesh with
+<p><code class="docutils literal notranslate"><span class="pre">landice/antarctica/mesh_gen</span></code> creates a 4-20km variable resolution mesh with
 the mesh file name <cite>Antarctica.nc</cite>. In addition, two region masks are
 generated based on the IMBIE1 (<a class="reference external" href="http://imbie.org/imbie-2016/drainage-basins/">http://imbie.org/imbie-2016/drainage-basins/</a>)
-and ISMIP6 basins (defined in Jourdain et al. 2020).
-There is no model integration step.</p>
+and ISMIP6 basins (defined in Jourdain et al. 2020).</p>
+<p>The test case performs interpolation of observational data from gridded datasets
+to the Antarctic mesh. This takes care of the peculiarities of the current gridded
+compilation dataset (antarctica_8km_2020_10_20.nc), as well as using conservative
+remapping directly from the high-resolution BedMachineAntarctica and MeASUReS
+velocity datasets. There is a fairly heavy degree of pre-processing done to get
+the BedMachine and MeASUReS datasets ready to be used here. The pre-processing
+includes renaming variables, setting reasonable _FillValue and missing_value
+attributes, extrapolating fields to avoid interpolation ramps at ice margins,
+updating mask values, and raising the bed topography at Lake Vostok to ensure
+a flat ice surface there.</p>
+<p>Those data files and processing scripts currently live here on Chicoma:
+<code class="docutils literal notranslate"><span class="pre">/usr/projects/climate/trhille/data</span></code>.
+Eventually that pre-processing could be integrated into a new step in COMPASS,
+or the processed data files could be added to the server on Anvil and downloaded
+as needed. However, until then, this test case provides a reproducible workflow
+for setting up Antarctic meshes at varying resolutions</p>
+<p>There is no model integration step.</p>
 </section>
 </section>
 
