@@ -62,7 +62,8 @@ class Viz(Step):
         for each resolution
         """
 
-        fig, ax = plt.subplots(nrows=len(points), ncols=1)
+        fig, ax = plt.subplots(nrows=len(points), ncols=1,
+                               figsize=(6, 2 * len(points)))
 
         for res in self.resolutions:
             ds = xr.open_dataset(f'output_{res}m.nc')
@@ -116,7 +117,7 @@ class Viz(Step):
             if i % plot_interval != 0:
                 continue
 
-            ncols = len(self.resolutions) + 1
+            ncols = len(self.resolutions)
             fig, ax = plt.subplots(nrows=1, ncols=ncols,
                                    figsize=(5 * ncols, 5),
                                    constrained_layout=True)

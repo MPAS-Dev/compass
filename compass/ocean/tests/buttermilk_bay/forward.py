@@ -41,7 +41,7 @@ class Forward(Step):
         self.add_namelist_file('compass.ocean.tests.buttermilk_bay',
                                'namelist.forward')
 
-        res_name = f'{resolution}km'
+        res_name = f'{resolution}m'
         self.add_namelist_file('compass.ocean.tests.buttermilk_bay',
                                f'namelist.{coord_type}.forward')
 
@@ -86,7 +86,7 @@ class Forward(Step):
         """
         Run this step of the testcase
         """
-        # update dt in case the user has changed dt_per_km
+        # update dt in case the user has changed dt_per_m
         dt = self.get_dt()
         self.update_namelist_at_runtime(options={'config_dt': dt},
                                         out_name='namelist.ocean')
@@ -116,7 +116,7 @@ class Forward(Step):
         """ get the these properties from the config options """
         config = self.config
         self.ntasks = config.getint('buttermilk_bay',
-                                    f'{self.resolution}km_ntasks')
+                                    f'{self.resolution}m_ntasks')
         self.min_tasks = config.getint('buttermilk_bay',
-                                       f'{self.resolution}km_min_tasks')
+                                       f'{self.resolution}m_min_tasks')
         self.openmp_threads = 1

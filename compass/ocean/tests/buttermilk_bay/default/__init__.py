@@ -80,7 +80,7 @@ class Default(TestCase):
             min_tasks = max(1,
                             round(approx_cells / max_cells_per_core))
 
-            res_name = f'{resolution}km'
+            res_name = f'{resolution}m'
             step = self.steps[f'forward_{res_name}']
             step.ntasks = ntasks
             step.min_tasks = min_tasks
@@ -98,7 +98,7 @@ class Default(TestCase):
 
         # set the default values that a user may change before setup
         config.set('buttermilk_bay', 'resolutions', default_resolutions,
-                   comment='a list of resolutions (km) to test')
+                   comment='a list of resolutions (m) to test')
 
         # get the resolutions back, perhaps with values set in the user's
         # config file
@@ -116,7 +116,7 @@ class Default(TestCase):
 
         for resolution in self.resolutions:
 
-            res_name = f'{resolution}km'
+            res_name = f'{resolution}m'
 
             init_step = InitialState(test_case=self,
                                      name=f'initial_state_{res_name}',
@@ -139,4 +139,4 @@ class Default(TestCase):
         variables = ['layerThickness', 'normalVelocity']
         for res in self.resolutions:
             compare_variables(test_case=self, variables=variables,
-                              filename1=f'forward_{res}km/output.nc')
+                              filename1=f'forward_{res}m/output.nc')
