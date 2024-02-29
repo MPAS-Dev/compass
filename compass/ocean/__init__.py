@@ -1,5 +1,6 @@
 from compass.mpas_core import MpasCore
 from compass.ocean.tests.baroclinic_channel import BaroclinicChannel
+from compass.ocean.tests.buttermilk_bay import ButtermilkBay
 from compass.ocean.tests.dam_break import DamBreak
 from compass.ocean.tests.drying_slope import DryingSlope
 from compass.ocean.tests.global_convergence import GlobalConvergence
@@ -37,6 +38,7 @@ class Ocean(MpasCore):
         super().__init__(name='ocean')
 
         self.add_test_group(BaroclinicChannel(mpas_core=self))
+        self.add_test_group(ButtermilkBay(mpas_core=self))
         self.add_test_group(DamBreak(mpas_core=self))
         self.add_test_group(DryingSlope(mpas_core=self))
         self.add_test_group(GlobalConvergence(mpas_core=self))

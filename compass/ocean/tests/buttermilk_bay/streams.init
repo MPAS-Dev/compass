@@ -1,0 +1,55 @@
+<streams>
+
+<immutable_stream name="input_init"
+                  filename_template="culled_mesh.nc"/>
+
+<stream name="output_init"
+        type="output"
+        output_interval="0000_00:00:01"
+        clobber_mode="truncate"
+        filename_template="ocean.nc">
+
+    <stream name="input_init"/>
+    <var name="refZMid"/>
+    <var name="normalVelocity"/>
+    <var name="layerThickness"/>
+    <var name="restingThickness"/>
+    <var name="boundaryLayerDepth"/>
+    <var name="refBottomDepth"/>
+    <var name="bottomDepth"/>
+    <var name="bottomDepthObserved"/>
+    <var name="minLevelCell"/>
+    <var name="maxLevelCell"/>
+    <var name="vertCoordMovementWeights"/>
+    <var name="edgeMask"/>
+    <var name="ssh"/>
+    <var name="fEdge"/>
+    <var name="fCell"/>
+    <var name="fVertex"/>
+    <var name="subgridWetVolumeCellTable"/>
+    <var name="subgridWetVolumeEdgeTable"/>
+    <var name="subgridWetVolumeVertexTable"/>
+    <var name="subgridWetFractionCellTable"/>
+    <var name="subgridWetFractionEdgeTable"/>
+    <var name="subgridWetFractionVertexTable"/>
+    <var name="subgridSshCellTableRange"/>
+    <var name="subgridSshEdgeTableRange"/>
+    <var name="subgridSshVertexTableRange"/>
+    <var name="subgridEdgeBathymetryMean"/>
+    <var name="subgridVertexBathymetryMean"/>
+    <var name="subgridCellBathymetryMin"/>
+    <var name="subgridEdgeBathymetryMin"/>
+    <var name="subgridVertexBathymetryMin"/>
+    <var name="subgridLayerThicknessDebug"/>
+</stream>
+
+<stream name="forcing_data_init"
+        type="output"
+        filename_template="init_mode_forcing_data.nc"
+        clobber_mode="truncate"
+        output_interval="0000-00-00_00:00:01">
+
+    <var name="tidalInputMask"/>
+</stream>
+
+</streams>
