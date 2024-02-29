@@ -48,6 +48,8 @@ class Forward(Step):
         if wetdry == 'subgrid':
             self.add_namelist_file('compass.ocean.tests.buttermilk_bay',
                                    'namelist.subgrid.forward')
+            self.add_streams_file('compass.ocean.tests.buttermilk_bay',
+                                  'streams.subgrid.forward')
         else:
             self.add_streams_file('compass.ocean.tests.buttermilk_bay',
                                   'streams.forward')
@@ -58,6 +60,8 @@ class Forward(Step):
                             target=f'{input_path}/ocean.nc')
         self.add_input_file(filename='graph.info',
                             target=f'{input_path}/culled_graph.info')
+        self.add_input_file(filename='forcing.nc',
+                            target=f'{input_path}/init_mode_forcing_data.nc')
 
         self.add_model_as_input()
 
