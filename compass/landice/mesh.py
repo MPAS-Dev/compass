@@ -1124,6 +1124,7 @@ def interp_ais_measures(self, data_path, mali_scrip, nProcs, dest_file):
             '-v', 'observedSurfaceVelocityX',
                   'observedSurfaceVelocityY',
                   'observedSurfaceVelocityUncertainty']
+    check_call(args, logger=logger)
 
 
 def clean_up_after_interp(fname):
@@ -1137,7 +1138,7 @@ def clean_up_after_interp(fname):
     """
 
     # Create a backup in case clean-up goes awry
-    backup_name = f"{fname.split('.')[:-1][0]}_backup,nc"
+    backup_name = f"{fname.split('.')[:-1][0]}_backup.nc"
     copyfile(fname, backup_name)
 
     # Clean up: trim to iceMask and set large velocity
