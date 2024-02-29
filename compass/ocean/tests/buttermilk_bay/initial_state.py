@@ -64,11 +64,6 @@ class InitialState(Step):
             options = {'config_buttermilk_bay_vert_levels': f'{vert_levels}'}
         self.update_namelist_at_runtime(options)
 
-        # Set test case parameters
-        coriolis = config.get('buttermilk_bay', 'coriolis_parameter')
-        options = {'config_buttermilk_bay_Coriolis_parameter': coriolis}
-        self.update_namelist_at_runtime(options)
-
         # Determine mesh parameters
         Lx = config.getint('buttermilk_bay', 'Lx')
         Ly = config.getint('buttermilk_bay', 'Ly')

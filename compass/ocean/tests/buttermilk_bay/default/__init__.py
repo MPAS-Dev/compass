@@ -94,7 +94,7 @@ class Default(TestCase):
     def _setup_steps(self, config):
         """ setup steps given resolutions """
 
-        default_resolutions = '256, 128'
+        default_resolutions = '256, 128, 64'
 
         # set the default values that a user may change before setup
         config.set('buttermilk_bay', 'resolutions', default_resolutions,
