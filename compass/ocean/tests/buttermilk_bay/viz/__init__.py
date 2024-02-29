@@ -16,6 +16,11 @@ class Viz(Step):
 
     Attributes
     ----------
+    wetdry : str
+        The wetting and drying approach used
+
+     resolutions : list
+         The grid resolutions run for this case
     """
     def __init__(self, test_case, wetdry, resolutions):
         """
@@ -25,6 +30,12 @@ class Viz(Step):
         ----------
         test_case : compass.TestCase
             The test case this step belongs to
+
+        wetdry : str
+            The wetting and drying approach used
+
+         resolutions : list
+             The grid resolutions run for this case
         """
         super().__init__(test_case=test_case, name='viz')
 
@@ -142,7 +153,7 @@ class Viz(Step):
             cb = fig.colorbar(cm, ax=ax[-1], shrink=0.6)
             cb.set_label('ssh (m)')
             t = round((time[i] - time[0]).total_seconds() / 86400., 2)
-            fig.suptitle((f'Buttermilk Bay ({self.wetdry})'
+            fig.suptitle((f'Buttermilk Bay ({self.wetdry}) '
                           f'ssh solution at t={t} days'))
             fig.savefig(f'solution_{i:03d}.png')
             plt.close()
