@@ -8,6 +8,7 @@ Test groups
    :titlesonly:
 
    baroclinic_channel
+   buttermilk_bay
    dam_break
    drying_slope
    global_convergence
