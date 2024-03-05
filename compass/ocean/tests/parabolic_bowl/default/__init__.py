@@ -17,6 +17,15 @@ class Default(TestCase):
     ----------
     ramp_type : str
         The type of vertical coordinate (``ramp``, ``noramp``, etc.)
+
+    wetdry : str
+        The type of wetting and drying used (``standard``, ``subgrid``)
+
+    use_lts : bool
+        Whether local time-stepping is used
+
+    resolutions : list
+        List of resolutions to run
     """
 
     def __init__(self, test_group, ramp_type, wetdry, use_lts):

@@ -20,6 +20,18 @@ class InitialState(Step):
         ----------
         test_case : compass.ocean.tests.parabolic_bowl.default.Default
             The test case this step belongs to
+
+        name : str
+            The name of the test case
+
+        resolution : float
+            The grid resolution of the test case
+
+         coord_type : str
+             The type vertical coordinate used
+
+         wetdry : str
+             The wetting and drying approach used
         """
         self.coord_type = coord_type
         self.resolution = resolution
