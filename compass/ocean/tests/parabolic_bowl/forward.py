@@ -38,6 +38,9 @@ class Forward(Step):
 
         ramp_type : str, optional
             Vertical coordinate configuration
+
+        wetdry : str, optional
+            The wetting and drying approach uesd
         """
 
         self.resolution = resolution
