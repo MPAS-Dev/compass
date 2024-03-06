@@ -10,7 +10,7 @@ class RestartTest(TestCase):
     test case verifies that the results of the two runs are identical.
     """
 
-    def __init__(self, test_group, depth_integrated=False):
+    def __init__(self, test_group, advection_type, depth_integrated=False):
         """
         Create the test case
 
@@ -25,10 +25,11 @@ class RestartTest(TestCase):
         """
 
         if depth_integrated is True:
-            name = 'fo-depthInt_restart_test'
+            name_tmp = 'fo-depthInt_restart_test'
         else:
-            name = 'fo_restart_test'
+            name_tmp = 'fo_restart_test'
 
+        name = f'{advection_type}_{name_tmp}'
         super().__init__(test_group=test_group, name=name)
 
         ntasks = 36
@@ -42,6 +43,11 @@ class RestartTest(TestCase):
         step.add_namelist_file(
             'compass.landice.tests.thwaites.restart_test',
             'namelist.full', out_name='namelist.landice')
+        if advection_type == 'fct':
+            step.add_namelist_options(
+                {'config_thickness_advection': "'fct'",
+                 'config_tracer_advection': "'fct'"},
+                out_name='namelist.landice')
         step.add_streams_file(
             'compass.landice.tests.thwaites.restart_test',
             'streams.full', out_name='streams.landice')
@@ -57,6 +63,11 @@ class RestartTest(TestCase):
         step.add_namelist_file(
             'compass.landice.tests.thwaites.restart_test',
             'namelist.restart', out_name='namelist.landice')
+        if advection_type == 'fct':
+            step.add_namelist_options(
+                {'config_thickness_advection': "'fct'",
+                 'config_tracer_advection': "'fct'"},
+                out_name='namelist.landice')
         step.add_streams_file(
             'compass.landice.tests.thwaites.restart_test',
             'streams.restart', out_name='streams.landice')
@@ -64,6 +75,11 @@ class RestartTest(TestCase):
         step.add_namelist_file(
             'compass.landice.tests.thwaites.restart_test',
             'namelist.restart.rst', out_name='namelist.landice.rst')
+        if advection_type == 'fct':
+            step.add_namelist_options(
+                {'config_thickness_advection': "'fct'",
+                 'config_tracer_advection': "'fct'"},
+                out_name='namelist.landice.rst')
         # same streams file for both restart stages
         step.add_streams_file(
             'compass.landice.tests.thwaites.restart_test',
