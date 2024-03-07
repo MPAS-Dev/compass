@@ -815,7 +815,7 @@ def make_region_masks(self, mesh_filename, mask_filename, cores, tags):
             '-m', mesh_filename,
             '-g', geojson_filename,
             '-o', mask_filename,
-            '-t', 'cell',
+            '-t', 'cell', 'edge',
             '--process_count', f'{cores}',
             '--format', mpas_tools.io.default_format,
             '--engine', mpas_tools.io.default_engine]
