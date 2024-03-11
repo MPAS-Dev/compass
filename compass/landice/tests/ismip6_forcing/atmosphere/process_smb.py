@@ -1,11 +1,14 @@
 import os
-import numpy as np
 import shutil
+
+import numpy as np
 import xarray as xr
-from compass.landice.tests.ismip6_forcing.atmosphere.create_mapfile_smb \
-    import build_mapping_file
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
+
+from compass.landice.tests.ismip6_forcing.atmosphere.create_mapfile_smb import (  # noqa: E501
+    build_mapping_file,
+)
 from compass.step import Step
 
 
@@ -43,14 +46,16 @@ class ProcessSMB(Step):
         period_endyear = section.get("period_endyear")
         model = section.get("model")
         scenario = section.get("scenario")
-        res_ismip6 = section.get("res_ismip6")
+        # test case specific configurations
+        section = config["ismip6_ais_atmosphere"]
+        data_res = section.get("data_resolution")
 
         self.add_input_file(filename=mali_mesh_file,
                             target=os.path.join(base_path_mali,
                                                 mali_mesh_file))
 
         input_file_list = \
-            self._files[period_endyear][model][scenario][res_ismip6]
+            self._files[period_endyear][model][scenario][data_res]
 
         for file in input_file_list:
             self.add_input_file(filename=os.path.basename(file),
@@ -84,11 +89,11 @@ class ProcessSMB(Step):
         period_endyear = section.get("period_endyear")
         model = section.get("model")
         scenario = section.get("scenario")
-        res_ismip6 = section.get("res_ismip6")
         output_base_path = section.get("output_base_path")
 
         section = config["ismip6_ais_atmosphere"]
         method_remap = section.get("method_remap")
+        data_res = section.get("data_resolution")
 
         # define file names needed
         # input racmo climotology file
@@ -103,7 +108,7 @@ class ProcessSMB(Step):
                              "but it is required as an input file "
                              "to run this step. Please run `process_smb_racmo`"
                              "step prior to running this step by setting"
-                             "the config option 'process_smb_racmo' to 'True'.")
+                             "the config option 'process_smb_racmo' to 'True'")
 
         # temporary remapped climatology and anomaly files
         clim_ismip6_temp = "clim_ismip6.nc"
@@ -118,7 +123,7 @@ class ProcessSMB(Step):
         # combine ismip6 forcing data covering different periods
         # into a single file
         input_file_list = \
-            self._files[period_endyear][model][scenario][res_ismip6]
+            self._files[period_endyear][model][scenario][data_res]
 
         i = 0
         for file in input_file_list:
@@ -138,7 +143,7 @@ class ProcessSMB(Step):
         # smb anomaly files on which climatology is calculated.
         logger.info(f"Calculating climatology for {model}_{scenario} forcing"
                     f"over 1995-2017")
-        args = [f"ncra", "-O", "-F", "-d", "time,1,23",
+        args = ["ncra", "-O", "-F", "-d", "time,1,23",
                 f"{combined_file_temp}",
                 f"{clim_ismip6_temp}"]
 
@@ -198,7 +203,7 @@ class ProcessSMB(Step):
         dst = os.path.join(output_path, output_anomaly_ismip6)
         shutil.copy(src, dst)
 
-        logger.info(f"!---Done processing the file---!")
+        logger.info("!---Done processing the file---!")
 
     def remap_ismip6_smb_to_mali(self, input_file, output_file, mali_mesh_name,
                                  mali_mesh_file, method_remap):
@@ -330,147 +335,148 @@ class ProcessSMB(Step):
         ds["sfcMassBal"] = ds["sfcMassBal"] + corr_clim
 
         # write metadata
-        ds["sfcMassBal"].attrs = {"long_name" : "surface mass balance",
-                                  "units" : "kg m-2 s-1",
-                                  "coordinates" : "lat lon"}
+        ds["sfcMassBal"].attrs = {"long_name": "surface mass balance",
+                                  "units": "kg m-2 s-1",
+                                  "coordinates": "lat lon"}
 
         # write to a new netCDF file
         write_netcdf(ds, output_file_final)
         ds.close()
 
-    # create a nested dictionary for the ISMIP6 original forcing files including relative path
-    # Note: these files needed to be explicitly listed because of inconsistencies that are
-    # present in file naming conventions in the ISMIP6 source dataset.
+    # create a nested dictionary for the ISMIP6 original forcing files
+    # including relative path. Note: these files needed to be explicitly
+    # listed because of inconsistencies that are present in file naming
+    # conventions in the ISMIP6 source dataset.
     _files = {
         "2100": {
             "CCSM4": {
                 "RCP85": [
-                    "AIS/Atmosphere_Forcing/ccsm4_rcp8.5/Regridded_8km/CCSM4_8km_anomaly_1995-2100.nc"]
+                    "AIS/Atmosphere_Forcing/ccsm4_rcp8.5/Regridded_8km/CCSM4_8km_anomaly_1995-2100.nc"]  # noqa: E501
             },
             "CESM2": {
                 "SSP585v1": [
-                    "AIS/Atmosphere_Forcing/CESM2_ssp585/Regridded_8km/CESM2_anomaly_ssp585_1995-2100_8km_v1.nc"],
+                    "AIS/Atmosphere_Forcing/CESM2_ssp585/Regridded_8km/CESM2_anomaly_ssp585_1995-2100_8km_v1.nc"],  # noqa: E501
                 "SSP585v2": [
-                    "AIS/Atmosphere_Forcing/CESM2_ssp585/Regridded_8km/CESM2_anomaly_ssp585_1995-2100_8km_v2.nc"]
+                    "AIS/Atmosphere_Forcing/CESM2_ssp585/Regridded_8km/CESM2_anomaly_ssp585_1995-2100_8km_v2.nc"]  # noqa: E501
             },
             "CNRM_CM6": {
                 "SSP126": [
-                    "AIS/Atmosphere_Forcing/CNRM_CM6_ssp126/Regridded_8km/CNRM-CM6-1_anomaly_ssp126_1995-2100_8km_ISMIP6.nc"],
+                    "AIS/Atmosphere_Forcing/CNRM_CM6_ssp126/Regridded_8km/CNRM-CM6-1_anomaly_ssp126_1995-2100_8km_ISMIP6.nc"],  # noqa: E501
                 "SSP585": [
-                    "AIS/Atmosphere_Forcing/CNRM_CM6_ssp585/Regridded_8km/CNRM-CM6-1_anomaly_ssp585_1995-2100_8km_ISMIP6.nc"]
+                    "AIS/Atmosphere_Forcing/CNRM_CM6_ssp585/Regridded_8km/CNRM-CM6-1_anomaly_ssp585_1995-2100_8km_ISMIP6.nc"]  # noqa: E501
             },
             "CNRM_ESM2": {
                 "SSP585": [
-                    "AIS/Atmosphere_Forcing/CNRM_ESM2_ssp585/Regridded_8km/CNRM-ESM2-1_anomaly_ssp585_1995-2100_8km_ISMIP6.nc"]
+                    "AIS/Atmosphere_Forcing/CNRM_ESM2_ssp585/Regridded_8km/CNRM-ESM2-1_anomaly_ssp585_1995-2100_8km_ISMIP6.nc"]  # noqa: E501
             },
             "CSIRO-Mk3-6-0": {
                 "RCP85": [
-                    "AIS/Atmosphere_Forcing/CSIRO-Mk3-6-0_rcp85/Regridded_8km/CSIRO-Mk3-6-0_8km_anomaly_rcp85_1995-2100.nc"]
+                    "AIS/Atmosphere_Forcing/CSIRO-Mk3-6-0_rcp85/Regridded_8km/CSIRO-Mk3-6-0_8km_anomaly_rcp85_1995-2100.nc"]  # noqa: E501
             },
             "HadGEM2-ES": {
                 "RCP85": [
-                    "AIS/Atmosphere_Forcing/HadGEM2-ES_rcp85/Regridded_8km/HadGEM2-ES_8km_anomaly_rcp85_1995-2100.nc"]
+                    "AIS/Atmosphere_Forcing/HadGEM2-ES_rcp85/Regridded_8km/HadGEM2-ES_8km_anomaly_rcp85_1995-2100.nc"]  # noqa: E501
             },
             "IPSL-CM5A-MR": {
                 "RCP26": [
-                    "AIS/Atmosphere_Forcing/IPSL-CM5A-MR_rcp26/Regridded_8km/IPSL-CM5A-MR_8km_anomaly_rcp26_1995-2100.nc"],
+                    "AIS/Atmosphere_Forcing/IPSL-CM5A-MR_rcp26/Regridded_8km/IPSL-CM5A-MR_8km_anomaly_rcp26_1995-2100.nc"],  # noqa: E501
                 "RCP85": [
-                    "AIS/Atmosphere_Forcing/IPSL-CM5A-MR_rcp85/Regridded_8km/IPSL-CM5A-MR_8km_anomaly_rcp85_1995-2100.nc"]
+                    "AIS/Atmosphere_Forcing/IPSL-CM5A-MR_rcp85/Regridded_8km/IPSL-CM5A-MR_8km_anomaly_rcp85_1995-2100.nc"]  # noqa: E501
             },
             "MIROC-ESM-CHEM": {
                 "RCP85": [
-                    "AIS/Atmosphere_Forcing/miroc-esm-chem_rcp8.5/Regridded_8km/MIROC-ESM-CHEM_8km_anomaly_1995-2100.nc"]
+                    "AIS/Atmosphere_Forcing/miroc-esm-chem_rcp8.5/Regridded_8km/MIROC-ESM-CHEM_8km_anomaly_1995-2100.nc"]  # noqa: E501
             },
             "NorESM1-M": {
                 "RCP26": [
-                    "AIS/Atmosphere_Forcing/noresm1-m_rcp2.6/Regridded_8km/NorESM-M_8km_anomaly_rcp26_1995-2100.nc"],
+                    "AIS/Atmosphere_Forcing/noresm1-m_rcp2.6/Regridded_8km/NorESM-M_8km_anomaly_rcp26_1995-2100.nc"],  # noqa: E501
                 "RCP85": [
-                    "AIS/Atmosphere_Forcing/noresm1-m_rcp8.5/Regridded_8km/NorESM-M_8km_anomaly_1995-2100.nc"]
+                    "AIS/Atmosphere_Forcing/noresm1-m_rcp8.5/Regridded_8km/NorESM-M_8km_anomaly_1995-2100.nc"]  # noqa: E501
             },
             "UKESM1-0-LL": {
                 "SSP585": [
-                    "AIS/Atmosphere_Forcing/UKESM1-0-LL/Regridded_8km/UKESM1-0-LL_anomaly_ssp585_1995-2100_8km.nc"]
+                    "AIS/Atmosphere_Forcing/UKESM1-0-LL/Regridded_8km/UKESM1-0-LL_anomaly_ssp585_1995-2100_8km.nc"]  # noqa: E501
             }
         },
         "2300": {
             "CCSM4": {
                 "RCP85": {
                     "4km": [
-                        "AIS/Atmospheric_forcing/CCSM4_RCP85/Regridded_04km/CCSM4_4km_anomaly_1995-2100.nc",
-                        "AIS/Atmospheric_forcing/CCSM4_RCP85/Regridded_04km/CCSM4_4km_anomaly_2101-2300.nc"],
+                        "AIS/Atmospheric_forcing/CCSM4_RCP85/Regridded_04km/CCSM4_4km_anomaly_1995-2100.nc",  # noqa: E501
+                        "AIS/Atmospheric_forcing/CCSM4_RCP85/Regridded_04km/CCSM4_4km_anomaly_2101-2300.nc"],  # noqa: E501
                     "8km": [
-                        "AIS/Atmospheric_forcing/CCSM4_RCP85/Regridded_08km/CCSM4_8km_anomaly_1995-2100.nc",
-                        "AIS/Atmospheric_forcing/CCSM4_RCP85/Regridded_08km/CCSM4_8km_anomaly_2101-2300.nc"]
+                        "AIS/Atmospheric_forcing/CCSM4_RCP85/Regridded_08km/CCSM4_8km_anomaly_1995-2100.nc",  # noqa: E501
+                        "AIS/Atmospheric_forcing/CCSM4_RCP85/Regridded_08km/CCSM4_8km_anomaly_2101-2300.nc"]  # noqa: E501
                 },
             },
             "CESM2-WACCM": {
                 "SSP585": {
                     "4km": [
-                        "AIS/Atmospheric_forcing/CESM2-WACCM_ssp585/Regridded_4km/CESM2-WACCM_4km_anomaly_ssp585_1995-2100.nc",
-                        "AIS/Atmospheric_forcing/CESM2-WACCM_ssp585/Regridded_4km/CESM2-WACCM_4km_anomaly_ssp585_2101-2299.nc"],
+                        "AIS/Atmospheric_forcing/CESM2-WACCM_ssp585/Regridded_4km/CESM2-WACCM_4km_anomaly_ssp585_1995-2100.nc",  # noqa: E501
+                        "AIS/Atmospheric_forcing/CESM2-WACCM_ssp585/Regridded_4km/CESM2-WACCM_4km_anomaly_ssp585_2101-2299.nc"],  # noqa: E501
                     "8km": [
-                        "AIS/Atmospheric_forcing/CESM2-WACCM_ssp585/Regridded_8km/CESM2-WACCM_8km_anomaly_ssp585_1995-2100.nc",
-                        "AIS/Atmospheric_forcing/CESM2-WACCM_ssp585/Regridded_8km/CESM2-WACCM_8km_anomaly_ssp585_2101-2299.nc"]
+                        "AIS/Atmospheric_forcing/CESM2-WACCM_ssp585/Regridded_8km/CESM2-WACCM_8km_anomaly_ssp585_1995-2100.nc",  # noqa: E501
+                        "AIS/Atmospheric_forcing/CESM2-WACCM_ssp585/Regridded_8km/CESM2-WACCM_8km_anomaly_ssp585_2101-2299.nc"]  # noqa: E501
                 },
                 "SSP585-repeat": {
                     "4km": [
-                        "AIS/Atmospheric_forcing/CESM2-WACCM_ssp585-repeat/Regridded_4km/CESM2-WACCM_4km_anomaly_ssp585_1995-2300_v2.nc"],
+                        "AIS/Atmospheric_forcing/CESM2-WACCM_ssp585-repeat/Regridded_4km/CESM2-WACCM_4km_anomaly_ssp585_1995-2300_v2.nc"],  # noqa: E501
                     "8km": [
-                        "AIS/Atmospheric_forcing/CESM2-WACCM_ssp585-repeat/Regridded_8km/CESM2-WACCM_8km_anomaly_ssp585_1995-2300_v2.nc"]
+                        "AIS/Atmospheric_forcing/CESM2-WACCM_ssp585-repeat/Regridded_8km/CESM2-WACCM_8km_anomaly_ssp585_1995-2300_v2.nc"]  # noqa: E501
                 },
             },
             "HadGEM2-ES": {
                 "RCP85": {
                     "4km": [
-                        "AIS/Atmospheric_forcing/HadGEM2-ES_RCP85/Regridded_4km/HadGEM2-ES_4km_anomaly_rcp85_1995-2100.nc",
-                        "AIS/Atmospheric_forcing/HadGEM2-ES_RCP85/Regridded_4km/HadGEM2-ES_4km_anomaly_rcp85_2101-2299.nc"],
+                        "AIS/Atmospheric_forcing/HadGEM2-ES_RCP85/Regridded_4km/HadGEM2-ES_4km_anomaly_rcp85_1995-2100.nc",  # noqa: E501
+                        "AIS/Atmospheric_forcing/HadGEM2-ES_RCP85/Regridded_4km/HadGEM2-ES_4km_anomaly_rcp85_2101-2299.nc"],  # noqa: E501
                     "8km": [
-                        "AIS/Atmospheric_forcing/HadGEM2-ES_RCP85/Regridded_8km/HadGEM2-ES_8km_anomaly_rcp85_1995-2100.nc",
-                        "AIS/Atmospheric_forcing/HadGEM2-ES_RCP85/Regridded_8km/HadGEM2-ES_8km_anomaly_rcp85_2101-2299.nc"]
+                        "AIS/Atmospheric_forcing/HadGEM2-ES_RCP85/Regridded_8km/HadGEM2-ES_8km_anomaly_rcp85_1995-2100.nc",  # noqa: E501
+                        "AIS/Atmospheric_forcing/HadGEM2-ES_RCP85/Regridded_8km/HadGEM2-ES_8km_anomaly_rcp85_2101-2299.nc"]  # noqa: E501
                 },
                 "RCP85-repeat": {
                     "4km": [
-                        "AIS/Atmospheric_forcing/HadGEM2-ES-RCP85-repeat/Regridded_4km/HadGEM2-ES_4km_anomaly_rcp85_1995-2300_v2.nc"],
+                        "AIS/Atmospheric_forcing/HadGEM2-ES-RCP85-repeat/Regridded_4km/HadGEM2-ES_4km_anomaly_rcp85_1995-2300_v2.nc"],  # noqa: E501
                     "8km": [
-                        "AIS/Atmospheric_forcing/HadGEM2-ES-RCP85-repeat/Regridded_8km/HadGEM2-ES_8km_anomaly_rcp85_1995-2300_v2.nc"]
+                        "AIS/Atmospheric_forcing/HadGEM2-ES-RCP85-repeat/Regridded_8km/HadGEM2-ES_8km_anomaly_rcp85_1995-2300_v2.nc"]  # noqa: E501
                 },
             },
             "NorESM1-M": {
                 "RCP26-repeat": {
                     "4km": [
-                        "AIS/Atmospheric_forcing/NorESM1-M_RCP26-repeat/Regridded_4km/NorESM1-M_4km_anomaly_rcp26_1995-2300_v3.nc"],
+                        "AIS/Atmospheric_forcing/NorESM1-M_RCP26-repeat/Regridded_4km/NorESM1-M_4km_anomaly_rcp26_1995-2300_v3.nc"],  # noqa: E501
                     "8km": [
-                        "AIS/Atmospheric_forcing/NorESM1-M_RCP26-repeat/Regridded_8km/NorESM1-M_8km_anomaly_rcp26_1995-2300_v2.nc"]
+                        "AIS/Atmospheric_forcing/NorESM1-M_RCP26-repeat/Regridded_8km/NorESM1-M_8km_anomaly_rcp26_1995-2300_v2.nc"]  # noqa: E501
                 },
                 "RCP85-repeat": {
                     "4km": [
-                        "AIS/Atmospheric_forcing/NorESM1-M_RCP85-repeat/Regridded_4km/NorESM1-M_4km_anomaly_1995-2300_v2.nc"],
+                        "AIS/Atmospheric_forcing/NorESM1-M_RCP85-repeat/Regridded_4km/NorESM1-M_4km_anomaly_1995-2300_v2.nc"],  # noqa: E501
                     "8km": [
-                        "AIS/Atmospheric_forcing/NorESM1-M_RCP85-repeat/Regridded_8km/NorESM1-M_8km_anomaly_1995-2300_v2.nc"]
+                        "AIS/Atmospheric_forcing/NorESM1-M_RCP85-repeat/Regridded_8km/NorESM1-M_8km_anomaly_1995-2300_v2.nc"]  # noqa: E501
                 },
             },
             "UKESM1-0-LL": {
                 "SSP126": {
                     "4km": [
-                        "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp126/Regridded_4km/UKESM1-0-LL_4km_anomaly_ssp126_1995-2100.nc",
-                        "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp126/Regridded_4km/UKESM1-0-LL_4km_anomaly_ssp126_2101-2300.nc"],
+                        "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp126/Regridded_4km/UKESM1-0-LL_4km_anomaly_ssp126_1995-2100.nc",  # noqa: E501
+                        "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp126/Regridded_4km/UKESM1-0-LL_4km_anomaly_ssp126_2101-2300.nc"],  # noqa: E501
                     "8km": [
-                        "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp126/Regridded_8km/UKESM1-0-LL_8km_anomaly_ssp126_1995-2100.nc",
-                        "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp126/Regridded_8km/UKESM1-0-LL_8km_anomaly_ssp126_2101-2300.nc"]
+                        "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp126/Regridded_8km/UKESM1-0-LL_8km_anomaly_ssp126_1995-2100.nc",  # noqa: E501
+                        "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp126/Regridded_8km/UKESM1-0-LL_8km_anomaly_ssp126_2101-2300.nc"]  # noqa: E501
                 },
                 "SSP585": {
                     "4km": [
-                        "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585/Regridding_4km/UKESM1-0-LL_4km_anomaly_ssp585_1995-2100.nc",
-                        "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585/Regridding_4km/UKESM1-0-LL_4km_anomaly_ssp585_2101-2300.nc"],
+                        "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585/Regridding_4km/UKESM1-0-LL_4km_anomaly_ssp585_1995-2100.nc",  # noqa: E501
+                        "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585/Regridding_4km/UKESM1-0-LL_4km_anomaly_ssp585_2101-2300.nc"],  # noqa: E501
                     "8km": [
-                        "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585/Regridding_8km/UKESM1-0-LL_8km_anomaly_ssp585_1995-2100.nc",
-                        "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585/Regridding_8km/UKESM1-0-LL_8km_anomaly_ssp585_2101-2300.nc"]
+                        "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585/Regridding_8km/UKESM1-0-LL_8km_anomaly_ssp585_1995-2100.nc",  # noqa: E501
+                        "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585/Regridding_8km/UKESM1-0-LL_8km_anomaly_ssp585_2101-2300.nc"]  # noqa: E501
                 },
                 "SSP585-repeat": {
                     "4km": [
-                        "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585-repeat/Regridding_4km/UKESM1-0-LL_4km_anomaly_ssp585_1995-2300_v2.nc"],
+                        "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585-repeat/Regridding_4km/UKESM1-0-LL_4km_anomaly_ssp585_1995-2300_v2.nc"],  # noqa: E501
                     "8km": [
-                        "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585-repeat/Regridding_8km/UKESM1-0-LL_8km_anomaly_ssp585_1995-2300_v2.nc"]
+                        "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585-repeat/Regridding_8km/UKESM1-0-LL_8km_anomaly_ssp585_1995-2300_v2.nc"]  # noqa: E501
                 }
             }
         }

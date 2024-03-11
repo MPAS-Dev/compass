@@ -1,11 +1,14 @@
 import os
 import shutil
+
 import numpy as np
 import xarray as xr
-from compass.landice.tests.ismip6_forcing.atmosphere.create_mapfile_smb \
-    import build_mapping_file
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
+
+from compass.landice.tests.ismip6_forcing.atmosphere.create_mapfile_smb import (  # noqa: E501
+    build_mapping_file,
+)
 from compass.step import Step
 
 
@@ -39,21 +42,30 @@ class ProcessShelfCollapse(Step):
         period_endyear = section.get("period_endyear")
         model = section.get("model")
         scenario = section.get("scenario")
-        res_ismip6 = section.get("res_ismip6")
         mali_mesh_name = section.get("mali_mesh_name")
         mali_mesh_file = section.get("mali_mesh_file")
+        # test case specific configurations
+        section = config["ismip6_ais_shelf_collapse"]
+        data_res = section.get("data_resolution")
 
-        model_list_2300 = ["CCSM4", "CESM2-WACCM","HadGEM2-ES","UKESM1-0-LL"]
-        if period_endyear != 2300 and model not in model_list_2300:
-            raise ValueError(f"ice shelf-collapse masks are provided by the "
-                             f"ISMIP6 only for CCSM4-RCP85, "
-                             f"CESM2-WACCM-SSP585,HadGEM2-ES-RCP85, "
-                             f"UKESM1-0-LL-SSP585 model&scenarios. Please "
-                             f"set up the correct config options in "
-                             f"the config file.")
+        # create string for requested configuration (i.e. model / scenario)
+        model_option = "-".join([model, scenario])
+        model_options = ["CCSM4-RCP85", "CESM2-WACCM-SSP585",
+                         "HadGEM2-ES-RCP85", "UKESM1-0-LL-SSP585"]
+        # this is string comparison b/c `period_endyear` is a dictionary key
+        if period_endyear != "2300":
+            raise ValueError("ice shelf-collapse masks are only supported "
+                             "for 2300 projections.")
+        elif model_option not in model_options:
+            raise ValueError("Requested model-scenario combination "
+                             f"{ {model_option} } is not supported. "
+                             f"ice shelf-collapse masks are provided by "
+                             f"ISMIP6 for {*model_options,} model-scenario "
+                             f"only. Please specify a valid model-scenario "
+                             f"combination in the config file")
 
-        input_file = self._files[period_endyear][model][scenario] \
-                     [res_ismip6][0]
+        input_file = self._files[period_endyear][model][scenario][data_res]
+
         self.add_input_file(filename=mali_mesh_file,
                             target=os.path.join(base_path_mali,
                                                 mali_mesh_file))
@@ -74,28 +86,28 @@ class ProcessShelfCollapse(Step):
         output_base_path = section.get("output_base_path")
         model = section.get("model")
         scenario = section.get("scenario")
-        res_ismip6 = section.get("res_ismip6")
         mali_mesh_name = section.get("mali_mesh_name")
         mali_mesh_file = section.get("mali_mesh_file")
+        # test case specific configurations
+        section = config["ismip6_ais_shelf_collapse"]
+        data_res = section.get("data_resolution")
 
         # we always want neareststod for the remapping method because we want
-        # a value between 0 and 1 per mesh point.
+        # a value of 0 or 1 per mesh point.
         method_remap = "neareststod"
 
         # interpolate and rename the data
         # ismip6 input files
-        input_file = self._files[period_endyear][model][scenario] \
-                     [res_ismip6][0]
-
-        logger.info(f"!---Start processing the file---!")
-        logger.info(f"processing the input file "
+        input_file = self._files[period_endyear][model][scenario][data_res]
+        logger.info("!---Start processing the file---!")
+        logger.info("processing the input file "
                     f"'{os.path.basename(input_file)}'")
 
         # temporary file name.
-        remapped_file_temp = f"remapped.nc"
+        remapped_file_temp = "remapped.nc"
 
         # remap the input forcing file.
-        logger.info(f"Calling the remapping function...")
+        logger.info("Calling the remapping function...")
         self.remap_ismip6_shelf_mask_to_mali_vars(os.path.basename(input_file),
                                                   remapped_file_temp,
                                                   mali_mesh_name,
@@ -105,31 +117,28 @@ class ProcessShelfCollapse(Step):
         output_file = f"{mali_mesh_name}_{os.path.basename(input_file)}"
 
         # rename the ismip6 variables to MALI variables
-        logger.info(f"Renaming the ismip6 variables to "
-                    f"mali variable names...")
+        logger.info("Renaming the ismip6 variables to "
+                    "mali variable names...")
         self.rename_ismip6_shelf_mask_to_mali_vars(remapped_file_temp,
                                                    output_file)
 
-        # round up/down the mask values to 1/0
-        args = ["ncap2", "-O", "-s",
-                "where(calvingMask>=0.5) calvingMask=1",
+        # round up/down the mask values to 1/0. String addition
+        # (c.f. continuation) is needed for the nco inline script to work
+        args = ["ncap2", "-A", "-s",
+                "where(calvingMask>=0.5){calvingMask=1;} " +
+                "elsewhere{calvingMask=0;}",
                 output_file]
 
         check_call(args, logger=self.logger)
 
-        args = ["ncap2", "-O", "-s",
-                "where(calvingMask<0.5) calvingMask=0", output_file]
-        check_call(args, logger=self.logger)
-
-        logger.info(f"Remapping and renaming process done successfully. "
-                    f"Removing the temporary files...")
+        logger.info("Remapping and renaming process done successfully. "
+                    "Removing the temporary files...")
 
         # remove the temporary combined file
         os.remove(remapped_file_temp)
 
         # place the output file in appropriate directory
-        output_path = f"{output_base_path}/shelf_collapse/" \
-                      f"{model}_{scenario}/"
+        output_path = f"{output_base_path}/shelf_collapse/{model}_{scenario}/"
 
         if not os.path.exists(output_path):
             logger.info("Creating a new directory for the output data...")
@@ -139,9 +148,9 @@ class ProcessShelfCollapse(Step):
         dst = os.path.join(output_path, output_file)
         shutil.copy(src, dst)
 
-        logger.info(f"!---Done processing the current file---!")
-        logger.info(f"")
-        logger.info(f"")
+        logger.info("!---Done processing the current file---!")
+        logger.info("")
+        logger.info("")
 
     def remap_ismip6_shelf_mask_to_mali_vars(self, input_file, output_file,
                                              mali_mesh_name, mali_mesh_file,
@@ -176,8 +185,8 @@ class ProcessShelfCollapse(Step):
                                input_file, mapping_file, mali_mesh_file,
                                method_remap)
         else:
-            self.logger.info(f"Mapping file exists. "
-                             f"Remapping the input data...")
+            self.logger.info("Mapping file exists. "
+                             "Remapping the input data...")
 
         # remap the input data
         args = ["ncremap",
@@ -234,7 +243,7 @@ class ProcessShelfCollapse(Step):
         ds["calvingMask"] = ds["calvingMask"].astype(int)
 
         # drop unnecessary variables on the regridded data on MALI mesh
-        ds = ds.drop_vars(["lat_vertices", "lon_vertices","lat",
+        ds = ds.drop_vars(["lat_vertices", "lon_vertices", "lat",
                            "lon", "area"])
 
         # write to a new netCDF file
@@ -243,38 +252,38 @@ class ProcessShelfCollapse(Step):
 
     # input files: input uniform melt rate coefficient (gamma0)
     _files = {
-        #"2100":  Will be added later
+        # "2100": Not supported for shelf collapse experiments
         "2300": {
             "CCSM4": {
                 "RCP85": {
-                    "8km":[
-                        "AIS/ShelfCollapse_forcing/CCSM4_RCP85/ice_shelf_collapse_mask_CCSM4_RCP85_1995-2300_08km.nc"],
-                    "4km":[
-                        "AIS/ShelfCollapse_forcing/CCSM4_RCP85/ice_shelf_collapse_mask_CCSM4_RCP85_1995-2300_04km.nc"]
+                    "8km":
+                        "AIS/ShelfCollapse_forcing/CCSM4_RCP85/ice_shelf_collapse_mask_CCSM4_RCP85_1995-2300_08km.nc",  # noqa: E501
+                    "4km":
+                        "AIS/ShelfCollapse_forcing/CCSM4_RCP85/ice_shelf_collapse_mask_CCSM4_RCP85_1995-2300_04km.nc",  # noqa: E501
                 },
             },
             "CESM2-WACCM": {
                 "SSP585": {
-                    "8km":[
-                        "AIS/ShelfCollapse_forcing/CESM2_WACCM_ssp585/ice_shelf_collapse_mask_CESM2_WACCM_ssp585_1995-2300_08km.nc"],
-                    "4km":[
-                        "AIS/ShelfCollapse_forcing/CESM2_WACCM_ssp585/ice_shelf_collapse_mask_CESM2_WACCM_ssp585_1995-2300_04km.nc"]
+                    "8km":
+                        "AIS/ShelfCollapse_forcing/CESM2_WACCM_ssp585/ice_shelf_collapse_mask_CESM2_WACCM_ssp585_1995-2300_08km.nc",  # noqa: E501
+                    "4km":
+                        "AIS/ShelfCollapse_forcing/CESM2_WACCM_ssp585/ice_shelf_collapse_mask_CESM2_WACCM_ssp585_1995-2300_04km.nc",  # noqa: E501
                 },
             },
             "HadGEM2-ES": {
                 "RCP85": {
-                    "8km":[
-                        "AIS/ShelfCollapse_forcing/HadGEM2-ES_RCP85/ice_shelf_collapse_mask_HadGEM2-ES_RCP85_1995-2300_08km.nc"],
-                    "4km":[
-                        "AIS/ShelfCollapse_forcing/HadGEM2-ES_RCP85/ice_shelf_collapse_mask_HadGEM2-ES_RCP85_1995-2300_04km.nc"]
+                    "8km":
+                        "AIS/ShelfCollapse_forcing/HadGEM2-ES_RCP85/ice_shelf_collapse_mask_HadGEM2-ES_RCP85_1995-2300_08km.nc",  # noqa: E501
+                    "4km":
+                        "AIS/ShelfCollapse_forcing/HadGEM2-ES_RCP85/ice_shelf_collapse_mask_HadGEM2-ES_RCP85_1995-2300_04km.nc",  # noqa: E501
                 },
             },
             "UKESM1-0-LL": {
                 "SSP585": {
-                    "8km":[
-                        "AIS/ShelfCollapse_forcing/UKESM1-0-LL_ssp585/ice_shelf_collapse_mask_UKESM1-0-LL_ssp585_1995-2300_08km.nc"],
-                    "4km":[
-                        "AIS/ShelfCollapse_forcing/UKESM1-0-LL_ssp585/ice_shelf_collapse_mask_UKESM1-0-LL_ssp585_1995-2300_04km.nc"]
+                    "8km":
+                        "AIS/ShelfCollapse_forcing/UKESM1-0-LL_ssp585/ice_shelf_collapse_mask_UKESM1-0-LL_ssp585_1995-2300_08km.nc",  # noqa: E501
+                    "4km":
+                        "AIS/ShelfCollapse_forcing/UKESM1-0-LL_ssp585/ice_shelf_collapse_mask_UKESM1-0-LL_ssp585_1995-2300_04km.nc",  # noqa: E501
                 }
             }
         }
