@@ -464,10 +464,6 @@
 
     <span class="n">dsBaseMesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
     <span class="n">dsLandMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;land_mask.nc&#39;</span><span class="p">)</span>
-    <span class="n">dsLandMask</span> <span class="o">=</span> <span class="n">add_land_locked_cells_to_mask</span><span class="p">(</span>
-        <span class="n">dsLandMask</span><span class="p">,</span> <span class="n">dsBaseMesh</span><span class="p">,</span> <span class="n">latitude_threshold</span><span class="o">=</span><span class="n">latitude_threshold</span><span class="p">,</span>
-        <span class="n">nSweeps</span><span class="o">=</span><span class="n">sweep_count</span><span class="p">)</span>
-    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsLandMask</span><span class="p">,</span> <span class="s1">&#39;land_mask_with_land_locked_cells.nc&#39;</span><span class="p">)</span>
 
     <span class="c1"># create seed points for a flood fill of the ocean</span>
     <span class="c1"># use all points in the ocean directory, on the assumption that they are,</span>
@@ -535,13 +531,21 @@
 
         <span class="c1"># Alter critical passages to be at least two cells wide, to avoid sea</span>
         <span class="c1"># ice blockage</span>
-        <span class="n">dsCritPassMask</span> <span class="o">=</span> <span class="n">widen_transect_edge_masks</span><span class="p">(</span><span class="n">dsCritPassMask</span><span class="p">,</span> <span class="n">dsBaseMesh</span><span class="p">,</span>
-                                                   <span class="n">latitude_threshold</span><span class="o">=</span><span class="mf">43.0</span><span class="p">)</span>
+        <span class="n">dsCritPassMask</span> <span class="o">=</span> <span class="n">widen_transect_edge_masks</span><span class="p">(</span>
+            <span class="n">dsCritPassMask</span><span class="p">,</span> <span class="n">dsBaseMesh</span><span class="p">,</span>
+            <span class="n">latitude_threshold</span><span class="o">=</span><span class="n">latitude_threshold</span><span class="p">)</span>
 
         <span class="n">dsPreserve</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dsCritPassMask</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">preserve_floodplain</span><span class="p">:</span>
         <span class="n">dsPreserve</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dsBaseMesh</span><span class="p">)</span>
+
+    <span class="c1"># fix land locked cells after adding critical land blockages, as these</span>
+    <span class="c1"># can lead to new land-locked cells</span>
+    <span class="n">dsLandMask</span> <span class="o">=</span> <span class="n">add_land_locked_cells_to_mask</span><span class="p">(</span>
+        <span class="n">dsLandMask</span><span class="p">,</span> <span class="n">dsBaseMesh</span><span class="p">,</span> <span class="n">latitude_threshold</span><span class="o">=</span><span class="n">latitude_threshold</span><span class="p">,</span>
+        <span class="n">nSweeps</span><span class="o">=</span><span class="n">sweep_count</span><span class="p">)</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsLandMask</span><span class="p">,</span> <span class="s1">&#39;land_mask_with_land_locked_cells.nc&#39;</span><span class="p">)</span>
 
     <span class="c1"># cull the mesh based on the land mask</span>
     <span class="n">dsCulledMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsBaseMesh</span><span class="p">,</span> <span class="n">dsMask</span><span class="o">=</span><span class="n">dsLandMask</span><span class="p">,</span>
