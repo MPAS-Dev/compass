@@ -26,24 +26,24 @@ The ``nightly`` test suite includes the following test cases:
     ocean/baroclinic_channel/10km/decomp_test
     ocean/baroclinic_channel/10km/restart_test
 
-    ocean/global_ocean/QU240/mesh
-    ocean/global_ocean/QU240/WOA23/init
-    ocean/global_ocean/QU240/WOA23/performance_test
-    ocean/global_ocean/QU240/WOA23/restart_test
-    ocean/global_ocean/QU240/WOA23/decomp_test
-    ocean/global_ocean/QU240/WOA23/threads_test
-    ocean/global_ocean/QU240/WOA23/analysis_test
+    ocean/global_ocean/Icos240/mesh
+    ocean/global_ocean/Icos240/WOA23/init
+    ocean/global_ocean/Icos240/WOA23/performance_test
+    ocean/global_ocean/Icos240/WOA23/restart_test
+    ocean/global_ocean/Icos240/WOA23/decomp_test
+    ocean/global_ocean/Icos240/WOA23/threads_test
+    ocean/global_ocean/Icos240/WOA23/analysis_test
 
-    ocean/global_ocean/QU240/WOA23/RK4/performance_test
-    ocean/global_ocean/QU240/WOA23/RK4/restart_test
-    ocean/global_ocean/QU240/WOA23/RK4/decomp_test
-    ocean/global_ocean/QU240/WOA23/RK4/threads_test
+    ocean/global_ocean/Icos240/WOA23/RK4/performance_test
+    ocean/global_ocean/Icos240/WOA23/RK4/restart_test
+    ocean/global_ocean/Icos240/WOA23/RK4/decomp_test
+    ocean/global_ocean/Icos240/WOA23/RK4/threads_test
 
-    ocean/global_ocean/QUwISC240/mesh
+    ocean/global_ocean/IcoswISC240/mesh
       cached
-    ocean/global_ocean/QUwISC240/WOA23/init
+    ocean/global_ocean/IcoswISC240/WOA23/init
       cached
-    ocean/global_ocean/QUwISC240/WOA23/performance_test
+    ocean/global_ocean/IcoswISC240/WOA23/performance_test
 
     ocean/ice_shelf_2d/5km/z-star/restart_test
     ocean/ice_shelf_2d/5km/z-level/restart_test
@@ -121,7 +121,7 @@ pr test suite
 
     compass suite -s -c ocean -t pr ...
 
-The ``nightly`` test suite includes the following test cases:
+The ``pr`` test suite includes the following test cases:
 
 .. code-block:: none
 
@@ -139,37 +139,37 @@ The ``nightly`` test suite includes the following test cases:
       cached: QU150_mesh QU150_init QU180_mesh QU180_init QU210_mesh QU210_init
       cached: QU240_mesh QU240_init
 
-    ocean/global_ocean/QU240/mesh
-    ocean/global_ocean/QU240/WOA23/init
-    ocean/global_ocean/QU240/WOA23/performance_test
-    ocean/global_ocean/QU240/WOA23/restart_test
-    ocean/global_ocean/QU240/WOA23/decomp_test
-    ocean/global_ocean/QU240/WOA23/threads_test
-    ocean/global_ocean/QU240/WOA23/analysis_test
-    ocean/global_ocean/QU240/WOA23/dynamic_adjustment
+    ocean/global_ocean/Icos240/mesh
+    ocean/global_ocean/Icos240/WOA23/init
+    ocean/global_ocean/Icos240/WOA23/performance_test
+    ocean/global_ocean/Icos240/WOA23/restart_test
+    ocean/global_ocean/Icos240/WOA23/decomp_test
+    ocean/global_ocean/Icos240/WOA23/threads_test
+    ocean/global_ocean/Icos240/WOA23/analysis_test
+    ocean/global_ocean/Icos240/WOA23/dynamic_adjustment
 
-    ocean/global_ocean/QU240/WOA23/RK4/performance_test
-    ocean/global_ocean/QU240/WOA23/RK4/restart_test
-    ocean/global_ocean/QU240/WOA23/RK4/decomp_test
-    ocean/global_ocean/QU240/WOA23/RK4/threads_test
+    ocean/global_ocean/Icos240/WOA23/RK4/performance_test
+    ocean/global_ocean/Icos240/WOA23/RK4/restart_test
+    ocean/global_ocean/Icos240/WOA23/RK4/decomp_test
+    ocean/global_ocean/Icos240/WOA23/RK4/threads_test
 
-    ocean/global_ocean/QUwISC240/mesh
+    ocean/global_ocean/IcoswISC240/mesh
       cached
-    ocean/global_ocean/QUwISC240/WOA23/init
+    ocean/global_ocean/IcoswISC240/WOA23/init
       cached
-    ocean/global_ocean/QUwISC240/WOA23/performance_test
+    ocean/global_ocean/IcoswISC240/WOA23/performance_test
 
-    ocean/global_ocean/EC30to60/mesh
+    ocean/global_ocean/Icos/mesh
       cached
-    ocean/global_ocean/EC30to60/WOA23/init
+    ocean/global_ocean/Icos/WOA23/init
       cached
-    ocean/global_ocean/EC30to60/WOA23/performance_test
+    ocean/global_ocean/Icos/WOA23/performance_test
 
-    ocean/global_ocean/ECwISC30to60/mesh
+    ocean/global_ocean/IcoswISC/mesh
       cached
-    ocean/global_ocean/ECwISC30to60/WOA23/init
+    ocean/global_ocean/IcoswISC/WOA23/init
       cached
-    ocean/global_ocean/ECwISC30to60/WOA23/performance_test
+    ocean/global_ocean/IcoswISC/WOA23/performance_test
 
     ocean/ice_shelf_2d/5km/z-star/restart_test
     ocean/ice_shelf_2d/5km/z-level/restart_test
@@ -179,10 +179,10 @@ The ``nightly`` test suite includes the following test cases:
     ocean/ziso/20km/default
     ocean/ziso/20km/with_frazil
 
-These are all meant to be slightly more comprehensive tests than `nightly`,
-to be compared to a baseline before a compass or MPAS-Ocean PR gest merged.
+These are all meant to be slightly more comprehensive tests than ``nightly``,
+to be compared to a baseline before a compass or MPAS-Ocean PR gets merged.
 They cover additional features such as convergence, higher resolution meshes,
-and vertical lagrangian remapping.
+and vertical Lagrangian remapping.
 
 
 .. _ocean_suite_qu240_for_e3sm:
