@@ -407,8 +407,9 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
 
         # Alter critical passages to be at least two cells wide, to avoid sea
         # ice blockage
-        dsCritPassMask = widen_transect_edge_masks(dsCritPassMask, dsBaseMesh,
-                                                   latitude_threshold=43.0)
+        dsCritPassMask = widen_transect_edge_masks(
+            dsCritPassMask, dsBaseMesh,
+            latitude_threshold=latitude_threshold)
 
         dsPreserve.append(dsCritPassMask)
 
