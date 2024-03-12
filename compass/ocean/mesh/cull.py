@@ -336,10 +336,6 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
 
     dsBaseMesh = xr.open_dataset('base_mesh.nc')
     dsLandMask = xr.open_dataset('land_mask.nc')
-    dsLandMask = add_land_locked_cells_to_mask(
-        dsLandMask, dsBaseMesh, latitude_threshold=latitude_threshold,
-        nSweeps=sweep_count)
-    write_netcdf(dsLandMask, 'land_mask_with_land_locked_cells.nc')
 
     # create seed points for a flood fill of the ocean
     # use all points in the ocean directory, on the assumption that they are,
@@ -407,13 +403,21 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
 
         # Alter critical passages to be at least two cells wide, to avoid sea
         # ice blockage
-        dsCritPassMask = widen_transect_edge_masks(dsCritPassMask, dsBaseMesh,
-                                                   latitude_threshold=43.0)
+        dsCritPassMask = widen_transect_edge_masks(
+            dsCritPassMask, dsBaseMesh,
+            latitude_threshold=latitude_threshold)
 
         dsPreserve.append(dsCritPassMask)
 
     if preserve_floodplain:
         dsPreserve.append(dsBaseMesh)
+
+    # fix land locked cells after adding critical land blockages, as these
+    # can lead to new land-locked cells
+    dsLandMask = add_land_locked_cells_to_mask(
+        dsLandMask, dsBaseMesh, latitude_threshold=latitude_threshold,
+        nSweeps=sweep_count)
+    write_netcdf(dsLandMask, 'land_mask_with_land_locked_cells.nc')
 
     # cull the mesh based on the land mask
     dsCulledMesh = cull(dsBaseMesh, dsMask=dsLandMask,
