@@ -29,7 +29,8 @@ class GlobalOcean(TestGroup):
         super().__init__(mpas_core=mpas_core, name='global_ocean')
 
         # we do a lot of tests for QU240/QUwISC240
-        self._add_tests(mesh_names=['QU240', 'Icos240', 'QUwISC240'],
+        self._add_tests(mesh_names=['QU240', 'Icos240', 'QUwISC240',
+                                    'IcoswISC240'],
                         high_res_topography=False,
                         include_rk4=True,
                         include_regression=True,
