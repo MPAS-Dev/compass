@@ -113,7 +113,7 @@ class ForwardStep(Step):
                            config_land_ice_flux_mode=f"'{land_ice_flux_mode}'")
             self.add_namelist_options(options)
             if land_ice_flux_mode == 'data':
-                filename = 'prescribed_ismf_adusumilli2020.nc'
+                filename = 'prescribed_ismf_paolo2023.nc'
                 target = f'{init.path}/remap_ice_shelf_melt/{filename}'
                 self.add_input_file(filename=filename, work_dir_target=target)
                 self.add_streams_file(
