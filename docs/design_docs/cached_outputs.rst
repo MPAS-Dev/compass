@@ -35,7 +35,7 @@ Contributors: Xylar Asay-Davis
 Each ``compass`` step defines its output files in the ``compass.Step.outputs``
 attribute. For selected steps (see :ref:`req_select`), we require a mechanism
 to download cached files for each of these outputs and to use these cached
-files for the outputs of the step instead of computing them.  
+files for the outputs of the step instead of computing them.
 
 .. _req_select:
 
@@ -48,7 +48,7 @@ Contributors: Xylar Asay-Davis
 
 There needs to be a mechanism for developers and users to select which steps
 are run as normal and which use cached outputs.  For this mechanism to be
-practical, it should not be overly tedious or manual (e.g. manually setting a 
+practical, it should not be overly tedious or manual (e.g. manually setting a
 flag for each step).
 
 .. _req_update:
@@ -72,11 +72,11 @@ Date last modified: 2021/07/30
 
 Contributors: Xylar Asay-Davis
 
-There should be a mechanism for giving each cached output file a unique 
-identifier (such as a date stamp).  A given version (git hash or release) of 
+There should be a mechanism for giving each cached output file a unique
+identifier (such as a date stamp).  A given version (git hash or release) of
 ``compass`` should know which cached files to download.  Older cached files
 should be retained so that older versions of ``compass`` can still be used
-with these cached files.  
+with these cached files.
 
 .. note::
 
@@ -109,14 +109,14 @@ Date last modified: 2021/07/30
 
 Contributors: Xylar Asay-Davis
 
-``compass`` supports "databases" of input data files on the E3SM 
+``compass`` supports "databases" of input data files on the E3SM
 `LCRC server <https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/>`_.
-Files will be stored in a new ``compass_cache`` database within each MPAS 
+Files will be stored in a new ``compass_cache`` database within each MPAS
 core's space on that server.  If the "cached" version of a step is selected
-(see :ref:`des_select`), an appropriate "input" file will be added to the test 
+(see :ref:`des_select`), an appropriate "input" file will be added to the test
 case where the "target" is the file on the LCRC server to be cached locally for
 future use and the "filename" is the output file.  ``compass`` will know which
-files on the server correspond to which output files via a python dictionary, 
+files on the server correspond to which output files via a python dictionary,
 as described in :ref:`des_unique`.
 
 .. _des_select:
@@ -403,9 +403,9 @@ The implementation leans heavily on the assumption that a given step will
 either be run with cached outputs or as normal, so that both versions are not
 available in the same work directory or as part of the same test suite.
 
-Nevertheless, if a separate "cached" version of a step were desired, it would 
-be necessary to make symlinks from the cached files in the location of the 
-"uncached" version of the step to the location of the "cached" version.  For 
+Nevertheless, if a separate "cached" version of a step were desired, it would
+be necessary to make symlinks from the cached files in the location of the
+"uncached" version of the step to the location of the "cached" version.  For
 example, if the "uncached" step is
 
 .. code-block:: none
@@ -422,7 +422,7 @@ symlinks could be created on the LCRC server, e.g.
 
 .. code-block:: none
 
-    /lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-ocean/compass_cache/global_ocean/QU240/cached/mesh/mesh/culled_mesh.210803.nc 
+    /lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-ocean/compass_cache/global_ocean/QU240/cached/mesh/mesh/culled_mesh.210803.nc
       -> /lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-ocean/compass_cache/global_ocean/QU240/mesh/mesh/culled_mesh.210803.nc
 
 and the ``cached`` attribute could be set to ``True`` in the constructor of the
@@ -452,8 +452,8 @@ using test-case runs on Chrysalis.
     ocean/global_ocean/QUwISC240/PHC/init/ssh_adjustment/
     ocean/global_ocean/EC30to60/mesh/mesh/
     ocean/global_ocean/EC30to60/PHC/init/initial_state/
-    ocean/global_ocean/WC14/mesh/mesh/
-    ocean/global_ocean/WC14/PHC/init/initial_state/
+    ocean/global_ocean/NARRM14/mesh/mesh/
+    ocean/global_ocean/NARRM14/PHC/init/initial_state/
     ocean/global_ocean/ECwISC30to60/mesh/mesh/
     ocean/global_ocean/ECwISC30to60/PHC/init/initial_state/
     ocean/global_ocean/ECwISC30to60/PHC/init/ssh_adjustment/

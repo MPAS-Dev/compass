@@ -46,7 +46,7 @@ class GlobalOcean(TestGroup):
 
         self._add_tests(mesh_names=['SO12to60', 'SOwISC12to60'])
 
-        self._add_tests(mesh_names=['WC14', 'WCwISC14'])
+        self._add_tests(mesh_names=['NARRM14', 'NARRMwISC14'])
 
         # RRS6to18: with and without cavities
         self._add_tests(mesh_names=['RRS6to18', 'RRSwISC6to18'])

@@ -239,8 +239,8 @@ test cases and steps
    mesh.so12to60.SO12to60BaseMesh
    mesh.so12to60.SO12to60BaseMesh.build_cell_width_lat_lon
 
-   mesh.wc14.WC14BaseMesh
-   mesh.wc14.WC14BaseMesh.build_cell_width_lat_lon
+   mesh.narrm14.NARRM14BaseMesh
+   mesh.narrm14.NARRM14BaseMesh.build_cell_width_lat_lon
 
    performance_test.PerformanceTest
    performance_test.PerformanceTest.configure
