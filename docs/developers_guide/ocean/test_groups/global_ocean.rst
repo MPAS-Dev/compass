@@ -46,7 +46,7 @@ The values of some of the metadata are given in config options:
     ## metadata related to the mesh
     # whether to add metadata to output files
     add_metadata = True
-    # the prefix (e.g. QU, EC, WC, SO)
+    # the prefix (e.g. QU, EC, NARRM, SO)
     prefix = PREFIX
     # a description of the mesh
     mesh_description = <<<Missing>>>
@@ -87,7 +87,7 @@ defines:
     ...
 
     ## metadata related to the mesh
-    # the prefix (e.g. QU, EC, WC, SO)
+    # the prefix (e.g. QU, EC, NARRM, SO)
     prefix = EC
     # a description of the mesh and initial condition
     mesh_description = MPAS Eddy Closure mesh for E3SM version ${e3sm_version} with
@@ -371,7 +371,7 @@ The default config options for these meshes are:
     approx_cell_count = 7400
 
     ## metadata related to the mesh
-    # the prefix (e.g. QU, EC, WC, SO)
+    # the prefix (e.g. QU, EC, NARRM, SO)
     prefix = QU
     # a description of the mesh
     mesh_description = MPAS quasi-uniform mesh for E3SM version ${e3sm_version} at
@@ -454,7 +454,7 @@ The default config options for these meshes are:
     [global_ocean]
 
     ## metadata related to the mesh
-    # the prefix (e.g. QU, EC, WC, SO)
+    # the prefix (e.g. QU, EC, NARRM, SO)
     prefix = QU
 
     # a description of the mesh
@@ -486,7 +486,7 @@ corresponding QU config options above:
     [global_ocean]
 
     ## metadata related to the mesh
-    # the prefix (e.g. QU, EC, WC, SO)
+    # the prefix (e.g. QU, EC, NARRM, SO)
     prefix = Icos
 
     # a description of the mesh
@@ -552,7 +552,7 @@ The default config options for these meshes are:
     approx_cell_count = 240000
 
     ## metadata related to the mesh
-    # the prefix (e.g. QU, EC, WC, SO)
+    # the prefix (e.g. QU, EC, NARRM, SO)
     prefix = EC
     # a description of the mesh and initial condition
     mesh_description = MPAS Eddy Closure mesh for E3SM version ${e3sm_version} with
@@ -612,7 +612,7 @@ module:
     [global_ocean]
 
     ## metadata related to the mesh
-    # the prefix (e.g. QU, EC, WC, SO, Kuroshio)
+    # the prefix (e.g. QU, EC, NARRM, SO, Kuroshio)
     prefix = Kuroshio
     # a description of the mesh and initial condition
     mesh_description = MPAS Kuroshio regionally refined mesh for E3SM version
@@ -694,7 +694,7 @@ The default config options for these meshes are:
     approx_cell_count = 3700000
 
     ## metadata related to the mesh
-    # the prefix (e.g. QU, EC, WC, SO)
+    # the prefix (e.g. QU, EC, NARRM, SO)
     prefix = RRS
     # a description of the mesh and initial condition
     mesh_description = MPAS Eddy Closure mesh for E3SM version ${e3sm_version} with
@@ -820,7 +820,7 @@ The default config options for these meshes are:
     approx_cell_count = 570000
 
     ## metadata related to the mesh
-    # the prefix (e.g. QU, EC, WC, SO)
+    # the prefix (e.g. QU, EC, NARRM, SO)
     prefix = SO
     # a description of the mesh and initial condition
     mesh_description = MPAS Southern Ocean regionally refined mesh for E3SM version
@@ -855,20 +855,19 @@ The vertical grid is an ``index_tanh_dz`` profile (see
 :ref:`dev_ocean_framework_vertical`) with 64 vertical levels ranging in
 thickness from 10 to 250 m.
 
-.. _dev_ocean_global_ocean_wc14:
+.. _dev_ocean_global_ocean_narrm14:
 
-WC14 and WCwISC14
-+++++++++++++++++
+NARRM14 and NARRMwISC14
++++++++++++++++++++++++
 
-The ``WC14`` and ``WCwISC14`` meshes are the Water Cycle regionally refined
-meshes for E3SM v3.  They have higher resolution (~14-km) around the continental
+The ``NARRM14`` and ``NARRMwISC14`` meshes are the North American Regionally Refined
+Meshes for E3SM v3.  They have higher resolution (~14-km) around the continental
 US, the Arctic Ocean, and a section of the North Atlantic containing the Gulf
-Stream. The resolution elsewhere varies between 35 km at the South Pole to 60
-km at mid latitudes, with a band of 30-km resolution around the equator.
+Stream. The resolution is uniformly about 30 km elsewhere.
 
-The class :py:class:`compass.ocean.tests.global_ocean.mesh.wc14.WC14BaseMesh`
+The class :py:class:`compass.ocean.tests.global_ocean.mesh.narrm14.NARRM14BaseMesh`
 defines the resolution for the meshes. The
-``compass.ocean.tests.global_ocean.mesh.wc14`` module includes namelist options
+``compass.ocean.tests.global_ocean.mesh.narrm14`` module includes namelist options
 appropriate for forward simulations with split-explicit (but not RK4) time
 integration on these meshes.  These set the time step and default run duration for
 short runs with these meshes.
@@ -907,12 +906,13 @@ The default config options for these meshes are:
     approx_cell_count = 410000
 
     ## metadata related to the mesh
-    # the prefix (e.g. QU, EC, WC, SO)
-    prefix = WC
+    # the prefix (e.g. QU, EC, NARRM, SO)
+    prefix = NARRM
     # a description of the mesh and initial condition
-    mesh_description = MPAS North America and Arctic Focused Water Cycle mesh for E3SM version
-                       ${e3sm_version}, with a focused ${min_res}-km resolution
-                       around North America and <<<levels>>> vertical levels
+    mesh_description = MPAS North America and Arctic Regionally Refined Mesh for
+                       E3SM version ${e3sm_version}, with ${min_res}-km resolution
+                       in these regions, ${max_res} elsewhere and <<<levels>>>
+                       vertical levels
 
     # E3SM version that the mesh is intended for
     e3sm_version = 3
@@ -922,9 +922,9 @@ The default config options for these meshes are:
     # the minimum (finest) resolution in the mesh
     min_res = 14
     # the maximum (coarsest) resolution in the mesh, can be the same as min_res
-    max_res = 60
+    max_res = 30
     # The URL of the pull request documenting the creation of the mesh
-    pull_request = https://github.com/MPAS-Dev/MPAS-Model/pull/628
+    pull_request = https://github.com/MPAS-Dev/MPAS-Model/pull/782
 
 
     # config options related to initial condition and diagnostics support files

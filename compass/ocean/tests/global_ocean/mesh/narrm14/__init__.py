@@ -14,9 +14,9 @@ from mpas_tools.viz.colormaps import register_sci_viz_colormaps
 from compass.mesh import QuasiUniformSphericalMeshStep
 
 
-class WC14BaseMesh(QuasiUniformSphericalMeshStep):
+class NARRM14BaseMesh(QuasiUniformSphericalMeshStep):
     """
-    A step for creating WC14 mesh
+    A step for creating NARRM14 mesh
     """
     def setup(self):
         """
@@ -75,14 +75,10 @@ class WC14BaseMesh(QuasiUniformSphericalMeshStep):
         fig.set_size_inches(10.0, 14.0)
         register_sci_viz_colormaps()
 
-        # Create cell width vs latitude for Atlantic and Pacific basins
-        EC60to30 = mdt.EC_CellWidthVsLat(lat)
-        EC60to30Narrow = mdt.EC_CellWidthVsLat(lat, latPosEq=8.0,
-                                               latWidthEq=3.0)
-
-        # Expand from 1D to 2D
-        _, cellWidth = np.meshgrid(lon, EC60to30Narrow)
-        _plot_cartopy(2, 'narrow EC60to30', cellWidth, '3Wbgy5')
+        # start with a uniform 30 km background resolution
+        dx_max = 30.
+        cellWidth = dx_max * np.ones((nlat, nlon))
+        _plot_cartopy(2, 'Uniform 30 km', cellWidth, '3Wbgy5')
         plotFrame = 3
 
         # global settings for regionally refines mesh
@@ -191,13 +187,6 @@ class WC14BaseMesh(QuasiUniformSphericalMeshStep):
         _plot_cartopy(plotFrame, fileName + ' mask', mask, 'Blues')
         _plot_cartopy(plotFrame + 1, 'cellWidth ', cellWidth, '3Wbgy5')
         plotFrame += 2
-
-        ax = plt.subplot(6, 2, 1)
-        ax.plot(lat, EC60to30, label='original EC60to30')
-        ax.plot(lat, EC60to30Narrow, label='narrow EC60to30')
-        ax.grid(True)
-        plt.title('Grid cell size [km] versus latitude')
-        plt.legend(loc="upper left")
 
         plt.savefig('mesh_construction.png', dpi=300)
 
