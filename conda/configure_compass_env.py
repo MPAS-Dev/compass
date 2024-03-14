@@ -100,7 +100,7 @@ def main():
     if local_mache:
         mache = ''
     else:
-        mache = '"mache=1.17.0"'
+        mache = '"mache=1.20.0"'
 
     setup_install_env(env_name, activate_base, args.use_local, logger,
                       args.recreate, conda_base, mache)
