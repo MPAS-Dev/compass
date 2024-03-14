@@ -449,6 +449,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi,  # noqa: C901
     cmake = config.get('deploy', 'cmake')
     esmf = config.get('deploy', 'esmf')
     lapack = config.get('deploy', 'lapack')
+    moab = config.get('deploy', 'moab')
     petsc = config.get('deploy', 'petsc')
     scorpio = config.get('deploy', 'scorpio')
     parallelio = config.get('deploy', 'parallelio')
@@ -479,6 +480,9 @@ def build_spack_env(config, update_spack, machine, compiler, mpi,  # noqa: C901
         include_e3sm_lapack = False
     else:
         include_e3sm_lapack = True
+    if moab != 'None':
+        specs.append(
+            f'"moab@{moab}+mpi+hdf5+netcdf+pnetcdf+metis+parmetis+tempest"')
     if petsc != 'None':
         specs.append(f'"petsc@{petsc}+mpi+batch"')
 
