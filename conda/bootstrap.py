@@ -383,7 +383,7 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
             f'{activate_env} && ' \
             f'cd {source_path} && ' \
             f'rm -rf compass.egg-info && ' \
-            f'python -m pip install -e .'
+            f'python -m pip install --no-deps -e .'
         check_call(commands, logger=logger)
 
         print('Installing pre-commit\n')
@@ -649,11 +649,11 @@ def write_load_compass(template_path, activ_path, conda_base, env_type,
                mkdir -p conda/logs
                echo Reinstalling compass package in edit mode...
                rm -rf compass.egg-info
-               python -m pip install -e . &> conda/logs/install_compass.log
+               python -m pip install --no-deps -e . &> conda/logs/install_compass.log
                echo Done.
                echo
             fi
-            """
+            """  # noqa: E501
     else:
         update_compass = ''
 
@@ -1053,7 +1053,7 @@ def main():  # noqa: C901
                 commands = f'source {conda_base}/etc/profile.d/conda.sh && ' \
                            f'conda activate {conda_env_name} && ' \
                            'cd ../build_mache/mache && ' \
-                           'python -m pip install .'
+                           'python -m pip install --no-deps .'
                 check_call(commands, logger=logger)
 
             previous_conda_env = conda_env_name
