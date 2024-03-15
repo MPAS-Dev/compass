@@ -87,6 +87,10 @@ class Cull(Step):
                              map_culled_to_base_filename=map_filename,
                              logger=logger)
 
+        with xr.open_dataset('culled_ocean_restart.nc') as ds:
+            ds = ds.drop_vars('xtime')
+            write_netcdf(ds, 'culled_ocean_restart_no_xtime.nc')
+
         in_filename = seaice_restart_filename
         out_filename = 'culled_seaice_restart.nc'
 
@@ -96,3 +100,7 @@ class Cull(Step):
                              culled_mesh_filename=culled_mesh_filename,
                              map_culled_to_base_filename=map_filename,
                              logger=logger)
+
+        with xr.open_dataset('culled_seaice_restart.nc') as ds:
+            ds = ds.drop_vars('xtime')
+            write_netcdf(ds, 'culled_seaice_restart_no_xtime.nc')
