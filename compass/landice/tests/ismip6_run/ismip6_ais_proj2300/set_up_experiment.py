@@ -232,7 +232,7 @@ class SetUpExperiment(Step):
             slm_input_others = section.get('slm_input_others')
             nglv = section.getint('nglv')
 
-            # complate the full paths to the SLM inputs
+            # complete the full paths to the SLM inputs
             slm_input_ice = os.path.join(slm_input_ice,
                                          f'GL{nglv}/ice_noGrIS_GL{nglv}/')
             slm_input_others = os.path.join(slm_input_others,
@@ -343,7 +343,7 @@ class SetUpExperiment(Step):
         # first create scrip files
         mali_scripfile = 'mali_scripfile.nc'
         slm_scripfile = f'slm_nglv{nglv}scripfile.nc'
-        mali_meshfile = 'mali_meshfile.nc'
+        mali_meshfile = 'mali_meshfile_sphereLatLon.nc'
 
         # slm scripfile
         logger.info(f'creating scripfile for the SLM grid with '
@@ -385,7 +385,7 @@ class SetUpExperiment(Step):
         check_call(args, logger)
 
         # create mapping file from SLM grid to MALI mesh
-        logger.info('SLM -> MALI mesh mapfile with blinear method')
+        logger.info('SLM -> MALI mesh mapfile with bilinear method')
         args = parallel_executable.split(' ')
         args.extend(['ESMF_RegridWeightGen',
                      '-s', slm_scripfile,
