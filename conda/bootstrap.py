@@ -340,42 +340,7 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
             check_call(commands, logger=logger)
 
         if recreate or update_jigsaw:
-            # remove conda jigsaw and jigsaw-python
-            t0 = time.time()
-            commands = \
-                f'{activate_env} && ' \
-                f'conda remove -y --force-remove jigsaw jigsawpy'
-            check_call(commands, logger=logger)
-
-            commands = \
-                f'{activate_env} && ' \
-                f'cd {source_path} && ' \
-                f'git submodule update --init jigsaw-python'
-            check_call(commands, logger=logger)
-
-            print('Building JIGSAW\n')
-            # add build tools to deployment env, not compass env
-            commands = \
-                f'conda install -y cmake cxx-compiler && ' \
-                f'cd {source_path}/jigsaw-python && ' \
-                f'python setup.py build_external'
-            check_call(commands, logger=logger)
-
-            print('Installing JIGSAW and JIGSAW-Python\n')
-            commands = \
-                f'{activate_env} && ' \
-                f'cd {source_path}/jigsaw-python && ' \
-                f'python -m pip install --no-deps -e . && ' \
-                f'cp jigsawpy/_bin/* ${{CONDA_PREFIX}}/bin'
-            check_call(commands, logger=logger)
-
-            t1 = time.time()
-            total = t1 - t0
-            message = f'JIGSAW install took {total:.1f} s.'
-            if logger is None:
-                print(message)
-            else:
-                logger.info(message)
+            build_jigsaw(activate_env, source_path, env_path, logger)
 
         # install (or reinstall) compass in edit mode
         print('Installing compass\n')
@@ -392,6 +357,57 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
             f'cd {source_path} && ' \
             f'pre-commit install'
         check_call(commands, logger=logger)
+
+
+def build_jigsaw(activate_env, source_path, env_path, logger):
+    # remove conda jigsaw and jigsaw-python
+    t0 = time.time()
+    commands = \
+        f'{activate_env} && ' \
+        f'conda remove -y --force-remove jigsaw jigsawpy'
+    check_call(commands, logger=logger)
+
+    commands = \
+        f'{activate_env} && ' \
+        f'cd {source_path} && ' \
+        f'git submodule update --init jigsaw-python'
+    check_call(commands, logger=logger)
+
+    print('Building JIGSAW\n')
+    # add build tools to deployment env, not compass env
+    jigsaw_build_deps = 'cxx-compiler cmake'
+    netcdf_lib = f'{env_path}/lib/libnetcdf.so'
+    cmake_args = f'-DCMAKE_BUILD_TYPE=Release -DNETCDF_LIBRARY={netcdf_lib}'
+
+    commands = \
+        f'conda install -y {jigsaw_build_deps} && ' \
+        f'cd {source_path}/jigsaw-python/external/jigsaw && ' \
+        f'rm -rf tmp && ' \
+        f'mkdir tmp && ' \
+        f'cd tmp && ' \
+        f'cmake .. {cmake_args} && ' \
+        f'cmake --build . --config Release --target install --parallel 4 && ' \
+        f'cd {source_path}/jigsaw-python && ' \
+        f'rm -rf jigsawpy/_bin jigsawpy/_lib && ' \
+        f'cp -r external/jigsaw/bin/ jigsawpy/_bin && ' \
+        f'cp -r external/jigsaw/lib/ jigsawpy/_lib'
+    check_call(commands, logger=logger)
+
+    print('Installing JIGSAW and JIGSAW-Python\n')
+    commands = \
+        f'{activate_env} && ' \
+        f'cd {source_path}/jigsaw-python && ' \
+        f'python -m pip install --no-deps -e . && ' \
+        f'cp jigsawpy/_bin/* ${{CONDA_PREFIX}}/bin'
+    check_call(commands, logger=logger)
+
+    t1 = time.time()
+    total = int(t1 - t0 + 0.5)
+    message = f'JIGSAW install took {total:.1f} s.'
+    if logger is None:
+        print(message)
+    else:
+        logger.info(message)
 
 
 def get_env_vars(machine, compiler, mpilib):
