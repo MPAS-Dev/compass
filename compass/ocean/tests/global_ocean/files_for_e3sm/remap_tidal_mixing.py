@@ -34,13 +34,22 @@ class RemapTidalMixing(FilesForE3SMStep):
             target='ustar_CATS2008_S71W70.nc',
             database='tidal_mixing')
 
-        self.add_output_file(filename='velocityTidalRMS_CATS2008.nc')
+    def setup(self):
+        """
+        setup input and output files based on config options
+        """
+        super().setup()
+        if self.with_ice_shelf_cavities:
+            self.add_output_file(filename='velocityTidalRMS_CATS2008.nc')
 
     def run(self):
         """
         Run this step of the test case
         """
         super().run()
+        if not self.with_ice_shelf_cavities:
+            return
+
         logger = self.logger
         config = self.config
         ntasks = self.ntasks
