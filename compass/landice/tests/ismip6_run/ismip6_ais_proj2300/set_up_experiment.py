@@ -229,6 +229,7 @@ class SetUpExperiment(Step):
             # get config options
             slm_input_ice = section.get('slm_input_ice')
             slm_input_earth = section.get('slm_input_earth')
+            slm_earth_structure = section.get('slm_earth_structure')
             slm_input_others = section.get('slm_input_others')
             nglv = section.getint('nglv')
 
@@ -248,6 +249,7 @@ class SetUpExperiment(Step):
                                  'namelist.sealevel.template'))
             text = template.render(nglv=int(nglv), slm_input_ice=slm_input_ice,
                                    slm_input_earth=slm_input_earth,
+                                   slm_earth_structure=slm_earth_structure,
                                    slm_input_others=slm_input_others)
 
             # write out the namelise.sealevel file
