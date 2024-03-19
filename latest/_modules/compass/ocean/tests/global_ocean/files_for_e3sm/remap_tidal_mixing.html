@@ -151,10 +151,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;ustar_CATS2008_S71W70.nc&#39;</span><span class="p">,</span>
             <span class="n">target</span><span class="o">=</span><span class="s1">&#39;ustar_CATS2008_S71W70.nc&#39;</span><span class="p">,</span>
-            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;tidal_mixing&#39;</span><span class="p">)</span>
+            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;tidal_mixing&#39;</span><span class="p">)</span></div>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;velocityTidalRMS_CATS2008.nc&#39;</span><span class="p">)</span></div>
 
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        setup input and output files based on config options</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;velocityTidalRMS_CATS2008.nc&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="RemapTidalMixing.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.remap_tidal_mixing.RemapTidalMixing.run.html#compass.ocean.tests.global_ocean.files_for_e3sm.remap_tidal_mixing.RemapTidalMixing.run">[docs]</a>
@@ -163,6 +169,9 @@
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
+            <span class="k">return</span>
+
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">ntasks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span>
