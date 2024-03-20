@@ -117,7 +117,8 @@ example).
 First, you need to know the versions of the ``mache`` and ``moab`` packages
 that are needed (1.20.0 and 5.5.1, respectively, in this example).  These are
 specified in ``conda/configure_compass_env.py`` and ``conda/default.cfg``,
-respectively.  On a LANL laptop *without the VPN*, run:
+respectively.  On a LANL laptop with either (1) the VPN turned off and the
+proxies unset or (2) the VPN turned on and the proxies set, run:
 
 .. code-block:: bash
 
@@ -136,9 +137,10 @@ respectively.  On a LANL laptop *without the VPN*, run:
 
     tar cvfj spack_mirror.tar.bz2 spack_mirror
 
-Second, you need to turn on the LANL VPN.  You may find it convenient to login
-on to Chicoma (e.g. ``ssh -tt wtrw 'ssh ch-fe'``) in a separate terminal if you
-have configured your laptop to preserve connections.
+Then, if you used option (1) above turn on the LANL VPN (and set the proxies).
+You may find it convenient to login on to Chicoma
+(e.g. ``ssh -tt wtrw 'ssh ch-fe'``) in a separate terminal if you have
+configured your laptop to preserve connections.
 
 .. code-block:: bash
 
@@ -151,6 +153,7 @@ Then, on Chicoma:
 
     cd /usr/projects/e3sm/compass/chicoma-cpu/spack/
     tar xvf spack_mirror.tar.bz2
+    chgrp -R climate spack_mirror/
     chmod -R ug+w spack_mirror/
     chmod -R ugo+rX spack_mirror/
     rm spack_mirror.tar.bz2
