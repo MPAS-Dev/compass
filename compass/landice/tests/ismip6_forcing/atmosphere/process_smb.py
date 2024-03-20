@@ -6,7 +6,7 @@ import xarray as xr
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 
-from compass.landice.tests.ismip6_forcing.atmosphere.create_mapfile_smb import (  # noqa: E501
+from compass.landice.tests.ismip6_forcing.create_mapfile_smb import (
     build_mapping_file,
 )
 from compass.step import Step
@@ -236,8 +236,10 @@ class ProcessSMB(Step):
             self.logger.info(f"Creating a mapping file. "
                              f"Mapping method used: {method_remap}")
             build_mapping_file(self.config, self.ntasks, self.logger,
-                               input_file, mapping_file, mali_mesh_file,
-                               method_remap)
+                               input_file, mapping_file,
+                               scrip_from_latlon=True,
+                               mali_mesh_file=mali_mesh_file,
+                               method_remap=method_remap)
         else:
             self.logger.info("Mapping file exists. "
                              "Remapping the input data...")

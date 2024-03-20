@@ -170,8 +170,10 @@ class ProcessThermalForcing(Step):
         if not os.path.exists(mapping_file):
             # build a mapping file if it doesn't already exist
             build_mapping_file(self.config, self.ntasks, self.logger,
-                               input_file, mapping_file, mali_mesh_file,
-                               method_remap)
+                               input_file, mapping_file,
+                               scrip_from_latlon=False,
+                               mali_mesh_file=mali_mesh_file,
+                               method_remap=method_remap)
         else:
             self.logger.info("Mapping file exists. "
                              "Remapping the input data...")

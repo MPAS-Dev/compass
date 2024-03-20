@@ -1,11 +1,14 @@
 import os
 import shutil
+
 import xarray as xr
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
+
+from compass.landice.tests.ismip6_forcing.create_mapfile_smb import (
+    build_mapping_file,
+)
 from compass.step import Step
-from compass.landice.tests.ismip6_forcing.atmosphere.create_mapfile_smb \
-    import build_mapping_file
 
 
 class ProcessSmbRacmo(Step):
@@ -54,9 +57,9 @@ class ProcessSmbRacmo(Step):
                           f"_smb_climatology_1995-2017.nc"
             self.add_output_file(filename=output_file)
         else:
-            print(f"\n'Warning: process_smb_racmo' is set to 'False'."
-                  f" This step will not run unless set 'True' in the"
-                  f" config file.\n")
+            print("\n'Warning: process_smb_racmo' is set to 'False'."
+                  " This step will not run unless set 'True' in the"
+                  " config file.\n")
 
     def run(self):
         """
@@ -152,7 +155,7 @@ class ProcessSmbRacmo(Step):
         dst = os.path.join(output_path, output_file)
         shutil.copy(src, dst)
 
-        logger.info(f"!---Done processing the file---!")
+        logger.info("!---Done processing the file---!")
 
     def remap_source_smb_to_mali(self, input_file, output_file, mali_mesh_name,
                                  mali_mesh_file, method_remap):
@@ -185,8 +188,10 @@ class ProcessSmbRacmo(Step):
             self.logger.info(f"Creating a mapping file. "
                              f"Mapping method used: {method_remap}")
             build_mapping_file(self.config, self.ntasks, self.logger,
-                               input_file, mapping_file, mali_mesh_file,
-                               method_remap)
+                               input_file, mapping_file,
+                               scrip_from_latlon=True,
+                               mali_mesh_file=mali_mesh_file,
+                               method_remap=method_remap)
         else:
             self.logger.info("Mapping file exists. "
                              "Remapping the input data...")
