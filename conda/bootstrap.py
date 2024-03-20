@@ -528,7 +528,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi,  # noqa: C901
 
     if albany != 'None':
         specs.append(f'"trilinos-for-albany@{albany}"')
-        specs.append(f'"albany@{albany}+mpas~epetra~py+unit_tests"')
+        specs.append(f'"albany@{albany}+mpas~py+unit_tests"')
 
     yaml_template = f'{spack_template_path}/{machine}_{compiler}_{mpi}.yaml'
     if not os.path.exists(yaml_template):
