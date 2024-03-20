@@ -470,6 +470,11 @@ def build_spack_env(config, update_spack, machine, compiler, mpi,  # noqa: C901
     scorpio = config.get('deploy', 'scorpio')
     parallelio = config.get('deploy', 'parallelio')
 
+    if config.has_option('deploy', 'spack_mirror'):
+        spack_mirror = config.get('deploy', 'spack_mirror')
+    else:
+        spack_mirror = None
+
     spack_branch_base = f'{spack_base}/{spack_env}'
 
     specs = list()
@@ -546,7 +551,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi,  # noqa: C901
                        include_e3sm_lapack=include_e3sm_lapack,
                        include_e3sm_hdf5_netcdf=e3sm_hdf5_netcdf,
                        yaml_template=yaml_template, tmpdir=tmpdir,
-                       custom_spack=custom_spack)
+                       custom_spack=custom_spack, spack_mirror=spack_mirror)
 
         # remove ESMC/ESMF include files that interfere with MPAS time keeping
         include_path = f'{spack_branch_base}/var/spack/environments/' \
