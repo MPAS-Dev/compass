@@ -1,8 +1,10 @@
+from compass.landice.tests.ismip6_forcing.configure import (
+    configure as configure_testgroup,
+)
+from compass.landice.tests.ismip6_forcing.shelf_collapse.process_shelf_collapse import (  # noqa: E501
+    ProcessShelfCollapse,
+)
 from compass.testcase import TestCase
-from compass.landice.tests.ismip6_forcing.shelf_collapse.process_shelf_collapse \
-    import ProcessShelfCollapse
-from compass.landice.tests.ismip6_forcing.configure import configure as \
-    configure_testgroup
 
 
 class ShelfCollapse(TestCase):

@@ -1,10 +1,13 @@
+from compass.landice.tests.ismip6_forcing.atmosphere.process_smb import (
+    ProcessSMB,
+)
+from compass.landice.tests.ismip6_forcing.atmosphere.process_smb_racmo import (
+    ProcessSmbRacmo,
+)
+from compass.landice.tests.ismip6_forcing.configure import (
+    configure as configure_testgroup,
+)
 from compass.testcase import TestCase
-from compass.landice.tests.ismip6_forcing.atmosphere.process_smb \
-    import ProcessSMB
-from compass.landice.tests.ismip6_forcing.atmosphere.process_smb_racmo \
-    import ProcessSmbRacmo
-from compass.landice.tests.ismip6_forcing.configure import configure as \
-    configure_testgroup
 
 
 class Atmosphere(TestCase):

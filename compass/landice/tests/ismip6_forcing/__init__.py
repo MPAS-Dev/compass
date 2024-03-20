@@ -1,8 +1,9 @@
-from compass.testgroup import TestGroup
 from compass.landice.tests.ismip6_forcing.atmosphere import Atmosphere
-from compass.landice.tests.ismip6_forcing.ocean_thermal import OceanThermal
 from compass.landice.tests.ismip6_forcing.ocean_basal import OceanBasal
+from compass.landice.tests.ismip6_forcing.ocean_thermal import OceanThermal
 from compass.landice.tests.ismip6_forcing.shelf_collapse import ShelfCollapse
+from compass.testgroup import TestGroup
+
 
 class Ismip6Forcing(TestGroup):
     """

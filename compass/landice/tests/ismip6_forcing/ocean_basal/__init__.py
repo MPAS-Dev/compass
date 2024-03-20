@@ -1,8 +1,10 @@
+from compass.landice.tests.ismip6_forcing.configure import (
+    configure as configure_testgroup,
+)
+from compass.landice.tests.ismip6_forcing.ocean_basal.process_basal_melt import (  # noqa: E501
+    ProcessBasalMelt,
+)
 from compass.testcase import TestCase
-from compass.landice.tests.ismip6_forcing.ocean_basal.process_basal_melt \
-    import ProcessBasalMelt
-from compass.landice.tests.ismip6_forcing.configure import configure as \
-    configure_testgroup
 
 
 class OceanBasal(TestCase):
