@@ -6,7 +6,7 @@ import xarray as xr
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 
-from compass.landice.tests.ismip6_forcing.create_mapfile_smb import (
+from compass.landice.tests.ismip6_forcing.create_mapfile import (
     build_mapping_file,
 )
 from compass.step import Step
