@@ -6,7 +6,7 @@ python>=3.8
 cartopy
 cartopy_offlinedata
 cmocean
-esmf=*={{ mpi_prefix }}_*
+esmf=8.6.0={{ mpi_prefix }}_*
 ffmpeg
 geometric_features=1.3.0
 git
@@ -16,11 +16,13 @@ ipython
 jupyter
 lxml
 {% if include_mache %}
-mache=1.17.0
+mache=1.20.0
 {% endif %}
 matplotlib-base
 metis
-mpas_tools=0.29.0
+moab >=5.5.1
+moab=*={{ mpi_prefix }}_tempest_*
+mpas_tools=0.32.0
 nco
 netcdf4=*=nompi_*
 numpy
@@ -30,7 +32,7 @@ otps=2021.10
 progressbar2
 pyamg >=4.2.2
 pyproj
-pyremap>=1.1.0,<2.0.0
+pyremap>=1.3.0,<2.0.0
 requests
 ruamel.yaml
 # having pip check problems with this version

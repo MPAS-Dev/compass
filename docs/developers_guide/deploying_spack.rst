@@ -105,6 +105,59 @@ for machines that mache knows about get updated.  When this happens, we update
 mache’s copy of ``config_machines.xml`` and that tells me which modules to
 update in spack, see below.dev_quick_start
 
+Mirroring MOAB on Chicoma
+-------------------------
+
+The firewall on LANL IC's Chicoma blocks access to the MOAB package (at least
+at the moment -- Xylar has made a request to allow access).  To get around
+this, someone testing or deploying spack builds on Chicoma will first need to
+update the local spack mirror with the desired version of MOAB (5.5.1 in this
+example).
+
+First, you need to know the versions of the ``mache`` and ``moab`` packages
+that are needed (1.20.0 and 5.5.1, respectively, in this example).  These are
+specified in ``conda/configure_compass_env.py`` and ``conda/default.cfg``,
+respectively.  On a LANL laptop with either (1) the VPN turned off and the
+proxies unset or (2) the VPN turned on and the proxies set, run:
+
+.. code-block:: bash
+
+    MACHE_VER=1.20.0
+    MOAB_VER=5.5.1
+    mkdir spack_mirror
+    cd spack_mirror
+    git clone git@github.com:E3SM-Project/spack.git -b spack_for_mache_${MACHE_VER} spack_for_mache_${MACHE_VER}
+    source spack_for_mache_${MACHE_VER}/share/spack/setup-env.sh
+
+    # remove any cache files that might cause trouble
+    rm -rf ~/.spack
+
+    # this should create spack_mirror with subdirectories moab and _source-cache
+    spack mirror create -d spack_mirror moab@${MOAB_VER}
+
+    tar cvfj spack_mirror.tar.bz2 spack_mirror
+
+Then, if you used option (1) above turn on the LANL VPN (and set the proxies).
+You may find it convenient to login on to Chicoma
+(e.g. ``ssh -tt wtrw 'ssh ch-fe'``) in a separate terminal if you have
+configured your laptop to preserve connections.
+
+.. code-block:: bash
+
+    rsync -rLpt -e 'ssh wtrw ssh' spack_mirror.tar.bz2 ch-fe:/usr/projects/e3sm/compass/chicoma-cpu/spack/
+
+
+Then, on Chicoma:
+
+.. code-block:: bash
+
+    cd /usr/projects/e3sm/compass/chicoma-cpu/spack/
+    tar xvf spack_mirror.tar.bz2
+    chgrp -R climate spack_mirror/
+    chmod -R ug+w spack_mirror/
+    chmod -R ugo+rX spack_mirror/
+    rm spack_mirror.tar.bz2
+
 Creating spack environments
 ---------------------------
 
