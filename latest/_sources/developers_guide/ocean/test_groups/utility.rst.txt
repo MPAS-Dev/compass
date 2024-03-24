@@ -8,6 +8,21 @@ may create datasets for other test groups to use.  It is partly designed to
 provide provenance for data processing that may be more complex than a single,
 short script.
 
+cull_restarts
+-------------
+The class :py:class:`compass.ocean.tests.utility.cull_restarts.CullRestarts`
+defines a test case for culling ice-shelf cavities from MPAS-Ocean and -Seaice
+restart files.
+
+cull
+~~~~
+
+The class :py:class:`compass.ocean.tests.utility.cull_restarts.Cull` defines
+a step for culling ice-shelf cavities from MPAS-Ocean and -Seaice
+restart files.  The step produces a culled mesh file, graph file, maps between
+the unculled and culled meshes in addition to culled versions of the restart
+files.
+
 extrap_woa
 ----------
 The class :py:class:`compass.ocean.tests.utility.extrap_woa.ExtrapWoa`
