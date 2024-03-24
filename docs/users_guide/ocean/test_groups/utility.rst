@@ -8,6 +8,13 @@ may create datasets for other test groups to use.  It is partly designed to
 provide provenance for data processing that may be more complex than a single,
 short script.
 
+cull_restarts
+-------------
+The ``ocean/utility/cull_restarts`` test case is used to cull ice-shelf
+cavities from MPAS-Ocean and -Seaice restart files.  It is intended for
+expert users wanting to create an E3SM branch run without ice-shelf cavities
+from a previous run that included cavities.
+
 extrap_woa
 ----------
 The ``ocean/utility/extrap_woa`` test case is used to extrapolate
