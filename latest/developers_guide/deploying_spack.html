@@ -79,6 +79,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#identifying-e3sm-machines">Identifying E3SM machines</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#config-options-describing-e3sm-machines">Config options describing E3SM machines</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#modules-env-variables-etc-for-e3sm-machines">Modules, env. variables, etc. for  E3SM machines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mirroring-moab-on-chicoma">Mirroring MOAB on Chicoma</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#creating-spack-environments">Creating spack environments</a></li>
 </ul>
 </li>
@@ -225,6 +226,51 @@ We try to keep a close eye on E3SM master and update mache when system modules
 for machines that mache knows about get updated.  When this happens, we update
 mache’s copy of <code class="docutils literal notranslate"><span class="pre">config_machines.xml</span></code> and that tells me which modules to
 update in spack, see below.dev_quick_start</p>
+</section>
+<section id="mirroring-moab-on-chicoma">
+<h3>Mirroring MOAB on Chicoma<a class="headerlink" href="#mirroring-moab-on-chicoma" title="Link to this heading">¶</a></h3>
+<p>The firewall on LANL IC’s Chicoma blocks access to the MOAB package (at least
+at the moment – Xylar has made a request to allow access).  To get around
+this, someone testing or deploying spack builds on Chicoma will first need to
+update the local spack mirror with the desired version of MOAB (5.5.1 in this
+example).</p>
+<p>First, you need to know the versions of the <code class="docutils literal notranslate"><span class="pre">mache</span></code> and <code class="docutils literal notranslate"><span class="pre">moab</span></code> packages
+that are needed (1.20.0 and 5.5.1, respectively, in this example).  These are
+specified in <code class="docutils literal notranslate"><span class="pre">conda/configure_compass_env.py</span></code> and <code class="docutils literal notranslate"><span class="pre">conda/default.cfg</span></code>,
+respectively.  On a LANL laptop with either (1) the VPN turned off and the
+proxies unset or (2) the VPN turned on and the proxies set, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">MACHE_VER</span><span class="o">=</span><span class="m">1</span>.20.0
+<span class="nv">MOAB_VER</span><span class="o">=</span><span class="m">5</span>.5.1
+mkdir<span class="w"> </span>spack_mirror
+<span class="nb">cd</span><span class="w"> </span>spack_mirror
+git<span class="w"> </span>clone<span class="w"> </span>git@github.com:E3SM-Project/spack.git<span class="w"> </span>-b<span class="w"> </span>spack_for_mache_<span class="si">${</span><span class="nv">MACHE_VER</span><span class="si">}</span><span class="w"> </span>spack_for_mache_<span class="si">${</span><span class="nv">MACHE_VER</span><span class="si">}</span>
+<span class="nb">source</span><span class="w"> </span>spack_for_mache_<span class="si">${</span><span class="nv">MACHE_VER</span><span class="si">}</span>/share/spack/setup-env.sh
+
+<span class="c1"># remove any cache files that might cause trouble</span>
+rm<span class="w"> </span>-rf<span class="w"> </span>~/.spack
+
+<span class="c1"># this should create spack_mirror with subdirectories moab and _source-cache</span>
+spack<span class="w"> </span>mirror<span class="w"> </span>create<span class="w"> </span>-d<span class="w"> </span>spack_mirror<span class="w"> </span>moab@<span class="si">${</span><span class="nv">MOAB_VER</span><span class="si">}</span>
+
+tar<span class="w"> </span>cvfj<span class="w"> </span>spack_mirror.tar.bz2<span class="w"> </span>spack_mirror
+</pre></div>
+</div>
+<p>Then, if you used option (1) above turn on the LANL VPN (and set the proxies).
+You may find it convenient to login on to Chicoma
+(e.g. <code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">-tt</span> <span class="pre">wtrw</span> <span class="pre">'ssh</span> <span class="pre">ch-fe'</span></code>) in a separate terminal if you have
+configured your laptop to preserve connections.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rsync<span class="w"> </span>-rLpt<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;ssh wtrw ssh&#39;</span><span class="w"> </span>spack_mirror.tar.bz2<span class="w"> </span>ch-fe:/usr/projects/e3sm/compass/chicoma-cpu/spack/
+</pre></div>
+</div>
+<p>Then, on Chicoma:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/usr/projects/e3sm/compass/chicoma-cpu/spack/
+tar<span class="w"> </span>xvf<span class="w"> </span>spack_mirror.tar.bz2
+chgrp<span class="w"> </span>-R<span class="w"> </span>climate<span class="w"> </span>spack_mirror/
+chmod<span class="w"> </span>-R<span class="w"> </span>ug+w<span class="w"> </span>spack_mirror/
+chmod<span class="w"> </span>-R<span class="w"> </span>ugo+rX<span class="w"> </span>spack_mirror/
+rm<span class="w"> </span>spack_mirror.tar.bz2
+</pre></div>
+</div>
 </section>
 <section id="creating-spack-environments">
 <h3>Creating spack environments<a class="headerlink" href="#creating-spack-environments" title="Link to this heading">¶</a></h3>
