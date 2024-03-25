@@ -8,6 +8,15 @@ may create datasets for other test groups to use.  It is partly designed to
 provide provenance for data processing that may be more complex than a single,
 short script.
 
+combine_topo
+------------
+The ``ocean/utility/combine_topo`` test case is used to combine the
+`BedMachine Antarctica v3 <https://nsidc.org/data/nsidc-0756/versions/3>`_
+dataset with the `GEBCO 2023 <https://www.gebco.net/data_and_products/gridded_bathymetry_data/>`_
+dataset.  The result is on a 1/80 degree latitude-longitude grid.  This utility
+is intended for provenance.  It is intended to doucment the process for
+producing the topography dataset used for E3SM ocean meshes.
+
 cull_restarts
 -------------
 The ``ocean/utility/cull_restarts`` test case is used to cull ice-shelf
