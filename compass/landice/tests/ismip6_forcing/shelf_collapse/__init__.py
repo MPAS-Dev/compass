@@ -1,17 +1,17 @@
 from compass.landice.tests.ismip6_forcing.configure import (
     configure as configure_testgroup,
 )
-from compass.landice.tests.ismip6_forcing.ocean_basal.process_basal_melt import (  # noqa: E501
-    ProcessBasalMelt,
+from compass.landice.tests.ismip6_forcing.shelf_collapse.process_shelf_collapse import (  # noqa: E501
+    ProcessShelfCollapse,
 )
 from compass.testcase import TestCase
 
 
-class OceanBasal(TestCase):
+class ShelfCollapse(TestCase):
     """
-    A test case for processing the ISMIP6 ocean basalmelt param. coeff. data.
+    A test case for processing the ISMIP6 shelf-collapse mask data.
     The test case builds a mapping file for interpolation between the
-    ISMIP6 8km polarstereo grid and MALI mesh, regrids the forcing data
+    ISMIP6 polarstereo grid and MALI mesh, regrids the forcing data
     and renames the ISMIP6 variables to corresponding MALI variables.
     """
 
@@ -24,10 +24,10 @@ class OceanBasal(TestCase):
         test_group : compass.landice.tests.ismip6_forcing.Ismip6Forcing
             The test group that this test case belongs to
         """
-        name = "ocean_basal"
+        name = "shelf_collapse"
         super().__init__(test_group=test_group, name=name)
 
-        step = ProcessBasalMelt(test_case=self)
+        step = ProcessShelfCollapse(test_case=self)
         self.add_step(step)
 
     def configure(self):

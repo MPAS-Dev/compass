@@ -1,8 +1,10 @@
+from compass.landice.tests.ismip6_forcing.configure import (
+    configure as configure_testgroup,
+)
+from compass.landice.tests.ismip6_forcing.ocean_thermal.process_thermal_forcing import (  # noqa: E501
+    ProcessThermalForcing,
+)
 from compass.testcase import TestCase
-from compass.landice.tests.ismip6_forcing.ocean_thermal.\
-    process_thermal_forcing import ProcessThermalForcing
-from compass.landice.tests.ismip6_forcing.configure import configure as \
-    configure_testgroup
 
 
 class OceanThermal(TestCase):
