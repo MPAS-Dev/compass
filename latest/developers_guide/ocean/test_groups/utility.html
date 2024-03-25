@@ -85,6 +85,7 @@
 <li class="toctree-l3"><a class="reference internal" href="spherical_harmonic_transform.html">spherical_harmonic_transform</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tides.html">tides</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">utility</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#combine-topo">combine_topo</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#cull-restarts">cull_restarts</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#extrap-woa">extrap_woa</a></li>
 </ul>
@@ -152,6 +153,22 @@
 may create datasets for other test groups to use.  It is partly designed to
 provide provenance for data processing that may be more complex than a single,
 short script.</p>
+<section id="combine-topo">
+<h2>combine_topo<a class="headerlink" href="#combine-topo" title="Link to this heading">¶</a></h2>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.utility.combine_topo.CombineTopo.html#compass.ocean.tests.utility.combine_topo.CombineTopo" title="compass.ocean.tests.utility.combine_topo.CombineTopo"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.utility.combine_topo.CombineTopo</span></code></a>
+defines a test case for combining the
+<a class="reference external" href="https://nsidc.org/data/nsidc-0756/versions/3">BedMachine Antarctica v3</a>
+dataset with the <a class="reference external" href="https://www.gebco.net/data_and_products/gridded_bathymetry_data/">GEBCO 2023</a>
+dataset.</p>
+<section id="combine">
+<h3>combine<a class="headerlink" href="#combine" title="Link to this heading">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.utility.combine_topo.Combine.html#compass.ocean.tests.utility.combine_topo.Combine" title="compass.ocean.tests.utility.combine_topo.Combine"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.utility.combine_topo.Combine</span></code></a>
+defines a step for combining the datasets above.  The GEBCO data is downsampled
+to a 1/80 degree latitude-longitude grid to make later remapping to MPAS meshes
+more manageable.  The BedMachine data is remapped to this same mesh and the
+two datasets are blended between 60 and 62 degrees south latitude.</p>
+</section>
+</section>
 <section id="cull-restarts">
 <h2>cull_restarts<a class="headerlink" href="#cull-restarts" title="Link to this heading">¶</a></h2>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.utility.cull_restarts.CullRestarts.html#compass.ocean.tests.utility.cull_restarts.CullRestarts" title="compass.ocean.tests.utility.cull_restarts.CullRestarts"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.utility.cull_restarts.CullRestarts</span></code></a>
@@ -173,8 +190,8 @@ defines a test case for extrapolating
 <a class="reference external" href="https://www.ncei.noaa.gov/products/world-ocean-atlas">WOA 2023</a> data into
 ice-shelf cavities and coastal regions, then into land, grounded ice and below
 bathymetry.</p>
-<section id="combine">
-<h3>combine<a class="headerlink" href="#combine" title="Link to this heading">¶</a></h3>
+<section id="id1">
+<h3>combine<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.utility.extrap_woa.Combine.html#compass.ocean.tests.utility.extrap_woa.Combine" title="compass.ocean.tests.utility.extrap_woa.Combine"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.utility.extrap_woa.Combine</span></code></a> defines
 a step for combining the Annual and January temperature and salinity
 climatology data into a single file.  We use the 30-year objectively analyzed
