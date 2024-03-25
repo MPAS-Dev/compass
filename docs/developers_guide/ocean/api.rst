@@ -907,6 +907,11 @@ utility
 
    Utility
 
+   combine_topo.CombineTopo
+   combine_topo.Combine
+   combine_topo.Combine.setup
+   combine_topo.Combine.run
+
    cull_restarts.CullRestarts
    cull_restarts.Cull
    cull_restarts.Cull.run

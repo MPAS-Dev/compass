@@ -8,6 +8,22 @@ may create datasets for other test groups to use.  It is partly designed to
 provide provenance for data processing that may be more complex than a single,
 short script.
 
+combine_topo
+------------
+The class :py:class:`compass.ocean.tests.utility.combine_topo.CombineTopo`
+defines a test case for combining the
+`BedMachine Antarctica v3 <https://nsidc.org/data/nsidc-0756/versions/3>`_
+dataset with the `GEBCO 2023 <https://www.gebco.net/data_and_products/gridded_bathymetry_data/>`_
+dataset.
+
+combine
+~~~~~~~
+The class :py:class:`compass.ocean.tests.utility.combine_topo.Combine`
+defines a step for combining the datasets above.  The GEBCO data is downsampled
+to a 1/80 degree latitude-longitude grid to make later remapping to MPAS meshes
+more manageable.  The BedMachine data is remapped to this same mesh and the
+two datasets are blended between 60 and 62 degrees south latitude.
+
 cull_restarts
 -------------
 The class :py:class:`compass.ocean.tests.utility.cull_restarts.CullRestarts`
