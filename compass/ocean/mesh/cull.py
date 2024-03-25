@@ -11,6 +11,7 @@ from mpas_tools.io import write_netcdf
 from mpas_tools.logging import LoggingContext, check_call
 from mpas_tools.mesh.conversion import cull
 from mpas_tools.mesh.creation.sort_mesh import sort_mesh
+from mpas_tools.mesh.cull import cull_dataset, map_culled_to_base
 from mpas_tools.mesh.mask import compute_mpas_flood_fill_mask
 from mpas_tools.ocean import inject_bathymetry
 from mpas_tools.ocean.coastline_alteration import (
@@ -126,7 +127,8 @@ class CullMeshStep(Step):
                                 work_dir_target=target)
             self.add_output_file('topography_culled.nc')
             self.add_output_file('map_culled_to_base.nc')
-
+            self.add_input_file(filename='south_pole.geojson',
+                                package='compass.ocean.mesh')
         config = self.config
         self.cpus_per_task = config.getint('spherical_mesh',
                                            'cull_mesh_cpus_per_task')
@@ -268,39 +270,6 @@ def cull_mesh(with_cavities=False, with_critical_passages=False,
             convert_to_cdf5, latitude_threshold, sweep_count)
 
 
-def write_map_culled_to_base(base_mesh_filename, culled_mesh_filename,
-                             out_filename):
-    ds_base = xr.open_dataset(base_mesh_filename)
-    ncells_base = ds_base.sizes['nCells']
-    lon_base = ds_base.lonCell.values
-    lat_base = ds_base.latCell.values
-
-    ds_culled = xr.open_dataset(culled_mesh_filename)
-    ncells_culled = ds_culled.sizes['nCells']
-    lon_culled = ds_culled.lonCell.values
-    lat_culled = ds_culled.latCell.values
-
-    # create a map from lat-lon pairs to base-mesh cell indices
-    map_base = dict()
-    for cell_index in range(ncells_base):
-        lon = lon_base[cell_index]
-        lat = lat_base[cell_index]
-        map_base[(lon, lat)] = cell_index
-
-    # create a map from culled- to base-mesh cell indices
-    map_culled_to_base = list()
-    for cell_index in range(ncells_culled):
-        lon = lon_culled[cell_index]
-        lat = lat_culled[cell_index]
-        # each (lon, lat) for a culled cell *must* be in the base mesh
-        map_culled_to_base.append(map_base[(lon, lat)])
-
-    ds_map_culled_to_base = xr.Dataset()
-    ds_map_culled_to_base['mapCulledToBase'] = (('nCells',),
-                                                map_culled_to_base)
-    write_netcdf(ds_map_culled_to_base, out_filename)
-
-
 def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
                             custom_critical_passages, custom_land_blockages,
                             preserve_floodplain, use_progress_bar,
@@ -321,6 +290,9 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
     netcdf_engine = mpas_tools.io.default_engine
 
     has_remapped_topo = os.path.exists('topography.nc')
+    if with_cavities and not has_remapped_topo:
+        raise ValueError('Mesh culling with caviites must be from '
+                         'remapped topography.')
 
     if has_remapped_topo:
         _land_mask_from_topo(with_cavities,
@@ -463,24 +435,11 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
         check_call(args, logger=logger)
 
     if has_remapped_topo:
-        write_map_culled_to_base(base_mesh_filename='base_mesh.nc',
-                                 culled_mesh_filename='culled_mesh.nc',
-                                 out_filename='map_culled_to_base.nc')
-        _cull_topo()
+        _cull_topo(with_cavities, process_count, logger)
 
     if with_cavities:
-        if has_remapped_topo:
-            _land_ice_mask_from_topo(topo_filename='topography_culled.nc',
-                                     mask_filename='ice_coverage.nc')
-        else:
-            _land_mask_from_geojson(with_cavities=False,
-                                    process_count=process_count,
-                                    logger=logger,
-                                    mesh_filename='culled_mesh.nc',
-                                    geojson_filename='ice_coverage.geojson',
-                                    mask_filename='ice_coverage.nc')
-
-        dsMask = xr.open_dataset('ice_coverage.nc')
+        dsMask = xr.open_dataset('topography_culled.nc')
+        dsMask = dsMask[['regionCellMasks',]]
 
         dsMask = add_land_locked_cells_to_mask(
             dsMask, dsCulledMesh, latitude_threshold=latitude_threshold,
@@ -511,13 +470,26 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
                     use_progress_bar=use_progress_bar)
 
 
-def _cull_topo():
-    ds_map = xr.open_dataset('map_culled_to_base.nc')
-    map_culled_to_base = ds_map.mapCulledToBase.values
+def _cull_topo(with_cavities, process_count, logger):
 
     ds_topo = xr.open_dataset('topography.nc')
-    ds_topo = ds_topo.isel(nCells=map_culled_to_base)
-    write_netcdf(ds_topo, 'topography_culled.nc')
+    ds_base = xr.open_dataset('base_mesh.nc')
+    if with_cavities:
+        _add_land_ice_mask_to_topo(ds_topo, ds_base, logger)
+        write_netcdf(ds_topo, 'topography_with_land_ice_mask.nc')
+
+    ds_culled = xr.open_dataset('culled_mesh.nc')
+    ds_map_culled_to_base = map_culled_to_base(ds_base=ds_base,
+                                               ds_culled=ds_culled,
+                                               workers=process_count)
+    logger.info('Culling topography')
+    write_netcdf(ds_map_culled_to_base, 'map_culled_to_base.nc')
+    ds_culled_topo = cull_dataset(ds=ds_topo, ds_base_mesh=ds_base,
+                                  ds_culled_mesh=ds_culled,
+                                  ds_map_culled_to_base=ds_map_culled_to_base,
+                                  logger=logger)
+
+    write_netcdf(ds_culled_topo, 'topography_culled.nc')
 
 
 def _land_mask_from_topo(with_cavities, topo_filename, mask_filename):
@@ -544,18 +516,36 @@ def _land_mask_from_topo(with_cavities, topo_filename, mask_filename):
     write_netcdf(ds_mask, mask_filename)
 
 
-def _land_ice_mask_from_topo(topo_filename, mask_filename):
-    ds_topo = xr.open_dataset(topo_filename)
+def _add_land_ice_mask_to_topo(ds_topo, ds_base_mesh, logger):
     land_ice_frac = ds_topo.landIceFracObserved
 
     # we want the mask to be 1 where there's at least half land-ice
     land_ice_mask = xr.where(land_ice_frac > 0.5, 1, 0)
 
-    land_ice_mask = land_ice_mask.expand_dims(dim='nRegions', axis=1)
+    ocean_mask = 1 - land_ice_mask
 
-    ds_mask = xr.Dataset()
-    ds_mask['regionCellMasks'] = land_ice_mask
-    write_netcdf(ds_mask, mask_filename)
+    gf = GeometricFeatures()
+    fc_seed = gf.read(componentName='ocean', objectType='point',
+                      tags=['seed_point'])
+
+    # flood fill the ocean portion to fill in any holes in the land ice
+    ds_mask = compute_mpas_flood_fill_mask(dsMesh=ds_base_mesh,
+                                           daGrow=ocean_mask,
+                                           fcSeed=fc_seed,
+                                           logger=logger)
+    land_ice_mask = 1 - ds_mask.cellSeedMask
+
+    fc_seed = read_feature_collection('south_pole.geojson')
+
+    # now flood fill the ice portion to remove isolated land ice
+    ds_mask = compute_mpas_flood_fill_mask(dsMesh=ds_base_mesh,
+                                           daGrow=land_ice_mask,
+                                           fcSeed=fc_seed,
+                                           logger=logger)
+    land_ice_mask = ds_mask.cellSeedMask
+    ds_topo['landIceMask'] = land_ice_mask
+    region_cell_mask = land_ice_mask.expand_dims(dim='nRegions', axis=1)
+    ds_topo['regionCellMasks'] = region_cell_mask
 
 
 def _land_mask_from_geojson(with_cavities, process_count, logger,
