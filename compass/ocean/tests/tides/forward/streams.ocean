@@ -29,7 +29,6 @@
 
     <stream name="mesh"/>
     <var name="ssh"/>
-    <var name="ssh_sal"/>
     <var name="layerThickness"/>
     <var name="xtime"/>
     <var name="kineticEnergyCell"/>
@@ -61,9 +60,14 @@
 <stream name="topographic_wave_drag"
         type="input"
         filename_template="topographic_wave_drag.nc"
-        input_interval="initial_only" >
+        input_interval="initial_only">
 
-        <var name="topographic_wave_drag"/>
+        <var name="topo_buoyancy_N1V"/>
+        <var name="topo_buoyancy_N1B"/>
+        <var name="bathy_stddev"/>
+        <var name="bed_slope_edges"/>
+        <var name="latGradEdge"/>
+        <var name="lonGradEdge"/>
 </stream>
 
 <stream name="globalStatsOutput"
