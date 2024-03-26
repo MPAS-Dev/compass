@@ -89,6 +89,31 @@ for new runs
     # Whether facemelting should be included in the runs
     include_face_melting = False
 
+    # True if running coupled MALI-sea level model simulation
+    sea_level_model = True
+
+    # NOTE: for the directories related to the sea-level model input/outputs, the slash '/' at the end of the directory name is necessary.
+    # Path to the base directory containing globally defined ice thickness field for the sea-level model
+    slm_input_ice = /global/cfs/cdirs/fanssie/MALI_projects/SeaLevelModel_Inputs/icemodel/
+
+    # Path to the directory containing earth model for the sea-level model
+    slm_input_earth = /global/cfs/cdirs/fanssie/MALI_projects/SeaLevelModel_Inputs/earthmodel/
+
+    # Earth structure profile
+    # possible values: any file name string of earth model file.
+    # Note that there is no single representative earth model for the globe or
+    # any region of the globe (e.g., West Antarctica, East Antarctica, Greenland)
+    # But for this test, we use 'prem_512.l60K2C.sum18p6.dum19p2.tz19p4.lm22' for West Antarctica
+    # and 'prem_coll_512.l120C.ump5.lm10' for East Antarctica. Other earthmodels that can be used
+    # should exist in the path defined in the config option 'slm_input_earth'.
+    slm_earth_structure = prem_512.l60K2C.sum18p6.dum19p2.tz19p4.lm22
+
+    # Path to the diectory containing other input files (present-day global topography and sea-level model grid files)
+    slm_input_others = /global/cfs/cdirs/fanssie/MALI_projects/SeaLevelModel_Inputs/others/
+
+    # number of gauss-legendre nodes in latitude (typically an integer multiple of 512)
+    nglv = 2048
+
 Additionally, a user should also include the following options (and possibly
 others) that will be used for submitting the jobs for each ensemble member
 (set to appropriate values for their usage situation):
@@ -133,3 +158,26 @@ Steps for setting up and running experiments
 Note that the ``hist`` run must be completed before any of the other
 experiments can be run.  A symlink to the ``hist`` restart file from year
 2015 exists in each of the other experiment subdirectories.
+
+Important notes for analyzing coupled MALI-SLM simulations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Currently, MALI uses a planar mesh that projects the south pole with
+polar stereographic projection of ellipsoidal Earth, and the sea-level model
+uses a global grid of spherical Earth. This inconsistency in the Earth's
+assumed shape (ellipsoid vs. sphere) in MALI and the SLM causes discrepancies
+in the comparison of post-simulation ice mass calculations from the model outputs.
+To address this issue, an interim solution has been made to project the southern
+polar region onto the MALI planar mesh assuming a sphere (this is done by setting
+the lat/long in the MALI mesh using the 'aid-bedmap2-sphere' projection string in
+calling the function in 'set_lat_lon_fields_in_planar_grid.py'. Thus, the resulting
+MALI mesh for coupled MALI-SLM simulations that are setup from this testgroup have
+the lat/long values based off sphere. Once the simulation outputs are generated,
+it is necessary to calculate and apply the scaling factors to the MALI outputs
+to correct for the areal distortion arose from projecting the south pole on a sphere
+onto plane. Only after applying the scaling factor, the MALI outputs will be
+comparable to the SLM outputs. The equations to calculate the scaling factors are shown in
+Eqn. 21-4 in https://pubs.usgs.gov/pp/1395/report.pdf
+An example of the calculation for the MALI-SLM case can also be found in
+the ``compass`` testgroup/testcase/ ``compass/landice/test/slm/circ_icesheet/``,
+``visualize`` step (https://github.com/MPAS-Dev/compass/pull/748).
