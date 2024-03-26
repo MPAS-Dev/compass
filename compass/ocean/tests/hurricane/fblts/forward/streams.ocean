@@ -1,0 +1,108 @@
+<streams>
+
+<immutable_stream name="mesh"
+                  type="input"
+                  filename_template="input.nc"
+                  input_interval="initial_only"/>
+
+<immutable_stream name="input"
+                  type="input"
+                  filename_template="input.nc"
+                  input_interval="initial_only"/>
+
+<immutable_stream name="restart"
+                  type="input;output"
+                  filename_template="restarts/restart.$Y-$M-$D_$h.$m.$s.nc"
+                  filename_interval="output_interval"
+                  reference_time="0001-01-01_00:00:00"
+                  clobber_mode="truncate"
+                  input_interval="initial_only"
+                  output_interval="0005_00:00:00"/>
+
+<immutable_stream name="atmospheric_forcing"
+                  type="input"
+                  filename_template="atmospheric_forcing.nc"
+                  filename_interval="none"
+                  packages="timeVaryingAtmosphericForcingPKG"
+                  input_interval="none"/>
+
+<stream name="pointLocationsInput"
+        filename_template="points.nc"
+        type="input"
+        input_interval="initial_only"
+        runtime_format="single_file"
+        mode="forward;analysis">
+
+    <var name="pointCellGlobalID"/>
+</stream>
+
+<stream name="topographic_wave_drag"
+                  type="input"
+                  filename_template="topographic_wave_drag.nc"
+                  filename_interval="none"
+                  packages="topographicWaveDragPKG"
+                  input_interval="initial_only">
+
+    <var name="topographic_wave_drag"/>
+</stream>
+
+<stream name="ltsregion"
+                  type="input"
+                  filename_template="input.nc"
+                  filename_interval="none"
+                  input_interval="initial_only">
+    <var name="LTSRegion"/>
+</stream>
+
+<stream name="output"
+        type="output"
+        filename_template="output.nc"
+        output_interval="12:00:00"
+        precision="double"
+        clobber_mode="truncate">
+
+    <var name="xtime"/>
+    <var name="ssh"/>
+    <var name="kineticEnergyCell"/>
+    <var name="layerThickness"/>
+    <var name="normalVelocity"/>
+    <var name="daysSinceStartOfSim"/>
+    <var name="LTSRegion"/>
+</stream>
+
+<stream name="pointwiseStatsOutput"
+        filename_template="pointwiseStats.nc"
+        type="output"
+        mode="forward;analysis"
+        output_interval="00:30:00"
+        packages="pointwiseStatsAMPKG"
+        clobber_mode="truncate"
+        io_type="netcdf"
+        runtime_format="single_file">
+
+    <var name="pointCellGlobalID"/>
+    <var name="xtime"/>
+    <var name="latCell"/>
+    <var name="lonCell"/>
+    <var name="ssh"/>
+    <var name="layerThickness"/>
+</stream>
+
+<stream name="globalStatsOutput"
+        type="none"
+        filename_template="globalStats.nc"
+        filename_interval="01-00-00_00:00:00"
+        clobber_mode="truncate"
+        packages="globalStatsAMPKG"
+        output_interval="none" >
+
+    <var_array name="minGlobalStats"/>
+    <var_array name="maxGlobalStats"/>
+    <var_array name="avgGlobalStats"/>
+    <var name="xtime"/>
+    <var name="daysSinceStartOfSim"/>
+    <var name="volumeCellGlobal"/>
+    <var name="CFLNumberGlobal"/>
+</stream>
+
+</streams>

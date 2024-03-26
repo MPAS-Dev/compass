@@ -29,8 +29,10 @@ class Mesh(TestCase):
         self.mesh_name = mesh_name
         self.use_lts = use_lts
 
-        if use_lts:
+        if use_lts == 'LTS':
             name = 'mesh_lts'
+        elif use_lts == 'FB_LTS':
+            name = 'mesh_fblts'
         else:
             name = 'mesh'
         subdir = '{}/{}'.format(mesh_name, name)
@@ -60,10 +62,14 @@ class Mesh(TestCase):
 
         self.add_step(cull_mesh_step)
 
-        if use_lts:
-
+        if use_lts == 'LTS':
             self.add_step(LTSRegionsStep(
-                          test_case=self, cull_mesh_step=cull_mesh_step))
+                          test_case=self, cull_mesh_step=cull_mesh_step,
+                          num_interface_adjacent=2))
+        elif use_lts == 'FB_LTS':
+            self.add_step(LTSRegionsStep(
+                          test_case=self, cull_mesh_step=cull_mesh_step,
+                          num_interface_adjacent=10))
 
     def configure(self):
         """

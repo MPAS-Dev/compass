@@ -19,7 +19,7 @@ class Hurricane(TestGroup):
         storm = 'sandy'
         mesh_name = 'DEQU120at30cr10rr2'
 
-        for use_lts in [False, True]:
+        for use_lts in [False, 'LTS', 'FB_LTS']:
 
             mesh = Mesh(test_group=self,
                         mesh_name=mesh_name,
