@@ -40,7 +40,7 @@ class Mesh(TestCase):
                 self, pixel_step,
                 name='base_mesh', subdir=None,
                 elev_file='RTopo_2_0_4_GEBCO_v2023_30sec_pixel.nc',
-                spac_dhdx=0.125, spac_hmin=5, spac_hmax=45, spac_hbar=60,
+                spac_dhdx=0.125, spac_hmin=5, spac_hmax=45, spac_hbar=45,
                 ncell_nwav=80, ncell_nslp=4,
                 filt_sdev=0.5, filt_halo=50, filt_plev=0.325)
             mesh_lower = 'vr45to5'
