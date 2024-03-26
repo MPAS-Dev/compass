@@ -158,3 +158,26 @@ Steps for setting up and running experiments
 Note that the ``hist`` run must be completed before any of the other
 experiments can be run.  A symlink to the ``hist`` restart file from year
 2015 exists in each of the other experiment subdirectories.
+
+Important notes for analyzing coupled MALI-SLM simulations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Currently, MALI uses a planar mesh that projects the south pole with
+polar stereographic projection of ellipsoidal Earth, and the sea-level model
+uses a global grid of spherical Earth. This inconsistency in the Earth's
+assumed shape (ellipsoid vs. sphere) in MALI and the SLM causes discrepancies
+in the comparison of post-simulation ice mass calculations from the model outputs.
+To address this issue, an interim solution has been made to project the southern
+polar region onto the MALI planar mesh assuming a sphere (this is done by setting
+the lat/long in the MALI mesh using the 'aid-bedmap2-sphere' projection string in
+calling the function in 'set_lat_lon_fields_in_planar_grid.py'. Thus, the resulting
+MALI mesh for coupled MALI-SLM simulations that are setup from this testgroup have
+the lat/long values based off sphere. Once the simulation outputs are generated,
+it is necessary to calculate and apply the scaling factors to the MALI outputs
+to correct for the areal distortion arose from projecting the south pole on a sphere
+onto plane. Only after applying the scaling factor, the MALI outputs will be
+comparable to the SLM outputs. The equations to calculate the scaling factors are shown in
+Eqn. 21-4 in https://pubs.usgs.gov/pp/1395/report.pdf
+An example of the calculation for the MALI-SLM case can also be found in
+the ``compass`` testgroup/testcase/ ``compass/landice/test/slm/circ_icesheet/``,
+``visualize`` step (https://github.com/MPAS-Dev/compass/pull/748).
