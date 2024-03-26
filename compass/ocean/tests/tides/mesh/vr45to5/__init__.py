@@ -5,10 +5,12 @@ import netCDF4 as nc
 import numpy as np
 from mpas_tools.cime.constants import constants
 from mpas_tools.logging import check_call
-from skimage.filters import farid, gaussian, scharr
-from skimage.filters.rank import median, percentile
+from skimage.filters import gaussian, scharr
 
 from compass.mesh.spherical import SphericalBaseStep
+
+# from skimage.filters import farid
+# from skimage.filters.rank import median, percentile
 
 
 class VRTidesMesh(SphericalBaseStep):
@@ -77,6 +79,18 @@ class VRTidesMesh(SphericalBaseStep):
         earth_radius = constants['SHR_CONST_REARTH']
         opts = self.opts
 
+        opts.hfun_scal = "absolute"
+        opts.hfun_hmax = float("inf")       # null spacing lim
+        opts.hfun_hmin = float(+0.00)
+
+        opts.verbosity = +1
+        opts.mesh_dims = +2                 # 2-dim. simplexes
+
+        opts.optm_kern = "cvt+dqdx"
+
+        opts.optm_iter = 32                 # tighter opt. tol
+        opts.optm_qtol = +1.00E-05
+
         jigsawpy.savemsh(opts.hfun_file, spac)
 
         # define JIGSAW geometry
@@ -87,6 +101,14 @@ class VRTidesMesh(SphericalBaseStep):
 
         jigsawpy.savejig(opts.jcfg_file, opts)
         check_call(['jigsaw', opts.jcfg_file], logger=logger)
+        # jigsawpy.cmd.jigsaw(opts, mesh)
+
+        # rbar = np.mean(geom.radii)          # bisect heuristic
+        # hbar = np.mean(spac.value)
+        # nlev = round(math.log2(
+        #     rbar / math.sin(.4 * math.pi) / hbar)
+        # )
+        # jigsawpy.cmd.tetris(opts, nlev - 1, mesh)
 
     def build_cell_width_lat_lon(self):
         """
