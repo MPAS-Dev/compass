@@ -475,7 +475,7 @@ def _cull_topo(with_cavities, process_count, logger):
     ds_topo = xr.open_dataset('topography.nc')
     ds_base = xr.open_dataset('base_mesh.nc')
     if with_cavities:
-        _add_land_ice_mask_to_topo(ds_topo, ds_base, logger)
+        _add_land_ice_mask_and_mask_draft(ds_topo, ds_base, logger)
         write_netcdf(ds_topo, 'topography_with_land_ice_mask.nc')
 
     ds_culled = xr.open_dataset('culled_mesh.nc')
@@ -516,7 +516,7 @@ def _land_mask_from_topo(with_cavities, topo_filename, mask_filename):
     write_netcdf(ds_mask, mask_filename)
 
 
-def _add_land_ice_mask_to_topo(ds_topo, ds_base_mesh, logger):
+def _add_land_ice_mask_and_mask_draft(ds_topo, ds_base_mesh, logger):
     land_ice_frac = ds_topo.landIceFracObserved
 
     # we want the mask to be 1 where there's at least half land-ice
@@ -525,27 +525,40 @@ def _add_land_ice_mask_to_topo(ds_topo, ds_base_mesh, logger):
     ocean_mask = 1 - land_ice_mask
 
     gf = GeometricFeatures()
-    fc_seed = gf.read(componentName='ocean', objectType='point',
-                      tags=['seed_point'])
+    fc_ocean_seed = gf.read(componentName='ocean', objectType='point',
+                            tags=['seed_point'])
 
     # flood fill the ocean portion to fill in any holes in the land ice
     ds_mask = compute_mpas_flood_fill_mask(dsMesh=ds_base_mesh,
                                            daGrow=ocean_mask,
-                                           fcSeed=fc_seed,
+                                           fcSeed=fc_ocean_seed,
                                            logger=logger)
     land_ice_mask = 1 - ds_mask.cellSeedMask
 
-    fc_seed = read_feature_collection('south_pole.geojson')
+    fc_south_pole_seed = read_feature_collection('south_pole.geojson')
 
     # now flood fill the ice portion to remove isolated land ice
     ds_mask = compute_mpas_flood_fill_mask(dsMesh=ds_base_mesh,
                                            daGrow=land_ice_mask,
-                                           fcSeed=fc_seed,
+                                           fcSeed=fc_south_pole_seed,
                                            logger=logger)
     land_ice_mask = ds_mask.cellSeedMask
     ds_topo['landIceMask'] = land_ice_mask
     region_cell_mask = land_ice_mask.expand_dims(dim='nRegions', axis=1)
     ds_topo['regionCellMasks'] = region_cell_mask
+
+    # we also want to mask out the land-ice draft for cells detatched from the
+    # ice sheet, this time anywhere the land-ice fraction > 0
+    land_ice_draft_mask = xr.where(land_ice_frac > 0.0, 1, 0)
+    ds_mask = compute_mpas_flood_fill_mask(dsMesh=ds_base_mesh,
+                                           daGrow=land_ice_draft_mask,
+                                           fcSeed=fc_south_pole_seed,
+                                           logger=logger)
+
+    land_ice_draft_mask = ds_mask.cellSeedMask
+    ds_topo['landIceDraftMask'] = land_ice_draft_mask
+    ds_topo['landIceDraftObserved'] = (
+        land_ice_mask * ds_topo.landIceDraftObserved)
 
 
 def _land_mask_from_geojson(with_cavities, process_count, logger,
