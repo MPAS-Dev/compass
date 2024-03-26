@@ -4,10 +4,10 @@ import pyproj
 import xarray as xr
 from mpas_tools.cime.constants import constants
 from mpas_tools.io import write_netcdf
+from mpas_tools.mesh.cull import write_map_culled_to_base
 from pyremap import MpasCellMeshDescriptor, ProjectionGridDescriptor, Remapper
 from scipy.spatial import KDTree
 
-from compass.ocean.mesh.cull import write_map_culled_to_base
 from compass.step import Step
 
 
@@ -445,7 +445,7 @@ def _land_ice_mask_on_base_mesh(base_mesh_filename, land_ice_mask_filename,
     """ Map the land-ice mask back to the base mesh """
 
     ds_map = xr.open_dataset(map_culled_to_base_filename)
-    map_culled_to_base = ds_map.mapCulledToBase.values
+    map_culled_to_base = ds_map.mapCulledToBaseCell.values
 
     ds_base = xr.open_dataset(base_mesh_filename)
     ncells_base = ds_base.sizes['nCells']
@@ -513,7 +513,7 @@ def _reroute_missing_flux(base_mesh_filename, map_culled_to_base_filename,
     _, indices = tree.query(reroute_xyz, workers=-1)
 
     ds_map = xr.open_dataset(map_culled_to_base_filename)
-    map_culled_to_base = ds_map.mapCulledToBase.values
+    map_culled_to_base = ds_map.mapCulledToBaseCell.values
 
     fwf_rerouted = land_ice_mask.values * fwf.where(fwf.notnull(), 0.).values
     hf_rerouted = land_ice_mask.values * hf.where(hf.notnull(), 0.).values
