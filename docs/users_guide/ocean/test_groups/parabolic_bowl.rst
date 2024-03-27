@@ -72,6 +72,42 @@ different times, a time series at various points, and a convergence plot.
    :width: 500 px
    :align: center
 
+lts
+~~~
+
+Both the ``ramp`` and ``noramp`` test cases can be run with the ``lts`` variant
+which uses local time-stepping (LTS) as time integrator. Note that the tests
+verify the ability of the LTS scheme to run correctly with wetting and drying
+and are not designed to leverage the LTS capability of producing faster runs.
+
+subgrid
+~~~~~~~
+
+Both the ``ramp`` and ``noramp`` test cases can be run with a subgrid scale
+correction scheme that accounts for the effects of subgrid scale flow in
+partially wet cells due to fine-scale bathymetric variation. This approach
+is useful becuase it allows connectivity due to unresolved features
+to be represented. In many coastal applications, this scheme can enable
+coarse resolution models to capture flooding with accuracy comprable to
+what higher-resolution simulations achieve without the subgrid corrections.
+Using the subgrid corrections for the parabolic bowl should result in 
+reduced errors vs. using only the standard wetting and drying. For more
+details on the subgrid scale correction scheme see:
+`Kennedy et al. (2019) <https://doi.org/10.1016/j.ocemod.2019.101491>`_.
+Results for the subgrid test cases are shown below:
+
+.. image:: images/parabolic_bowl_subgrid_solution_360.png
+   :width: 500 px
+   :align: center
+
+.. image:: images/parabolic_bowl_subgrid_points.png
+   :width: 500 px
+   :align: center
+
+.. image:: images/parabolic_bowl_subgrid_error.png
+   :width: 500 px
+   :align: center
+
 config options
 ~~~~~~~~~~~~~~
 
@@ -124,8 +160,8 @@ The ``parabolic_bowl`` config options include:
     plot_interval = 10
 
 
-The last 7 options are used to control properties of the cosine bell and the
-background properties.  The first 4 options are discussed below.
+The first 6 options are used to control properties of the initial/analytical solution.
+The remaining options are discussed below.
 
 resolutions
 ~~~~~~~~~~~
@@ -169,11 +205,7 @@ viz
 The visualization step can be configured to plot the timeseries for an 
 arbitrary set of coordinates by setting ``points``. Also, the interval
 between contour plot time snaps can be controlled with ``plot_interval``.
+An error convergence plot is also generated. Errors for the ``ramp``
+and ``noramp`` cases for both the ``standard`` and ``subgrid`` cases,
+if the output exists at the time it is run.
 
-lts
-~~~
-
-Both the ``ramp`` and ``noramp`` test cases can be run with the ``lts`` variant
-which uses local time-stepping (LTS) as time integrator. Note that the tests
-verify the ability of the LTS scheme to run correctly with wetting and drying
-and are not designed to leverage the LTS capability of producing faster runs.

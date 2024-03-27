@@ -8,7 +8,7 @@ from compass.step import Step
 
 class InitialState(Step):
     """
-    A step for creating a mesh and initial condition for drying slope test
+    A step for creating a mesh and initial condition for buttermilk bay test
     cases
     """
     def __init__(self, test_case, name, resolution,
@@ -18,20 +18,8 @@ class InitialState(Step):
 
         Parameters
         ----------
-        test_case : compass.ocean.tests.parabolic_bowl.default.Default
+        test_case : compass.ocean.tests.buttermilk_bay.default.Default
             The test case this step belongs to
-
-        name : str
-            The name of the test case
-
-        resolution : float
-            The grid resolution of the test case
-
-         coord_type : str
-             The type vertical coordinate used
-
-         wetdry : str
-             The wetting and drying approach used
         """
         self.coord_type = coord_type
         self.resolution = resolution
@@ -39,18 +27,23 @@ class InitialState(Step):
         super().__init__(test_case=test_case, name=name, ntasks=1,
                          min_tasks=1, openmp_threads=1)
 
-        self.add_namelist_file('compass.ocean.tests.parabolic_bowl',
+        self.add_namelist_file('compass.ocean.tests.buttermilk_bay',
                                'namelist.init', mode='init')
 
         if wetdry == 'subgrid':
-            self.add_namelist_file('compass.ocean.tests.parabolic_bowl',
+            self.add_namelist_file('compass.ocean.tests.buttermilk_bay',
                                    'namelist.subgrid.init', mode='init')
 
-        self.add_streams_file('compass.ocean.tests.parabolic_bowl',
+        self.add_streams_file('compass.ocean.tests.buttermilk_bay',
                               'streams.init', mode='init')
 
+        self.add_input_file(
+            filename='buttermilk_bathy.nc',
+            target='buttermilk_bathy.nc',
+            database='bathymetry_database')
+
         for file in ['base_mesh.nc', 'culled_mesh.nc', 'culled_graph.info',
-                     'ocean.nc']:
+                     'ocean.nc', 'init_mode_forcing_data.nc']:
             self.add_output_file(file)
 
         self.add_model_as_input()
@@ -65,31 +58,18 @@ class InitialState(Step):
         # Set vertical levels
         coord_type = self.coord_type
         if coord_type == 'single_layer':
-            options = {'config_parabolic_bowl_vert_levels': '1'}
+            options = {'config_buttermilk_bay_vert_levels': '1'}
         else:
             vert_levels = config.getint('vertical_grid', 'vert_levels')
-            options = {'config_parabolic_bowl_vert_levels': f'{vert_levels}'}
-        self.update_namelist_at_runtime(options)
-
-        # Set test case parameters
-        eta_max = config.get('parabolic_bowl', 'eta_max')
-        depth_max = config.get('parabolic_bowl', 'depth_max')
-        coriolis = config.get('parabolic_bowl', 'coriolis_parameter')
-        omega = config.get('parabolic_bowl', 'omega')
-        gravity = config.get('parabolic_bowl', 'gravity')
-        options = {'config_parabolic_bowl_Coriolis_parameter': coriolis,
-                   'config_parabolic_bowl_eta0': eta_max,
-                   'config_parabolic_bowl_b0': depth_max,
-                   'config_parabolic_bowl_omega': omega,
-                   'config_parabolic_bowl_gravity': gravity}
+            options = {'config_buttermilk_bay_vert_levels': f'{vert_levels}'}
         self.update_namelist_at_runtime(options)
 
         # Determine mesh parameters
-        Lx = config.getint('parabolic_bowl', 'Lx')
-        Ly = config.getint('parabolic_bowl', 'Ly')
+        Lx = config.getint('buttermilk_bay', 'Lx')
+        Ly = config.getint('buttermilk_bay', 'Ly')
         nx = round(Lx / self.resolution)
         ny = round(Ly / self.resolution)
-        dc = 1e3 * self.resolution
+        dc = self.resolution
 
         logger.info(' * Make planar hex mesh')
         dsMesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc, nonperiodic_x=True,
@@ -104,5 +84,6 @@ class InitialState(Step):
                          logger=logger)
         logger.info(' * Completed Convert mesh')
         write_netcdf(dsMesh, 'culled_mesh.nc')
+
         run_model(self, namelist='namelist.ocean',
                   streams='streams.ocean')

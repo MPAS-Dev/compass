@@ -53,6 +53,35 @@ baroclinic_channel
    initial_state.InitialState.setup
    initial_state.InitialState.run
 
+buttermilk_bay
+~~~~~~~~~~~~~~
+
+.. currentmodule:: compass.ocean.tests.buttermilk_bay
+
+.. autosummary::
+   :toctree: generated/
+
+   ButtermilkBay
+
+   default.Default
+   default.Default.configure
+   default.Default.update_cores
+   default.Default.validate
+
+   forward.Forward
+   forward.Forward.run
+   forward.Forward.setup
+   forward.Forward.get_dt
+
+   initial_state.InitialState
+   initial_state.InitialState.run
+
+   viz.Viz
+   viz.Viz.run
+   viz.Viz.get_points
+   viz.Viz.timeseries_plots
+   viz.Viz.contour_plots
+
 
 dam_break
 ~~~~~~~~~
