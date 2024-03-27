@@ -67,8 +67,8 @@ class Forward(Step):
         self.add_namelist_file('compass.ocean.tests.baroclinic_gyre',
                                'namelist.forward')
         if long:
-            output_interval = "0010_00:00:00"
-            restart_interval = "0010_00:00:00"
+            output_interval = "0001-01-01_00:00:00"
+            restart_interval = "0001-01-01_00:00:00"
         else:
             output_interval = res_params['run_duration'].replace("'", "")
             restart_interval = "0030_00:00:00"
@@ -82,6 +82,8 @@ class Forward(Step):
             options[f'config_{option}'] = res_params[option]
         if long:
             # run for 3 years instead of 3 time steps
+            options['config_dt'] = "'00:30:00'"
+            options['config_btr_dt'] = "'00:03:00'"
             options['config_start_time'] = "'0001-01-01_00:00:00'"
             options['config_stop_time'] = "'0004-01-01_00:00:00'"
             options['config_run_duration'] = "'none'"
@@ -108,5 +110,5 @@ class Forward(Step):
 
         if self.name == '3_year_test':
             replacements = {'config_do_restart': '.true.',
-                            'config_start_time': "'file'"}
+                            'config_start_time': "'Restart_timestamp'"}
             self.update_namelist_at_runtime(replacements)
