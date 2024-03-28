@@ -46,7 +46,13 @@ class Forward(Step):
                                'dt': "'01:00:00'",
                                'btr_dt': "'00:03:00'",
                                'mom_del4': "5.0e11",
-                               'run_duration': "'0000_03:00:00'"}}
+                               'run_duration': "'0000_03:00:00'"},
+                      '20km': {'ntasks': 100,
+                               'min_tasks': 10,
+                               'dt': "'00:20:00'",
+                               'btr_dt': "'0000_00:00:20'",
+                               'mom_del4': "2.0e10 ",
+                               'run_duration': "'0000_00:01:00'"}}
 
         if res_name not in res_params:
             raise ValueError(
