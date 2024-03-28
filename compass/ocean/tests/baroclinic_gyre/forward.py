@@ -43,10 +43,10 @@ class Forward(Step):
 
         res_params = {'80km': {'ntasks': 20,  # MODIFY
                                'min_tasks': 2,
-                               'dt': "'00:12:00'",
-                               'btr_dt': "'00:00:36'",
-                               'mom_del4': "5.0e10",
-                               'run_duration': "'0000_00:36:00'"}}
+                               'dt': "'01:00:00'",
+                               'btr_dt': "'00:03:00'",
+                               'mom_del4': "5.0e11",
+                               'run_duration': "'0000_03:00:00'"}}
 
         if res_name not in res_params:
             raise ValueError(
@@ -67,7 +67,7 @@ class Forward(Step):
         self.add_namelist_file('compass.ocean.tests.baroclinic_gyre',
                                'namelist.forward')
         if long:
-            output_interval = "0001-01-01_00:00:00"
+            output_interval = "0000-01-00_00:00:00"
             restart_interval = "0001-01-01_00:00:00"
         else:
             output_interval = res_params['run_duration'].replace("'", "")
@@ -82,8 +82,6 @@ class Forward(Step):
             options[f'config_{option}'] = res_params[option]
         if long:
             # run for 3 years instead of 3 time steps
-            options['config_dt'] = "'00:30:00'"
-            options['config_btr_dt'] = "'00:03:00'"
             options['config_start_time'] = "'0001-01-01_00:00:00'"
             options['config_stop_time'] = "'0004-01-01_00:00:00'"
             options['config_run_duration'] = "'none'"
