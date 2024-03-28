@@ -1,13 +1,8 @@
-import numpy as np
-import netCDF4
-import xarray
-from matplotlib import pyplot as plt
 from os.path import exists
+from shutil import copyfile
 
-from mpas_tools.mesh.creation import build_planar_mesh
-from mpas_tools.mesh.conversion import convert, cull
-from mpas_tools.planar_hex import make_planar_hex_mesh
-from mpas_tools.io import write_netcdf
+import netCDF4
+import numpy as np
 from mpas_tools.logging import check_call
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
 
@@ -15,7 +10,7 @@ from compass.landice.mesh import (
     build_cell_width,
     build_mali_mesh,
     make_region_masks,
-)  
+)
 from compass.model import make_graph_file
 from compass.step import Step
 
@@ -82,22 +77,23 @@ class Mesh(Step):
             projection='gis-gimp', geojson_file=None)
 
         # Create scrip files if they don't already exist
-        if exists(data_path+"/"+'BedMachineGreenland-v5.scrip.nc'):
-            logger.info('BedMachine script file exists; skipping file creation')
+        if exists(data_path + '/BedMachineGreenland-v5.scrip.nc'):
+            logger.info('BedMachine script file exists;',
+                        ' skipping file creation')
         else:
             logger.info('creating scrip file for BedMachine dataset')
             args = ['create_SCRIP_file_from_planar_rectangular_grid.py',
-                    '-i', data_path+"/"+'BedMachineGreenland-v5_edits_floodFill_extrap.nc',
-                    '-s', data_path+"/"+'BedMachineGreenland-v5.scrip.nc',
+                    '-i', data_path + '/BedMachineGreenland-v5_edits_floodFill_extrap.nc',  # noqa
+                    '-s', data_path + '/BedMachineGreenland-v5.scrip.nc',
                     '-p', 'gis-gimp', '-r', '2']
             check_call(args, logger=logger)
-        if exists(data_path+"/"+'greenland_vel_mosaic500.scrip.nc'):
+        if exists(data_path + '/greenland_vel_mosaic500.scrip.nc'):
             logger.info('Measures script file exists; skipping file creation')
         else:
             logger.info('creating scrip file for 2006-2010 velocity dataset')
             args = ['create_SCRIP_file_from_planar_rectangular_grid.py',
-                    '-i', data_path+"/"+'greenland_vel_mosaic500_extrap.nc',
-                    '-s', data_path+"/"+'greenland_vel_mosaic500.scrip.nc',
+                    '-i', data_path + '/greenland_vel_mosaic500_extrap.nc',
+                    '-s', data_path + '/greenland_vel_mosaic500.scrip.nc',
                     '-p', 'gis-gimp', '-r', '2']
             check_call(args, logger=logger)
 
@@ -119,7 +115,7 @@ class Mesh(Step):
         else:
             logger.info('generating gridded dataset -> MPAS weights')
             args = ['srun', '-n', nProcs, 'ESMF_RegridWeightGen', '--source',
-                    data_path+'BedMachineGreenland-v5.scrip.nc',
+                    data_path + 'BedMachineGreenland-v5.scrip.nc',
                     '--destination',
                     'GIS.scrip.nc',
                     '--weight', 'BedMachine_to_MPAS_weights.nc',
@@ -133,7 +129,7 @@ class Mesh(Step):
         else:
             logger.info('generating gridded dataset -> MPAS weights')
             args = ['srun', '-n', nProcs, 'ESMF_RegridWeightGen', '--source',
-                    data_path+'greenland_vel_mosaic500.scrip.nc',
+                    data_path + 'greenland_vel_mosaic500.scrip.nc',
                     '--destination',
                     'GIS.scrip.nc',
                     '--weight', 'measures_to_MPAS_weights.nc',
@@ -141,27 +137,21 @@ class Mesh(Step):
                     "-i", "-64bit_offset", '--netcdf4',
                     "--dst_regional", "--src_regional", '--ignore_unmapped']
             check_call(args, logger=logger)
-        
-        logger.info('calling interpolate_to_mpasli_grid.py')
-        args = ['interpolate_to_mpasli_grid.py', '-s',
-                'greenland_1km_2020_04_20.epsg3413.icesheetonly.nc',
-                '-d', 'GIS.nc', '-m', 'b']
-        check_call(args, logger=logger)
 
         # interpoalte fields from BedMachine and Measures
         # Using conservative remapping
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
-                data_path+"/"+'BedMachineGreenland-v5_edits_floodFill_extrap.nc',
+                data_path + '/BedMachineGreenland-v5_edits_floodFill_extrap.nc',  # noqa
                 '-d', 'GIS.nc', '-m', 'e',
                 '-w', 'BedMachine_to_MPAS_weights.nc']
         check_call(args, logger=logger)
 
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
-                data_path+"/"+'greenland_vel_mosaic500_extrap.nc',
+                data_path + '/greenland_vel_mosaic500_extrap.nc',
                 '-d', 'GIS.nc', '-m', 'e',
-                '-w', 'measures2006_2010_to_MPAS_weights.nc',
+                '-w', 'measures_to_MPAS_weights.nc',
                 '-v', 'observedSurfaceVelocityX',
                 'observedSurfaceVelocityY',
                 'observedSurfaceVelocityUncertainty']
@@ -183,15 +173,15 @@ class Mesh(Step):
         data = netCDF4.Dataset('GIS.nc', 'r+')
         data.set_auto_mask(False)
         data.variables['thickness'][:] *= (data.variables['iceMask'][:] > 1.5)
-        
+
         mask = np.logical_or(
-                np.isnan(
-                    data.variables['observedSurfaceVelocityUncertainty'][:]),
-                data.variables['thickness'][:] < 1.0)
+            np.isnan(
+                data.variables['observedSurfaceVelocityUncertainty'][:]),
+            data.variables['thickness'][:] < 1.0)
         mask = np.logical_or(
-                mask,
-                data.variables['observedSurfaceVelocityUncertainty'][:] == 0.0)
-        data.variables['observedSurfaceVelocityUncertainty'][0,mask[0,:]] = 1.0
+            mask,
+            data.variables['observedSurfaceVelocityUncertainty'][:] == 0.0)
+        data.variables['observedSurfaceVelocityUncertainty'][0, mask[0, :]] = 1.0  # noqa
 
         # create region masks
         mask_filename = f'{mesh_name[:-3]}_regionMasks.nc'
@@ -207,14 +197,17 @@ class Mesh(Step):
                                 'westCentralGreenland'])
 
         # Ensure basalHeatFlux is positive
-        data.variables['basalHeatFlux'][:] = np.abs(data.variables['basalHeatFlux'][:])
+        data.variables['basalHeatFlux'][:] = np.abs(
+            data.variables['basalHeatFlux'][:])
         # Ensure reasonable dHdt values
         dHdt = data.variables["observedThicknessTendency"][:]
         dHdtErr = data.variables["observedThicknessTendencyUncertainty"][:]
-        dHdtErr = np.abs(dHdt) * 0.05 # Arbitrary 5% uncertainty; improve this later
-        dHdtErr[np.abs(dHdt)>1.0] = 1.0 # large uncertainty where data is missing
-        dHdt[np.abs(dHdt)>1.0] = 0.0 # Remove ridiculous values
+        # Arbitrary 5% uncertainty; improve this later
+        dHdtErr = np.abs(dHdt) * 0.05
+        # large uncertainty where data is missing
+        dHdtErr[np.abs(dHdt) > 1.0] = 1.0
+        dHdt[np.abs(dHdt) > 1.0] = 0.0  # Remove ridiculous values
         data.variables["observedThicknessTendency"][:] = dHdt
         data.variables["observedThicknessTendencyUncertainty"][:] = dHdtErr
-        
+
         data.close()
