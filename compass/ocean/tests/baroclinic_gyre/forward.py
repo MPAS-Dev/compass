@@ -47,7 +47,7 @@ class Forward(Step):
                                'btr_dt': "'00:03:00'",
                                'mom_del4': "5.0e11",
                                'run_duration': "'0000_03:00:00'"},
-                      '20km': {'ntasks': 100,
+                      '20km': {'ntasks': 128,
                                'min_tasks': 10,
                                'dt': "'00:20:00'",
                                'btr_dt': "'0000_00:00:20'",
@@ -74,7 +74,7 @@ class Forward(Step):
                                'namelist.forward')
         if long:
             output_interval = "0000-01-00_00:00:00"
-            restart_interval = "0001-01-01_00:00:00"
+            restart_interval = "0001-0-00_00:00:00"
         else:
             output_interval = res_params['run_duration'].replace("'", "")
             restart_interval = "0030_00:00:00"
