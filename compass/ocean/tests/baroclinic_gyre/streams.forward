@@ -40,20 +40,22 @@
     <var name="indexSurfaceLayerDepth"/>
     <var name="surfaceFrictionVelocity"/>
     <var name="surfaceBuoyancyForcing"/>
-    <var name="seaIcePressure"/>
     <var name="atmosphericPressure"/>
     <var name="windStressZonal"/>
     <var name="windStressMeridional"/>
     <var name="BruntVaisalaFreqTop"/>
+    <var_array name="activeTracerSurfaceFluxTendency"/>
 </stream>
 
 <stream name="forcing_data"
         filename_template="forcing.nc">
 
+    <var_struct name="tracersSurfaceFlux"/>
     <var_struct name="tracersSurfaceRestoringFields"/>
     <var_struct name="tracersInteriorRestoringFields"/>
     <var name="windStressZonal"/>
     <var name="windStressMeridional"/>
+    <var name="bottomDrag"/>
 </stream>
 
 </streams>
