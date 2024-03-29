@@ -1,5 +1,6 @@
 import os
 
+import numpy as np
 import xarray as xr
 from mpas_tools.io import write_netcdf
 from pyremap import LatLonGridDescriptor, MpasCellMeshDescriptor, Remapper
@@ -137,6 +138,11 @@ class RemapTopography(Step):
             in_var = config.get('remap_topography', option)
             out_var = rename[option]
             ds_out[out_var] = ds_in[in_var]
+
+        # make sure fractions don't exceed 1
+        for var in ['landIceFracObserved', 'landIceGroundedFracObserved',
+                    'oceanFracObserved']:
+            ds_out[var] = np.minimum(ds_out[var], 1.)
 
         # renormalize elevation variables
         norm = ds_out.oceanFracObserved
