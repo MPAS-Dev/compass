@@ -30,8 +30,8 @@ class Default(TestCase):
         wetdry : str
             The type of wetting and drying used (``standard``, ``subgrid``)
         """
-        name = f'{wetdry}'
-        subdir = f'{wetdry}'
+        name = wetdry
+        subdir = wetdry
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
@@ -62,11 +62,10 @@ class Default(TestCase):
                                               'goal_cells_per_core')
         max_cells_per_core = config.getfloat('buttermilk_bay',
                                              'max_cells_per_core')
+        lx = config.getfloat('buttermilk_bay', 'Lx')
+        ly = config.getfloat('buttermilk_bay', 'Ly')
 
         for resolution in self.resolutions:
-
-            lx = config.getfloat('buttermilk_bay', 'Lx')
-            ly = config.getfloat('buttermilk_bay', 'Ly')
 
             nx = 2 * int(0.5 * lx / resolution + 0.5)
             ny = 2 * int(0.5 * ly * (2. / np.sqrt(3)) / resolution + 0.5)

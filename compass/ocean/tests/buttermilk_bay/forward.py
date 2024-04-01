@@ -6,7 +6,7 @@ from compass.step import Step
 
 class Forward(Step):
     """
-    A step for performing forward MPAS-Ocean runs as part of parabolic bowl
+    A step for performing forward MPAS-Ocean runs as part of buttermilk bay
     test cases.
     """
     def __init__(self, test_case, resolution,

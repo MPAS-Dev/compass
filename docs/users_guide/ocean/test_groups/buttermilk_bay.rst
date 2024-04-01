@@ -20,7 +20,9 @@ amplitude of 2 m and a period of 0.5 days.
 
 By default, the resolution is varied from  256 m to 64 m by doubling the resolution,
 with the time step proportional to resolution.
-The result of the ``viz`` step of the test case is are plots of the solution at 
+The wetting/drying ramp feature (``config_zero_drying_velocity_ramp = .true.``)
+is used by default for both the standard and subgrid versions of this test case. 
+The result of the ``viz`` step of the test case is plots of the solution at 
 different times, a time series at various points, and a convergence plot.
 
 standard
