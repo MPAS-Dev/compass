@@ -41,14 +41,14 @@ class Forward(Step):
         else:
             res_name = f'{int(resolution)}m'
 
-        res_params = {'80km': {'ntasks': 20,  # MODIFY
-                               'min_tasks': 2,
+        res_params = {'80km': {'ntasks': 32,
+                               'min_tasks': 3,
                                'dt': "'01:00:00'",
                                'btr_dt': "'00:03:00'",
                                'mom_del4': "5.0e11",
                                'run_duration': "'0000_03:00:00'"},
-                      '20km': {'ntasks': 128,
-                               'min_tasks': 10,
+                      '20km': {'ntasks': 384,
+                               'min_tasks': 32,
                                'dt': "'00:20:00'",
                                'btr_dt': "'0000_00:00:20'",
                                'mom_del4': "2.0e10 ",
@@ -74,7 +74,7 @@ class Forward(Step):
                                'namelist.forward')
         if long:
             output_interval = "0000-01-00_00:00:00"
-            restart_interval = "0001-0-00_00:00:00"
+            restart_interval = "0001-00-00_00:00:00"
         else:
             output_interval = res_params['run_duration'].replace("'", "")
             restart_interval = "0030_00:00:00"

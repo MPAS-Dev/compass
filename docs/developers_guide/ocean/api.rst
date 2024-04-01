@@ -55,12 +55,12 @@ baroclinic_channel
 
 
 baroclinic_gyre
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
 
 .. currentmodule:: compass.ocean.tests.baroclinic_gyre
 
 .. autosummary::
-      :toctree: generated/
+   :toctree: generated/
 
    BaroclinicGyre
 
