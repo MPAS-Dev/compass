@@ -1,11 +1,11 @@
 .. _baroclinic_gyre:
 
 baroclinic_gyre
-=======================
+===============
 
 The ``baroclinic_gyre`` test group implements variants of the
 baroclinic ocean gyre set-up from the 
-`MITgcm test case <https://mitgcm.readthedocs.io/en/latest/examples/baroclinic_gyre/baroclinic_gyre.html>`_.
+`MITgcm test case`_.
 
 This test simulates a baroclinic, wind and buoyancy-forced, double-gyre ocean circulation. 
 The grid employs spherical polar coordinates with 15 vertical layers.
@@ -17,16 +17,16 @@ The fluid is :math:`1.8`\ km deep and is forced by a zonal wind
 stress which is constant in time, :math:`\tau_{\lambda}`, varying sinusoidally in the
 north-south direction.
 
-.. figure:: ../images/baroclinic_gyre_config.png
+.. figure:: ./images/baroclinic_gyre_config.png
   :width: 95%
   :align: center
   :alt: baroclinic gyre configuration
   :name: baroclinic_gyre_config
 
-  Schematic of simulation domain and wind-stress forcing function for baroclinic gyre numerical experiment. The domain is enclosed by solid walls. From `MITgcm test case <https://mitgcm.readthedocs.io/en/latest/examples/baroclinic_gyre/baroclinic_gyre.html>`_.
+  Schematic of simulation domain and wind-stress forcing function for baroclinic gyre numerical experiment. The domain is enclosed by solid walls. From `MITgcm test case`_.
 
 Forcing
---------------
+-------
 
 The Coriolis parameter, :math:`f`, is defined
 according to latitude :math:`\varphi`
@@ -55,7 +55,7 @@ Temperature is restored in the surface layer to a linear profile:
 where the piston velocity :math:`U_{piston}=3.86e-7 \text{ }  (s^{-1})`  (equivalent to a relaxation timescale of 30 days) and :math:`\theta_{\rm max}=30^{\circ}` C, :math:`\theta_{\rm min}=0^{\circ}` C.
 
 Initial state
---------------
+-------------
 
 Initially the fluid is stratified
 with a reference potential temperature profile that varies from (approximately) :math:`\theta=30.6 \text{ } ^{\circ}`\ C
@@ -74,9 +74,9 @@ temperature, :math:`\theta`. For simplicity, here we use the variable :math:`\th
 represent temperature.
 
 Analysis
---------------
+--------
 
-For scientific validation, this test case is meant to be run to quasi-steady state and its mean state compared to the MITgcm test case and / or theoretical scaling. This is done through an analysis step in the ``3_year_test`` case. 
+For scientific validation, this test case is meant to be run to quasi-steady state and its mean state compared to the MITgcm test case and / or theoretical scaling. This is done through an analysis step in the ``3_year_test`` case. Note that 3 years are likely insufficient to bring the test case to full equilibrium.  
 Examples of qualitative plots include: i) equilibrated SSH contours on top of surface heat fluxes, ii) barotropic streamfunction (compared to MITgcm or a barotropic gyre test case).
 
 Examples of checks against theory include: iii) max of simulated barotropic streamfunction ~ Sverdrup transport, iv) simulated thermocline depth ~ scaling argument for penetration depth (Vallis (2017) or Cushman-Roisin and Beckers (2011)).
@@ -143,29 +143,35 @@ All 2 test cases share the same set of config options:
     lon_min = 0
     lon_max = 60
     
-    # Maximum zonal wind stress value
-    wind_stress_max = 0.1
-
+    # Initial vertical temperature profile
+    initial_temp_top = 33.
+    initial_temp_bot = 1.
+    
     # Constant salinity value (also used in restoring)
     initial_salinity = 34.
     
-    # Surface temperature restoring
-    temp_min = 0.
-    temp_max = 30.
+    # Maximum zonal wind stress value
+    wind_stress_max = 0.1
     
+    # Surface temperature restoring
+    restoring_temp_min = 0.
+    restoring_temp_max = 30.
+
     # Restoring piston velocity for surface temperature (s-1)
     restoring_temp_piston_vel = 3.86e-7
 
 performance_test
-------------
+----------------
 
 ``ocean/baroclinic_gyre/performance_test`` is the default version of the
-baroclinic_gyre test case for a short (10-day) test run and validation of
+baroclinic_gyre test case for a short (3 time steps) test run and validation of
 prognostic variables for regression testing.
 
 3_year_test
---------
+-----------
 
 ``ocean/baroclinic_gyre/3_year_test`` is an additional version of the
-baroclinic_gyre test case for a test run to quasi equilibirum (3 years)
+baroclinic_gyre test case for a test run to spin up (3 years)
 and validation of the mean state against theory and results from other models.
+
+.. _MITgcm test case: https://mitgcm.readthedocs.io/en/latest/examples/baroclinic_gyre/baroclinic_gyre.html
