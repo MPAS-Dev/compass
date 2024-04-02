@@ -7,15 +7,18 @@ The ``landice/ismip6_forcing`` test group processes (i.e., remaps and renames)
 the atmospheric and ocean forcing data of the Ice Sheet Model Intercomparison for CMIP6
 (ISMIP6) protocol. The processed data is used to force MALI in its simulations
 under a relevant ISMIP6 (either the 2100 or 2300) experimental protocol.
-The test group includes three test cases, ``atmosphere``, ``ocean_basal``,
-``ocean_thermal_obs`` and ``ocean_thermal``; the ``atmosphere`` test case
-has two steps: ``process_smb`` and ``process_smb_racmo``.  The ``ocean_basal``
-and the ``ocean_thermal`` test case each has one step, ``process_basal_melt``,
-and ``process_thermal_forcing``, respectively. (For more details on the steps of
+The test group includes five test cases:
+``atmosphere``, ``ocean_basal``, ``ocean_thermal_obs``, ``ocean_thermal`` and
+``shelf_collapse``. The ``atmosphere`` test case has two steps: 
+``process_smb`` and ``process_smb_racmo``; the ``ocean_basal`` and ``shelf_collpase``
+test cases each have one step, ``process_basal_melt`` and ``process_shelf_collpase``
+(respectively); the ``ocean_thermal_obs`` and ``ocean_thermal``
+share one step, ``process_thermal_forcing``. (For more details on the steps of
 each test case, see :ref:`landice_ismip6_forcing_atmosphere`,
 :ref:`landice_ismip6_forcing_ocean_basal`,
 :ref:`landice_ismip6_forcing_ocean_thermal_obs` and
-:ref:`landice_ismip6_forcing_ocean_thermal`.)
+:ref:`landice_ismip6_forcing_ocean_thermal`,
+:ref:`landice_ismip6_forcing_shelf_collapse`.)
 Approximated time for processing a single forcing file
 on Cori (single core) is 2 and 7 minutes for the atmosphere and ocean basal
 testcases, and less than a minute for ocean thermal obs and ocean thermal
@@ -38,7 +41,9 @@ control runs).
 and end year.
 
 4. run :ref:`landice_ismip6_forcing_atmosphere` with
-``process_racmo_smb = True`` once with any model.
+``process_racmo_smb = True`` once, independent of the model, scenario and
+end year.
+
 
 5. run :ref:`landice_ismip6_forcing_atmosphere` for each model,
 scenario and end year. Users can keep ``process_racmo_smb = False`` as long as
@@ -53,7 +58,7 @@ climatology files for (#3) atmospheric and (#4) ocean forcing, (#5) ISMIP6 basin
 number file, and (#6) the ocean basal-melt parameter files.
 
 Except for the file #3, The ISMIP6 source data (files #1, 2, 4-6) can be obtained by contacting the ISMIP6 steering
-committee as described `here. <https://www.climate-cryosphere.org/wiki/index.php?title=ISMIP6-Projections2300-Antarctica#A2.2_Retrieving_datasets_and_uploading_your_model_output>`_
+committee as described `here. <https://theghub.org/groups/ismip6/wiki/ISMIP6-Projections2300-Antarctica>`_
 Once the users get access to the data on `Globus <https://www.globus.org>`_,
 and within the base path directory that the user specifies in the config file
 (i.e., the config option ``base_path_ismip6``;
@@ -63,7 +68,17 @@ and names provided in the GHub endpoints (named ``GHub-ISMIP6-Forcing``
 for the 2100 CE projection protocol and ``ISMIP6-Projections-Forcing-2300``
 for the 2300 CE projection protocol). That is, the directory paths and the file
 names must exactly match (even the letter case) those that are provided by the
-GHub endpoints. For example, if a user wants to process the atmosphere (SMB)
+GHub endpoints. 
+
+.. note::
+    
+    It is important to emphasize that a ``base_path_ismip6`` value with a bottom 
+    level direcoty name of ``GHub-ISMIP6-Forcing`` will **only** work for the 
+    2100 CE projection protocol (``period_endyear`` config option below). The 
+    same applied for a bottom level directory of ``ISMIP6-Projections-Forcing-2300``
+    and the 2300 CE projection protocol. 
+
+For example, if a user wants to process the atmosphere (SMB)
 forcing representing the ``SSP585`` scenario from the ``UKESM1-0-LL`` model
 provided by the ISMIP6-2100 protocol (i.e., from the ``GHub-ISMIP6-Forcing``
 Globus endpoint), they must create the directory path
@@ -128,24 +143,30 @@ and where processed files will be saved.
 config options
 --------------
 
-All four test cases share some set of default config options under the section
+All five test cases share some set of default config options under the section
 ``[ismip6_ais]`` and have separate config options for each test case:
-``[ismip6_ais_atmosphere]``, ``[ismip6_ais_ocean_thermal]``, and
-``[ismip6_ais_ocean_basal]``. In the general config section
-``[ismip6_ais]``, users need to supply base paths to input files and MALI mesh
-file, and MALI mesh name, as well as the model name, climate forcing scenario
-and the projection end year of the ISMIP6 forcing data, which can be chosen
-from the available options as given in the config file (see the example file
-below.) In the ``ismip6_ais_atmosphere`` section, users need to indicate
-``True`` or ``False`` on whether to process the RACMO modern climatology
-(``True`` is required to run the ``process_smb_racmo`` step, which needs to be
-run before the ``process_smb`` step).
+``[ismip6_ais_atmosphere]``, ``[ismip6_ais_ocean_thermal]``, 
+``[ismip6_ais_ocean_basal]``, and ``[ismip6_ais_shelf_collpase``]. In the
+general config section (``[ismip6_ais]``), users need to supply base paths to
+input files and MALI mesh file, and MALI mesh name, as well as the model name,
+climate forcing scenario and the projection end year of the ISMIP6 forcing data,
+which can be chosen from the available options as given in the config file
+(see the example file below.) In the ``ismip6_ais_atmosphere`` section,
+users need to indicate ``True`` or ``False`` on whether to process the RACMO
+modern climatology (``True`` is required to run the ``process_smb_racmo`` step,
+which needs to be run before the ``process_smb`` step).
 
-For most the ``[ismip6_ais_atmosphere]`` and ``[ismip6_ais_ocean_thermal]``
-config sections users may choose the interpolation scheme among
+The ``[ismip6_ais_atmosphere]`` and ``[ismip6_ais_ocean_thermal]``
+config sections allow users to choose the interpolation scheme among
 ``bilinear``, ``neareststod`` and ``conserve`` methods. The exception is that
-the ``ocean basal`` test case should always use the ``neareststod`` method
-because the source files have a single valued data per basin.
+the ``ocean basal`` test case will always use the ``neareststod`` method
+because the source files have a single valued data per basin. Futhermore, the 
+``[ismip6_ais_atmosphere]`` and ``[ismip6_ais_shelf_collpase]`` config sections
+support a ``data_resolution`` config option, which allows the user to pick the
+source data resolution most appropriate for the MALI mesh the data is being 
+interpolated onto. The ``[ismip6_ais_ocean_thermal]`` config section does not 
+support the ``data_resolution`` config option, because the source datasets are
+only provided at a single resolution.
 
 Below are the default config options:
 
@@ -190,12 +211,21 @@ Below are the default config options:
 
     # config options for ismip6 antarctic ice sheet SMB forcing data test cases
     [ismip6_ais_atmosphere]
+    
+    # resolution of CMIP6 model data to be used; supported options are [8km, 4km]
+    data_resolution = 8km
 
     # Remapping method used in building a mapping file. Options include: bilinear, neareststod, conserve
     method_remap = bilinear
 
     # Set True to process RACMO modern climatology
     process_smb_racmo = True
+
+    # config options for ismip6 antarctic ice shelf collpase forcing test cases
+    [ismip6_ais_shelf_collapse]
+
+    # resolution of CMIP6 model data to be used; supported options are [8km, 4km]
+    data_resolution = 8km
 
     # config options for ismip6 ocean thermal forcing data test cases
     [ismip6_ais_ocean_thermal]
@@ -254,11 +284,20 @@ process the RACMO modern SMB climatology but not the modern thermal forcing.
     # config options for ismip6 antarctic ice sheet SMB forcing data test cases
     [ismip6_ais_atmosphere]
 
+    # resolution of CMIP6 model data to be used; supported options are [8km, 4km]
+    data_resolution = 8km
+
     # Remapping method used in building a mapping file. Options include: bilinear, neareststod, conserve
     method_remap = bilinear
 
     # Set True to process RACMO modern climatology
     process_smb_racmo = True
+
+    # config options for ismip6 antarctic ice shelf collpase forcing test cases
+    [ismip6_ais_shelf_collapse]
+
+    # resolution of CMIP6 model data to be used; supported options are [8km, 4km]
+    data_resolution = 8km
 
     # config options for ismip6 ocean thermal forcing data test cases
     [ismip6_ais_ocean_thermal]
@@ -313,3 +352,12 @@ The ``landice/ismip6_forcing/ocean_thermal`` test case
 performs the processing of ocean thermal forcing. Processing data includes
 regridding the original ISMIP6 thermal forcing data from its native
 polarstereo grid to MALI's unstructured grid and renaming variables.
+
+.. _landice_ismip6_forcing_shelf_collapse:
+
+shelf_collapse
+--------------
+The ``landice/ismip6_forcing/shelf_collpase`` test case performs the processing
+of ice shelf collapse masks by remapping the original ISMIP6 forcing data to
+MALI's unstructured grid and renaming variables. This test case is only supported
+with a ``period_endyear`` of ``2300``.

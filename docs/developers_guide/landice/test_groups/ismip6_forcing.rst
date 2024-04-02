@@ -12,7 +12,7 @@ the unstructure MALI mesh. The test group includes five test cases:
 ``shelf_collapse``. The ``atmosphere`` test case has two steps: 
 ``process_smb`` and ``process_smb_racmo``; the ``ocean_basal`` and ``shelf_collpase``
 test cases each have one step, ``process_basal_melt`` and ``process_shelf_collpase``
-(respectivlye); the ``ocean_thermal_obs`` and ``ocean_thermal``
+(respectively); the ``ocean_thermal_obs`` and ``ocean_thermal``
 share one step, ``process_thermal_forcing``. Each step has the local methods
 (functions) of remapping and renaming the original ISMIP6 data to the format
 that MALI can incorporate in its forward simulations. In remapping the data,
