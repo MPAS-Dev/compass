@@ -16,6 +16,17 @@ class CalculateWaveDrag(Step):
 
     Attributes
     ----------
+    bathy_file : str
+       File name for the blended RTopo/GEBCO pixel file
+
+    mesh_file : str
+       File name for the culled mesh from the mesh test case
+
+    bouy_file : str
+       File name for the WOA bouyancy data
+
+    output_file : str
+       File name for the output file containing wave drag information
     """
 
     def __init__(self, test_case, mesh):
@@ -26,6 +37,9 @@ class CalculateWaveDrag(Step):
         ----------
         test_case : compass.ocean.tests.tides.init.Init
             The test case this step belongs to
+
+         mesh : compass.ocean.tests.tides.mesh.Mesh
+            The test case the produces the mesh for this case
 
         """
 
@@ -43,12 +57,12 @@ class CalculateWaveDrag(Step):
 
         mesh_path = mesh.steps['cull_mesh'].path
         self.add_input_file(
-            filename='mesh.nc',
+            filename=self.mesh_file,
             work_dir_target=f'{mesh_path}/culled_mesh.nc')
 
         bathy_path = mesh.steps['pixel'].path
         self.add_input_file(
-            filename='bathy.nc',
+            filename=self.bathy_file,
             work_dir_target=f'{bathy_path}/'
                             'RTopo_2_0_4_GEBCO_v2023_30sec_pixel.nc')
 
@@ -57,7 +71,7 @@ class CalculateWaveDrag(Step):
 
     def interpolate_data_to_grid(self, grid_file, data_file, var):
         """
-
+        Interpolate a variable from a data file to an the MPAS grid
         """
 
         # Open files
@@ -68,28 +82,16 @@ class CalculateWaveDrag(Step):
         lon_data = data_nc.variables['longitude'][:]
         lat_data = data_nc.variables['latitude'][:]
         nsnaps = 1
-        print(np.amax(lon_data), 'WOA2013 max lon data',
-              np.amin(lon_data), 'min lon data')
-        print(np.amax(lat_data), 'WOA2013 max lat data',
-              np.amin(lat_data), 'WOA2013 min lat data')
 
         # Get grid from grid file
         lon_grid = np.mod(grid_nc.variables['lonEdge'][:] + np.pi,
                           2.0 * np.pi) - np.pi
         lon_grid = lon_grid * 180.0 / np.pi
         lat_grid = grid_nc.variables['latEdge'][:] * 180.0 / np.pi
-        print(np.amax(lon_grid), 'max longitude in MPAS mesh',
-              np.amin(lon_grid), 'min lon mesh')
-        print(np.amax(lat_grid), 'max lat in MPAS mesh',
-              np.amin(lat_grid), 'min lat mesh')
 
         grid_points = np.column_stack((lon_grid, lat_grid))
-        print(np.shape(grid_points))
         nEdges = lon_grid.size
         interp_data = np.zeros((nsnaps, nEdges))
-        print(interp_data.shape, 'interp')
-        print(np.amin(lon_grid), np.amax(lon_grid))
-        print(np.amin(lat_grid), np.amax(lat_grid))
 
         # Interpolate timesnaps
         print(f'Interpolating {var}')
@@ -110,7 +112,7 @@ class CalculateWaveDrag(Step):
 
     def run(self):
         """
-
+        Run the step to calculate wave drag information
         """
 
         # Open Datasets
@@ -144,7 +146,6 @@ class CalculateWaveDrag(Step):
         del xmesh, ymesh, R
 
         for tile in range(indx.size - 1):
-            print('Tile', tile, '/', indx.size - 2)
 
             head = indx[tile + 0] + 1
             tail = indx[tile + 1] + 1
@@ -173,14 +174,12 @@ class CalculateWaveDrag(Step):
         ylat_nn = [[] for _ in range(nEdges)]
         print("Making lists")
         for i in range(np.size(ymid)):
-            print('xlon', i, '/', np.size(xmid) - 1)
             for j in range(np.size(xmid)):
                 ylat_nn, xlon_nn = self.make_nn_lists(ylat_nn, xlon_nn,
                                                       near, i, j)
 
         print("Calculating stats")
         for edge in range(nEdges):
-            print(edge, '/', nEdges)
             bed_slope_edge, sd, xGradEdge, yGradEdge = self.calc_stats(
                 xlon_nn, ylat_nn, near, bed_slope,
                 edge, xmid, ymid, elev, xgrad, ygrad)
@@ -203,7 +202,7 @@ class CalculateWaveDrag(Step):
             xGradEdges = self.fix_nans(xGradEdges, md)
         while (np.sum(np.isnan(yGradEdges)) > 0):
             print("yGradEdges", np.sum(np.isnan(stddev)))
-            # yGradEdge = self.fix_nans(yGradEdges, md)
+            yGradEdge = self.fix_nans(yGradEdges, md)
 
         # Remove any 0s from the bottom Depth
         # bottomDepthEdges[bottomDepthEdges==0.0] = 0.01
@@ -228,11 +227,10 @@ class CalculateWaveDrag(Step):
 
     def fix_nans(self, data, mesh_nc):
         """
-
+        Replace NaN values with average of surrounding (non-NaN) values
         """
         if (np.sum(np.isnan(data))):
             edgesOnEdge = mesh_nc.edgesOnEdge.data
-            # nEdges = mesh_nc.nEdges.data[-1]+1
 
             nanEdges = np.isnan(data)
             for edge in range(mesh_nc.nEdges.data[-1]):
@@ -247,7 +245,7 @@ class CalculateWaveDrag(Step):
 
     def make_nn_lists(self, ylat_nn, xlon_nn, near, i, j):
         """
-
+        Create the nearest neighbor lists
         """
         ylat_nn[near[i, j]].append(i)
         xlon_nn[near[i, j]].append(j)
@@ -256,7 +254,7 @@ class CalculateWaveDrag(Step):
     def calc_stats(self, xlon_nn, ylat_nn, near, bed_slope,
                    edge, xlon, ylat, elev, xgrad, ygrad):
         """
-
+        Calculate the mean bathymetry slopes/gradients and stadard deviation
         """
 
         # Prepare for calculating area integral
@@ -302,7 +300,7 @@ class CalculateWaveDrag(Step):
 
     def polyfit2d(self, X, Y, Z):
         """
-
+        Calculate linear least squares fit for standard deviation calculation
         """
         # X, Y = np.meshgrid(x, y, copy=False)
         # X = X.flatten()
