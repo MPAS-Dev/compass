@@ -360,7 +360,7 @@ class Analysis(Step):
             # Plot data
             fig = plt.figure(figsize=(18, 12))
             subplot_title = [f'{con} Amplitude (simulation) [m]',
-                             f'{con} Amplitude (TPXO8) [m]',
+                             f'{con} Amplitude ({self.tpxo_version}) [m]',
                              f'{con} RMSE (Amplitude) [m]',
                              f'{con} RMSE (Complex) [m]']
 
