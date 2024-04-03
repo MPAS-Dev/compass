@@ -78,7 +78,7 @@ class Mesh(Step):
 
         # Create scrip files if they don't already exist
         if exists(data_path + '/BedMachineGreenland-v5.scrip.nc'):
-            logger.info('BedMachine script file exists;',
+            logger.info('BedMachine script file exists;'
                         ' skipping file creation')
         else:
             logger.info('creating scrip file for BedMachine dataset')
