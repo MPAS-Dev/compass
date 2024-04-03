@@ -1091,66 +1091,6 @@ def interp_gridded2mali(self, source_file, mali_scrip, nProcs, dest_file, proj,
     # conflicts when multiple interpolations are done?
 
 
-def interp_ais_measures(self, data_path, mali_scrip, nProcs, dest_file):
-    """
-    Interpolates MEASURES ice velocity dataset
-    to a MALI mesh
-
-    Parameters
-    ----------
-    data_path : str
-        path to AIS datasets, including BedMachine
-
-    mali_scrip : str
-        name of scrip file corresponding to destination MALI mesh
-
-    nProcs : int
-        number of processors to use for generating remapping weights
-
-    dest_file: str
-        MALI input file to which data should be remapped
-    """
-
-    logger = self.logger
-
-    logger.info('creating scrip file for velocity dataset')
-    # Note: writing scrip file to workdir
-    args = ['create_SCRIP_file_from_planar_rectangular_grid.py',
-            '-i',
-            os.path.join(data_path,
-                         'antarctica_ice_velocity_450m_v2_edits_extrap.nc'),
-            '-s',
-            'antarctica_ice_velocity_450m_v2.scrip.nc',
-            '-p', 'ais-bedmap2',
-            '-r', '2']
-    check_call(args, logger=logger)
-
-    # Generate remapping weights
-    logger.info('generating gridded dataset -> MPAS weights')
-    args = ['srun', '-n', nProcs, 'ESMF_RegridWeightGen',
-            '--source',
-            'antarctica_ice_velocity_450m_v2.scrip.nc',
-            '--destination', mali_scrip,
-            '--weight', 'measures_to_MPAS_weights.nc',
-            '--method', 'conserve',
-            "--netcdf4",
-            "--dst_regional", "--src_regional", '--ignore_unmapped']
-    check_call(args, logger=logger)
-
-    logger.info('calling interpolate_to_mpasli_grid.py')
-    args = ['interpolate_to_mpasli_grid.py',
-            '-s',
-            os.path.join(data_path,
-                         'antarctica_ice_velocity_450m_v2_edits_extrap.nc'),
-            '-d', dest_file,
-            '-m', 'e',
-            '-w', 'measures_to_MPAS_weights.nc',
-            '-v', 'observedSurfaceVelocityX',
-                  'observedSurfaceVelocityY',
-                  'observedSurfaceVelocityUncertainty']
-    check_call(args, logger=logger)
-
-
 def clean_up_after_interp(fname):
     """
     Perform some final clean up steps after interpolation

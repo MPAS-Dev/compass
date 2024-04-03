@@ -9,8 +9,7 @@ from compass.landice.mesh import (
     build_cell_width,
     build_mali_mesh,
     clean_up_after_interp,
-    interp_ais_bedmachine,
-    interp_ais_measures,
+    interp_gridded2mali,
     make_region_masks,
     preprocess_ais_data,
 )
@@ -61,19 +60,26 @@ class Mesh(Step):
         """
         logger = self.logger
         config = self.config
+
         section_ais = config['antarctica']
-        data_path = section_ais.get('data_path')
+
         nProcs = section_ais.get('nProcs')
+        src_proj = section_ais.get("src_proj")
+        data_path = section_ais.get('data_path')
+        measures_filename = section_ais.get("measures_filename")
+        bedmachine_filename = section_ais.get("bedmachine_filename")
+
+        measures_dataset = os.path.join(data_path, measures_filename)
+        bedmachine_dataset = os.path.join(data_path, bedmachine_filename)
 
         section_name = 'mesh'
 
+        # do we want to add this to the config file?
         source_gridded_dataset = 'antarctica_8km_2024_01_29.nc'
-        bedmachine_path = os.path.join(
-            data_path,
-            'BedMachineAntarctica_2020-07-15_v02_edits_floodFill_extrap_fillVostok.nc')  # noqa
 
         bm_updated_gridded_dataset = add_bedmachine_thk_to_ais_gridded_data(
-            self, source_gridded_dataset, bedmachine_path)
+            self, source_gridded_dataset, bedmachine_dataset)
+
         logger.info('calling build_cell_width')
         cell_width, x1, y1, geom_points, geom_edges, floodFillMask = \
             build_cell_width(
@@ -91,7 +97,7 @@ class Mesh(Step):
             self, cell_width, x1, y1, geom_points, geom_edges,
             mesh_name=self.mesh_filename, section_name=section_name,
             gridded_dataset=bm_updated_gridded_dataset,
-            projection='ais-bedmap2', geojson_file=None)
+            projection=src_proj, geojson_file=None)
 
         # Now that we have base mesh with standard interpolation
         # perform advanced interpolation for specific fields
@@ -131,10 +137,16 @@ class Mesh(Step):
 
         # Now perform bespoke interpolation of geometry and velocity data
         # from their respective sources
-        interp_ais_bedmachine(self, data_path, dst_scrip_file, nProcs,
-                              self.mesh_filename)
-        interp_ais_measures(self, data_path, dst_scrip_file, nProcs,
-                            self.mesh_filename)
+        interp_gridded2mali(self, bedmachine_dataset, dst_scrip_file, nProcs,
+                            self.mesh_filename, src_proj, variables="all")
+
+        # only interpolate a subset of MEASURES varibles onto the MALI mesh
+        measures_vars = ['observedSurfaceVelocityX',
+                         'observedSurfaceVelocityY',
+                         'observedSurfaceVelocityUncertainty']
+        interp_gridded2mali(self, measures_dataset, dst_scrip_file, nProcs,
+                            self.mesh_filename, src_proj,
+                            variables=measures_vars)
 
         # perform some final cleanup details
         clean_up_after_interp(self.mesh_filename)
