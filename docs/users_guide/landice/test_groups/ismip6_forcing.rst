@@ -73,9 +73,9 @@ GHub endpoints.
 .. note::
     
     It is important to emphasize that a ``base_path_ismip6`` value with a bottom 
-    level direcoty name of ``GHub-ISMIP6-Forcing`` will **only** work for the 
+    level directory name of ``GHub-ISMIP6-Forcing`` will **only** work for the 
     2100 CE projection protocol (``period_endyear`` config option below). The 
-    same applied for a bottom level directory of ``ISMIP6-Projections-Forcing-2300``
+    same applies for a bottom level directory of ``ISMIP6-Projections-Forcing-2300``
     and the 2300 CE projection protocol. 
 
 For example, if a user wants to process the atmosphere (SMB)
@@ -146,12 +146,12 @@ config options
 All five test cases share some set of default config options under the section
 ``[ismip6_ais]`` and have separate config options for each test case:
 ``[ismip6_ais_atmosphere]``, ``[ismip6_ais_ocean_thermal]``, 
-``[ismip6_ais_ocean_basal]``, and ``[ismip6_ais_shelf_collpase``]. In the
+``[ismip6_ais_ocean_basal]``, and ``[ismip6_ais_shelf_collapse``]. In the
 general config section (``[ismip6_ais]``), users need to supply base paths to
 input files and MALI mesh file, and MALI mesh name, as well as the model name,
 climate forcing scenario and the projection end year of the ISMIP6 forcing data,
 which can be chosen from the available options as given in the config file
-(see the example file below.) In the ``ismip6_ais_atmosphere`` section,
+(see the example file below). In the ``ismip6_ais_atmosphere`` section,
 users need to indicate ``True`` or ``False`` on whether to process the RACMO
 modern climatology (``True`` is required to run the ``process_smb_racmo`` step,
 which needs to be run before the ``process_smb`` step).

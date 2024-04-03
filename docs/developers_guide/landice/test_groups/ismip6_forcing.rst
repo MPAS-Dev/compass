@@ -64,7 +64,8 @@ correcting the SMB anomaly field for the MALI base SMB.
 ocean_basal
 ~~~~~~~~~~~~
 
-The :py:class:`compass.landice.tests.ismip6_forcing.ocean_basal.OceanBasal` performs processing of the coefficients for the basal melt parameterization
+The :py:class:`compass.landice.tests.ismip6_forcing.ocean_basal.OceanBasal`
+performs processing of the coefficients for the basal melt parameterization
 utilized by the ISMIP6 protocol. Processing data includes combining the
 IMBIE2 basin number file and parameterization coefficients and remapping onto
 the MALI mesh.
