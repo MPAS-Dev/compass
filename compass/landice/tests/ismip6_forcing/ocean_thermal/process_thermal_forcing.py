@@ -59,7 +59,7 @@ class ProcessThermalForcing(Step):
                                                 mali_mesh_file))
 
         if process_obs_data:
-            input_file = self._file_obs
+            input_file = self._file_obs[period_endyear]
             output_file = f"{mali_mesh_name}_obs_TF_1995-2017_8km_x_60m.nc"
         else:
             input_file = self._files[period_endyear][model][scenario]
@@ -91,7 +91,7 @@ class ProcessThermalForcing(Step):
         process_obs_data = self.process_obs
 
         if process_obs_data:
-            input_file_list = self._file_obs
+            input_file_list = self._file_obs[period_endyear]
             output_file = f"{mali_mesh_name}_obs_TF_1995-2017_8km_x_60m.nc"
             output_path = f"{output_base_path}/ocean_thermal_forcing/"\
                           f"obs"
@@ -170,8 +170,10 @@ class ProcessThermalForcing(Step):
         if not os.path.exists(mapping_file):
             # build a mapping file if it doesn't already exist
             build_mapping_file(self.config, self.ntasks, self.logger,
-                               input_file, mapping_file, mali_mesh_file,
-                               method_remap)
+                               input_file, mapping_file,
+                               scrip_from_latlon=False,
+                               mali_mesh_file=mali_mesh_file,
+                               method_remap=method_remap)
         else:
             self.logger.info("Mapping file exists. "
                              "Remapping the input data...")
@@ -269,7 +271,13 @@ class ProcessThermalForcing(Step):
 
     # create a nested dictionary for the ISMIP6 original forcing files
     # including relative path
-    _file_obs = ["AIS/Ocean_Forcing/climatology_from_obs_1995-2017/obs_thermal_forcing_1995-2017_8km_x_60m.nc"]  # noqa: E501
+    _file_obs = {
+        "2100": [
+            "AIS/Ocean_Forcing/climatology_from_obs_1995-2017/obs_thermal_forcing_1995-2017_8km_x_60m.nc"],  # noqa: E501
+        "2300": [
+            "AIS/Ocean_forcing/climatology_from_obs_1995-2017/obs_thermal_forcing_1995-2017_8km_x_60m.nc"]  # noqa: E501
+    }
+
     _files = {
         "2100": {
             "CCSM4": {
