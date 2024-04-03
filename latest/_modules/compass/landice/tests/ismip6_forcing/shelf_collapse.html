@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.landice.tests.ismip6_forcing.ocean_basal &mdash; compass latest documentation</title>
+  <title>compass.landice.tests.ismip6_forcing.shelf_collapse &mdash; compass latest documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=19f00094" />
 
@@ -102,7 +102,7 @@
           <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
           <li class="breadcrumb-item"><a href="../../../landice.html">compass.landice</a></li>
           <li class="breadcrumb-item"><a href="../ismip6_forcing.html">compass.landice.tests.ismip6_forcing</a></li>
-      <li class="breadcrumb-item active">compass.landice.tests.ismip6_forcing.ocean_basal</li>
+      <li class="breadcrumb-item active">compass.landice.tests.ismip6_forcing.shelf_collapse</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -111,28 +111,28 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for compass.landice.tests.ismip6_forcing.ocean_basal</h1><div class="highlight"><pre>
+  <h1>Source code for compass.landice.tests.ismip6_forcing.shelf_collapse</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">compass.landice.tests.ismip6_forcing.configure</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">configure</span> <span class="k">as</span> <span class="n">configure_testgroup</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.ismip6_forcing.ocean_basal.process_basal_melt</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
-    <span class="n">ProcessBasalMelt</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">compass.landice.tests.ismip6_forcing.shelf_collapse.process_shelf_collapse</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
+    <span class="n">ProcessShelfCollapse</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
 
 
-<div class="viewcode-block" id="OceanBasal">
-<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.ocean_basal.OceanBasal.html#compass.landice.tests.ismip6_forcing.ocean_basal.OceanBasal">[docs]</a>
-<span class="k">class</span> <span class="nc">OceanBasal</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="ShelfCollapse">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.shelf_collapse.ShelfCollapse.html#compass.landice.tests.ismip6_forcing.shelf_collapse.ShelfCollapse">[docs]</a>
+<span class="k">class</span> <span class="nc">ShelfCollapse</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A test case for processing the ISMIP6 ocean basalmelt param. coeff. data.</span>
+<span class="sd">    A test case for processing the ISMIP6 shelf-collapse mask data.</span>
 <span class="sd">    The test case builds a mapping file for interpolation between the</span>
-<span class="sd">    ISMIP6 8km polarstereo grid and MALI mesh, regrids the forcing data</span>
+<span class="sd">    ISMIP6 polarstereo grid and MALI mesh, regrids the forcing data</span>
 <span class="sd">    and renames the ISMIP6 variables to corresponding MALI variables.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="OceanBasal.__init__">
-<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.ocean_basal.OceanBasal.html#compass.landice.tests.ismip6_forcing.ocean_basal.OceanBasal.__init__">[docs]</a>
+<div class="viewcode-block" id="ShelfCollapse.__init__">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.shelf_collapse.ShelfCollapse.html#compass.landice.tests.ismip6_forcing.shelf_collapse.ShelfCollapse.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the test case</span>
@@ -142,15 +142,15 @@
 <span class="sd">        test_group : compass.landice.tests.ismip6_forcing.Ismip6Forcing</span>
 <span class="sd">            The test group that this test case belongs to</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;ocean_basal&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;shelf_collapse&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
-        <span class="n">step</span> <span class="o">=</span> <span class="n">ProcessBasalMelt</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="n">ProcessShelfCollapse</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="OceanBasal.configure">
-<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.ocean_basal.OceanBasal.configure.html#compass.landice.tests.ismip6_forcing.ocean_basal.OceanBasal.configure">[docs]</a>
+<div class="viewcode-block" id="ShelfCollapse.configure">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.shelf_collapse.ShelfCollapse.configure.html#compass.landice.tests.ismip6_forcing.shelf_collapse.ShelfCollapse.configure">[docs]</a>
     <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Configures test case</span>

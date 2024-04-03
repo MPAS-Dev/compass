@@ -111,17 +111,19 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice.tests.ismip6_forcing</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.ismip6_forcing.atmosphere</span> <span class="kn">import</span> <span class="n">Atmosphere</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.ismip6_forcing.ocean_thermal</span> <span class="kn">import</span> <span class="n">OceanThermal</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.landice.tests.ismip6_forcing.atmosphere</span> <span class="kn">import</span> <span class="n">Atmosphere</span>
 <span class="kn">from</span> <span class="nn">compass.landice.tests.ismip6_forcing.ocean_basal</span> <span class="kn">import</span> <span class="n">OceanBasal</span>
+<span class="kn">from</span> <span class="nn">compass.landice.tests.ismip6_forcing.ocean_thermal</span> <span class="kn">import</span> <span class="n">OceanThermal</span>
+<span class="kn">from</span> <span class="nn">compass.landice.tests.ismip6_forcing.shelf_collapse</span> <span class="kn">import</span> <span class="n">ShelfCollapse</span>
+<span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
 
 
 <div class="viewcode-block" id="Ismip6Forcing">
 <a class="viewcode-back" href="../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.Ismip6Forcing.html#compass.landice.tests.ismip6_forcing.Ismip6Forcing">[docs]</a>
 <span class="k">class</span> <span class="nc">Ismip6Forcing</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A test group for processing the ISMIP6 ocean and atmosphere forcing data</span>
+<span class="sd">    A test group for processing the ISMIP6 atmosphere, ocean and</span>
+<span class="sd">    shelf-collapse forcing data</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Ismip6Forcing.__init__">
@@ -140,7 +142,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">Atmosphere</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">OceanBasal</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">OceanThermal</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_obs</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">OceanThermal</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_obs</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">OceanThermal</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_obs</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">ShelfCollapse</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span></div>
 </div>
 
 </pre></div>

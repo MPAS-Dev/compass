@@ -296,12 +296,10 @@ ismip6_forcing
    Ismip6Forcing
    configure.configure
    create_mapfile.build_mapping_file
+   create_mapfile.create_scrip_from_latlon
 
    atmosphere.Atmosphere
    atmosphere.Atmosphere.configure
-   atmosphere.create_mapfile_smb
-   atmosphere.create_mapfile_smb.build_mapping_file
-   atmosphere.create_mapfile_smb.create_atm_scrip
    atmosphere.process_smb.ProcessSMB
    atmosphere.process_smb.ProcessSMB.setup
    atmosphere.process_smb.ProcessSMB.run
@@ -331,6 +329,13 @@ ismip6_forcing
    ocean_thermal.process_thermal_forcing.ProcessThermalForcing.run
    ocean_thermal.process_thermal_forcing.ProcessThermalForcing.remap_ismip6_thermal_forcing_to_mali_vars
    ocean_thermal.process_thermal_forcing.ProcessThermalForcing.rename_ismip6_thermal_forcing_to_mali_vars
+
+   shelf_collapse.ShelfCollapse
+   shelf_collapse.ShelfCollapse.configure
+   shelf_collapse.process_shelf_collapse.ProcessShelfCollapse.setup
+   shelf_collapse.process_shelf_collapse.ProcessShelfCollapse.run
+   shelf_collapse.process_shelf_collapse.ProcessShelfCollapse.remap_ismip6_shelf_mask_to_mali_vars
+   shelf_collapse.process_shelf_collapse.ProcessShelfCollapse.rename_ismip6_shelf_mask_to_mali_vars
 
 ismip6_run
 ~~~~~~~~~~

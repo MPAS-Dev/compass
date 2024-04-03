@@ -115,11 +115,14 @@
   <h1>Source code for compass.landice.tests.ismip6_forcing.ocean_basal.process_basal_melt</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
+
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.ismip6_forcing.create_mapfile</span> \
-    <span class="kn">import</span> <span class="nn">build_mapping_file</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
+
+<span class="kn">from</span> <span class="nn">compass.landice.tests.ismip6_forcing.create_mapfile</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">build_mapping_file</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
 
@@ -197,12 +200,12 @@
         <span class="c1"># ismip6 input files</span>
 
         <span class="c1"># call the function that combines data</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Combining the ismip6 input files&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Combining the ismip6 input files&quot;</span><span class="p">)</span>
         <span class="n">input_file_basin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_basin</span><span class="p">[</span><span class="n">period_endyear</span><span class="p">]</span>
         <span class="n">input_file_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_files_coeff</span><span class="p">[</span><span class="n">period_endyear</span><span class="p">]</span>
 
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">input_file_list</span><span class="p">):</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;!---Start processing the current file---!&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;!---Start processing the current file---!&quot;</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;processing the input file &quot;</span>
                         <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
             <span class="c1"># temporary file names. Note: The counter &#39;i&#39; seems to be necessary</span>
@@ -216,7 +219,7 @@
                                            <span class="n">combined_file_temp</span><span class="p">)</span>
 
             <span class="c1"># remap the input forcing file.</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calling the remapping function...&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Calling the remapping function...&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">remap_ismip6_basal_melt_to_mali_vars</span><span class="p">(</span><span class="n">combined_file_temp</span><span class="p">,</span>
                                                       <span class="n">remapped_file_temp</span><span class="p">,</span>
                                                       <span class="n">mali_mesh_name</span><span class="p">,</span>
@@ -227,13 +230,13 @@
                           <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
 
             <span class="c1"># rename the ismip6 variables to MALI variables</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Renaming the ismip6 variables to &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;mali variable names...&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Renaming the ismip6 variables to &quot;</span>
+                        <span class="s2">&quot;mali variable names...&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">rename_ismip6_basal_melt_to_mali_vars</span><span class="p">(</span><span class="n">remapped_file_temp</span><span class="p">,</span>
                                                        <span class="n">output_file</span><span class="p">)</span>
 
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Remapping and renaming process done successfully. &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;Removing the temporary files...&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Remapping and renaming process done successfully. &quot;</span>
+                        <span class="s2">&quot;Removing the temporary files...&quot;</span><span class="p">)</span>
 
             <span class="c1"># remove the temporary combined file</span>
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">combined_file_temp</span><span class="p">)</span>
@@ -249,9 +252,9 @@
             <span class="n">dst</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
 
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;!---Done processing the current file---!&quot;</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;</span><span class="p">)</span></div>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;!---Done processing the current file---!&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ProcessBasalMelt.combine_ismip6_inputfiles">
@@ -314,11 +317,13 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mapping_file</span><span class="p">):</span>
             <span class="c1"># build a mapping file if it doesn&#39;t already exist</span>
             <span class="n">build_mapping_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span>
-                               <span class="n">input_file</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="p">,</span>
-                               <span class="n">method_remap</span><span class="p">)</span>
+                               <span class="n">input_file</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
+                               <span class="n">scrip_from_latlon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                               <span class="n">mali_mesh_file</span><span class="o">=</span><span class="n">mali_mesh_file</span><span class="p">,</span>
+                               <span class="n">method_remap</span><span class="o">=</span><span class="n">method_remap</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mapping file exists. &quot;</span>
-                             <span class="sa">f</span><span class="s2">&quot;Remapping the input data...&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Mapping file exists. &quot;</span>
+                             <span class="s2">&quot;Remapping the input data...&quot;</span><span class="p">)</span>
 
         <span class="c1"># remap the input data</span>
         <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ncremap&quot;</span><span class="p">,</span>
@@ -376,31 +381,33 @@
     <span class="p">}</span>
 
     <span class="n">_files_coeff</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;2100&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_pct_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_percentile.nc&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_pct_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_percentile.nc&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_median_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_median.nc&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_pct_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_percentile.nc&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_pct_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_percentile.nc&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median.nc&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;2100&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_pct_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_percentile.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_pct_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_percentile.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_median_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_median.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_pct_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_percentile.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_pct_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_percentile.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">&quot;AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
 
-        <span class="s2">&quot;2300&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_pct_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_percentile.nc&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_pct_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_percentile.nc&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_median_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_median.nc&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_pct_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_percentile.nc&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_pct_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_percentile.nc&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median.nc&quot;</span><span class="p">]</span>
+        <span class="s2">&quot;2300&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_pct_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_percentile.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_pct_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_percentile.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_median_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_median.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_pct_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_percentile.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_pct_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_percentile.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median_PIGL_gamma_calibration.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+            <span class="s2">&quot;AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
     <span class="p">}</span></div>
 
 </pre></div>

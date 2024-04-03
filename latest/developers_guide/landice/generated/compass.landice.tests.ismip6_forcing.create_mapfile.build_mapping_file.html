@@ -19,7 +19,7 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="compass.landice.tests.ismip6_forcing.atmosphere.Atmosphere" href="compass.landice.tests.ismip6_forcing.atmosphere.Atmosphere.html" />
+    <link rel="next" title="compass.landice.tests.ismip6_forcing.create_mapfile.create_scrip_from_latlon" href="compass.landice.tests.ismip6_forcing.create_mapfile.create_scrip_from_latlon.html" />
     <link rel="prev" title="compass.landice.tests.ismip6_forcing.configure.configure" href="compass.landice.tests.ismip6_forcing.configure.configure.html" /> 
 </head>
 
@@ -131,7 +131,7 @@
 <h1>compass.landice.tests.ismip6_forcing.create_mapfile.build_mapping_file<a class="headerlink" href="#compass-landice-tests-ismip6-forcing-create-mapfile-build-mapping-file" title="Link to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="compass.landice.tests.ismip6_forcing.create_mapfile.build_mapping_file">
-<span class="sig-prename descclassname"><span class="pre">compass.landice.tests.ismip6_forcing.create_mapfile.</span></span><span class="sig-name descname"><span class="pre">build_mapping_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ismip6_grid_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapping_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mali_mesh_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method_remap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/tests/ismip6_forcing/create_mapfile.html#build_mapping_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.tests.ismip6_forcing.create_mapfile.build_mapping_file" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">compass.landice.tests.ismip6_forcing.create_mapfile.</span></span><span class="sig-name descname"><span class="pre">build_mapping_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ismip6_grid_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapping_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scrip_from_latlon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mali_mesh_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method_remap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/tests/ismip6_forcing/create_mapfile.html#build_mapping_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.tests.ismip6_forcing.create_mapfile.build_mapping_file" title="Link to this definition">¶</a></dt>
 <dd><p>Build a mapping file if it does not exist.
 Mapping file is then used to remap the ismip6 source file in polarstero
 coordinate to unstructured mali mesh</p>
@@ -143,7 +143,9 @@ coordinate to unstructured mali mesh</p>
 <li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><em>logging.Logger</em></a>) – A logger for output from the step</p></li>
 <li><p><strong>ismip6_grid_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – ismip6 grid file</p></li>
 <li><p><strong>mapping_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – weights for interpolation from ismip6_grid_file to mali_mesh_file</p></li>
-<li><p><strong>mali_mesh_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – The MALI mesh file if mapping file does not exist</p></li>
+<li><p><strong>scrip_from_latlon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to use the <cite>lat</cite>/<cite>lon</cite> coordinates to create the SCRIP file
+for the <cite>ismip6_grid_file</cite> passed into the function</p></li>
+<li><p><strong>mali_mesh_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – The MALI mesh file is used if mapping file does not exist</p></li>
 <li><p><strong>method_remap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Remapping method used in building a mapping file</p></li>
 </ul>
 </dd>
@@ -157,7 +159,7 @@ coordinate to unstructured mali mesh</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="compass.landice.tests.ismip6_forcing.configure.configure.html" class="btn btn-neutral float-left" title="compass.landice.tests.ismip6_forcing.configure.configure" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="compass.landice.tests.ismip6_forcing.atmosphere.Atmosphere.html" class="btn btn-neutral float-right" title="compass.landice.tests.ismip6_forcing.atmosphere.Atmosphere" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.landice.tests.ismip6_forcing.create_mapfile.create_scrip_from_latlon.html" class="btn btn-neutral float-right" title="compass.landice.tests.ismip6_forcing.create_mapfile.create_scrip_from_latlon" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

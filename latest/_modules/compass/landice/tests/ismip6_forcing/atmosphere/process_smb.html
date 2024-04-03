@@ -114,13 +114,16 @@
              
   <h1>Source code for compass.landice.tests.ismip6_forcing.atmosphere.process_smb</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.ismip6_forcing.atmosphere.create_mapfile_smb</span> \
-    <span class="kn">import</span> <span class="nn">build_mapping_file</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
+
+<span class="kn">from</span> <span class="nn">compass.landice.tests.ismip6_forcing.create_mapfile</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">build_mapping_file</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
 
@@ -165,14 +168,31 @@
         <span class="n">period_endyear</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;period_endyear&quot;</span><span class="p">)</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">)</span>
         <span class="n">scenario</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scenario&quot;</span><span class="p">)</span>
-        <span class="n">res_ismip6</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;res_ismip6&quot;</span><span class="p">)</span>
+        <span class="c1"># test case specific configurations</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;ismip6_ais_atmosphere&quot;</span><span class="p">]</span>
+        <span class="n">data_res</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data_resolution&quot;</span><span class="p">)</span>
+
+        <span class="c1"># find the resolutions supported for the requested: endyear, model,</span>
+        <span class="c1"># and scenario. As more resolutions are supported this error checking</span>
+        <span class="c1"># will automatically evolve</span>
+        <span class="n">supported_res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="p">[</span><span class="n">period_endyear</span><span class="p">][</span><span class="n">model</span><span class="p">][</span><span class="n">scenario</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+        <span class="c1"># check that the requested resolution is supported</span>
+        <span class="k">if</span> <span class="n">data_res</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">supported_res</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Requested data resolution of </span><span class="si">{</span><span class="w"> </span><span class="p">{</span><span class="n">data_res</span><span class="p">}</span><span class="w"> </span><span class="si">}</span><span class="s2"> &quot;</span>
+                             <span class="sa">f</span><span class="s2">&quot;is not supported for requested:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                             <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">period_endyear : </span><span class="si">{</span><span class="n">period_endyear</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                             <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">model          : </span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                             <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">scenario       : </span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                             <span class="sa">f</span><span class="s2">&quot;Currently supported data resolutions are &quot;</span>
+                             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="w"> </span><span class="nb">list</span><span class="p">(</span><span class="n">supported_res</span><span class="p">)</span><span class="w"> </span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">mali_mesh_file</span><span class="p">,</span>
                             <span class="n">target</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path_mali</span><span class="p">,</span>
                                                 <span class="n">mali_mesh_file</span><span class="p">))</span>
 
         <span class="n">input_file_list</span> <span class="o">=</span> \
-            <span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="p">[</span><span class="n">period_endyear</span><span class="p">][</span><span class="n">model</span><span class="p">][</span><span class="n">scenario</span><span class="p">][</span><span class="n">res_ismip6</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="p">[</span><span class="n">period_endyear</span><span class="p">][</span><span class="n">model</span><span class="p">][</span><span class="n">scenario</span><span class="p">][</span><span class="n">data_res</span><span class="p">]</span>
 
         <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">input_file_list</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">),</span>
@@ -209,11 +229,11 @@
         <span class="n">period_endyear</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;period_endyear&quot;</span><span class="p">)</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">)</span>
         <span class="n">scenario</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scenario&quot;</span><span class="p">)</span>
-        <span class="n">res_ismip6</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;res_ismip6&quot;</span><span class="p">)</span>
         <span class="n">output_base_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;output_base_path&quot;</span><span class="p">)</span>
 
         <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;ismip6_ais_atmosphere&quot;</span><span class="p">]</span>
         <span class="n">method_remap</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;method_remap&quot;</span><span class="p">)</span>
+        <span class="n">data_res</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data_resolution&quot;</span><span class="p">)</span>
 
         <span class="c1"># define file names needed</span>
         <span class="c1"># input racmo climotology file</span>
@@ -228,7 +248,7 @@
                              <span class="s2">&quot;but it is required as an input file &quot;</span>
                              <span class="s2">&quot;to run this step. Please run `process_smb_racmo`&quot;</span>
                              <span class="s2">&quot;step prior to running this step by setting&quot;</span>
-                             <span class="s2">&quot;the config option &#39;process_smb_racmo&#39; to &#39;True&#39;.&quot;</span><span class="p">)</span>
+                             <span class="s2">&quot;the config option &#39;process_smb_racmo&#39; to &#39;True&#39;&quot;</span><span class="p">)</span>
 
         <span class="c1"># temporary remapped climatology and anomaly files</span>
         <span class="n">clim_ismip6_temp</span> <span class="o">=</span> <span class="s2">&quot;clim_ismip6.nc&quot;</span>
@@ -243,7 +263,7 @@
         <span class="c1"># combine ismip6 forcing data covering different periods</span>
         <span class="c1"># into a single file</span>
         <span class="n">input_file_list</span> <span class="o">=</span> \
-            <span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="p">[</span><span class="n">period_endyear</span><span class="p">][</span><span class="n">model</span><span class="p">][</span><span class="n">scenario</span><span class="p">][</span><span class="n">res_ismip6</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="p">[</span><span class="n">period_endyear</span><span class="p">][</span><span class="n">model</span><span class="p">][</span><span class="n">scenario</span><span class="p">][</span><span class="n">data_res</span><span class="p">]</span>
 
         <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">input_file_list</span><span class="p">:</span>
@@ -263,7 +283,7 @@
         <span class="c1"># smb anomaly files on which climatology is calculated.</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calculating climatology for </span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2"> forcing&quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;over 1995-2017&quot;</span><span class="p">)</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;ncra&quot;</span><span class="p">,</span> <span class="s2">&quot;-O&quot;</span><span class="p">,</span> <span class="s2">&quot;-F&quot;</span><span class="p">,</span> <span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="s2">&quot;time,1,23&quot;</span><span class="p">,</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ncra&quot;</span><span class="p">,</span> <span class="s2">&quot;-O&quot;</span><span class="p">,</span> <span class="s2">&quot;-F&quot;</span><span class="p">,</span> <span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="s2">&quot;time,1,23&quot;</span><span class="p">,</span>
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">combined_file_temp</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">clim_ismip6_temp</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
 
@@ -323,7 +343,7 @@
         <span class="n">dst</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">output_anomaly_ismip6</span><span class="p">)</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;!---Done processing the file---!&quot;</span><span class="p">)</span></div>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;!---Done processing the file---!&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ProcessSMB.remap_ismip6_smb_to_mali">
@@ -359,8 +379,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating a mapping file. &quot;</span>
                              <span class="sa">f</span><span class="s2">&quot;Mapping method used: </span><span class="si">{</span><span class="n">method_remap</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">build_mapping_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span>
-                               <span class="n">input_file</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="p">,</span>
-                               <span class="n">method_remap</span><span class="p">)</span>
+                               <span class="n">input_file</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
+                               <span class="n">scrip_from_latlon</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                               <span class="n">mali_mesh_file</span><span class="o">=</span><span class="n">mali_mesh_file</span><span class="p">,</span>
+                               <span class="n">method_remap</span><span class="o">=</span><span class="n">method_remap</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Mapping file exists. &quot;</span>
                              <span class="s2">&quot;Remapping the input data...&quot;</span><span class="p">)</span>
@@ -464,148 +486,177 @@
         <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;sfcMassBal&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;sfcMassBal&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">corr_clim</span>
 
         <span class="c1"># write metadata</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;sfcMassBal&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;long_name&quot;</span> <span class="p">:</span> <span class="s2">&quot;surface mass balance&quot;</span><span class="p">,</span>
-                                  <span class="s2">&quot;units&quot;</span> <span class="p">:</span> <span class="s2">&quot;kg m-2 s-1&quot;</span><span class="p">,</span>
-                                  <span class="s2">&quot;coordinates&quot;</span> <span class="p">:</span> <span class="s2">&quot;lat lon&quot;</span><span class="p">}</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;sfcMassBal&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;long_name&quot;</span><span class="p">:</span> <span class="s2">&quot;surface mass balance&quot;</span><span class="p">,</span>
+                                  <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;kg m-2 s-1&quot;</span><span class="p">,</span>
+                                  <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="s2">&quot;lat lon&quot;</span><span class="p">}</span>
 
         <span class="c1"># write to a new netCDF file</span>
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">output_file_final</span><span class="p">)</span>
         <span class="n">ds</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
-    <span class="c1"># create a nested dictionary for the ISMIP6 original forcing files including relative path</span>
-    <span class="c1"># Note: these files needed to be explicitly listed because of inconsistencies that are</span>
-    <span class="c1"># present in file naming conventions in the ISMIP6 source dataset.</span>
+    <span class="c1"># create a nested dictionary for the ISMIP6 original forcing files</span>
+    <span class="c1"># including relative path. Note: these files needed to be explicitly</span>
+    <span class="c1"># listed because of inconsistencies that are present in file naming</span>
+    <span class="c1"># conventions in the ISMIP6 source dataset.</span>
     <span class="n">_files</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;2100&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;CCSM4&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;RCP85&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Atmosphere_Forcing/ccsm4_rcp8.5/Regridded_8km/CCSM4_8km_anomaly_1995-2100.nc&quot;</span><span class="p">]</span>
+                <span class="s2">&quot;RCP85&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;8km&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;AIS/Atmosphere_Forcing/ccsm4_rcp8.5/Regridded_8km/CCSM4_8km_anomaly_1995-2100.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
+                <span class="p">},</span>
             <span class="p">},</span>
             <span class="s2">&quot;CESM2&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;SSP585v1&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Atmosphere_Forcing/CESM2_ssp585/Regridded_8km/CESM2_anomaly_ssp585_1995-2100_8km_v1.nc&quot;</span><span class="p">],</span>
-                <span class="s2">&quot;SSP585v2&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Atmosphere_Forcing/CESM2_ssp585/Regridded_8km/CESM2_anomaly_ssp585_1995-2100_8km_v2.nc&quot;</span><span class="p">]</span>
+                <span class="s2">&quot;SSP585v1&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;8km&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;AIS/Atmosphere_Forcing/CESM2_ssp585/Regridded_8km/CESM2_anomaly_ssp585_1995-2100_8km_v1.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;SSP585v2&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;8km&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;AIS/Atmosphere_Forcing/CESM2_ssp585/Regridded_8km/CESM2_anomaly_ssp585_1995-2100_8km_v2.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
+                <span class="p">},</span>
             <span class="p">},</span>
             <span class="s2">&quot;CNRM_CM6&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;SSP126&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Atmosphere_Forcing/CNRM_CM6_ssp126/Regridded_8km/CNRM-CM6-1_anomaly_ssp126_1995-2100_8km_ISMIP6.nc&quot;</span><span class="p">],</span>
-                <span class="s2">&quot;SSP585&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Atmosphere_Forcing/CNRM_CM6_ssp585/Regridded_8km/CNRM-CM6-1_anomaly_ssp585_1995-2100_8km_ISMIP6.nc&quot;</span><span class="p">]</span>
+                <span class="s2">&quot;SSP126&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;8km&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;AIS/Atmosphere_Forcing/CNRM_CM6_ssp126/Regridded_8km/CNRM-CM6-1_anomaly_ssp126_1995-2100_8km_ISMIP6.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;SSP585&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;8km&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;AIS/Atmosphere_Forcing/CNRM_CM6_ssp585/Regridded_8km/CNRM-CM6-1_anomaly_ssp585_1995-2100_8km_ISMIP6.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
+                <span class="p">},</span>
             <span class="p">},</span>
             <span class="s2">&quot;CNRM_ESM2&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;SSP585&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Atmosphere_Forcing/CNRM_ESM2_ssp585/Regridded_8km/CNRM-ESM2-1_anomaly_ssp585_1995-2100_8km_ISMIP6.nc&quot;</span><span class="p">]</span>
+                <span class="s2">&quot;SSP585&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;8km&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;AIS/Atmosphere_Forcing/CNRM_ESM2_ssp585/Regridded_8km/CNRM-ESM2-1_anomaly_ssp585_1995-2100_8km_ISMIP6.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
+                <span class="p">},</span>
             <span class="p">},</span>
             <span class="s2">&quot;CSIRO-Mk3-6-0&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;RCP85&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Atmosphere_Forcing/CSIRO-Mk3-6-0_rcp85/Regridded_8km/CSIRO-Mk3-6-0_8km_anomaly_rcp85_1995-2100.nc&quot;</span><span class="p">]</span>
+                <span class="s2">&quot;RCP85&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;8km&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;AIS/Atmosphere_Forcing/CSIRO-Mk3-6-0_rcp85/Regridded_8km/CSIRO-Mk3-6-0_8km_anomaly_rcp85_1995-2100.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
+                <span class="p">},</span>
             <span class="p">},</span>
             <span class="s2">&quot;HadGEM2-ES&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;RCP85&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Atmosphere_Forcing/HadGEM2-ES_rcp85/Regridded_8km/HadGEM2-ES_8km_anomaly_rcp85_1995-2100.nc&quot;</span><span class="p">]</span>
+                <span class="s2">&quot;RCP85&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;8km&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;AIS/Atmosphere_Forcing/HadGEM2-ES_rcp85/Regridded_8km/HadGEM2-ES_8km_anomaly_rcp85_1995-2100.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
+                <span class="p">},</span>
             <span class="p">},</span>
             <span class="s2">&quot;IPSL-CM5A-MR&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;RCP26&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Atmosphere_Forcing/IPSL-CM5A-MR_rcp26/Regridded_8km/IPSL-CM5A-MR_8km_anomaly_rcp26_1995-2100.nc&quot;</span><span class="p">],</span>
-                <span class="s2">&quot;RCP85&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Atmosphere_Forcing/IPSL-CM5A-MR_rcp85/Regridded_8km/IPSL-CM5A-MR_8km_anomaly_rcp85_1995-2100.nc&quot;</span><span class="p">]</span>
+                <span class="s2">&quot;RCP26&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;8km&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;AIS/Atmosphere_Forcing/IPSL-CM5A-MR_rcp26/Regridded_8km/IPSL-CM5A-MR_8km_anomaly_rcp26_1995-2100.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;RCP85&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;8km&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;AIS/Atmosphere_Forcing/IPSL-CM5A-MR_rcp85/Regridded_8km/IPSL-CM5A-MR_8km_anomaly_rcp85_1995-2100.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
+                <span class="p">},</span>
             <span class="p">},</span>
             <span class="s2">&quot;MIROC-ESM-CHEM&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;RCP85&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Atmosphere_Forcing/miroc-esm-chem_rcp8.5/Regridded_8km/MIROC-ESM-CHEM_8km_anomaly_1995-2100.nc&quot;</span><span class="p">]</span>
+                <span class="s2">&quot;RCP85&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;8km&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;AIS/Atmosphere_Forcing/miroc-esm-chem_rcp8.5/Regridded_8km/MIROC-ESM-CHEM_8km_anomaly_1995-2100.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
+                <span class="p">},</span>
             <span class="p">},</span>
             <span class="s2">&quot;NorESM1-M&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;RCP26&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Atmosphere_Forcing/noresm1-m_rcp2.6/Regridded_8km/NorESM-M_8km_anomaly_rcp26_1995-2100.nc&quot;</span><span class="p">],</span>
-                <span class="s2">&quot;RCP85&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Atmosphere_Forcing/noresm1-m_rcp8.5/Regridded_8km/NorESM-M_8km_anomaly_1995-2100.nc&quot;</span><span class="p">]</span>
+                <span class="s2">&quot;RCP26&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;8km&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;AIS/Atmosphere_Forcing/noresm1-m_rcp2.6/Regridded_8km/NorESM-M_8km_anomaly_rcp26_1995-2100.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;RCP85&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;8km&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;AIS/Atmosphere_Forcing/noresm1-m_rcp8.5/Regridded_8km/NorESM-M_8km_anomaly_1995-2100.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
+                <span class="p">},</span>
             <span class="p">},</span>
             <span class="s2">&quot;UKESM1-0-LL&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;SSP585&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;AIS/Atmosphere_Forcing/UKESM1-0-LL/Regridded_8km/UKESM1-0-LL_anomaly_ssp585_1995-2100_8km.nc&quot;</span><span class="p">]</span>
+                <span class="s2">&quot;SSP585&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;8km&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;AIS/Atmosphere_Forcing/UKESM1-0-LL/Regridded_8km/UKESM1-0-LL_anomaly_ssp585_1995-2100_8km.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
+                <span class="p">},</span>
             <span class="p">}</span>
         <span class="p">},</span>
         <span class="s2">&quot;2300&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;CCSM4&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;RCP85&quot;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s2">&quot;4km&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/CCSM4_RCP85/Regridded_04km/CCSM4_4km_anomaly_1995-2100.nc&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/CCSM4_RCP85/Regridded_04km/CCSM4_4km_anomaly_2101-2300.nc&quot;</span><span class="p">],</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/CCSM4_RCP85/Regridded_04km/CCSM4_4km_anomaly_1995-2100.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/CCSM4_RCP85/Regridded_04km/CCSM4_4km_anomaly_2101-2300.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
                     <span class="s2">&quot;8km&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/CCSM4_RCP85/Regridded_08km/CCSM4_8km_anomaly_1995-2100.nc&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/CCSM4_RCP85/Regridded_08km/CCSM4_8km_anomaly_2101-2300.nc&quot;</span><span class="p">]</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/CCSM4_RCP85/Regridded_08km/CCSM4_8km_anomaly_1995-2100.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/CCSM4_RCP85/Regridded_08km/CCSM4_8km_anomaly_2101-2300.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
                 <span class="p">},</span>
             <span class="p">},</span>
             <span class="s2">&quot;CESM2-WACCM&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;SSP585&quot;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s2">&quot;4km&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/CESM2-WACCM_ssp585/Regridded_4km/CESM2-WACCM_4km_anomaly_ssp585_1995-2100.nc&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/CESM2-WACCM_ssp585/Regridded_4km/CESM2-WACCM_4km_anomaly_ssp585_2101-2299.nc&quot;</span><span class="p">],</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/CESM2-WACCM_ssp585/Regridded_4km/CESM2-WACCM_4km_anomaly_ssp585_1995-2100.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/CESM2-WACCM_ssp585/Regridded_4km/CESM2-WACCM_4km_anomaly_ssp585_2101-2299.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
                     <span class="s2">&quot;8km&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/CESM2-WACCM_ssp585/Regridded_8km/CESM2-WACCM_8km_anomaly_ssp585_1995-2100.nc&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/CESM2-WACCM_ssp585/Regridded_8km/CESM2-WACCM_8km_anomaly_ssp585_2101-2299.nc&quot;</span><span class="p">]</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/CESM2-WACCM_ssp585/Regridded_8km/CESM2-WACCM_8km_anomaly_ssp585_1995-2100.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/CESM2-WACCM_ssp585/Regridded_8km/CESM2-WACCM_8km_anomaly_ssp585_2101-2299.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
                 <span class="p">},</span>
                 <span class="s2">&quot;SSP585-repeat&quot;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s2">&quot;4km&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/CESM2-WACCM_ssp585-repeat/Regridded_4km/CESM2-WACCM_4km_anomaly_ssp585_1995-2300_v2.nc&quot;</span><span class="p">],</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/CESM2-WACCM_ssp585-repeat/Regridded_4km/CESM2-WACCM_4km_anomaly_ssp585_1995-2300_v2.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
                     <span class="s2">&quot;8km&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/CESM2-WACCM_ssp585-repeat/Regridded_8km/CESM2-WACCM_8km_anomaly_ssp585_1995-2300_v2.nc&quot;</span><span class="p">]</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/CESM2-WACCM_ssp585-repeat/Regridded_8km/CESM2-WACCM_8km_anomaly_ssp585_1995-2300_v2.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
                 <span class="p">},</span>
             <span class="p">},</span>
             <span class="s2">&quot;HadGEM2-ES&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;RCP85&quot;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s2">&quot;4km&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/HadGEM2-ES_RCP85/Regridded_4km/HadGEM2-ES_4km_anomaly_rcp85_1995-2100.nc&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/HadGEM2-ES_RCP85/Regridded_4km/HadGEM2-ES_4km_anomaly_rcp85_2101-2299.nc&quot;</span><span class="p">],</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/HadGEM2-ES_RCP85/Regridded_4km/HadGEM2-ES_4km_anomaly_rcp85_1995-2100.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/HadGEM2-ES_RCP85/Regridded_4km/HadGEM2-ES_4km_anomaly_rcp85_2101-2299.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
                     <span class="s2">&quot;8km&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/HadGEM2-ES_RCP85/Regridded_8km/HadGEM2-ES_8km_anomaly_rcp85_1995-2100.nc&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/HadGEM2-ES_RCP85/Regridded_8km/HadGEM2-ES_8km_anomaly_rcp85_2101-2299.nc&quot;</span><span class="p">]</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/HadGEM2-ES_RCP85/Regridded_8km/HadGEM2-ES_8km_anomaly_rcp85_1995-2100.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/HadGEM2-ES_RCP85/Regridded_8km/HadGEM2-ES_8km_anomaly_rcp85_2101-2299.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
                 <span class="p">},</span>
                 <span class="s2">&quot;RCP85-repeat&quot;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s2">&quot;4km&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/HadGEM2-ES-RCP85-repeat/Regridded_4km/HadGEM2-ES_4km_anomaly_rcp85_1995-2300_v2.nc&quot;</span><span class="p">],</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/HadGEM2-ES-RCP85-repeat/Regridded_4km/HadGEM2-ES_4km_anomaly_rcp85_1995-2300_v2.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
                     <span class="s2">&quot;8km&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/HadGEM2-ES-RCP85-repeat/Regridded_8km/HadGEM2-ES_8km_anomaly_rcp85_1995-2300_v2.nc&quot;</span><span class="p">]</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/HadGEM2-ES-RCP85-repeat/Regridded_8km/HadGEM2-ES_8km_anomaly_rcp85_1995-2300_v2.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
                 <span class="p">},</span>
             <span class="p">},</span>
             <span class="s2">&quot;NorESM1-M&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;RCP26-repeat&quot;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s2">&quot;4km&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/NorESM1-M_RCP26-repeat/Regridded_4km/NorESM1-M_4km_anomaly_rcp26_1995-2300_v3.nc&quot;</span><span class="p">],</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/NorESM1-M_RCP26-repeat/Regridded_4km/NorESM1-M_4km_anomaly_rcp26_1995-2300_v3.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
                     <span class="s2">&quot;8km&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/NorESM1-M_RCP26-repeat/Regridded_8km/NorESM1-M_8km_anomaly_rcp26_1995-2300_v2.nc&quot;</span><span class="p">]</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/NorESM1-M_RCP26-repeat/Regridded_8km/NorESM1-M_8km_anomaly_rcp26_1995-2300_v2.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
                 <span class="p">},</span>
                 <span class="s2">&quot;RCP85-repeat&quot;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s2">&quot;4km&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/NorESM1-M_RCP85-repeat/Regridded_4km/NorESM1-M_4km_anomaly_1995-2300_v2.nc&quot;</span><span class="p">],</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/NorESM1-M_RCP85-repeat/Regridded_4km/NorESM1-M_4km_anomaly_1995-2300_v2.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
                     <span class="s2">&quot;8km&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/NorESM1-M_RCP85-repeat/Regridded_8km/NorESM1-M_8km_anomaly_1995-2300_v2.nc&quot;</span><span class="p">]</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/NorESM1-M_RCP85-repeat/Regridded_8km/NorESM1-M_8km_anomaly_1995-2300_v2.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
                 <span class="p">},</span>
             <span class="p">},</span>
             <span class="s2">&quot;UKESM1-0-LL&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;SSP126&quot;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s2">&quot;4km&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/UKESM1-0-LL_ssp126/Regridded_4km/UKESM1-0-LL_4km_anomaly_ssp126_1995-2100.nc&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/UKESM1-0-LL_ssp126/Regridded_4km/UKESM1-0-LL_4km_anomaly_ssp126_2101-2300.nc&quot;</span><span class="p">],</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/UKESM1-0-LL_ssp126/Regridded_4km/UKESM1-0-LL_4km_anomaly_ssp126_1995-2100.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/UKESM1-0-LL_ssp126/Regridded_4km/UKESM1-0-LL_4km_anomaly_ssp126_2101-2300.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
                     <span class="s2">&quot;8km&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/UKESM1-0-LL_ssp126/Regridded_8km/UKESM1-0-LL_8km_anomaly_ssp126_1995-2100.nc&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/UKESM1-0-LL_ssp126/Regridded_8km/UKESM1-0-LL_8km_anomaly_ssp126_2101-2300.nc&quot;</span><span class="p">]</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/UKESM1-0-LL_ssp126/Regridded_8km/UKESM1-0-LL_8km_anomaly_ssp126_1995-2100.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/UKESM1-0-LL_ssp126/Regridded_8km/UKESM1-0-LL_8km_anomaly_ssp126_2101-2300.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
                 <span class="p">},</span>
                 <span class="s2">&quot;SSP585&quot;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s2">&quot;4km&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585/Regridding_4km/UKESM1-0-LL_4km_anomaly_ssp585_1995-2100.nc&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585/Regridding_4km/UKESM1-0-LL_4km_anomaly_ssp585_2101-2300.nc&quot;</span><span class="p">],</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585/Regridding_4km/UKESM1-0-LL_4km_anomaly_ssp585_1995-2100.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585/Regridding_4km/UKESM1-0-LL_4km_anomaly_ssp585_2101-2300.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
                     <span class="s2">&quot;8km&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585/Regridding_8km/UKESM1-0-LL_8km_anomaly_ssp585_1995-2100.nc&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585/Regridding_8km/UKESM1-0-LL_8km_anomaly_ssp585_2101-2300.nc&quot;</span><span class="p">]</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585/Regridding_8km/UKESM1-0-LL_8km_anomaly_ssp585_1995-2100.nc&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585/Regridding_8km/UKESM1-0-LL_8km_anomaly_ssp585_2101-2300.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
                 <span class="p">},</span>
                 <span class="s2">&quot;SSP585-repeat&quot;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s2">&quot;4km&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585-repeat/Regridding_4km/UKESM1-0-LL_4km_anomaly_ssp585_1995-2300_v2.nc&quot;</span><span class="p">],</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585-repeat/Regridding_4km/UKESM1-0-LL_4km_anomaly_ssp585_1995-2300_v2.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
                     <span class="s2">&quot;8km&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="s2">&quot;AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585-repeat/Regridding_8km/UKESM1-0-LL_8km_anomaly_ssp585_1995-2300_v2.nc&quot;</span><span class="p">]</span>
+                        <span class="s2">&quot;AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585-repeat/Regridding_8km/UKESM1-0-LL_8km_anomaly_ssp585_1995-2300_v2.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
                 <span class="p">}</span>
             <span class="p">}</span>
         <span class="p">}</span>

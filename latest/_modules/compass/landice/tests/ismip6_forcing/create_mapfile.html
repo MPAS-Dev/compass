@@ -114,15 +114,22 @@
   <h1>Source code for compass.landice.tests.ismip6_forcing.create_mapfile</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.scrip.from_mpas</span> <span class="kn">import</span> <span class="n">scrip_from_mpas</span>
+
+<span class="kn">import</span> <span class="nn">netCDF4</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.scrip.from_mpas</span> <span class="kn">import</span> <span class="n">scrip_from_mpas</span>
+<span class="kn">from</span> <span class="nn">pyremap.descriptor.utility</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">create_scrip</span><span class="p">,</span>
+    <span class="n">interp_extrap_corners_2d</span><span class="p">,</span>
+    <span class="n">unwrap_corners</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="build_mapping_file">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.create_mapfile.build_mapping_file.html#compass.landice.tests.ismip6_forcing.create_mapfile.build_mapping_file">[docs]</a>
-<span class="k">def</span> <span class="nf">build_mapping_file</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">cores</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">ismip6_grid_file</span><span class="p">,</span>
-                       <span class="n">mapping_file</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="k">def</span> <span class="nf">build_mapping_file</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">cores</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">ismip6_grid_file</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
+                       <span class="n">scrip_from_latlon</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                        <span class="n">method_remap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a mapping file if it does not exist.</span>
@@ -146,42 +153,51 @@
 <span class="sd">    mapping_file : str</span>
 <span class="sd">        weights for interpolation from ismip6_grid_file to mali_mesh_file</span>
 
+<span class="sd">    scrip_from_latlon : bool, optional</span>
+<span class="sd">        whether to use the `lat`/`lon` coordinates to create the SCRIP file</span>
+<span class="sd">        for the `ismip6_grid_file` passed into the function</span>
+
 <span class="sd">    mali_mesh_file : str, optional</span>
-<span class="sd">        The MALI mesh file if mapping file does not exist</span>
+<span class="sd">        The MALI mesh file is used if mapping file does not exist</span>
 
 <span class="sd">    method_remap : str, optional</span>
 <span class="sd">        Remapping method used in building a mapping file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mapping_file</span><span class="p">):</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mapping file exists. Not building a new one.&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Mapping file exists. Not building a new one.&quot;</span><span class="p">)</span>
         <span class="k">return</span>
+
+    <span class="c1"># create the scrip files if mapping file does not exist</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Mapping file does not exist. Building one based on the&quot;</span>
+                <span class="s2">&quot; input/output meshes&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating temporary scrip files for source and &quot;</span>
+                <span class="s2">&quot;destination grids...&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">mali_mesh_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Mapping file does not exist. To build one, Mali &quot;</span>
                          <span class="s2">&quot;mesh file with &#39;-f&#39; should be provided. &quot;</span>
                          <span class="s2">&quot;Type --help for info&quot;</span><span class="p">)</span>
 
-    <span class="n">ismip6_scripfile</span> <span class="o">=</span> <span class="s2">&quot;temp_ismip6_8km_scrip.nc&quot;</span>
+    <span class="c1"># name temporary scrip files that will be used to build mapping file</span>
+    <span class="n">source_grid_scripfile</span> <span class="o">=</span> <span class="s2">&quot;temp_source_scrip.nc&quot;</span>
     <span class="n">mali_scripfile</span> <span class="o">=</span> <span class="s2">&quot;temp_mali_scrip.nc&quot;</span>
+    <span class="c1"># this is the projection of ismip6 data for Antarctica</span>
     <span class="n">ismip6_projection</span> <span class="o">=</span> <span class="s2">&quot;ais-bedmap2&quot;</span>
 
-    <span class="c1"># create the ismip6 scripfile if mapping file does not exist</span>
-    <span class="c1"># this is the projection of ismip6 data for Antarctica</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mapping file does not exist. Building one based on &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;the input/ouptut meshes&quot;</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating temporary scripfiles &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;for ismip6 grid and mali mesh...&quot;</span><span class="p">)</span>
+    <span class="c1"># create the scrip file for the forcing dataset</span>
+    <span class="k">if</span> <span class="n">scrip_from_latlon</span><span class="p">:</span>
+        <span class="n">create_scrip_from_latlon</span><span class="p">(</span><span class="n">ismip6_grid_file</span><span class="p">,</span> <span class="n">source_grid_scripfile</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;create_SCRIP_file_from_planar_rectangular_grid.py&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;--input&quot;</span><span class="p">,</span> <span class="n">ismip6_grid_file</span><span class="p">,</span>
+                <span class="s2">&quot;--scrip&quot;</span><span class="p">,</span> <span class="n">source_grid_scripfile</span><span class="p">,</span>
+                <span class="s2">&quot;--proj&quot;</span><span class="p">,</span> <span class="n">ismip6_projection</span><span class="p">,</span>
+                <span class="s2">&quot;--rank&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">]</span>
 
-    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;create_SCRIP_file_from_planar_rectangular_grid.py&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;--input&quot;</span><span class="p">,</span> <span class="n">ismip6_grid_file</span><span class="p">,</span>
-            <span class="s2">&quot;--scrip&quot;</span><span class="p">,</span> <span class="n">ismip6_scripfile</span><span class="p">,</span>
-            <span class="s2">&quot;--proj&quot;</span><span class="p">,</span> <span class="n">ismip6_projection</span><span class="p">,</span>
-            <span class="s2">&quot;--rank&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">]</span>
+        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
-    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-
-    <span class="c1"># create a MALI mesh scripfile if mapping file does not exist</span>
+    <span class="c1"># create a MALI mesh scripfile</span>
     <span class="c1"># make sure the mali mesh file uses the longitude convention of [0 2pi]</span>
     <span class="c1"># make changes on a duplicated file to avoid making changes to the</span>
     <span class="c1"># original mesh file</span>
@@ -195,36 +211,111 @@
 
     <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
-    <span class="n">scrip_from_mpas</span><span class="p">(</span><span class="n">mali_mesh_file</span><span class="p">,</span> <span class="n">mali_scripfile</span><span class="p">)</span>
+    <span class="c1"># create a MALI mesh scripfile if mapping file does not exist</span>
+    <span class="n">scrip_from_mpas</span><span class="p">(</span><span class="n">mali_mesh_copy</span><span class="p">,</span> <span class="n">mali_scripfile</span><span class="p">)</span>
 
     <span class="c1"># create a mapping file using ESMF weight gen</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating a mapping file... &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;Mapping method used: </span><span class="si">{</span><span class="n">method_remap</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating a mapping file. Mapping method used: </span><span class="si">{</span><span class="n">method_remap</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">method_remap</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Desired remapping option should be provided with &quot;</span>
                          <span class="s2">&quot;--method. Available options are &#39;bilinear&#39;,&quot;</span>
                          <span class="s2">&quot;&#39;neareststod&#39;, &#39;conserve&#39;.&quot;</span><span class="p">)</span>
 
-    <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parallel&quot;</span><span class="p">,</span> <span class="s2">&quot;parallel_executable&quot;</span><span class="p">)</span>
+    <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;parallel_executable&#39;</span><span class="p">)</span>
     <span class="c1"># split the parallel executable into constituents in case it includes flags</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parallel_executable</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
     <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;-n&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cores</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                  <span class="s2">&quot;ESMF_RegridWeightGen&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="n">ismip6_scripfile</span><span class="p">,</span>
+                 <span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="n">source_grid_scripfile</span><span class="p">,</span>
                  <span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="n">mali_scripfile</span><span class="p">,</span>
                  <span class="s2">&quot;-w&quot;</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
                  <span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="n">method_remap</span><span class="p">,</span>
                  <span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;-64bit_offset&quot;</span><span class="p">,</span>
                  <span class="s2">&quot;--dst_regional&quot;</span><span class="p">,</span> <span class="s2">&quot;--src_regional&quot;</span><span class="p">])</span>
 
-    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
     <span class="c1"># remove the temporary scripfiles once the mapping file is generated</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Removing the temporary mesh and scripfiles...&quot;</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">ismip6_scripfile</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Removing the temporary mesh and scripfiles...&quot;</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">source_grid_scripfile</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">mali_scripfile</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">mali_mesh_copy</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_scrip_from_latlon">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.create_mapfile.create_scrip_from_latlon.html#compass.landice.tests.ismip6_forcing.create_mapfile.create_scrip_from_latlon">[docs]</a>
+<span class="k">def</span> <span class="nf">create_scrip_from_latlon</span><span class="p">(</span><span class="n">source_grid_file</span><span class="p">,</span> <span class="n">source_grid_scripfile</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a scripfile based on the `lat`/`lon` coordinates of a source</span>
+<span class="sd">    dataset.</span>
+
+<span class="sd">    This function is needed, c.f. the scrip utility in the MPAS-Tools repo</span>
+<span class="sd">    (i.e. `create_SCRIP_file_from_planar_rectangular_grid.py`), when a dataset</span>
+<span class="sd">    does not have `x`/`y` coordinates to generate the scrip file from. This is</span>
+<span class="sd">    the case for the atmospheric forcing datasets from ISMIP6</span>
+<span class="sd">    and for RACMO products.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    source_grid_file : str</span>
+<span class="sd">        input dataset (with `lat`/`lon` coords) to generate a scrip file for</span>
+
+<span class="sd">    source_grid_scripfile : str</span>
+<span class="sd">        output scrip file of the input smb data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">source_grid_file</span><span class="p">)</span>
+    <span class="n">out_file</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">source_grid_scripfile</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+
+    <span class="c1"># RACMO datasets, which use a rotated-pole grid, do not contain `x`/`y`</span>
+    <span class="c1"># dimensions, instead use `rlat`/`rlon` dimensions to find `nx`/`ny`</span>
+    <span class="k">if</span> <span class="s2">&quot;rlon&quot;</span> <span class="ow">in</span> <span class="n">ds</span> <span class="ow">and</span> <span class="s2">&quot;rlat&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s2">&quot;rlon&quot;</span><span class="p">]</span>
+        <span class="n">ny</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s2">&quot;rlat&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span>
+        <span class="n">ny</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span>
+
+    <span class="n">grid_size</span> <span class="o">=</span> <span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span>
+
+    <span class="c1"># generate common variables used in scrip files</span>
+    <span class="n">create_scrip</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span> <span class="n">grid_size</span><span class="p">,</span> <span class="n">grid_corners</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">grid_rank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                 <span class="n">units</span><span class="o">=</span><span class="s2">&quot;degrees&quot;</span><span class="p">,</span> <span class="n">meshName</span><span class="o">=</span><span class="n">source_grid_file</span><span class="p">)</span>
+
+    <span class="c1"># place the information from our source dataset into the scrip dataset</span>
+    <span class="n">out_file</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;grid_center_lat&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">lat</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flat</span>
+    <span class="n">out_file</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;grid_center_lon&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">lon</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flat</span>
+    <span class="n">out_file</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;grid_dims&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="p">[</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">]</span>
+    <span class="n">out_file</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;grid_imask&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="c1"># determine the corners of gricells</span>
+    <span class="k">if</span> <span class="s2">&quot;lat_bnds&quot;</span> <span class="ow">in</span> <span class="n">ds</span> <span class="ow">and</span> <span class="s2">&quot;lon_bnds&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
+        <span class="n">lat_corner</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">lat_bnds</span>
+        <span class="k">if</span> <span class="s2">&quot;time&quot;</span> <span class="ow">in</span> <span class="n">lat_corner</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="n">lat_corner</span> <span class="o">=</span> <span class="n">lat_corner</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">lon_corner</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">lon_bnds</span>
+        <span class="k">if</span> <span class="s2">&quot;time&quot;</span> <span class="ow">in</span> <span class="n">lon_corner</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="n">lon_corner</span> <span class="o">=</span> <span class="n">lon_corner</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">lat_corner</span> <span class="o">=</span> <span class="n">lat_corner</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">lon_corner</span> <span class="o">=</span> <span class="n">lon_corner</span><span class="o">.</span><span class="n">values</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># RACMO datasets do not have `lat_bnds`/`lon_bnds` variables. Instead</span>
+        <span class="c1"># the bounds of the RACMO dataset are approximated assuming the cell</span>
+        <span class="c1"># centers are located at the midpoint b/w cell edges</span>
+        <span class="n">lat_corner</span> <span class="o">=</span> <span class="n">unwrap_corners</span><span class="p">(</span><span class="n">interp_extrap_corners_2d</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">lat</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+        <span class="n">lon_corner</span> <span class="o">=</span> <span class="n">unwrap_corners</span><span class="p">(</span><span class="n">interp_extrap_corners_2d</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">lon</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+
+    <span class="n">grid_corner_lat</span> <span class="o">=</span> <span class="n">lat_corner</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">grid_size</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">grid_corner_lon</span> <span class="o">=</span> <span class="n">lon_corner</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">grid_size</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+    <span class="n">out_file</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;grid_corner_lat&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">grid_corner_lat</span>
+    <span class="n">out_file</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;grid_corner_lon&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">grid_corner_lon</span>
+
+    <span class="n">out_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 </pre></div>
 

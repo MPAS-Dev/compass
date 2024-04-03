@@ -76,9 +76,7 @@
 <li class="toctree-l3"><a class="reference internal" href="hydro_radial.html">hydro_radial</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">ismip6_forcing</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#framework">framework</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#atmosphere">atmosphere</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ocean-basal">ocean_basal</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ocean-thermal">ocean_thermal</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-cases">Test cases</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ismip6_run.html">ismip6_run</a></li>
@@ -151,25 +149,43 @@
 <span class="pre">forcing.Ismip6Forcing</span></code>) processes (i.e., remapping and renaming) the
 atmospheric and oceanic forcing data of the Ice Sheet Model
 Intercomparison for CMIP6 (ISMIP6) protocol from its native polarstereo grid to
-the unstructure MALI mesh. The test group includes four test cases,
-<code class="docutils literal notranslate"><span class="pre">atmosphere</span></code>, <code class="docutils literal notranslate"><span class="pre">ocean_basal</span></code>, <code class="docutils literal notranslate"><span class="pre">ocean_thermal_obs</span></code> and <code class="docutils literal notranslate"><span class="pre">ocean_thermal</span></code>.
-The <code class="docutils literal notranslate"><span class="pre">atmosphere</span></code> test case has two steps: <code class="docutils literal notranslate"><span class="pre">process_smb</span></code> and <code class="docutils literal notranslate"><span class="pre">process_smb_racmo</span></code>;
-the <code class="docutils literal notranslate"><span class="pre">ocean_basal</span></code> test case has one step, <code class="docutils literal notranslate"><span class="pre">process_basal_melt</span></code>;
-the <code class="docutils literal notranslate"><span class="pre">ocean_thermal_obs</span></code> and <code class="docutils literal notranslate"><span class="pre">ocean_thermal</span></code> share one step, <code class="docutils literal notranslate"><span class="pre">process_thermal_forcing</span></code>.
-Each step has the local methods (functions) of remapping and
-renaming the original ismip6 data to the format that MALI can incorporate in
-its forward simulations. In remapping the data, all test cases import the
-method <code class="docutils literal notranslate"><span class="pre">build_mapping_file</span></code> to create or use scrip files
-of the source (ISMIP6) and destination (MALI) mesh depending on the existence
-of a mapping file. Below, we describe the shared framework for this
+the unstructure MALI mesh. The test group includes five test cases:
+<code class="docutils literal notranslate"><span class="pre">atmosphere</span></code>, <code class="docutils literal notranslate"><span class="pre">ocean_basal</span></code>, <code class="docutils literal notranslate"><span class="pre">ocean_thermal_obs</span></code>, <code class="docutils literal notranslate"><span class="pre">ocean_thermal</span></code> and
+<code class="docutils literal notranslate"><span class="pre">shelf_collapse</span></code>. The <code class="docutils literal notranslate"><span class="pre">atmosphere</span></code> test case has two steps:
+<code class="docutils literal notranslate"><span class="pre">process_smb</span></code> and <code class="docutils literal notranslate"><span class="pre">process_smb_racmo</span></code>; the <code class="docutils literal notranslate"><span class="pre">ocean_basal</span></code> and <code class="docutils literal notranslate"><span class="pre">shelf_collpase</span></code>
+test cases each have one step, <code class="docutils literal notranslate"><span class="pre">process_basal_melt</span></code> and <code class="docutils literal notranslate"><span class="pre">process_shelf_collpase</span></code>
+(respectively); the <code class="docutils literal notranslate"><span class="pre">ocean_thermal_obs</span></code> and <code class="docutils literal notranslate"><span class="pre">ocean_thermal</span></code>
+share one step, <code class="docutils literal notranslate"><span class="pre">process_thermal_forcing</span></code>. Each step has the local methods
+(functions) of remapping and renaming the original ISMIP6 data to the format
+that MALI can incorporate in its forward simulations. In remapping the data,
+all test cases import the method <code class="docutils literal notranslate"><span class="pre">build_mapping_file</span></code> to create or use scrip
+files of the source (ISMIP6) and destination (MALI) mesh depending on the
+existence of a mapping file. Below, we describe the shared framework for this
 test group and the 3 test cases.</p>
 <section id="framework">
 <span id="dev-landice-ismip6-forcing-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Link to this heading">¶</a></h2>
 <p>The shared config options for the <code class="docutils literal notranslate"><span class="pre">ismip6_forcing</span></code> test group are described
 in <a class="reference internal" href="../../../users_guide/landice/test_groups/ismip6_forcing.html#landice-ismip6-forcing"><span class="std std-ref">ismip6_forcing</span></a> in the User’s Guide.</p>
+<section id="create-mapfile">
+<h3>create_mapfile<a class="headerlink" href="#create-mapfile" title="Link to this heading">¶</a></h3>
+<p>The module <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ismip6_forcing.create_mapfile</span></code> defines
+a unified framework for creating the SCRIP and mapping files from the ISMIP6
+source data files. The function
+<a class="reference internal" href="../generated/compass.landice.tests.ismip6_forcing.create_mapfile.build_mapping_file.html#compass.landice.tests.ismip6_forcing.create_mapfile.build_mapping_file" title="compass.landice.tests.ismip6_forcing.create_mapfile.build_mapping_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.tests.ismip6_forcing.create_mapfile.build_mapping_file()</span></code></a>
+is the common interface to build the SCRIP files and mapping files. The
+<code class="docutils literal notranslate"><span class="pre">scrip_from_latlon</span></code> keyword argument is used to call the appropriate function
+for generating the SCRIP file. If <code class="docutils literal notranslate"><span class="pre">scrip_from_latlon</span></code> is <code class="docutils literal notranslate"><span class="pre">false</span></code> the
+<code class="docutils literal notranslate"><span class="pre">create_SCRIP_file_from_planar_rectangular_grid.py</span></code> command line executable
+from the <code class="docutils literal notranslate"><span class="pre">MPAS_Tools</span></code> conda package is used, otherwise the
+<a class="reference internal" href="../generated/compass.landice.tests.ismip6_forcing.create_mapfile.create_scrip_from_latlon.html#compass.landice.tests.ismip6_forcing.create_mapfile.create_scrip_from_latlon" title="compass.landice.tests.ismip6_forcing.create_mapfile.create_scrip_from_latlon"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.tests.ismip6_forcing.create_mapfile.create_scrip_from_latlon()</span></code></a>
+function is used. Multiple methods for creating SCRIP files are necessary due to
+inconsistent dimensions names across the different ISMIP6 datasets.</p>
 </section>
+</section>
+<section id="test-cases">
+<h2>Test cases<a class="headerlink" href="#test-cases" title="Link to this heading">¶</a></h2>
 <section id="atmosphere">
-<span id="dev-landice-ismip6-forcing-atmosphere"></span><h2>atmosphere<a class="headerlink" href="#atmosphere" title="Link to this heading">¶</a></h2>
+<span id="dev-landice-ismip6-forcing-atmosphere"></span><h3>atmosphere<a class="headerlink" href="#atmosphere" title="Link to this heading">¶</a></h3>
 <p>The <a class="reference internal" href="../generated/compass.landice.tests.ismip6_forcing.atmosphere.Atmosphere.html#compass.landice.tests.ismip6_forcing.atmosphere.Atmosphere" title="compass.landice.tests.ismip6_forcing.atmosphere.Atmosphere"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ismip6_forcing.atmosphere.Atmosphere</span></code></a>
 performs processing of the surface mass balance (SMB) forcing.
 Processing data includes regridding the original ISMIP6 SMB data from its
@@ -177,7 +193,7 @@ native polarstereo grid to MALI’s unstructured grid, renaming variables and
 correcting the SMB anomaly field for the MALI base SMB.</p>
 </section>
 <section id="ocean-basal">
-<span id="dev-landice-ismip6-forcing-ocean-basal"></span><h2>ocean_basal<a class="headerlink" href="#ocean-basal" title="Link to this heading">¶</a></h2>
+<span id="dev-landice-ismip6-forcing-ocean-basal"></span><h3>ocean_basal<a class="headerlink" href="#ocean-basal" title="Link to this heading">¶</a></h3>
 <p>The <a class="reference internal" href="../generated/compass.landice.tests.ismip6_forcing.ocean_basal.OceanBasal.html#compass.landice.tests.ismip6_forcing.ocean_basal.OceanBasal" title="compass.landice.tests.ismip6_forcing.ocean_basal.OceanBasal"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ismip6_forcing.ocean_basal.OceanBasal</span></code></a>
 performs processing of the coefficients for the basal melt parameterization
 utilized by the ISMIP6 protocol. Processing data includes combining the
@@ -185,12 +201,19 @@ IMBIE2 basin number file and parameterization coefficients and remapping onto
 the MALI mesh.</p>
 </section>
 <section id="ocean-thermal">
-<span id="dev-landice-ismip6-forcing-ocean-thermal"></span><h2>ocean_thermal<a class="headerlink" href="#ocean-thermal" title="Link to this heading">¶</a></h2>
+<span id="dev-landice-ismip6-forcing-ocean-thermal"></span><h3>ocean_thermal<a class="headerlink" href="#ocean-thermal" title="Link to this heading">¶</a></h3>
 <p>The <a class="reference internal" href="../generated/compass.landice.tests.ismip6_forcing.ocean_thermal.OceanThermal.html#compass.landice.tests.ismip6_forcing.ocean_thermal.OceanThermal" title="compass.landice.tests.ismip6_forcing.ocean_thermal.OceanThermal"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ismip6_forcing.ocean_thermal.OceanThermal</span></code></a>
 performs the processing of ocean thermal forcing, both observational climatology
 (in <code class="docutils literal notranslate"><span class="pre">ocean_thermal_obs</span></code>) and the CMIP model data (in <code class="docutils literal notranslate"><span class="pre">ocean_thermal</span></code>).
 Processing data includes regridding the original ISMIP6 thermal forcing data
 from its native polarstereo grid to MALI’s unstructured grid and renaming variables.</p>
+</section>
+<section id="shelf-collapse">
+<span id="dev-landice-ismip6-forcing-shelf-collapse"></span><h3>shelf_collapse<a class="headerlink" href="#shelf-collapse" title="Link to this heading">¶</a></h3>
+<p>The <a class="reference internal" href="../generated/compass.landice.tests.ismip6_forcing.shelf_collapse.ShelfCollapse.html#compass.landice.tests.ismip6_forcing.shelf_collapse.ShelfCollapse" title="compass.landice.tests.ismip6_forcing.shelf_collapse.ShelfCollapse"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ismip6_forcing.shelf_collapse.ShelfCollapse</span></code></a>
+test case performs the processing of ice shelf collapse masks by remapping the
+original ISMIP6 forcing data to MALI’s unstructured grid and renaming variables.</p>
+</section>
 </section>
 </section>
 

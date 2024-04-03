@@ -181,7 +181,7 @@
                                                 <span class="n">mali_mesh_file</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">process_obs_data</span><span class="p">:</span>
-            <span class="n">input_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_obs</span>
+            <span class="n">input_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_obs</span><span class="p">[</span><span class="n">period_endyear</span><span class="p">]</span>
             <span class="n">output_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_obs_TF_1995-2017_8km_x_60m.nc&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">input_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="p">[</span><span class="n">period_endyear</span><span class="p">][</span><span class="n">model</span><span class="p">][</span><span class="n">scenario</span><span class="p">]</span>
@@ -216,7 +216,7 @@
         <span class="n">process_obs_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_obs</span>
 
         <span class="k">if</span> <span class="n">process_obs_data</span><span class="p">:</span>
-            <span class="n">input_file_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_obs</span>
+            <span class="n">input_file_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_obs</span><span class="p">[</span><span class="n">period_endyear</span><span class="p">]</span>
             <span class="n">output_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mali_mesh_name</span><span class="si">}</span><span class="s2">_obs_TF_1995-2017_8km_x_60m.nc&quot;</span>
             <span class="n">output_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_base_path</span><span class="si">}</span><span class="s2">/ocean_thermal_forcing/&quot;</span>\
                           <span class="sa">f</span><span class="s2">&quot;obs&quot;</span>
@@ -298,8 +298,10 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mapping_file</span><span class="p">):</span>
             <span class="c1"># build a mapping file if it doesn&#39;t already exist</span>
             <span class="n">build_mapping_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span>
-                               <span class="n">input_file</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="p">,</span>
-                               <span class="n">method_remap</span><span class="p">)</span>
+                               <span class="n">input_file</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
+                               <span class="n">scrip_from_latlon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                               <span class="n">mali_mesh_file</span><span class="o">=</span><span class="n">mali_mesh_file</span><span class="p">,</span>
+                               <span class="n">method_remap</span><span class="o">=</span><span class="n">method_remap</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Mapping file exists. &quot;</span>
                              <span class="s2">&quot;Remapping the input data...&quot;</span><span class="p">)</span>
@@ -401,7 +403,13 @@
 
     <span class="c1"># create a nested dictionary for the ISMIP6 original forcing files</span>
     <span class="c1"># including relative path</span>
-    <span class="n">_file_obs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;AIS/Ocean_Forcing/climatology_from_obs_1995-2017/obs_thermal_forcing_1995-2017_8km_x_60m.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
+    <span class="n">_file_obs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;2100&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;AIS/Ocean_Forcing/climatology_from_obs_1995-2017/obs_thermal_forcing_1995-2017_8km_x_60m.nc&quot;</span><span class="p">],</span>  <span class="c1"># noqa: E501</span>
+        <span class="s2">&quot;2300&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;AIS/Ocean_forcing/climatology_from_obs_1995-2017/obs_thermal_forcing_1995-2017_8km_x_60m.nc&quot;</span><span class="p">]</span>  <span class="c1"># noqa: E501</span>
+    <span class="p">}</span>
+
     <span class="n">_files</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;2100&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;CCSM4&quot;</span><span class="p">:</span> <span class="p">{</span>
