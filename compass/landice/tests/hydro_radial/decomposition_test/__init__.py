@@ -1,8 +1,8 @@
-from compass.validate import compare_variables
-from compass.testcase import TestCase
-from compass.landice.tests.hydro_radial.setup_mesh import SetupMesh
 from compass.landice.tests.hydro_radial.run_model import RunModel
+from compass.landice.tests.hydro_radial.setup_mesh import SetupMesh
 from compass.landice.tests.hydro_radial.visualize import Visualize
+from compass.testcase import TestCase
+from compass.validate import compare_variables
 
 
 class DecompositionTest(TestCase):
@@ -24,7 +24,7 @@ class DecompositionTest(TestCase):
         super().__init__(test_group=test_group, name='decomposition_test')
 
         self.add_step(
-            SetupMesh(test_case=self, initial_condition='zero'))
+            SetupMesh(test_case=self, initial_condition='exact'))
 
         for procs in [1, 3]:
             name = '{}proc_run'.format(procs)
@@ -36,7 +36,7 @@ class DecompositionTest(TestCase):
             name = 'visualize_{}'.format(name)
             step = Visualize(test_case=self, name=name, subdir=name,
                              input_dir=input_dir)
-            self.add_step(step, run_by_default=False)
+            self.add_step(step)
 
     # no configure() method is needed
 

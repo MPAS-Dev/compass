@@ -1,8 +1,8 @@
-from compass.validate import compare_variables
-from compass.testcase import TestCase
-from compass.landice.tests.hydro_radial.setup_mesh import SetupMesh
 from compass.landice.tests.hydro_radial.run_model import RunModel
+from compass.landice.tests.hydro_radial.setup_mesh import SetupMesh
 from compass.landice.tests.hydro_radial.visualize import Visualize
+from compass.testcase import TestCase
+from compass.validate import compare_variables
 
 
 class RestartTest(TestCase):
@@ -25,11 +25,11 @@ class RestartTest(TestCase):
         super().__init__(test_group=test_group, name='restart_test')
 
         self.add_step(
-            SetupMesh(test_case=self, initial_condition='zero'))
+            SetupMesh(test_case=self, initial_condition='exact'))
 
         name = 'full_run'
-        step = RunModel(test_case=self, name=name, subdir=name, ntasks=4,
-                        openmp_threads=1)
+        step = RunModel(test_case=self, name=name, subdir=name, ntasks=128,
+                        min_tasks=1, openmp_threads=1)
         # modify the namelist options and streams file
         step.add_namelist_file(
             'compass.landice.tests.hydro_radial.restart_test',
@@ -43,11 +43,11 @@ class RestartTest(TestCase):
         name = 'visualize_{}'.format(name)
         step = Visualize(test_case=self, name=name, subdir=name,
                          input_dir=input_dir)
-        self.add_step(step, run_by_default=False)
+        self.add_step(step, run_by_default=True)
 
         name = 'restart_run'
-        step = RunModel(test_case=self, name=name, subdir=name, ntasks=4,
-                        openmp_threads=1,
+        step = RunModel(test_case=self, name=name, subdir=name, ntasks=128,
+                        min_tasks=1, openmp_threads=1,
                         suffixes=['landice', 'landice.rst'])
 
         # modify the namelist options and streams file
@@ -70,7 +70,7 @@ class RestartTest(TestCase):
         name = 'visualize_{}'.format(name)
         step = Visualize(test_case=self, name=name, subdir=name,
                          input_dir=input_dir)
-        self.add_step(step, run_by_default=False)
+        self.add_step(step, run_by_default=True)
 
     # no configure() method is needed
 
