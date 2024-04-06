@@ -176,6 +176,25 @@ class InitialState(Step):
         plot_vertical_grid(grid_filename='vertical_grid.nc', config=config,
                            out_filename='vertical_grid.png')
 
+        min_levels = config.getint('global_ocean', 'min_levels')
+        # minimum depth will be the depth of the middle of the minimum layer
+        # so that MPAS-Ocean init mode will convert it back to the same
+        # minimm number of levels
+        min_depth = 0.5 * (interfaces[min_levels - 1] +
+                           interfaces[min_levels])
+        namelist = {'config_global_ocean_minimum_depth': f'{min_depth}'}
+
+        if self.mesh.with_ice_shelf_cavities:
+            cavity_min_levels = \
+                config.getint('global_ocean', 'cavity_min_levels')
+            cavity_min_layer_thickness = \
+                config.getfloat('global_ocean', 'cavity_min_layer_thickness')
+            namelist['config_rx1_min_levels'] = f'{cavity_min_levels}'
+            namelist['config_rx1_min_layer_thickness'] = \
+                f'{cavity_min_layer_thickness}'
+
+        self.update_namelist_at_runtime(namelist)
+
         update_pio = config.getboolean('global_ocean', 'init_update_pio')
         run_model(self, update_pio=update_pio)
 
