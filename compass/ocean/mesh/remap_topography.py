@@ -142,9 +142,12 @@ class RemapTopography(Step):
             out_var = rename[option]
             ds_out[out_var] = ds_in[in_var]
 
+        ds_out['landIceFloatingFracObserved'] = \
+            ds_out.landIceFracObserved - ds_out.landIceGroundedFracObserved
+
         # make sure fractions don't exceed 1
         for var in ['landIceFracObserved', 'landIceGroundedFracObserved',
-                    'oceanFracObserved']:
+                    'landIceFloatingFracObserved', 'oceanFracObserved']:
             ds_out[var] = np.minimum(ds_out[var], 1.)
 
         # renormalize elevation variables
