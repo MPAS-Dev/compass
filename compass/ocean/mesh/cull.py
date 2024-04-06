@@ -501,9 +501,7 @@ def _land_mask_from_topo(with_cavities, topo_filename, mask_filename):
         # we want the mask to be 1 where there's not ocean
         cull_mask = xr.where(ocean_frac < 0.5, 1, 0)
     else:
-        land_ice_frac = ds_topo.landIceFracObserved
-        grounded_ice_frac = ds_topo.landIceGroundedFracObserved
-        floating_ice_frac = land_ice_frac - grounded_ice_frac
+        floating_ice_frac = ds_topo.landIceFloatingFracObserved
         no_cavities_ocean_frac = ocean_frac - floating_ice_frac
 
         # we want the mask to be 1 where there's not open ocean
