@@ -2,6 +2,7 @@ import os
 
 import numpy as np
 import xarray as xr
+from mpas_tools.cime.constants import constants
 from mpas_tools.io import write_netcdf
 from pyremap import LatLonGridDescriptor, MpasCellMeshDescriptor, Remapper
 
@@ -101,6 +102,8 @@ class RemapTopography(Step):
         method = config.get('remap_topography', 'method')
         renorm_threshold = config.getfloat('remap_topography',
                                            'renorm_threshold')
+        ice_density = config.getfloat('remap_topography', 'ice_density')
+        g = constants['SHR_CONST_G']
 
         in_descriptor = LatLonGridDescriptor.read(fileName='topography.nc',
                                                   lonVarName=lon_var,
@@ -151,4 +154,6 @@ class RemapTopography(Step):
                     'landIceThkObserved']:
             ds_out[var] = xr.where(valid, ds_out[var] / norm, 0.)
 
+        ds_out['landIcePressureObserved'] = \
+            ice_density * g * ds_out['landIceThkObserved']
         write_netcdf(ds_out, 'topography_remapped.nc')
