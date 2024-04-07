@@ -80,10 +80,14 @@ def adjust_ssh(variable, iteration_count, step, update_pio=True,
     partition(ntasks, config, logger)
 
     with xarray.open_dataset('adjusting_init0.nc') as ds:
+        ds = ds.isel(Time=0)
+        orig_ssh = ds.ssh
+        orig_land_ice_pressure = ds.landIcePressure
+
         on_a_sphere = ds.attrs['on_a_sphere'].lower() == 'yes'
 
-        mask = numpy.logical_and(ds.maxLevelCell > 0,
-                                 ds.modifyLandIcePressureMask == 1)
+        modify_mask = numpy.logical_and(ds.maxLevelCell > 0,
+                                        ds.modifyLandIcePressureMask == 1)
 
     for iter_index in range(iteration_count):
         logger.info(f" * Iteration {iter_index + 1}/{iteration_count}")
@@ -117,7 +121,7 @@ def adjust_ssh(variable, iteration_count, step, update_pio=True,
                 final_ssh = ds_ssh.ssh
                 topDensity = ds_ssh.density.isel(nVertLevels=minLevelCell)
 
-            delta_ssh = mask * (final_ssh - init_ssh)
+            delta_ssh = modify_mask * (final_ssh - init_ssh)
 
             # then, modify the SSH or land-ice pressure
             if variable == 'ssh':
@@ -196,3 +200,21 @@ def adjust_ssh(variable, iteration_count, step, update_pio=True,
 
     if out_filename is not None:
         shutil.copy(out_filename, 'adjusted_init.nc')
+
+        with xarray.open_dataset('adjusted_init.nc') as ds:
+            ds = ds.isel(Time=0)
+            final_ssh = ds.ssh
+            final_land_ice_pressure = ds.landIcePressure
+            delta_ssh = final_ssh - orig_ssh
+            masked_delta_ssh = modify_mask * delta_ssh
+            delta_land_ice_pressure = \
+                final_land_ice_pressure - orig_land_ice_pressure
+            masked_delta_land_ice_pressure = \
+                modify_mask * delta_land_ice_pressure
+            ds_out = xarray.Dataset()
+            ds_out['delta_ssh'] = delta_ssh
+            ds_out['masked_delta_ssh'] = masked_delta_ssh
+            ds_out['delta_land_ice_pressure'] = delta_land_ice_pressure
+            ds_out['masked_delta_land_ice_pressure'] = \
+                masked_delta_land_ice_pressure
+            write_netcdf(ds_out, 'total_delta.nc')
