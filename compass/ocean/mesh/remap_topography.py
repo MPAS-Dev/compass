@@ -164,4 +164,6 @@ class RemapTopography(Step):
         ds_out['landIceDraftObserved'] = \
             - (ice_density / ocean_density) * thickness
 
+        ds_out['ssh'] = ds_out.landIceDraftObserved
+
         write_netcdf(ds_out, 'topography_remapped.nc')
