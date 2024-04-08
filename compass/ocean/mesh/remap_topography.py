@@ -103,6 +103,7 @@ class RemapTopography(Step):
         renorm_threshold = config.getfloat('remap_topography',
                                            'renorm_threshold')
         ice_density = config.getfloat('remap_topography', 'ice_density')
+        ocean_density = constants['SHR_CONST_RHOSW']
         g = constants['SHR_CONST_G']
 
         in_descriptor = LatLonGridDescriptor.read(fileName='topography.nc',
@@ -131,7 +132,6 @@ class RemapTopography(Step):
         ds_in = ds_in.rename({'ncol': 'nCells'})
         ds_out = xr.Dataset()
         rename = {'bathymetry_var': 'bed_elevation',
-                  'ice_draft_var': 'landIceDraftObserved',
                   'ice_thickness_var': 'landIceThkObserved',
                   'ice_frac_var': 'landIceFracObserved',
                   'grounded_ice_frac_var': 'landIceGroundedFracObserved',
@@ -150,10 +150,15 @@ class RemapTopography(Step):
         # renormalize elevation variables
         norm = ds_out.oceanFracObserved
         valid = norm > renorm_threshold
-        for var in ['bed_elevation', 'landIceDraftObserved',
-                    'landIceThkObserved']:
+        for var in ['bed_elevation', 'landIceThkObserved']:
             ds_out[var] = xr.where(valid, ds_out[var] / norm, 0.)
 
-        ds_out['landIcePressureObserved'] = \
-            ice_density * g * ds_out['landIceThkObserved']
+        thickness = ds_out['landIceThkObserved']
+        ds_out['landIcePressureObserved'] = ice_density * g * thickness
+
+        # compute the ice draft to be consistent with the land ice pressure
+        # and using E3SM's density of seawater
+        ds_out['landIceDraftObserved'] = \
+            - (ice_density / ocean_density) * thickness
+
         write_netcdf(ds_out, 'topography_remapped.nc')
