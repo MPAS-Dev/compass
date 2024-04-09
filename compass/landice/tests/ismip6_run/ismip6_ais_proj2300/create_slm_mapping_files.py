@@ -27,8 +27,7 @@ class CreateSlmMappingFiles(Step):
         super().__init__(test_case=test_case, name=name, subdir=subdir)
 
     def setup(self):
-        # no setup needed
-        pass
+        print("    Setting up mapping_file subdirectory")
 
     def run(self):
         """
@@ -59,7 +58,8 @@ class CreateSlmMappingFiles(Step):
         section = config['ismip6_run_ais_2300']
         init_cond_path = section.get('init_cond_path')
         nglv = section.getint('nglv')
-        ntasks = section.getint('ntasks')
+        section = config['parallel']
+        ntasks = section.getint('cores_per_node')
 
         # create the mapping files
         # first create scrip files
