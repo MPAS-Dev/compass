@@ -1,4 +1,3 @@
-import os
 import shutil
 
 from mpas_tools.logging import check_call
@@ -83,7 +82,7 @@ class CreateSlmMappingFiles(Step):
         shutil.copy(init_cond_path, mali_meshfile)
         args = ['set_lat_lon_fields_in_planar_grid.py',
                 '--file', mali_meshfile,
-                '--proj', 'ais-bedmap2-sphere']
+                '--proj', 'ais-bedmap2']
 
         check_call(args, logger=logger)
 
@@ -121,8 +120,4 @@ class CreateSlmMappingFiles(Step):
 
         check_call(args, logger)
 
-        # remove the scripfiles and copied mesh file
-        logger.info('Removing the temporary mesh and scripfiles...')
-        os.remove(slm_scripfile)
-        os.remove(mali_scripfile)
-        os.remove(mali_meshfile)
+        logger.info('mapping file creation complete')
