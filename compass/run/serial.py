@@ -314,8 +314,10 @@ def _log_and_run_test(test_case, logger, test_logger, quiet,  # noqa: C901
         if test_pass:
             log_function_call(function=_run_test, logger=test_logger)
             test_logger.info('')
-            test_list = ', '.join(test_case.steps_to_run)
-            test_logger.info(f'Running steps: {test_list}')
+            test_logger.info('Running steps:')
+            for step in test_case.steps_to_run:
+                test_logger.info(f'  {step}')
+            test_logger.info('')
             try:
                 _run_test(test_case, available_resources)
                 run_status = success_str
