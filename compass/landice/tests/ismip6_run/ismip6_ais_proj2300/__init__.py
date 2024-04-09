@@ -1,5 +1,8 @@
 import os
 
+from compass.landice.tests.ismip6_run.ismip6_ais_proj2300.create_slm_mapping_files import (  # noqa
+    CreateSlmMappingFiles,
+)
 from compass.landice.tests.ismip6_run.ismip6_ais_proj2300.set_up_experiment import (  # noqa
     SetUpExperiment,
 )
@@ -70,6 +73,14 @@ class Ismip6AisProj2300(TestCase):
         # each experiment (step) should be run manually
         self.steps_to_run = []
 
+        sea_level_model = self.config.getboolean('ismip6_run_ais_2300',
+                                                 'sea_level_model')
+        if sea_level_model:
+            self.add_step(
+                CreateSlmMappingFiles(test_case=self, name='mapping_files',
+                                      subdir='mapping_files'))
+            self.steps_to_run.append('mapping_files')
+
     def run(self):
         """
         A dummy run method
@@ -77,6 +88,9 @@ class Ismip6AisProj2300(TestCase):
         raise ValueError("ERROR: 'compass run' has no functionality at the "
                          "test case level for this test.  "
                          "Please submit the job script in "
-                         "each experiment's subdirectory manually instead.")
+                         "each experiment's subdirectory manually instead."
+                         "To create Sea-Level Model mapping files, submit"
+                         "job script or execute 'compass run' from the"
+                         "'mapping_files' subdirectory.")
 
     # no validate() method is needed
