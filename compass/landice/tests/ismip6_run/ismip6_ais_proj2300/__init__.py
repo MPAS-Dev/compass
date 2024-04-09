@@ -76,10 +76,18 @@ class Ismip6AisProj2300(TestCase):
         sea_level_model = self.config.getboolean('ismip6_run_ais_2300',
                                                  'sea_level_model')
         if sea_level_model:
-            self.add_step(
-                CreateSlmMappingFiles(test_case=self, name='mapping_files',
-                                      subdir='mapping_files'))
-            self.steps_to_run.append('mapping_files')
+            subdir = 'mapping_files'
+            if os.path.exists(os.path.join(self.work_dir, subdir)):
+                print(f"WARNING: {subdir} path already exists; skipping.  "
+                      "Please remove the directory "
+                      f"{os.path.join(self.work_dir, subdir)} and execute "
+                      "'compass setup' again to set this experiment up.")
+            else:
+                self.add_step(
+                    CreateSlmMappingFiles(test_case=self,
+                                          name='mapping_files',
+                                          subdir=subdir))
+                self.steps_to_run.append('mapping_files')
 
     def run(self):
         """
