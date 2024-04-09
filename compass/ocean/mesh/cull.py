@@ -558,7 +558,7 @@ def _add_land_ice_mask_and_mask_draft(ds_topo, ds_base_mesh, logger):
     land_ice_draft_mask = ds_mask.cellSeedMask
     ds_topo['landIceDraftMask'] = land_ice_draft_mask
     ds_topo['landIceDraftObserved'] = (
-        land_ice_mask * ds_topo.landIceDraftObserved)
+        land_ice_draft_mask * ds_topo.landIceDraftObserved)
 
 
 def _land_mask_from_geojson(with_cavities, process_count, logger,
