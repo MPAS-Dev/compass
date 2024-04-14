@@ -712,9 +712,9 @@ The default config options for these meshes are:
     prefix = RRS
     # a description of the mesh and initial condition
     mesh_description = MPAS Eddy Closure mesh for E3SM version ${e3sm_version} with
-                    enhanced resolution around the equator (30 km), South pole
-                    (35 km), Greenland (${min_res} km), ${max_res}-km resolution
-                    at mid latitudes, and ${levels} vertical levels
+                       enhanced resolution around the equator (30 km), South pole
+                       (35 km), Greenland (${min_res} km), ${max_res}-km resolution
+                       at mid latitudes, and ${levels} vertical levels
     # E3SM version that the mesh is intended for
     e3sm_version = 3
     # The revision number of the mesh, which should be incremented each time the
@@ -998,14 +998,31 @@ defines the step for creating the initial state, including defining the
 topography, wind stress, shortwave, potential temperature, salinity, and
 ecosystem input data files.
 
+If a mesh has ice-shelf cavities, iterative adjustment of the sea-surface height
+is performed to prevent tsunamis in forward runs.
+
+First, a step defined by
+:py:class:`compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity`
+is called to update the ``ssh`` variable in the topography dataset based
+on the surface pressure, rather than the constant reference density.
+
+Then, for each iteration, first a new ``InitialState`` step is called with the
+updated ``ssh``.  Next, a step with the
+:py:class:`compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment`
+class is called to perform a short (typically 1-hour) forward run.  The
+``ssh`` at the end of that run, masked to be modified only under ice shelves,
+is used as the new ``ssh`` for the next iteration.  The idea is that the
+main cause of dynamics in the sea-surface height in the first hour of
+simulation is due to the hydrostatic imbalance between ``landIcePressure`` and
+``ssh``, and that this can be reduced by updating the ``ssh`` with this
+iterative procedure.
+
+Finally, another ``InitialState`` step creates the initial condition to be
+used in subsequent forward simulations in Compass.
+
 The class :py:class:`compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt`
 defines a step that remaps melt rates from the satellite-derived dataset
 from `Paolo et al. (2023) <https://doi.org/10.5194/tc-17-3409-2023>`_.
-
-The class :py:class:`compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment`
-defines a step to adjust the ``landIcePressure`` variable to be in closer to
-dynamical balance with the sea-surface height (SSH) in configurations with
-:ref:`dev_ocean_framework_iceshelf`.
 
 If the test case is being compared with a baseline, the potential temperature,
 salinity, and layerThickness are compared with those in the baseline initial

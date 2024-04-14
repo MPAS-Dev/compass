@@ -249,6 +249,8 @@ test cases and steps
    init.ssh_adjustment.SshAdjustment
    init.ssh_adjustment.SshAdjustment.setup
    init.ssh_adjustment.SshAdjustment.run
+   init.ssh_from_surface_density.SshFromSurfaceDensity
+   init.ssh_from_surface_density.SshFromSurfaceDensity.run
 
    mesh.Mesh
    mesh.Mesh.configure
