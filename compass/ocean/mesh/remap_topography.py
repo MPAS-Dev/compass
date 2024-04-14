@@ -58,7 +58,8 @@ class RemapTopography(Step):
         dependencies.
         """
         super().setup()
-        topo_filename = self.config.get('remap_topography', 'topo_filename')
+        config = self.config
+        topo_filename = config.get('remap_topography', 'topo_filename')
         self.add_input_file(
             filename='topography.nc',
             target=topo_filename,
@@ -70,7 +71,6 @@ class RemapTopography(Step):
         target = os.path.join(base_path, base_filename)
         self.add_input_file(filename='base_mesh.nc', work_dir_target=target)
 
-        config = self.config
         self.ntasks = config.getint('remap_topography', 'ntasks')
         self.min_tasks = config.getint('remap_topography', 'min_tasks')
 
@@ -137,9 +137,8 @@ class RemapTopography(Step):
                   'grounded_ice_frac_var': 'landIceGroundedFracObserved',
                   'ocean_frac_var': 'oceanFracObserved'}
 
-        for option in rename:
+        for option, out_var in rename.items():
             in_var = config.get('remap_topography', option)
-            out_var = rename[option]
             ds_out[out_var] = ds_in[in_var]
 
         ds_out['landIceFloatingFracObserved'] = \
