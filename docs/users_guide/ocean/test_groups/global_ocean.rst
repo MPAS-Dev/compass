@@ -43,6 +43,12 @@ Note that meshes and test cases may modify these options, as noted below.
     cull_mesh_min_cpus_per_task = 1
     # maximum memory usage allowed (in MB)
     cull_mesh_max_memory = 1000
+    # Whether to convert the culled mesh file to CDF5 format
+    convert_culled_mesh_to_cdf5 = False
+    # Minimum latitude, in degrees, for masking land-locked cells
+    latitude_threshold = 43.0
+    # Maximum number of sweeps to search for land-locked cells
+    sweep_count = 20
 
 
     # Options relate to adjusting the sea-surface height or land-ice pressure
@@ -78,8 +84,23 @@ Note that meshes and test cases may modify these options, as noted below.
 
     ## config options related to the initial_state step
 
+    # minimum number of vertical levels, both in the open ocean and in ice-shelf
+    # cavities
+    min_levels = 3
+    cavity_min_levels = ${min_levels}
+
+    # minimum thickness of layers in ice-shelf cavities
+    cavity_min_layer_thickness = 1.0
+
     # Maximum allowed Haney number for configurations with ice-shelf cavities
-    rx1_max = 20
+    rx1_max = 20.0
+
+    # the number of iterations of topography smoothing (0 means no smoothing)
+    topo_smooth_num_passes = 0
+    # The distance in km over which the Gaussian filter is applied
+    topo_smooth_distance_limit = 200.0
+    # The standard deviation in km of the Gaussian filter
+    topo_smooth_std_deviation = 100.0
 
     # number of cores to use
     init_ntasks = 36
@@ -124,7 +145,7 @@ Note that meshes and test cases may modify these options, as noted below.
     # the number of vertical levels, always detected automatically
     levels = autodetect
 
-    # the date the mesh was created as YYMMDD, typically detected automatically
+    # the date the mesh was created as YYYYMMDD, typically detected automatically
     creation_date = autodetect
     # The following options are detected from .gitconfig if not explicitly entered
     author = autodetect
@@ -146,6 +167,10 @@ Note that meshes and test cases may modify these options, as noted below.
     # config options related to initial condition and diagnostics support files
     # for E3SM
     [files_for_e3sm]
+
+    # The minimum and maximum cells per core for creating graph partitions
+    max_cells_per_core = 30000
+    min_cells_per_core = 2
 
     ## the following relate to the comparison grids in MPAS-Analysis to generate
     ## mapping files for.  The default values are also the defaults in
@@ -200,9 +225,9 @@ Note that meshes and test cases may modify these options, as noted below.
     # directory of an ocean restart file on the given mesh
     ocean_restart_filename = autodetect
 
-   # the base mesh before culling for remapping and rerouting data ice-shelf melt
-   # fluxes
-   base_mesh_filename = autodetect
+    # the base mesh before culling for remapping and rerouting data ice-shelf melt
+    # fluxes
+    ocean_base_mesh_filename = autodetect
 
     # the initial state used to extract the ocean and sea-ice meshes
     ocean_initial_state_filename = ${ocean_restart_filename}

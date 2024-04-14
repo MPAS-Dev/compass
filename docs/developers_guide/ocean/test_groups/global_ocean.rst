@@ -664,6 +664,13 @@ The default config options for these meshes are:
     grid_type = 80layerE3SMv1
 
 
+    # options for spherical meshes
+    [spherical_mesh]
+
+    # Whether to convert the culled mesh file to CDF5 format
+    convert_culled_mesh_to_cdf5 = True
+
+
     # Options relate to adjusting the sea-surface height or land-ice pressure
     # below ice shelves to they are dynamically consistent with one another
     [ssh_adjustment]
@@ -675,6 +682,13 @@ The default config options for these meshes are:
 
     # options for global ocean testcases
     [global_ocean]
+
+    # minimum number of vertical levels, both in the open ocean and in ice-shelf
+    # cavities
+    min_levels = 8
+
+    # minimum thickness of layers in ice-shelf cavities
+    cavity_min_layer_thickness = 2.5
 
     ## config options related to the initial_state step
     # number of cores to use
@@ -691,16 +705,16 @@ The default config options for these meshes are:
     forward_update_pio = False
 
     # the approximate number of cells in the mesh
-    approx_cell_count = 3700000
+    approx_cell_count = 4000000
 
     ## metadata related to the mesh
     # the prefix (e.g. QU, EC, WC, SO)
     prefix = RRS
     # a description of the mesh and initial condition
     mesh_description = MPAS Eddy Closure mesh for E3SM version ${e3sm_version} with
-                       enhanced resolution around the equator (30 km), South pole
-                       (35 km), Greenland (${min_res} km), ${max_res}-km resolution
-                       at mid latitudes, and ${levels} vertical levels
+                    enhanced resolution around the equator (30 km), South pole
+                    (35 km), Greenland (${min_res} km), ${max_res}-km resolution
+                    at mid latitudes, and ${levels} vertical levels
     # E3SM version that the mesh is intended for
     e3sm_version = 3
     # The revision number of the mesh, which should be incremented each time the
@@ -730,6 +744,15 @@ The default config options for these meshes are:
 
     # the NetCDF output engine: netcdf4 or scipy
     engine = netcdf4
+
+    # config options related to initial condition and diagnostics support files
+    # for E3SM
+    [files_for_e3sm]
+
+    # The minimum and maximum cells per core for creating graph partitions
+    max_cells_per_core = 30000
+    # We're seeing gpmetis failures for more than 750,000 tasks so we'll stay under
+    min_cells_per_core = 6
 
 The vertical grid is a ``80LayerE3SMv1`` profile (see
 :ref:`dev_ocean_framework_vertical`) with 80 vertical levels ranging in
