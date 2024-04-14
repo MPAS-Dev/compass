@@ -715,6 +715,13 @@ for short runs with these meshes.</p>
 <span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">80layerE3SMv1</span>
 
 
+<span class="c1"># options for spherical meshes</span>
+<span class="k">[spherical_mesh]</span>
+
+<span class="c1"># Whether to convert the culled mesh file to CDF5 format</span>
+<span class="na">convert_culled_mesh_to_cdf5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+
+
 <span class="c1"># Options relate to adjusting the sea-surface height or land-ice pressure</span>
 <span class="c1"># below ice shelves to they are dynamically consistent with one another</span>
 <span class="k">[ssh_adjustment]</span>
@@ -726,6 +733,13 @@ for short runs with these meshes.</p>
 
 <span class="c1"># options for global ocean testcases</span>
 <span class="k">[global_ocean]</span>
+
+<span class="c1"># minimum number of vertical levels, both in the open ocean and in ice-shelf</span>
+<span class="c1"># cavities</span>
+<span class="na">min_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span>
+
+<span class="c1"># minimum thickness of layers in ice-shelf cavities</span>
+<span class="na">cavity_min_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2.5</span>
 
 <span class="c1">## config options related to the initial_state step</span>
 <span class="c1"># number of cores to use</span>
@@ -742,16 +756,16 @@ for short runs with these meshes.</p>
 <span class="na">forward_update_pio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
 
 <span class="c1"># the approximate number of cells in the mesh</span>
-<span class="na">approx_cell_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3700000</span>
+<span class="na">approx_cell_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4000000</span>
 
 <span class="c1">## metadata related to the mesh</span>
 <span class="c1"># the prefix (e.g. QU, EC, WC, SO)</span>
 <span class="na">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">RRS</span>
 <span class="c1"># a description of the mesh and initial condition</span>
 <span class="na">mesh_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MPAS Eddy Closure mesh for E3SM version ${e3sm_version} with</span>
-<span class="w">                   </span><span class="na">enhanced resolution around the equator (30 km), South pole</span>
-<span class="w">                   </span><span class="na">(35 km), Greenland (${min_res} km), ${max_res}-km resolution</span>
-<span class="w">                   </span><span class="na">at mid latitudes, and ${levels} vertical levels</span>
+<span class="w">                </span><span class="na">enhanced resolution around the equator (30 km), South pole</span>
+<span class="w">                </span><span class="na">(35 km), Greenland (${min_res} km), ${max_res}-km resolution</span>
+<span class="w">                </span><span class="na">at mid latitudes, and ${levels} vertical levels</span>
 <span class="c1"># E3SM version that the mesh is intended for</span>
 <span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
 <span class="c1"># The revision number of the mesh, which should be incremented each time the</span>
@@ -781,6 +795,15 @@ for short runs with these meshes.</p>
 
 <span class="c1"># the NetCDF output engine: netcdf4 or scipy</span>
 <span class="na">engine</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">netcdf4</span>
+
+<span class="c1"># config options related to initial condition and diagnostics support files</span>
+<span class="c1"># for E3SM</span>
+<span class="k">[files_for_e3sm]</span>
+
+<span class="c1"># The minimum and maximum cells per core for creating graph partitions</span>
+<span class="na">max_cells_per_core</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">30000</span>
+<span class="c1"># We&#39;re seeing gpmetis failures for more than 750,000 tasks so we&#39;ll stay under</span>
+<span class="na">min_cells_per_core</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6</span>
 </pre></div>
 </div>
 <p>The vertical grid is a <code class="docutils literal notranslate"><span class="pre">80LayerE3SMv1</span></code> profile (see

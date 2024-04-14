@@ -301,6 +301,25 @@
         <span class="n">plot_vertical_grid</span><span class="p">(</span><span class="n">grid_filename</span><span class="o">=</span><span class="s1">&#39;vertical_grid.nc&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
                            <span class="n">out_filename</span><span class="o">=</span><span class="s1">&#39;vertical_grid.png&#39;</span><span class="p">)</span>
 
+        <span class="n">min_levels</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;min_levels&#39;</span><span class="p">)</span>
+        <span class="c1"># minimum depth will be the depth of the middle of the minimum layer</span>
+        <span class="c1"># so that MPAS-Ocean init mode will convert it back to the same</span>
+        <span class="c1"># minimm number of levels</span>
+        <span class="n">min_depth</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">interfaces</span><span class="p">[</span><span class="n">min_levels</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
+                           <span class="n">interfaces</span><span class="p">[</span><span class="n">min_levels</span><span class="p">])</span>
+        <span class="n">namelist</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_global_ocean_minimum_depth&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">min_depth</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
+            <span class="n">cavity_min_levels</span> <span class="o">=</span> \
+                <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;cavity_min_levels&#39;</span><span class="p">)</span>
+            <span class="n">cavity_min_layer_thickness</span> <span class="o">=</span> \
+                <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;cavity_min_layer_thickness&#39;</span><span class="p">)</span>
+            <span class="n">namelist</span><span class="p">[</span><span class="s1">&#39;config_rx1_min_levels&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cavity_min_levels</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">namelist</span><span class="p">[</span><span class="s1">&#39;config_rx1_min_layer_thickness&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cavity_min_layer_thickness</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span><span class="n">namelist</span><span class="p">)</span>
+
         <span class="n">update_pio</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;init_update_pio&#39;</span><span class="p">)</span>
         <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_pio</span><span class="o">=</span><span class="n">update_pio</span><span class="p">)</span>
 
