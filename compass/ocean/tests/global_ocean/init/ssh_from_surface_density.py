@@ -72,7 +72,7 @@ class SshFromSurfaceDensity(Step):
             ds_init = ds_init.isel(Time=0)
             modify_mask = np.logical_and(
                 ds_init.maxLevelCell > 0,
-                ds_init.modifyLandIcePressureMask == 1)
+                ds_init.sshAdjustmentMask == 1)
             land_ice_pressure = ds_init.landIcePressure
 
             if 'minLevelCell' in ds_init:

@@ -101,7 +101,7 @@ class SshAdjustment(ForwardStep):
             ds = ds.isel(Time=0)
             init_ssh = ds.ssh
             modify_mask = np.logical_and(ds.maxLevelCell > 0,
-                                         ds.modifyLandIcePressureMask == 1)
+                                         ds.sshAdjustmentMask == 1)
             land_ice_pressure = ds.landIcePressure
 
         logger.info("   * Running forward model")
