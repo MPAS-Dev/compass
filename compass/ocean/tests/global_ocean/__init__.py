@@ -1,5 +1,3 @@
-from comass.ocean.test.global_ocean.wave_mesh import WaveMesh
-
 from compass.ocean.tests.global_ocean.analysis_test import AnalysisTest
 from compass.ocean.tests.global_ocean.daily_output_test import DailyOutputTest
 from compass.ocean.tests.global_ocean.decomp_test import DecompTest
@@ -15,6 +13,7 @@ from compass.ocean.tests.global_ocean.monthly_output_test import (
 from compass.ocean.tests.global_ocean.performance_test import PerformanceTest
 from compass.ocean.tests.global_ocean.restart_test import RestartTest
 from compass.ocean.tests.global_ocean.threads_test import ThreadsTest
+from compass.ocean.tests.global_ocean.wave_mesh import WaveMesh
 from compass.testgroup import TestGroup
 
 
@@ -175,4 +174,5 @@ class GlobalOcean(TestGroup):
                         dynamic_adjustment=dynamic_adjustment_test))
 
             if include_wave_mesh:
-                self.add_test_case(WaveMesh(test_group=self, ocean_mesh=mest_test))
+                self.add_test_case(
+                    WaveMesh(test_group=self, ocean_mesh=mesh_test))

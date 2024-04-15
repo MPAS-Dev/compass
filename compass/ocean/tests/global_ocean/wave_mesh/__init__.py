@@ -1,9 +1,10 @@
-#from compass.ocean.tests.global_ocean.metadata import (
-#    get_author_and_email_from_git,
-#)
+# from compass.ocean.tests.global_ocean.metadata import (
+#     get_author_and_email_from_git,
+# )
+from compass.ocean.tests.global_ocean.wave_mesh.base_mesh import WavesBaseMesh
 from compass.testcase import TestCase
 
-#from compass.validate import compare_variables
+# from compass.validate import compare_variables
 
 
 class WaveMesh(TestCase):
@@ -24,12 +25,14 @@ class WaveMesh(TestCase):
 
         """
         name = 'wave_mesh'
-        subdir = f'{mesh_name}/{name}'
+        subdir = f'{ocean_mesh.mesh_name}/{name}'
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
+        mesh_lower = ocean_mesh.mesh_name.lower()
         self.package = f'compass.ocean.tests.global_ocean.mesh.{mesh_lower}'
         self.mesh_config_filename = f'{mesh_lower}.cfg'
 
+        base_mesh_step = WavesBaseMesh(test_case=self)
         self.add_step(base_mesh_step)
 
 #    def configure(self, config=None):
