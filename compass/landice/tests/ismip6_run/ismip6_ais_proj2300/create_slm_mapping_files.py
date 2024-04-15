@@ -82,7 +82,7 @@ class CreateSlmMappingFiles(Step):
         shutil.copy(init_cond_path, mali_meshfile)
         args = ['set_lat_lon_fields_in_planar_grid.py',
                 '--file', mali_meshfile,
-                '--proj', 'ais-bedmap2']
+                '--proj', 'ais-bedmap2-sphere']
 
         check_call(args, logger=logger)
 
