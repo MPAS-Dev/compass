@@ -11,13 +11,13 @@ from compass.ocean.tests.global_ocean.mesh.fris02to60 import FRIS02to60BaseMesh
 from compass.ocean.tests.global_ocean.mesh.fris04to60 import FRIS04to60BaseMesh
 from compass.ocean.tests.global_ocean.mesh.fris08to60 import FRIS08to60BaseMesh
 from compass.ocean.tests.global_ocean.mesh.kuroshio import KuroshioBaseMesh
+from compass.ocean.tests.global_ocean.mesh.narrm14 import NARRM14BaseMesh
 from compass.ocean.tests.global_ocean.mesh.qu import (
     IcosMeshFromConfigStep,
     QUMeshFromConfigStep,
 )
 from compass.ocean.tests.global_ocean.mesh.rrs6to18 import RRS6to18BaseMesh
 from compass.ocean.tests.global_ocean.mesh.so12to60 import SO12to60BaseMesh
-from compass.ocean.tests.global_ocean.mesh.wc14 import WC14BaseMesh
 from compass.ocean.tests.global_ocean.metadata import (
     get_author_and_email_from_git,
 )
@@ -110,8 +110,8 @@ class Mesh(TestCase):
             base_mesh_step = FRIS08to60BaseMesh(self, name=name, subdir=subdir)
         elif mesh_name.startswith('Kuroshio'):
             base_mesh_step = KuroshioBaseMesh(self, name=name, subdir=subdir)
-        elif mesh_name in ['WC14', 'WCwISC14']:
-            base_mesh_step = WC14BaseMesh(self, name=name, subdir=subdir)
+        elif mesh_name in ['NARRM14', 'NARRMwISC14']:
+            base_mesh_step = NARRM14BaseMesh(self, name=name, subdir=subdir)
         else:
             raise ValueError(f'Unknown mesh name {mesh_name}')
 
