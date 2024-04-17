@@ -52,7 +52,7 @@ class WaveMesh(TestCase):
         self.add_step(rotate_mesh_step)
 
         uost_file_step = WavesUostFiles(test_case=self,
-                                        ocean_mesh=ocean_mesh)
+                                        wave_culled_mesh=cull_mesh_step)
         self.add_step(uost_file_step)
 
     def configure(self, config=None):

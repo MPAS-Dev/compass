@@ -6,23 +6,23 @@ from alphaBetaLab.alphaBetaLab.abEstimateAndSave import (
 )
 # importing from alphaBetaLab the needed components
 from alphaBetaLab.alphaBetaLab.abOptionManager import abOptions
-from compass.mesh import QuasiUniformSphericalMeshStep
+from compass import Step
 
 
-class WavesUostFiles(QuasiUniformSphericalMeshStep):
+class WavesUostFiles(Step):
     """
     A step for creating the unresolved obstacles file for wave mesh
     """
-    def __init__(self, test_case, ocean_mesh, name='uost_files', subdir=None):
+    def __init__(self, test_case, wave_culled_mesh,
+                 name='uost_files', subdir=None):
 
-        super().__init__(test_case=test_case, name=name, subdir=subdir,
-                         cell_width=None)
+        super().__init__(test_case=test_case, name=name, subdir=subdir)
 
         # other things INIT should do?
-        base_mesh_path = ocean_mesh.steps['base_mesh'].path
+        culled_mesh_path = wave_culled_mesh.path
         self.add_input_file(
-            filename='ocean_mesh.nc',
-            work_dir_target=f'{base_mesh_path}/base_mesh.nc')
+            filename='wave_mesh_culled.msh',
+            work_dir_target=f'{culled_mesh_path}/wave_mesh_culled.msh')
 
         self.add_input_file(
             filename='etopo1_180.nc',
@@ -50,17 +50,17 @@ class WavesUostFiles(QuasiUniformSphericalMeshStep):
         freqs = [minfrq * (frqfactor ** i) for i in range(1, nfreq + 1)]
 
         # definition of the spatial mesh
-        gridname = 'glo_unst'
-        mshfile = 'global.msh'
+        gridname = 'glo_unst'  # SB NOTE: should be flexible
+        mshfile = 'wave_mesh_culled.msh'
         triMeshSpec = triMeshSpecFromMshFile(mshfile)
 
         # path of the etopo1 bathymetry
         # etopoFilePath = '/users/sbrus/scratch4/ \
         # WW3_unstructured/GEBCO_2019.nc'
-        etopoFilePath = './etopo1_180.nc'
+        etopoFilePath = 'etopo1_180.nc'
 
         # output directory
-        outputDestDir = './output/'
+        outputDestDir = 'output/'
 
         # number of cores for parallel computing
         nParWorker = 1
