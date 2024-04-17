@@ -37,8 +37,9 @@ class WaveMesh(TestCase):
         base_mesh_step = WavesBaseMesh(test_case=self,
                                        ocean_mesh=ocean_mesh)
         self.add_step(base_mesh_step)
-        
-        uost_file_step = WavesUostFiles(test_case=self)
+
+        uost_file_step = WavesUostFiles(test_case=self,
+                                        ocean_mesh=ocean_mesh)
         self.add_step(uost_file_step)
 
     def configure(self, config=None):
