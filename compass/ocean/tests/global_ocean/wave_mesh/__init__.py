@@ -28,25 +28,25 @@ class WaveMesh(TestCase):
         subdir = f'{ocean_mesh.mesh_name}/{name}'
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
-        mesh_lower = ocean_mesh.mesh_name.lower()
-        self.package = f'compass.ocean.tests.global_ocean.mesh.{mesh_lower}'
-        self.mesh_config_filename = f'{mesh_lower}.cfg'
+        self.package = 'compass.ocean.tests.global_ocean.wave_mesh'
+        self.mesh_config_filename = 'wave_mesh.cfg'
 
-        base_mesh_step = WavesBaseMesh(test_case=self)
+        base_mesh_step = WavesBaseMesh(test_case=self,
+                                       ocean_mesh=ocean_mesh)
         self.add_step(base_mesh_step)
 
-#    def configure(self, config=None):
-#        """
-#        Modify the configuration options for this test case
-#
-#        config : compass.config.CompassConfigParser, optional
-#            Configuration options to update if not those for this test case
-#        """
-#        if config is None:
-#            config = self.config
-#        config.add_from_package('compass.mesh', 'mesh.cfg', exception=True)
-#
-#        get_author_and_email_from_git(config)
+    def configure(self, config=None):
+        """
+        Modify the configuration options for this test case
+
+        config : compass.config.CompassConfigParser, optional
+            Configuration options to update if not those for this test case
+        """
+        if config is None:
+            config = self.config
+        config.add_from_package('compass.mesh', 'mesh.cfg', exception=True)
+
+        # get_author_and_email_from_git(config)
 
 #    def validate(self):
 #        """
