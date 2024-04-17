@@ -2,6 +2,9 @@
 #     get_author_and_email_from_git,
 # )
 from compass.ocean.tests.global_ocean.wave_mesh.base_mesh import WavesBaseMesh
+from compass.ocean.tests.global_ocean.wave_mesh.uost_files import (
+    WavesUostFiles,
+)
 from compass.testcase import TestCase
 
 # from compass.validate import compare_variables
@@ -34,6 +37,9 @@ class WaveMesh(TestCase):
         base_mesh_step = WavesBaseMesh(test_case=self,
                                        ocean_mesh=ocean_mesh)
         self.add_step(base_mesh_step)
+        
+        uost_file_step = WavesUostFiles(test_case=self)
+        self.add_step(uost_file_step)
 
     def configure(self, config=None):
         """
