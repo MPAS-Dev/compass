@@ -6,27 +6,33 @@ from alphaBetaLab.alphaBetaLab.abEstimateAndSave import (
 )
 # importing from alphaBetaLab the needed components
 from alphaBetaLab.alphaBetaLab.abOptionManager import abOptions
+from compass.mesh import QuasiUniformSphericalMeshStep
 
-# from compass.mesh import QuasiUniformSphericalMeshStep
 
-
-class WavesUostFiles():
+class WavesUostFiles(QuasiUniformSphericalMeshStep):
     """
     A step for creating the unresolved obstacles file for wave mesh
     """
-    # pass
+    def __init__(self, test_case, ocean_mesh, name='uost_files', subdir=None):
 
-    def __init__(self, test_case):
-        """
-        Create a new step
-        """
-        super().__init__(test_case, name='uost_files')
+        super().__init__(test_case=test_case, name=name, subdir=subdir,
+                         cell_width=None)
+
+        # other things INIT should do?
+        base_mesh_path = ocean_mesh.steps['base_mesh'].path
+        self.add_input_file(
+            filename='ocean_mesh.nc',
+            work_dir_target=f'{base_mesh_path}/base_mesh.nc')
+
+        self.add_input_file(
+            filename='etopo1_180.nc',
+            target='etopo1_180.nc',
+            database='bathymetry_database')
 
     def run(self):
         """
-        Run this step
+        Create unresolved obstacles for wave mesh and spectral resolution
         """
-        super().run()
 
         dirs = np.linspace(0, 2 * np.pi, 36)
         nfreq = 50   # ET NOTE: this should be flexible
@@ -37,7 +43,9 @@ class WavesUostFiles():
             frqfactor = 1.10
         elif (nfreq == 25):
             frqfactor = 1.147
-            # PRINT SOME ERROR MESSAGE FOR NON-supoorted spectral reslution
+        else:
+            print("ERROR: Spectral resolution not supported.")
+            print("Number of wave freqencies must be 25, 36, or 50.")
 
         freqs = [minfrq * (frqfactor ** i) for i in range(1, nfreq + 1)]
 
@@ -69,32 +77,3 @@ class WavesUostFiles():
         abEstimateAndSaveTriangularEtopo1(
             dirs, freqs, gridname, triMeshSpec, etopoFilePath,
             outputDestDir, nParWorker, abOptions=opt)
-
-    # def build_cell_width_lat_lon(self):
-    #    """
-    #    Create cell width array for this mesh on a regular latitude-longitude
-    #    grid
-
-    #    Returns
-    #    -------
-    #    cellWidth : numpy.array
-    #        m x n array of cell width in km
-
-    #    lon : numpy.array
-    #        longitude in degrees (length n and between -180 and 180)
-
-    #    lat : numpy.array
-    #        longitude in degrees (length m and between -90 and 90)
-    #    """
-
-    #    dlon = 10.
-    #    dlat = 0.1
-    #    nlon = int(360. / dlon) + 1
-    #    nlat = int(180. / dlat) + 1
-    #    lon = np.linspace(-180., 180., nlon)
-    #    lat = np.linspace(-90., 90., nlat)
-
-    #    cellWidthVsLat = mdt.EC_CellWidthVsLat(lat)
-    #    cellWidth = np.outer(cellWidthVsLat, np.ones([1, lon.size]))
-
-    #    return cellWidth, lon, lat
