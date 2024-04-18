@@ -175,4 +175,5 @@ class GlobalOcean(TestGroup):
 
             if include_wave_mesh:
                 self.add_test_case(
-                    WaveMesh(test_group=self, ocean_mesh=mesh_test))
+                    WaveMesh(test_group=self, ocean_mesh=mesh_test,
+                             ocean_init=init_test))

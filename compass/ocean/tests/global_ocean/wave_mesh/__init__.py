@@ -21,7 +21,7 @@ class WaveMesh(TestCase):
     Attributes
     ----------
     """
-    def __init__(self, test_group, ocean_mesh):
+    def __init__(self, test_group, ocean_mesh, ocean_init):
         """
         Create test case for creating a global MPAS-Ocean mesh
 
@@ -39,11 +39,11 @@ class WaveMesh(TestCase):
         self.mesh_config_filename = 'wave_mesh.cfg'
 
         base_mesh_step = WavesBaseMesh(test_case=self,
-                                       ocean_mesh=ocean_mesh)
+                                       ocean_mesh=ocean_init)
         self.add_step(base_mesh_step)
 
         cull_mesh_step = WavesCullMesh(test_case=self,
-                                       ocean_mesh=ocean_mesh,
+                                       ocean_mesh=ocean_init,
                                        wave_base_mesh=base_mesh_step)
         self.add_step(cull_mesh_step)
 

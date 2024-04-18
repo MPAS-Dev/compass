@@ -12,15 +12,15 @@ class WavesCullMesh(Step):
 
         super().__init__(test_case=test_case, name=name, subdir=subdir)
 
-        culled_mesh_path = ocean_mesh.steps['cull_mesh'].path
+        culled_mesh_path = ocean_mesh.steps['initial_state'].path
         self.add_input_file(
             filename='ocean_culled_mesh.nc',
-            work_dir_target=f'{culled_mesh_path}/culled_mesh.nc')
+            work_dir_target=f'{culled_mesh_path}/initial_state.nc')
 
         wave_base_mesh_path = wave_base_mesh.path
         self.add_input_file(
             filename='wave_base_mesh.nc',
-            work_dir_target=f'{wave_base_mesh_path}/wave_base_mesh.nc')
+            work_dir_target=f'{wave_base_mesh_path}/base_mesh.nc')
 
     def setup(self):
 

@@ -23,10 +23,10 @@ class WavesBaseMesh(QuasiUniformSphericalMeshStep):
         super().__init__(test_case=test_case, name=name, subdir=subdir,
                          cell_width=None)
 
-        base_mesh_path = ocean_mesh.steps['base_mesh'].path
+        mesh_path = ocean_mesh.steps['initial_state'].path
         self.add_input_file(
             filename='ocean_mesh.nc',
-            work_dir_target=f'{base_mesh_path}/base_mesh.nc')
+            work_dir_target=f'{mesh_path}/initial_state.nc')
 
     def setup(self):
 
@@ -182,8 +182,8 @@ class WavesBaseMesh(QuasiUniformSphericalMeshStep):
 
         spac = jigsawpy.jigsaw_msh_t()
         spac.mshID = "ellipsoid-grid"
-        spac.xgrid = lon
-        spac.ygrid = lat
+        spac.xgrid = np.radians(lon)
+        spac.ygrid = np.radians(lat)
         spac.value = cell_width
         spac.slope = np.full(spac.value.shape, dhdx)
         jigsawpy.savemsh(opts.hfun_file, spac)

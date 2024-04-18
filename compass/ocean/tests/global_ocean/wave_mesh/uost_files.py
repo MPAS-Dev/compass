@@ -63,7 +63,7 @@ class WavesUostFiles(Step):
         outputDestDir = 'output/'
 
         # number of cores for parallel computing
-        nParWorker = 1
+        nParWorker = 1  # SB NOTE: we should set this to the of cores on a node
 
         # this option indicates that the computation
         # should be skipped for cells smaller than 3 km
