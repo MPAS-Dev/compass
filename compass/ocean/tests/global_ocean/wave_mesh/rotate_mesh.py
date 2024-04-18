@@ -23,11 +23,11 @@ class WavesRotateMesh(Step):
 
         f = open(f'{self.work_dir}/rotate.nml', 'w')
         f.write('&inputs\n')
-        f.write("   LON_POLE = -42.8906d0\n")
-        f.write("   LAT_POLE = 72.3200d0\n")
-        f.write("   wind_file = 'null'\n")
-        f.write("   mesh_file = 'wave_mesh_culled.msh'\n")
-        f.write("   mesh_file_out = 'wave_culled_mesh_RTD.msh'\n")
+        f.write("    LON_POLE = -42.8906d0\n")
+        f.write("    LAT_POLE = 72.3200d0\n")
+        f.write("    wind_file = 'null'\n")
+        f.write("    mesh_file = 'wave_mesh_culled.msh'\n")
+        f.write("    mesh_file_out = 'wave_culled_mesh_RTD.msh'\n")
         f.write("/")
         f.close()
 

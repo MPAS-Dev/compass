@@ -23,10 +23,10 @@ class WavesScripFile(Step):
 
         f = open(f'{self.work_dir}/scrip.nml', 'w')
         f.write('&inputs\n')
-        f.write("   waves_mesh_file = 'wave_mesh_culled.msh'\n")
+        f.write("    waves_mesh_file = 'wave_mesh_culled.msh'\n")
         f.write("/\n")
         f.write('&outputs\n')
-        f.write("   waves_scrip_file = 'wave_mesh_scrip.nc'\n")
+        f.write("    waves_scrip_file = 'wave_mesh_scrip.nc'\n")
         f.write("/")
         f.close()
 
