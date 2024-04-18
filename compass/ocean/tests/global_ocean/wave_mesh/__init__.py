@@ -1,8 +1,12 @@
 # from compass.ocean.tests.global_ocean.metadata import (
 #     get_author_and_email_from_git,
 # )
+from compass.ocean.tests.global_ocean.files_for_e3sm.scrip import Scrip
 from compass.ocean.tests.global_ocean.wave_mesh.base_mesh import WavesBaseMesh
 from compass.ocean.tests.global_ocean.wave_mesh.cull_mesh import WavesCullMesh
+from compass.ocean.tests.global_ocean.wave_mesh.remap_files import (
+    WavesRemapFiles,
+)
 from compass.ocean.tests.global_ocean.wave_mesh.rotate_mesh import (
     WavesRotateMesh,
 )
@@ -53,6 +57,11 @@ class WaveMesh(TestCase):
         scrip_file_step = WavesScripFile(test_case=self,
                                          wave_culled_mesh=cull_mesh_step)
         self.add_step(scrip_file_step)
+
+        remap_file_step = WavesRemapFiles(test_case=self,
+                                          wave_scrip=scrip_file_step,
+                                          ocean_scrip=Scrip)
+        self.add_step(remap_file_step)
 
         rotate_mesh_step = WavesRotateMesh(test_case=self,
                                            wave_culled_mesh=cull_mesh_step)
