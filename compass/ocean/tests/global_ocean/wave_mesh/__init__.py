@@ -6,6 +6,9 @@ from compass.ocean.tests.global_ocean.wave_mesh.cull_mesh import WavesCullMesh
 from compass.ocean.tests.global_ocean.wave_mesh.rotate_mesh import (
     WavesRotateMesh,
 )
+from compass.ocean.tests.global_ocean.wave_mesh.scrip_file import (
+    WavesScripFile,
+)
 from compass.ocean.tests.global_ocean.wave_mesh.uost_files import (
     WavesUostFiles,
 )
@@ -46,6 +49,10 @@ class WaveMesh(TestCase):
                                        ocean_mesh=ocean_init,
                                        wave_base_mesh=base_mesh_step)
         self.add_step(cull_mesh_step)
+
+        scrip_file_step = WavesScripFile(test_case=self,
+                                         wave_culled_mesh=cull_mesh_step)
+        self.add_step(scrip_file_step)
 
         rotate_mesh_step = WavesRotateMesh(test_case=self,
                                            wave_culled_mesh=cull_mesh_step)
