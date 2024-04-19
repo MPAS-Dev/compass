@@ -1,3 +1,6 @@
+from importlib.resources import read_text
+
+from jinja2 import Template
 from mpas_tools.logging import check_call
 
 from compass import Step
@@ -26,16 +29,15 @@ class WavesCullMesh(Step):
 
         super().setup()
 
-        f = open(f'{self.work_dir}/cull_waves_mesh.nml', 'w')
-        f.write('&inputs\n')
-        f.write("    waves_mesh_file = 'wave_base_mesh.nc'\n")
-        f.write("    ocean_mesh_file = 'ocean_culled_mesh.nc'\n")
-        f.write("/\n")
-        f.write("&output\n")
-        f.write("    waves_mesh_culled_vtk = 'wave_mesh_culled.vtk'\n")
-        f.write("    waves_mesh_culled_gmsh = 'wave_mesh_culled.msh'\n")
-        f.write("/\n")
-        f.close()
+        template = Template(read_text(
+            'compass.ocean.tests.global_ocean.wave_mesh',
+            'cull_mesh.template'))
+
+        text = template.render()
+        text = f'{text}\n'
+
+        with open(f'{self.work_dir}/cull_waves_mesh.nml', 'w') as file:
+            file.write(text)
 
     def run(self):
 

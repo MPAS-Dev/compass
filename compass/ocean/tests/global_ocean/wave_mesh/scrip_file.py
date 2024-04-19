@@ -1,3 +1,6 @@
+from importlib.resources import read_text
+
+from jinja2 import Template
 from mpas_tools.logging import check_call
 
 from compass import Step
@@ -21,14 +24,15 @@ class WavesScripFile(Step):
 
         super().setup()
 
-        f = open(f'{self.work_dir}/scrip.nml', 'w')
-        f.write('&inputs\n')
-        f.write("    waves_mesh_file = 'wave_mesh_culled.msh'\n")
-        f.write("/\n")
-        f.write('&outputs\n')
-        f.write("    waves_scrip_file = 'wave_mesh_scrip.nc'\n")
-        f.write("/\n")
-        f.close()
+        template = Template(read_text(
+            'compass.ocean.tests.global_ocean.wave_mesh',
+            'scrip_file.template'))
+
+        text = template.render()
+        text = f'{text}\n'
+
+        with open(f'{self.work_dir}/scrip.nml', 'w') as file:
+            file.write(text)
 
     def run(self):
         """

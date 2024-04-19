@@ -1,3 +1,6 @@
+from importlib.resources import read_text
+
+from jinja2 import Template
 from mpas_tools.logging import check_call
 
 from compass import Step
@@ -21,15 +24,15 @@ class WavesRotateMesh(Step):
 
         super().setup()
 
-        f = open(f'{self.work_dir}/rotate.nml', 'w')
-        f.write('&inputs\n')
-        f.write("    LON_POLE = -42.8906d0\n")
-        f.write("    LAT_POLE = 72.3200d0\n")
-        f.write("    wind_file = 'null'\n")
-        f.write("    mesh_file = 'wave_mesh_culled.msh'\n")
-        f.write("    mesh_file_out = 'wave_culled_mesh_RTD.msh'\n")
-        f.write("/\n")
-        f.close()
+        template = Template(read_text(
+            'compass.ocean.tests.global_ocean.wave_mesh',
+            'rotate_mesh.template'))
+
+        text = template.render()
+        text = f'{text}\n'
+
+        with open(f'{self.work_dir}/rotate.nml', 'w') as file:
+            file.write(text)
 
     def run(self):
 
