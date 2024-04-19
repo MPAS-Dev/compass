@@ -1,12 +1,10 @@
 import timeit
 
-import cartopy  # noqa: F401
-import cartopy.crs as ccrs  # noqa: F401
-import cartopy.feature as cfeature  # noqa: F401
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
 import jigsawpy
 import matplotlib.pyplot as plt
 import numpy as np
-import shapefile
 from mpas_tools.cime.constants import constants
 from netCDF4 import Dataset
 from scipy import interpolate, spatial
@@ -63,9 +61,7 @@ class WavesBaseMesh(QuasiUniformSphericalMeshStep):
         ylat = np.linspace(lat_min, lat_max, nlat)
 
         earth_radius = constants['SHR_CONST_REARTH'] / km
-        # SB NOTE: need to use GHSSH from cartopy
-        shapefiles = ['GSHHS_l_L1.shp', 'GSHHS_l_L6.shp']
-        cell_width = self.cell_widthVsLatLon(xlon, ylat, shapefiles,
+        cell_width = self.cell_widthVsLatLon(xlon, ylat,
                                              earth_radius, 'ocean_mesh.nc')
         cell_width = cell_width / km
 
@@ -78,8 +74,7 @@ class WavesBaseMesh(QuasiUniformSphericalMeshStep):
 
         return cell_width, xlon, ylat
 
-    def cell_widthVsLatLon(self, lon, lat, coast_shapefiles,
-                           sphere_radius, ocean_mesh):
+    def cell_widthVsLatLon(self, lon, lat, sphere_radius, ocean_mesh):
 
         config = self.config
 
@@ -129,7 +124,7 @@ class WavesBaseMesh(QuasiUniformSphericalMeshStep):
         bathy_grd = np.reshape(bathy_interp, (nlat, nlon))
 
         # Get distance to coasts
-        D = self.distance_to_shapefile_points(coast_shapefiles, lon, lat,
+        D = self.distance_to_shapefile_points(lon, lat,
                                               sphere_radius, reggrid=True)
 
         # Apply refined region criteria
@@ -196,27 +191,20 @@ class WavesBaseMesh(QuasiUniformSphericalMeshStep):
 
         return spac.value
 
-    def distance_to_shapefile_points(self, shpfiles, lon, lat,
+    def distance_to_shapefile_points(self, lon, lat,
                                      sphere_radius, reggrid=False):
 
         # Get coastline coordinates from shapefile
+        features = cfeature.GSHHSFeature(scale='l', levels=[1, 6])
+
         pt_list = []
-        for shpfile in shpfiles:
+        for feature in features.geometries():
 
-            sf = shapefile.Reader(shpfile)
-            shapes = sf.shapes()
-            # records = sf.records()
-            n = len(sf.shapes())
+            if feature.length < 20:
+                continue
 
-            for i in range(n):
-
-                points = shapes[i].points
-
-                if len(points) < 20:
-                    continue
-
-                for pt in points:
-                    pt_list.append([pt[0], pt[1]])
+            for coord in feature.exterior.coords:
+                pt_list.append([coord[0], coord[1]])
 
         coast_pts = np.radians(np.array(pt_list))
 
