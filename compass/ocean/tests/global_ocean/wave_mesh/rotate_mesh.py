@@ -28,7 +28,7 @@ class WavesRotateMesh(Step):
         f.write("    wind_file = 'null'\n")
         f.write("    mesh_file = 'wave_mesh_culled.msh'\n")
         f.write("    mesh_file_out = 'wave_culled_mesh_RTD.msh'\n")
-        f.write("/")
+        f.write("/\n")
         f.close()
 
     def run(self):

@@ -27,7 +27,7 @@ class WavesScripFile(Step):
         f.write("/\n")
         f.write('&outputs\n')
         f.write("    waves_scrip_file = 'wave_mesh_scrip.nc'\n")
-        f.write("/")
+        f.write("/\n")
         f.close()
 
     def run(self):
