@@ -121,10 +121,10 @@ class GlobalOcean(TestGroup):
                 time_integrator=time_integrator)
             self.add_test_case(dynamic_adjustment_test)
 
-            self.add_test_case(
-                FilesForE3SM(
-                    test_group=self, mesh=mesh_test, init=init_test,
-                    dynamic_adjustment=dynamic_adjustment_test))
+            e3sm_files_test = FilesForE3SM(
+                test_group=self, mesh=mesh_test, init=init_test,
+                dynamic_adjustment=dynamic_adjustment_test)
+            self.add_test_case(e3sm_files_test)
 
             if include_rk4:
                 time_integrator = 'RK4'
@@ -176,4 +176,4 @@ class GlobalOcean(TestGroup):
             if include_wave_mesh:
                 self.add_test_case(
                     WaveMesh(test_group=self, ocean_mesh=mesh_test,
-                             ocean_init=init_test))
+                             ocean_init=init_test, ocean_e3sm=e3sm_files_test))
