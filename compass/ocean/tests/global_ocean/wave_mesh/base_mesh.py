@@ -63,6 +63,7 @@ class WavesBaseMesh(QuasiUniformSphericalMeshStep):
         ylat = np.linspace(lat_min, lat_max, nlat)
 
         earth_radius = constants['SHR_CONST_REARTH'] / km
+        # SB NOTE: need to use GHSSH from cartopy
         shapefiles = ['GSHHS_l_L1.shp', 'GSHHS_l_L6.shp']
         cell_width = self.cell_widthVsLatLon(xlon, ylat, shapefiles,
                                              earth_radius, 'ocean_mesh.nc')
@@ -70,6 +71,10 @@ class WavesBaseMesh(QuasiUniformSphericalMeshStep):
 
         self.create_initial_points('ocean_mesh.nc', xlon, ylat, cell_width,
                                    earth_radius, self.opts.init_file)
+
+        hfun_slope_lim = self.config.getfloat('wave_mesh', 'hfun_slope_lim')
+        cell_width = self.limit_spacing_gradient(xlon, ylat, cell_width,
+                                                 earth_radius, hfun_slope_lim)
 
         return cell_width, xlon, ylat
 
@@ -140,9 +145,6 @@ class WavesBaseMesh(QuasiUniformSphericalMeshStep):
                               (D < dist_threshold_global))
         cell_width[idxx, idxy] = hfun_grd[idxx, idxy]
 
-        hfun_slope_lim = config.getfloat('wave_mesh', 'hfun_slope_lim')
-        self.limit_spacing_gradient(lon, lat, cell_width, hfun_slope_lim)
-
         # Plot
         fig = plt.figure(figsize=(16, 8))
 
@@ -171,7 +173,8 @@ class WavesBaseMesh(QuasiUniformSphericalMeshStep):
 
         return cell_width
 
-    def limit_spacing_gradient(self, lon, lat, cell_width, dhdx):
+    def limit_spacing_gradient(self, lon, lat, cell_width,
+                               sphere_radius, dhdx):
 
         print("Smoothing h(x) via |dh/dx| limits...")
 
@@ -182,10 +185,11 @@ class WavesBaseMesh(QuasiUniformSphericalMeshStep):
 
         spac = jigsawpy.jigsaw_msh_t()
         spac.mshID = "ellipsoid-grid"
+        spac.radii = np.full(3, sphere_radius, dtype=spac.REALS_t)
         spac.xgrid = np.radians(lon)
         spac.ygrid = np.radians(lat)
-        spac.value = cell_width
-        spac.slope = np.full(spac.value.shape, dhdx)
+        spac.value = cell_width.astype(spac.REALS_t)
+        spac.slope = np.full(spac.value.shape, dhdx, dtype=spac.REALS_t)
         jigsawpy.savemsh(opts.hfun_file, spac)
 
         jigsawpy.cmd.marche(opts, spac)
@@ -306,7 +310,6 @@ class WavesBaseMesh(QuasiUniformSphericalMeshStep):
         lat = np.append(lat, 0.5 * np.pi)
 
         npt = lon.size
-        print(npt)
 
         # Change to Cartesian coordinates
         x, y, z = self.lonlat2xyz(lon, lat, sphere_radius)
