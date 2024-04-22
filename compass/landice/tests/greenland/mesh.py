@@ -138,7 +138,7 @@ class Mesh(Step):
                     "--dst_regional", "--src_regional", '--ignore_unmapped']
             check_call(args, logger=logger)
 
-        # interpoalte fields from BedMachine and Measures
+        # interpolate fields from BedMachine and Measures
         # Using conservative remapping
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',

@@ -89,3 +89,15 @@ mesh_gen
 The :py:class:`compass.landice.tests.greenland.mesh_gen.MeshGen`
 calls the :py:class:`compass.landice.tests.greenland.mesh.Mesh` to create
 the variable resolution Greenland Ice Sheet mesh.
+
+The mesh generation is based around 1- and 2-km reference datasets, which
+are updated in a number of ways directly from high resolution source
+data.  In the future, a complete workflow from source datasets may
+replace this hybrid method.
+
+Once the mesh is created, scrip files and the associated weights files
+are created for the mesh and observational data sets. Then, ice geometry and
+velocity observations are conservatively remapped from BedMachine v5 and
+MEaSUREs 2006-2010 data sets. Finally, there is some cleanup to set large
+velocity uncertainties outside the ice mask, check the sign of the basal heat
+flux, and set reasonable values for dH/dt and its uncertainty.

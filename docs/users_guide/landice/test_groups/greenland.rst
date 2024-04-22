@@ -123,7 +123,7 @@ The test case performs interpolation of observational data from gridded
 datasets to the Greenland mesh. This takes care of the peculiarities of
 the current gridded compilation dataset (greenland_1km_2024_01_29.epsg3413.icesheetonly.nc),
 as well as using conservative remapping directly from the high-resolution
-BedMachine v5 and MeASUReS 2005-2010 velocity datasets. There is a fairly
+BedMachine v5 and MeASUReS 2006-2010 velocity datasets. There is a fairly
 heavy degree of pre-processing done to get the BedMachine and MeASUReS
 datasets ready to be used here. The pre-processing includes renaming
 variables, setting reasonable _FillValue and missing_value attributes
