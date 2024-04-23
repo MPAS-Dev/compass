@@ -1,21 +1,21 @@
 &time_config
     itersl = 1
-    starttime = 2015
+    starttime = 2000
     dt1 = 5
 
 /
 &model_resolution
     norder = 512
-    nglv = "{{ nglv }}"
+    nglv = {{ nglv }}
 
 /
 &io_directory
-    inputfolder_ice = "{{ slm_input_ice }}"
-    inputfolder = "{{ slm_input_others }}"
-    planetfolder = "{{ slm_input_earth }}"
-    gridfolder = "{{ slm_input_others }}"
-    outputfolder = OUTPUT_SLM/
-    outputfolder_ice = ICELOAD_SLM/
+    inputfolder_ice = '{{ slm_input_ice }}'
+    inputfolder = '{{ slm_input_others }}'
+    planetfolder = '{{ slm_input_earth }}'
+    gridfolder = '{{ slm_input_others }}'
+    outputfolder = 'OUTPUT_SLM/'
+    outputfolder_ice = 'ICELOAD_SLM/'
     folder_coupled = ''
 
 /
@@ -27,13 +27,13 @@
 /
 &file_name
     planetmodel   = '{{  slm_earth_structure  }}'
-    icemodel      = 'iceGlobalDomain_zeroField_GL{{ nglv }}_`
+    icemodel      = 'iceGlobalDomain_zeroField_GL{{ nglv }}_'
     icemodel_out  = 'iceload_out_'
     timearray     = 'times'
-    topomodel     = 'etopo2_{{ nglv }}_AISbedmap2'
-    topo_initial  = 'etopo2_{{ nglv }}_AISbedmap2'
+    topomodel     = 'etopo2_nglv{{ nglv }}_outside_AIS'
+    topo_initial  = 'etopo2_nglv{{ nglv }}_outside_AIS'
     grid_lat      = 'GLlat_{{ nglv }}.txt'
-    grid_lon      = 'GLlon_{{ nglv}}.txt'
+    grid_lon      = 'GLlon_{{ nglv }}.txt'
 
 /
 &model_config
@@ -64,3 +64,5 @@
 
 
 /
+
+! end of the namelist file
