@@ -14,7 +14,7 @@
   <![endif]-->
   
         <script src="../../../_static/documentation_options.js?v=c6e86fd7"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -213,6 +213,16 @@ the latter perform a 2-day restart run beginning with the end of the first.</p>
 <p>The <a class="reference internal" href="../generated/compass.landice.tests.greenland.mesh_gen.MeshGen.html#compass.landice.tests.greenland.mesh_gen.MeshGen" title="compass.landice.tests.greenland.mesh_gen.MeshGen"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.greenland.mesh_gen.MeshGen</span></code></a>
 calls the <a class="reference internal" href="../generated/compass.landice.tests.greenland.mesh.Mesh.html#compass.landice.tests.greenland.mesh.Mesh" title="compass.landice.tests.greenland.mesh.Mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.greenland.mesh.Mesh</span></code></a> to create
 the variable resolution Greenland Ice Sheet mesh.</p>
+<p>The mesh generation is based around 1- and 2-km reference datasets, which
+are updated in a number of ways directly from high resolution source
+data.  In the future, a complete workflow from source datasets may
+replace this hybrid method.</p>
+<p>Once the mesh is created, scrip files and the associated weights files
+are created for the mesh and observational data sets. Then, ice geometry and
+velocity observations are conservatively remapped from BedMachine v5 and
+MEaSUREs 2006-2010 data sets. Finally, there is some cleanup to set large
+velocity uncertainties outside the ice mask, check the sign of the basal heat
+flux, and set reasonable values for dH/dt and its uncertainty.</p>
 </section>
 </section>
 

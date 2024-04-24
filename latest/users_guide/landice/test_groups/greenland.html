@@ -14,7 +14,7 @@
   <![endif]-->
   
         <script src="../../../_static/documentation_options.js?v=c6e86fd7"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -149,8 +149,9 @@
              
   <section id="greenland">
 <span id="landice-greenland"></span><h1>greenland<a class="headerlink" href="#greenland" title="Link to this heading">¶</a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">landice/greenland</span></code> test group runs tests with a coarse (20-km)
-<a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/gis20km.210608.nc">Greenland mesh</a>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">landice/greenland</span></code> test group is used to run tests with a coarse (20-km)
+<a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/gis20km.210608.nc">Greenland mesh</a>.
+and to create customized variable resolution meshes.</p>
 <figure class="align-center" id="id1">
 <a class="reference internal image-reference" href="../../../_images/gis_speed.png"><img alt="../../../_images/gis_speed.png" src="../../../_images/gis_speed.png" style="width: 742px;" /></a>
 <figcaption>
@@ -171,15 +172,30 @@ for the test case <code class="docutils literal notranslate"><span class="pre">m
 <h2>config options<a class="headerlink" href="#config-options" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">mesh_gen</span></code> test case uses the default config options below.
 The other test cases do not use config options.</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[mesh]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for high_res_mesh test case</span>
+<span class="k">[mesh]</span>
+
+<span class="c1"># path to directory containing BedMachine and Measures datasets</span>
+<span class="na">data_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/standard_datasets/GIS_datasets/</span>
 
 <span class="c1"># number of levels in the mesh</span>
 <span class="na">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span>
+
+<span class="c1"># Bounds of GIS mesh. If any bound is set</span>
+<span class="c1"># to None, the mesh will use the full extent</span>
+<span class="c1"># of the gridded dataset.</span>
+<span class="na">x_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
+<span class="na">x_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
+<span class="na">y_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
+<span class="na">y_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
 
 <span class="c1"># distance from ice margin to cull (km).</span>
 <span class="c1"># Set to a value &lt;= 0 if you do not want</span>
 <span class="c1"># to cull based on distance from margin.</span>
 <span class="na">cull_distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span>
+
+<span class="c1"># number of processors to use for ESMF_RegridWeightGen</span>
+<span class="na">nProcs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">128</span>
 
 <span class="c1"># mesh density parameters</span>
 <span class="c1"># minimum cell spacing (meters)</span>
@@ -193,12 +209,21 @@ The other test cases do not use config options.</p>
 <span class="c1"># distance at which cell spacing = max_spac</span>
 <span class="na">high_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e5</span>
 <span class="c1"># distance within which cell spacing = min_spac</span>
-<span class="na">low_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5.e4</span>
+<span class="na">low_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e4</span>
+<span class="c1"># distance at which bed topography has no effect</span>
+<span class="na">high_dist_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e5</span>
+<span class="c1"># distance within which bed topography has maximum effect</span>
+<span class="na">low_dist_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">7.5e4</span>
+<span class="c1"># Bed elev beneath which cell spacing is minimized</span>
+<span class="na">low_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">50.0</span>
+<span class="c1"># Bed elev above which cell spacing is maximized</span>
+<span class="na">high_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100.0</span>
 
 <span class="c1"># mesh density functions</span>
 <span class="na">use_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
 <span class="na">use_dist_to_grounding_line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
 <span class="na">use_dist_to_edge</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="na">use_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
 </pre></div>
 </div>
 </section>
@@ -230,6 +255,22 @@ on the the config options listed above. This will not be the same as the
 pre-generated 20 km mesh used in the other three test cases because it uses
 a newer version of Jigsaw. Note that the basal friction optimization is
 performed separately and is not part of this test case.</p>
+<p>The test case performs interpolation of observational data from gridded
+datasets to the Greenland mesh. This takes care of the peculiarities of
+the current gridded compilation dataset (greenland_1km_2024_01_29.epsg3413.icesheetonly.nc),
+as well as using conservative remapping directly from the high-resolution
+BedMachine v5 and MeASUReS 2006-2010 velocity datasets. There is a fairly
+heavy degree of pre-processing done to get the BedMachine and MeASUReS
+datasets ready to be used here. The pre-processing includes renaming
+variables, setting reasonable _FillValue and missing_value attributes
+extrapolating fields to avoid interpolation ramps at ice margins,
+updating mask values.</p>
+<p>Those data files and processing scripts currently live here on Perlmutter:
+<code class="docutils literal notranslate"><span class="pre">/global/cfs/cdirs/fanssie/standard_datasets/GIS_datasets/</span></code>. Eventually
+that pre-processing could be integrated into a new step in COMPASS, or
+the processed data files could be added to the server on Anvil and downloaded
+as needed. However, until then, this test case provides a reproducible workflow
+for setting up Greenland meshes at varying resolutions.</p>
 </section>
 </section>
 
