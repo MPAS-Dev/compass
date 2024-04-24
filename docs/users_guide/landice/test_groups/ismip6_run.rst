@@ -125,10 +125,10 @@ others) that will be used for submitting the jobs for each ensemble member
     qos = regular
 
     [job]
-    wall_time = 10:00:00 
+    wall_time = 10:00:00
 
 Steps for setting up and running experiments
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------------------------
 
 1. With a compass conda environment set up, run, e.g.,
    ``compass setup -t landice/ismip6_run/ismip6_ais_proj2300 -w WORK_DIR_PATH -f USER.cfg``
@@ -159,8 +159,11 @@ Note that the ``hist`` run must be completed before any of the other
 experiments can be run.  A symlink to the ``hist`` restart file from year
 2015 exists in each of the other experiment subdirectories.
 
-Important notes for analyzing coupled MALI-SLM simulations
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Important notes for running coupled MALI-SLM simulations
+--------------------------------------------------------
+
+Projection handling
+~~~~~~~~~~~~~~~~~~~
 
 Currently, MALI uses a planar mesh that projects the south pole with
 polar stereographic projection of ellipsoidal Earth, and the sea-level model
@@ -181,3 +184,24 @@ Eqn. 21-4 in https://pubs.usgs.gov/pp/1395/report.pdf
 An example of the calculation for the MALI-SLM case can also be found in
 the ``compass`` testgroup/testcase/ ``compass/landice/test/slm/circ_icesheet/``,
 ``visualize`` step (https://github.com/MPAS-Dev/compass/pull/748).
+
+Mapping files
+~~~~~~~~~~~~~
+
+Coupling between the Sea-Level Model and MALI requires the generation of mapping files
+before simulations are run.  When ``sea_level_model=True`` in the cfg file, an
+additional test case step is created named ``mapping_files``.  Before any MALI
+simulations are started, the user should run this step.  It will generate the required
+mapping files, and they will be available in each experiment directory through symlinks.
+Once the mapping files have been generated, the user can proceed to running the ``hist``
+experiment.
+
+Restarts
+~~~~~~~~
+
+Additionally, for restarts with the SLM to work correctly, the entire history of the
+``OUTPUT_SLM`` and ``ICELOAD_SLM`` directories must be present.  Because the projection
+experiments (ctrl and exp*) are branched off the hist run as restarts, this means these
+two directories from the hist run must be manually copied to each projection run before
+beginning it. There is not an easy way for this to happen automatically, so this step
+must be done manually.
