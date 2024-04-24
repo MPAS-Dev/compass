@@ -96,8 +96,8 @@ attributes, extrapolating fields to avoid interpolation ramps at ice margins,
 updating mask values, and raising the bed topography at Lake Vostok to ensure
 a flat ice surface there.
 
-Those data files and processing scripts currently live here on Chicoma:
-``/usr/projects/climate/trhille/data``.
+Those data files and processing scripts currently live here on Perlmutter:
+``/global/cfs/cdirs/fanssie/standard_datasets/AIS_datasets``.
 Eventually that pre-processing could be integrated into a new step in COMPASS,
 or the processed data files could be added to the server on Anvil and downloaded
 as needed. However, until then, this test case provides a reproducible workflow
