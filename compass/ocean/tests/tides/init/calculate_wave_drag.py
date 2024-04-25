@@ -122,6 +122,8 @@ class CalculateWaveDrag(Step):
         ylat = np.asarray(bd.lat.values[:], dtype=np.float64)
         xlon = np.asarray(bd.lon.values[:], dtype=np.float64)
         bed_slope = np.asarray(bd.bed_slope.values)
+        xgrad = np.asarray(bd.bed_dz_dx.values)
+        ygrad = np.asarray(bd.bed_dz_dy.values)
 
         md = xr.open_dataset(self.mesh_file)
         nEdges = np.size(md.nEdges.values)
@@ -137,13 +139,6 @@ class CalculateWaveDrag(Step):
         indx = np.asarray(np.round(
             np.linspace(-1, ymid.size, 17)), dtype=int)
         nset = []
-
-        R = 6378206.4
-        xmesh, ymesh = np.meshgrid(xmid, ymid)
-        ygrad, xgrad = np.gradient(elev, ymid, xmid)
-        ygrad = ygrad / R
-        xgrad = xgrad / (R * np.cos(ymesh * np.pi / 180.))
-        del xmesh, ymesh, R
 
         for tile in range(indx.size - 1):
 
