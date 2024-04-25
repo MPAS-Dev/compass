@@ -7,13 +7,13 @@ from mpas_tools.cime.constants import constants
 from mpas_tools.logging import check_call
 from skimage.filters import gaussian, scharr
 
-from compass.mesh.spherical import SphericalBaseStep
+from compass.mesh.spherical import QuasiUniformSphericalMeshStep
 
 # from skimage.filters import farid
 # from skimage.filters.rank import median, percentile
 
 
-class VRTidesMesh(SphericalBaseStep):
+class VRTidesMesh(QuasiUniformSphericalMeshStep):
     """
     A step for creating a variable resolution tides mesh
     """
@@ -49,66 +49,15 @@ class VRTidesMesh(SphericalBaseStep):
             filename='bathy.nc',
             work_dir_target=f'{pixel_path}/{elev_file}')
 
-    def setup(self):
-        """
-        Add JIGSAW options based on config options
-        """
-        section = self.config['spherical_mesh']
-        self.opts.mesh_file = section.get('jigsaw_mesh_filename')
-        self.opts.geom_file = section.get('jigsaw_geom_filename')
-        self.opts.jcfg_file = section.get('jigsaw_jcfg_filename')
-        self.opts.hfun_file = section.get('jigsaw_hfun_filename')
-        super().setup()
-
-    def run(self):
-        """
-
-        """
-        spac = self.build_cell_width_lat_lon()
-        self.save_and_plot_cell_width(spac.xgrid, spac.ygrid, spac.value)
-
-        self.make_jigsaw_mesh(spac)
-
-        super().run()
-
-    def make_jigsaw_mesh(self, spac):
+    def make_jigsaw_mesh(self, lon, lat, cell_width):
         """
         Build the JIGSAW mesh.
         """
-        logger = self.logger
-        earth_radius = constants['SHR_CONST_REARTH']
-        opts = self.opts
+        self.opts.optm_kern = "cvt+dqdx"
+        self.opts.optm_iter = 32                 # tighter opt. tol
+        self.opts.optm_qtol = +1.00E-05
 
-        opts.hfun_scal = "absolute"
-        opts.hfun_hmax = float("inf")       # null spacing lim
-        opts.hfun_hmin = float(+0.00)
-
-        opts.verbosity = +1
-        opts.mesh_dims = +2                 # 2-dim. simplexes
-
-        opts.optm_kern = "cvt+dqdx"
-
-        opts.optm_iter = 32                 # tighter opt. tol
-        opts.optm_qtol = +1.00E-05
-
-        jigsawpy.savemsh(opts.hfun_file, spac)
-
-        # define JIGSAW geometry
-        geom = jigsawpy.jigsaw_msh_t()
-        geom.mshID = 'ELLIPSOID-MESH'
-        geom.radii = earth_radius * 1e-3 * np.ones(3, float)
-        jigsawpy.savemsh(opts.geom_file, geom)
-
-        jigsawpy.savejig(opts.jcfg_file, opts)
-        check_call(['jigsaw', opts.jcfg_file], logger=logger)
-        # jigsawpy.cmd.jigsaw(opts, mesh)
-
-        # rbar = np.mean(geom.radii)          # bisect heuristic
-        # hbar = np.mean(spac.value)
-        # nlev = round(math.log2(
-        #     rbar / math.sin(.4 * math.pi) / hbar)
-        # )
-        # jigsawpy.cmd.tetris(opts, nlev - 1, mesh)
+        super().make_jigsaw_mesh(lon, lat, cell_width)
 
     def build_cell_width_lat_lon(self):
         """
@@ -202,7 +151,7 @@ class VRTidesMesh(SphericalBaseStep):
 
         spac = self.limit_spacing_gradient(spac, dhdx=dhdx)
 
-        return spac
+        return spac.value, np.degrees(spac.xgrid), np.degrees(spac.ygrid)
 
     def limit_spacing_gradient(self, spac, dhdx):
 
