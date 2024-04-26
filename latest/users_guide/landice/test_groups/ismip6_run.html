@@ -68,6 +68,8 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">ismip6_run</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#ismip6-ais-proj2300">ismip6_ais_proj2300</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#steps-for-setting-up-and-running-experiments">Steps for setting up and running experiments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#important-notes-for-running-coupled-mali-slm-simulations">Important notes for running coupled MALI-SLM simulations</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="isunnguata_sermia.html">isunnguata_sermia</a></li>
@@ -223,6 +225,31 @@ for new runs</p>
 
 <span class="c1"># Whether facemelting should be included in the runs</span>
 <span class="na">include_face_melting</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+
+<span class="c1"># True if running coupled MALI-sea level model simulation</span>
+<span class="na">sea_level_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+
+<span class="c1"># NOTE: for the directories related to the sea-level model input/outputs, the slash &#39;/&#39; at the end of the directory name is necessary.</span>
+<span class="c1"># Path to the base directory containing globally defined ice thickness field for the sea-level model</span>
+<span class="na">slm_input_ice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/MALI_projects/SeaLevelModel_Inputs/icemodel/</span>
+
+<span class="c1"># Path to the directory containing earth model for the sea-level model</span>
+<span class="na">slm_input_earth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/MALI_projects/SeaLevelModel_Inputs/earthmodel/</span>
+
+<span class="c1"># Earth structure profile</span>
+<span class="c1"># possible values: any file name string of earth model file.</span>
+<span class="c1"># Note that there is no single representative earth model for the globe or</span>
+<span class="c1"># any region of the globe (e.g., West Antarctica, East Antarctica, Greenland)</span>
+<span class="c1"># But for this test, we use &#39;prem_512.l60K2C.sum18p6.dum19p2.tz19p4.lm22&#39; for West Antarctica</span>
+<span class="c1"># and &#39;prem_coll_512.l120C.ump5.lm10&#39; for East Antarctica. Other earthmodels that can be used</span>
+<span class="c1"># should exist in the path defined in the config option &#39;slm_input_earth&#39;.</span>
+<span class="na">slm_earth_structure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">prem_512.l60K2C.sum18p6.dum19p2.tz19p4.lm22</span>
+
+<span class="c1"># Path to the diectory containing other input files (present-day global topography and sea-level model grid files)</span>
+<span class="na">slm_input_others</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/MALI_projects/SeaLevelModel_Inputs/others/</span>
+
+<span class="c1"># number of gauss-legendre nodes in latitude (typically an integer multiple of 512)</span>
+<span class="na">nglv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2048</span>
 </pre></div>
 </div>
 <p>Additionally, a user should also include the following options (and possibly
@@ -236,8 +263,9 @@ others) that will be used for submitting the jobs for each ensemble member
 <span class="na">wall_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10:00:00</span>
 </pre></div>
 </div>
+</section>
 <section id="steps-for-setting-up-and-running-experiments">
-<h3>Steps for setting up and running experiments<a class="headerlink" href="#steps-for-setting-up-and-running-experiments" title="Link to this heading">¶</a></h3>
+<h2>Steps for setting up and running experiments<a class="headerlink" href="#steps-for-setting-up-and-running-experiments" title="Link to this heading">¶</a></h2>
 <ol class="arabic simple">
 <li><p>With a compass conda environment set up, run, e.g.,
 <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span> <span class="pre">-t</span> <span class="pre">landice/ismip6_run/ismip6_ais_proj2300</span> <span class="pre">-w</span> <span class="pre">WORK_DIR_PATH</span> <span class="pre">-f</span> <span class="pre">USER.cfg</span></code>
@@ -265,6 +293,49 @@ expected.  Then use <code class="docutils literal notranslate"><span class="pre"
 <p>Note that the <code class="docutils literal notranslate"><span class="pre">hist</span></code> run must be completed before any of the other
 experiments can be run.  A symlink to the <code class="docutils literal notranslate"><span class="pre">hist</span></code> restart file from year
 2015 exists in each of the other experiment subdirectories.</p>
+</section>
+<section id="important-notes-for-running-coupled-mali-slm-simulations">
+<h2>Important notes for running coupled MALI-SLM simulations<a class="headerlink" href="#important-notes-for-running-coupled-mali-slm-simulations" title="Link to this heading">¶</a></h2>
+<section id="projection-handling">
+<h3>Projection handling<a class="headerlink" href="#projection-handling" title="Link to this heading">¶</a></h3>
+<p>Currently, MALI uses a planar mesh that projects the south pole with
+polar stereographic projection of ellipsoidal Earth, and the sea-level model
+uses a global grid of spherical Earth. This inconsistency in the Earth’s
+assumed shape (ellipsoid vs. sphere) in MALI and the SLM causes discrepancies
+in the comparison of post-simulation ice mass calculations from the model outputs.
+To address this issue, an interim solution has been made to project the southern
+polar region onto the MALI planar mesh assuming a sphere (this is done by setting
+the lat/long in the MALI mesh using the ‘aid-bedmap2-sphere’ projection string in
+calling the function in ‘set_lat_lon_fields_in_planar_grid.py’. Thus, the resulting
+MALI mesh for coupled MALI-SLM simulations that are setup from this testgroup have
+the lat/long values based off sphere. Once the simulation outputs are generated,
+it is necessary to calculate and apply the scaling factors to the MALI outputs
+to correct for the areal distortion arose from projecting the south pole on a sphere
+onto plane. Only after applying the scaling factor, the MALI outputs will be
+comparable to the SLM outputs. The equations to calculate the scaling factors are shown in
+Eqn. 21-4 in <a class="reference external" href="https://pubs.usgs.gov/pp/1395/report.pdf">https://pubs.usgs.gov/pp/1395/report.pdf</a>
+An example of the calculation for the MALI-SLM case can also be found in
+the <code class="docutils literal notranslate"><span class="pre">compass</span></code> testgroup/testcase/ <code class="docutils literal notranslate"><span class="pre">compass/landice/test/slm/circ_icesheet/</span></code>,
+<code class="docutils literal notranslate"><span class="pre">visualize</span></code> step (<a class="reference external" href="https://github.com/MPAS-Dev/compass/pull/748">https://github.com/MPAS-Dev/compass/pull/748</a>).</p>
+</section>
+<section id="mapping-files">
+<h3>Mapping files<a class="headerlink" href="#mapping-files" title="Link to this heading">¶</a></h3>
+<p>Coupling between the Sea-Level Model and MALI requires the generation of mapping files
+before simulations are run.  When <code class="docutils literal notranslate"><span class="pre">sea_level_model=True</span></code> in the cfg file, an
+additional test case step is created named <code class="docutils literal notranslate"><span class="pre">mapping_files</span></code>.  Before any MALI
+simulations are started, the user should run this step.  It will generate the required
+mapping files, and they will be available in each experiment directory through symlinks.
+Once the mapping files have been generated, the user can proceed to running the <code class="docutils literal notranslate"><span class="pre">hist</span></code>
+experiment.</p>
+</section>
+<section id="restarts">
+<h3>Restarts<a class="headerlink" href="#restarts" title="Link to this heading">¶</a></h3>
+<p>Additionally, for restarts with the SLM to work correctly, the entire history of the
+<code class="docutils literal notranslate"><span class="pre">OUTPUT_SLM</span></code> and <code class="docutils literal notranslate"><span class="pre">ICELOAD_SLM</span></code> directories must be present.  Because the projection
+experiments (ctrl and exp*) are branched off the hist run as restarts, this means these
+two directories from the hist run must be manually copied to each projection run before
+beginning it. There is not an easy way for this to happen automatically, so this step
+must be done manually.</p>
 </section>
 </section>
 </section>

@@ -114,6 +114,9 @@
   <h1>Source code for compass.landice.tests.ismip6_run.ismip6_ais_proj2300</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 
+<span class="kn">from</span> <span class="nn">compass.landice.tests.ismip6_run.ismip6_ais_proj2300.create_slm_mapping_files</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa</span>
+    <span class="n">CreateSlmMappingFiles</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.landice.tests.ismip6_run.ismip6_ais_proj2300.set_up_experiment</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa</span>
     <span class="n">SetUpExperiment</span><span class="p">,</span>
 <span class="p">)</span>
@@ -189,7 +192,23 @@
                                     <span class="n">subdir</span><span class="o">=</span><span class="n">exp_name</span><span class="p">,</span> <span class="n">exp</span><span class="o">=</span><span class="n">exp</span><span class="p">))</span>
         <span class="c1"># Do not add experiments to step to steps_to_run;</span>
         <span class="c1"># each experiment (step) should be run manually</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span> <span class="o">=</span> <span class="p">[]</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">sea_level_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;ismip6_run_ais_2300&#39;</span><span class="p">,</span>
+                                                 <span class="s1">&#39;sea_level_model&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sea_level_model</span><span class="p">:</span>
+            <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;mapping_files&#39;</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">subdir</span><span class="p">)):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;WARNING: </span><span class="si">{</span><span class="n">subdir</span><span class="si">}</span><span class="s2"> path already exists; skipping.  &quot;</span>
+                      <span class="s2">&quot;Please remove the directory &quot;</span>
+                      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span><span class="w"> </span><span class="n">subdir</span><span class="p">)</span><span class="si">}</span><span class="s2"> and execute &quot;</span>
+                      <span class="s2">&quot;&#39;compass setup&#39; again to set this experiment up.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
+                    <span class="n">CreateSlmMappingFiles</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                                          <span class="n">name</span><span class="o">=</span><span class="s1">&#39;mapping_files&#39;</span><span class="p">,</span>
+                                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;mapping_files&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Ismip6AisProj2300.run">
@@ -201,7 +220,10 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;ERROR: &#39;compass run&#39; has no functionality at the &quot;</span>
                          <span class="s2">&quot;test case level for this test.  &quot;</span>
                          <span class="s2">&quot;Please submit the job script in &quot;</span>
-                         <span class="s2">&quot;each experiment&#39;s subdirectory manually instead.&quot;</span><span class="p">)</span></div>
+                         <span class="s2">&quot;each experiment&#39;s subdirectory manually instead.&quot;</span>
+                         <span class="s2">&quot;To create Sea-Level Model mapping files, submit&quot;</span>
+                         <span class="s2">&quot;job script or execute &#39;compass run&#39; from the&quot;</span>
+                         <span class="s2">&quot;&#39;mapping_files&#39; subdirectory.&quot;</span><span class="p">)</span></div>
 </div>
 
 

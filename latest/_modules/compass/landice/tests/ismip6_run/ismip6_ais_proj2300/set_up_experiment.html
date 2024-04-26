@@ -117,6 +117,9 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">resources</span>
+
+<span class="kn">from</span> <span class="nn">jinja2</span> <span class="kn">import</span> <span class="n">Template</span>
 
 <span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span>
 <span class="kn">from</span> <span class="nn">compass.job</span> <span class="kn">import</span> <span class="n">write_job_script</span>
@@ -171,6 +174,7 @@
         <span class="n">region_mask_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">region_mask_path</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">calving_method</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;calving_method&#39;</span><span class="p">)</span>
         <span class="n">use_face_melting</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;use_face_melting&#39;</span><span class="p">)</span>
+        <span class="n">sea_level_model</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;sea_level_model&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span> <span class="o">==</span> <span class="s1">&#39;hist&#39;</span><span class="p">:</span>
             <span class="n">exp_fcg</span> <span class="o">=</span> <span class="s1">&#39;ctrlAE&#39;</span>
@@ -341,6 +345,52 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
                                       <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">sea_level_model</span><span class="p">:</span>
+            <span class="c1"># get config options</span>
+            <span class="n">slm_input_ice</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;slm_input_ice&#39;</span><span class="p">)</span>
+            <span class="n">slm_input_earth</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;slm_input_earth&#39;</span><span class="p">)</span>
+            <span class="n">slm_earth_structure</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;slm_earth_structure&#39;</span><span class="p">)</span>
+            <span class="n">slm_input_others</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;slm_input_others&#39;</span><span class="p">)</span>
+            <span class="n">nglv</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;nglv&#39;</span><span class="p">)</span>
+
+            <span class="c1"># complete the full paths to the SLM inputs</span>
+            <span class="n">slm_input_ice</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">slm_input_ice</span><span class="p">,</span>
+                                         <span class="sa">f</span><span class="s1">&#39;GL</span><span class="si">{</span><span class="n">nglv</span><span class="si">}</span><span class="s1">/ice_noGrIS_GL</span><span class="si">{</span><span class="n">nglv</span><span class="si">}</span><span class="s1">/&#39;</span><span class="p">)</span>
+            <span class="n">slm_input_others</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">slm_input_others</span><span class="p">,</span>
+                                            <span class="sa">f</span><span class="s1">&#39;GL</span><span class="si">{</span><span class="n">nglv</span><span class="si">}</span><span class="s1">/&#39;</span><span class="p">)</span>
+            <span class="c1"># incorporate the SLM config in the landice namelist</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_uplift_method&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;sealevelmodel&#39;&quot;</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
+                                      <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">)</span>
+
+            <span class="c1"># change the sealevel namelist</span>
+            <span class="n">template</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">resources</span><span class="o">.</span><span class="n">read_text</span>
+                                <span class="p">(</span><span class="n">resource_location</span><span class="p">,</span>
+                                 <span class="s1">&#39;namelist.sealevel.template&#39;</span><span class="p">))</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">nglv</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">nglv</span><span class="p">),</span> <span class="n">slm_input_ice</span><span class="o">=</span><span class="n">slm_input_ice</span><span class="p">,</span>
+                                   <span class="n">slm_input_earth</span><span class="o">=</span><span class="n">slm_input_earth</span><span class="p">,</span>
+                                   <span class="n">slm_earth_structure</span><span class="o">=</span><span class="n">slm_earth_structure</span><span class="p">,</span>
+                                   <span class="n">slm_input_others</span><span class="o">=</span><span class="n">slm_input_others</span><span class="p">)</span>
+
+            <span class="c1"># write out the namelist.sealevel file</span>
+            <span class="n">file_slm_nl</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;namelist.sealevel&#39;</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_slm_nl</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+                <span class="n">handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+            <span class="c1"># create SLM output paths</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;OUTPUT_SLM/&#39;</span><span class="p">),</span>
+                        <span class="n">exist_ok</span><span class="o">=</span><span class="s1">&#39;True&#39;</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;ICELOAD_SLM/&#39;</span><span class="p">),</span>
+                        <span class="n">exist_ok</span><span class="o">=</span><span class="s1">&#39;True&#39;</span><span class="p">)</span>
+
+            <span class="c1"># link in SLM mapping files</span>
+            <span class="c1"># they don&#39;t exist yet, but we can create symlinks now</span>
+            <span class="n">map_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;mapping_files&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">map_file</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mapfile_mali_to_slm.nc&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;mapfile_slm_to_mali.nc&#39;</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">map_dir</span><span class="p">,</span> <span class="n">map_file</span><span class="p">),</span>
+                           <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">map_file</span><span class="p">))</span>
+
         <span class="c1"># For all projection runs, symlink the restart file for the</span>
         <span class="c1"># historical run</span>
         <span class="c1"># don&#39;t symlink restart_timestamp or you&#39;ll have a mighty mess</span>
@@ -393,6 +443,21 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;ismip6_run_ais_2300&#39;</span><span class="p">]</span>
+        <span class="n">sea_level_model</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;sea_level_model&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sea_level_model</span><span class="p">:</span>
+            <span class="c1"># Check if mapping files were generated</span>
+            <span class="n">map_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;mapping_files&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">map_file</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mapfile_mali_to_slm.nc&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;mapfile_slm_to_mali.nc&#39;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">map_dir</span><span class="p">,</span> <span class="n">map_file</span><span class="p">)):</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ERROR: &#39;mapping_files/</span><span class="si">{</span><span class="n">map_file</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                             <span class="s2">&quot;does not exist in workdir.&quot;</span>
+                             <span class="s2">&quot;Please run the &#39;mapping_files&#39; step&quot;</span>
+                             <span class="s2">&quot;before proceeding.&quot;</span><span class="p">)</span>
+
         <span class="n">run_model</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">namelist</span><span class="o">=</span><span class="s1">&#39;namelist.landice&#39;</span><span class="p">,</span>
                   <span class="n">streams</span><span class="o">=</span><span class="s1">&#39;streams.landice&#39;</span><span class="p">)</span></div>
 </div>
