@@ -2,6 +2,9 @@ import glob
 import os
 import shutil
 import sys
+from importlib import resources
+
+from jinja2 import Template
 
 from compass.io import symlink
 from compass.job import write_job_script
@@ -49,6 +52,7 @@ class SetUpExperiment(Step):
         region_mask_fname = os.path.split(region_mask_path)[-1]
         calving_method = section.get('calving_method')
         use_face_melting = section.getboolean('use_face_melting')
+        sea_level_model = section.getboolean('sea_level_model')
 
         if self.exp == 'hist':
             exp_fcg = 'ctrlAE'
@@ -219,6 +223,52 @@ class SetUpExperiment(Step):
             self.add_namelist_options(options=options,
                                       out_name='namelist.landice')
 
+        if sea_level_model:
+            # get config options
+            slm_input_ice = section.get('slm_input_ice')
+            slm_input_earth = section.get('slm_input_earth')
+            slm_earth_structure = section.get('slm_earth_structure')
+            slm_input_others = section.get('slm_input_others')
+            nglv = section.getint('nglv')
+
+            # complete the full paths to the SLM inputs
+            slm_input_ice = os.path.join(slm_input_ice,
+                                         f'GL{nglv}/ice_noGrIS_GL{nglv}/')
+            slm_input_others = os.path.join(slm_input_others,
+                                            f'GL{nglv}/')
+            # incorporate the SLM config in the landice namelist
+            options = {'config_uplift_method': "'sealevelmodel'"}
+            self.add_namelist_options(options=options,
+                                      out_name='namelist.landice')
+
+            # change the sealevel namelist
+            template = Template(resources.read_text
+                                (resource_location,
+                                 'namelist.sealevel.template'))
+            text = template.render(nglv=int(nglv), slm_input_ice=slm_input_ice,
+                                   slm_input_earth=slm_input_earth,
+                                   slm_earth_structure=slm_earth_structure,
+                                   slm_input_others=slm_input_others)
+
+            # write out the namelist.sealevel file
+            file_slm_nl = os.path.join(self.work_dir, 'namelist.sealevel')
+            with open(file_slm_nl, 'w') as handle:
+                handle.write(text)
+
+            # create SLM output paths
+            os.makedirs(os.path.join(self.work_dir, 'OUTPUT_SLM/'),
+                        exist_ok='True')
+            os.makedirs(os.path.join(self.work_dir, 'ICELOAD_SLM/'),
+                        exist_ok='True')
+
+            # link in SLM mapping files
+            # they don't exist yet, but we can create symlinks now
+            map_dir = os.path.join('..', 'mapping_files')
+            for map_file in ('mapfile_mali_to_slm.nc',
+                             'mapfile_slm_to_mali.nc'):
+                os.symlink(os.path.join(map_dir, map_file),
+                           os.path.join(self.work_dir, map_file))
+
         # For all projection runs, symlink the restart file for the
         # historical run
         # don't symlink restart_timestamp or you'll have a mighty mess
@@ -268,5 +318,20 @@ class SetUpExperiment(Step):
         """
         Run this step of the test case
         """
+
+        config = self.config
+        section = config['ismip6_run_ais_2300']
+        sea_level_model = section.getboolean('sea_level_model')
+        if sea_level_model:
+            # Check if mapping files were generated
+            map_dir = os.path.join('..', 'mapping_files')
+            for map_file in ('mapfile_mali_to_slm.nc',
+                             'mapfile_slm_to_mali.nc'):
+                if not os.path.isfile(os.path.join(map_dir, map_file)):
+                    sys.exit(f"ERROR: 'mapping_files/{map_file}'"
+                             "does not exist in workdir."
+                             "Please run the 'mapping_files' step"
+                             "before proceeding.")
+
         run_model(step=self, namelist='namelist.landice',
                   streams='streams.landice')
