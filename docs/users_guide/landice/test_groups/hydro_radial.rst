@@ -95,6 +95,6 @@ restart_test
 model forward in time (``full_run`` step).  Then, a second step
 (``restart_run``) performs 2 1-month runs, where the second begins from a
 restart file saved by the first. Prognostic variables are compared between the
-"full" and "restart" runs atafter 2 to make sure they are bit-for-bit
+"full" and "restart" runs at the end of 2 months to make sure they are bit-for-bit
 identical.  This test is set up as in the steady_state_drift_test and
 decomposition_test but runs for a total of two months instead of one.
