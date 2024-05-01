@@ -1,7 +1,7 @@
-from compass.testcase import TestCase
-from compass.landice.tests.hydro_radial.setup_mesh import SetupMesh
 from compass.landice.tests.hydro_radial.run_model import RunModel
+from compass.landice.tests.hydro_radial.setup_mesh import SetupMesh
 from compass.landice.tests.hydro_radial.visualize import Visualize
+from compass.testcase import TestCase
 
 
 class SteadyStateDriftTest(TestCase):
@@ -24,9 +24,10 @@ class SteadyStateDriftTest(TestCase):
         self.add_step(
             SetupMesh(test_case=self, initial_condition='exact'))
         self.add_step(
-            RunModel(test_case=self, ntasks=4, openmp_threads=1))
+            RunModel(test_case=self, ntasks=128, min_tasks=1,
+                     openmp_threads=1))
         step = Visualize(test_case=self)
-        self.add_step(step, run_by_default=False)
+        self.add_step(step)
 
     # no configure() method is needed
 

@@ -1,6 +1,6 @@
-import numpy as np
-import netCDF4
 import matplotlib.pyplot as plt
+import netCDF4
+import numpy as np
 
 from compass.step import Step
 
@@ -138,7 +138,7 @@ def visualize_hydro_radial(config, logger):
     plt.plot([5.0, 5.0], [0.0, 45.0], ':k')
     plt.grid(True)
     if save_images:
-        plt.savefig('hydro_radial_vs_exact.png', dpi=150)
+        plt.savefig('hydro_radial_vs_exact.png', dpi=250)
 
     # plot how close to SS we are
     fig = plt.figure(2, facecolor='w')
@@ -157,7 +157,7 @@ def visualize_hydro_radial(config, logger):
     plt.grid(True)
 
     if save_images:
-        plt.savefig('hydro_radial_steady_state.png', dpi=150)
+        plt.savefig('hydro_radial_steady_state.png', dpi=250)
 
     # plot opening/closing rates
     fig = plt.figure(3, facecolor='w')
@@ -201,7 +201,7 @@ def visualize_hydro_radial(config, logger):
     plt.grid(True)
 
     if save_images:
-        plt.savefig('hydro_radial_opening_closing.png', dpi=150)
+        plt.savefig('hydro_radial_opening_closing.png', dpi=250)
 
     # plot some edge quantities
     inde = np.nonzero(yEdge[:] == centerY)
@@ -258,7 +258,7 @@ def visualize_hydro_radial(config, logger):
     dx = dcEdge.mean()
 
     if save_images:
-        plt.savefig('hydro_radial_edge.png', dpi=150)
+        plt.savefig('hydro_radial_edge.png', dpi=250)
 
     fig = plt.figure(6, facecolor='w')
 
@@ -288,7 +288,7 @@ def visualize_hydro_radial(config, logger):
 
     plt.draw()
     if save_images:
-        plt.savefig('hydro_radial_error.png', dpi=150)
+        plt.savefig('hydro_radial_error.png', dpi=250)
 
     if hide_figs:
         logger.info("Plot display disabled with hide_plot config option.")
