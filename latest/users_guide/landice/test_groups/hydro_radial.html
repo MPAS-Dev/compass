@@ -151,11 +151,18 @@
 <span id="landice-hydro-radial"></span><h1>hydro_radial<a class="headerlink" href="#hydro-radial" title="Link to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">landice/hydro_radial</span></code> test group implements variants of the
 radially symmetric hydrological test case from
-<a class="reference external" href="https://doi.org/10.5194/gmd-8-1613-2015">Bueler et al. (2015)</a>.</p>
+<a class="reference external" href="https://doi.org/10.5194/gmd-8-1613-2015">Bueler and van Pelt (2015)</a>.
+The test case uses semi-analytic solutions for water depth and water
+pressure for an ice sheet with prescribed ice thickness and sliding speed.</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="../../../_images/hydro_radial_vs_exact.png"><img alt="../../../_images/hydro_radial_vs_exact.png" src="../../../_images/hydro_radial_vs_exact.png" style="width: 800px;" /></a>
+<figcaption>
+<p><span class="caption-text">Profiles of modeled water depth (W) and water pressure (P_w)
+compared to the semi-exact solution of Bueler and van Pelt (2015)</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>The domain is approximately rectangular with a radially symmetric ice sheet
-at its center.  The mesh has 1-km horizontal resolution and 3 vertical layers.
-&lt;&lt;&lt;Further description here&gt;&gt;&gt;</p>
-<p>&lt;&lt;&lt;Exmaple image here&gt;&gt;&gt;</p>
+at its center.  The mesh has 1-km horizontal resolution.</p>
 <p>The test group includes 4 test cases.  All test cases are made up of 3
 types of steps, <code class="docutils literal notranslate"><span class="pre">setup_mesh</span></code>, which defines the mesh and initial conditions
 for the model; <code class="docutils literal notranslate"><span class="pre">run_model</span></code> (given another name in many test cases to
@@ -196,29 +203,36 @@ model; and <code class="docutils literal notranslate"><span class="pre">visualiz
 <section id="spinup-test">
 <h2>spinup_test<a class="headerlink" href="#spinup-test" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">landice/hydro_radial/spinup_test</span></code> performs a 10,000-year spin-up run from
-“zero” (a very thin ice sheet) to quasi-steady state.</p>
+“zero” (a very thin ice initial water layer) to quasi-steady state.
+This takes about 10 minutes on 128 processors (1 cpu node) on Perlmutter.</p>
 </section>
 <section id="steady-state-drift-test">
 <h2>steady_state_drift_test<a class="headerlink" href="#steady-state-drift-test" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">landice/hydro_radial/steady_state_drift_test</span></code> performs a 1-month run,
 starting from the “exact” (that is, a nearly exact steady-state solution) as
-the initial condition.</p>
+the initial condition.  The model drift away from the initialized exact
+solution can be used as a metric of model error.  See figure 3 in
+Hoffman, Matthew J., et al. 2018. “MPAS-Albany Land Ice (MALI):
+A Variable-Resolution Ice Sheet Model for Earth System Modeling Using
+Voronoi Grids.” Geoscientific Model Development 11 (9):
+3747–80. <a class="reference external" href="https://doi.org/10.5194/gmd-11-3747-2018">https://doi.org/10.5194/gmd-11-3747-2018</a>.</p>
 </section>
 <section id="decomposition-test">
 <h2>decomposition_test<a class="headerlink" href="#decomposition-test" title="Link to this heading">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">landice/hydro_radial/decomposition_test</span></code> runs short (1-month) integrations
-of the model forward in time on 1 (<code class="docutils literal notranslate"><span class="pre">1proc_run</span></code> step) and then on 3 cores
+<p><code class="docutils literal notranslate"><span class="pre">landice/hydro_radial/decomposition_test</span></code> runs the steady state drift
+test on 1 (<code class="docutils literal notranslate"><span class="pre">1proc_run</span></code> step) and then on 3 cores
 (<code class="docutils literal notranslate"><span class="pre">3proc_run</span></code> step) to make sure the resulting prognostic variables are
 bit-for-bit identical between the two runs.</p>
 </section>
 <section id="restart-test">
 <h2>restart_test<a class="headerlink" href="#restart-test" title="Link to this heading">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">landice/hydro_radial/restart_test</span></code> first run a 2-year integration of the
+<p><code class="docutils literal notranslate"><span class="pre">landice/hydro_radial/restart_test</span></code> first run a 2-month integration of the
 model forward in time (<code class="docutils literal notranslate"><span class="pre">full_run</span></code> step).  Then, a second step
-(<code class="docutils literal notranslate"><span class="pre">restart_run</span></code>) performs 2 1-year runs, where the second begins from a
+(<code class="docutils literal notranslate"><span class="pre">restart_run</span></code>) performs 2 1-month runs, where the second begins from a
 restart file saved by the first. Prognostic variables are compared between the
-“full” and “restart” runs at year 2 to make sure they are bit-for-bit
-identical.</p>
+“full” and “restart” runs at the end of 2 months to make sure they are bit-for-bit
+identical.  This test is set up as in the steady_state_drift_test and
+decomposition_test but runs for a total of two months instead of one.</p>
 </section>
 </section>
 

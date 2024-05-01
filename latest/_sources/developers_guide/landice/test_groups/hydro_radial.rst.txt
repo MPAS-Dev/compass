@@ -5,7 +5,7 @@ hydro_radial
 
 The ``hydro_radial`` test group (:py:class:`compass.landice.tests.hydro_radial.HydroRadial`)
 implements variants of the radially symmetric hydrological test case at 1-km
-uniform resolution and 3 vertical layers (see :ref:`landice_hydro_radial`).
+uniform resolution (see :ref:`landice_hydro_radial`).
 Here, we describe the shared framework for this test group and the 4 test
 cases.
 
@@ -36,7 +36,8 @@ to partition the mesh before the model run.
 
 Finally, the initial condition is defined in the private function
 ``_setup_hydro_radial_initial_conditions()``.  Most test cases use a
-``zero`` initial condition (meaning a very thin initial ice sheet), but the
+``zero`` initial condition (meaning a very thin initial water thickness),
+but the
 ``steady_state_drift_test`` uses an ``exact`` initial condition that uses
 a nearly exact numerical solution in steady state, as described in
 `Bueler et al. (2015) <https://doi.org/10.5194/gmd-8-1613-2015>`_.
@@ -59,13 +60,6 @@ The :py:class:`compass.landice.tests.hydro_radial.visualize.Visualize` step
 is optional in each test case and can be run manually to plot the results of
 the test case.  It iscontrol by the config options in the ``hydro_radial_viz``
 section.
-
-This step is not run by default by adding it with ``run_by_default=False``:
-
-.. code-block:: python
-
-    step = Visualize(test_case=self)
-    self.add_step(step, run_by_default=False)
 
 .. _dev_landice_hydro_radial_spinup_test:
 
@@ -103,8 +97,8 @@ restart_test
 ------------
 
 The :py:class:`compass.landice.tests.hydro_radial.restart_test.RestartTest`
-performs a 2-year run once on 4 cores, then a sequence of 2 1-year runs on 4
-cores.  It ensures that ``waterThickness`` and ``waterPressure`` are identical
+performs a 2-month run once, then a sequence of 2 1-month runs.
+It ensures that ``waterThickness`` and ``waterPressure`` are identical
 at the end of the two runs (as well as with a baseline if one is provided when
 calling :ref:`dev_compass_setup`).
 
