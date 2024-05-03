@@ -8,6 +8,7 @@ Test groups
    :titlesonly:
 
    baroclinic_channel
+   baroclinic_gyre
    dam_break
    drying_slope
    global_convergence

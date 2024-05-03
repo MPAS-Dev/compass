@@ -54,6 +54,26 @@ baroclinic_channel
    initial_state.InitialState.run
 
 
+baroclinic_gyre
+~~~~~~~~~~~~~~~
+
+.. currentmodule:: compass.ocean.tests.baroclinic_gyre
+
+.. autosummary::
+   :toctree: generated/
+
+   BaroclinicGyre
+
+   GyreTestCase
+   GyreTestCase.configure
+
+   forward.Forward
+   forward.Forward.run
+
+   initial_state.InitialState
+   initial_state.InitialState.run
+
+
 dam_break
 ~~~~~~~~~
 
