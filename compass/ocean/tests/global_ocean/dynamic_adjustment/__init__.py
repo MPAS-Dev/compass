@@ -113,6 +113,7 @@ class DynamicAdjustment(ForwardTestCase):
         and timers
         """
         config = self.config
+        logger = self.logger
         variables = ['temperature', 'salinity', 'layerThickness',
                      'normalVelocity']
 
@@ -137,6 +138,9 @@ class DynamicAdjustment(ForwardTestCase):
                             f'Max of {var} > allowed threshold: '
                             f'{max_in_global_stats} > {max_value} '
                             f'in {filename}')
+                    logger.info(f'As desired, max of {var}: '
+                                f'{max_in_global_stats} <= {max_value} in\n'
+                                f'  {filename}')
 
     def _add_step(self, step_name, options, get_dt_from_min_res,
                   time_integrator, yaml_filename, start_time,
