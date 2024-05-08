@@ -55,7 +55,7 @@ def submit_e3sm_tests(submodule, repo_url, ocean_strings, landice_strings,
 
     load_script = os.path.abspath(load_script)
 
-    commands = 'git submodule update --init'
+    commands = f'git submodule update --init {submodule}'
     print_and_run(commands)
 
     current_submodule = f'{submodule}-current'
