@@ -1,8 +1,9 @@
+import datetime
+
+import matplotlib.pyplot as plt
+import numpy as np
 import xarray
 import xarray.plot
-import numpy as np
-import datetime
-import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
 
 
@@ -106,6 +107,24 @@ def plot_initial_state(input_file_name='initial_state.nc',
     xarray.plot.hist(var, bins=100, log=True)
     plt.ylabel('frequency')
     plt.xlabel('Haney Number, max={:4.2f}'.format(maxRx1Edge))
+    txt = '{}{:9.2e} {:9.2e} {}\n'.format(txt, var.min().values,
+                                          var.max().values, varName)
+
+    plt.subplot(3, 3, 8)
+    varName = 'areaCell'
+    var = ds[varName]
+    xarray.plot.hist(1e-6 * var, bins=100, log=True)
+    plt.ylabel('frequency')
+    plt.xlabel(r'cell area (km$^2$)')
+    txt = '{}{:9.2e} {:9.2e} {}\n'.format(txt, var.min().values,
+                                          var.max().values, varName)
+
+    plt.subplot(3, 3, 9)
+    varName = 'dcEdge'
+    var = ds[varName]
+    xarray.plot.hist(1e-3 * var, bins=100, log=True)
+    plt.ylabel('frequency')
+    plt.xlabel(r'dcEdge: cell-to-cell great-circle distance (km)')
     txt = '{}{:9.2e} {:9.2e} {}\n'.format(txt, var.min().values,
                                           var.max().values, varName)
 
