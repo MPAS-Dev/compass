@@ -19,13 +19,16 @@ which can be used to simulate coastal inundation using MPAS-Ocean's
 wetting and drying scheme.
 
 The time stepping options to run the simulations include the fourth
-order Runge-Kutta scheme (RK4), which is the default, and a local
-time-stepping (LTS) scheme, see 
+order Runge-Kutta scheme (RK4), and two local time-stepping schemes.
+The first LTS scheme is based on a strong stability preserving Runge-Kutta
+scheme of order three and is called LTS3, see 
 `Lilly et al. (2023) <https://doi.org/10.1029/2022MS003327>`_
-for details. Each test case in the ``ocean/hurricane`` test group has an 
-LTS counterpart which is identified by the ``_lts`` appendix in the test case name.
-Note that the executable to be used with LTS has to be compiled with
-the following options: ``USE_LTS=true OPENMP=false``.
+for details.
+The second LTS scheme is based on a forward-backward Runge-Kutta scheme
+of order two and is called FB-LTS.
+Each test case in the ``ocean/hurricane`` test group has a counterpart 
+for each LTS scheme which is identified by appending the test case name
+with ``_lts`` for LTS3 and ``_fblts`` for FB-LTS.
 
 Shared config options
 ---------------------
@@ -96,7 +99,7 @@ since this data is not carried over from the cell culling process.
 
 .. _hurricane_mesh_lts:
 
-If the LTS option is selected for the mesh test case, an additional step
+If either LTS option is selected for the mesh test case, an additional step
 is carried out after the mesh culling. This step appropriately flags 
 the cells of the mesh according to a user defined criterion in order to
 use time-steps of different sizes on different regions of the mesh.
@@ -136,7 +139,7 @@ pointWiseStats analysis member for the forward run.
 
 compute topographic wave drag step
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-This step is carried out only if the LTS option is selected for the init test case.
+This step is carried out only if either LTS option is selected for the init test case.
 
 The reciprocal of the e-folding time, ``r_inv``, from the HyCOM model,
 is computed in this step. See 
@@ -165,6 +168,6 @@ is used for the validation.
 
 .. _hurricane_sandy_lts:
 
-If the LTS option is selected for the sandy test case, the LTS scheme
+If either LTS option is selected for the sandy test case, the LTS scheme
 is used to advance the solution in time rather than the default RK4 scheme.
 
