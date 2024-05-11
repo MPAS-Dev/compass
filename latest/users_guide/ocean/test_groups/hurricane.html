@@ -166,13 +166,16 @@ of MPAS-Ocean. Each mesh can optionally be created to contain the floodplain
 which can be used to simulate coastal inundation using MPAS-Ocean’s
 wetting and drying scheme.</p>
 <p>The time stepping options to run the simulations include the fourth
-order Runge-Kutta scheme (RK4), which is the default, and a local
-time-stepping (LTS) scheme, see
+order Runge-Kutta scheme (RK4), and two local time-stepping schemes.
+The first LTS scheme is based on a strong stability preserving Runge-Kutta
+scheme of order three and is called LTS3, see
 <a class="reference external" href="https://doi.org/10.1029/2022MS003327">Lilly et al. (2023)</a>
-for details. Each test case in the <code class="docutils literal notranslate"><span class="pre">ocean/hurricane</span></code> test group has an
-LTS counterpart which is identified by the <code class="docutils literal notranslate"><span class="pre">_lts</span></code> appendix in the test case name.
-Note that the executable to be used with LTS has to be compiled with
-the following options: <code class="docutils literal notranslate"><span class="pre">USE_LTS=true</span> <span class="pre">OPENMP=false</span></code>.</p>
+for details.
+The second LTS scheme is based on a forward-backward Runge-Kutta scheme
+of order two and is called FB-LTS.
+Each test case in the <code class="docutils literal notranslate"><span class="pre">ocean/hurricane</span></code> test group has a counterpart
+for each LTS scheme which is identified by appending the test case name
+with <code class="docutils literal notranslate"><span class="pre">_lts</span></code> for LTS3 and <code class="docutils literal notranslate"><span class="pre">_fblts</span></code> for FB-LTS.</p>
 <section id="shared-config-options">
 <h2>Shared config options<a class="headerlink" href="#shared-config-options" title="Link to this heading">¶</a></h2>
 <p>All <code class="docutils literal notranslate"><span class="pre">hurricane</span></code> test cases start the following shared config options.
@@ -235,7 +238,7 @@ topography in the floodplain is used to set a mask for the cell culling
 process. The land cells above the <code class="docutils literal notranslate"><span class="pre">floodplain_elevation</span></code> are then culled
 from the mesh. Finally, the bathymetry is re-interpolated onto the mesh
 since this data is not carried over from the cell culling process.</p>
-<p id="hurricane-mesh-lts">If the LTS option is selected for the mesh test case, an additional step
+<p id="hurricane-mesh-lts">If either LTS option is selected for the mesh test case, an additional step
 is carried out after the mesh culling. This step appropriately flags
 the cells of the mesh according to a user defined criterion in order to
 use time-steps of different sizes on different regions of the mesh.
@@ -270,7 +273,7 @@ pointWiseStats analysis member for the forward run.</p>
 </section>
 <section id="compute-topographic-wave-drag-step">
 <span id="hurricane-init-lts"></span><h3>compute topographic wave drag step<a class="headerlink" href="#compute-topographic-wave-drag-step" title="Link to this heading">¶</a></h3>
-<p>This step is carried out only if the LTS option is selected for the init test case.</p>
+<p>This step is carried out only if either LTS option is selected for the init test case.</p>
 <p>The reciprocal of the e-folding time, <code class="docutils literal notranslate"><span class="pre">r_inv</span></code>, from the HyCOM model,
 is computed in this step. See
 <a class="reference external" href="https://doi.org/10.1175/JPO-D-15-0074.1">Buijsman et al. (2016)</a>
@@ -293,7 +296,7 @@ are ramped to their full value to avoid shocking the system.</p>
 <p>The analysis step plots the timeseries data at each observation station
 to compare the modeled and observed data. Both NOAA and USGS station data
 is used for the validation.</p>
-<p id="hurricane-sandy-lts">If the LTS option is selected for the sandy test case, the LTS scheme
+<p id="hurricane-sandy-lts">If either LTS option is selected for the sandy test case, the LTS scheme
 is used to advance the solution in time rather than the default RK4 scheme.</p>
 </section>
 </section>

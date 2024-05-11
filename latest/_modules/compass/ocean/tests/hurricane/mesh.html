@@ -147,8 +147,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh_name</span> <span class="o">=</span> <span class="n">mesh_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_lts</span> <span class="o">=</span> <span class="n">use_lts</span>
 
-        <span class="k">if</span> <span class="n">use_lts</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">use_lts</span> <span class="o">==</span> <span class="s1">&#39;LTS&#39;</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;mesh_lts&#39;</span>
+        <span class="k">elif</span> <span class="n">use_lts</span> <span class="o">==</span> <span class="s1">&#39;FB_LTS&#39;</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;mesh_fblts&#39;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;mesh&#39;</span>
         <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
@@ -178,10 +180,14 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">cull_mesh_step</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">use_lts</span><span class="p">:</span>
-
+        <span class="k">if</span> <span class="n">use_lts</span> <span class="o">==</span> <span class="s1">&#39;LTS&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">LTSRegionsStep</span><span class="p">(</span>
-                          <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">cull_mesh_step</span><span class="o">=</span><span class="n">cull_mesh_step</span><span class="p">))</span></div>
+                          <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">cull_mesh_step</span><span class="o">=</span><span class="n">cull_mesh_step</span><span class="p">,</span>
+                          <span class="n">num_interface_adjacent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">use_lts</span> <span class="o">==</span> <span class="s1">&#39;FB_LTS&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">LTSRegionsStep</span><span class="p">(</span>
+                          <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">cull_mesh_step</span><span class="o">=</span><span class="n">cull_mesh_step</span><span class="p">,</span>
+                          <span class="n">num_interface_adjacent</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="Mesh.configure">
