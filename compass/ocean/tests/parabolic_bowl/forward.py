@@ -38,6 +38,9 @@ class Forward(Step):
 
         ramp_type : str, optional
             Vertical coordinate configuration
+
+        wetdry : str, optional
+            The wetting and drying approach uesd
         """
 
         self.resolution = resolution
@@ -54,7 +57,9 @@ class Forward(Step):
         if ramp_type == 'ramp':
             self.add_namelist_file('compass.ocean.tests.parabolic_bowl',
                                    'namelist.ramp.forward')
-
+        if wetdry == 'subgrid':
+            self.add_namelist_file('compass.ocean.tests.parabolic_bowl',
+                                   'namelist.subgrid.forward')
         if use_lts:
             self.add_namelist_options(
                 {'config_time_integrator': "'LTS'",
@@ -72,8 +77,12 @@ class Forward(Step):
                                 target=f'{input_path}/lts_ocean.nc')
 
         else:
-            self.add_streams_file('compass.ocean.tests.parabolic_bowl',
-                                  'streams.forward')
+            if wetdry == 'subgrid':
+                self.add_streams_file('compass.ocean.tests.parabolic_bowl',
+                                      'streams.subgrid.forward')
+            else:
+                self.add_streams_file('compass.ocean.tests.parabolic_bowl',
+                                      'streams.forward')
             input_path = f'../initial_state_{res_name}'
             self.add_input_file(filename='mesh.nc',
                                 target=f'{input_path}/culled_mesh.nc')
