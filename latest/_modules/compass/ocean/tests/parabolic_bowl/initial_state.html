@@ -138,6 +138,18 @@
 <span class="sd">        ----------</span>
 <span class="sd">        test_case : compass.ocean.tests.parabolic_bowl.default.Default</span>
 <span class="sd">            The test case this step belongs to</span>
+
+<span class="sd">        name : str</span>
+<span class="sd">            The name of the test case</span>
+
+<span class="sd">        resolution : float</span>
+<span class="sd">            The grid resolution of the test case</span>
+
+<span class="sd">         coord_type : str</span>
+<span class="sd">             The type vertical coordinate used</span>
+
+<span class="sd">         wetdry : str</span>
+<span class="sd">             The wetting and drying approach used</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">coord_type</span> <span class="o">=</span> <span class="n">coord_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
@@ -147,6 +159,10 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.parabolic_bowl&#39;</span><span class="p">,</span>
                                <span class="s1">&#39;namelist.init&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">wetdry</span> <span class="o">==</span> <span class="s1">&#39;subgrid&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.parabolic_bowl&#39;</span><span class="p">,</span>
+                                   <span class="s1">&#39;namelist.subgrid.init&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.parabolic_bowl&#39;</span><span class="p">,</span>
                               <span class="s1">&#39;streams.init&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>

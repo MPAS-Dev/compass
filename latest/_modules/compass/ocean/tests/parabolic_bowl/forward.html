@@ -156,6 +156,9 @@
 
 <span class="sd">        ramp_type : str, optional</span>
 <span class="sd">            Vertical coordinate configuration</span>
+
+<span class="sd">        wetdry : str, optional</span>
+<span class="sd">            The wetting and drying approach uesd</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
@@ -172,7 +175,9 @@
         <span class="k">if</span> <span class="n">ramp_type</span> <span class="o">==</span> <span class="s1">&#39;ramp&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.parabolic_bowl&#39;</span><span class="p">,</span>
                                    <span class="s1">&#39;namelist.ramp.forward&#39;</span><span class="p">)</span>
-
+        <span class="k">if</span> <span class="n">wetdry</span> <span class="o">==</span> <span class="s1">&#39;subgrid&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.parabolic_bowl&#39;</span><span class="p">,</span>
+                                   <span class="s1">&#39;namelist.subgrid.forward&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">use_lts</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span>
                 <span class="p">{</span><span class="s1">&#39;config_time_integrator&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;LTS&#39;&quot;</span><span class="p">,</span>
@@ -190,8 +195,12 @@
                                 <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/lts_ocean.nc&#39;</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.parabolic_bowl&#39;</span><span class="p">,</span>
-                                  <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">wetdry</span> <span class="o">==</span> <span class="s1">&#39;subgrid&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.parabolic_bowl&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;streams.subgrid.forward&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.parabolic_bowl&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
             <span class="n">input_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;../initial_state_</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">&#39;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span>
                                 <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc&#39;</span><span class="p">)</span>

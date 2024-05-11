@@ -136,7 +136,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Viz.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.parabolic_bowl.viz.Viz.html#compass.ocean.tests.parabolic_bowl.viz.Viz.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolutions</span><span class="p">,</span> <span class="n">use_lts</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">ramp_type</span><span class="p">,</span> <span class="n">wetdry</span><span class="p">,</span> <span class="n">resolutions</span><span class="p">,</span> <span class="n">use_lts</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the step</span>
 
@@ -149,6 +149,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="o">=</span> <span class="n">resolutions</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_lts</span> <span class="o">=</span> <span class="n">use_lts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span> <span class="o">=</span> <span class="n">wetdry</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ramp_type</span> <span class="o">=</span> <span class="n">ramp_type</span>
 
         <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">resolutions</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;output_</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km.nc&#39;</span><span class="p">,</span>
@@ -220,6 +222,7 @@
             <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">lines</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
 
+        <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ramp_type</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span>
@@ -318,7 +321,8 @@
             <span class="n">cb</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
             <span class="n">cb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;ssh (m)&#39;</span><span class="p">)</span>
             <span class="n">t</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="n">time</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">/</span> <span class="mf">86400.</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-            <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ssh solution at t=</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s1"> days&#39;</span><span class="p">)</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">((</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ramp_type</span><span class="si">}</span><span class="s1">) &#39;</span>
+                          <span class="sa">f</span><span class="s1">&#39;ssh solution at t=</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s1"> days&#39;</span><span class="p">))</span>
             <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;solution_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">03d</span><span class="si">}</span><span class="s1">.png&#39;</span><span class="p">)</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
@@ -338,7 +342,9 @@
 
         <span class="n">comparisons</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">cases</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;standard_ramp&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;../../../standard/</span><span class="si">{</span><span class="n">ramp_name</span><span class="si">}</span><span class="s1">/viz&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;standard_noramp&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;../../../standard/</span><span class="si">{</span><span class="n">noramp_name</span><span class="si">}</span><span class="s1">/viz&#39;</span><span class="p">}</span>
+                 <span class="s1">&#39;standard_noramp&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;../../../standard/</span><span class="si">{</span><span class="n">noramp_name</span><span class="si">}</span><span class="s1">/viz&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;subgrid_ramp&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;../../../subgrid/</span><span class="si">{</span><span class="n">ramp_name</span><span class="si">}</span><span class="s1">/viz&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;subgrid_noramp&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;../../../subgrid/</span><span class="si">{</span><span class="n">noramp_name</span><span class="si">}</span><span class="s1">/viz&#39;</span><span class="p">}</span>
         <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="n">cases</span><span class="p">:</span>
             <span class="n">include</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">:</span>
@@ -369,7 +375,7 @@
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
             <span class="n">rmse_1st_order</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">rmse_1st_order</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span>
 
-        <span class="n">ax</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">rmse_1st_order</span><span class="p">),</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">,</span> <span class="n">rmse_1st_order</span><span class="p">,</span>
                   <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.25</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;1st order&#39;</span><span class="p">)</span>
 
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Cell size (km)&#39;</span><span class="p">)</span>

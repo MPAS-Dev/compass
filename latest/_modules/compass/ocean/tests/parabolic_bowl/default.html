@@ -133,6 +133,15 @@
 <span class="sd">    ----------</span>
 <span class="sd">    ramp_type : str</span>
 <span class="sd">        The type of vertical coordinate (``ramp``, ``noramp``, etc.)</span>
+
+<span class="sd">    wetdry : str</span>
+<span class="sd">        The type of wetting and drying used (``standard``, ``subgrid``)</span>
+
+<span class="sd">    use_lts : bool</span>
+<span class="sd">        Whether local time-stepping is used</span>
+
+<span class="sd">    resolutions : list</span>
+<span class="sd">        List of resolutions to run</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Default.__init__">
@@ -277,7 +286,10 @@
                                   <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
                                   <span class="n">ramp_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ramp_type</span><span class="p">,</span>
                                   <span class="n">wetdry</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Viz</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolutions</span><span class="o">=</span><span class="n">resolutions</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Viz</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                          <span class="n">ramp_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ramp_type</span><span class="p">,</span>
+                          <span class="n">wetdry</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span><span class="p">,</span>
+                          <span class="n">resolutions</span><span class="o">=</span><span class="n">resolutions</span><span class="p">,</span>
                           <span class="n">use_lts</span><span class="o">=</span><span class="n">use_lts</span><span class="p">))</span>
 
 <div class="viewcode-block" id="Default.validate">
