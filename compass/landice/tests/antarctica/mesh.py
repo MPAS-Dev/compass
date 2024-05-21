@@ -11,7 +11,7 @@ from compass.landice.mesh import (
     clean_up_after_interp,
     interp_gridded2mali,
     make_region_masks,
-    preprocess_ais_data,
+    preprocess_gridded_data,
 )
 from compass.model import make_graph_file
 from compass.step import Step
@@ -88,8 +88,8 @@ class Mesh(Step):
 
         # Preprocess the gridded AIS source datasets to work
         # with the rest of the workflow
-        logger.info('calling preprocess_ais_data')
-        preprocessed_gridded_dataset = preprocess_ais_data(
+        logger.info('calling preprocess_gridded_data')
+        preprocessed_gridded_dataset = preprocess_gridded_data(
             self, bm_updated_gridded_dataset, floodFillMask)
 
         # Now build the base mesh and perform the standard interpolation

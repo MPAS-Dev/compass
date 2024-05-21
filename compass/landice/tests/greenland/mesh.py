@@ -1,7 +1,5 @@
 import os
 
-import netCDF4
-import numpy as np
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
 
 from compass.landice.mesh import (
@@ -10,6 +8,7 @@ from compass.landice.mesh import (
     clean_up_after_interp,
     interp_gridded2mali,
     make_region_masks,
+    preprocess_griddedd_data,
 )
 from compass.model import make_graph_file
 from compass.step import Step
@@ -84,11 +83,17 @@ class Mesh(Step):
                 gridded_dataset=source_gridded_dataset_2km,
                 flood_fill_start=[100, 700])
 
+        # Preprocess the gridded GrIS source datasets to work
+        # with the rest of the workflow
+        logger.info('calling preprocess_gridded_data')
+        preprocessed_gridded_dataset = preprocess_griddedd_data(
+            self, source_gridded_dataset_1km, floodMask)
+
         # Now build the base mesh and perform the standard interpolation
         build_mali_mesh(
             self, cell_width, x1, y1, geom_points, geom_edges,
             mesh_name=self.mesh_filename, section_name=section_name,
-            gridded_dataset=source_gridded_dataset_1km,
+            gridded_dataset=preprocessed_gridded_dataset,
             projection=src_proj, geojson_file=None)
 
         # Create scrip file for the newly generated mesh
@@ -129,22 +134,3 @@ class Mesh(Step):
                                 'southGreenland',
                                 'southWestGreenland',
                                 'westCentralGreenland'])
-
-        # is there a way to encompass this in an existing framework function?
-        data = netCDF4.Dataset('GIS.nc', 'r+')
-        data.set_auto_mask(False)
-        # Ensure basalHeatFlux is positive
-        data.variables['basalHeatFlux'][:] = np.abs(
-            data.variables['basalHeatFlux'][:])
-        # Ensure reasonable dHdt values
-        dHdt = data.variables["observedThicknessTendency"][:]
-        dHdtErr = data.variables["observedThicknessTendencyUncertainty"][:]
-        # Arbitrary 5% uncertainty; improve this later
-        dHdtErr = np.abs(dHdt) * 0.05
-        # large uncertainty where data is missing
-        dHdtErr[np.abs(dHdt) > 1.0] = 1.0
-        dHdt[np.abs(dHdt) > 1.0] = 0.0  # Remove ridiculous values
-        data.variables["observedThicknessTendency"][:] = dHdt
-        data.variables["observedThicknessTendencyUncertainty"][:] = dHdtErr
-
-        data.close()

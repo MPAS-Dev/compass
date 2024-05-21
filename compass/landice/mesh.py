@@ -889,16 +889,15 @@ def add_bedmachine_thk_to_ais_gridded_data(self, source_gridded_dataset,
     return gridded_dataset_with_bm_thk
 
 
-def preprocess_ais_data(self, source_gridded_dataset,
-                        floodFillMask):
+def preprocess_gridded_data(self, source_gridded_dataset, floodFillMask):
     """
-    Perform adjustments to gridded AIS datasets needed
+    Perform adjustments to gridded AIS/GIS datasets needed
     for rest of compass workflow to utilize them
 
     Parameters
     ----------
     source_gridded_dataset : str
-        name of NetCDF file containing original AIS gridded datasets
+        name of NetCDF file containing original AIS/GIS gridded datasets
 
     floodFillMask : numpy.ndarray
         0/1 mask of flood filled ice region
@@ -934,10 +933,16 @@ def preprocess_ais_data(self, source_gridded_dataset,
     data.createVariable('iceMask', 'f', ('time', 'y1', 'x1'))
     data.variables['iceMask'][:] = data.variables["thk"][:] > 0.
 
+    # rename variables to common/shared names
+    if ('dHdt' not in data.variables) & ('dhdt' in data.variables):
+        data.renameVariable('dhdt', 'dHdt')
+    if ('topgerr' not in data.variables) & ('thkerr' in data.variables):
+        data.renameVariable('thkerr', 'topgerr')
+
     # Note: dhdt is only reported over grounded ice, so we will have to
     # either update the dataset to include ice shelves or give them values of
     # 0 with reasonably large uncertainties.
-    dHdt = data.variables["dhdt"][:]
+    dHdt = data.variables["dHdt"][:]
     dHdtErr = 0.05 * dHdt  # assign arbitrary uncertainty of 5%
     # Where dHdt data are missing, set large uncertainty
     dHdtErr[dHdt > 1.e30] = 1.
@@ -952,16 +957,16 @@ def preprocess_ais_data(self, source_gridded_dataset,
     yy = yGrid.ravel()
     bigTic = time.perf_counter()
     for field in ['thk', 'bheatflx', 'vx', 'vy',
-                  'ex', 'ey', 'thkerr', 'dhdt']:
+                  'ex', 'ey', 'topgerr', 'dHdt']:
         tic = time.perf_counter()
         logger.info(f"Beginning building interpolator for {field}")
-        if field in ['thk', 'thkerr']:
+        if field in ['thk', 'topgerr']:
             mask = cellsWithIce.ravel()
         elif field == 'bheatflx':
             mask = np.logical_and(
                 data.variables[field][:].ravel() < 1.0e9,
                 data.variables[field][:].ravel() != 0.0)
-        elif field in ['vx', 'vy', 'ex', 'ey', 'dhdt']:
+        elif field in ['vx', 'vy', 'ex', 'ey', 'dHdt']:
             mask = np.logical_and(
                 data.variables[field][:].ravel() < 1.0e9,
                 cellsWithIce.ravel() > 0)
@@ -995,9 +1000,6 @@ def preprocess_ais_data(self, source_gridded_dataset,
 
     data.variables['subm'][:] *= -1.0  # correct basal melting sign
     data.variables['subm_ss'][:] *= -1.0
-
-    data.renameVariable('dhdt', 'dHdt')
-    data.renameVariable('thkerr', 'topgerr')
 
     data.createVariable('x', 'f', ('x1'))
     data.createVariable('y', 'f', ('y1'))
