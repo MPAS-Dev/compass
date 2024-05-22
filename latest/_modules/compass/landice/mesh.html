@@ -493,12 +493,6 @@
     <span class="c1"># cell size in the final mesh. There may be a more rigorous way to set</span>
     <span class="c1"># that distance.</span>
     <span class="k">if</span> <span class="n">dist_to_edge</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">assert</span> <span class="p">(</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">cull_distance</span> <span class="o">&lt;</span> <span class="nb">max</span><span class="p">(</span><span class="n">high_dist</span><span class="p">,</span> <span class="n">high_dist_bed</span><span class="p">)),</span> \
-            <span class="p">(</span><span class="s1">&#39;cull_distance is set to be larger than 3x the max of high_dist &#39;</span>
-             <span class="s1">&#39;and high_dist_bed, which means max_spac is not being applied to &#39;</span>
-             <span class="s1">&#39;the regions of the mesh that will be culled, which means the &#39;</span>
-             <span class="s1">&#39;mesh generation is likely to be substantially slower &#39;</span>
-             <span class="s1">&#39;than necessary.  Please fix or relax this constraint.&#39;</span><span class="p">)</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
             <span class="n">thk</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">dist_to_edge</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">cull_distance</span><span class="p">))</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Setting cell_width in outer regions to max_spac &#39;</span>
