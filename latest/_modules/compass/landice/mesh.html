@@ -908,7 +908,8 @@
 
 <div class="viewcode-block" id="make_region_masks">
 <a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.mesh.make_region_masks.html#compass.landice.mesh.make_region_masks">[docs]</a>
-<span class="k">def</span> <span class="nf">make_region_masks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">,</span> <span class="n">cores</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">make_region_masks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">,</span>
+                      <span class="n">cores</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="s1">&#39;landice&#39;</span><span class="p">,</span> <span class="n">all_tags</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create masks for ice-sheet subregions based on data</span>
 <span class="sd">    in ``MPAS-Dev/geometric_fatures``.</span>
@@ -933,10 +934,9 @@
     <span class="n">gf</span> <span class="o">=</span> <span class="n">GeometricFeatures</span><span class="p">()</span>
     <span class="n">fcMask</span> <span class="o">=</span> <span class="n">FeatureCollection</span><span class="p">()</span>
 
-    <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
-        <span class="n">fc</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;landice&#39;</span><span class="p">,</span> <span class="n">objectType</span><span class="o">=</span><span class="s1">&#39;region&#39;</span><span class="p">,</span>
-                     <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="n">tag</span><span class="p">])</span>
-        <span class="n">fcMask</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">fc</span><span class="p">)</span>
+    <span class="n">fc</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">componentName</span><span class="o">=</span><span class="n">component</span><span class="p">,</span> <span class="n">objectType</span><span class="o">=</span><span class="s1">&#39;region&#39;</span><span class="p">,</span>
+                 <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">,</span> <span class="n">allTags</span><span class="o">=</span><span class="n">all_tags</span><span class="p">)</span>
+    <span class="n">fcMask</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">fc</span><span class="p">)</span>
 
     <span class="n">geojson_filename</span> <span class="o">=</span> <span class="s1">&#39;regionMask.geojson&#39;</span>
     <span class="n">fcMask</span><span class="o">.</span><span class="n">to_geojson</span><span class="p">(</span><span class="n">geojson_filename</span><span class="p">)</span>

@@ -305,7 +305,13 @@
         <span class="n">data</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;observedSurfaceVelocityUncertainty&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="n">mask</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]]</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># noqa</span>
 
         <span class="c1"># create region masks</span>
-        <span class="n">mask_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_name</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s1">_regionMasks.nc&#39;</span>
+        <span class="n">mask_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_name</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s1">_ismip6_regionMasks.nc&#39;</span>
+        <span class="n">make_region_masks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">,</span>
+                          <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span><span class="p">,</span>
+                          <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Greenland&quot;</span><span class="p">,</span> <span class="s2">&quot;ISMIP6&quot;</span><span class="p">,</span> <span class="s2">&quot;Shelf&quot;</span><span class="p">],</span>
+                          <span class="n">component</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">)</span>
+
+        <span class="n">mask_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_name</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s1">_zwally_regionMasks.nc&#39;</span>
         <span class="n">make_region_masks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">,</span>
                           <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span><span class="p">,</span>
                           <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;eastCentralGreenland&#39;</span><span class="p">,</span>
@@ -315,7 +321,8 @@
                                 <span class="s1">&#39;southEastGreenland&#39;</span><span class="p">,</span>
                                 <span class="s1">&#39;southGreenland&#39;</span><span class="p">,</span>
                                 <span class="s1">&#39;southWestGreenland&#39;</span><span class="p">,</span>
-                                <span class="s1">&#39;westCentralGreenland&#39;</span><span class="p">])</span>
+                                <span class="s1">&#39;westCentralGreenland&#39;</span><span class="p">],</span>
+                          <span class="n">all_tags</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="c1"># Ensure basalHeatFlux is positive</span>
         <span class="n">data</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;basalHeatFlux&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span>
