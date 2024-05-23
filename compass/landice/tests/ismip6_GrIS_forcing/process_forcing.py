@@ -12,6 +12,10 @@ def datetime_2_xtime(ds, var="time"):
                           output_dtypes=["S"])
 
 
+{"thermal_forcing": "ismip6_2dThermalForcing",
+ "basin_runoff": "ismip6Runoff"}
+
+
 class ProcessForcing(Step):
     """
 
@@ -54,7 +58,10 @@ class ProcessForcing(Step):
 
                 remapped_fp = f"gis_{var}_{GCM}_{scenario}_{start}-{end}.nc"
 
-                self.remap_variable(var_fp, remapped_fp)
+                self.remap_variable(var_fp,
+                                    remapped_fp,
+                                    self.test_case.ismip6_2_mali_weights)
+
                 print(var_fp, os.path.exists(var_fp))
 
             # loop over atmosphere variables
@@ -80,7 +87,7 @@ class ProcessForcing(Step):
         # self.create_xtime(remapped_ds)
         pass
 
-    def remap_variable(self, input_file, output_file):
+    def remap_variable(self, input_file, output_file, weights_file):
         """
         """
 
@@ -88,11 +95,15 @@ class ProcessForcing(Step):
         args = ["ncremap",
                 "-i", input_file,
                 "-o", output_file,
-                "-m", self.test_case.remapping_weights]
+                "-m", weights_file]
 
         check_call(args, logger=self.logger)
 
-    def rename_variables(self, ds, var):
+    def rename_variable_and_trim_dataset(self, ds, var):
+
+        # drop unnecessary variables
+        ds = ds.drop_vars(["lat_vertices", "area",
+                           "lon_vertices", "lat", "lon"])
         pass
 
     def create_xtime(self, ds):

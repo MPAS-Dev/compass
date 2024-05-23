@@ -8,6 +8,9 @@ from compass.landice.tests.ismip6_GrIS_forcing.file_finders import (
 from compass.landice.tests.ismip6_GrIS_forcing.process_forcing import (
     ProcessForcing,
 )
+from compass.landice.tests.ismip6_GrIS_forcing.ref_smb_climatology import (
+    SMBRefClimatology,
+)
 from compass.testcase import TestCase
 
 
@@ -44,11 +47,17 @@ class ForcingGen(TestCase):
         name = "forcing_gen"
         super().__init__(test_group=test_group, name=name)
 
-        # filenames for remapping files, stored at the testcase level so they
-        # will be accesible to all steps in the testcase
+        # NOTE: scrip and weight filenames are stored at the testcase level
+        # so they will be accesible to all steps in the testcase
+
+        # filenames for scrip files (i.e. grid descriptors)
         self.mali_mesh_scrip = "mali_mesh.scrip.nc"
-        self.ismip6_GrIS_scrip = "ismip6_GrIS.scrip.nc"
-        self.remapping_weights = "ismip6_2_mali.weights.nc"
+        self.racmo_gis_scrip = "racmo_gis.scrip.nc"
+        self.ismip6_gis_scrip = "ismip6_GrIS.scrip.nc"
+        # filenames of remapping files
+        self.racmo_2_mali_weights = "racmo_2_mali.weights.nc"
+        self.ismip6_2_mali_weights = "ismip6_2_mali.weights.nc"
+
         # place holder for file finders that will be initialized in `configure`
         self.__atmFF = None
         self.__ocnFF = None
@@ -58,6 +67,8 @@ class ForcingGen(TestCase):
         self.add_step(CreateMappingFiles(test_case=self))
 
         # step that deals with racmo, do all I need to do is remap and average?
+
+        self.add_step(SMBRefClimatology(test_case=self))
 
         # add steps that re-maps and processes downscaled GCM data for each
         # experiment.
