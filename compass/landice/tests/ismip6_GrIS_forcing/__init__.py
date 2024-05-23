@@ -1,3 +1,5 @@
+import os
+
 import yaml
 
 from compass.landice.tests.ismip6_GrIS_forcing.forcing_gen import ForcingGen
@@ -17,13 +19,18 @@ class Ismip6GrISForcing(TestGroup):
 
         self.add_test_case(ForcingGen(test_group=self))
 
-        with open("experiments.yml", "r") as f:
+        # open, read, and validate the experiment file
+        self._read_and_validate_experiment_file()
+
+    def _read_and_validate_experiment_file(self):
+
+        # get the filepath to current module, needed of opening experiment file
+        module_path = os.path.dirname(os.path.realpath(__file__))
+
+        with open(f"{module_path}/experiments.yml", "r") as f:
             experiments = yaml.safe_load(f)
 
         # should I filter through the experiments dictionary to make sure
         # everything is valid....
 
         self.experiments = experiments
-
-    def __read_and_validate_experiment_file(self):
-        pass
