@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import time
 from shutil import copyfile
@@ -882,16 +883,15 @@ def add_bedmachine_thk_to_ais_gridded_data(self, source_gridded_dataset,
     return gridded_dataset_with_bm_thk
 
 
-def preprocess_ais_data(self, source_gridded_dataset,
-                        floodFillMask):
+def preprocess_gridded_data(self, source_gridded_dataset, floodFillMask):
     """
-    Perform adjustments to gridded AIS datasets needed
+    Perform adjustments to gridded AIS/GIS datasets needed
     for rest of compass workflow to utilize them
 
     Parameters
     ----------
     source_gridded_dataset : str
-        name of NetCDF file containing original AIS gridded datasets
+        name of NetCDF file containing original AIS/GIS gridded datasets
 
     floodFillMask : numpy.ndarray
         0/1 mask of flood filled ice region
@@ -927,10 +927,16 @@ def preprocess_ais_data(self, source_gridded_dataset,
     data.createVariable('iceMask', 'f', ('time', 'y1', 'x1'))
     data.variables['iceMask'][:] = data.variables["thk"][:] > 0.
 
+    # rename variables to common/shared names
+    if ('dHdt' not in data.variables) & ('dhdt' in data.variables):
+        data.renameVariable('dhdt', 'dHdt')
+    if ('topgerr' not in data.variables) & ('thkerr' in data.variables):
+        data.renameVariable('thkerr', 'topgerr')
+
     # Note: dhdt is only reported over grounded ice, so we will have to
     # either update the dataset to include ice shelves or give them values of
     # 0 with reasonably large uncertainties.
-    dHdt = data.variables["dhdt"][:]
+    dHdt = data.variables["dHdt"][:]
     dHdtErr = 0.05 * dHdt  # assign arbitrary uncertainty of 5%
     # Where dHdt data are missing, set large uncertainty
     dHdtErr[dHdt > 1.e30] = 1.
@@ -945,16 +951,16 @@ def preprocess_ais_data(self, source_gridded_dataset,
     yy = yGrid.ravel()
     bigTic = time.perf_counter()
     for field in ['thk', 'bheatflx', 'vx', 'vy',
-                  'ex', 'ey', 'thkerr', 'dhdt']:
+                  'ex', 'ey', 'topgerr', 'dHdt']:
         tic = time.perf_counter()
         logger.info(f"Beginning building interpolator for {field}")
-        if field in ['thk', 'thkerr']:
+        if field in ['thk', 'topgerr']:
             mask = cellsWithIce.ravel()
         elif field == 'bheatflx':
             mask = np.logical_and(
                 data.variables[field][:].ravel() < 1.0e9,
                 data.variables[field][:].ravel() != 0.0)
-        elif field in ['vx', 'vy', 'ex', 'ey', 'dhdt']:
+        elif field in ['vx', 'vy', 'ex', 'ey', 'dHdt']:
             mask = np.logical_and(
                 data.variables[field][:].ravel() < 1.0e9,
                 cellsWithIce.ravel() > 0)
@@ -989,9 +995,6 @@ def preprocess_ais_data(self, source_gridded_dataset,
     data.variables['subm'][:] *= -1.0  # correct basal melting sign
     data.variables['subm_ss'][:] *= -1.0
 
-    data.renameVariable('dhdt', 'dHdt')
-    data.renameVariable('thkerr', 'topgerr')
-
     data.createVariable('x', 'f', ('x1'))
     data.createVariable('y', 'f', ('y1'))
     data.variables['x'][:] = x1
@@ -1002,15 +1005,15 @@ def preprocess_ais_data(self, source_gridded_dataset,
     return preprocessed_gridded_dataset
 
 
-def interp_ais_bedmachine(self, data_path, mali_scrip, nProcs, dest_file):
+def interp_gridded2mali(self, source_file, mali_scrip, nProcs, dest_file, proj,
+                        variables="all"):
     """
-    Interpolates BedMachine thickness and bedTopography dataset
-    to a MALI mesh
+    Interpolate gridded dataset (e.g. MEASURES, BedMachine) onto a MALI mesh
 
     Parameters
     ----------
-    data_path : str
-        path to AIS datasets, including BedMachine
+    source_file : str
+        filepath to the source gridded datatset to be interpolated
 
     mali_scrip : str
         name of scrip file corresponding to destination MALI mesh
@@ -1020,19 +1023,45 @@ def interp_ais_bedmachine(self, data_path, mali_scrip, nProcs, dest_file):
 
     dest_file: str
         MALI input file to which data should be remapped
+
+    proj: str
+        projection of the source dataset ...
+
+    variables: str or list of strings
+
     """
+
+    def __guess_scrip_name(filename):
+
+        # try searching for string followed by a version number
+        match = re.search(r'(^.*[_-]v\d*[_-])+', filename)
+
+        if match:
+            # slice string to end of match minus one to leave of final _ or -
+            base_fn = filename[:match.end() - 1]
+        else:
+            # no matches were found, just use the filename (minus extension)
+            base_fn = os.path.splitext(filename)[0]
+
+        return f"{base_fn}.scrip.nc"
 
     logger = self.logger
 
-    logger.info('creating scrip file for BedMachine dataset')
+    source_scrip = __guess_scrip_name(os.path.basename(source_file))
+    weights_filename = "gridded_to_MPAS_weights.nc"
+
+    if variables != "all":
+        # make sure this is a list
+
+        # if list, then join the list making it a space seprated list for cli
+        variables = " ".join(variables)
+
+    logger.info('creating scrip file for source dataset')
     # Note: writing scrip file to workdir
     args = ['create_SCRIP_file_from_planar_rectangular_grid.py',
-            '-i',
-            os.path.join(data_path,
-                         'BedMachineAntarctica_2020-07-15_v02_edits_floodFill_extrap_fillVostok.nc'),  # noqa
-            '-s',
-            'BedMachineAntarctica_2020-07-15_v02.scrip.nc',
-            '-p', 'ais-bedmap2',
+            '-i', source_file,
+            '-s', source_scrip,
+            '-p', proj,
             '-r', '2']
     check_call(args, logger=logger)
 
@@ -1041,10 +1070,9 @@ def interp_ais_bedmachine(self, data_path, mali_scrip, nProcs, dest_file):
     # 2 nodes is too few. I have not tested anything in between.
     logger.info('generating gridded dataset -> MPAS weights')
     args = ['srun', '-n', nProcs, 'ESMF_RegridWeightGen',
-            '--source',
-            'BedMachineAntarctica_2020-07-15_v02.scrip.nc',
+            '--source', source_scrip,
             '--destination', mali_scrip,
-            '--weight', 'BedMachine_to_MPAS_weights.nc',
+            '--weight', weights_filename,
             '--method', 'conserve',
             "--netcdf4",
             "--dst_regional", "--src_regional", '--ignore_unmapped']
@@ -1052,73 +1080,17 @@ def interp_ais_bedmachine(self, data_path, mali_scrip, nProcs, dest_file):
 
     # Perform actual interpolation using the weights
     logger.info('calling interpolate_to_mpasli_grid.py')
-    args = ['interpolate_to_mpasli_grid.py', '-s',
-            os.path.join(data_path,
-                         'BedMachineAntarctica_2020-07-15_v02_edits_floodFill_extrap_fillVostok.nc'),  # noqa
-            '-d', dest_file,
-            '-m', 'e',
-            '-w', 'BedMachine_to_MPAS_weights.nc']
-    check_call(args, logger=logger)
-
-
-def interp_ais_measures(self, data_path, mali_scrip, nProcs, dest_file):
-    """
-    Interpolates MEASURES ice velocity dataset
-    to a MALI mesh
-
-    Parameters
-    ----------
-    data_path : str
-        path to AIS datasets, including BedMachine
-
-    mali_scrip : str
-        name of scrip file corresponding to destination MALI mesh
-
-    nProcs : int
-        number of processors to use for generating remapping weights
-
-    dest_file: str
-        MALI input file to which data should be remapped
-    """
-
-    logger = self.logger
-
-    logger.info('creating scrip file for velocity dataset')
-    # Note: writing scrip file to workdir
-    args = ['create_SCRIP_file_from_planar_rectangular_grid.py',
-            '-i',
-            os.path.join(data_path,
-                         'antarctica_ice_velocity_450m_v2_edits_extrap.nc'),
-            '-s',
-            'antarctica_ice_velocity_450m_v2.scrip.nc',
-            '-p', 'ais-bedmap2',
-            '-r', '2']
-    check_call(args, logger=logger)
-
-    # Generate remapping weights
-    logger.info('generating gridded dataset -> MPAS weights')
-    args = ['srun', '-n', nProcs, 'ESMF_RegridWeightGen',
-            '--source',
-            'antarctica_ice_velocity_450m_v2.scrip.nc',
-            '--destination', mali_scrip,
-            '--weight', 'measures_to_MPAS_weights.nc',
-            '--method', 'conserve',
-            "--netcdf4",
-            "--dst_regional", "--src_regional", '--ignore_unmapped']
-    check_call(args, logger=logger)
-
-    logger.info('calling interpolate_to_mpasli_grid.py')
     args = ['interpolate_to_mpasli_grid.py',
-            '-s',
-            os.path.join(data_path,
-                         'antarctica_ice_velocity_450m_v2_edits_extrap.nc'),
+            '-s', source_file,
             '-d', dest_file,
             '-m', 'e',
-            '-w', 'measures_to_MPAS_weights.nc',
-            '-v', 'observedSurfaceVelocityX',
-                  'observedSurfaceVelocityY',
-                  'observedSurfaceVelocityUncertainty']
+            '-w', weights_filename,
+            '-v', variables]
+
     check_call(args, logger=logger)
+
+    # should I delted the weights file, since that could cause namespace
+    # conflicts when multiple interpolations are done?
 
 
 def clean_up_after_interp(fname):
