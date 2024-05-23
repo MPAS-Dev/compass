@@ -772,7 +772,8 @@ def build_mali_mesh(self, cell_width, x1, y1, geom_points,
     check_call(args, logger=logger)
 
 
-def make_region_masks(self, mesh_filename, mask_filename, cores, tags):
+def make_region_masks(self, mesh_filename, mask_filename,
+                      cores, tags, component='landice', all_tags=True):
     """
     Create masks for ice-sheet subregions based on data
     in ``MPAS-Dev/geometric_fatures``.
@@ -797,10 +798,9 @@ def make_region_masks(self, mesh_filename, mask_filename, cores, tags):
     gf = GeometricFeatures()
     fcMask = FeatureCollection()
 
-    for tag in tags:
-        fc = gf.read(componentName='landice', objectType='region',
-                     tags=[tag])
-        fcMask.merge(fc)
+    fc = gf.read(componentName=component, objectType='region',
+                 tags=tags, allTags=all_tags)
+    fcMask.merge(fc)
 
     geojson_filename = 'regionMask.geojson'
     fcMask.to_geojson(geojson_filename)

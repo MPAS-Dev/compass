@@ -150,7 +150,8 @@ class Mesh(Step):
                           self.cpus_per_task,
                           tags=['EastAntarcticaIMBIE',
                                 'WestAntarcticaIMBIE',
-                                'AntarcticPeninsulaIMBIE'])
+                                'AntarcticPeninsulaIMBIE'],
+                          all_tags=False)
 
         mask_filename = f'{self.mesh_filename[:-3]}_ismip6_regionMasks.nc'
         make_region_masks(self, self.mesh_filename, mask_filename,

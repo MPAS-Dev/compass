@@ -82,8 +82,8 @@ def make_diagnostics_files(logger, mesh_short_name, with_ice_shelf_cavities,
 
     gf = GeometricFeatures()
     region_groups = ['Antarctic Regions', 'Arctic Ocean Regions',
-                     'Arctic Sea Ice Regions', 'Ocean Basins',
-                     'Ocean Subbasins', 'ISMIP6 Regions']
+                     'Arctic Sea Ice Regions', 'Greenland Regions',
+                     'Ocean Basins', 'Ocean Subbasins', 'ISMIP6 Regions']
 
     if with_ice_shelf_cavities:
         region_groups.append('Ice Shelves')

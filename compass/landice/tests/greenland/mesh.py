@@ -184,7 +184,13 @@ class Mesh(Step):
         data.variables['observedSurfaceVelocityUncertainty'][0, mask[0, :]] = 1.0  # noqa
 
         # create region masks
-        mask_filename = f'{mesh_name[:-3]}_regionMasks.nc'
+        mask_filename = f'{mesh_name[:-3]}_ismip6_regionMasks.nc'
+        make_region_masks(self, mesh_name, mask_filename,
+                          self.cpus_per_task,
+                          tags=["Greenland", "ISMIP6", "Shelf"],
+                          component='ocean')
+
+        mask_filename = f'{mesh_name[:-3]}_zwally_regionMasks.nc'
         make_region_masks(self, mesh_name, mask_filename,
                           self.cpus_per_task,
                           tags=['eastCentralGreenland',
@@ -194,7 +200,8 @@ class Mesh(Step):
                                 'southEastGreenland',
                                 'southGreenland',
                                 'southWestGreenland',
-                                'westCentralGreenland'])
+                                'westCentralGreenland'],
+                          all_tags=False)
 
         # Ensure basalHeatFlux is positive
         data.variables['basalHeatFlux'][:] = np.abs(
