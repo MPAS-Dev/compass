@@ -220,9 +220,10 @@ class Viz(Step):
         fig, ax = plt.subplots(nrows=1, ncols=1)
 
         max_rmse = 0
+        resolutions = self.resolutions
         for j, comp in enumerate(comparisons):
-            rmse = np.zeros(len(self.resolutions))
-            for i, res in enumerate(self.resolutions):
+            rmse = np.zeros(len(resolutions))
+            for i, res in enumerate(resolutions):
 
                 rmse[i] = self.compute_rmse(
                     'h',
@@ -231,19 +232,20 @@ class Viz(Step):
                 if rmse[i] > max_rmse:
                     max_rmse = rmse[i]
 
-            ax.loglog(self.resolutions, rmse,
+            ax.loglog(resolutions, rmse,
                       linestyle='-', marker='o', label=comp)
 
-        rmse_1st_order = np.zeros(len(self.resolutions))
+        rmse_1st_order = np.zeros(len(resolutions))
         rmse_1st_order[0] = max_rmse
-        for i in range(len(self.resolutions) - 1):
+        for i in range(len(resolutions) - 1):
             rmse_1st_order[i + 1] = rmse_1st_order[i] / 2.0
 
-        ax.loglog(self.resolutions, rmse_1st_order,
+        ax.loglog(resolutions, rmse_1st_order,
                   linestyle='-', color='k', alpha=.25, label='1st order')
 
         ax.set_xlabel('Cell size (km)')
         ax.set_ylabel('RMSE (m)')
+        ax.invert_xaxis()
 
         ax.legend(loc='lower right')
         ax.set_title('Layer thickness convergence')
