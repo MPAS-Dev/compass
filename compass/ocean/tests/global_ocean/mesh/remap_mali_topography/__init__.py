@@ -132,7 +132,8 @@ class RemapMaliTopography(RemapTopography):
             ice_mask,
             ice_density / mali_ocean_density * thickness <= sea_level - bed)
         grounded_mask = np.logical_and(ice_mask, np.logical_not(floating_mask))
-        ocean_mask = np.logical_and(np.logical_not(ice_mask), bed < sea_level)
+        ocean_mask = np.logical_and(np.logical_not(grounded_mask),
+                                    bed < sea_level)
 
         lithop = ice_density * g * thickness
         ice_frac = xr.where(ice_mask, 1., 0.)
@@ -236,16 +237,28 @@ class RemapMaliTopography(RemapTopography):
                     'landIceThkObserved']:
             ds_out[var] = ds_mali[var]
 
-        # for now, blend topography at calving fronts, but we may want a
-        # smoother blend in the future
-        alpha = ds_mali.landIceFracBilinear
-        ds_out['bed_elevation'] = (alpha * ds_mali.bed_elevation +
-                                   (1.0 - alpha) * ds_bedmachine.bed_elevation)
+        ds_out['landIceFracObserved'] = ds_mali['landIceFracConserve']
+
+        ds_out['landIceFloatingFracObserved'] = (
+            ds_mali['landIceFracConserve'] -
+            ds_mali['landIceGroundedFracConserve'])
 
         for var in ['maliFracBilinear', 'maliFracConserve']:
             mali_field = ds_mali[var]
             mali_field = xr.where(mali_field.notnull(), mali_field, 0.)
             ds_out[var] = mali_field
+
+        # for now, blend topography at calving fronts, but we may want a
+        # smoother blend in the future
+        alpha = ds_mali.landIceFracBilinear
+        ds_out['bed_elevation'] = (
+            alpha * ds_mali.bed_elevation +
+            (1.0 - alpha) * ds_bedmachine.bed_elevation)
+
+        alpha = ds_out.maliFracConserve
+        ds_out['oceanFracObserved'] = (
+            alpha * ds_mali.oceanFracConserve +
+            (1.0 - alpha) * ds_bedmachine.oceanFracObserved)
 
         ds_out['ssh'] = ds_out.landIceDraftObserved
 
