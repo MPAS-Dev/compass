@@ -113,6 +113,7 @@
   <h1>Source code for compass.ocean.mesh.remap_topography</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
 <span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">LatLonGridDescriptor</span><span class="p">,</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">,</span> <span class="n">Remapper</span>
@@ -263,6 +264,11 @@
             <span class="n">in_var</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
             <span class="n">out_var</span> <span class="o">=</span> <span class="n">rename</span><span class="p">[</span><span class="n">option</span><span class="p">]</span>
             <span class="n">ds_out</span><span class="p">[</span><span class="n">out_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_in</span><span class="p">[</span><span class="n">in_var</span><span class="p">]</span>
+
+        <span class="c1"># make sure fractions don&#39;t exceed 1</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;landIceFracObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceGroundedFracObserved&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">]:</span>
+            <span class="n">ds_out</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">ds_out</span><span class="p">[</span><span class="n">var</span><span class="p">],</span> <span class="mf">1.</span><span class="p">)</span>
 
         <span class="c1"># renormalize elevation variables</span>
         <span class="n">norm</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">oceanFracObserved</span>
