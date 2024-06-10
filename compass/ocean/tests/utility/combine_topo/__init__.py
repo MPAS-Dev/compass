@@ -170,13 +170,10 @@ class Combine(Step):
         grounded_mask = np.logical_or(np.logical_or(mask == 1, mask == 2),
                                       mask == 4).astype(float)
 
-        bedmachine['bathymetry'] = bedmachine.bed.where(ocean_mask, 0.)
-        bedmachine['ice_draft'] = \
-            (bedmachine.surface -
-                bedmachine.thickness).where(ocean_mask, 0.)
+        bedmachine['bathymetry'] = bedmachine.bed
+        bedmachine['ice_draft'] = bedmachine.surface - bedmachine.thickness
         bedmachine.ice_draft.attrs['units'] = 'meters'
-        bedmachine['thickness'] = \
-            bedmachine.thickness.where(ocean_mask, 0.)
+        bedmachine['thickness'] = bedmachine.thickness
 
         bedmachine['ice_mask'] = ice_mask
         bedmachine['grounded_mask'] = grounded_mask
@@ -231,11 +228,6 @@ class Combine(Step):
         logger = self.logger
         logger.info('Remap BedMachineAntarctica to GEBCO 1/80 deg grid')
 
-        config = self.config
-
-        section = config['combine_topo']
-        renorm_thresh = section.getfloat('renorm_thresh')
-
         in_filename = 'BedMachineAntarctica-v3_mod.nc'
         out_filename = 'BedMachineAntarctica_on_GEBCO_low.nc'
         gebco_filename = 'GEBCO_2023_0.0125_degree.nc'
@@ -264,16 +256,6 @@ class Combine(Step):
 
         for field in ['bathymetry', 'ice_draft', 'thickness']:
             bedmachine_on_gebco_low[field].attrs['unit'] = 'meters'
-
-        # renormalize the fields based on the ocean masks
-        ocean_mask = bedmachine_on_gebco_low.ocean_mask
-
-        valid = ocean_mask > renorm_thresh
-        norm = ocean_mask.where(valid, 1.)
-        norm = 1. / norm
-        for field in ['bathymetry', 'ice_draft', 'thickness']:
-            bedmachine_on_gebco_low[field] = \
-                norm * bedmachine_on_gebco_low[field].where(valid, 0.)
 
         bedmachine_on_gebco_low.to_netcdf(out_filename)
         logger.info('  Done.')
@@ -314,8 +296,8 @@ class Combine(Step):
         for field in ['bathymetry', 'ice_draft', 'thickness']:
             combined[field].attrs['unit'] = 'meters'
 
-        fill = {'ice_mask': 0., 'grounded_mask': 0.,
-                'ocean_mask': combined['bathymetry'] < 0.}
+        fill = {'ice_draft': 0., 'thickness': 0., 'ice_mask': 0.,
+                'grounded_mask': 0., 'ocean_mask': combined['bathymetry'] < 0.}
 
         for field, fill_val in fill.items():
             valid = bedmachine[field].notnull()
