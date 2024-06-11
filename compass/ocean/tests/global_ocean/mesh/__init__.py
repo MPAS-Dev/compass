@@ -147,6 +147,7 @@ class Mesh(TestCase):
             description = 'Bathymetry is from GEBCO 2022, combined with ' \
                           'BedMachine Antarctica v2 around Antarctica.'
             config.set('remap_topography', 'topo_filename', filename)
+            config.set('remap_topography', 'bathy_frac_var', 'ocean_mask')
             config.set('remap_topography', 'description', description)
             config.set('remap_topography', 'ntasks', '64')
             config.set('remap_topography', 'min_tasks', '4')

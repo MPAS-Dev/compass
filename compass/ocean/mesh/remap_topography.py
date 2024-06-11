@@ -135,7 +135,8 @@ class RemapTopography(Step):
                   'ice_thickness_var': 'landIceThkObserved',
                   'ice_frac_var': 'landIceFracObserved',
                   'grounded_ice_frac_var': 'landIceGroundedFracObserved',
-                  'ocean_frac_var': 'oceanFracObserved'}
+                  'ocean_frac_var': 'oceanFracObserved',
+                  'bathy_frac_var': 'bathyFracObserved'}
 
         for option, out_var in rename.items():
             in_var = config.get('remap_topography', option)
@@ -146,11 +147,12 @@ class RemapTopography(Step):
 
         # make sure fractions don't exceed 1
         for var in ['landIceFracObserved', 'landIceGroundedFracObserved',
-                    'landIceFloatingFracObserved', 'oceanFracObserved']:
+                    'landIceFloatingFracObserved', 'oceanFracObserved',
+                    'bathyFracObserved']:
             ds_out[var] = np.minimum(ds_out[var], 1.)
 
         # renormalize elevation variables
-        norm = ds_out.oceanFracObserved
+        norm = ds_out.bathyFracObserved
         valid = norm > renorm_threshold
         for var in ['bed_elevation', 'landIceThkObserved']:
             ds_out[var] = xr.where(valid, ds_out[var] / norm, 0.)
