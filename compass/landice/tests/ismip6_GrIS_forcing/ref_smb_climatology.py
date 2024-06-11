@@ -1,6 +1,7 @@
 import os
 
 import xarray as xr
+from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 
 from compass.step import Step
@@ -58,9 +59,13 @@ class SMBRefClimatology(Step):
 
         # make a descriptive filename based on climatology period
         clima_fn = f"racmo_climatology_{clima_start}--{clima_end}.nc"
+        # add the steps workdir to the filename to make it a full path
+        clima_fp = os.path.join(self.work_dir, clima_fn)
 
-        self.smb_ref_climatology = clima_fn
-        self.add_output_file(filename=clima_fn)
+        # set the testcase attribute and add it as an output file for this
+        # step so the climatology will by useable by other steps
+        self.test_case.smb_ref_climatology = clima_fp
+        self.add_output_file(filename=self.test_case.smb_ref_climatology)
 
     def run(self):
         """
@@ -75,21 +80,32 @@ class SMBRefClimatology(Step):
 
         # remap the gridded racmo data onto the mpas grid
         self.remap_variable(self.racmo_smb,
-                            self.smb_ref_climatology,
+                            self.test_case.smb_ref_climatology,
                             self.test_case.racmo_2_mali_weights)
 
-        ds = xr.open_dataset(self.smb_ref_climatology, decode_times=False)
+        ds = xr.open_dataset(self.test_case.smb_ref_climatology,
+                             decode_times=False)
 
+        # find indices of climatology start/end (TO DO: make more robust)
         s_idx = ((clima_start - 1958) * 12) - 1
         e_idx = ((clima_end - 1958) * 12) - 1
 
-        climatology = ds.SMB_rec.isel(time=slice(s_idx, e_idx)).mean("time")
-
-        climatology.to_netcdf(self.smb_ref_climatology, "w")
-
-        # trim unused variables
-
-        # take temporal average
+        # calculate climatology
+        ds["SMB_rec"] = ds.SMB_rec.isel(time=slice(s_idx, e_idx)).mean("time")
+        # rename variables to match MALI/MPAS conventiosn
+        ds = ds.rename(SMB_rec="sfcMassBal", ncol="nCells")
+        # drop unused dimensions
+        ds = ds.drop_dims(["time", "nv"])
+        # drop un-needed varibales
+        ds = ds.drop_vars(["area", "lat", "lon"])
+        # convert `sfcMassBal` to MPAS units
+        ds["sfcMassBal"] /= (60 * 60 * 24 * 365) / 12.
+        # add a units attribute to `sfcMassBal`
+        ds["sfcMassBal"].attrs["units"] = "kg m-2 s-1"
+        # expand sfcMassBal dimension to match what MALI expects
+        ds["sfcMassBal"] = ds.sfcMassBal.expand_dims("Time")
+        # write the file
+        write_netcdf(ds, self.test_case.smb_ref_climatology)
 
     def remap_variable(self, input_file, output_file, weights_file):
         """
@@ -99,6 +115,7 @@ class SMBRefClimatology(Step):
         args = ["ncremap",
                 "-i", input_file,
                 "-o", output_file,
-                "-m", weights_file]
+                "-m", weights_file,
+                "-v", "SMB_rec"]
 
         check_call(args, logger=self.logger)
