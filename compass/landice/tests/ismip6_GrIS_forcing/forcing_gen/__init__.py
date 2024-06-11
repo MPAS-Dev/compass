@@ -57,7 +57,8 @@ class ForcingGen(TestCase):
         # filenames of remapping files
         self.racmo_2_mali_weights = "racmo_2_mali.weights.nc"
         self.ismip6_2_mali_weights = "ismip6_2_mali.weights.nc"
-
+        # filename of the reference climatology
+        self.smb_ref_climatology = None
         # place holder for file finders that will be initialized in `configure`
         self.__atmFF = None
         self.__ocnFF = None
@@ -67,7 +68,6 @@ class ForcingGen(TestCase):
         self.add_step(CreateMappingFiles(test_case=self))
 
         # step that deals with racmo, do all I need to do is remap and average?
-
         self.add_step(SMBRefClimatology(test_case=self))
 
         # add steps that re-maps and processes downscaled GCM data for each
