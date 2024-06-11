@@ -149,7 +149,7 @@ class CreateMappingFiles(Step):
         forcingDescriptor.to_scrip(forcing_scrip_fp)
 
         # generate mapping weights between forcing data and the MALI mesh
-        args = ['srun', '-n', '128', 'ESMF_RegridWeigh:tGen',
+        args = ['srun', '-n', '128', 'ESMF_RegridWeightGen',
                 '-s', forcing_scrip_fp,
                 '-d', mali_mesh_scrip_fp,
                 '-w', weights_file_fp,
