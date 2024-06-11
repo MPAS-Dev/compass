@@ -287,17 +287,22 @@ class Combine(Step):
         bedmachine_bathy = bedmachine.bathymetry
         valid = bedmachine_bathy.notnull()
         bedmachine_bathy = bedmachine_bathy.where(valid, 0.)
+        bedmachine_bathy = bedmachine_bathy.where(bedmachine_bathy < 0., 0.)
 
         combined['bathymetry'] = \
-            alpha * gebco.bathymetry.where(gebco.bathymetry < 0, 0.) + \
+            alpha * gebco.bathymetry.where(gebco.bathymetry < 0., 0.) + \
             (1.0 - alpha) * bedmachine_bathy
+        bathy_mask = xr.where(combined.bathymetry < 0., 1.0, 0.0)
+
         for field in ['ice_draft', 'thickness']:
-            combined[field] = bedmachine[field]
+            combined[field] = bathy_mask * bedmachine[field]
         for field in ['bathymetry', 'ice_draft', 'thickness']:
             combined[field].attrs['unit'] = 'meters'
 
+        combined['bathymetry_mask'] = bathy_mask
+
         fill = {'ice_draft': 0., 'thickness': 0., 'ice_mask': 0.,
-                'grounded_mask': 0., 'ocean_mask': combined['bathymetry'] < 0.}
+                'grounded_mask': 0., 'ocean_mask': combined.bathymetry_mask}
 
         for field, fill_val in fill.items():
             valid = bedmachine[field].notnull()
