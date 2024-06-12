@@ -99,7 +99,7 @@ class atmosphereFileFinder:
             # with output filename, combine the files to a single
             self.__combine_files(yearly_files, out_fp)
 
-        return out_fp, yearly_files
+        return out_fp
 
     def __find_yearly_files(self, GCM, scenario, variable, start, end):
         """
