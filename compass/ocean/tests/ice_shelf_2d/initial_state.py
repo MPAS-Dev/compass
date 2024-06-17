@@ -122,7 +122,7 @@ class InitialState(Step):
         ds['fCell'] = xarray.zeros_like(ds.xCell)
         ds['fEdge'] = xarray.zeros_like(ds.xEdge)
         ds['fVertex'] = xarray.zeros_like(ds.xVertex)
-        ds['modifyLandIcePressureMask'] = modify_mask
+        ds['sshAdjustmentMask'] = modify_mask
         ds['landIceFraction'] = landIceFraction
         ds['landIceFloatingFraction'] = landIceFloatingFraction
         ds['landIceMask'] = landIceMask

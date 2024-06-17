@@ -28,8 +28,14 @@ class InitialState(Step):
 
     initial_condition : {'WOA23', 'PHC', 'EN4_1900'}
         The initial condition dataset to use
+
+    adjustment_fraction : float
+        The fraction of the way through iterative ssh adjustment for this
+        step
     """
-    def __init__(self, test_case, mesh, initial_condition):
+    def __init__(self, test_case, mesh, initial_condition,
+                 culled_topo_path=None, name='initial_state', subdir=None,
+                 adjustment_fraction=None):
         """
         Create the step
 
@@ -43,13 +49,30 @@ class InitialState(Step):
 
         initial_condition : {'WOA23', 'PHC', 'EN4_1900'}
             The initial condition dataset to use
+
+        culled_topo_path : str, optional
+            The path to a step where ``topography_culled.nc`` is provided
+
+        name : str, optional
+            The name of the step
+
+        subdir : str, optional
+            The subdirectory for the step
+
+        adjustment_fraction : float, optional
+            The fraction of the way through iterative ssh adjustment for this
+            step
         """
         if initial_condition not in ['WOA23', 'PHC', 'EN4_1900']:
             raise ValueError(f'Unknown initial_condition {initial_condition}')
 
-        super().__init__(test_case=test_case, name='initial_state')
+        super().__init__(test_case=test_case, name=name, subdir=subdir)
         self.mesh = mesh
         self.initial_condition = initial_condition
+        if mesh.with_ice_shelf_cavities and adjustment_fraction is None:
+            raise ValueError('Must provide adjustment_fraction for '
+                             'initializing meshes with ice-shelf cavities')
+        self.adjustment_fraction = adjustment_fraction
 
         package = 'compass.ocean.tests.global_ocean.init'
 
@@ -83,8 +106,10 @@ class InitialState(Step):
         self.add_namelist_options(options, mode='init')
         self.add_streams_file(package, 'streams.topo', mode='init')
 
-        cull_step = self.mesh.steps['cull_mesh']
-        target = os.path.join(cull_step.path, 'topography_culled.nc')
+        if culled_topo_path is None:
+            cull_step = self.mesh.steps['cull_mesh']
+            culled_topo_path = cull_step.path
+        target = os.path.join(culled_topo_path, 'topography_culled.nc')
         self.add_input_file(filename='topography_culled.nc',
                             work_dir_target=target)
 
@@ -168,6 +193,7 @@ class InitialState(Step):
         Run this step of the testcase
         """
         config = self.config
+        section = config['global_ocean']
         self._smooth_topography()
 
         interfaces = generate_1d_grid(config=config)
@@ -185,10 +211,14 @@ class InitialState(Step):
         namelist = {'config_global_ocean_minimum_depth': f'{min_depth}'}
 
         if self.mesh.with_ice_shelf_cavities:
-            cavity_min_levels = \
-                config.getint('global_ocean', 'cavity_min_levels')
-            cavity_min_layer_thickness = \
-                config.getfloat('global_ocean', 'cavity_min_layer_thickness')
+            frac = self.adjustment_fraction
+            cavity_min_levels = section.getint('cavity_min_levels')
+            min_thick_init = section.getfloat(
+                'cavity_min_layer_thickness_initial')
+            min_thick_final = section.getfloat(
+                'cavity_min_layer_thickness_final')
+            cavity_min_layer_thickness = (
+                (1.0 - frac) * min_thick_init + frac * min_thick_final)
             namelist['config_rx1_min_levels'] = f'{cavity_min_levels}'
             namelist['config_rx1_min_layer_thickness'] = \
                 f'{cavity_min_layer_thickness}'

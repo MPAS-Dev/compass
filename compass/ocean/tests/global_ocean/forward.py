@@ -139,12 +139,8 @@ class ForwardStep(Step):
             work_dir_target=f'{mesh_path}/culled_mesh.nc')
 
         if init is not None:
-            if mesh.with_ice_shelf_cavities:
-                initial_state_target = \
-                    f'{init.path}/ssh_adjustment/adjusted_init.nc'
-            else:
-                initial_state_target = \
-                    f'{init.path}/initial_state/initial_state.nc'
+            initial_state_target = \
+                f'{init.path}/initial_state/initial_state.nc'
             self.add_input_file(filename='init.nc',
                                 work_dir_target=initial_state_target)
             self.add_input_file(

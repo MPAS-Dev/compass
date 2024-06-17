@@ -109,7 +109,7 @@ class InitialState(Step):
         ds['landIceFloatingFraction'] = \
             ds['landIceFloatingFraction'].expand_dims(dim='Time', axis=0)
 
-        ds['modifyLandIcePressureMask'] = \
+        ds['sshAdjustmentMask'] = \
             (ds['landIceFraction'] > 0.01).astype(int)
 
         # This inequality needs to be > rather than >= to ensure correctness
