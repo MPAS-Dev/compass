@@ -41,6 +41,8 @@ class RemapIcebergClimatology(FilesForE3SMStep):
         Run this step of the test case
         """
         super().run()
+        if not self.with_ice_shelf_cavities:
+            return
         logger = self.logger
         config = self.config
         ntasks = self.ntasks
