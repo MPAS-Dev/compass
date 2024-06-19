@@ -142,4 +142,13 @@ class ProcessForcing(Step):
 
             remapped_ds[renamed_var] += mali_ds[renamed_var]
 
+        # ocean variable contain alot of nan's, replace with zeros
+        # ismip6Runoff : nan in catchments that are not marine terminating
+        # ismip6_2dThermalForcing : nan for all cells above sea level
+        if renamed_var in {"ismip6_2dThermalForcing", "ismip6Runoff"}:
+            # get the ocean dataarray of interest
+            da = remapped_ds[renamed_var]
+            # set nan values to zero in the parent dataset
+            remapped_ds[renamed_var] = xr.where(da.isnull(), 0, da)
+
         return remapped_ds
