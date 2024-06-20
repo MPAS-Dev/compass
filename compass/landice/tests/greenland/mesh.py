@@ -48,6 +48,10 @@ class Mesh(Step):
         self.add_input_file(filename='greenland_2km_2024_01_29.epsg3413.nc',
                             target='greenland_2km_2024_01_29.epsg3413.nc',
                             database='')
+        self.add_input_file(filename='greenland_only_outline_45km_buffer_latlon_singlepart.geojson',  # noqa: E501
+                            package='compass.landice.tests.greenland',
+                            target='greenland_only_outline_45km_buffer_latlon_singlepart.geojson',  # noqa: E501
+                            database=None)
 
     # no setup() method is needed
 
@@ -74,7 +78,9 @@ class Mesh(Step):
             self, cell_width, x1, y1, geom_points, geom_edges,
             mesh_name=mesh_name, section_name=section_name,
             gridded_dataset='greenland_1km_2024_01_29.epsg3413.icesheetonly.nc',  # noqa
-            projection='gis-gimp', geojson_file=None)
+            projection='gis-gimp',
+            geojson_file="greenland_only_outline_45km_buffer_latlon_singlepart.geojson",  # noqa: E501
+        )
 
         # Create scrip files if they don't already exist
         if exists(data_path + '/BedMachineGreenland-v5.scrip.nc'):
