@@ -115,7 +115,12 @@
   <h1>Source code for compass.ocean.tests.global_ocean.init.ssh_adjustment</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">importlib.resources</span> <span class="kn">import</span> <span class="n">contents</span>
 
-<span class="kn">from</span> <span class="nn">compass.ocean.iceshelf</span> <span class="kn">import</span> <span class="n">adjust_ssh</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
+
+<span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">partition</span><span class="p">,</span> <span class="n">run_model</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.forward</span> <span class="kn">import</span> <span class="n">ForwardStep</span>
 
 
@@ -128,7 +133,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="SshAdjustment.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.html#compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">init_path</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ssh_adjustment&#39;</span><span class="p">,</span>
+                 <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the step</span>
 
@@ -136,16 +142,24 @@
 <span class="sd">        ----------</span>
 <span class="sd">        test_case : compass.ocean.tests.global_ocean.init.Init</span>
 <span class="sd">            The test case this step belongs to</span>
+
+<span class="sd">        init_path : str</span>
+<span class="sd">            The path to the initial state to use for forward runs</span>
+
+<span class="sd">        name : str, optional</span>
+<span class="sd">            The name of the step</span>
+
+<span class="sd">        subdir : str, optional</span>
+<span class="sd">            The subdirectory for the step</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">test_case</span><span class="o">.</span><span class="n">mesh</span><span class="p">,</span>
                          <span class="n">time_integrator</span><span class="o">=</span><span class="s1">&#39;split_explicit_ab2&#39;</span><span class="p">,</span>
-                         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ssh_adjustment&#39;</span><span class="p">)</span>
+                         <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">({</span><span class="s1">&#39;config_AM_globalStats_enable&#39;</span><span class="p">:</span> <span class="s1">&#39;.false.&#39;</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.namelists&#39;</span><span class="p">,</span>
                                <span class="s1">&#39;namelist.ssh_adjust&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.streams&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.ssh_adjust&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.global_ocean.init&#39;</span><span class="p">,</span>
                               <span class="s1">&#39;streams.ssh_adjust&#39;</span><span class="p">)</span>
 
@@ -160,10 +174,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">mesh_package</span><span class="p">,</span> <span class="n">mesh_streams</span><span class="p">)</span>
 
         <span class="n">mesh_path</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">get_cull_mesh_path</span><span class="p">()</span>
-        <span class="n">init_path</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;initial_state&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;adjusting_init0.nc&#39;</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
             <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init_path</span><span class="si">}</span><span class="s1">/initial_state.nc&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;forcing_data.nc&#39;</span><span class="p">,</span>
@@ -172,7 +185,11 @@
             <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
             <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/culled_graph.info&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;adjusted_init.nc&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;original_topograpy.nc&#39;</span><span class="p">,</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/topography_culled.nc&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;topography_culled.nc&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SshAdjustment.run">
@@ -182,14 +199,84 @@
 <span class="sd">        Run this step of the testcase</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">iteration_count</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ssh_adjustment&#39;</span><span class="p">,</span> <span class="s1">&#39;iterations&#39;</span><span class="p">)</span>
         <span class="n">update_pio</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_update_pio&#39;</span><span class="p">)</span>
         <span class="n">convert_to_cdf5</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;ssh_adjustment&#39;</span><span class="p">,</span>
                                             <span class="s1">&#39;convert_to_cdf5&#39;</span><span class="p">)</span>
-        <span class="n">adjust_ssh</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;landIcePressure&#39;</span><span class="p">,</span> <span class="n">iteration_count</span><span class="o">=</span><span class="n">iteration_count</span><span class="p">,</span>
-                   <span class="n">step</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_pio</span><span class="o">=</span><span class="n">update_pio</span><span class="p">,</span>
-                   <span class="n">convert_to_cdf5</span><span class="o">=</span><span class="n">convert_to_cdf5</span><span class="p">)</span></div>
-</div>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_adjust_ssh</span><span class="p">(</span><span class="n">update_pio</span><span class="o">=</span><span class="n">update_pio</span><span class="p">,</span>
+                         <span class="n">convert_to_cdf5</span><span class="o">=</span><span class="n">convert_to_cdf5</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_adjust_ssh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_pio</span><span class="p">,</span> <span class="n">convert_to_cdf5</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adjust the sea surface height to be dynamically consistent with</span>
+<span class="sd">        land-ice pressure.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ntasks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+
+        <span class="k">if</span> <span class="n">update_pio</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_pio</span><span class="p">(</span><span class="s1">&#39;namelist.ocean&#39;</span><span class="p">)</span>
+        <span class="n">partition</span><span class="p">(</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;init.nc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
+            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">init_ssh</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">ssh</span>
+            <span class="n">modify_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">maxLevelCell</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
+                                         <span class="n">ds</span><span class="o">.</span><span class="n">sshAdjustmentMask</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">land_ice_pressure</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">landIcePressure</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;   * Running forward model&quot;</span><span class="p">)</span>
+        <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_pio</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">partition_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;   - Complete&quot;</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;   * Updating SSH&quot;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;output_ssh.nc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds_ssh</span><span class="p">:</span>
+            <span class="c1"># get the last time entry</span>
+            <span class="n">ds_ssh</span> <span class="o">=</span> <span class="n">ds_ssh</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">ds_ssh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">final_ssh</span> <span class="o">=</span> <span class="n">ds_ssh</span><span class="o">.</span><span class="n">ssh</span>
+
+        <span class="n">delta_ssh</span> <span class="o">=</span> <span class="n">modify_mask</span> <span class="o">*</span> <span class="p">(</span><span class="n">final_ssh</span> <span class="o">-</span> <span class="n">init_ssh</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;original_topograpy.nc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds_out</span><span class="p">:</span>
+
+            <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">modify_mask</span> <span class="o">*</span> <span class="n">final_ssh</span>
+
+            <span class="k">if</span> <span class="n">convert_to_cdf5</span><span class="p">:</span>
+                <span class="n">write_filename</span> <span class="o">=</span> <span class="s1">&#39;topography_before_cdf5.nc&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">write_filename</span> <span class="o">=</span> <span class="s1">&#39;topography_culled.nc&#39;</span>
+            <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="n">write_filename</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">convert_to_cdf5</span><span class="p">:</span>
+                <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ncks&#39;</span><span class="p">,</span> <span class="s1">&#39;-O&#39;</span><span class="p">,</span> <span class="s1">&#39;-5&#39;</span><span class="p">,</span> <span class="s1">&#39;topography_before_cdf5.nc&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;topography_culled.nc&#39;</span><span class="p">]</span>
+                <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+            <span class="c1"># Write the largest change in SSH and its lon/lat to a file</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;maxDeltaSSH.log&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">log_file</span><span class="p">:</span>
+
+                <span class="n">icell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">delta_ssh</span><span class="p">)</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+
+                <span class="n">ds_cell</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nCells</span><span class="o">=</span><span class="n">icell</span><span class="p">)</span>
+                <span class="n">delta_ssh_max</span> <span class="o">=</span> <span class="n">delta_ssh</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nCells</span><span class="o">=</span><span class="n">icell</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+                <span class="n">coords</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;lon/lat: &#39;</span>
+                          <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">ds_cell</span><span class="o">.</span><span class="n">lonCell</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="si">:</span><span class="s1">f</span><span class="si">}</span><span class="s1"> &#39;</span>
+                          <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">ds_cell</span><span class="o">.</span><span class="n">latCell</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="si">:</span><span class="s1">f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">string</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;delta_ssh_max: &#39;</span>
+                          <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">delta_ssh_max</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">coords</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;     </span><span class="si">{</span><span class="n">string</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">log_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">string</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">string</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ssh: </span><span class="si">{</span><span class="n">final_ssh</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nCells</span><span class="o">=</span><span class="n">icell</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">, &#39;</span>
+                          <span class="sa">f</span><span class="s1">&#39;landIcePressure: &#39;</span>
+                          <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">land_ice_pressure</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nCells</span><span class="o">=</span><span class="n">icell</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;     </span><span class="si">{</span><span class="n">string</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">log_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">string</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;   - Complete</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 </pre></div>
 

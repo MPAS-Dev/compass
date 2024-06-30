@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.ocean.tests.global_ocean.init.initial_state.InitialState &mdash; compass latest documentation</title>
+  <title>compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity &mdash; compass latest documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
 
@@ -19,8 +19,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="compass.ocean.tests.global_ocean.init.initial_state.InitialState.setup" href="compass.ocean.tests.global_ocean.init.initial_state.InitialState.setup.html" />
-    <link rel="prev" title="compass.ocean.tests.global_ocean.init.Init.run" href="compass.ocean.tests.global_ocean.init.Init.run.html" /> 
+    <link rel="next" title="compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity.run" href="compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity.run.html" />
+    <link rel="prev" title="compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.run" href="compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.run.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -117,9 +117,9 @@
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../api.html">API reference</a></li>
           <li class="breadcrumb-item"><a href="../api.html">ocean</a></li>
-      <li class="breadcrumb-item active">compass.ocean.tests.global_ocean.init.initial_state.InitialState</li>
+      <li class="breadcrumb-item active">compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.initial_state.InitialState.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -127,38 +127,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="compass-ocean-tests-global-ocean-init-initial-state-initialstate">
-<h1>compass.ocean.tests.global_ocean.init.initial_state.InitialState<a class="headerlink" href="#compass-ocean-tests-global-ocean-init-initial-state-initialstate" title="Link to this heading">¶</a></h1>
+  <section id="compass-ocean-tests-global-ocean-init-ssh-from-surface-density-sshfromsurfacedensity">
+<h1>compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity<a class="headerlink" href="#compass-ocean-tests-global-ocean-init-ssh-from-surface-density-sshfromsurfacedensity" title="Link to this heading">¶</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="compass.ocean.tests.global_ocean.init.initial_state.InitialState">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compass.ocean.tests.global_ocean.init.initial_state.</span></span><span class="sig-name descname"><span class="pre">InitialState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_case</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">culled_topo_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'initial_state'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adjustment_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/global_ocean/init/initial_state.html#InitialState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.tests.global_ocean.init.initial_state.InitialState" title="Link to this definition">¶</a></dt>
-<dd><p>A step for creating a mesh and initial condition for baroclinic channel
-test cases</p>
+<dt class="sig sig-object py" id="compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compass.ocean.tests.global_ocean.init.ssh_from_surface_density.</span></span><span class="sig-name descname"><span class="pre">SshFromSurfaceDensity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_case</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/global_ocean/init/ssh_from_surface_density.html#SshFromSurfaceDensity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity" title="Link to this definition">¶</a></dt>
+<dd><p>Compute the sea surface height that is in approximate hydrostatic balance
+with a given land-ice pressure using the density in the top layer of the
+ocean</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>mesh</strong> (<em>compass.ocean.tests.global_ocean.mesh.mesh.MeshStep</em>) – The step for creating the mesh</p></li>
-<li><p><strong>initial_condition</strong> (<em>{'WOA23'</em><em>, </em><em>'PHC'</em><em>, </em><em>'EN4_1900'}</em>) – The initial condition dataset to use</p></li>
-<li><p><strong>adjustment_fraction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – The fraction of the way through iterative ssh adjustment for this
-step</p></li>
-</ul>
+<dd class="field-odd"><p><strong>mesh</strong> (<em>compass.ocean.tests.global_ocean.mesh.mesh.MeshStep</em>) – The step for creating the mesh</p>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="compass.ocean.tests.global_ocean.init.initial_state.InitialState.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_case</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">culled_topo_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'initial_state'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adjustment_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/global_ocean/init/initial_state.html#InitialState.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.tests.global_ocean.init.initial_state.InitialState.__init__" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_case</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/global_ocean/init/ssh_from_surface_density.html#SshFromSurfaceDensity.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Create the step</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>test_case</strong> (<a class="reference internal" href="compass.ocean.tests.global_ocean.init.Init.html#compass.ocean.tests.global_ocean.init.Init" title="compass.ocean.tests.global_ocean.init.Init"><em>compass.ocean.tests.global_ocean.init.Init</em></a>) – The test case this step belongs to</p></li>
-<li><p><strong>mesh</strong> (<a class="reference internal" href="compass.ocean.tests.global_ocean.mesh.Mesh.html#compass.ocean.tests.global_ocean.mesh.Mesh" title="compass.ocean.tests.global_ocean.mesh.Mesh"><em>compass.ocean.tests.global_ocean.mesh.Mesh</em></a>) – The test case that creates the mesh used by this test case</p></li>
-<li><p><strong>initial_condition</strong> (<em>{'WOA23'</em><em>, </em><em>'PHC'</em><em>, </em><em>'EN4_1900'}</em>) – The initial condition dataset to use</p></li>
-<li><p><strong>culled_topo_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – The path to a step where <code class="docutils literal notranslate"><span class="pre">topography_culled.nc</span></code> is provided</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – The name of the step</p></li>
-<li><p><strong>subdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – The subdirectory for the step</p></li>
-<li><p><strong>adjustment_fraction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – The fraction of the way through iterative ssh adjustment for this
-step</p></li>
+<li><p><strong>init_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The path to the initial state from which to get the land ice
+pressure and surface density</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The name of the step</p></li>
+<li><p><strong>subdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The subdirectory for the step</p></li>
 </ul>
 </dd>
 </dl>
@@ -167,7 +160,7 @@ step</p></li>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#compass.ocean.tests.global_ocean.init.initial_state.InitialState.__init__" title="compass.ocean.tests.global_ocean.init.initial_state.InitialState.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(test_case, mesh, initial_condition)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity.__init__" title="compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(test_case, init_path, name, subdir)</p></td>
 <td><p>Create the step</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_input_file</span></code>([filename, target, database, ...])</p></td>
@@ -189,22 +182,22 @@ step</p></li>
 <td><p>Add a streams file to the step to be parsed when generating a complete streams file if and when the step gets set up.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">constrain_resources</span></code>(available_resources)</p></td>
-<td><p>Update resources at runtime from config options</p></td>
+<td><p>Constrain <code class="docutils literal notranslate"><span class="pre">cpus_per_task</span></code> and <code class="docutils literal notranslate"><span class="pre">ntasks</span></code> based on the number of cores available to this step</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_inputs_and_outputs</span></code>()</p></td>
 <td><p>Process the inputs to and outputs from a step added with <a class="reference internal" href="../../generated/compass.Step.add_input_file.html#compass.Step.add_input_file" title="compass.Step.add_input_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_input_file()</span></code></a> and <a class="reference internal" href="../../generated/compass.Step.add_output_file.html#compass.Step.add_output_file" title="compass.Step.add_output_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_output_file()</span></code></a>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compass.ocean.tests.global_ocean.init.initial_state.InitialState.run.html#compass.ocean.tests.global_ocean.init.initial_state.InitialState.run" title="compass.ocean.tests.global_ocean.init.initial_state.InitialState.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity.run.html#compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity.run" title="compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>()</p></td>
 <td><p>Run this step of the testcase</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">runtime_setup</span></code>()</p></td>
-<td><p>Update the Haney number at runtime based on the config option.</p></td>
+<td><p>Update attributes of the step at runtime before calling the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_resources</span></code>([cpus_per_task, ...])</p></td>
 <td><p>Update the resources for the subtask.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compass.ocean.tests.global_ocean.init.initial_state.InitialState.setup.html#compass.ocean.tests.global_ocean.init.initial_state.InitialState.setup" title="compass.ocean.tests.global_ocean.init.initial_state.InitialState.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup</span></code></a>()</p></td>
-<td><p>Get resources at setup from config options</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup</span></code>()</p></td>
+<td><p>Set up the test case in the work directory, including downloading any dependencies.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_namelist_at_runtime</span></code>(options[, out_name])</p></td>
 <td><p>Update an existing namelist file with additional options.</p></td>
@@ -225,8 +218,8 @@ step</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="compass.ocean.tests.global_ocean.init.Init.run.html" class="btn btn-neutral float-left" title="compass.ocean.tests.global_ocean.init.Init.run" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="compass.ocean.tests.global_ocean.init.initial_state.InitialState.setup.html" class="btn btn-neutral float-right" title="compass.ocean.tests.global_ocean.init.initial_state.InitialState.setup" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.run.html" class="btn btn-neutral float-left" title="compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.run" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity.run.html" class="btn btn-neutral float-right" title="compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity.run" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

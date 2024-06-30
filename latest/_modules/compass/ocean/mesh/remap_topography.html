@@ -115,6 +115,7 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
 <span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">LatLonGridDescriptor</span><span class="p">,</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">,</span> <span class="n">Remapper</span>
 
@@ -177,7 +178,8 @@
 <span class="sd">        dependencies.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
-        <span class="n">topo_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;topo_filename&#39;</span><span class="p">)</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">topo_filename</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;topo_filename&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">,</span>
             <span class="n">target</span><span class="o">=</span><span class="n">topo_filename</span><span class="p">,</span>
@@ -189,7 +191,6 @@
         <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="n">base_filename</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span> <span class="n">work_dir_target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
 
-        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;ntasks&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;min_tasks&#39;</span><span class="p">)</span></div>
 
@@ -227,6 +228,9 @@
         <span class="n">method</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;method&#39;</span><span class="p">)</span>
         <span class="n">renorm_threshold</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span>
                                            <span class="s1">&#39;renorm_threshold&#39;</span><span class="p">)</span>
+        <span class="n">ice_density</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;ice_density&#39;</span><span class="p">)</span>
+        <span class="n">ocean_density</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_RHOSW&#39;</span><span class="p">]</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_G&#39;</span><span class="p">]</span>
 
         <span class="n">in_descriptor</span> <span class="o">=</span> <span class="n">LatLonGridDescriptor</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">,</span>
                                                   <span class="n">lonVarName</span><span class="o">=</span><span class="n">lon_var</span><span class="p">,</span>
@@ -254,28 +258,45 @@
         <span class="n">ds_in</span> <span class="o">=</span> <span class="n">ds_in</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;ncol&#39;</span><span class="p">:</span> <span class="s1">&#39;nCells&#39;</span><span class="p">})</span>
         <span class="n">ds_out</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
         <span class="n">rename</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;bathymetry_var&#39;</span><span class="p">:</span> <span class="s1">&#39;bed_elevation&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;ice_draft_var&#39;</span><span class="p">:</span> <span class="s1">&#39;landIceDraftObserved&#39;</span><span class="p">,</span>
                   <span class="s1">&#39;ice_thickness_var&#39;</span><span class="p">:</span> <span class="s1">&#39;landIceThkObserved&#39;</span><span class="p">,</span>
                   <span class="s1">&#39;ice_frac_var&#39;</span><span class="p">:</span> <span class="s1">&#39;landIceFracObserved&#39;</span><span class="p">,</span>
                   <span class="s1">&#39;grounded_ice_frac_var&#39;</span><span class="p">:</span> <span class="s1">&#39;landIceGroundedFracObserved&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;ocean_frac_var&#39;</span><span class="p">:</span> <span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">}</span>
+                  <span class="s1">&#39;ocean_frac_var&#39;</span><span class="p">:</span> <span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;bathy_frac_var&#39;</span><span class="p">:</span> <span class="s1">&#39;bathyFracObserved&#39;</span><span class="p">}</span>
 
-        <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">rename</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">option</span><span class="p">,</span> <span class="n">out_var</span> <span class="ow">in</span> <span class="n">rename</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">in_var</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
-            <span class="n">out_var</span> <span class="o">=</span> <span class="n">rename</span><span class="p">[</span><span class="n">option</span><span class="p">]</span>
             <span class="n">ds_out</span><span class="p">[</span><span class="n">out_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_in</span><span class="p">[</span><span class="n">in_var</span><span class="p">]</span>
+
+        <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIceFloatingFracObserved&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">ds_out</span><span class="o">.</span><span class="n">landIceFracObserved</span> <span class="o">-</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">landIceGroundedFracObserved</span>
 
         <span class="c1"># make sure fractions don&#39;t exceed 1</span>
         <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;landIceFracObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceGroundedFracObserved&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">]:</span>
+                    <span class="s1">&#39;landIceFloatingFracObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;bathyFracObserved&#39;</span><span class="p">]:</span>
             <span class="n">ds_out</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">ds_out</span><span class="p">[</span><span class="n">var</span><span class="p">],</span> <span class="mf">1.</span><span class="p">)</span>
 
         <span class="c1"># renormalize elevation variables</span>
-        <span class="n">norm</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">oceanFracObserved</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">bathyFracObserved</span>
         <span class="n">valid</span> <span class="o">=</span> <span class="n">norm</span> <span class="o">&gt;</span> <span class="n">renorm_threshold</span>
-        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bed_elevation&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceDraftObserved&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;landIceThkObserved&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bed_elevation&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceThkObserved&#39;</span><span class="p">]:</span>
             <span class="n">ds_out</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">valid</span><span class="p">,</span> <span class="n">ds_out</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">/</span> <span class="n">norm</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+
+        <span class="n">thickness</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">landIceThkObserved</span>
+        <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIcePressureObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ice_density</span> <span class="o">*</span> <span class="n">g</span> <span class="o">*</span> <span class="n">thickness</span>
+
+        <span class="c1"># compute the ice draft to be consistent with the land ice pressure</span>
+        <span class="c1"># and using E3SM&#39;s density of seawater</span>
+        <span class="n">draft</span> <span class="o">=</span> <span class="o">-</span> <span class="p">(</span><span class="n">ice_density</span> <span class="o">/</span> <span class="n">ocean_density</span><span class="p">)</span> <span class="o">*</span> <span class="n">thickness</span>
+        <span class="n">bed</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">bed_elevation</span>
+
+        <span class="c1"># can&#39;t be deeper than the bed</span>
+        <span class="n">draft</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">draft</span> <span class="o">&gt;=</span> <span class="n">bed</span><span class="p">,</span> <span class="n">draft</span><span class="p">,</span> <span class="n">bed</span><span class="p">)</span>
+
+        <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIceDraftObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">draft</span>
+
+        <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">draft</span>
 
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="s1">&#39;topography_remapped.nc&#39;</span><span class="p">)</span></div>
 </div>

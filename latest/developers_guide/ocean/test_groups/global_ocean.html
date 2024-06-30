@@ -764,9 +764,9 @@ for short runs with these meshes.</p>
 <span class="na">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">RRS</span>
 <span class="c1"># a description of the mesh and initial condition</span>
 <span class="na">mesh_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MPAS Eddy Closure mesh for E3SM version ${e3sm_version} with</span>
-<span class="w">                </span><span class="na">enhanced resolution around the equator (30 km), South pole</span>
-<span class="w">                </span><span class="na">(35 km), Greenland (${min_res} km), ${max_res}-km resolution</span>
-<span class="w">                </span><span class="na">at mid latitudes, and ${levels} vertical levels</span>
+<span class="w">                   </span><span class="na">enhanced resolution around the equator (30 km), South pole</span>
+<span class="w">                   </span><span class="na">(35 km), Greenland (${min_res} km), ${max_res}-km resolution</span>
+<span class="w">                   </span><span class="na">at mid latitudes, and ${levels} vertical levels</span>
 <span class="c1"># E3SM version that the mesh is intended for</span>
 <span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
 <span class="c1"># The revision number of the mesh, which should be incremented each time the</span>
@@ -1027,13 +1027,27 @@ and <code class="docutils literal notranslate"><span class="pre">streams.wisc</s
 defines the step for creating the initial state, including defining the
 topography, wind stress, shortwave, potential temperature, salinity, and
 ecosystem input data files.</p>
+<p>If a mesh has ice-shelf cavities, iterative adjustment of the sea-surface height
+is performed to prevent tsunamis in forward runs.</p>
+<p>First, a step defined by
+<a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity.html#compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity" title="compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.init.ssh_from_surface_density.SshFromSurfaceDensity</span></code></a>
+is called to update the <code class="docutils literal notranslate"><span class="pre">ssh</span></code> variable in the topography dataset based
+on the surface pressure, rather than the constant reference density.</p>
+<p>Then, for each iteration, first a new <code class="docutils literal notranslate"><span class="pre">InitialState</span></code> step is called with the
+updated <code class="docutils literal notranslate"><span class="pre">ssh</span></code>.  Next, a step with the
+<a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.html#compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment" title="compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment</span></code></a>
+class is called to perform a short (typically 1-hour) forward run.  The
+<code class="docutils literal notranslate"><span class="pre">ssh</span></code> at the end of that run, masked to be modified only under ice shelves,
+is used as the new <code class="docutils literal notranslate"><span class="pre">ssh</span></code> for the next iteration.  The idea is that the
+main cause of dynamics in the sea-surface height in the first hour of
+simulation is due to the hydrostatic imbalance between <code class="docutils literal notranslate"><span class="pre">landIcePressure</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ssh</span></code>, and that this can be reduced by updating the <code class="docutils literal notranslate"><span class="pre">ssh</span></code> with this
+iterative procedure.</p>
+<p>Finally, another <code class="docutils literal notranslate"><span class="pre">InitialState</span></code> step creates the initial condition to be
+used in subsequent forward simulations in Compass.</p>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt.html#compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt" title="compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt</span></code></a>
 defines a step that remaps melt rates from the satellite-derived dataset
 from <a class="reference external" href="https://doi.org/10.5194/tc-17-3409-2023">Paolo et al. (2023)</a>.</p>
-<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.html#compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment" title="compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment</span></code></a>
-defines a step to adjust the <code class="docutils literal notranslate"><span class="pre">landIcePressure</span></code> variable to be in closer to
-dynamical balance with the sea-surface height (SSH) in configurations with
-<a class="reference internal" href="../framework.html#dev-ocean-framework-iceshelf"><span class="std std-ref">Ice-shelf cavities</span></a>.</p>
 <p>If the test case is being compared with a baseline, the potential temperature,
 salinity, and layerThickness are compared with those in the baseline initial
 condition to make sure they are identical.  In simulations with ice-shelf

@@ -119,6 +119,9 @@
     <span class="n">RemapIceShelfMelt</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.init.ssh_adjustment</span> <span class="kn">import</span> <span class="n">SshAdjustment</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.init.ssh_from_surface_density</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SshFromSurfaceDensity</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
 <span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
 
@@ -166,18 +169,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">initial_condition</span> <span class="o">=</span> <span class="n">initial_condition</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
-            <span class="n">InitialState</span><span class="p">(</span>
-                <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
-                <span class="n">initial_condition</span><span class="o">=</span><span class="n">initial_condition</span><span class="p">))</span>
-
-        <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">RemapIceShelfMelt</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">))</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
-                <span class="n">SshAdjustment</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_condition</span> <span class="o">=</span> <span class="n">initial_condition</span></div>
 
 
 <div class="viewcode-block" id="Init.configure">
@@ -189,11 +181,14 @@
 <span class="sd">        config : compass.config.CompassConfigParser, optional</span>
 <span class="sd">            Configuration options to update if not those for this test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">add_steps</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
+        <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span>
+
         <span class="c1"># set mesh-relate config options</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">mesh</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
 
         <span class="n">initial_condition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_condition</span>
         <span class="n">descriptions</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;WOA23&#39;</span><span class="p">:</span> <span class="s1">&#39;World Ocean Atlas 2023 climatology &#39;</span>
@@ -203,7 +198,73 @@
                         <span class="s1">&#39;EN4_1900&#39;</span><span class="p">:</span> <span class="s2">&quot;Met Office Hadley Centre&#39;s EN4 dataset &quot;</span>
                                     <span class="s2">&quot;from 1900&quot;</span><span class="p">}</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;init_description&#39;</span><span class="p">,</span>
-                   <span class="n">descriptions</span><span class="p">[</span><span class="n">initial_condition</span><span class="p">])</span></div>
+                   <span class="n">descriptions</span><span class="p">[</span><span class="n">initial_condition</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">add_steps</span><span class="p">:</span>
+            <span class="c1"># add the steps for ssh adjustment</span>
+            <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
+                <span class="n">step_index</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">name</span> <span class="o">=</span> \
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">step_index</span><span class="si">:</span><span class="s1">02d</span><span class="si">}</span><span class="s1">_init_with_draft_from_constant_density&#39;</span>
+                <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;adjust_ssh/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="n">init_const_rho</span> <span class="o">=</span> <span class="n">InitialState</span><span class="p">(</span>
+                    <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
+                    <span class="n">initial_condition</span><span class="o">=</span><span class="n">initial_condition</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">,</span>
+                    <span class="n">adjustment_fraction</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">init_const_rho</span><span class="p">)</span>
+
+                <span class="c1"># Recompute ssh using surface density</span>
+                <span class="n">step_index</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">step_index</span><span class="si">:</span><span class="s1">02d</span><span class="si">}</span><span class="s1">_ssh_from_surface_density&#39;</span>
+                <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;adjust_ssh/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="n">ssh_from_surf_rho</span> <span class="o">=</span> <span class="n">SshFromSurfaceDensity</span><span class="p">(</span>
+                    <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">init_path</span><span class="o">=</span><span class="n">init_const_rho</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">ssh_from_surf_rho</span><span class="p">)</span>
+
+                <span class="n">culled_topo_path</span> <span class="o">=</span> <span class="n">ssh_from_surf_rho</span><span class="o">.</span><span class="n">path</span>
+
+                <span class="n">iteration_count</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ssh_adjustment&#39;</span><span class="p">,</span> <span class="s1">&#39;iterations&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">iter_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iteration_count</span><span class="p">):</span>
+                    <span class="n">fraction</span> <span class="o">=</span> <span class="n">iter_index</span> <span class="o">/</span> <span class="n">iteration_count</span>
+
+                    <span class="n">step_index</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">step_index</span><span class="si">:</span><span class="s1">02d</span><span class="si">}</span><span class="s1">_init&#39;</span>
+                    <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;adjust_ssh/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="n">init_step</span> <span class="o">=</span> <span class="n">InitialState</span><span class="p">(</span>
+                        <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
+                        <span class="n">initial_condition</span><span class="o">=</span><span class="n">initial_condition</span><span class="p">,</span>
+                        <span class="n">culled_topo_path</span><span class="o">=</span><span class="n">culled_topo_path</span><span class="p">,</span>
+                        <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">,</span>
+                        <span class="n">adjustment_fraction</span><span class="o">=</span><span class="n">fraction</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">init_step</span><span class="p">)</span>
+
+                    <span class="n">step_index</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">step_index</span><span class="si">:</span><span class="s1">02d</span><span class="si">}</span><span class="s1">_adjust_ssh&#39;</span>
+                    <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;adjust_ssh/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="n">adjust_ssh</span> <span class="o">=</span> <span class="n">SshAdjustment</span><span class="p">(</span>
+                        <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">init_path</span><span class="o">=</span><span class="n">init_step</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
+                        <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">adjust_ssh</span><span class="p">)</span>
+                    <span class="n">culled_topo_path</span> <span class="o">=</span> <span class="n">adjust_ssh</span><span class="o">.</span><span class="n">path</span>
+
+                <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;initial_state&#39;</span>
+                <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;initial_state&#39;</span>
+                <span class="n">init_step</span> <span class="o">=</span> <span class="n">InitialState</span><span class="p">(</span>
+                    <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
+                    <span class="n">initial_condition</span><span class="o">=</span><span class="n">initial_condition</span><span class="p">,</span>
+                    <span class="n">culled_topo_path</span><span class="o">=</span><span class="n">culled_topo_path</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">,</span>
+                    <span class="n">adjustment_fraction</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">init_step</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">RemapIceShelfMelt</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
+                    <span class="n">InitialState</span><span class="p">(</span>
+                        <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
+                        <span class="n">initial_condition</span><span class="o">=</span><span class="n">initial_condition</span><span class="p">))</span></div>
 
 
     <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -213,12 +274,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">]</span>
         <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;initial_state/initial_state.nc&#39;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
-            <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">,</span> <span class="s1">&#39;landIcePressure&#39;</span><span class="p">]</span>
-            <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-                              <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;ssh_adjustment/adjusted_init.nc&#39;</span><span class="p">)</span></div>
+                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;initial_state/initial_state.nc&#39;</span><span class="p">)</span></div>
 
 </pre></div>
 
