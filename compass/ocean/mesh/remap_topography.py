@@ -2,6 +2,7 @@ import os
 
 import numpy as np
 import xarray as xr
+from mpas_tools.cime.constants import constants
 from mpas_tools.io import write_netcdf
 from pyremap import LatLonGridDescriptor, MpasCellMeshDescriptor, Remapper
 
@@ -57,7 +58,8 @@ class RemapTopography(Step):
         dependencies.
         """
         super().setup()
-        topo_filename = self.config.get('remap_topography', 'topo_filename')
+        config = self.config
+        topo_filename = config.get('remap_topography', 'topo_filename')
         self.add_input_file(
             filename='topography.nc',
             target=topo_filename,
@@ -69,7 +71,6 @@ class RemapTopography(Step):
         target = os.path.join(base_path, base_filename)
         self.add_input_file(filename='base_mesh.nc', work_dir_target=target)
 
-        config = self.config
         self.ntasks = config.getint('remap_topography', 'ntasks')
         self.min_tasks = config.getint('remap_topography', 'min_tasks')
 
@@ -101,6 +102,9 @@ class RemapTopography(Step):
         method = config.get('remap_topography', 'method')
         renorm_threshold = config.getfloat('remap_topography',
                                            'renorm_threshold')
+        ice_density = config.getfloat('remap_topography', 'ice_density')
+        ocean_density = constants['SHR_CONST_RHOSW']
+        g = constants['SHR_CONST_G']
 
         in_descriptor = LatLonGridDescriptor.read(fileName='topography.nc',
                                                   lonVarName=lon_var,
@@ -128,27 +132,44 @@ class RemapTopography(Step):
         ds_in = ds_in.rename({'ncol': 'nCells'})
         ds_out = xr.Dataset()
         rename = {'bathymetry_var': 'bed_elevation',
-                  'ice_draft_var': 'landIceDraftObserved',
                   'ice_thickness_var': 'landIceThkObserved',
                   'ice_frac_var': 'landIceFracObserved',
                   'grounded_ice_frac_var': 'landIceGroundedFracObserved',
-                  'ocean_frac_var': 'oceanFracObserved'}
+                  'ocean_frac_var': 'oceanFracObserved',
+                  'bathy_frac_var': 'bathyFracObserved'}
 
-        for option in rename:
+        for option, out_var in rename.items():
             in_var = config.get('remap_topography', option)
-            out_var = rename[option]
             ds_out[out_var] = ds_in[in_var]
+
+        ds_out['landIceFloatingFracObserved'] = \
+            ds_out.landIceFracObserved - ds_out.landIceGroundedFracObserved
 
         # make sure fractions don't exceed 1
         for var in ['landIceFracObserved', 'landIceGroundedFracObserved',
-                    'oceanFracObserved']:
+                    'landIceFloatingFracObserved', 'oceanFracObserved',
+                    'bathyFracObserved']:
             ds_out[var] = np.minimum(ds_out[var], 1.)
 
         # renormalize elevation variables
-        norm = ds_out.oceanFracObserved
+        norm = ds_out.bathyFracObserved
         valid = norm > renorm_threshold
-        for var in ['bed_elevation', 'landIceDraftObserved',
-                    'landIceThkObserved']:
+        for var in ['bed_elevation', 'landIceThkObserved']:
             ds_out[var] = xr.where(valid, ds_out[var] / norm, 0.)
+
+        thickness = ds_out.landIceThkObserved
+        ds_out['landIcePressureObserved'] = ice_density * g * thickness
+
+        # compute the ice draft to be consistent with the land ice pressure
+        # and using E3SM's density of seawater
+        draft = - (ice_density / ocean_density) * thickness
+        bed = ds_out.bed_elevation
+
+        # can't be deeper than the bed
+        draft = xr.where(draft >= bed, draft, bed)
+
+        ds_out['landIceDraftObserved'] = draft
+
+        ds_out['ssh'] = draft
 
         write_netcdf(ds_out, 'topography_remapped.nc')

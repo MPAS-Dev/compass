@@ -87,7 +87,7 @@ def adjust_ssh(variable, iteration_count, step, update_pio=True,
         on_a_sphere = ds.attrs['on_a_sphere'].lower() == 'yes'
 
         modify_mask = numpy.logical_and(ds.maxLevelCell > 0,
-                                        ds.modifyLandIcePressureMask == 1)
+                                        ds.sshAdjustmentMask == 1)
 
     for iter_index in range(iteration_count):
         logger.info(f" * Iteration {iter_index + 1}/{iteration_count}")

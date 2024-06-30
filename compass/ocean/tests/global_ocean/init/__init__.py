@@ -5,6 +5,9 @@ from compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt import (
     RemapIceShelfMelt,
 )
 from compass.ocean.tests.global_ocean.init.ssh_adjustment import SshAdjustment
+from compass.ocean.tests.global_ocean.init.ssh_from_surface_density import (
+    SshFromSurfaceDensity,
+)
 from compass.testcase import TestCase
 from compass.validate import compare_variables
 
@@ -50,17 +53,6 @@ class Init(TestCase):
         self.mesh = mesh
         self.initial_condition = initial_condition
 
-        self.add_step(
-            InitialState(
-                test_case=self, mesh=mesh,
-                initial_condition=initial_condition))
-
-        if mesh.with_ice_shelf_cavities:
-            self.add_step(RemapIceShelfMelt(test_case=self, mesh=mesh))
-
-            self.add_step(
-                SshAdjustment(test_case=self))
-
     def configure(self, config=None):
         """
         Modify the configuration options for this test case
@@ -68,11 +60,14 @@ class Init(TestCase):
         config : compass.config.CompassConfigParser, optional
             Configuration options to update if not those for this test case
         """
+        add_steps = config is None
         if config is None:
             config = self.config
 
+        mesh = self.mesh
+
         # set mesh-relate config options
-        self.mesh.configure(config=config)
+        mesh.configure(config=config)
 
         initial_condition = self.initial_condition
         descriptions = {'WOA23': 'World Ocean Atlas 2023 climatology '
@@ -84,6 +79,72 @@ class Init(TestCase):
         config.set('global_ocean', 'init_description',
                    descriptions[initial_condition])
 
+        if add_steps:
+            # add the steps for ssh adjustment
+            if mesh.with_ice_shelf_cavities:
+                step_index = 1
+                name = \
+                    f'{step_index:02d}_init_with_draft_from_constant_density'
+                subdir = f'adjust_ssh/{name}'
+                init_const_rho = InitialState(
+                    test_case=self, mesh=mesh,
+                    initial_condition=initial_condition,
+                    name=name, subdir=subdir,
+                    adjustment_fraction=0.)
+                self.add_step(init_const_rho)
+
+                # Recompute ssh using surface density
+                step_index += 1
+                name = f'{step_index:02d}_ssh_from_surface_density'
+                subdir = f'adjust_ssh/{name}'
+                ssh_from_surf_rho = SshFromSurfaceDensity(
+                    test_case=self, init_path=init_const_rho.path,
+                    name=name, subdir=subdir)
+                self.add_step(ssh_from_surf_rho)
+
+                culled_topo_path = ssh_from_surf_rho.path
+
+                iteration_count = config.getint('ssh_adjustment', 'iterations')
+                for iter_index in range(iteration_count):
+                    fraction = iter_index / iteration_count
+
+                    step_index += 1
+                    name = f'{step_index:02d}_init'
+                    subdir = f'adjust_ssh/{name}'
+                    init_step = InitialState(
+                        test_case=self, mesh=mesh,
+                        initial_condition=initial_condition,
+                        culled_topo_path=culled_topo_path,
+                        name=name, subdir=subdir,
+                        adjustment_fraction=fraction)
+                    self.add_step(init_step)
+
+                    step_index += 1
+                    name = f'{step_index:02d}_adjust_ssh'
+                    subdir = f'adjust_ssh/{name}'
+                    adjust_ssh = SshAdjustment(
+                        test_case=self, init_path=init_step.path,
+                        name=name, subdir=subdir)
+                    self.add_step(adjust_ssh)
+                    culled_topo_path = adjust_ssh.path
+
+                name = 'initial_state'
+                subdir = 'initial_state'
+                init_step = InitialState(
+                    test_case=self, mesh=mesh,
+                    initial_condition=initial_condition,
+                    culled_topo_path=culled_topo_path,
+                    name=name, subdir=subdir,
+                    adjustment_fraction=1.0)
+                self.add_step(init_step)
+
+                self.add_step(RemapIceShelfMelt(test_case=self, mesh=mesh))
+            else:
+                self.add_step(
+                    InitialState(
+                        test_case=self, mesh=mesh,
+                        initial_condition=initial_condition))
+
     def validate(self):
         """
         Test cases can override this method to perform validation of variables
@@ -92,8 +153,3 @@ class Init(TestCase):
         variables = ['temperature', 'salinity', 'layerThickness']
         compare_variables(test_case=self, variables=variables,
                           filename1='initial_state/initial_state.nc')
-
-        if self.mesh.with_ice_shelf_cavities:
-            variables = ['ssh', 'landIcePressure']
-            compare_variables(test_case=self, variables=variables,
-                              filename1='ssh_adjustment/adjusted_init.nc')

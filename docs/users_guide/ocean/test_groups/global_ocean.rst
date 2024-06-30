@@ -56,7 +56,7 @@ Note that meshes and test cases may modify these options, as noted below.
     [ssh_adjustment]
 
     # the number of iterations of ssh adjustment to perform
-    iterations = 10
+    iterations = 4
 
     # Whether to convert adjusted initial condition files to CDF5 format during
     # ssh adjustment under ice shelves

@@ -501,9 +501,7 @@ def _land_mask_from_topo(with_cavities, topo_filename, mask_filename):
         # we want the mask to be 1 where there's not ocean
         cull_mask = xr.where(ocean_frac < 0.5, 1, 0)
     else:
-        land_ice_frac = ds_topo.landIceFracObserved
-        grounded_ice_frac = ds_topo.landIceGroundedFracObserved
-        floating_ice_frac = land_ice_frac - grounded_ice_frac
+        floating_ice_frac = ds_topo.landIceFloatingFracObserved
         no_cavities_ocean_frac = ocean_frac - floating_ice_frac
 
         # we want the mask to be 1 where there's not open ocean
@@ -558,7 +556,7 @@ def _add_land_ice_mask_and_mask_draft(ds_topo, ds_base_mesh, logger):
     land_ice_draft_mask = ds_mask.cellSeedMask
     ds_topo['landIceDraftMask'] = land_ice_draft_mask
     ds_topo['landIceDraftObserved'] = (
-        land_ice_mask * ds_topo.landIceDraftObserved)
+        land_ice_draft_mask * ds_topo.landIceDraftObserved)
 
 
 def _land_mask_from_geojson(with_cavities, process_count, logger,
