@@ -283,12 +283,8 @@
                        <span class="n">base_mesh_filename</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">init</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
-                <span class="n">initial_state_filename</span> <span class="o">=</span> \
-                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/ssh_adjustment/adjusted_init.nc&#39;</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">initial_state_filename</span> <span class="o">=</span> \
-                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/initial_state/initial_state.nc&#39;</span>
+            <span class="n">initial_state_filename</span> <span class="o">=</span> \
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/initial_state/initial_state.nc&#39;</span>
             <span class="n">initial_state_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_work_dir</span><span class="p">,</span>
                                                   <span class="n">initial_state_filename</span><span class="p">)</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span> <span class="s1">&#39;ocean_initial_state_filename&#39;</span><span class="p">,</span>
