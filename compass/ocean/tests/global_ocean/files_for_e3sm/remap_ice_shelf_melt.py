@@ -40,7 +40,9 @@ class RemapIceShelfMelt(FilesForE3SMStep):
         setup input files based on config options
         """
         super().setup()
-        if not self.with_ice_shelf_cavities:
+        if self.init is not None:
+            # we don't need any files, since we already did this remapping
+            # during init
             return
 
         filename = 'prescribed_ismf_paolo2023.nc'
