@@ -30,33 +30,39 @@ class RemapIceShelfMelt(FilesForE3SMStep):
 
         init : compass.ocean.tests.global_ocean.init.Init
             The test case that produces the initial condition for this run
-        """  # noqa: E501
+        """
         super().__init__(test_case, name='remap_ice_shelf_melt', ntasks=512,
                          min_tasks=1)
         self.init = init
-        filename = 'prescribed_ismf_paolo2023.nc'
-        if init is None:
-            self.add_input_file(
-                filename='Paolo_2023_ANT_G1920V01_IceShelfMelt.nc',
-                target='Paolo_2023_ANT_G1920V01_IceShelfMelt.nc',
-                database='initial_condition_database',
-                url='https://its-live-data.s3.amazonaws.com/height_change/Antarctica/Floating/ANT_G1920V01_IceShelfMelt.nc')    # noqa: E501
-        elif 'remap_ice_shelf_melt' in self.init.steps:
-            melt_path = \
-                self.init.steps['remap_ice_shelf_melt'].path
-
-            self.add_input_file(
-                filename=filename,
-                work_dir_target=f'{melt_path}/{filename}')
 
     def setup(self):
         """
         setup input files based on config options
         """
         super().setup()
+        if not self.with_ice_shelf_cavities:
+            return
+
         filename = 'prescribed_ismf_paolo2023.nc'
-        if self.with_ice_shelf_cavities:
+
+        if self.init is None:
+            self.add_input_file(
+                filename='Paolo_2023_ANT_G1920V01_IceShelfMelt.nc',
+                target='Paolo_2023_ANT_G1920V01_IceShelfMelt.nc',
+                database='initial_condition_database',
+                url='https://its-live-data.s3.amazonaws.com/height_change/Antarctica/Floating/ANT_G1920V01_IceShelfMelt.nc')    # noqa: E501
             self.add_output_file(filename=filename)
+        else:
+            if 'remap_ice_shelf_melt' not in self.init.steps:
+                raise ValueError('Something seems to be misconfigured. No '
+                                 'remap_ice_shelf_melt step found in init '
+                                 'test case.')
+            melt_path = \
+                self.init.steps['remap_ice_shelf_melt'].path
+
+            self.add_input_file(
+                filename=filename,
+                work_dir_target=f'{melt_path}/{filename}')
 
     def run(self):
         """
