@@ -131,21 +131,20 @@ class Analysis(Step):
         # find time since the beginning of run
         ds = xr.open_dataset(f'{mesh_name}_output.nc')
         for j in range(len(ds.xtime)):
-            tt = str(ds.xtime[j].values)
-            tt.rfind('_')
-            DY = float(tt[10:12]) - 1
-            if DY == pd:
+            time_string = str(np.strings.decode(ds.xtime[j].values))
+            day = float(time_string[8:10]) - 1
+            if day == pd:
                 sliceTime = j
                 break
-        HR = float(tt[13:15])
-        MN = float(tt[16:18])
-        t = 86400.0 * DY + HR * 3600. + MN
+        hour = float(time_string[11:13])
+        min = float(time_string[14:16])
+        t = 86400.0 * day + hour * 3600. + min
         # find new location of blob center
         # center is based on equatorial velocity
-        R = init.sphere_radius
-        distTrav = 2.0 * 3.14159265 * R / (86400.0 * pd) * t
+        r = init.sphere_radius
+        distTrav = 2.0 * np.pi * r / (86400.0 * pd) * t
         # distance in radians is
-        distRad = distTrav / R
+        distRad = distTrav / r
         newLon = lonCent + distRad
         if newLon > 2.0 * np.pi:
             newLon -= 2.0 * np.pi
@@ -154,12 +153,12 @@ class Analysis(Step):
         tracer = np.zeros_like(init.tracer1[0, :, 0].values)
         latC = init.latCell.values
         lonC = init.lonCell.values
-        temp = R * np.arccos(np.sin(latCent) * np.sin(latC) +
-                             np.cos(latCent) * np.cos(latC) * np.cos(
-            lonC - newLon))
+        temp = r * np.arccos(np.sin(latCent) * np.sin(latC) +
+                             (np.cos(latCent) * np.cos(latC) *
+                              np.cos(lonC - newLon)))
         mask = temp < radius
         tracer[mask] = psi0 / 2.0 * (
-            1.0 + np.cos(3.1415926 * temp[mask] / radius))
+            1.0 + np.cos(np.pi * temp[mask] / radius))
 
         # oad forward mode data
         tracerF = ds.tracer1[sliceTime, :, 0].values
@@ -167,4 +166,4 @@ class Analysis(Step):
 
         init.close()
         ds.close()
-        return rmseValue, init.dims['nCells']
+        return rmseValue, init.sizes['nCells']
