@@ -162,12 +162,8 @@ class FilesForE3SM(TestCase):
                        base_mesh_filename)
 
         if init is not None:
-            if mesh.with_ice_shelf_cavities:
-                initial_state_filename = \
-                    f'{init.path}/ssh_adjustment/adjusted_init.nc'
-            else:
-                initial_state_filename = \
-                    f'{init.path}/initial_state/initial_state.nc'
+            initial_state_filename = \
+                f'{init.path}/initial_state/initial_state.nc'
             initial_state_filename = os.path.join(self.base_work_dir,
                                                   initial_state_filename)
             config.set('files_for_e3sm', 'ocean_initial_state_filename',
