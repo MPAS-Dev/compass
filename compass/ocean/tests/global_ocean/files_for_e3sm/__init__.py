@@ -10,6 +10,9 @@ from compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_masks import (
 from compass.ocean.tests.global_ocean.files_for_e3sm.e3sm_to_cmip_maps import (
     E3smToCmipMaps,
 )
+from compass.ocean.tests.global_ocean.files_for_e3sm.normalize_iceberg_ice_shelf_melt import (  # noqa: E501
+    NormalizeIcebergIceShelfMelt,
+)
 from compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition import (  # noqa: E501
     OceanGraphPartition,
 )
@@ -113,12 +116,15 @@ class FilesForE3SM(TestCase):
         self.add_step(DiagnosticMaps(test_case=self))
         self.add_step(DiagnosticMasks(test_case=self))
 
-        self.add_step(RemapIceShelfMelt(test_case=self, init=init))
-
-        self.add_step(RemapSeaSurfaceSalinityRestoring(
+        self.add_step(RemapIcebergClimatology(
             test_case=self))
 
-        self.add_step(RemapIcebergClimatology(
+        self.add_step(RemapIceShelfMelt(test_case=self, init=init))
+
+        self.add_step(NormalizeIcebergIceShelfMelt(
+            test_case=self))
+
+        self.add_step(RemapSeaSurfaceSalinityRestoring(
             test_case=self))
 
         self.add_step(RemapTidalMixing(test_case=self))
