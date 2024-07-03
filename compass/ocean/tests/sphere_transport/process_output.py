@@ -1,9 +1,10 @@
-import matplotlib.pyplot as plt
-from matplotlib.gridspec import GridSpec
-from matplotlib.colors import ListedColormap
-import matplotlib
-import numpy as np
 from importlib import resources
+
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.colors import ListedColormap
+from matplotlib.gridspec import GridSpec
 
 
 def appx_mesh_size(dataset):
@@ -260,8 +261,8 @@ def read_ncl_rgb_file(cmap_filename):
     map_file_found = False
     try:
         with resources.open_text(
-                "compass.ocean.tests.sphere_transport.resources", cmap_filename) \
-                as f:
+                "compass.ocean.tests.sphere_transport.resources",
+                cmap_filename) as f:
             flines = f.readlines()
         map_file_found = True
     except BaseException:
@@ -277,7 +278,7 @@ def read_ncl_rgb_file(cmap_filename):
         result = ListedColormap(rgb, name=cmap_filename)
     else:
         print("error reading ncl colormap. using matplotlib default instead.")
-        result = matplotlib.cm.get_cmap()
+        result = matplotlib.pyplot.get_cmap()
     return result
 
 

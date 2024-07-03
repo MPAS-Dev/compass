@@ -1,13 +1,14 @@
-from compass.step import Step
+import os
 
-import netCDF4
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-import numpy as np
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
-import os
+import matplotlib.pyplot as plt
+import netCDF4
+import numpy as np
+from matplotlib import colormaps
 from mpas_tools.logging import check_call
+
+from compass.step import Step
 
 
 class Analysis(Step):
@@ -255,7 +256,7 @@ class Analysis(Step):
         """
 
         plt.switch_backend('agg')
-        cmap_reversed = cm.get_cmap('Spectral_r')
+        cmap_reversed = colormaps['Spectral_r']
 
         # Initialize plotting variables
         TW = 2                         # Tick width

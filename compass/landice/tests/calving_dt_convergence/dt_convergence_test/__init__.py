@@ -1,10 +1,11 @@
-from compass.testcase import TestCase
-from compass.landice.tests.calving_dt_convergence.run_model import RunModel
+import matplotlib.cm
+import matplotlib.pyplot as plt
+import netCDF4
 # from compass.validate import compare_variables  # not currently used
 import numpy
-import netCDF4
-import matplotlib.pyplot as plt
-import matplotlib.cm
+
+from compass.landice.tests.calving_dt_convergence.run_model import RunModel
+from compass.testcase import TestCase
 
 
 class DtConvergenceTest(TestCase):
@@ -77,7 +78,8 @@ class DtConvergenceTest(TestCase):
         ax[3].set_ylabel('# warnings', color='c')
         ax2 = ax[3].twinx()
         ax2.set_ylabel('fraction with warnings', color='g')
-        colors = matplotlib.cm.jet(numpy.linspace(0, 1, len(self.fractions)))
+        jet = matplotlib.colormaps['jet']
+        colors = jet(numpy.linspace(0, 1, len(self.fractions)))
         nWarn = numpy.zeros([len(self.fractions)])
         nTimesteps = numpy.zeros([len(self.fractions)])
 

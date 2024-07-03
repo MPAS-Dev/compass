@@ -522,7 +522,7 @@ with open('ensemble_data.pickle', 'wb') as f:
 
 if plot_maps:
     # axMaps2.plot(GLX, GLY, '.')
-    axMaps2.hist2d(GLX, GLY, (50, 50), cmap=plt.cm.jet)
+    axMaps2.hist2d(GLX, GLY, (50, 50), cmap=plt.get_cmap('jet'))
     figMaps.savefig('figure_maps.png')
 
 if plot_time_series:

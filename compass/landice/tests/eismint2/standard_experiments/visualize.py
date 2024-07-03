@@ -1,6 +1,7 @@
 import datetime
-import netCDF4
+
 import matplotlib.pyplot as plt
+import netCDF4
 import numpy as np
 from scipy.interpolate import griddata
 
@@ -473,7 +474,7 @@ def _contour_mpas(field, nCells, xCell, yCell, contour_levs=None):
     if len(contour_levs) == 1:
         im = plt.contour(xi, yi, zi)
     else:
-        im = plt.contour(xi, yi, zi, contour_levs, cmap=plt.cm.jet)
+        im = plt.contour(xi, yi, zi, contour_levs, cmap=plt.get_cmap('jet'))
 
     # to see the raw data on top
     # plt.scatter(xCell, yCell, c=temperature[timelev,:,-1], s=100,
