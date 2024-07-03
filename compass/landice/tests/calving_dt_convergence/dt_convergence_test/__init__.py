@@ -29,7 +29,7 @@ class DtConvergenceTest(TestCase):
         test_group : compass.landice.tests.calving_dt_convergence.CalvingDtConvergence
             The test group that this test case belongs to
 
-        """
+        """  # noqa: E501
         self.name = f'calving_dt_convergence_test_{mesh}_{calving}_{velo}'
         subdir = f'{mesh}.{calving}.{velo}'
         super().__init__(test_group=test_group, name=self.name, subdir=subdir)
@@ -93,7 +93,7 @@ class DtConvergenceTest(TestCase):
             ax[0].plot(yr[1:], calv[1:], '-', label=f'{frac:.2f}',
                        color=colors[i])
 
-            ax[1].plot(yr[1:], (calv[1:]*deltat[1:]).cumsum(), '-',
+            ax[1].plot(yr[1:], (calv[1:] * deltat[1:]).cumsum(), '-',
                        color=colors[i])
 
             ratio = f.variables['dtCalvingCFLratio'][:]
@@ -109,7 +109,7 @@ class DtConvergenceTest(TestCase):
             nWarn[i] = logcontents.count("WARNING: Failed to ablate")
             nTimesteps[i] = logcontents.count("Starting timestep number")
             ax[3].plot(frac, nWarn[i], 'co')
-            ax2.plot(frac, nWarn[i]/nTimesteps[i], 'gx')
+            ax2.plot(frac, nWarn[i] / nTimesteps[i], 'gx')
 
             f.close()
             i += 1

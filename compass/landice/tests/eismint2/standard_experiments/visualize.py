@@ -20,7 +20,7 @@ class Visualize(Step):
         ----------
         test_case : compass.landice.tests.eismint2.standard_experiments.StandardExperiments
             The test case this step belongs to
-        """
+        """  # noqa: E501
         super().__init__(test_case=test_case, name='visualize')
 
         # depending on settings, this may produce no outputs, so we won't add
@@ -71,8 +71,8 @@ def visualize_eismint2(config, logger, experiment):
 
     # open supplied MPAS output file and get variables needed
     filein = netCDF4.Dataset(filename, 'r')
-    xCell = filein.variables['xCell'][:]/1000.0
-    yCell = filein.variables['yCell'][:]/1000.0
+    xCell = filein.variables['xCell'][:] / 1000.0
+    yCell = filein.variables['yCell'][:] / 1000.0
     xtime = filein.variables['xtime'][:]
     nCells = len(filein.dimensions['nCells'])
     nVertLevels = len(filein.dimensions['nVertLevels'])
@@ -104,16 +104,17 @@ def visualize_eismint2(config, logger, experiment):
 
     # make an educated guess about how big the markers should be.
     if nCells**0.5 < 100.0:
-        markersize = max(int(round(3600.0/(nCells**0.5))), 1)
+        markersize = max(int(round(3600.0 / (nCells**0.5))), 1)
         # use hexes if the points are big enough, otherwise just dots
         markershape = 'h'
     else:
-        markersize = max(int(round(1800.0/(nCells**0.5))), 1)
+        markersize = max(int(round(1800.0 / (nCells**0.5))), 1)
         markershape = '.'
     logger.info('Using a markersize of {}'.format(markersize))
 
     fig = plt.figure(1, facecolor='w')
-    fig.suptitle('Payne et al. Fig. 1, 3, 6, 9, or 11', fontsize=10, fontweight='bold')
+    fig.suptitle('Payne et al. Fig. 1, 3, 6, 9, or 11', fontsize=10,
+                 fontweight='bold')
 
     iceIndices = np.where(thickness[timelev, :] > 10.0)[0]
     plt.scatter(xCell[iceIndices], yCell[iceIndices], markersize,
@@ -139,7 +140,8 @@ def visualize_eismint2(config, logger, experiment):
         plt.savefig('EISMINT2-{}-basaltemp.png'.format(experiment), dpi=150)
 
     # ================
-    # STEADY STATE MAPS -  panels b and c are switched and with incorrect units in the paper
+    # STEADY STATE MAPS -  panels b and c are switched and with incorrect
+    #                      units in the paper
     # ================
     fig = plt.figure(2, facecolor='w', figsize=(12, 6), dpi=72)
     fig.suptitle('Payne et al. Fig. 2 or 4', fontsize=10, fontweight='bold')
@@ -153,7 +155,7 @@ def visualize_eismint2(config, logger, experiment):
                 edgecolors='none')
 
     # add contours of ice thickness over the top
-    contour_intervals = np.linspace(0.0, 5000.0,  int(5000.0/250.0)+1)
+    contour_intervals = np.linspace(0.0, 5000.0, int(5000.0 / 250.0) + 1)
     _contour_mpas(thickness[timelev, :], nCells, xCell, yCell,
                   contour_levs=contour_intervals)
 
@@ -168,8 +170,8 @@ def visualize_eismint2(config, logger, experiment):
 
     flux = np.zeros((nCells,))
     for k in range(nVertLevels):
-        speedLevel = (uReconstructX[timelev, :, k:k+2].mean(axis=1)**2 +
-                      uReconstructY[timelev, :, k:k+2].mean(axis=1)**2)**0.5
+        speedLevel = (uReconstructX[timelev, :, k:k + 2].mean(axis=1)**2 +
+                      uReconstructY[timelev, :, k:k + 2].mean(axis=1)**2)**0.5
         flux += speedLevel * thickness[timelev, :] * layerThicknessFractions[k]
 
     plt.scatter(xCell[iceIndices], yCell[iceIndices], markersize,
@@ -177,8 +179,8 @@ def visualize_eismint2(config, logger, experiment):
                 edgecolors='none')
 
     # add contours over the top
-    contour_intervals = np.linspace(0.0, 20.0,  11)
-    _contour_mpas(flux * 3600.0*24.0*365.0 / 10000.0, nCells, xCell, yCell,
+    contour_intervals = np.linspace(0.0, 20.0, 11)
+    _contour_mpas(flux * 3600.0 * 24.0 * 365.0 / 10000.0, nCells, xCell, yCell,
                   contour_levs=contour_intervals)
     ax.set_aspect('equal')
     plt.title('Final flux (m$^2$ a$^{-1}$ / 10000)')
@@ -200,7 +202,7 @@ def visualize_eismint2(config, logger, experiment):
     if flwa[timelev, :, :].max() > 0.0:
         # NOT SURE WHICH LEVEL FLWA SHOULD COME FROM - so taking column average
         _contour_mpas(
-            flwa[timelev, :, :].mean(axis=1) * 3600.0*24.0*365.0 / 1.0e-17,
+            flwa[timelev, :, :].mean(axis=1) * 3600.0 * 24.0 * 365.0 / 1.0e-17,
             nCells, xCell, yCell)
     ax.set_aspect('equal')
     # Note: the paper's figure claims units of 10$^{-25}$ Pa$^{-3}$ a$^{-1}$
@@ -216,7 +218,8 @@ def visualize_eismint2(config, logger, experiment):
     # DIVIDE EVOLUTION TIME SERIES
     # ================
     fig = plt.figure(3, facecolor='w')
-    fig.suptitle('Payne et al. Fig. 5, 7, or 8', fontsize=10, fontweight='bold')
+    fig.suptitle('Payne et al. Fig. 5, 7, or 8', fontsize=10,
+                 fontweight='bold')
 
     # get indices for given time
     if experiment == 'b':
@@ -233,14 +236,15 @@ def visualize_eismint2(config, logger, experiment):
     # panel a - thickness
     fig.add_subplot(211)
     timeInd = np.nonzero(years <= endTime)[0][0:]
-    plt.plot(years[timeInd]/1000.0, thickness[timeInd, divideIndex], 'k.-')
+    plt.plot(years[timeInd] / 1000.0, thickness[timeInd, divideIndex], 'k.-')
     plt.ylabel('Thickness (m)')
 
     # panel b - basal temperature
     fig.add_subplot(212)
     # skip the first index cause basalTemperature isn't calculated then
     timeInd = np.nonzero(years <= endTime)[0][1:]
-    plt.plot(years[timeInd]/1000.0, basalTemperature[timeInd, divideIndex], 'k.-')
+    plt.plot(years[timeInd] / 1000.0, basalTemperature[timeInd, divideIndex],
+             'k.-')
     plt.ylabel('Basal temperature (K)')
     plt.xlabel('Time (kyr)')
 
@@ -297,8 +301,8 @@ def visualize_eismint2(config, logger, experiment):
                  'min/mean/max of community', fontsize=10, fontweight='bold')
 
     fig.add_subplot(151)
-    volume = ((thickness[timelev, iceIndices] * areaCell[iceIndices]).sum()
-              / 1000.0**3 / 10.0**6)
+    volume = ((thickness[timelev, iceIndices] * areaCell[iceIndices]).sum() /
+              1000.0**3 / 10.0**6)
     # benchmark results
     plt.plot(np.zeros((3,)), bench['volume'], 'k*')
     if bench['stattype'] == 'relative':
