@@ -365,8 +365,7 @@ def plot_sol(fig, tcname, dataset):
                              cmap="seismic",
                              vmin=diffmin,
                              vmax=diffmax)
-    lcm = axes[9].tricontourf(xc, yc, dataset.variables["layerThickness"]
-                              [0, :, 1])
+    axes[9].tricontourf(xc, yc, dataset.variables["layerThickness"][0, :, 1])
     axes[9].set_ylabel('layer thickness')
     axes[10].tricontourf(xc, yc, dataset.variables["layerThickness"]
                          [0, :, 1])
@@ -390,8 +389,8 @@ def plot_sol(fig, tcname, dataset):
         axes[9 + i].set_xticklabels(xticklabels)
     for i in range(9):
         axes[i].set_xticklabels([])
-    cb1 = fig.colorbar(cm, ax=axes[8])
-    cb2 = fig.colorbar(tcm, ax=axes[5])
+    fig.colorbar(cm, ax=axes[8])
+    fig.colorbar(tcm, ax=axes[5])
     # cb3 = fig.colorbar(lcm, ax=axes[11])
     fig.suptitle(tcname)
 

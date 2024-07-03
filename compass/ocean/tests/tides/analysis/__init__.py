@@ -104,7 +104,7 @@ class Analysis(Step):
         # Write coordinate file for OTPS2
         f = open('lat_lon', 'w')
         for i in range(nCells):
-            f.write(str(lat_grid[i])+'  '+str(lon_grid[i])+'\n')
+            f.write(f'{lat_grid[i]}  {lon_grid[i]} \n')
         f.close()
 
     def setup_otps2(self):
@@ -122,7 +122,7 @@ class Analysis(Step):
                       'comment': '! 2. latitude/longitude/<time> file'},
                      {'inp': 'z',
                       'comment': '! 3. z/U/V/u/v'},
-                     {'inp':  con,
+                     {'inp': con,
                       'comment': '! 4. tidal constituents to include'},
                      {'inp': 'AP',
                       'comment': '! 5. AP/RI'},
@@ -138,10 +138,10 @@ class Analysis(Step):
                 os.mkdir('inputs')
 
             # Write the setup_con file
-            f = open('inputs/'+con+'_setup', 'w')
+            f = open(f'inputs/{con}_setup', 'w')
             for line in lines:
                 spaces = 28 - len(line['inp'])
-                f.write(line['inp'] + spaces*' ' + line['comment'] + '\n')
+                f.write(line['inp'] + spaces * ' ' + line['comment'] + '\n')
             f.close()
 
             # Write the Model_atlas_con file
@@ -181,18 +181,18 @@ class Analysis(Step):
                 line_sp = line.split()
                 if line_sp[2] != '*************':
                     val = float(line_sp[2])
-                    self.mesh_AP[con]['amp'][start+i] = val
+                    self.mesh_AP[con]['amp'][start + i] = val
                 else:
-                    self.mesh_AP[con]['amp'][start+i] = -9999
+                    self.mesh_AP[con]['amp'][start + i] = -9999
 
                 if line_sp[3] != 'Site':
                     val = float(line_sp[3])
                     if val < 0:
                         val = val + 360.0
-                    self.mesh_AP[con]['phase'][start+i] = val
+                    self.mesh_AP[con]['phase'][start + i] = val
 
                 else:
-                    self.mesh_AP[con]['phase'][start+i] = -9999
+                    self.mesh_AP[con]['phase'][start + i] = -9999
 
     def append_tpxo_data(self):
         """
@@ -269,8 +269,8 @@ class Analysis(Step):
 
         lon_grid = np.mod(data_nc.variables['lonCell'][:] + np.pi,
                           2.0 * np.pi) - np.pi
-        lon_grid = lon_grid*180.0/np.pi
-        lat_grid = data_nc.variables['latCell'][:]*180.0/np.pi
+        lon_grid = lon_grid * 180.0 / np.pi
+        lat_grid = data_nc.variables['latCell'][:] * 180.0 / np.pi
 
         nCells = lon_grid.size
         data1 = np.zeros((nCells))
@@ -288,14 +288,14 @@ class Analysis(Step):
         # Use these to fix up the plots
         subplot_ticks = [[np.linspace(0, 0.65, 10), np.linspace(0, 0.65, 10),
                           np.linspace(0, 0.13, 10), np.linspace(0, 0.13, 10)],
-                         [np.linspace(0, 1.4,  10), np.linspace(0, 1.4,  10),
+                         [np.linspace(0, 1.40, 10), np.linspace(0, 1.40, 10),
                           np.linspace(0, 0.22, 10), np.linspace(0, 0.25, 10)],
                          [np.linspace(0, 0.22, 10), np.linspace(0, 0.22, 10),
                           np.linspace(0, 0.05, 10), np.linspace(0, 0.05, 10)],
-                         [np.linspace(0, 0.5,  10), np.linspace(0, 0.5,  10),
+                         [np.linspace(0, 0.50, 10), np.linspace(0, 0.50, 10),
                           np.linspace(0, 0.08, 10), np.linspace(0, 0.08, 10)],
-                         [np.linspace(0, 0.7,  10), np.linspace(0, 0.7,  10),
-                          np.linspace(0, 0.5,  10), np.linspace(0, 0.5,  10)]]
+                         [np.linspace(0, 0.70, 10), np.linspace(0, 0.70, 10),
+                          np.linspace(0, 0.50, 10), np.linspace(0, 0.50, 10)]]
 
         for i, con in enumerate(constituent_list):
 
@@ -312,39 +312,45 @@ class Analysis(Step):
             data2_phase[:] = data_nc.variables[
                 f'{con}Phase{self.tpxo_version}'][:]
 
-            data1_phase = data1_phase*np.pi/180.0
-            data2_phase = data2_phase*np.pi/180.0
+            data1_phase = data1_phase * np.pi / 180.0
+            data2_phase = data2_phase * np.pi / 180.0
 
             # Calculate RMSE values
-            rmse_amp = 0.5*(data1 - data2)**2
-            rmse_com = 0.5*(data2**2 + data1**2) \
-                - data1*data2*np.cos(data2_phase - data1_phase)
+            rmse_amp = 0.5 * (data1 - data2)**2
+            rmse_com = 0.5 * (data2**2 + data1**2) \
+                - data1 * data2 * np.cos(data2_phase - data1_phase)
 
             # Calculate mean (global) values
-            idx = np.where((depth > 20)
-                           & (rmse_com < 1000) & (rmse_amp < 1000))
+            idx = np.where((depth > 20) & (rmse_com < 1000) &
+                           (rmse_amp < 1000))
             area_tot = np.sum(area[idx])
-            glo_rmse_amp = np.sqrt(np.sum(rmse_amp[idx]*area[idx])/area_tot)
-            glo_rmse_com = np.sqrt(np.sum(rmse_com[idx]*area[idx])/area_tot)
+            glo_rmse_amp = np.sqrt(np.sum(rmse_amp[idx] * area[idx]) /
+                                   area_tot)
+            glo_rmse_com = np.sqrt(np.sum(rmse_com[idx] * area[idx]) /
+                                   area_tot)
             print('Global RMSE (Amp) = ', glo_rmse_amp)
             print('Global RMSE (Com) = ', glo_rmse_com)
 
             # Calculate shallow RMSE (<=1000m)
-            idx = np.where((depth > 20) & (depth < 1000)
-                           & (np.abs(lat_grid) < 66)
-                           & (rmse_com < 1000) & (rmse_amp < 1000))
+            idx = np.where((depth > 20) & (depth < 1000) &
+                           (np.abs(lat_grid) < 66) &
+                           (rmse_com < 1000) & (rmse_amp < 1000))
             area_tot = np.sum(area[idx])
-            shal_rmse_amp = np.sqrt(np.sum(rmse_amp[idx]*area[idx])/area_tot)
-            shal_rmse_com = np.sqrt(np.sum(rmse_com[idx]*area[idx])/area_tot)
+            shal_rmse_amp = np.sqrt(np.sum(rmse_amp[idx] * area[idx]) /
+                                    area_tot)
+            shal_rmse_com = np.sqrt(np.sum(rmse_com[idx] * area[idx]) /
+                                    area_tot)
             print('Shallow RMSE (Amp) = ', shal_rmse_amp)
             print('Shallow RMSE (Com) = ', shal_rmse_com)
 
             # Calculate deep RMSE (>1000m)
-            idx = np.where((depth >= 1000) & (np.abs(lat_grid) < 66)
-                           & (rmse_com < 1000) & (rmse_amp < 1000))
+            idx = np.where((depth >= 1000) & (np.abs(lat_grid) < 66) &
+                           (rmse_com < 1000) & (rmse_amp < 1000))
             area_tot = np.sum(area[idx])
-            deep_rmse_amp = np.sqrt(np.sum(rmse_amp[idx]*area[idx])/area_tot)
-            deep_rmse_com = np.sqrt(np.sum(rmse_com[idx]*area[idx])/area_tot)
+            deep_rmse_amp = np.sqrt(np.sum(rmse_amp[idx] * area[idx]) /
+                                    area_tot)
+            deep_rmse_com = np.sqrt(np.sum(rmse_com[idx] * area[idx]) /
+                                    area_tot)
             print('Deep RMSE (Amp) = ', deep_rmse_amp)
             print('Deep RMSE (Com) = ', deep_rmse_com)
 
@@ -359,7 +365,7 @@ class Analysis(Step):
                              f'{con} RMSE (Complex) [m]']
 
             for subplot in range(0, 4):
-                ax = fig.add_subplot(2, 2, subplot+1,
+                ax = fig.add_subplot(2, 2, subplot + 1,
                                      projection=ccrs.PlateCarree())
                 ax.set_title(subplot_title[subplot], fontsize=20)
                 levels = subplot_ticks[i][subplot][:]
@@ -408,9 +414,9 @@ class Analysis(Step):
                 cbar.ax.tick_params(labelsize=16)
 
             fig.tight_layout()
-            global_err = str(round(glo_rmse_com*100, 3))
-            deep_err = str(round(deep_rmse_com*100, 3))
-            shallow_err = str(round(shal_rmse_com*100, 3))
+            global_err = str(round(glo_rmse_com * 100, 3))
+            deep_err = str(round(deep_rmse_com * 100, 3))
+            shallow_err = str(round(shal_rmse_com * 100, 3))
             fig.suptitle(f'Complex RMSE: Global = {global_err} cm; '
                          f'Deep = {deep_err} cm; '
                          f'Shallow = {shallow_err} cm',
@@ -431,7 +437,7 @@ class Analysis(Step):
 
         # Setup chunking for TPXO extraction with large meshes
         indices = np.arange(self.nCells)
-        nchunks = np.ceil(self.nCells/200000)
+        nchunks = np.ceil(self.nCells / 200000)
         index_chunks = np.array_split(indices, nchunks)
 
         # Initialize data structure for TPXO values
