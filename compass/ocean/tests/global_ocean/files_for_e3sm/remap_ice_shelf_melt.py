@@ -1,6 +1,3 @@
-import os
-
-from compass.io import symlink
 from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step import (  # noqa: E501
     FilesForE3SMStep,
 )
@@ -37,13 +34,9 @@ class RemapIceShelfMelt(FilesForE3SMStep):
 
     def setup(self):
         """
-        setup input files based on config options
+        setup input and output files based on config options
         """
         super().setup()
-        if self.init is not None:
-            # we don't need any files, since we already did this remapping
-            # during init
-            return
 
         filename = 'prescribed_ismf_paolo2023.nc'
 
@@ -72,34 +65,24 @@ class RemapIceShelfMelt(FilesForE3SMStep):
         """
         super().run()
 
-        if not self.with_ice_shelf_cavities:
+        if not self.with_ice_shelf_cavities or self.init is not None:
             return
 
-        prefix = 'prescribed_ismf_paolo2023'
-        suffix = f'{self.mesh_short_name}.{self.creation_date}'
+        logger = self.logger
+        config = self.config
+        ntasks = self.ntasks
+        in_filename = 'Paolo_2023_ANT_G1920V01_IceShelfMelt.nc'
+        remapped_filename = 'prescribed_ismf_paolo2023.nc'
 
-        remapped_filename = f'{prefix}.nc'
-        dest_filename = f'{prefix}.{suffix}.nc'
+        parallel_executable = config.get('parallel', 'parallel_executable')
 
-        if self.init is None:
-            logger = self.logger
-            config = self.config
-            ntasks = self.ntasks
-            in_filename = 'Paolo_2023_ANT_G1920V01_IceShelfMelt.nc'
+        base_mesh_filename = 'base_mesh.nc'
+        culled_mesh_filename = 'initial_state.nc'
+        mesh_name = self.mesh_short_name
+        land_ice_mask_filename = 'initial_state.nc'
 
-            parallel_executable = config.get('parallel', 'parallel_executable')
-
-            base_mesh_filename = 'base_mesh.nc'
-            culled_mesh_filename = 'initial_state.nc'
-            mesh_name = self.mesh_short_name
-            land_ice_mask_filename = 'initial_state.nc'
-
-            remap_paolo(in_filename, base_mesh_filename,
-                        culled_mesh_filename, mesh_name,
-                        land_ice_mask_filename, remapped_filename,
-                        logger=logger, mpi_tasks=ntasks,
-                        parallel_executable=parallel_executable)
-
-        symlink(
-            os.path.abspath(remapped_filename),
-            f'{self.ocean_inputdata_dir}/{dest_filename}')
+        remap_paolo(in_filename, base_mesh_filename,
+                    culled_mesh_filename, mesh_name,
+                    land_ice_mask_filename, remapped_filename,
+                    logger=logger, mpi_tasks=ntasks,
+                    parallel_executable=parallel_executable)
