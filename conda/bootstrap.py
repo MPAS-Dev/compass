@@ -376,6 +376,11 @@ def build_jigsaw(activate_env, source_path, env_path, logger):
     print('Building JIGSAW\n')
     # add build tools to deployment env, not compass env
     jigsaw_build_deps = 'cxx-compiler cmake'
+    if platform.system() == 'Linux':
+        jigsaw_build_deps = f'{jigsaw_build_deps} sysroot_linux-64=2.17'
+    elif platform.system() == 'Darwin':
+        jigsaw_build_deps = \
+            f'{jigsaw_build_deps} macosx_deployment_target=10.13'
     netcdf_lib = f'{env_path}/lib/libnetcdf.so'
     cmake_args = f'-DCMAKE_BUILD_TYPE=Release -DNETCDF_LIBRARY={netcdf_lib}'
 
