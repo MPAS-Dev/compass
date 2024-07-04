@@ -1,9 +1,10 @@
-import matplotlib.pyplot as plt
-from matplotlib.gridspec import GridSpec
-from matplotlib.colors import ListedColormap
-import matplotlib
-import numpy as np
 from importlib import resources
+
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.colors import ListedColormap
+from matplotlib.gridspec import GridSpec
 
 
 def appx_mesh_size(dataset):
@@ -260,8 +261,8 @@ def read_ncl_rgb_file(cmap_filename):
     map_file_found = False
     try:
         with resources.open_text(
-                "compass.ocean.tests.sphere_transport.resources", cmap_filename) \
-                as f:
+                "compass.ocean.tests.sphere_transport.resources",
+                cmap_filename) as f:
             flines = f.readlines()
         map_file_found = True
     except BaseException:
@@ -277,7 +278,7 @@ def read_ncl_rgb_file(cmap_filename):
         result = ListedColormap(rgb, name=cmap_filename)
     else:
         print("error reading ncl colormap. using matplotlib default instead.")
-        result = matplotlib.cm.get_cmap()
+        result = matplotlib.pyplot.get_cmap()
     return result
 
 
@@ -364,8 +365,7 @@ def plot_sol(fig, tcname, dataset):
                              cmap="seismic",
                              vmin=diffmin,
                              vmax=diffmax)
-    lcm = axes[9].tricontourf(xc, yc, dataset.variables["layerThickness"]
-                              [0, :, 1])
+    axes[9].tricontourf(xc, yc, dataset.variables["layerThickness"][0, :, 1])
     axes[9].set_ylabel('layer thickness')
     axes[10].tricontourf(xc, yc, dataset.variables["layerThickness"]
                          [0, :, 1])
@@ -389,8 +389,8 @@ def plot_sol(fig, tcname, dataset):
         axes[9 + i].set_xticklabels(xticklabels)
     for i in range(9):
         axes[i].set_xticklabels([])
-    cb1 = fig.colorbar(cm, ax=axes[8])
-    cb2 = fig.colorbar(tcm, ax=axes[5])
+    fig.colorbar(cm, ax=axes[8])
+    fig.colorbar(tcm, ax=axes[5])
     # cb3 = fig.colorbar(lcm, ax=axes[11])
     fig.suptitle(tcname)
 
