@@ -1,0 +1,67 @@
+<streams>
+
+<immutable_stream name="input"
+                  type="input"
+                  filename_template="landice_grid.nc"
+                  input_interval="initial_only"/>
+
+<immutable_stream name="restart"
+                  type="input;output"
+                  filename_template="rst.$Y.nc"
+                  filename_interval="output_interval"
+                  output_interval="0100-00-00_00:00:00"
+                  clobber_mode="overwrite"
+                  precision="double"
+                  input_interval="initial_only"/>
+
+<stream name="output"
+        type="output"
+        filename_template="output/output.nc"
+        output_interval="0001-00-00_00:00:00"
+        clobber_mode="overwrite"
+        precision="double">
+
+    <stream name="basicmesh"/>
+    <var name="xtime"/>
+    <var name="cellMask"/>
+    <var name="sfcMassBal"/>
+    <var name="bedTopography"/>
+    <var name="thickness"/>
+    <var name="daysSinceStart"/>
+    <var name="lowerSurface"/>
+    <var name="upperSurface"/>
+</stream>
+
+
+<stream name="globalStatsOutput"
+        type="output"
+        filename_template="output/globalStats.nc"
+        filename_interval="none"
+        reference_time="2015-01-01_00:00:00"
+        clobber_mode="overwrite"
+        packages="globalStatsAMPKG"
+        output_interval="0000-00-00_01:00:00"
+        runtime_format="single_file">
+
+    <var_struct name="globalStatsAM"/>
+    <var name="xtime"/>
+    <var name="simulationStartTime"/>
+    <var name="daysSinceStart"/>
+    <var name="deltat"/>
+    <var name="allowableDtACFL"/>
+    <var name="allowableDtDCFL"/>
+    <var name="albanyVelocityError"/>
+</stream>
+
+<stream name="smb"
+        type="input"
+        mode="forward;analysis"
+        filename_template="smb_forcing.nc"
+        input_interval="0001-00-00_00:00:00"
+        reference_time="2015-01-01_00:00:00"
+        runtime_format="single_file">
+
+    <var name="sfcMassBal"/>
+</stream>
+
+</streams>
