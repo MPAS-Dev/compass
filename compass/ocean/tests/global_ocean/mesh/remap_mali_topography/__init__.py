@@ -109,28 +109,17 @@ class RemapMaliTopography(RemapTopography):
         thickness = ds_mali.thickness
 
         ice_density = config.getfloat('remap_topography', 'ice_density')
-
-        mali_ice_density = ds_mali.attrs['config_ice_density']
-        mali_ocean_density = ds_mali.attrs['config_ocean_density']
-        sea_level = ds_mali.attrs['config_sea_level']
+        ocean_density = config.getfloat('remap_topography', 'ocean_density')
+        sea_level = config.getfloat('remap_topography', 'sea_level')
 
         g = constants['SHR_CONST_G']
-        ocean_density = constants['SHR_CONST_RHOSW']
-
-        if ice_density != mali_ice_density:
-            raise ValueError('Ice density from the config option in '
-                             '[remap_topography] does not match the value '
-                             'from MALI config_ice_density')
-        if ocean_density != mali_ocean_density:
-            logger.warn('\nWARNING: Ocean density from SHR_CONST_RHOSW does '
-                        'not match the value from MALI config_ocean_density\n')
 
         draft = - (ice_density / ocean_density) * thickness
 
         ice_mask = ds_mali.thickness > 0
         floating_mask = np.logical_and(
             ice_mask,
-            ice_density / mali_ocean_density * thickness <= sea_level - bed)
+            ice_density / ocean_density * thickness <= sea_level - bed)
         grounded_mask = np.logical_and(ice_mask, np.logical_not(floating_mask))
         ocean_mask = np.logical_and(np.logical_not(grounded_mask),
                                     bed < sea_level)
