@@ -239,6 +239,8 @@ class MoviePlotter(object):
         self.sectionY = sectionY
         self.showProgress = showProgress
 
+        if 'Time' in dsMesh.dims:
+            dsMesh = dsMesh.isel(Time=0)
         self.dsMesh = dsMesh
         self.ds = ds
 
@@ -508,7 +510,9 @@ class MoviePlotter(object):
             The time indices at which to plot. If not provided, set to all.
         """
 
-        nTime = self.ds.sizes['Time']
+        if 'Time' not in da.dims:
+            da = da.expand_dims(dim='Time', axis=0)
+        nTime = da.sizes['Time']
         if self.showProgress:
             widgets = ['plotting {}: '.format(nameInTitle),
                        progressbar.Percentage(), ' ',
