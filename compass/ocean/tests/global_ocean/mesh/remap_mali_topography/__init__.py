@@ -142,23 +142,16 @@ class RemapMaliTopography(RemapTopography):
         mali_frac = xr.DataArray(data=np.ones(ds_mali.sizes['nCells']),
                                  dims='nCells')
 
-        ds_in = {}
-        # we will remap topography bilinearly
-        ds_in['bilinear'] = xr.Dataset()
-        ds_in['bilinear']['bed_elevation'] = bed
-        ds_in['bilinear']['landIceThkObserved'] = thickness
-        ds_in['bilinear']['landIcePressureObserved'] = lithop
-        ds_in['bilinear']['landIceDraftObserved'] = draft
-        ds_in['bilinear']['landIceFracBilinear'] = ice_frac
-        ds_in['bilinear']['landIceGroundedFracBilinear'] = grounded_frac
-        ds_in['bilinear']['oceanFracBilinear'] = ocean_frac
-        ds_in['bilinear']['maliFracBilinear'] = mali_frac
-        # we will remap masks conservatively
-        ds_in['conserve'] = xr.Dataset()
-        ds_in['conserve']['landIceFracConserve'] = ice_frac
-        ds_in['conserve']['landIceGroundedFracConserve'] = grounded_frac
-        ds_in['conserve']['oceanFracConserve'] = ocean_frac
-        ds_in['conserve']['maliFracConserve'] = mali_frac
+        # we will remap conservatively
+        ds_in = xr.Dataset()
+        ds_in['bed_elevation'] = bed
+        ds_in['landIceThkObserved'] = thickness
+        ds_in['landIcePressureObserved'] = lithop
+        ds_in['landIceDraftObserved'] = draft
+        ds_in['landIceFrac'] = ice_frac
+        ds_in['landIceGroundedFrac'] = grounded_frac
+        ds_in['oceanFrac'] = ocean_frac
+        ds_in['maliFrac'] = mali_frac
 
         mbtempest_args = {'conserve': ['--order', '1',
                                        '--order', '1',
@@ -171,54 +164,54 @@ class RemapMaliTopography(RemapTopography):
         suffix = {'conserve': 'mbtraave',
                   'bilinear': 'mbtrbilin'}
 
-        ds_out = xr.Dataset()
-        for method in ['conserve', 'bilinear']:
-            mapping_file_name = \
-                f'map_{in_mesh_name}_to_{out_mesh_name}_{suffix[method]}.nc'
+        method = 'conserve'
+        mapping_file_name = \
+            f'map_{in_mesh_name}_to_{out_mesh_name}_{suffix[method]}.nc'
 
-            # split the parallel executable into constituents in case it
-            # includes flags
-            args = ['mbtempest',
-                    '--type', '5',
-                    '--load', 'mali_scrip.nc',
-                    '--load', 'mpaso_scrip.nc',
-                    '--intx', 'moab_intx_mali_mpaso.h5m',
-                    '--weights',
-                    '--method', 'fv',
-                    '--method', 'fv',
-                    '--file', mapping_file_name] + mbtempest_args[method]
+        # split the parallel executable into constituents in case it
+        # includes flags
+        args = ['mbtempest',
+                '--type', '5',
+                '--load', 'mali_scrip.nc',
+                '--load', 'mpaso_scrip.nc',
+                '--intx', 'moab_intx_mali_mpaso.h5m',
+                '--weights',
+                '--method', 'fv',
+                '--method', 'fv',
+                '--file', mapping_file_name] + mbtempest_args[method]
 
-            if method == 'bilinear':
-                # unhappy in parallel for now
-                check_call(args, logger)
-            else:
-
-                run_command(args=args, cpus_per_task=self.cpus_per_task,
-                            ntasks=self.ntasks,
-                            openmp_threads=self.openmp_threads,
-                            config=config, logger=logger)
-
-            in_filename = f'mali_topography_{method}.nc'
-            out_filename = f'mali_topography_ncremap_{method}.nc'
-            write_netcdf(ds_in[method], in_filename)
-
-            # remapping with the -P mpas flag leads to undesired
-            # renormalization
-            args = ['ncremap',
-                    '-m', mapping_file_name,
-                    '--vrb=1',
-                    in_filename,
-                    out_filename]
+        if method == 'bilinear':
+            # unhappy in parallel for now
             check_call(args, logger)
+        else:
 
-            ds_remapped = xr.open_dataset(out_filename)
-            for var_name in ds_remapped:
-                var = ds_remapped[var_name]
-                if 'Frac' in var:
-                    # copy the fractional variable, making sure it doesn't
-                    # exceed 1
-                    var = np.minimum(var, 1.)
-                ds_out[var_name] = var
+            run_command(args=args, cpus_per_task=self.cpus_per_task,
+                        ntasks=self.ntasks,
+                        openmp_threads=self.openmp_threads,
+                        config=config, logger=logger)
+
+        in_filename = f'mali_topography_{method}.nc'
+        out_filename = f'mali_topography_ncremap_{method}.nc'
+        write_netcdf(ds_in, in_filename)
+
+        # remapping with the -P mpas flag leads to undesired
+        # renormalization
+        args = ['ncremap',
+                '-m', mapping_file_name,
+                '--vrb=1',
+                in_filename,
+                out_filename]
+        check_call(args, logger)
+
+        ds_remapped = xr.open_dataset(out_filename)
+        ds_out = xr.Dataset()
+        for var_name in ds_remapped:
+            var = ds_remapped[var_name]
+            if 'Frac' in var:
+                # copy the fractional variable, making sure it doesn't
+                # exceed 1
+                var = np.minimum(var, 1.)
+            ds_out[var_name] = var
 
         write_netcdf(ds_out, 'mali_topography_remapped.nc')
 
@@ -240,8 +233,8 @@ class RemapMaliTopography(RemapTopography):
         ds_out['landIceFracObserved'] = ds_mali['landIceFracConserve']
 
         ds_out['landIceFloatingFracObserved'] = (
-            ds_mali['landIceFracConserve'] -
-            ds_mali['landIceGroundedFracConserve'])
+            ds_mali['landIceFrac'] -
+            ds_mali['landIceGroundedFrac'])
 
         for var in ['maliFracBilinear', 'maliFracConserve']:
             mali_field = ds_mali[var]
