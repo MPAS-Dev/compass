@@ -43,7 +43,7 @@ class RemapMaliTopography(RemapTopography):
         mesh_name : str
             The name of the MPAS mesh to include in the mapping file
 
-                    mali_ais_topo : str, optional
+        mali_ais_topo : str, optional
             Short name for the MALI dataset to use for Antarctic Ice Sheet
             topography
         """
@@ -230,27 +230,27 @@ class RemapMaliTopography(RemapTopography):
                     'landIceThkObserved']:
             ds_out[var] = ds_mali[var]
 
-        ds_out['landIceFracObserved'] = ds_mali['landIceFracConserve']
+        ds_out['landIceFracObserved'] = ds_mali['landIceFrac']
 
         ds_out['landIceFloatingFracObserved'] = (
             ds_mali['landIceFrac'] -
             ds_mali['landIceGroundedFrac'])
 
-        for var in ['maliFracBilinear', 'maliFracConserve']:
+        for var in ['maliFrac']:
             mali_field = ds_mali[var]
             mali_field = xr.where(mali_field.notnull(), mali_field, 0.)
             ds_out[var] = mali_field
 
         # for now, blend topography at calving fronts, but we may want a
         # smoother blend in the future
-        alpha = ds_mali.landIceFracBilinear
+        alpha = ds_mali.landIceFrac
         ds_out['bed_elevation'] = (
             alpha * ds_mali.bed_elevation +
             (1.0 - alpha) * ds_bedmachine.bed_elevation)
 
-        alpha = ds_out.maliFracConserve
+        alpha = ds_out.maliFrac
         ds_out['oceanFracObserved'] = (
-            alpha * ds_mali.oceanFracConserve +
+            alpha * ds_mali.oceanFrac +
             (1.0 - alpha) * ds_bedmachine.oceanFracObserved)
 
         ds_out['ssh'] = ds_out.landIceDraftObserved
