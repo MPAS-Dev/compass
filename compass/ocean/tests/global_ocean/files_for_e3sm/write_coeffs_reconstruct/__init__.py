@@ -31,7 +31,7 @@ class WriteCoeffsReconstruct(ForwardStep, FilesForE3SMStep):
         """
         super().__init__(test_case=test_case, mesh=mesh, init=init,
                          time_integrator='split_explicit_ab2',
-                         name='write_coeffs_reconstruct')
+                         name='write_coeffs_reconstruct', add_metadata=False)
 
         package = 'compass.ocean.tests.global_ocean.files_for_e3sm.' \
                   'write_coeffs_reconstruct'

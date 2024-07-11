@@ -45,7 +45,7 @@ class RestartTest(ForwardTestCase):
             step = ForwardStep(test_case=self, mesh=mesh, init=init,
                                time_integrator=time_integrator, name=name,
                                subdir=name, ntasks=4, openmp_threads=1,
-                               get_dt_from_min_res=False)
+                               get_dt_from_min_res=False, add_metadata=False)
 
             suffix = '{}.{}'.format(time_integrator.lower(), part)
             step.add_namelist_file(module, 'namelist.{}'.format(suffix))

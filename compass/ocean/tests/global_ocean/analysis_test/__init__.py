@@ -45,7 +45,7 @@ class AnalysisTest(ForwardTestCase):
 
         step = ForwardStep(test_case=self, mesh=mesh, init=init,
                            time_integrator=time_integrator, ntasks=4,
-                           openmp_threads=1)
+                           openmp_threads=1, add_metadata=False)
 
         self.variables = {
             'output.nc':
