@@ -39,7 +39,8 @@ class ForwardStep(Step):
     def __init__(self, test_case, mesh, time_integrator, init=None,
                  name='forward', subdir=None, ntasks=None, min_tasks=None,
                  openmp_threads=None, get_dt_from_min_res=True,
-                 land_ice_flux_mode='pressure_only', **kwargs):
+                 land_ice_flux_mode='pressure_only', add_metadata=True,
+                 **kwargs):
         """
         Create a new step
 
@@ -75,18 +76,26 @@ class ForwardStep(Step):
         openmp_threads : int, optional
             the number of OpenMP threads the step will use
 
-        get_dt_from_min_res : bool
-            Whether to automatically compute `config_dt` and `config_btr_dt`
-            namelist options from the minimum resolution of the mesh
+        get_dt_from_min_res : bool, optional
+            Whether to automatically compute ``config_dt`` and
+            ``config_btr_dt`` namelist options from the minimum resolution of
+            the mesh
 
         land_ice_flux_mode : {'pressure_only', 'standalone', 'data'}, optional
             Whether to have no ice-shelf melt fluxes ("pressure_only"),
             prognostic melt ("standalone") or data melt from a
             satellite-derived climatology ("data").
+
+        add_metadata : bool, optional
+            Whether to add mesh and initial-condition metadata to output files
+            (assuming the ``add_metadata`` config option is also set to True).
+            This should be set to ``False`` for regression tests where the
+            metadata is unlikely to be used.
         """
         self.mesh = mesh
         self.init = init
         self.time_integrator = time_integrator
+        self.add_metadata = add_metadata
         if min_tasks is None:
             min_tasks = ntasks
         super().__init__(test_case=test_case, name=name, subdir=subdir,
@@ -213,8 +222,9 @@ class ForwardStep(Step):
         update_pio = self.config.getboolean('global_ocean',
                                             'forward_update_pio')
         run_model(self, update_pio=update_pio)
-        add_mesh_and_init_metadata(self.outputs, self.config,
-                                   init_filename='init.nc')
+        if self.add_metadata:
+            add_mesh_and_init_metadata(self.outputs, self.config,
+                                       init_filename='init.nc')
 
     def _get_dts(self):
         """

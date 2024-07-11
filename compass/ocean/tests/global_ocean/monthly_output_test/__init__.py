@@ -35,7 +35,7 @@ class MonthlyOutputTest(ForwardTestCase):
 
         step = ForwardStep(test_case=self, mesh=mesh, init=init,
                            time_integrator=time_integrator, ntasks=4,
-                           openmp_threads=1)
+                           openmp_threads=1, add_metadata=False)
 
         module = self.__module__
         step.add_output_file(filename='output.nc')

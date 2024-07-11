@@ -36,7 +36,8 @@ class DecompTest(ForwardTestCase):
             name = '{}proc'.format(procs)
             step = ForwardStep(test_case=self, mesh=mesh, init=init,
                                time_integrator=time_integrator, name=name,
-                               subdir=name, ntasks=procs, openmp_threads=1)
+                               subdir=name, ntasks=procs, openmp_threads=1,
+                               add_metadata=False)
             step.add_output_file(filename='output.nc')
             self.add_step(step)
 

@@ -44,14 +44,16 @@ class PerformanceTest(ForwardTestCase):
                 step = ForwardStep(test_case=self, mesh=mesh, init=init,
                                    time_integrator=time_integrator,
                                    name=step_name,
-                                   land_ice_flux_mode=flux_mode)
+                                   land_ice_flux_mode=flux_mode,
+                                   add_metadata=False)
                 step.add_streams_file(this_module, 'streams.wisc')
                 step.add_output_file(filename='land_ice_fluxes.nc')
                 step.add_output_file(filename='output.nc')
                 self.add_step(step)
         else:
             step = ForwardStep(test_case=self, mesh=mesh, init=init,
-                               time_integrator=time_integrator)
+                               time_integrator=time_integrator,
+                               add_metadata=False)
 
             step.add_output_file(filename='output.nc')
             self.add_step(step)

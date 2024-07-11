@@ -174,7 +174,8 @@ class DynamicAdjustment(ForwardTestCase):
                            time_integrator=time_integrator, name=step_name,
                            subdir=step_name,
                            land_ice_flux_mode=land_ice_flux_mode,
-                           get_dt_from_min_res=get_dt_from_min_res)
+                           get_dt_from_min_res=get_dt_from_min_res,
+                           add_metadata=True)
 
         namelist_options = dict(shared_options)
         if previous_restart_filename is None:
