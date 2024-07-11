@@ -162,14 +162,16 @@
                 <span class="n">step</span> <span class="o">=</span> <span class="n">ForwardStep</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
                                    <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">,</span>
                                    <span class="n">name</span><span class="o">=</span><span class="n">step_name</span><span class="p">,</span>
-                                   <span class="n">land_ice_flux_mode</span><span class="o">=</span><span class="n">flux_mode</span><span class="p">)</span>
+                                   <span class="n">land_ice_flux_mode</span><span class="o">=</span><span class="n">flux_mode</span><span class="p">,</span>
+                                   <span class="n">add_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
                 <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">this_module</span><span class="p">,</span> <span class="s1">&#39;streams.wisc&#39;</span><span class="p">)</span>
                 <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;land_ice_fluxes.nc&#39;</span><span class="p">)</span>
                 <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">step</span> <span class="o">=</span> <span class="n">ForwardStep</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
-                               <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">)</span>
+                               <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">,</span>
+                               <span class="n">add_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
             <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span></div>

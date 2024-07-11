@@ -157,7 +157,8 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">openmp_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">get_dt_from_min_res</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                 <span class="n">land_ice_flux_mode</span><span class="o">=</span><span class="s1">&#39;pressure_only&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                 <span class="n">land_ice_flux_mode</span><span class="o">=</span><span class="s1">&#39;pressure_only&#39;</span><span class="p">,</span> <span class="n">add_metadata</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new step</span>
 
@@ -193,18 +194,26 @@
 <span class="sd">        openmp_threads : int, optional</span>
 <span class="sd">            the number of OpenMP threads the step will use</span>
 
-<span class="sd">        get_dt_from_min_res : bool</span>
-<span class="sd">            Whether to automatically compute `config_dt` and `config_btr_dt`</span>
-<span class="sd">            namelist options from the minimum resolution of the mesh</span>
+<span class="sd">        get_dt_from_min_res : bool, optional</span>
+<span class="sd">            Whether to automatically compute ``config_dt`` and</span>
+<span class="sd">            ``config_btr_dt`` namelist options from the minimum resolution of</span>
+<span class="sd">            the mesh</span>
 
 <span class="sd">        land_ice_flux_mode : {&#39;pressure_only&#39;, &#39;standalone&#39;, &#39;data&#39;}, optional</span>
 <span class="sd">            Whether to have no ice-shelf melt fluxes (&quot;pressure_only&quot;),</span>
 <span class="sd">            prognostic melt (&quot;standalone&quot;) or data melt from a</span>
 <span class="sd">            satellite-derived climatology (&quot;data&quot;).</span>
+
+<span class="sd">        add_metadata : bool, optional</span>
+<span class="sd">            Whether to add mesh and initial-condition metadata to output files</span>
+<span class="sd">            (assuming the ``add_metadata`` config option is also set to True).</span>
+<span class="sd">            This should be set to ``False`` for regression tests where the</span>
+<span class="sd">            metadata is unlikely to be used.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init</span> <span class="o">=</span> <span class="n">init</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time_integrator</span> <span class="o">=</span> <span class="n">time_integrator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_metadata</span> <span class="o">=</span> <span class="n">add_metadata</span>
         <span class="k">if</span> <span class="n">min_tasks</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">min_tasks</span> <span class="o">=</span> <span class="n">ntasks</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">,</span>
@@ -337,8 +346,9 @@
         <span class="n">update_pio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span>
                                             <span class="s1">&#39;forward_update_pio&#39;</span><span class="p">)</span>
         <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_pio</span><span class="o">=</span><span class="n">update_pio</span><span class="p">)</span>
-        <span class="n">add_mesh_and_init_metadata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
-                                   <span class="n">init_filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_metadata</span><span class="p">:</span>
+            <span class="n">add_mesh_and_init_metadata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+                                       <span class="n">init_filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">)</span></div>
 
 
     <span class="k">def</span> <span class="nf">_get_dts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
