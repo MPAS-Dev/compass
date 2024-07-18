@@ -437,7 +437,7 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
 
     if has_remapped_topo:
         _cull_topo(with_cavities, process_count, logger, latitude_threshold,
-                   sweep_count)
+                   sweep_count, dsPreserve)
 
     if with_cavities:
         dsMask = xr.open_dataset('topography_culled.nc')
@@ -476,7 +476,7 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
 
 
 def _cull_topo(with_cavities, process_count, logger, latitude_threshold,
-               sweep_count):
+               sweep_count, ds_preserve):
 
     ds_topo = xr.open_dataset('topography.nc')
     ds_base = xr.open_dataset('base_mesh.nc')
@@ -489,8 +489,9 @@ def _cull_topo(with_cavities, process_count, logger, latitude_threshold,
 
     if with_cavities:
         _add_land_ice_mask_and_mask_draft(ds_topo, ds_base,
-                                          ds_map_culled_to_base, logger,
-                                          latitude_threshold, sweep_count)
+                                          ds_map_culled_to_base, ds_preserve,
+                                          logger, latitude_threshold,
+                                          sweep_count)
         write_netcdf(ds_topo, 'topography_with_land_ice_mask.nc')
 
     logger.info('Culling topography')
@@ -525,9 +526,18 @@ def _land_mask_from_topo(with_cavities, topo_filename, mask_filename):
 
 
 def _add_land_ice_mask_and_mask_draft(ds_topo, ds_base_mesh,
-                                      ds_map_culled_to_base, logger,
-                                      latitude_threshold, sweep_count):
+                                      ds_map_culled_to_base, ds_perserve,
+                                      logger, latitude_threshold, sweep_count):
+
     land_ice_frac = ds_topo.landIceFracObserved
+    # we don't what land ice where we are preserving critical passages
+    for ds in ds_perserve:
+        not_preserve = ds.transectCellMasks.sum(dim='nTransects') == 0
+        land_ice_frac = land_ice_frac.where(not_preserve, 0.0)
+
+    land_ice_frac.to_netcdf('land_ice_frac_without_critical_passages.nc')
+
+    ds_topo['landIceFracObserved'] = land_ice_frac
 
     # we want the mask to be 1 where there's at least half land-ice
     land_ice_mask = xr.where(land_ice_frac > 0.5, 1, 0)
