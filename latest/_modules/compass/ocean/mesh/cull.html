@@ -114,6 +114,7 @@
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">import</span> <span class="nn">mpas_tools.io</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">FeatureCollection</span><span class="p">,</span>
@@ -563,15 +564,19 @@
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">has_remapped_topo</span><span class="p">:</span>
-        <span class="n">_cull_topo</span><span class="p">(</span><span class="n">with_cavities</span><span class="p">,</span> <span class="n">process_count</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+        <span class="n">_cull_topo</span><span class="p">(</span><span class="n">with_cavities</span><span class="p">,</span> <span class="n">process_count</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">latitude_threshold</span><span class="p">,</span>
+                   <span class="n">sweep_count</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">with_cavities</span><span class="p">:</span>
         <span class="n">dsMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;topography_culled.nc&#39;</span><span class="p">)</span>
         <span class="n">dsMask</span> <span class="o">=</span> <span class="n">dsMask</span><span class="p">[[</span><span class="s1">&#39;regionCellMasks&#39;</span><span class="p">,]]</span>
 
-        <span class="n">dsMask</span> <span class="o">=</span> <span class="n">add_land_locked_cells_to_mask</span><span class="p">(</span>
-            <span class="n">dsMask</span><span class="p">,</span> <span class="n">dsCulledMesh</span><span class="p">,</span> <span class="n">latitude_threshold</span><span class="o">=</span><span class="n">latitude_threshold</span><span class="p">,</span>
-            <span class="n">nSweeps</span><span class="o">=</span><span class="n">sweep_count</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">has_remapped_topo</span><span class="p">:</span>
+            <span class="c1"># we haven&#39;t dealt with cells land-locked next to land and</span>
+            <span class="c1"># land-ice yet</span>
+            <span class="n">dsMask</span> <span class="o">=</span> <span class="n">add_land_locked_cells_to_mask</span><span class="p">(</span>
+                <span class="n">dsMask</span><span class="p">,</span> <span class="n">dsCulledMesh</span><span class="p">,</span> <span class="n">latitude_threshold</span><span class="o">=</span><span class="n">latitude_threshold</span><span class="p">,</span>
+                <span class="n">nSweeps</span><span class="o">=</span><span class="n">sweep_count</span><span class="p">)</span>
 
         <span class="n">landIceMask</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">regionCellMasks</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nRegions</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">dsLandIceMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
@@ -598,20 +603,25 @@
                     <span class="n">use_progress_bar</span><span class="o">=</span><span class="n">use_progress_bar</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_cull_topo</span><span class="p">(</span><span class="n">with_cavities</span><span class="p">,</span> <span class="n">process_count</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_cull_topo</span><span class="p">(</span><span class="n">with_cavities</span><span class="p">,</span> <span class="n">process_count</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">latitude_threshold</span><span class="p">,</span>
+               <span class="n">sweep_count</span><span class="p">):</span>
 
     <span class="n">ds_topo</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">)</span>
     <span class="n">ds_base</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">with_cavities</span><span class="p">:</span>
-        <span class="n">_add_land_ice_mask_and_mask_draft</span><span class="p">(</span><span class="n">ds_topo</span><span class="p">,</span> <span class="n">ds_base</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_topo</span><span class="p">,</span> <span class="s1">&#39;topography_with_land_ice_mask.nc&#39;</span><span class="p">)</span>
 
     <span class="n">ds_culled</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">)</span>
     <span class="n">ds_map_culled_to_base</span> <span class="o">=</span> <span class="n">map_culled_to_base</span><span class="p">(</span><span class="n">ds_base</span><span class="o">=</span><span class="n">ds_base</span><span class="p">,</span>
                                                <span class="n">ds_culled</span><span class="o">=</span><span class="n">ds_culled</span><span class="p">,</span>
                                                <span class="n">workers</span><span class="o">=</span><span class="n">process_count</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Culling topography&#39;</span><span class="p">)</span>
     <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_map_culled_to_base</span><span class="p">,</span> <span class="s1">&#39;map_culled_to_base.nc&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">with_cavities</span><span class="p">:</span>
+        <span class="n">_add_land_ice_mask_and_mask_draft</span><span class="p">(</span><span class="n">ds_topo</span><span class="p">,</span> <span class="n">ds_base</span><span class="p">,</span>
+                                          <span class="n">ds_map_culled_to_base</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
+                                          <span class="n">latitude_threshold</span><span class="p">,</span> <span class="n">sweep_count</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_topo</span><span class="p">,</span> <span class="s1">&#39;topography_with_land_ice_mask.nc&#39;</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Culling topography&#39;</span><span class="p">)</span>
     <span class="n">ds_culled_topo</span> <span class="o">=</span> <span class="n">cull_dataset</span><span class="p">(</span><span class="n">ds</span><span class="o">=</span><span class="n">ds_topo</span><span class="p">,</span> <span class="n">ds_base_mesh</span><span class="o">=</span><span class="n">ds_base</span><span class="p">,</span>
                                   <span class="n">ds_culled_mesh</span><span class="o">=</span><span class="n">ds_culled</span><span class="p">,</span>
                                   <span class="n">ds_map_culled_to_base</span><span class="o">=</span><span class="n">ds_map_culled_to_base</span><span class="p">,</span>
@@ -642,33 +652,64 @@
     <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_mask</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_add_land_ice_mask_and_mask_draft</span><span class="p">(</span><span class="n">ds_topo</span><span class="p">,</span> <span class="n">ds_base_mesh</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_add_land_ice_mask_and_mask_draft</span><span class="p">(</span><span class="n">ds_topo</span><span class="p">,</span> <span class="n">ds_base_mesh</span><span class="p">,</span>
+                                      <span class="n">ds_map_culled_to_base</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
+                                      <span class="n">latitude_threshold</span><span class="p">,</span> <span class="n">sweep_count</span><span class="p">):</span>
     <span class="n">land_ice_frac</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="o">.</span><span class="n">landIceFracObserved</span>
 
     <span class="c1"># we want the mask to be 1 where there&#39;s at least half land-ice</span>
     <span class="n">land_ice_mask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">land_ice_frac</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
-    <span class="n">ocean_mask</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">land_ice_mask</span>
-
     <span class="n">gf</span> <span class="o">=</span> <span class="n">GeometricFeatures</span><span class="p">()</span>
     <span class="n">fc_ocean_seed</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="n">objectType</span><span class="o">=</span><span class="s1">&#39;point&#39;</span><span class="p">,</span>
                             <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;seed_point&#39;</span><span class="p">])</span>
 
-    <span class="c1"># flood fill the ocean portion to fill in any holes in the land ice</span>
+    <span class="n">fc_south_pole_seed</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">&#39;south_pole.geojson&#39;</span><span class="p">)</span>
+
+    <span class="c1"># flood fill the ice portion to remove isolated land ice</span>
+
+    <span class="n">ds_mask</span> <span class="o">=</span> <span class="n">compute_mpas_flood_fill_mask</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">=</span><span class="n">ds_base_mesh</span><span class="p">,</span>
+                                           <span class="n">daGrow</span><span class="o">=</span><span class="n">land_ice_mask</span><span class="p">,</span>
+                                           <span class="n">fcSeed</span><span class="o">=</span><span class="n">fc_south_pole_seed</span><span class="p">,</span>
+                                           <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    <span class="n">land_ice_mask</span> <span class="o">=</span> <span class="n">ds_mask</span><span class="o">.</span><span class="n">cellSeedMask</span>
+
+    <span class="c1"># now, remove land-locked or land-ice-locked cells</span>
+
+    <span class="n">map_culled_to_base</span> <span class="o">=</span> <span class="n">ds_map_culled_to_base</span><span class="o">.</span><span class="n">mapCulledToBaseCell</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">ncells_base</span> <span class="o">=</span> <span class="n">ds_base_mesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]</span>
+    <span class="c1"># the mask is 1 (for land) by default</span>
+    <span class="n">land_and_land_ice_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">ncells_base</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="c1"># where land has not been culled out, the mask is land_ice_mask</span>
+    <span class="n">land_and_land_ice_mask</span><span class="p">[</span><span class="n">map_culled_to_base</span><span class="p">]</span> <span class="o">=</span> \
+        <span class="n">land_ice_mask</span><span class="p">[</span><span class="n">map_culled_to_base</span><span class="p">]</span>
+
+    <span class="n">ds_mask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+    <span class="n">ds_mask</span><span class="p">[</span><span class="s1">&#39;regionCellMasks&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="n">land_and_land_ice_mask</span><span class="p">)</span>
+    <span class="n">ds_mask</span><span class="p">[</span><span class="s1">&#39;regionCellMasks&#39;</span><span class="p">]</span> <span class="o">=</span> \
+        <span class="n">ds_mask</span><span class="o">.</span><span class="n">regionCellMasks</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nRegions&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">ds_mask</span><span class="o">.</span><span class="n">to_netcdf</span><span class="p">(</span><span class="s1">&#39;land_and_land_ice_mask.nc&#39;</span><span class="p">)</span>
+    <span class="c1"># re-open from file so regionCellMasks can be assigned to.</span>
+    <span class="n">ds_mask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;land_and_land_ice_mask.nc&#39;</span><span class="p">)</span>
+
+    <span class="n">ds_mask</span> <span class="o">=</span> <span class="n">add_land_locked_cells_to_mask</span><span class="p">(</span>
+        <span class="n">ds_mask</span><span class="p">,</span> <span class="n">ds_base_mesh</span><span class="p">,</span> <span class="n">latitude_threshold</span><span class="o">=</span><span class="n">latitude_threshold</span><span class="p">,</span>
+        <span class="n">nSweeps</span><span class="o">=</span><span class="n">sweep_count</span><span class="p">)</span>
+
+    <span class="n">land_ice_mask</span> <span class="o">=</span> <span class="n">ds_mask</span><span class="o">.</span><span class="n">regionCellMasks</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nRegions</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># finally, flood fill the ocean portion to fill in any holes in the land</span>
+    <span class="c1"># ice</span>
+    <span class="n">ocean_mask</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">land_ice_mask</span>
+
     <span class="n">ds_mask</span> <span class="o">=</span> <span class="n">compute_mpas_flood_fill_mask</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">=</span><span class="n">ds_base_mesh</span><span class="p">,</span>
                                            <span class="n">daGrow</span><span class="o">=</span><span class="n">ocean_mask</span><span class="p">,</span>
                                            <span class="n">fcSeed</span><span class="o">=</span><span class="n">fc_ocean_seed</span><span class="p">,</span>
                                            <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
     <span class="n">land_ice_mask</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">ds_mask</span><span class="o">.</span><span class="n">cellSeedMask</span>
 
-    <span class="n">fc_south_pole_seed</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">&#39;south_pole.geojson&#39;</span><span class="p">)</span>
-
-    <span class="c1"># now flood fill the ice portion to remove isolated land ice</span>
-    <span class="n">ds_mask</span> <span class="o">=</span> <span class="n">compute_mpas_flood_fill_mask</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">=</span><span class="n">ds_base_mesh</span><span class="p">,</span>
-                                           <span class="n">daGrow</span><span class="o">=</span><span class="n">land_ice_mask</span><span class="p">,</span>
-                                           <span class="n">fcSeed</span><span class="o">=</span><span class="n">fc_south_pole_seed</span><span class="p">,</span>
-                                           <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-    <span class="n">land_ice_mask</span> <span class="o">=</span> <span class="n">ds_mask</span><span class="o">.</span><span class="n">cellSeedMask</span>
     <span class="n">ds_topo</span><span class="p">[</span><span class="s1">&#39;landIceMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">land_ice_mask</span>
     <span class="n">region_cell_mask</span> <span class="o">=</span> <span class="n">land_ice_mask</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nRegions&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">ds_topo</span><span class="p">[</span><span class="s1">&#39;regionCellMasks&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">region_cell_mask</span>
