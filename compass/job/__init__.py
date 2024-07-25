@@ -88,6 +88,12 @@ def write_job_script(config, machine, target_cores, min_cores, work_dir,
             job_name = 'compass'
         else:
             job_name = f'compass_{suite}'
+
+    if config.has_option('parallel', 'gpus_per_node'):
+        gpus_per_node = config.get('parallel', 'gpus_per_node')
+    else:
+        gpus_per_node = ''
+
     wall_time = config.get('job', 'wall_time')
 
     template = Template(resources.read_text(
@@ -96,7 +102,8 @@ def write_job_script(config, machine, target_cores, min_cores, work_dir,
     text = template.render(job_name=job_name, account=account,
                            nodes=f'{nodes}', wall_time=wall_time, qos=qos,
                            partition=partition, constraint=constraint,
-                           suite=suite, pre_run_commands=pre_run_commands,
+                           gpus_per_node=gpus_per_node, suite=suite,
+                           pre_run_commands=pre_run_commands,
                            post_run_commands=post_run_commands)
     text = _clean_up_whitespace(text)
     if suite == '':
