@@ -657,15 +657,19 @@
                                       <span class="n">ds_map_culled_to_base</span><span class="p">,</span> <span class="n">ds_perserve</span><span class="p">,</span>
                                       <span class="n">logger</span><span class="p">,</span> <span class="n">latitude_threshold</span><span class="p">,</span> <span class="n">sweep_count</span><span class="p">):</span>
 
-    <span class="n">land_ice_frac</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="o">.</span><span class="n">landIceFracObserved</span>
     <span class="c1"># we don&#39;t what land ice where we are preserving critical passages</span>
     <span class="k">for</span> <span class="n">ds</span> <span class="ow">in</span> <span class="n">ds_perserve</span><span class="p">:</span>
         <span class="n">not_preserve</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">transectCellMasks</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nTransects&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
-        <span class="n">land_ice_frac</span> <span class="o">=</span> <span class="n">land_ice_frac</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">not_preserve</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
 
-    <span class="n">land_ice_frac</span><span class="o">.</span><span class="n">to_netcdf</span><span class="p">(</span><span class="s1">&#39;land_ice_frac_without_critical_passages.nc&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;landIceFracObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;landIcePressureObserved&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;landIceDraftObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceGroundedFracObserved&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;landIceFloatingFracObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceThkObserved&#39;</span><span class="p">]:</span>
+            <span class="n">ds_topo</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="p">[</span><span class="n">var</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">not_preserve</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
 
-    <span class="n">ds_topo</span><span class="p">[</span><span class="s1">&#39;landIceFracObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">land_ice_frac</span>
+        <span class="n">ds_topo</span><span class="p">[</span><span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">ds_topo</span><span class="p">[</span><span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">not_preserve</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+    <span class="n">land_ice_frac</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="o">.</span><span class="n">landIceFracObserved</span>
 
     <span class="c1"># we want the mask to be 1 where there&#39;s at least half land-ice</span>
     <span class="n">land_ice_mask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">land_ice_frac</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
