@@ -529,15 +529,19 @@ def _add_land_ice_mask_and_mask_draft(ds_topo, ds_base_mesh,
                                       ds_map_culled_to_base, ds_perserve,
                                       logger, latitude_threshold, sweep_count):
 
-    land_ice_frac = ds_topo.landIceFracObserved
     # we don't what land ice where we are preserving critical passages
     for ds in ds_perserve:
         not_preserve = ds.transectCellMasks.sum(dim='nTransects') == 0
-        land_ice_frac = land_ice_frac.where(not_preserve, 0.0)
 
-    land_ice_frac.to_netcdf('land_ice_frac_without_critical_passages.nc')
+        for var in ['landIceFracObserved', 'landIcePressureObserved',
+                    'landIceDraftObserved', 'landIceGroundedFracObserved',
+                    'landIceFloatingFracObserved', 'landIceThkObserved']:
+            ds_topo[var] = ds_topo[var].where(not_preserve, 0.0)
 
-    ds_topo['landIceFracObserved'] = land_ice_frac
+        ds_topo['oceanFracObserved'] = \
+            ds_topo['oceanFracObserved'].where(not_preserve, 1.0)
+
+    land_ice_frac = ds_topo.landIceFracObserved
 
     # we want the mask to be 1 where there's at least half land-ice
     land_ice_mask = xr.where(land_ice_frac > 0.5, 1, 0)
