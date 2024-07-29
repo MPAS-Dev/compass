@@ -35,6 +35,7 @@ class Forward(Step):
         long : bool, optional
             Whether to run a long (3-year) simulation to quasi-equilibrium
         """
+        self.long = long
         self.resolution = resolution
         if resolution >= 1e3:
             res_name = f'{int(resolution/1e3)}km'
@@ -52,7 +53,7 @@ class Forward(Step):
                                'dt': "'00:20:00'",
                                'btr_dt': "'0000_00:00:20'",
                                'mom_del4': "2.0e10 ",
-                               'run_duration': "'0000_00:01:00'"}}
+                               'run_duration': "'0000_01:00:00'"}}
 
         if res_name not in res_params:
             raise ValueError(
@@ -112,7 +113,7 @@ class Forward(Step):
         """
         run_model(self, partition_graph=True)
 
-        if self.name == '3_year_test':
+        if self.long:
             replacements = {'config_do_restart': '.true.',
                             'config_start_time': "'file'"}
             self.update_namelist_at_runtime(replacements)
