@@ -48,14 +48,59 @@
 </stream>
 
 <stream name="forcing_data"
-        filename_template="forcing.nc">
-
+        filename_template="forcing.nc"
+        input_interval="initial_only"
+        type="input">
     <var_struct name="tracersSurfaceFlux"/>
     <var_struct name="tracersSurfaceRestoringFields"/>
     <var_struct name="tracersInteriorRestoringFields"/>
     <var name="windStressZonal"/>
     <var name="windStressMeridional"/>
     <var name="bottomDrag"/>
+</stream>
+
+<stream name="timeSeriesStatsMonthlyOutput"
+        type="output"
+        filename_template="timeSeriesStatsMonthly.$Y-$M-$D.nc"
+        filename_interval="00-01-00_00:00:00"
+        reference_time="0001-01-01_00:00:00"
+        clobber_mode="truncate"
+        io_type="pnetcdf"
+        packages="timeSeriesStatsMonthlyAMPKG"
+        output_interval="00-01-00_00:00:00">
+    <stream name="mesh"/>
+    <var_struct name="tracers"/>
+    <var name="layerThickness"/>
+    <var name="ssh"/>
+    <var name="maxLevelEdgeTop"/>
+    <var name="vertCoordMovementWeights"/>
+    <var name="edgeMask"/>
+    <var name="vertexMask"/>
+    <var name="cellMask"/>
+    <var name="refZMid"/>
+    <var name="refLayerThickness"/>
+    <var name="xtime"/>
+    <var name="zMid"/>
+    <var name="zTop"/>
+    <var name="kineticEnergyCell"/>
+    <var name="relativeVorticityCell"/>
+    <var name="velocityZonal"/>
+    <var name="velocityMeridional"/>
+    <var name="density"/>
+    <var name="divergence"/>
+    <var name="displacedDensity"/>
+    <var name="potentialDensity"/>
+    <var name="boundaryLayerDepth"/>
+    <var name="indexBoundaryLayerDepth"/>
+    <var name="indexSurfaceLayerDepth"/>
+    <var name="surfaceFrictionVelocity"/>
+    <var name="surfaceBuoyancyForcing"/>
+    <var name="atmosphericPressure"/>
+    <var name="windStressZonal"/>
+    <var name="windStressMeridional"/>
+    <var name="BruntVaisalaFreqTop"/>
+    <var_array name="activeTracerSurfaceFluxTendency"/>
+
 </stream>
 
 </streams>
