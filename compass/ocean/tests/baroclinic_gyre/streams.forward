@@ -31,6 +31,9 @@
 	<var name="relativeVorticityCell"/>
     <var name="velocityZonal"/>
     <var name="velocityMeridional"/>
+    <var name="vertVelocityTop"/>
+    <var name="normalTransportVelocity"/>
+    <var name="transportVelocityZonal"/>
     <var name="density"/>
     <var name="divergence"/>
     <var name="displacedDensity"/>
@@ -61,8 +64,8 @@
 
 <stream name="timeSeriesStatsMonthlyOutput"
         type="output"
-        filename_template="timeSeriesStatsMonthly.$Y-$M-$D.nc"
-        filename_interval="00-01-00_00:00:00"
+        filename_template="output/timeSeriesStatsMonthly.$Y-$M-$D.nc"
+        filename_interval="01-00-00_00:00:00"
         reference_time="0001-01-01_00:00:00"
         clobber_mode="truncate"
         io_type="pnetcdf"
@@ -84,6 +87,9 @@
     <var name="zTop"/>
     <var name="kineticEnergyCell"/>
     <var name="relativeVorticityCell"/>
+    <var name="vertVelocityTop"/>
+    <var name="normalTransportVelocity"/>
+    <var name="transportVelocityZonal"/>
     <var name="velocityZonal"/>
     <var name="velocityMeridional"/>
     <var name="density"/>
@@ -100,6 +106,18 @@
     <var name="windStressMeridional"/>
     <var name="BruntVaisalaFreqTop"/>
     <var_array name="activeTracerSurfaceFluxTendency"/>
+
+</stream>
+
+<stream name="timeSeriesStatsMonthlyRestart"
+        type="input;output"
+        filename_template="restarts/mpaso.rst.am.timeSeriesStatsMonthly.$Y-$M-$D_$S.nc"
+        filename_interval="output_interval"
+        reference_time="0001-01-01_00:00:00"
+        clobber_mode="truncate"
+        packages="timeSeriesStatsMonthlyAMPKG"
+        input_interval="initial_only"
+        output_interval="stream:restart:output_interval" >
 
 </stream>
 
