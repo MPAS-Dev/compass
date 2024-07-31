@@ -1,5 +1,3 @@
-import os
-
 import numpy as np
 import xarray
 from mpas_tools.io import write_netcdf
@@ -32,9 +30,9 @@ class Moc(Step):
         super().__init__(test_case=test_case, name='moc')
         self.resolution = resolution
 
-        self.add_input_file('./init.nc')
+        self.add_input_file('../initial_state/initial_state.nc')
         self.add_input_file(
-            '../output/timeSeriesStatsMonthly.0001-01-01.nc')
+            '../forward/output/timeSeriesStatsMonthly.0001-01-01.nc')
         self.add_output_file('moc.nc')
 
     def run(self):
@@ -42,7 +40,7 @@ class Moc(Step):
         Run this step of the test case
         """
 
-        in_dir = '../output'
+        in_dir = '../forward/output'
         out_dir = '.'
 
         # show progress only if we're not writing to a log file
@@ -55,11 +53,14 @@ class Moc(Step):
         latBins = np.arange(lat_min + dlat, lat_max + dlat, dlat)
         nz = self.config.getfloat('vertical_grid', 'vert_levels')
 
-        dsMesh = xarray.open_dataset(os.path.join(in_dir, 'init.nc'))
+        dsMesh = xarray.open_dataset('../initial_state/initial_state.nc')
 
         ds = xarray.open_mfdataset(
             '{}/timeSeriesStatsMonthly*.nc'.format(in_dir),
             concat_dim='Time', combine='nested')
+
+        # print(np.shape(dsMesh), np.shape(ds), np.shape(latBins),
+        #    np.shape(nz))
 
         moc = self._compute_amoc(dsMesh, ds, latBins, nz)
 

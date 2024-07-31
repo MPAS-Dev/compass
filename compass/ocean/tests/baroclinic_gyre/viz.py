@@ -36,8 +36,8 @@ class Viz(Step):
 
         # config = self.config
         out_dir = '../figures'
-        sim_dir = '../output'  # check output structure
-        dsMesh = xarray.open_dataset('./init.nc')
+        sim_dir = '../forward/output'  # check output structure
+        dsMesh = xarray.open_dataset('./initial_state/initial_state.nc')
         ds = xarray.open_dataset(f'{sim_dir}/moc.nc')
         # Insert plots here
         self._plot_moc(ds, dsMesh, out_dir)
@@ -65,4 +65,4 @@ class Viz(Step):
                      xy=(0.01, 0.05), xycoords='axes fraction')
         # plt.text('%d2'0.1)
         plt.colorbar()
-        plt.savefig('{}/AMOC_default_100.png'.format(out_dir))
+        plt.savefig('{}/AMOC_default_3.png'.format(out_dir))
