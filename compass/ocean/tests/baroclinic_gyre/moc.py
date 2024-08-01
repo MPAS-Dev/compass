@@ -70,9 +70,9 @@ class Moc(Step):
         dsMOC = xarray.Dataset()
         dsMOC['xtime_startMonthly'] = ds.xtime_startMonthly
         dsMOC['xtime_endMonthly'] = ds.xtime_endMonthly
-        dsMOC['moc'] = (['interfaceP1', 'latitudeBins'], moc)
-        dsMOC.coords['latitudeBins'] = latBins
-        dsMOC.coords['interfaceP1'] = np.arange(nz + 1)
+        dsMOC['moc'] = (["Time", "latBins", "nVertLevelsP1"], moc)
+        dsMOC.coords['latBins'] = latBins
+        dsMOC.coords['nVertLevelsP1'] = np.arange(nz + 1)
         dsMOC.moc.attrs['units'] = 'Sv'
         dsMOC.moc.attrs['description'] = \
             'zonally-averaged meridional overturning streamfunction'
@@ -87,16 +87,18 @@ class Moc(Step):
         """
 
         latCell = 180. / np.pi * dsMesh.variables['latCell'][:]
-        velArea = (ds.timeMonthly_avg_vertVelocityTop.mean(axis=0) *
-                   dsMesh.areaCell[:])
-        mocTop = np.zeros([np.size(latBins), nz + 1])
-        for iLat in range(1, np.size(latBins)):
-            indlat = np.logical_and(
-                latCell >= latBins[iLat - 1], latCell < latBins[iLat])
-            mocTop[iLat, :] = (mocTop[iLat - 1, :] +
-                               np.nansum(velArea[indlat, :], axis=0))
+        nt = np.shape(ds.timeMonthly_avg_vertVelocityTop)[0]
+        mocTop = np.zeros([nt, np.size(latBins), nz + 1])
+        indlat_all = [np.logical_and(
+            latCell >= latBins[iLat - 1], latCell < latBins[iLat])
+            for iLat in range(1, np.size(latBins))]
+        for tt in range(nt):
+            for iLat in range(1, np.size(latBins)):
+                indlat = indlat_all[iLat - 1]
+                velArea = (ds.timeMonthly_avg_vertVelocityTop[tt, :, :] *
+                           dsMesh.areaCell[:])
+                mocTop[tt, iLat, :] = (mocTop[tt, iLat - 1, :] +
+                                       np.nansum(velArea[indlat, :], axis=0))
         # convert m^3/s to Sverdrup
         mocTop = mocTop * 1e-6
-        mocTop = mocTop.T
-        print(np.shape(mocTop))
         return mocTop
