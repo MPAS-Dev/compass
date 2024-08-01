@@ -2,6 +2,8 @@ from compass.mesh import QuasiUniformSphericalMeshStep
 from compass.ocean.tests.baroclinic_gyre.cull_mesh import CullMesh
 from compass.ocean.tests.baroclinic_gyre.forward import Forward
 from compass.ocean.tests.baroclinic_gyre.initial_state import InitialState
+from compass.ocean.tests.baroclinic_gyre.moc import Moc
+from compass.ocean.tests.baroclinic_gyre.viz import Viz
 from compass.testcase import TestCase
 from compass.validate import compare_variables
 
@@ -55,6 +57,11 @@ class GyreTestCase(TestCase):
         self.add_step(
             Forward(test_case=self, resolution=resolution,
                     long=long))
+        if long:
+            self.add_step(
+                Moc(test_case=self, resolution=resolution))
+            self.add_step(
+                Viz(test_case=self, resolution=resolution))
 
     def configure(self):
         """
