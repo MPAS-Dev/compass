@@ -1,6 +1,7 @@
 import os
 from importlib.resources import contents, read_text
 
+import numpy as np
 import xarray as xr
 from jinja2 import Template
 from mpas_tools.io import write_netcdf
@@ -194,7 +195,7 @@ class InitialState(Step):
         """
         config = self.config
         section = config['global_ocean']
-        self._smooth_topography()
+        topo_filename = self._smooth_topography()
 
         interfaces = generate_1d_grid(config=config)
 
@@ -223,7 +224,15 @@ class InitialState(Step):
             namelist['config_rx1_min_layer_thickness'] = \
                 f'{cavity_min_layer_thickness}'
 
+            min_water_column_thickness = \
+                cavity_min_layer_thickness * cavity_min_levels
+
+            topo_filename = self._dig_cavity_bed_elevation(
+                topo_filename, min_water_column_thickness)
+
         self.update_namelist_at_runtime(namelist)
+
+        symlink(target=topo_filename, link_name='topography.nc')
 
         update_pio = config.getboolean('global_ocean', 'init_update_pio')
         run_model(self, update_pio=update_pio)
@@ -250,10 +259,8 @@ class InitialState(Step):
         section = config['global_ocean']
         num_passes = section.getint('topo_smooth_num_passes')
         if num_passes == 0:
-            # just symlink the culled topography to be the topography used for
-            # the initial condition
-            symlink(target='topography_culled.nc', link_name='topography.nc')
-            return
+            # just return the culled topography file name
+            return 'topography_culled.nc'
 
         distance_limit = section.getfloat('topo_smooth_distance_limit')
         std_deviation = section.getfloat('topo_smooth_std_deviation')
@@ -274,7 +281,8 @@ class InitialState(Step):
         check_call(args=['ocean_smooth_topo_before_init'],
                    logger=self.logger)
 
-        with (xr.open_dataset('topography_culled.nc') as ds_topo):
+        out_filename = 'topography_smoothed.nc'
+        with xr.open_dataset('topography_culled.nc') as ds_topo:
             with xr.open_dataset('topography_orig_and_smooth.nc') as ds_smooth:
                 for field in ['bed_elevation', 'landIceDraftObserved',
                               'landIceThkObserved']:
@@ -282,4 +290,23 @@ class InitialState(Step):
                     ds_topo[field] = ds_smooth[f'{field}New']
                     ds_topo[field].attrs = attrs
 
-            write_netcdf(ds_topo, 'topography.nc')
+            write_netcdf(ds_topo, out_filename)
+        return out_filename
+
+    def _dig_cavity_bed_elevation(self, in_filename,
+                                  min_water_column_thickness):
+        """ Dig bed elevation to preserve minimum water-column thickness """
+
+        out_filename = 'topography_dig_bed.nc'
+        with xr.open_dataset(in_filename) as ds_topo:
+            bed = ds_topo.bed_elevation
+            attrs = bed.attrs
+            draft = ds_topo.landIceDraftObserved
+            max_bed = draft - min_water_column_thickness
+            mask = np.logical_or(draft == 0., bed < max_bed)
+            bed = xr.where(mask, bed, max_bed)
+            ds_topo['bed_elevation'] = bed
+            ds_topo['bed_elevation'].attrs = attrs
+
+            write_netcdf(ds_topo, out_filename)
+        return out_filename
