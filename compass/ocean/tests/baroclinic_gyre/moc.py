@@ -50,8 +50,9 @@ class Moc(Step):
         lat_max = self.config.getfloat('baroclinic_gyre', 'lat_max')
         dlat = 0.25  # set in config next
         # latbins = np.arange(15.5, 75.5, 0.25)
-        latBins = np.arange(lat_min + dlat, lat_max + dlat, dlat)
-        nz = self.config.getfloat('vertical_grid', 'vert_levels')
+        latBins = np.arange(lat_min + 2 * dlat,
+                            lat_max + 2 * dlat, dlat)
+        nz = self.config.getint('vertical_grid', 'vert_levels')
 
         dsMesh = xarray.open_dataset('../initial_state/initial_state.nc')
 
@@ -59,15 +60,19 @@ class Moc(Step):
             '{}/timeSeriesStatsMonthly*.nc'.format(in_dir),
             concat_dim='Time', combine='nested')
 
-        # print(np.shape(dsMesh), np.shape(ds), np.shape(latBins),
-        #    np.shape(nz))
+        # print(dsMesh)
+        # print(ds)
+        # print(latBins)
+        # print(nz)
 
         moc = self._compute_amoc(dsMesh, ds, latBins, nz)
 
         dsMOC = xarray.Dataset()
         dsMOC['xtime_startMonthly'] = ds.xtime_startMonthly
         dsMOC['xtime_endMonthly'] = ds.xtime_endMonthly
-        dsMOC['moc'] = moc
+        dsMOC['moc'] = (['interfaceP1', 'latitudeBins'], moc)
+        dsMOC.coords['latitudeBins'] = latBins
+        dsMOC.coords['interfaceP1'] = np.arange(nz + 1)
         dsMOC.moc.attrs['units'] = 'Sv'
         dsMOC.moc.attrs['description'] = \
             'zonally-averaged meridional overturning streamfunction'
@@ -76,20 +81,22 @@ class Moc(Step):
         #    return
         write_netcdf(dsMOC, outputFileName)
 
-    def _compute_amoc(dsMesh, ds, latBins, nz):
+    def _compute_amoc(self, dsMesh, ds, latBins, nz):
         """
         compute the overturning streamfunction for the given mesh
         """
 
         latCell = 180. / np.pi * dsMesh.variables['latCell'][:]
-        velArea = ds.vertVelocityTop.mean(axis=0) * ds.areaCell[:]
+        velArea = (ds.timeMonthly_avg_vertVelocityTop.mean(axis=0) *
+                   dsMesh.areaCell[:])
         mocTop = np.zeros([np.size(latBins), nz + 1])
         for iLat in range(1, np.size(latBins)):
             indlat = np.logical_and(
                 latCell >= latBins[iLat - 1], latCell < latBins[iLat])
-            mocTop[iLat, :] = mocTop[iLat - 1, :] \
-                + np.nansum(velArea[indlat, :], axis=0)
+            mocTop[iLat, :] = (mocTop[iLat - 1, :] +
+                               np.nansum(velArea[indlat, :], axis=0))
         # convert m^3/s to Sverdrup
         mocTop = mocTop * 1e-6
         mocTop = mocTop.T
+        print(np.shape(mocTop))
         return mocTop
