@@ -34,7 +34,6 @@ class Viz(Step):
         Run this step of the test case
         """
 
-        # config = self.config
         out_dir = '.'
         moc_dir = '../moc'
         mon_dir = '../forward/output'
@@ -48,8 +47,8 @@ class Viz(Step):
         """
         Plot the time-mean moc state for the test case
         """
-
-        moc = ds.moc[:, :, :].mean(axis=0).T.values
+        avg_len = self.config.getint('mean_state_viz', 'time_averaging_length')
+        moc = ds.moc[-12 * avg_len:, :, :].mean(axis=0).T.values
         latbins = ds.latBins
         plt.contourf(
             latbins, dsMesh.refInterfaces, moc,
@@ -66,7 +65,7 @@ class Viz(Step):
         plt.annotate(amoc + '\n' + maxloc + '\n' + maxval,
                      xy=(0.01, 0.05), xycoords='axes fraction')
         plt.colorbar()
-        plt.savefig('{}/time_avg_moc.png'.format(out_dir))
+        plt.savefig('{}/time_avg_moc_last{}years.png'.format(out_dir, avg_len))
 
     def _plot_spinup(self, mon_dir, dsMesh, out_dir):
         """
