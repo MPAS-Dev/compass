@@ -488,7 +488,7 @@ def _cull_topo(with_cavities, process_count, logger, latitude_threshold,
     write_netcdf(ds_map_culled_to_base, 'map_culled_to_base.nc')
 
     if with_cavities:
-        _add_land_ice_mask_and_mask_draft(ds_topo, ds_base,
+        _flood_fill_and_add_land_ice_mask(ds_topo, ds_base,
                                           ds_map_culled_to_base, ds_preserve,
                                           logger, latitude_threshold,
                                           sweep_count)
@@ -525,7 +525,7 @@ def _land_mask_from_topo(with_cavities, topo_filename, mask_filename):
     write_netcdf(ds_mask, mask_filename)
 
 
-def _add_land_ice_mask_and_mask_draft(ds_topo, ds_base_mesh,
+def _flood_fill_and_add_land_ice_mask(ds_topo, ds_base_mesh,
                                       ds_map_culled_to_base, ds_perserve,
                                       logger, latitude_threshold, sweep_count):
 
@@ -534,7 +534,8 @@ def _add_land_ice_mask_and_mask_draft(ds_topo, ds_base_mesh,
         not_preserve = ds.transectCellMasks.sum(dim='nTransects') == 0
 
         for var in ['landIceFracObserved', 'landIcePressureObserved',
-                    'landIceDraftObserved', 'landIceGroundedFracObserved',
+                    'landIceDraftObserved', 'ssh',
+                    'landIceGroundedFracObserved',
                     'landIceFloatingFracObserved', 'landIceThkObserved']:
             ds_topo[var] = ds_topo[var].where(not_preserve, 0.0)
 
@@ -543,8 +544,7 @@ def _add_land_ice_mask_and_mask_draft(ds_topo, ds_base_mesh,
 
     land_ice_frac = ds_topo.landIceFracObserved
 
-    # we want the mask to be 1 where there's at least half land-ice
-    land_ice_mask = xr.where(land_ice_frac > 0.5, 1, 0)
+    land_ice_present = xr.where(land_ice_frac > 0.0, 1, 0)
 
     gf = GeometricFeatures()
     fc_ocean_seed = gf.read(componentName='ocean', objectType='point',
@@ -552,13 +552,22 @@ def _add_land_ice_mask_and_mask_draft(ds_topo, ds_base_mesh,
 
     fc_south_pole_seed = read_feature_collection('south_pole.geojson')
 
-    # flood fill the ice portion to remove isolated land ice
+    # flood fill anywhere land ice is present to remove isolated land ice
 
     ds_mask = compute_mpas_flood_fill_mask(dsMesh=ds_base_mesh,
-                                           daGrow=land_ice_mask,
+                                           daGrow=land_ice_present,
                                            fcSeed=fc_south_pole_seed,
                                            logger=logger)
-    land_ice_mask = ds_mask.cellSeedMask
+    land_ice_present = ds_mask.cellSeedMask
+
+    # update land-ice variables and ocean fraction accordingly
+    for var in ['landIceFracObserved', 'landIcePressureObserved',
+                'landIceDraftObserved', 'ssh', 'landIceGroundedFracObserved',
+                'landIceFloatingFracObserved', 'landIceThkObserved']:
+        ds_topo[var] = ds_topo[var].where(land_ice_present, 0.0)
+
+    land_ice_frac = ds_topo.landIceFracObserved
+    land_ice_mask = xr.where(land_ice_frac > 0.5, 1, 0)
 
     # now, remove land-locked or land-ice-locked cells
 
@@ -599,19 +608,6 @@ def _add_land_ice_mask_and_mask_draft(ds_topo, ds_base_mesh,
     ds_topo['landIceMask'] = land_ice_mask
     region_cell_mask = land_ice_mask.expand_dims(dim='nRegions', axis=1)
     ds_topo['regionCellMasks'] = region_cell_mask
-
-    # we also want to mask out the land-ice draft for cells detatched from the
-    # ice sheet, this time anywhere the land-ice fraction > 0
-    land_ice_draft_mask = xr.where(land_ice_frac > 0.0, 1, 0)
-    ds_mask = compute_mpas_flood_fill_mask(dsMesh=ds_base_mesh,
-                                           daGrow=land_ice_draft_mask,
-                                           fcSeed=fc_south_pole_seed,
-                                           logger=logger)
-
-    land_ice_draft_mask = ds_mask.cellSeedMask
-    ds_topo['landIceDraftMask'] = land_ice_draft_mask
-    ds_topo['landIceDraftObserved'] = (
-        land_ice_draft_mask * ds_topo.landIceDraftObserved)
 
 
 def _land_mask_from_geojson(with_cavities, process_count, logger,
