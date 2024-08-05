@@ -476,6 +476,9 @@ def build_spack_env(config, update_spack, machine, compiler, mpi,  # noqa: C901
     scorpio = config.get('deploy', 'scorpio')
     parallelio = config.get('deploy', 'parallelio')
 
+    # for now, we'll assume Cuda is needed anytime GPUs are present
+    with_cuda = config.has_option('parallel', 'gpus_per_node')
+
     if config.has_option('deploy', 'spack_mirror'):
         spack_mirror = config.get('deploy', 'spack_mirror')
     else:
@@ -536,8 +539,12 @@ def build_spack_env(config, update_spack, machine, compiler, mpi,  # noqa: C901
             f'@{parallelio}+pnetcdf~timing"')
 
     if albany != 'None':
-        specs.append(f'"trilinos-for-albany@{albany}"')
-        specs.append(f'"albany@{albany}+mpas~py+unit_tests"')
+        if with_cuda:
+            cuda = '+cuda+uvm'
+        else:
+            cuda = ''
+        specs.append(f'"trilinos-for-albany@{albany}{cuda}"')
+        specs.append(f'"albany@{albany}+mpas~py+unit_tests{cuda}"')
 
     yaml_template = f'{spack_template_path}/{machine}_{compiler}_{mpi}.yaml'
     if not os.path.exists(yaml_template):
