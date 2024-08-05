@@ -66,6 +66,11 @@ def get_available_parallel_resources(config):
         cores_per_node=cores_per_node,
         mpi_allowed=mpi_allowed
     )
+
+    if config.has_option('parallel', 'gpus_per_node'):
+        available_resources['gpus_per_node'] = \
+            config.getint('parallel', 'gpus_per_node')
+
     return available_resources
 
 

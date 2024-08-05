@@ -16,6 +16,9 @@
 {% if constraint != '' -%}
 #SBATCH  --constraint={{ constraint }}
 {%- endif %}
+{% if gpus_per_node != '' -%}
+#SBATCH  --gpus-per-node={{ gpus_per_node }}
+{%- endif %}
 
 source load_compass_env.sh
 {{ pre_run_commands }}
