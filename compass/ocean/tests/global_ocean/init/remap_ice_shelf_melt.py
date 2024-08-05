@@ -261,10 +261,10 @@ def remap_paolo(in_filename, base_mesh_filename, culled_mesh_filename,
 
     field = 'dataLandIceFreshwaterFlux'
     ds_remap[field] = area_ratio * sphere_fwf
-    ds_remap[field].attrs['units'] = 'kg m^-2 s^-1'
+    ds_remap[field].attrs['units'] = 'kg m-2 s-1'
     field = 'dataLandIceHeatFlux'
     ds_remap[field] = area_ratio * ds_remap[field]
-    ds_remap[field].attrs['units'] = 'W m^-2'
+    ds_remap[field].attrs['units'] = 'W m-2'
 
     mpas_flux = (ds_remap.dataLandIceFreshwaterFlux *
                  mpas_area_cell).sum().values
