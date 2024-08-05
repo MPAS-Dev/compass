@@ -114,6 +114,7 @@ def main():
                    f'git clone -b {args.mache_branch} ' \
                    f'git@github.com:{args.mache_fork}.git mache && ' \
                    f'cd mache && ' \
+                   f'conda install -y --file spec-file.txt && ' \
                    f'python -m pip install --no-deps .'
 
         check_call(commands, logger=logger)
