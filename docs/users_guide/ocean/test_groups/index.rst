@@ -12,6 +12,7 @@ coming months.
    :titlesonly:
 
    baroclinic_channel
+   baroclinic_gyre
    buttermilk_bay
    dam_break
    drying_slope
