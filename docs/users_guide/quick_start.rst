@@ -428,8 +428,8 @@ The output is:
       -c ocean -t qu240_for_e3sm
       -c ocean -t quwisc240
       -c ocean -t quwisc240_for_e3sm
-      -c ocean -t so12to60
-      -c ocean -t sowisc12to60
+      -c ocean -t so12to30
+      -c ocean -t sowisc12to30
       -c ocean -t wc14
       -c ocean -t wcwisc14
       -c ocean -t wetdry
