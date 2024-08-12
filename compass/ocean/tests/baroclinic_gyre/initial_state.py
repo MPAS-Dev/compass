@@ -49,8 +49,8 @@ class InitialState(Step):
         dsMesh = xr.open_dataset('culled_mesh.nc')
 
         ds = _write_initial_state(config, dsMesh)
-
-        _write_forcing(config, ds.latCell)
+        print('bottomDepth0', ds.refBottomDepth[0])
+        _write_forcing(config, ds.latCell, ds.refBottomDepth)
 
 
 def _write_initial_state(config, dsMesh):
@@ -107,14 +107,14 @@ def _write_initial_state(config, dsMesh):
     return ds
 
 
-def _write_forcing(config, lat):
+def _write_forcing(config, lat, refBottomDepth):
     section = config['baroclinic_gyre']
     latMin = section.getfloat('lat_min')
     latMax = section.getfloat('lat_max')
     tauMax = section.getfloat('wind_stress_max')
     tempMin = section.getfloat('restoring_temp_min')
     tempMax = section.getfloat('restoring_temp_max')
-    restoring_temp_piston_vel = section.getfloat('restoring_temp_piston_vel')
+    restoring_temp_timescale = section.getfloat('restoring_temp_timescale')
     initial_salinity = section.getfloat('initial_salinity')
     lat = np.rad2deg(lat)
     # set wind stress
@@ -132,8 +132,8 @@ def _write_forcing(config, lat):
         temperatureSurfaceRestoringValue.expand_dims(dim='Time', axis=0)
 
     temperaturePistonVelocity = \
-        restoring_temp_piston_vel * xr.ones_like(
-            temperatureSurfaceRestoringValue)
+        (refBottomDepth[0] * xr.ones_like(temperatureSurfaceRestoringValue) /
+         (restoring_temp_timescale * 24. * 3600.))
 
     salinitySurfaceRestoringValue = \
         initial_salinity * xr.ones_like(temperatureSurfaceRestoringValue)
