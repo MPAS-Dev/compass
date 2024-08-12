@@ -108,6 +108,7 @@ class Viz(Step):
 
         heatflux = (
             ds.timeMonthly_avg_activeTracerSurfaceFluxTendency_temperatureSurfaceFluxTendency[:, :, 0] *
+            ds.timeMonthly_avg_layerThickness[:, :, 0] *
             3996. * 1026.0)  # add to config or pull from constants
         avg_len = self.config.getint('mean_state_viz', 'time_averaging_length')
         absmax = np.max(np.abs(np.mean(heatflux[-12 * avg_len:, :], axis=0)))
