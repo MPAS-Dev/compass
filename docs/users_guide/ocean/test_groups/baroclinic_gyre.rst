@@ -52,7 +52,7 @@ Temperature is restored in the surface layer to a linear profile:
    \theta^* = \frac{\theta_{\rm max} - \theta_{\rm min}}{L_\varphi} (\varphi_{\rm max} - \varphi) + \theta_{\rm min}
    :label: baroc_restore_theta
 
-where the piston velocity :math:`U_{piston}=3.86e-7 \text{ }  (s^{-1})`  (equivalent to a relaxation timescale of 30 days) and :math:`\theta_{\rm max}=30^{\circ}` C, :math:`\theta_{\rm min}=0^{\circ}` C.
+where the piston velocity :math:`U_{piston}` (in m.s^{-1}) is calculated by applying a relaxation timescale of 30 days (set in config file) over the thickness of the top layer (50 m by default) and :math:`\theta_{\rm max}=30^{\circ}` C, :math:`\theta_{\rm min}=0^{\circ}` C.
 
 Initial state
 -------------
@@ -157,8 +157,8 @@ All 2 test cases share the same set of config options:
     restoring_temp_min = 0.
     restoring_temp_max = 30.
 
-    # Restoring piston velocity for surface temperature (s-1)
-    restoring_temp_piston_vel = 3.86e-7
+    # Restoring timescale for surface temperature (in days)
+    restoring_temp_timescale = 30.
 
 performance_test
 ----------------
@@ -171,7 +171,10 @@ prognostic variables for regression testing.
 -----------
 
 ``ocean/baroclinic_gyre/3_year_test`` is an additional version of the
-baroclinic_gyre test case for a test run to spin up (3 years)
-and validation of the mean state against theory and results from other models.
+baroclinic_gyre test case with a longer (3-year) spin-up. By default, it 
+includes monthly mean output, and plots the mean state of the simulation for the last 1 year (option in the config file). 
+Note that for the 80km configuration, the estimated time to equilibration is roughly 50 years (approx 3hours on default layout).  
+For a detailed comparison of the mean state against theory and results from other models, 
+the mean state at 100 years may be most appropriate to be aligned with the MITgcm results. 
 
 .. _MITgcm test case: https://mitgcm.readthedocs.io/en/latest/examples/baroclinic_gyre/baroclinic_gyre.html

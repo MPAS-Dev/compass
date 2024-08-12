@@ -62,5 +62,9 @@ resolutions are supported.
 ``ocean/baroclinic_gyre/80km/3_year_test`` performs a longer (3 year) integration
 of the model forward in time. The point is to (ultimately) compare the quasi-steady state with theroretical scaling and results from other models. Currently, only the 80-km and 20-km horizontal
 resolutions are supported. Note that 3 years is not long enough to reach steady state.
+For the 80km configuration, the estimated time to equilibration is roughly 50 years.
+For a detailed comparison of the mean state against theory and results from other models,
+the mean state at 100 years may be most appropriate to be aligned with the MITgcm results. 
+
 
 
