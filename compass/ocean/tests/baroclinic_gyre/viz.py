@@ -128,7 +128,7 @@ class Viz(Step):
 
         ax[0].set_title('SSH (m)')
         ax[1].set_title(r'SST ($^\circ$C)')
-        ax[2].set_title('Heat Flux (W/s)')
+        ax[2].set_title('Heat Flux (W/m^{2})')
 
         ax[0].set_ylabel(r'Latitude ($^\circ$)')
         for axis in ax:
