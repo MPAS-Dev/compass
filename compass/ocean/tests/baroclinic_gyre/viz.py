@@ -1,3 +1,4 @@
+import cmocean
 import matplotlib.pyplot as plt
 import numpy as np
 import xarray
@@ -41,6 +42,7 @@ class Viz(Step):
         ds = xarray.open_dataset(f'{moc_dir}/moc.nc')
         # Insert plots here
         self._plot_moc(ds, dsMesh, out_dir)
+        self._plot_mean_surface_state(mon_dir, dsMesh, out_dir)
         self._plot_spinup(mon_dir, dsMesh, out_dir)
 
     def _plot_moc(self, ds, dsMesh, out_dir):
@@ -60,8 +62,9 @@ class Viz(Step):
         amoc = "max MOC = {:.1e}".format(round(np.max(moc), 1))
         maxloc = 'at lat = {} and z = {}m'.format(
             latbins[idx[-1]].values, int(dsMesh.refInterfaces[idx[0]].values))
-        maxval = 'max MOC = {:.1e} at def loc'.format(
-            round(np.max(moc[:, 175]), 1))
+        maxval = 'max MOC = {:.1e} at lat={}-{}'.format(
+            round(np.max(moc[:, 175]), 1),
+            latbins[175 - 1].values, latbins[175].values)
         plt.annotate(amoc + '\n' + maxloc + '\n' + maxval,
                      xy=(0.01, 0.05), xycoords='axes fraction')
         plt.colorbar()
@@ -94,3 +97,39 @@ class Viz(Step):
         ax[0].set_ylabel('Layer Mean Kinetic Energy ($m^2 s^{-2}$)')
         ax[1].set_ylabel(r'Layer Mean Temperature ($^{\circ}$C)')
         plt.savefig('{}/spinup_ft.png'.format(out_dir), bbox_inches='tight')
+
+    def _plot_mean_surface_state(self, mon_dir, dsMesh, out_dir):
+
+        lon = 180. / np.pi * dsMesh.variables['lonCell'][:]
+        lat = 180. / np.pi * dsMesh.variables['latCell'][:]
+        ds = xarray.open_mfdataset(
+            '{}/timeSeriesStatsMonthly*.nc'.format(mon_dir),
+            concat_dim='Time', combine='nested')
+
+        heatflux = (
+            ds.timeMonthly_avg_activeTracerSurfaceFluxTendency_temperatureSurfaceFluxTendency[:, :, 0] *
+            3996. * 1026.0)  # add to config or pull from constants
+        avg_len = self.config.getint('mean_state_viz', 'time_averaging_length')
+        absmax = np.max(np.abs(np.mean(heatflux[-12 * avg_len:, :], axis=0)))
+        fig, ax = plt.subplots(1, 3, figsize=[18, 5])
+        ax[0].tricontour(lon, lat,
+            np.mean(ds.timeMonthly_avg_ssh[-12 * avg_len:, :], axis=0),
+            levels=14, linewidths=0.5, colors='k')
+        ssh = ax[0].tricontourf(lon, lat,
+              np.mean(ds.timeMonthly_avg_ssh[-12 * avg_len:, :], axis=0), levels=14, cmap="RdBu_r")
+        plt.colorbar(ssh, ax=ax[0])
+        ax[1].tricontour(lon, lat, np.mean(ds.timeMonthly_avg_ssh[-12 * avg_len:, :], axis=0), levels=14, linewidths=.8, colors='k')
+        temp = ax[1].tricontourf(lon, lat, np.mean(ds.timeMonthly_avg_activeTracers_temperature[-12 * avg_len:, :, 0], axis=0), levels=15, cmap=cmocean.cm.thermal)
+        plt.colorbar(temp, ax=ax[1])
+        ax[2].tricontour(lon, lat, np.mean(ds.timeMonthly_avg_ssh[-12 * avg_len:, :], axis=0), levels=14, linewidths=.8, colors='k')
+        hf = ax[2].tricontourf(lon, lat, np.mean(heatflux[-12 * avg_len:, :], axis=0), levels=np.linspace(- absmax, absmax, 27), cmap="RdBu_r")
+        plt.colorbar(hf, ax=ax[2])
+
+        ax[0].set_title('SSH (m)')
+        ax[1].set_title(r'SST ($^\circ$C)')
+        ax[2].set_title('Heat Flux (W/s)')
+
+        ax[0].set_ylabel(r'Latitude ($^\circ$)')
+        for axis in ax:
+            axis.set_xlabel(r'Longitude ($^\circ$)')
+        plt.savefig('{}/meansurfacestate_last{}years.png'.format(out_dir, avg_len), bbox_inches='tight')
