@@ -540,11 +540,13 @@ def build_spack_env(config, update_spack, machine, compiler, mpi,  # noqa: C901
 
     if albany != 'None':
         if with_cuda:
-            cuda = '+cuda+uvm'
+            albany_cuda = '+cuda+uvm+sfad sfadsize=12'
+            trilinos_cuda = '+cuda+uvm'
         else:
-            cuda = ''
-        specs.append(f'"trilinos-for-albany@{albany}{cuda}"')
-        specs.append(f'"albany@{albany}+mpas~py+unit_tests{cuda}"')
+            albany_cuda = ''
+            trilinos_cuda = ''
+        specs.append(f'"trilinos-for-albany@{albany}{trilinos_cuda}"')
+        specs.append(f'"albany@{albany}+mpas~py+unit_tests{albany_cuda}"')
 
     yaml_template = f'{spack_template_path}/{machine}_{compiler}_{mpi}.yaml'
     if not os.path.exists(yaml_template):
