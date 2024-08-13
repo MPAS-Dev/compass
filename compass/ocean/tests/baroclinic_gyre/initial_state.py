@@ -77,16 +77,16 @@ def _write_initial_state(config, dsMesh):
     print(f'Tinit: {temperature[0,0,:].values}')
     val_bot = aa * np.log(bb + cc)
     val_top = aa * np.log(cc)
-    print(f'analytical bottom T: {val_bot} at \
-            depth : {bottom_depth}')
-    print(f'analytical surface T: {val_top} at \
-            depth = 0')
+    print(f'analytical bottom T: {val_bot} at '
+          f'depth : {bottom_depth}')
+    print(f'analytical surface T: {val_top} at '
+          f'depth = 0')
 
 #    temperature = (-11. * np.log(0.0414 *
 #                   (-1. * ds.zMid + 100.3)) + 48.8)
 #    temperature = temperature.transpose('Time', 'nCells', 'nVertLevels')
-    print(f'bottom layer T: {temperature[0, 0, -1]} and \
-            surface layer T: {temperature[0, 0, 0]}')
+    print(f'bottom layer T: {temperature[0, 0, -1]} and '
+          f'surface layer T: {temperature[0, 0, 0]}')
     salinity = initial_salinity * xr.ones_like(temperature)
 
     normalVelocity = xr.zeros_like(ds.xEdge)
