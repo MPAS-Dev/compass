@@ -104,8 +104,9 @@ class Forward(Step):
         self.add_model_as_input()
 
         self.add_output_file(filename='output/output.0001-01-01_00.00.00.nc')
-        self.add_output_file(filename='output/'
-                                      'timeSeriesStatsMonthly.0001-01-01.nc')
+        if long:
+            self.add_output_file(filename='output/'
+                                 'timeSeriesStatsMonthly.0001-01-01.nc')
 
     # no setup() is needed
 

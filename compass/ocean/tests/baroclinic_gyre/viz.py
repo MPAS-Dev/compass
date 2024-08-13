@@ -2,6 +2,7 @@ import cmocean
 import matplotlib.pyplot as plt
 import numpy as np
 import xarray
+from mpas_tools.cime.constants import constants
 
 from compass.step import Step
 
@@ -105,25 +106,27 @@ class Viz(Step):
         ds = xarray.open_mfdataset(
             '{}/timeSeriesStatsMonthly*.nc'.format(mon_dir),
             concat_dim='Time', combine='nested')
-
         heatflux = (
-            ds.timeMonthly_avg_activeTracerSurfaceFluxTendency_temperatureSurfaceFluxTendency[:, :, 0] *
-            ds.timeMonthly_avg_layerThickness[:, :, 0] *
-            3996. * 1026.0)  # add to config or pull from constants
+            ds.timeMonthly_avg_activeTracersSurfaceFlux_temperatureSurfaceFlux[:, :] *  # noqa: E501
+            constants['SHR_CONST_CPSW'] * constants['SHR_CONST_RHOSW'])
         avg_len = self.config.getint('mean_state_viz', 'time_averaging_length')
-        absmax = np.max(np.abs(np.mean(heatflux[-12 * avg_len:, :], axis=0)))
+        absmax = np.max(np.abs(np.mean(heatflux[-12 * avg_len:, :].values, axis=0)))  # noqa: E501
         fig, ax = plt.subplots(1, 3, figsize=[18, 5])
-        ax[0].tricontour(lon, lat,
-            np.mean(ds.timeMonthly_avg_ssh[-12 * avg_len:, :], axis=0),
-            levels=14, linewidths=0.5, colors='k')
-        ssh = ax[0].tricontourf(lon, lat,
-              np.mean(ds.timeMonthly_avg_ssh[-12 * avg_len:, :], axis=0), levels=14, cmap="RdBu_r")
+        ax[0].tricontour(lon, lat, np.mean(ds.timeMonthly_avg_ssh[-12 * avg_len:, :], axis=0),  # noqa: E501
+                         levels=14, linewidths=0.5, colors='k')
+        ssh = ax[0].tricontourf(lon, lat, np.mean(ds.timeMonthly_avg_ssh[-12 * avg_len:, :], axis=0),  # noqa: E501
+                                levels=14, cmap="RdBu_r")
         plt.colorbar(ssh, ax=ax[0])
-        ax[1].tricontour(lon, lat, np.mean(ds.timeMonthly_avg_ssh[-12 * avg_len:, :], axis=0), levels=14, linewidths=.8, colors='k')
-        temp = ax[1].tricontourf(lon, lat, np.mean(ds.timeMonthly_avg_activeTracers_temperature[-12 * avg_len:, :, 0], axis=0), levels=15, cmap=cmocean.cm.thermal)
+        ax[1].tricontour(lon, lat, np.mean(ds.timeMonthly_avg_ssh[-12 * avg_len:, :], axis=0),  # noqa: E501
+                         levels=14, linewidths=.8, colors='k')
+        temp = ax[1].tricontourf(lon, lat,
+                                 np.mean(ds.timeMonthly_avg_activeTracers_temperature[-12 * avg_len:, :, 0], axis=0),  # noqa: E501
+                                 levels=15, cmap=cmocean.cm.thermal)
         plt.colorbar(temp, ax=ax[1])
-        ax[2].tricontour(lon, lat, np.mean(ds.timeMonthly_avg_ssh[-12 * avg_len:, :], axis=0), levels=14, linewidths=.8, colors='k')
-        hf = ax[2].tricontourf(lon, lat, np.mean(heatflux[-12 * avg_len:, :], axis=0), levels=np.linspace(- absmax, absmax, 27), cmap="RdBu_r")
+        ax[2].tricontour(lon, lat, np.mean(ds.timeMonthly_avg_ssh[-12 * avg_len:, :], axis=0),  # noqa: E501
+                         levels=14, linewidths=.8, colors='k')
+        hf = ax[2].tricontourf(lon, lat, np.mean(heatflux[-12 * avg_len:, :], axis=0),  # noqa: E501
+                               levels=np.linspace(- absmax, absmax, 27), cmap="RdBu_r")  # noqa: E501
         plt.colorbar(hf, ax=ax[2])
 
         ax[0].set_title('SSH (m)')
@@ -133,4 +136,5 @@ class Viz(Step):
         ax[0].set_ylabel(r'Latitude ($^\circ$)')
         for axis in ax:
             axis.set_xlabel(r'Longitude ($^\circ$)')
-        plt.savefig('{}/meansurfacestate_last{}years.png'.format(out_dir, avg_len), bbox_inches='tight')
+        plt.savefig('{}/meansurfacestate_last{}years.png'.format(
+            out_dir, avg_len), bbox_inches='tight')
