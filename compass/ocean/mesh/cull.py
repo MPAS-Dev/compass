@@ -492,6 +492,8 @@ def _cull_topo(with_cavities, process_count, logger, latitude_threshold,
                                           ds_map_culled_to_base, ds_preserve,
                                           logger, latitude_threshold,
                                           sweep_count)
+        ds_topo['ssh'] = ds_topo['landIceDraftObserved']
+
         write_netcdf(ds_topo, 'topography_with_land_ice_mask.nc')
 
     logger.info('Culling topography')
@@ -534,7 +536,7 @@ def _flood_fill_and_add_land_ice_mask(ds_topo, ds_base_mesh,
         not_preserve = ds.transectCellMasks.sum(dim='nTransects') == 0
 
         for var in ['landIceFracObserved', 'landIcePressureObserved',
-                    'landIceDraftObserved', 'ssh',
+                    'landIceDraftObserved',
                     'landIceGroundedFracObserved',
                     'landIceFloatingFracObserved', 'landIceThkObserved']:
             ds_topo[var] = ds_topo[var].where(not_preserve, 0.0)
@@ -562,7 +564,7 @@ def _flood_fill_and_add_land_ice_mask(ds_topo, ds_base_mesh,
 
     # update land-ice variables and ocean fraction accordingly
     for var in ['landIceFracObserved', 'landIcePressureObserved',
-                'landIceDraftObserved', 'ssh', 'landIceGroundedFracObserved',
+                'landIceDraftObserved', 'landIceGroundedFracObserved',
                 'landIceFloatingFracObserved', 'landIceThkObserved']:
         ds_topo[var] = ds_topo[var].where(land_ice_present, 0.0)
 

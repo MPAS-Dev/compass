@@ -170,6 +170,4 @@ class RemapTopography(Step):
 
         ds_out['landIceDraftObserved'] = draft
 
-        ds_out['ssh'] = draft
-
         write_netcdf(ds_out, 'topography_remapped.nc')
