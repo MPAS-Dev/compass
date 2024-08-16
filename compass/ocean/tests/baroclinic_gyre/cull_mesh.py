@@ -8,7 +8,7 @@ from compass.step import Step
 
 class CullMesh(Step):
     """
-    Cull a global mesh to only a signle basin
+    Cull a global mesh to only a single basin
     Attributes
     ----------
     """

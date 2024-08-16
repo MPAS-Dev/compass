@@ -50,7 +50,8 @@ class Viz(Step):
         """
         Plot the time-mean moc state for the test case
         """
-        avg_len = self.config.getint('mean_state_viz', 'time_averaging_length')
+        avg_len = self.config.getint('baroclinic_gyre_post',
+                                     'time_averaging_length')
         moc = ds.moc[-12 * avg_len:, :, :].mean(axis=0).T.values
         latbins = ds.latBins
         plt.contourf(
@@ -60,16 +61,21 @@ class Viz(Step):
         plt.ylabel('Depth (m)')
         plt.xlabel('Latitude')
         idx = np.unravel_index(np.argmax(moc), moc.shape)
-        amoc = "max MOC = {:.1e}".format(round(np.max(moc), 1))
-        maxloc = 'at lat = {} and z = {}m'.format(
-            latbins[idx[-1]].values, int(dsMesh.refInterfaces[idx[0]].values))
-        maxval = 'max MOC = {:.1e} at lat={}-{}'.format(
-            round(np.max(moc[:, 175]), 1),
-            latbins[175 - 1].values, latbins[175].values)
+        max_moc = round(np.max(moc), 1)
+        max_moc_loc = [latbins[idx[-1]].values,
+                       int(dsMesh.refInterfaces[idx[0]].values)]
+        ref_moc_loc = 175  # to be improved
+        max_moc_ref = round(np.max(moc[:, ref_moc_loc]), 1)
+        ref_moc_lat = [latbins[175 - 1].values, latbins[175].values]
+
+        amoc = f"max MOC = {max_moc:.1e}"
+        maxloc = f'at lat = {max_moc_loc[0]} and z = {max_moc_loc[1]}m'
+        maxval = (f'max MOC = {max_moc_ref:.1e} at '
+                  f'lat={ref_moc_lat[0]}-{ref_moc_lat[1]}')
         plt.annotate(amoc + '\n' + maxloc + '\n' + maxval,
                      xy=(0.01, 0.05), xycoords='axes fraction')
         plt.colorbar()
-        plt.savefig('{}/time_avg_moc_last{}years.png'.format(out_dir, avg_len))
+        plt.savefig(f'{out_dir}/time_avg_moc_last{avg_len}years.png')
 
     def _plot_spinup(self, mon_dir, dsMesh, out_dir):
         """
@@ -78,7 +84,7 @@ class Viz(Step):
         """
 
         ds = xarray.open_mfdataset(
-            '{}/timeSeriesStatsMonthly*.nc'.format(mon_dir),
+            f'{mon_dir}/timeSeriesStatsMonthly*.nc',
             concat_dim='Time', combine='nested')
         KE = ds.timeMonthly_avg_kineticEnergyCell[:, :, :].mean(axis=1)
         T = ds.timeMonthly_avg_activeTracers_temperature[:, :, :].mean(axis=1)
@@ -89,27 +95,28 @@ class Viz(Step):
 
         fig, ax = plt.subplots(2, 1, figsize=(6, 8))
         for ll in [0, 3, 6, 10, 14]:
-            ax[0].plot(KE[:, ll], label='{}m'.format(int(midlayer[ll])))
-            ax[1].plot(T[:, ll], label='{}m'.format(int(midlayer[ll])))
+            ax[0].plot(KE[:, ll], label=f'{int(midlayer[ll])}m')
+            ax[1].plot(T[:, ll], label=f'{int(midlayer[ll])}m')
         ax[0].legend()
         ax[1].legend()
         ax[0].set_xlabel('Time (months)')
         ax[1].set_xlabel('Time (months)')
         ax[0].set_ylabel('Layer Mean Kinetic Energy ($m^2 s^{-2}$)')
         ax[1].set_ylabel(r'Layer Mean Temperature ($^{\circ}$C)')
-        plt.savefig('{}/spinup_ft.png'.format(out_dir), bbox_inches='tight')
+        plt.savefig(f'{out_dir}/spinup_ft.png', bbox_inches='tight')
 
     def _plot_mean_surface_state(self, mon_dir, dsMesh, out_dir):
 
         lon = 180. / np.pi * dsMesh.variables['lonCell'][:]
         lat = 180. / np.pi * dsMesh.variables['latCell'][:]
         ds = xarray.open_mfdataset(
-            '{}/timeSeriesStatsMonthly*.nc'.format(mon_dir),
+            f'{mon_dir}/timeSeriesStatsMonthly*.nc',
             concat_dim='Time', combine='nested')
         heatflux = (
             ds.timeMonthly_avg_activeTracersSurfaceFlux_temperatureSurfaceFlux[:, :] *  # noqa: E501
             constants['SHR_CONST_CPSW'] * constants['SHR_CONST_RHOSW'])
-        avg_len = self.config.getint('mean_state_viz', 'time_averaging_length')
+        avg_len = self.config.getint('baroclinic_gyre_post',
+                                     'time_averaging_length')
         absmax = np.max(np.abs(np.mean(heatflux[-12 * avg_len:, :].values, axis=0)))  # noqa: E501
         fig, ax = plt.subplots(1, 3, figsize=[18, 5])
         ax[0].tricontour(lon, lat, np.mean(ds.timeMonthly_avg_ssh[-12 * avg_len:, :], axis=0),  # noqa: E501
@@ -131,10 +138,10 @@ class Viz(Step):
 
         ax[0].set_title('SSH (m)')
         ax[1].set_title(r'SST ($^\circ$C)')
-        ax[2].set_title('Heat Flux (W/m^{2})')
+        ax[2].set_title('Heat Flux (W/m$^{2}$)')
 
         ax[0].set_ylabel(r'Latitude ($^\circ$)')
         for axis in ax:
             axis.set_xlabel(r'Longitude ($^\circ$)')
-        plt.savefig('{}/meansurfacestate_last{}years.png'.format(
-            out_dir, avg_len), bbox_inches='tight')
+        plt.savefig(f'{out_dir}/meansurfacestate_last{avg_len}years.png',
+                    bbox_inches='tight')

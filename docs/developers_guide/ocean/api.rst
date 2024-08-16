@@ -96,12 +96,20 @@ baroclinic_gyre
    GyreTestCase
    GyreTestCase.configure
 
+   cull_mesh.CullMesh
+   cull_mesh.CullMesh.run
+
    forward.Forward
    forward.Forward.run
 
    initial_state.InitialState
    initial_state.InitialState.run
 
+   moc.Moc
+   moc.Moc.run
+
+   viz.Viz
+   viz.Viz.run
 
 dam_break
 ~~~~~~~~~

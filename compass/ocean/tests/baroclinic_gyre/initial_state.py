@@ -49,7 +49,6 @@ class InitialState(Step):
         dsMesh = xr.open_dataset('culled_mesh.nc')
 
         ds = _write_initial_state(config, dsMesh)
-        print('bottomDepth0', ds.refBottomDepth[0])
         _write_forcing(config, ds.latCell, ds.refBottomDepth)
 
 
@@ -69,12 +68,10 @@ def _write_initial_state(config, dsMesh):
     temp_top = section.getfloat('initial_temp_top')
     temp_bot = section.getfloat('initial_temp_bot')
 
-    print(f'zmid: {ds.zMid[0,0,:].values}')
     cc = 0.049  # 0.049 value from optimization on 1800m
     aa = temp_top / np.log(cc)
     bb = (cc ** (temp_bot / temp_top) - cc)
     temperature = aa * np.log(bb * -1.0 * ds.zMid / bottom_depth + cc)
-    print(f'Tinit: {temperature[0,0,:].values}')
     val_bot = aa * np.log(bb + cc)
     val_top = aa * np.log(cc)
     print(f'analytical bottom T: {val_bot} at '
@@ -82,9 +79,6 @@ def _write_initial_state(config, dsMesh):
     print(f'analytical surface T: {val_top} at '
           f'depth = 0')
 
-#    temperature = (-11. * np.log(0.0414 *
-#                   (-1. * ds.zMid + 100.3)) + 48.8)
-#    temperature = temperature.transpose('Time', 'nCells', 'nVertLevels')
     print(f'bottom layer T: {temperature[0, 0, -1]} and '
           f'surface layer T: {temperature[0, 0, 0]}')
     salinity = initial_salinity * xr.ones_like(temperature)

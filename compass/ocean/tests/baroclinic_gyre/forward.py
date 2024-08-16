@@ -89,9 +89,7 @@ class Forward(Step):
             options[f'config_{option}'] = res_params[option]
         if long:
             # run for 3 years instead of 3 time steps
-            options['config_start_time'] = "'0001-01-01_00:00:00'"
-            options['config_stop_time'] = "'0004-01-01_00:00:00'"
-            options['config_run_duration'] = "'none'"
+            options['config_run_duration'] = "'0003-00-00_00:00:00'"
 
         self.add_namelist_options(options=options)
         self.add_input_file(filename='init.nc',

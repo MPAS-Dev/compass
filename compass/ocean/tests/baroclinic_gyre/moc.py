@@ -43,13 +43,9 @@ class Moc(Step):
         in_dir = '../forward/output'
         out_dir = '.'
 
-        # show progress only if we're not writing to a log file
-        # show_progress = self.log_filename is None
-
         lat_min = self.config.getfloat('baroclinic_gyre', 'lat_min')
         lat_max = self.config.getfloat('baroclinic_gyre', 'lat_max')
-        dlat = 0.25  # set in config next
-        # latbins = np.arange(15.5, 75.5, 0.25)
+        dlat = self.config.getfloat('baroclinic_gyre_post', 'dlat')
         latBins = np.arange(lat_min + 2 * dlat,
                             lat_max + 2 * dlat, dlat)
         nz = self.config.getint('vertical_grid', 'vert_levels')
@@ -57,13 +53,8 @@ class Moc(Step):
         dsMesh = xarray.open_dataset('../initial_state/initial_state.nc')
 
         ds = xarray.open_mfdataset(
-            '{}/timeSeriesStatsMonthly*.nc'.format(in_dir),
+            f'{in_dir}/timeSeriesStatsMonthly*.nc',
             concat_dim='Time', combine='nested')
-
-        # print(dsMesh)
-        # print(ds)
-        # print(latBins)
-        # print(nz)
 
         moc = self._compute_amoc(dsMesh, ds, latBins, nz)
 
@@ -76,9 +67,8 @@ class Moc(Step):
         dsMOC.moc.attrs['units'] = 'Sv'
         dsMOC.moc.attrs['description'] = \
             'zonally-averaged meridional overturning streamfunction'
-        outputFileName = '{}/moc.nc'.format(out_dir)
-        # if file_complete(ds, outputFileName):
-        #    return
+
+        outputFileName = f'{out_dir}/moc.nc'
         write_netcdf(dsMOC, outputFileName)
 
     def _compute_amoc(self, dsMesh, ds, latBins, nz):
