@@ -122,6 +122,7 @@
 <span class="kn">from</span> <span class="nn">compass.ocean.vertical.grid_1d.index_tanh_dz</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">create_index_tanh_dz_grid</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.vertical.grid_1d.linear_dz</span> <span class="kn">import</span> <span class="n">create_linear_dz_grid</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.vertical.grid_1d.tanh_dz</span> <span class="kn">import</span> <span class="n">create_tanh_dz_grid</span>
 
 
@@ -148,6 +149,13 @@
     <span class="k">if</span> <span class="n">grid_type</span> <span class="o">==</span> <span class="s1">&#39;uniform&#39;</span><span class="p">:</span>
         <span class="n">vert_levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;vert_levels&#39;</span><span class="p">)</span>
         <span class="n">interfaces</span> <span class="o">=</span> <span class="n">_generate_uniform</span><span class="p">(</span><span class="n">vert_levels</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">grid_type</span> <span class="o">==</span> <span class="s1">&#39;linear_dz&#39;</span><span class="p">:</span>
+        <span class="n">vert_levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;vert_levels&#39;</span><span class="p">)</span>
+        <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;bottom_depth&#39;</span><span class="p">)</span>
+        <span class="n">linear_dz_rate</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;linear_dz_rate&#39;</span><span class="p">)</span>
+        <span class="n">interfaces</span> <span class="o">=</span> <span class="n">create_linear_dz_grid</span><span class="p">(</span><span class="n">vert_levels</span><span class="p">,</span>
+                                           <span class="n">bottom_depth</span><span class="p">,</span>
+                                           <span class="n">linear_dz_rate</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">grid_type</span> <span class="o">==</span> <span class="s1">&#39;tanh_dz&#39;</span><span class="p">:</span>
         <span class="n">vert_levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;vert_levels&#39;</span><span class="p">)</span>
         <span class="n">min_layer_thickness</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;min_layer_thickness&#39;</span><span class="p">)</span>

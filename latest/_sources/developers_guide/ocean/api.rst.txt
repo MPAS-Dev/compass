@@ -83,6 +83,34 @@ buttermilk_bay
    viz.Viz.contour_plots
 
 
+baroclinic_gyre
+~~~~~~~~~~~~~~~
+
+.. currentmodule:: compass.ocean.tests.baroclinic_gyre
+
+.. autosummary::
+   :toctree: generated/
+
+   BaroclinicGyre
+
+   GyreTestCase
+   GyreTestCase.configure
+
+   cull_mesh.CullMesh
+   cull_mesh.CullMesh.run
+
+   forward.Forward
+   forward.Forward.run
+
+   initial_state.InitialState
+   initial_state.InitialState.run
+
+   moc.Moc
+   moc.Moc.run
+
+   viz.Viz
+   viz.Viz.run
+
 dam_break
 ~~~~~~~~~
 
