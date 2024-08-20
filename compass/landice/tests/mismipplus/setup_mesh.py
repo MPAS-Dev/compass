@@ -275,7 +275,7 @@ def mark_cull_cells_for_MISMIP(ds_mesh):
     # Get the y position of the top row
     y_max = ds_mesh.yCell.max()
 
-    # set the absolute tolerance to `dy` +/- a 5% buffer
+    # set the absolute tolerance to +/- 5% of `dy`
     atol = dy * 0.05
     # find the first interior row along the top of the domain
     mask = np.isclose(ds_mesh.yCell, y_max - dy, atol=atol, rtol=0)
@@ -356,8 +356,7 @@ def center_trough(ds_mesh):
     ds_mesh['dvEdge'] = xr.where(mask, 0.0, ds_mesh.dvEdge)
 
     # Boolean mask for the indexed of edges N/S of  boundary cell centers,
-    # using a 2% relative threshold to account for accumulated roundoff
-    # from min calculation
+    # using an absolute threshold of 5% of the edge distance
     mask = (np.isclose(ds_mesh.yEdge, y_min + de, atol=de * 0.05, rtol=0) |
             np.isclose(ds_mesh.yEdge, y_max - de, atol=de * 0.05, rtol=0))
     # cut length in half for edges between boundary cells
