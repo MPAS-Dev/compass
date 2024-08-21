@@ -275,8 +275,10 @@ def mark_cull_cells_for_MISMIP(ds_mesh):
     # Get the y position of the top row
     y_max = ds_mesh.yCell.max()
 
+    # set the absolute tolerance to +/- 5% of `dy`
+    atol = dy * 0.05
     # find the first interior row along the top of the domain
-    mask = np.isclose(ds_mesh.yCell, y_max - dy, rtol=0.02)
+    mask = np.isclose(ds_mesh.yCell, y_max - dy, atol=atol, rtol=0)
 
     # add first interior row along northern boudnary to the cells to be culled
     ds_mesh['cullCell'] = xr.where(mask, 1, ds_mesh.cullCell)
@@ -308,6 +310,17 @@ def center_trough(ds_mesh):
         ds_mesh[f'x{loc}'] = ds_mesh[f'x{loc}'] + x_shift
         ds_mesh[f'y{loc}'] = ds_mesh[f'y{loc}'] + y_shift
 
+    # `mesh.dcEdge` is a vector. So, ensure that all values equal before we
+    # arbitrarily select a value from the array to use in the `de` calculation
+    if ds_mesh.dcEdge.all():
+        dc = float(ds_mesh.dcEdge[0])
+
+    # calculate the amplitude (i.e. `dy`) [m] of the dual mesh
+    dy = np.sqrt(3.) / 2. * dc
+    # Get the y position of the top/bottom row
+    y_max = ds_mesh.yCell.max()
+    y_min = ds_mesh.yCell.min()
+
     ##########################################################################
     # WHL :
     #   Need to adjust geometry along top and bottom boundaries to get flux
@@ -318,18 +331,13 @@ def center_trough(ds_mesh):
 
     # Boolean mask for indices which correspond to the N/S boundary of mesh
     # `np.isclose` is needed when comparing floats to avoid roundoff errors
-    mask = (np.isclose(ds_mesh.yCell, ds_mesh.yCell.min(), rtol=0.01) |
-            np.isclose(ds_mesh.yCell, ds_mesh.yCell.max(), rtol=0.01))
+    mask = (np.isclose(ds_mesh.yCell, y_min, atol=dy * 0.05, rtol=0) |
+            np.isclose(ds_mesh.yCell, y_max, atol=dy * 0.05, rtol=0))
 
     # Reduce the cell areas by half along the N/S boundary
     ds_mesh['areaCell'] = xr.where(mask,
                                    ds_mesh.areaCell * 0.5,
                                    ds_mesh.areaCell)
-
-    # `mesh.dcEdge` is a vector. So, ensure that all values equal before we
-    # arbitrarily select a value from the array to use in the `de` calculation
-    if ds_mesh.dcEdge.all():
-        dc = float(ds_mesh.dcEdge[0])
 
     # get the distance between edges. Since all meshes are generated with the
     # `make_planar_hex_mesh` function, all triangles (in the dual mesh) will
@@ -341,17 +349,16 @@ def center_trough(ds_mesh):
     y_max = ds_mesh.yEdge.max()
 
     # Boolean mask for edge indices on the N/S boundary of the mesh
-    mask = (np.isclose(ds_mesh.yEdge, y_min, rtol=0.01) |
-            np.isclose(ds_mesh.yEdge, y_max, rtol=0.01))
+    mask = (np.isclose(ds_mesh.yEdge, y_min, atol=de * 0.05, rtol=0) |
+            np.isclose(ds_mesh.yEdge, y_max, atol=de * 0.05, rtol=0))
     # WHL: zero out the edges on the boundary
     #      (not necessary because velocity will also be zero)
     ds_mesh['dvEdge'] = xr.where(mask, 0.0, ds_mesh.dvEdge)
 
     # Boolean mask for the indexed of edges N/S of  boundary cell centers,
-    # using a 2% relative threshold to account for accumulated roundoff
-    # from min calculation
-    mask = (np.isclose(ds_mesh.yEdge, y_min + de, rtol=0.02) |
-            np.isclose(ds_mesh.yEdge, y_max - de, rtol=0.02))
+    # using an absolute threshold of 5% of the edge distance
+    mask = (np.isclose(ds_mesh.yEdge, y_min + de, atol=de * 0.05, rtol=0) |
+            np.isclose(ds_mesh.yEdge, y_max - de, atol=de * 0.05, rtol=0))
     # cut length in half for edges between boundary cells
     ds_mesh['dvEdge'] = xr.where(mask, ds_mesh.dvEdge * 0.5, ds_mesh.dvEdge)
 
@@ -449,9 +456,20 @@ def _setup_MISMPPlus_IC(config, logger, filename):
     # assign data array to dataset and ensure it's a 32 bit int field
     src['calvingMask'] = calvingMask.astype('int32')
 
+    # `src.dcEdge` is a vector. So, ensure that all values equal before we
+    # arbitrarily select a value from the array to use in the `de` calculation
+    if src.dcEdge.all():
+        dc = float(src.dcEdge[0])
+
+    # calculate the amplitude (i.e. `dy`) [m] of the dual mesh
+    dy = np.sqrt(3.) / 2. * dc
+    # Get the y position of the top/bottom row
+    y_max = src.yCell.max()
+    y_min = src.yCell.min()
+
     # Boolean masks for indices which correspond to the N/S boundary of mesh
-    mask = (np.isclose(src.yCell, src.yCell.min(), rtol=0.01) |
-            np.isclose(src.yCell, src.yCell.max(), rtol=0.02))
+    mask = (np.isclose(src.yCell, y_min, atol=dy * 0.05, rtol=0) |
+            np.isclose(src.yCell, y_max, atol=dy * 0.05, rtol=0))
     # NOTE: np.isclose returns a np.array. Due to the bug in xarray (<=2023.8)
     #       mask variable needs to converted to an xarray object in order for
     #       the `.variable` attribute to exist (which is needed to fix the
