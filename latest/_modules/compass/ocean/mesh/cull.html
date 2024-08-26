@@ -620,6 +620,8 @@
                                           <span class="n">ds_map_culled_to_base</span><span class="p">,</span> <span class="n">ds_preserve</span><span class="p">,</span>
                                           <span class="n">logger</span><span class="p">,</span> <span class="n">latitude_threshold</span><span class="p">,</span>
                                           <span class="n">sweep_count</span><span class="p">)</span>
+        <span class="n">ds_topo</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="p">[</span><span class="s1">&#39;landIceDraftObserved&#39;</span><span class="p">]</span>
+
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_topo</span><span class="p">,</span> <span class="s1">&#39;topography_with_land_ice_mask.nc&#39;</span><span class="p">)</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Culling topography&#39;</span><span class="p">)</span>
@@ -662,7 +664,7 @@
         <span class="n">not_preserve</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">transectCellMasks</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nTransects&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
 
         <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;landIceFracObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;landIcePressureObserved&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;landIceDraftObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;ssh&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;landIceDraftObserved&#39;</span><span class="p">,</span>
                     <span class="s1">&#39;landIceGroundedFracObserved&#39;</span><span class="p">,</span>
                     <span class="s1">&#39;landIceFloatingFracObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceThkObserved&#39;</span><span class="p">]:</span>
             <span class="n">ds_topo</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="p">[</span><span class="n">var</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">not_preserve</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
@@ -690,7 +692,7 @@
 
     <span class="c1"># update land-ice variables and ocean fraction accordingly</span>
     <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;landIceFracObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;landIcePressureObserved&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;landIceDraftObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;ssh&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceGroundedFracObserved&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;landIceDraftObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceGroundedFracObserved&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;landIceFloatingFracObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceThkObserved&#39;</span><span class="p">]:</span>
         <span class="n">ds_topo</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="p">[</span><span class="n">var</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">land_ice_present</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
 
