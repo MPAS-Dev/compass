@@ -29,7 +29,7 @@ def plot_initial_state(input_file_name='initial_state.nc',
     nVertLevels = ds.sizes['nVertLevels']
 
     fig = plt.figure()
-    fig.set_size_inches(16.0, 12.0)
+    fig.set_size_inches(16.0, 16.0)
     plt.clf()
 
     print('plotting histograms of the initial condition')
@@ -43,7 +43,7 @@ def plot_initial_state(input_file_name='initial_state.nc',
         'number layers: {}\n\n'.format(nVertLevels) + \
         '  min val   max val  variable name\n'
 
-    plt.subplot(3, 3, 2)
+    plt.subplot(4, 3, 2)
     varName = 'maxLevelCell'
     var = ds[varName]
     maxLevelCell = var.values - 1
@@ -53,7 +53,7 @@ def plot_initial_state(input_file_name='initial_state.nc',
     txt = '{}{:9.2e} {:9.2e} {}\n'.format(txt, var.min().values,
                                           var.max().values, varName)
 
-    plt.subplot(3, 3, 3)
+    plt.subplot(4, 3, 3)
     varName = 'bottomDepth'
     var = ds[varName]
     xarray.plot.hist(var, bins=nVertLevels - 4)
@@ -75,7 +75,7 @@ def plot_initial_state(input_file_name='initial_state.nc',
     cellMask = xarray.DataArray(data=cellMask, dims=('nCells', 'nVertLevels'))
     edgeMask = xarray.DataArray(data=edgeMask, dims=('nEdges', 'nVertLevels'))
 
-    plt.subplot(3, 3, 4)
+    plt.subplot(4, 3, 4)
     varName = 'temperature'
     var = ds[varName].isel(Time=0).where(cellMask)
     xarray.plot.hist(var, bins=100, log=True)
@@ -84,7 +84,7 @@ def plot_initial_state(input_file_name='initial_state.nc',
     txt = '{}{:9.2e} {:9.2e} {}\n'.format(txt, var.min().values,
                                           var.max().values, varName)
 
-    plt.subplot(3, 3, 5)
+    plt.subplot(4, 3, 5)
     varName = 'salinity'
     var = ds[varName].isel(Time=0).where(cellMask)
     xarray.plot.hist(var, bins=100, log=True)
@@ -92,7 +92,7 @@ def plot_initial_state(input_file_name='initial_state.nc',
     txt = '{}{:9.2e} {:9.2e} {}\n'.format(txt, var.min().values,
                                           var.max().values, varName)
 
-    plt.subplot(3, 3, 6)
+    plt.subplot(4, 3, 6)
     varName = 'layerThickness'
     var = ds[varName].isel(Time=0).where(cellMask)
     xarray.plot.hist(var, bins=100, log=True)
@@ -100,7 +100,7 @@ def plot_initial_state(input_file_name='initial_state.nc',
     txt = '{}{:9.2e} {:9.2e} {}\n'.format(txt, var.min().values,
                                           var.max().values, varName)
 
-    plt.subplot(3, 3, 7)
+    plt.subplot(4, 3, 7)
     varName = 'rx1Edge'
     var = ds[varName].isel(Time=0).where(edgeMask)
     maxRx1Edge = var.max().values
@@ -110,7 +110,7 @@ def plot_initial_state(input_file_name='initial_state.nc',
     txt = '{}{:9.2e} {:9.2e} {}\n'.format(txt, var.min().values,
                                           var.max().values, varName)
 
-    plt.subplot(3, 3, 8)
+    plt.subplot(4, 3, 8)
     varName = 'areaCell'
     var = ds[varName]
     xarray.plot.hist(1e-6 * var, bins=100, log=True)
@@ -119,7 +119,7 @@ def plot_initial_state(input_file_name='initial_state.nc',
     txt = '{}{:9.2e} {:9.2e} {}\n'.format(txt, var.min().values,
                                           var.max().values, varName)
 
-    plt.subplot(3, 3, 9)
+    plt.subplot(4, 3, 9)
     varName = 'dcEdge'
     var = ds[varName]
     xarray.plot.hist(1e-3 * var, bins=100, log=True)
@@ -127,6 +127,26 @@ def plot_initial_state(input_file_name='initial_state.nc',
     plt.xlabel(r'dcEdge: cell-to-cell great-circle distance (km)')
     txt = '{}{:9.2e} {:9.2e} {}\n'.format(txt, var.min().values,
                                           var.max().values, varName)
+
+    plt.subplot(4, 3, 10)
+    var = ds.ssh - (-ds.bottomDepth)
+    if 'landIceMask' in ds:
+        mask = ds.landIceMask == 0
+        var = var.where(mask)
+    xarray.plot.hist(var, bins=100, log=True)
+    plt.ylabel('frequency')
+    plt.xlabel(r'open ocean water-column thickness (m)')
+    txt = '{}{:9.2e} {:9.2e} {}\n'.format(txt, var.min().values,
+                                          var.max().values, 'open ocean wc')
+
+    if 'landIceMask' in ds:
+        plt.subplot(4, 3, 11)
+        var = (ds.ssh - (-ds.bottomDepth)).where(ds.landIceMask == 1)
+        xarray.plot.hist(var, bins=100, log=True)
+        plt.ylabel('frequency')
+        plt.xlabel(r'ice-shelf cavity water-column thickness (m)')
+        txt = '{}{:9.2e} {:9.2e} {}\n'.format(txt, var.min().values,
+                                              var.max().values, 'cavity wc')
 
     font = FontProperties()
     font.set_family('monospace')
