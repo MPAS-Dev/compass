@@ -284,17 +284,19 @@
             <span class="n">ds_out</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">valid</span><span class="p">,</span> <span class="n">ds_out</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">/</span> <span class="n">norm</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
 
         <span class="n">thickness</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">landIceThkObserved</span>
+        <span class="n">bed</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">bed_elevation</span>
+        <span class="n">flotation_thickness</span> <span class="o">=</span> <span class="o">-</span> <span class="p">(</span><span class="n">ocean_density</span> <span class="o">/</span> <span class="n">ice_density</span><span class="p">)</span> <span class="o">*</span> <span class="n">bed</span>
+        <span class="c1"># not allowed to be thicker than the flotation thickness</span>
+        <span class="n">thickness</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">thickness</span><span class="p">,</span> <span class="n">flotation_thickness</span><span class="p">)</span>
+        <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIceThkObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">thickness</span>
+
         <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIcePressureObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ice_density</span> <span class="o">*</span> <span class="n">g</span> <span class="o">*</span> <span class="n">thickness</span>
 
         <span class="c1"># compute the ice draft to be consistent with the land ice pressure</span>
         <span class="c1"># and using E3SM&#39;s density of seawater</span>
-        <span class="n">draft</span> <span class="o">=</span> <span class="o">-</span> <span class="p">(</span><span class="n">ice_density</span> <span class="o">/</span> <span class="n">ocean_density</span><span class="p">)</span> <span class="o">*</span> <span class="n">thickness</span>
-        <span class="n">bed</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">bed_elevation</span>
 
-        <span class="c1"># can&#39;t be deeper than the bed</span>
-        <span class="n">draft</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">draft</span> <span class="o">&gt;=</span> <span class="n">bed</span><span class="p">,</span> <span class="n">draft</span><span class="p">,</span> <span class="n">bed</span><span class="p">)</span>
-
-        <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIceDraftObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">draft</span>
+        <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIceDraftObserved&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="o">-</span> <span class="p">(</span><span class="n">ice_density</span> <span class="o">/</span> <span class="n">ocean_density</span><span class="p">)</span> <span class="o">*</span> <span class="n">thickness</span>
 
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="s1">&#39;topography_remapped.nc&#39;</span><span class="p">)</span></div>
 </div>
