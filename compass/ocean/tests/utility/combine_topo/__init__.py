@@ -299,14 +299,17 @@ class Combine(Step):
         for field in ['bathymetry', 'ice_draft', 'thickness']:
             combined[field].attrs['unit'] = 'meters'
 
+        for field in ['ice_mask', 'grounded_mask', 'ocean_mask']:
+            combined[field] = bedmachine[field]
+
         combined['bathymetry_mask'] = bathy_mask
 
         fill = {'ice_draft': 0., 'thickness': 0., 'ice_mask': 0.,
-                'grounded_mask': 0., 'ocean_mask': combined.bathymetry_mask}
+                'grounded_mask': 0., 'ocean_mask': bathy_mask}
 
         for field, fill_val in fill.items():
-            valid = bedmachine[field].notnull()
-            combined[field] = bedmachine[field].where(valid, fill_val)
+            valid = combined[field].notnull()
+            combined[field] = combined[field].where(valid, fill_val)
 
         combined['water_column'] = \
             combined['ice_draft'] - combined['bathymetry']
