@@ -158,16 +158,18 @@ class RemapTopography(Step):
             ds_out[var] = xr.where(valid, ds_out[var] / norm, 0.)
 
         thickness = ds_out.landIceThkObserved
+        bed = ds_out.bed_elevation
+        flotation_thickness = - (ocean_density / ice_density) * bed
+        # not allowed to be thicker than the flotation thickness
+        thickness = np.minimum(thickness, flotation_thickness)
+        ds_out['landIceThkObserved'] = thickness
+
         ds_out['landIcePressureObserved'] = ice_density * g * thickness
 
         # compute the ice draft to be consistent with the land ice pressure
         # and using E3SM's density of seawater
-        draft = - (ice_density / ocean_density) * thickness
-        bed = ds_out.bed_elevation
 
-        # can't be deeper than the bed
-        draft = xr.where(draft >= bed, draft, bed)
-
-        ds_out['landIceDraftObserved'] = draft
+        ds_out['landIceDraftObserved'] = \
+            - (ice_density / ocean_density) * thickness
 
         write_netcdf(ds_out, 'topography_remapped.nc')
