@@ -9,9 +9,6 @@ class CircIcesheetTest(TestCase):
     This test generates an idealized, circular ice sheet that has a
     prescribed thickness evolution for testing coupling between MALI
     and the Sea-Level Model.
-
-    Attributes
-    ----------
     """
 
     def __init__(self, test_group):
@@ -20,12 +17,9 @@ class CircIcesheetTest(TestCase):
 
         Parameters
         ----------
-        test_group : compass.landice.tests.dome.Dome
+        test_group : compass.landice.tests.slm.Slm
             The test group that this test case belongs to
             The resolution or type of mesh of the test case
-
-        name : str, optional
-            the name of the test case
         """
         name = 'circular_icesheet_test'
         subdir = name
@@ -51,7 +45,7 @@ class CircIcesheetTest(TestCase):
             for nglv in slm_nglv:
                 self.add_step(SetupMesh(test_case=self,
                                         name=f'mali{res}km_slm{nglv}/'
-                                        f'setup_mesh', res=res, nglv=nglv))
+                                        'setup_mesh', res=res, nglv=nglv))
                 if (int(res) <= 16 and int(res) > 2):
                     ntasks = 256
                 elif (int(res) <= 2):
