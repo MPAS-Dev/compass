@@ -10,10 +10,8 @@ from compass.step import Step
 class RunModel(Step):
     """
     A step for performing forward MALI runs as part of dome test cases.
-
-    Attributes
-    ----------
     """
+
     def __init__(self, test_case, res, nglv, ntasks, name='run_model',
                  subdir=None, min_tasks=None, openmp_threads=1):
         """
@@ -93,7 +91,7 @@ class RunModel(Step):
                              'namelist.sealevel.template'))
         text = template.render(nglv=self.nglv)
 
-        # write out the namelise.sealevel file
+        # write out the namelist.sealevel file
         file_slm_nl = os.path.join(self.work_dir, 'namelist.sealevel')
         with open(file_slm_nl, 'w') as handle:
             handle.write(text)
