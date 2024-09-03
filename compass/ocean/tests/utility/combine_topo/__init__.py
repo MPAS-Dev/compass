@@ -1,3 +1,7 @@
+import os
+import subprocess
+from datetime import datetime
+
 import numpy as np
 import progressbar
 import pyproj
@@ -14,7 +18,7 @@ class CombineTopo(TestCase):
     datasets
     """
 
-    def __init__(self, test_group):
+    def __init__(self, test_group, target_grid):
         """
         Create the test case
 
@@ -23,28 +27,43 @@ class CombineTopo(TestCase):
         test_group : compass.ocean.tests.utility.Utility
             The test group that this test case belongs to
         """
-        super().__init__(test_group=test_group, name='combine_topo')
 
-        self.add_step(Combine(test_case=self))
+        subdir = os.path.join('combine_topo', target_grid)
+
+        super().__init__(
+            test_group=test_group, name='combine_topo', subdir=subdir,
+        )
+
+        self.add_step(Combine(test_case=self, target_grid=target_grid))
 
 
 class Combine(Step):
     """
     A step for combining GEBCO 2023 with BedMachineAntarctica topography
     datasets
+    TODO: Document target grid throughout
+
+    Attributes
+    ----------
+    ...
     """
 
-    def __init__(self, test_case):
+    def __init__(self, test_case, target_grid):
         """
         Create a new step
 
         Parameters
         ----------
-        test_case : compass.ocean.tests.utility.extrap_woa.ExtraWoa
+        test_case : compass.ocean.tests.utility.combine_topo.CombineTopo
             The test case this step belongs to
+        target_grid : `str`, either "lat_lon" or "cubed_sphere"
+        date_stamp : `datetime.datetime`, date when test was run
         """
-        super().__init__(test_case, name='combine', ntasks=None,
-                         min_tasks=None)
+        super().__init__(
+            test_case, name='combine', ntasks=None, min_tasks=None,
+        )
+        self.target_grid = target_grid
+        self.date_stamp = None
 
     def setup(self):
         """
@@ -55,101 +74,70 @@ class Combine(Step):
 
         config = self.config
         section = config['combine_topo']
+
+        # Get input filenames and resolution
         antarctic_filename = section.get('antarctic_filename')
-        self.add_input_file(filename=antarctic_filename,
-                            target=antarctic_filename,
-                            database='bathymetry_database')
         global_filename = section.get('global_filename')
-        self.add_input_file(filename=global_filename,
-                            target=global_filename,
-                            database='bathymetry_database')
+        resolution = section.getint('resolution')
 
-        cobined_filename = section.get('cobined_filename')
-        self.add_output_file(filename=cobined_filename)
+        # Datestamp
+        self.datestamp = datetime.now().strftime('%Y%m%d')
 
+        # Build output filename
+        combined_filename = _get_combined_filename(
+            self.target_grid, self.datestamp, resolution,
+            antarctic_filename, global_filename,
+        )
+
+        # Add bathymetry data input files
+        self.add_input_file(
+            filename=antarctic_filename,
+            target=antarctic_filename,
+            database='bathymetry_database',
+        )
+        self.add_input_file(
+            filename=global_filename,
+            target=global_filename,
+            database='bathymetry_database',
+        )
+        self.add_output_file(filename=combined_filename)
+
+        # Make tiles directory
+        os.makedirs('tiles', exist_ok=True)
+
+        # Get ntasks and min_tasks
         self.ntasks = section.getint('ntasks')
         self.min_tasks = section.getint('min_tasks')
+
+    def constrain_resources(self, available_resources):
+        """
+        Constrain ``cpus_per_task`` and ``ntasks`` based on the number of
+        cores available to this step
+
+        Parameters
+        ----------
+        available_resources : dict
+            The total number of cores available to the step
+        """
+        config = self.config
+        self.ntasks = config.getint('combine_topo', 'ntasks')
+        self.min_tasks = config.getint('combine_topo', 'min_tasks')
+        super().constrain_resources(available_resources)
 
     def run(self):
         """
         Run this step of the test case
         """
-        self._downsample_gebco()
         self._modify_bedmachine()
-        # we will work with bedmachine data at its original resolution
-        # self._downsample_bedmachine()
+        self._modify_gebco()
+        self._tile_gebco()
+        self._create_ne_scrip()
+        self._create_bedmachine_scrip()
+        self._get_map_gebco()
+        self._get_map_bedmachine()
+        self._remap_gebco()
         self._remap_bedmachine()
         self._combine()
-
-    def _downsample_gebco(self):
-        """
-        Average GEBCO to 0.0125 degree grid. GEBCO is on 15" grid, so average
-        every 3x3 block of cells
-        """
-        config = self.config
-        logger = self.logger
-
-        section = config['combine_topo']
-        in_filename = section.get('global_filename')
-        out_filename = 'GEBCO_2023_0.0125_degree.nc'
-
-        gebco = xr.open_dataset(in_filename)
-
-        nlon = gebco.sizes['lon']
-        nlat = gebco.sizes['lat']
-
-        block = 3
-        norm = 1.0 / block**2
-
-        nx = nlon // block
-        ny = nlat // block
-
-        chunks = 2
-        nxchunk = nlon // chunks
-        nychunk = nlat // chunks
-
-        gebco = gebco.chunk({'lon': nxchunk, 'lat': nychunk})
-
-        bathymetry = np.zeros((ny, nx))
-
-        logger.info('Averaging GEBCO to 0.0125 degree grid')
-        widgets = [progressbar.Percentage(), ' ',
-                   progressbar.Bar(), ' ', progressbar.ETA()]
-        bar = progressbar.ProgressBar(widgets=widgets,
-                                      maxval=chunks**2).start()
-        for ychunk in range(chunks):
-            for xchunk in range(chunks):
-                gebco_chunk = gebco.isel(
-                    lon=slice(nxchunk * xchunk, nxchunk * (xchunk + 1)),
-                    lat=slice(nychunk * ychunk, nychunk * (ychunk + 1)))
-                elevation = gebco_chunk.elevation.values
-                nxblock = nxchunk // block
-                nyblock = nychunk // block
-                bathy_block = np.zeros((nyblock, nxblock))
-                for y in range(block):
-                    for x in range(block):
-                        bathy_block += elevation[y::block, x::block]
-                bathy_block *= norm
-                xmin = xchunk * nxblock
-                xmax = (xchunk + 1) * nxblock
-                ymin = ychunk * nyblock
-                ymax = (ychunk + 1) * nyblock
-                bathymetry[ymin:ymax, xmin:xmax] = bathy_block
-                bar.update(ychunk * chunks + xchunk + 1)
-        bar.finish()
-
-        lon_corner = np.linspace(-180., 180., bathymetry.shape[1] + 1)
-        lat_corner = np.linspace(-90., 90., bathymetry.shape[0] + 1)
-        lon = 0.5 * (lon_corner[0:-1] + lon_corner[1:])
-        lat = 0.5 * (lat_corner[0:-1] + lat_corner[1:])
-        gebco_low = xr.Dataset({'bathymetry': (['lat', 'lon'], bathymetry)},
-                               coords={'lon': (['lon',], lon),
-                                       'lat': (['lat',], lat)})
-        gebco_low.attrs = gebco.attrs
-        gebco_low.lon.attrs = gebco.lon.attrs
-        gebco_low.lat.attrs = gebco.lat.attrs
-        gebco_low.bathymetry.attrs = gebco.elevation.attrs
-        gebco_low.to_netcdf(out_filename)
 
     def _modify_bedmachine(self):
         """
@@ -159,10 +147,9 @@ class Combine(Step):
         logger.info('Modifying BedMachineAntarctica with MPAS-Ocean names')
 
         config = self.config
+        in_filename = config.get('combine_topo', 'antarctic_filename')
+        out_filename = in_filename.replace('.nc', '_mod.nc')
 
-        section = config['combine_topo']
-        in_filename = section.get('antarctic_filename')
-        out_filename = 'BedMachineAntarctica-v3_mod.nc'
         bedmachine = xr.open_dataset(in_filename)
         mask = bedmachine.mask
         ice_mask = (mask != 0).astype(float)
@@ -175,152 +162,362 @@ class Combine(Step):
         bedmachine.ice_draft.attrs['units'] = 'meters'
         bedmachine['thickness'] = bedmachine.thickness
 
+        bedmachine['bathymetry'] = bedmachine['bathymetry'].where(ocean_mask, 0.)
+        bedmachine['ice_draft'] = bedmachine['ice_draft'].where(ocean_mask, 0.)
+        bedmachine['thickness'] = bedmachine['thickness'].where(ocean_mask, 0.)
+
         bedmachine['ice_mask'] = ice_mask
         bedmachine['grounded_mask'] = grounded_mask
         bedmachine['ocean_mask'] = ocean_mask
 
-        varlist = ['bathymetry', 'ice_draft', 'thickness', 'ice_mask',
-                   'grounded_mask', 'ocean_mask']
+        varlist = [
+            'bathymetry', 'ice_draft', 'thickness',
+            'ice_mask', 'grounded_mask', 'ocean_mask',
+        ]
 
         bedmachine = bedmachine[varlist]
 
         bedmachine.to_netcdf(out_filename)
         logger.info('  Done.')
 
-    def _downsample_bedmachine(self):
+    def _modify_gebco(self):
         """
-        Downsample bedmachine from 0.5 to 1 km grid
+        Modify GEBCO to include lon/lat bounds located at grid edges
         """
         logger = self.logger
-        logger.info('Downsample BedMachineAntarctica from 500 m to 1 km')
+        logger.info('Adding bounds to GEBCO lat/lon')
 
-        in_filename = 'BedMachineAntarctica-v3_mod.nc'
-        out_filename = 'BedMachineAntarctica-v3_1k.nc'
-        bedmachine = xr.open_dataset(in_filename)
-        x = bedmachine.x.values
-        y = bedmachine.y.values
+        config = self.config
+        in_filename = config.get('combine_topo', 'global_filename')
+        out_filename = in_filename.replace('.nc', '_cf.nc')
 
-        nx = len(x) // 2
-        ny = len(y) // 2
-        x = 0.5 * (x[0:2 * nx:2] + x[1:2 * nx:2])
-        y = 0.5 * (y[0:2 * ny:2] + y[1:2 * ny:2])
-        bedmachine1k = xr.Dataset()
-        for field in bedmachine.data_vars:
-            in_array = bedmachine[field].values
-            out_array = np.zeros((ny, nx))
-            for yoffset in range(2):
-                for xoffset in range(2):
-                    out_array += 0.25 * \
-                        in_array[yoffset:2 * ny:2, xoffset:2 * nx:2]
-            da = xr.DataArray(out_array, dims=('y', 'x'),
-                              coords={'x': (('x',), x),
-                                      'y': (('y',), y)})
-            bedmachine1k[field] = da
-            bedmachine1k[field].attrs = bedmachine[field].attrs
+        gebco = xr.open_dataset(in_filename)
+        lat = gebco.lat
+        lon = gebco.lon
+        dlat = gebco.lat.isel(lat=1) - gebco.lat.isel(lat=0)
+        dlon = gebco.lon.isel(lon=1) - gebco.lon.isel(lon=0)
+        lat_bnds = xr.concat([lat - 0.5 * dlat, lat + 0.5 * dlat], dim='bnds')
+        lon_bnds = xr.concat([lon - 0.5 * dlon, lon + 0.5 * dlon], dim='bnds')
+        gebco['lat_bnds'] = lat_bnds.transpose('lat', 'bnds')
+        gebco['lon_bnds'] = lon_bnds.transpose('lon', 'bnds')
+        gebco.lat.attrs['bounds'] = 'lat_bnds'
+        gebco.lon.attrs['bounds'] = 'lon_bnds'
 
-        bedmachine1k.to_netcdf(out_filename)
+        gebco.to_netcdf(out_filename)
+        logger.info('  Done.')
+
+    def _tile_gebco(self):
+        """
+        Tile GEBCO
+        """
+        logger = self.logger
+        logger.info('Tiling GEBCO data')
+
+        config = self.config
+        section = config['combine_topo']
+        global_filename = section.get('global_filename')
+        lat_tiles = section.getint('lat_tiles')
+        lon_tiles = section.getint('lon_tiles')
+
+        in_filename = global_filename.replace('.nc', '_cf.nc')
+
+        gebco = xr.open_dataset(in_filename)
+        gebco = gebco.chunk({'lat': lat_tiles * lon_tiles})
+        nlat = gebco.sizes['lat']
+        nlon = gebco.sizes['lon']
+        nlat_tile = nlat // lat_tiles
+        nlon_tile = nlon // lon_tiles
+        for lat_tile in range(lat_tiles):
+            for lon_tile in range(lon_tiles):
+                src_filename, _, _ = _get_tile_filenames(global_filename, resolution, method, lat_tile, lon_tile)
+
+                lat_indices = np.arange(
+                    lat_tile * nlat_tile - 1, (lat_tile + 1) * nlat_tile + 1
+                )
+                lon_indices = np.arange(
+                    lon_tile * nlon_tile, (lon_tile + 1) * nlon_tile + 1
+                )
+                lat_indices = np.minimum(np.maximum(lat_indices, 0), nlat - 1)
+                lon_indices = np.mod(lon_indices, nlon)
+                ds_local = gebco.isel(lat=lat_indices, lon=lon_indices)
+                if lat_tile == 0:
+                    # need to handle south pole
+                    ds_local.lat.values[0] = -90.
+                if lat_tile == lat_tiles - 1:
+                    # need to handle north pole
+                    ds_local.lat.values[-1] = 90.
+
+                write_job = ds_local.to_netcdf(out_filename, compute=False)
+                with ProgressBar():
+                    logger.info(f'   writing {out_filename}')
+                    write_job.compute()
+
+        logger.info('  Done.')
+
+    def _create_ne_scrip(self):
+        """
+        Create SCRIP file for the NExxx (cubed-sphere) mesh
+        Reference:
+          https://acme-climate.atlassian.net/wiki/spaces/DOC/pages/872579110/
+          Running+E3SM+on+New+Atmosphere+Grids
+        """
+        logger = self.logger
+        logger.info('Creating NE scrip file')
+
+        resolution = self.resolution
+
+        args = [
+            'GenerateCSMesh', '--alt', '--res', f'{resolution}',
+            '--file', f'ne{resolution}.g',
+        ]
+        logger.info(f'    Running: {" ".join(args)}')
+        subprocess.check_call(args)
+
+        args = [
+            'ConvertMeshToSCRIP', '--in', f'ne{resolution}.g',
+            '--out', f'ne{resolution}.scrip.nc',
+        ]
+        logger.info(f'    Running: {" ".join(args)}')
+        subprocess.check_call(args)
+
+        logger.info('  Done.')
+
+    def _create_bedmachine_scrip(self):
+        """
+        Create SCRIP file for the BedMachineAntarctica-v3 bathymetry
+        """
+        logger = self.logger
+        logger.info('Creating Bedmachine scrip file')
+
+        in_filename = self.antarctic_filename
+        out_filename = in_filename.replace('.nc', '.scrip.nc')
+
+        projection = pyproj.Proj(
+            '+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0 '
+            '+k_0=1.0 +x_0=0.0 +y_0=0.0 +ellps=WGS84'
+        )
+
+        bedmachine_descriptor = ProjectionGridDescriptor.read(
+            projection, in_filename, 'BedMachineAntarctica500m',
+        )
+        bedmachine_descriptor.to_scrip(out_filename)
+
+        logger.info('  Done.')
+
+    def _get_map_gebco(self):
+        """
+        Create mapping files for GEBCO tiles onto NE grid
+        """
+        logger = self.logger
+        logger.info('Creating mapping files for GEBCO tiles')
+
+        config = self.config
+        section = config['combine_topo']
+        method = section.get('method')
+        lat_tiles = section.getint('lat_tiles')
+        lon_tiles = section.getint('lon_tiles')
+        resolution = self.resolution
+
+        global_name = self.global_filename.strip('.nc')
+        tile_prefix = f'tiles/{global_name}_tile'
+        map_prefix = f'tiles/map_{global_name}_to_ne{resolution}_{method}_tile'
+        ne_scrip_filename = f'ne{resolution}.scrip.nc'
+
+        for lat_tile in range(self.lat_tiles):
+            for lon_tile in range(self.lon_tiles):
+                in_filename = f'{tile_prefix}_{lon_tile}_{lat_tile}.nc'
+                out_filename = f'{map_prefix}_{lon_tile}_{lat_tile}.nc'
+
+                args = [
+                    'srun', '-n', f'{self.ntasks}',
+                    'ESMF_RegridWeightGen',
+                    '--source', in_filename,
+                    '--destination', ne_scrip_filename,
+                    '--weight', out_filename,
+                    '--method', method,
+                    '--netcdf4',
+                    '--src_regional',
+                    '--ignore_unmapped',
+                ]
+                logger.info(f'    Running: {" ".join(args)}')
+                subprocess.check_call(args)
+
+        logger.info('  Done.')
+
+    def _get_map_bedmachine(self):
+        """
+        Create BedMachine to NE mapping file
+        """
+        logger = self.logger
+        logger.info('Creating BedMachine mapping file')
+
+        config = self.config
+        method = config.get('combine_topo', 'method')
+        resolution = self.resolution
+        antarctic_name = self.antarctic_filename.strip('.nc')
+        in_filename = f'{antarctic_name}.scrip.nc'
+        out_filename = f'map_{antarctic_name}_to_ne{resolution}_{method}.nc'
+        ne_scrip_filename = f'ne{resolution}.scrip.nc'
+
+        args = [
+            'srun', '-n', f'{self.ntasks}',
+            'ESMF_RegridWeightGen',
+            '--source', in_filename,
+            '--destination', ne_scrip_filename,
+            '--weight', out_filename,
+            '--method', method,
+            '--netcdf4',
+            '--src_regional'
+            '--ignore_unmapped'
+        ]
+        logger.info(f'    Running: {" ".join(args)}')
+        subprocess.check_call(args)
+
+        logger.info('  Done.')
+
+    def _remap_gebco(self):
+        """
+        Remap GEBCO tiles to NE grid
+        """
+        logger = self.logger
+        logger.info('Remapping GEBCO tiles to NE grid')
+
+        global_name = self.global_filename.strip('.nc')
+        tile_prefix = f'tiles/{global_name}_tile'
+        ne_prefix = f'tiles/{global_name}_on_ne_tile'
+        map_prefix = f'tiles/map_{global_name}_to_ne{resolution}_{method}_tile'
+
+        for lat_tile in range(self.lat_tiles):
+            for lon_tile in range(self.lon_tiles):
+                in_filename = f'{tile_prefix}_{lon_tile}_{lat_tile}.nc'
+                out_filename = f'{ne_prefix}_{lon_tile}_{lat_tile}.nc'
+                mapping_filename = f'{map_prefix}_{lon_tile}_{lat_tile}.nc'
+
+                args = [
+                    'ncremap',
+                    '-m', mapping_filename,
+                    '--vrb=1',
+                    f'--renormalize={self.renorm_thresh}',
+                    in_filename,
+                    out_filename,
+                ]
+                logger.info(f'    Running: {" ".join(args)}')
+                subprocess.check_call(args)
+
         logger.info('  Done.')
 
     def _remap_bedmachine(self):
         """
-        Remap BedMachine Antarctica to GEBCO lat-lon grid
+        Remap BedMachine to NE grid
+        Still need:
+          bedmachine_filename, bedmachine_on_ne_filename,
+          mapping_filename, renorm_thresh
         """
         logger = self.logger
-        logger.info('Remap BedMachineAntarctica to GEBCO 1/80 deg grid')
+        logger.info('Remapping BedMachine to NE grid')
 
-        in_filename = 'BedMachineAntarctica-v3_mod.nc'
-        out_filename = 'BedMachineAntarctica_on_GEBCO_low.nc'
-        gebco_filename = 'GEBCO_2023_0.0125_degree.nc'
+        args = [
+            'ncremap',
+            '-m', mapping_filename,
+            '--vrb=1',
+            f'--renormalize={renorm_thresh}',
+            '-R', '--rgr lat_nm=y --rgr lon_nm=x',
+            bedmachine_filename,
+            bedmachine_on_ne_filename,
+        ]
+        logger.info(f'    Running: {" ".join(args)}')
+        subprocess.check_call(args)
 
-        projection = pyproj.Proj('+proj=stere +lat_ts=-71.0 +lat_0=-90 '
-                                 '+lon_0=0.0 +k_0=1.0 +x_0=0.0 +y_0=0.0 '
-                                 '+ellps=WGS84')
-
-        bedmachine = xr.open_dataset(in_filename)
-        x = bedmachine.x.values
-        y = bedmachine.y.values
-
-        in_descriptor = ProjectionGridDescriptor.create(
-            projection, x, y, 'BedMachineAntarctica_500m')
-
-        out_descriptor = LatLonGridDescriptor.read(fileName=gebco_filename)
-
-        mapping_filename = \
-            'map_BedMachineAntarctica_500m_to_GEBCO_0.0125deg_bilinear.nc'
-
-        remapper = Remapper(in_descriptor, out_descriptor, mapping_filename)
-        remapper.build_mapping_file(method='bilinear', mpiTasks=self.ntasks,
-                                    esmf_parallel_exec='srun', tempdir='.')
-        bedmachine = xr.open_dataset(in_filename)
-        bedmachine_on_gebco_low = remapper.remap(bedmachine)
-
-        for field in ['bathymetry', 'ice_draft', 'thickness']:
-            bedmachine_on_gebco_low[field].attrs['unit'] = 'meters'
-
-        bedmachine_on_gebco_low.to_netcdf(out_filename)
         logger.info('  Done.')
 
     def _combine(self):
         """
-        Combine GEBCO with BedMachine Antarctica
         """
         logger = self.logger
         logger.info('Combine BedMachineAntarctica and GEBCO')
 
-        config = self.config
-        section = config['combine_topo']
+        combined = xr.Dataset()
+        for lat_tile in range(lat_tiles):
+            for lon_tile in range(lon_tiles):
+                gebco_filename = f'{gebco_prefix}_{lon_tile}_{lat_tile}.nc'
+                gebco = xr.open_dataset(gebco_filename)
+                tile = gebco.elevation
+                tile = tile.where(tile.notnull(), 0.)
+                if 'bathymetry' in combined:
+                    combined['bathymetry'] = combined.bathymetry + tile
+                else:
+                    combined['bathymetry'] = tile
 
-        latmin = section.getfloat('latmin')
-        latmax = section.getfloat('latmax')
-        cobined_filename = section.get('cobined_filename')
-
-        gebco_filename = 'GEBCO_2023_0.0125_degree.nc'
-        gebco = xr.open_dataset(gebco_filename)
-
-        bedmachine_filename = 'BedMachineAntarctica_on_GEBCO_low.nc'
         bedmachine = xr.open_dataset(bedmachine_filename)
 
-        combined = xr.Dataset()
-        alpha = (gebco.lat - latmin) / (latmax - latmin)
+        alpha = (combined.lat - latmin) / (latmax - latmin)
         alpha = np.maximum(np.minimum(alpha, 1.0), 0.0)
 
         bedmachine_bathy = bedmachine.bathymetry
         valid = bedmachine_bathy.notnull()
         bedmachine_bathy = bedmachine_bathy.where(valid, 0.)
-        bedmachine_bathy = bedmachine_bathy.where(bedmachine_bathy < 0., 0.)
 
-        combined['bathymetry'] = \
-            alpha * gebco.bathymetry.where(gebco.bathymetry < 0., 0.) + \
-            (1.0 - alpha) * bedmachine_bathy
-        bathy_mask = xr.where(combined.bathymetry < 0., 1.0, 0.0)
+        combined['bathymetry'] = (
+            alpha * combined.bathymetry + (1.0 - alpha) * bedmachine_bathy
+        )
+
+        mask = combined.bathymetry < 0.
+        combined['bathymetry'] = combined.bathymetry.where(mask, 0.)
 
         for field in ['ice_draft', 'thickness']:
-            combined[field] = bathy_mask * bedmachine[field]
+            combined[field] = bedmachine[field].astype(float)
         for field in ['bathymetry', 'ice_draft', 'thickness']:
             combined[field].attrs['unit'] = 'meters'
 
-        for field in ['ice_mask', 'grounded_mask', 'ocean_mask']:
-            combined[field] = bedmachine[field]
-
-        combined['bathymetry_mask'] = bathy_mask
-
-        fill = {'ice_draft': 0., 'thickness': 0., 'ice_mask': 0.,
-                'grounded_mask': 0., 'ocean_mask': bathy_mask}
+        fill = {
+            'ice_mask': 0.,
+            'grounded_mask': 0.,
+            'ocean_mask': combined.bathymetry < 0.
+        }
 
         for field, fill_val in fill.items():
-            valid = combined[field].notnull()
-            combined[field] = combined[field].where(valid, fill_val)
+            valid = bedmachine[field].notnull()
+            combined[field] = bedmachine[field].where(valid, fill_val)
 
-        combined['water_column'] = \
-            combined['ice_draft'] - combined['bathymetry']
+        combined['water_column'] = combined.ice_draft - combined.bathymetry
         combined.water_column.attrs['units'] = 'meters'
+        combined = combined.drop_vars(['x', 'y'])
 
-        combined.to_netcdf(cobined_filename)
+        combined.to_netcdf(combined_filename)
+
         logger.info('  Done.')
 
-        diff = xr.Dataset()
+def _get_combined_filename(
+        target_grid, datestamp, resolution,
+        antarctic_filename, global_filename,
+):
+    """
+    """
 
-        diff['bathymetry'] = \
-            gebco.bathymetry.where(gebco.bathymetry < 0, 0.) - \
-            bedmachine.bathymetry
-        diff.to_netcdf('gebco_minus_bedmachine.nc')
+    # Parse resolution
+    if target_grid == 'cubed_sphere':
+        resolution_str = f'ne{resolution}'
+    elif target_grid == 'lat_lon':
+        resolution_str = f'{resolution}_degree'
+    else:
+        raise ValueError('Unknown target grid ' + target_grid)
+
+    # Build combined filename
+    combined_filename = '_'.join([
+        antarctic_filename.strip('.nc'), global_filename.strip('.nc'),
+        resolution_str, datestamp.strftime('%Y%m%d.nc'),
+    ])
+
+    return combined_filename
+
+def _get_tile_filenames(global_filename, resolution, method, lat_tile, lon_tile, tiledir='tiles'):
+    """
+    """
+
+    # Tiles
+    global_name = global_filename.strip('.nc')
+    src_filename = os.path.join(tiledir, f'{global_name}_tile_{lon_tile}_{lat_tile}.nc')
+    tgt_filename = os.path.join(tiledir, f'{global_name}_on_ne_tile_{lon_tile}_{lat_tile}.nc')
+    map_filename = os.path.join(tiledir, f'map_{global_name}_to_ne{resolution}_{method}_tile_{lon_tile}_{lat_tile}.nc')
+
+    return src_filename, tgt_filename, map_filename
