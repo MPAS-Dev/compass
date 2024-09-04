@@ -217,7 +217,7 @@ Optional flags
     Check to make sure expected commands are present
 
 ``--python``
-    Select a particular python version (the default is currently 3.8)
+    Select a particular python version (the default is currently 3.12)
 
 ``--env_name``
     Set the name of the environment (and the prefix for the activation script)
