@@ -195,7 +195,7 @@ class WavesBaseMesh(QuasiUniformSphericalMeshStep):
                                      sphere_radius, reggrid=False):
 
         # Get coastline coordinates from shapefile
-        features = cfeature.GSHHSFeature(scale='l', levels=[1, 6])
+        features = cfeature.GSHHSFeature(scale='l', levels=[1, 5])
 
         pt_list = []
         for feature in features.geometries():
