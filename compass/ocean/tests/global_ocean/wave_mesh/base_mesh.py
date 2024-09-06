@@ -32,24 +32,32 @@ class WavesBaseMesh(QuasiUniformSphericalMeshStep):
         self.opts.init_file = 'init.msh'
 
         # Set links to base mesh
-        if self.config.has_option('wave_mesh', 'ocean_base_mesh'):
-            ocean_base_mesh_path = self.config.get('wave_mesh',
-                                                   'ocean_base_mesh')
-        else:
+        if self.ocean_base_mesh is not None:
             mesh_path = self.ocean_base_mesh.steps['base_mesh'].path
             ocean_base_mesh_path = f'{mesh_path}/base_mesh.nc'
+        else:
+            if self.config.has_option('wave_mesh', 'ocean_base_mesh'):
+                ocean_base_mesh_path = self.config.get('wave_mesh',
+                                                       'ocean_base_mesh')
+            else:
+                raise ValueError('ocean_base_mesh option required '
+                                 'in wave_mesh section in cfg file')
 
         self.add_input_file(
             filename='ocean_base_mesh.nc',
             work_dir_target=ocean_base_mesh_path)
 
         # Set links to culled mesh
-        if self.config.has_option('wave_mesh', 'ocean_culled_mesh'):
-            ocean_culled_mesh_path = self.config.get('wave_mesh',
-                                                     'ocean_culled_mesh')
-        else:
+        if self.ocean_culled_mesh is not None:
             mesh_path = self.ocean_culled_mesh.steps['initial_state'].path
             ocean_culled_mesh_path = f'{mesh_path}/initial_state.nc'
+        else:
+            if self.config.has_option('wave_mesh', 'ocean_culled_mesh'):
+                ocean_culled_mesh_path = self.config.get('wave_mesh',
+                                                         'ocean_culled_mesh')
+            else:
+                raise ValueError('ocean_culled_mesh option required '
+                                 'in wave_mesh section in cfg file')
 
         self.add_input_file(
             filename='ocean_culled_mesh.nc',

@@ -27,12 +27,16 @@ class WavesScripFile(Step):
 
         super().setup()
 
-        if self.config.has_option('wave_mesh', 'ocean_culled_mesh'):
-            ocean_mesh_path = self.config.get('wave_mesh',
-                                              'ocean_culled_mesh')
-        else:
+        if self.ocean_mesh is not None:
             mesh_path = self.ocean_mesh.steps['initial_state'].path
             ocean_mesh_path = f'{mesh_path}/initial_state.nc'
+        else:
+            if self.config.has_option('wave_mesh', 'ocean_culled_mesh'):
+                ocean_mesh_path = self.config.get('wave_mesh',
+                                                  'ocean_culled_mesh')
+            else:
+                raise ValueError('ocean_culled_mesh option required '
+                                 'in wave_mesh section in cfg file')
 
         self.add_input_file(
             filename='ocean_mesh.nc',

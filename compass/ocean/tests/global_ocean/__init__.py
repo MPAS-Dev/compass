@@ -63,7 +63,8 @@ class GlobalOcean(TestGroup):
         # A test case for making E3SM support files from an existing mesh
         self.add_test_case(FilesForE3SM(test_group=self))
 
-        # Create waves mesh
+        # Test cases for creating waves mesh
+        self.add_test_case(WaveMesh(test_group=self))
         self._add_tests(mesh_names=['Icos'], include_wave_mesh=True)
 
     def _add_tests(self, mesh_names, high_res_topography=True,

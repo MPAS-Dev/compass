@@ -27,7 +27,7 @@ class WaveMesh(TestCase):
     Attributes
     ----------
     """
-    def __init__(self, test_group, ocean_mesh, ocean_init):
+    def __init__(self, test_group, ocean_mesh=None, ocean_init=None):
         """
         Create test case for creating a global MPAS-Ocean mesh
 
@@ -38,7 +38,11 @@ class WaveMesh(TestCase):
 
         """
         name = 'wave_mesh'
-        subdir = f'{ocean_mesh.mesh_name}/{name}'
+        if ocean_mesh is not None:
+            subdir = f'{ocean_mesh.mesh_name}/{name}'
+        else:
+            subdir = name
+
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
         self.package = 'compass.ocean.tests.global_ocean.wave_mesh'
