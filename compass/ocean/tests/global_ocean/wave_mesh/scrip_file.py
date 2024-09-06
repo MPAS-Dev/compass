@@ -16,10 +16,7 @@ class WavesScripFile(Step):
 
         super().__init__(test_case=test_case, name=name, subdir=subdir)
 
-        ocean_mesh_path = ocean_mesh.steps['initial_state'].path
-        self.add_input_file(
-            filename='ocean_mesh.nc',
-            work_dir_target=f'{ocean_mesh_path}/initial_state.nc')
+        self.ocean_mesh = ocean_mesh
 
         wave_culled_mesh_path = wave_culled_mesh.path
         self.add_input_file(
@@ -29,6 +26,17 @@ class WavesScripFile(Step):
     def setup(self):
 
         super().setup()
+
+        if self.config.has_option('wave_mesh', 'ocean_culled_mesh'):
+            ocean_mesh_path = self.config.get('wave_mesh',
+                                              'ocean_culled_mesh')
+        else:
+            mesh_path = self.ocean_mesh.steps['initial_state'].path
+            ocean_mesh_path = f'{mesh_path}/initial_state.nc'
+
+        self.add_input_file(
+            filename='ocean_mesh.nc',
+            work_dir_target=ocean_mesh_path)
 
         template = Template(read_text(
             'compass.ocean.tests.global_ocean.wave_mesh',

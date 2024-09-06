@@ -6,6 +6,7 @@ import jigsawpy
 import matplotlib.pyplot as plt
 import numpy as np
 from mpas_tools.cime.constants import constants
+from mpas_tools.mesh.cull import write_map_culled_to_base
 from netCDF4 import Dataset
 from scipy import interpolate, spatial
 
@@ -16,20 +17,43 @@ class WavesBaseMesh(QuasiUniformSphericalMeshStep):
     """
     A step for creating wave mesh based on an ocean mesh
     """
-    def __init__(self, test_case, ocean_mesh, name='base_mesh', subdir=None):
+    def __init__(self, test_case, ocean_base_mesh, ocean_culled_mesh,
+                 name='base_mesh', subdir=None):
 
         super().__init__(test_case=test_case, name=name, subdir=subdir,
                          cell_width=None)
 
-        mesh_path = ocean_mesh.steps['initial_state'].path
-        self.add_input_file(
-            filename='ocean_mesh.nc',
-            work_dir_target=f'{mesh_path}/initial_state.nc')
+        self.ocean_base_mesh = ocean_base_mesh
+        self.ocean_culled_mesh = ocean_culled_mesh
 
     def setup(self):
 
         super().setup()
         self.opts.init_file = 'init.msh'
+
+        # Set links to base mesh
+        if self.config.has_option('wave_mesh', 'ocean_base_mesh'):
+            ocean_base_mesh_path = self.config.get('wave_mesh',
+                                                   'ocean_base_mesh')
+        else:
+            mesh_path = self.ocean_base_mesh.steps['base_mesh'].path
+            ocean_base_mesh_path = f'{mesh_path}/base_mesh.nc'
+
+        self.add_input_file(
+            filename='ocean_base_mesh.nc',
+            work_dir_target=ocean_base_mesh_path)
+
+        # Set links to culled mesh
+        if self.config.has_option('wave_mesh', 'ocean_culled_mesh'):
+            ocean_culled_mesh_path = self.config.get('wave_mesh',
+                                                     'ocean_culled_mesh')
+        else:
+            mesh_path = self.ocean_culled_mesh.steps['initial_state'].path
+            ocean_culled_mesh_path = f'{mesh_path}/initial_state.nc'
+
+        self.add_input_file(
+            filename='ocean_culled_mesh.nc',
+            work_dir_target=ocean_culled_mesh_path)
 
     def build_cell_width_lat_lon(self):
         """
@@ -62,10 +86,13 @@ class WavesBaseMesh(QuasiUniformSphericalMeshStep):
 
         earth_radius = constants['SHR_CONST_REARTH'] / km
         cell_width = self.cell_widthVsLatLon(xlon, ylat,
-                                             earth_radius, 'ocean_mesh.nc')
+                                             earth_radius,
+                                             'ocean_culled_mesh.nc')
         cell_width = cell_width / km
 
-        self.create_initial_points('ocean_mesh.nc', xlon, ylat, cell_width,
+        self.create_initial_points('ocean_base_mesh.nc',
+                                   'ocean_culled_mesh.nc',
+                                   xlon, ylat, cell_width,
                                    earth_radius, self.opts.init_file)
 
         hfun_slope_lim = self.config.getfloat('wave_mesh', 'hfun_slope_lim')
@@ -248,24 +275,29 @@ class WavesBaseMesh(QuasiUniformSphericalMeshStep):
 
         return D
 
-    def create_initial_points(self, meshfile, lon, lat, hfunction,
+    def create_initial_points(self, base_mesh, culled_mesh,
+                              lon, lat, hfunction,
                               sphere_radius, outfile):
 
-        # Open MPAS mesh and get cell variables
-        nc_file = Dataset(meshfile, 'r')
-        lonCell = nc_file.variables['lonCell'][:]
-        latCell = nc_file.variables['latCell'][:]
-        nCells = lonCell.shape[0]
+        # Open MPAS culled mesh and get cell variables
+        nc_file_culled = Dataset(culled_mesh, 'r')
+        lonCell_culled = nc_file_culled.variables['lonCell'][:]
+        nCells_culled = lonCell_culled.shape[0]
+
+        # Open MPAS base mesh and get cell variables
+        nc_file_base = Dataset(base_mesh, 'r')
+        lonCell_base = nc_file_base.variables['lonCell'][:]
+        latCell_base = nc_file_base.variables['latCell'][:]
 
         # Transform 0,360 range to -180,180
-        idx, = np.where(lonCell > np.pi)
-        lonCell[idx] = lonCell[idx] - 2.0 * np.pi
+        idx, = np.where(lonCell_base > np.pi)
+        lonCell_base[idx] = lonCell_base[idx] - 2.0 * np.pi
 
         # Interpolate hfunction onto mesh cell centers
         hfun = interpolate.RegularGridInterpolator(
             (np.radians(lon), np.radians(lat)),
             hfunction.T)
-        mesh_pts = np.vstack((lonCell, latCell)).T
+        mesh_pts = np.vstack((lonCell_base, latCell_base)).T
         hfun_interp = hfun(mesh_pts)
 
         # Find cells in refined region of waves mesh
@@ -277,27 +309,39 @@ class WavesBaseMesh(QuasiUniformSphericalMeshStep):
         #   in the extra columns of cellsOnCell
         #   in this case, these must be zeroed out
         #   to correctly identify boundary cells
-        nEdgesOnCell = nc_file.variables['nEdgesOnCell'][:]
-        cellsOnCell = nc_file.variables['cellsOnCell'][:]
-        nz = np.zeros(cellsOnCell.shape, dtype=bool)
-        for i in range(nCells):
-            nz[i, 0:nEdgesOnCell[i]] = True
-        cellsOnCell[~nz] = 0
-        nCellsOnCell = np.count_nonzero(cellsOnCell, axis=1)
-        is_boundary_cell = np.equal(nCellsOnCell, nEdgesOnCell)
+        nEdgesOnCell_culled = nc_file_culled.variables['nEdgesOnCell'][:]
+        cellsOnCell_culled = nc_file_culled.variables['cellsOnCell'][:]
+        nz = np.zeros(cellsOnCell_culled.shape, dtype=bool)
+        for i in range(nCells_culled):
+            nz[i, 0:nEdgesOnCell_culled[i]] = True
+        cellsOnCell_culled[~nz] = 0
+        nCellsOnCell = np.count_nonzero(cellsOnCell_culled, axis=1)
+        is_boundary_cell = np.equal(nCellsOnCell, nEdgesOnCell_culled)
         idx_bnd, = np.where(is_boundary_cell == False)  # noqa: E712
 
-        # Force inclusion of all boundary cells
-        idx = np.union1d(idx, idx_bnd)
+        # Map from culled mesh cells to base mesh cells
+        write_map_culled_to_base(base_mesh, culled_mesh,
+                                 'base_to_culled_map.nc')
+        map_file = Dataset('base_to_culled_map.nc', 'r')
+        culled_to_base = map_file.variables['mapCulledToBaseCell'][:]
+        base_idx_bnd = culled_to_base[idx_bnd]
+
+        # Find cells in base mesh connected to culled mesh boundary cells
+        cellsOnCell_base = nc_file_base.variables['cellsOnCell'][:]
+        base_idx_xbnd = np.concatenate(cellsOnCell_base[base_idx_bnd])
+        base_idx_xbnd = base_idx_xbnd - 1
+
+        # Force inclusion of all boundary cells, eliminating any duplicates
+        idx = np.union1d(idx, base_idx_bnd)
+        idx = np.union1d(idx, base_idx_xbnd)
 
         # Get coordinates of points
-        lon = lonCell[idx]
-        lat = latCell[idx]
+        lon = lonCell_base[idx]
+        lat = latCell_base[idx]
 
+        # Include north pole point
         lon = np.append(lon, 0.0)
         lat = np.append(lat, 0.5 * np.pi)
-
-        npt = lon.size
 
         # Change to Cartesian coordinates
         x, y, z = self.lonlat2xyz(lon, lat, sphere_radius)
@@ -305,6 +349,7 @@ class WavesBaseMesh(QuasiUniformSphericalMeshStep):
         # Get coordinates and ID into structured array
         #   (for use with np.savetxt)
         pt_list = []
+        npt = lon.size
         for i in range(npt):
             # ID of -1 specifies that node is fixed
             pt_list.append((x[i], y[i], z[i], -1))

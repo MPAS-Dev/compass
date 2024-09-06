@@ -15,10 +15,7 @@ class WavesCullMesh(Step):
 
         super().__init__(test_case=test_case, name=name, subdir=subdir)
 
-        culled_mesh_path = ocean_mesh.steps['initial_state'].path
-        self.add_input_file(
-            filename='ocean_culled_mesh.nc',
-            work_dir_target=f'{culled_mesh_path}/initial_state.nc')
+        self.ocean_mesh = ocean_mesh
 
         wave_base_mesh_path = wave_base_mesh.path
         self.add_input_file(
@@ -28,6 +25,17 @@ class WavesCullMesh(Step):
     def setup(self):
 
         super().setup()
+
+        if self.config.has_option('wave_mesh', 'ocean_culled_mesh'):
+            culled_mesh_path = self.config.get('wave_mesh',
+                                               'ocean_culled_mesh')
+        else:
+            mesh_path = self.ocean_mesh.steps['initial_state'].path
+            culled_mesh_path = f'{mesh_path}/initial_state.nc'
+
+        self.add_input_file(
+            filename='ocean_culled_mesh.nc',
+            work_dir_target=culled_mesh_path)
 
         template = Template(read_text(
             'compass.ocean.tests.global_ocean.wave_mesh',

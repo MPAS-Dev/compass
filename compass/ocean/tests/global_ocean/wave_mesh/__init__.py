@@ -45,7 +45,8 @@ class WaveMesh(TestCase):
         self.mesh_config_filename = 'wave_mesh.cfg'
 
         base_mesh_step = WavesBaseMesh(test_case=self,
-                                       ocean_mesh=ocean_init)
+                                       ocean_base_mesh=ocean_mesh,
+                                       ocean_culled_mesh=ocean_init)
         self.add_step(base_mesh_step)
 
         cull_mesh_step = WavesCullMesh(test_case=self,
