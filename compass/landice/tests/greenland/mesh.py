@@ -1,7 +1,7 @@
 import os
 
-import netCDF4
 import numpy as np
+import xarray as xr
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
 
 from compass.landice.mesh import (
@@ -139,21 +139,22 @@ class Mesh(Step):
                                 'westCentralGreenland'],
                           all_tags=False)
 
-        # is there a way to encompass this in an existing framework function?
-        data = netCDF4.Dataset('GIS.nc', 'r+')
-        data.set_auto_mask(False)
+        # Do some final validation of the mesh
+        ds = xr.open_dataset(self.mesh_filename)
         # Ensure basalHeatFlux is positive
-        data.variables['basalHeatFlux'][:] = np.abs(
-            data.variables['basalHeatFlux'][:])
+        ds["basalHeatFlux"] = np.abs(ds.basalHeatFlux)
         # Ensure reasonable dHdt values
-        dHdt = data.variables["observedThicknessTendency"][:]
-        dHdtErr = data.variables["observedThicknessTendencyUncertainty"][:]
+        dHdt = ds["observedThicknessTendency"]
         # Arbitrary 5% uncertainty; improve this later
         dHdtErr = np.abs(dHdt) * 0.05
-        # large uncertainty where data is missing
-        dHdtErr[np.abs(dHdt) > 1.0] = 1.0
-        dHdt[np.abs(dHdt) > 1.0] = 0.0  # Remove ridiculous values
-        data.variables["observedThicknessTendency"][:] = dHdt
-        data.variables["observedThicknessTendencyUncertainty"][:] = dHdtErr
-
-        data.close()
+        # Use threshold of |dHdt| > 1.0 to determine invalid data
+        mask = np.abs(dHdt) > 1.0
+        # Assign 100% uncertainty where data is missing
+        dHdtErr = dHdtErr.where(~mask, 1.0)
+        # Remove ridiculous values
+        dHdt = dHdt.where(~mask, 0.0)
+        # Put the updated fields back in the dataset
+        ds["observedThicknessTendency"] = dHdt
+        ds["observedThicknessTendencyUncertainty"] = dHdtErr
+        # Write the data to disk
+        ds.to_netcdf(self.mesh_filename, 'a')
