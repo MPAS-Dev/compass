@@ -442,7 +442,7 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y,
     elif window_size < min(high_dist, high_dist_bed):
         logger.info('WARNING: window_size was set to a value smaller'
                     ' than high_dist and/or high_dist_bed. Resetting'
-                    f' window_size to {max(high_dist, high_dist_bed)},'
+                    f' window_size to {max(high_dist, high_dist_bed)}, '
                     ' which is  max(high_dist, high_dist_bed)')
         window_size = max(high_dist, high_dist_bed)
 
@@ -969,6 +969,8 @@ def preprocess_ais_data(self, source_gridded_dataset,
 
         tic = time.perf_counter()
         logger.info(f"Beginning interpolation for {field}")
+        # NOTE: Do not need to evaluate the extrapolator at all gridcells.
+        #       Only needed for ice-free gricells, since it's NN extrapolation
         data.variables[field][0, :] = interp(xGrid, yGrid)
         toc = time.perf_counter()
         logger.info(f"Interpolation completed in {toc - tic} seconds")

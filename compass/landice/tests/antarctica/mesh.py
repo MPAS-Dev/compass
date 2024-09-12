@@ -43,10 +43,10 @@ class Mesh(Step):
         self.mesh_filename = 'Antarctica.nc'
         self.add_output_file(filename='graph.info')
         self.add_output_file(filename=self.mesh_filename)
-        self.add_output_file(filename=f'{self.mesh_filename[:-3]}_'
-                                      f'imbie_regionMasks.nc')
-        self.add_output_file(filename=f'{self.mesh_filename[:-3]}_'
-                                      f'ismip6_regionMasks.nc')
+        self.add_output_file(
+            filename=f'{self.mesh_filename[:-3]}_imbie_regionMasks.nc')
+        self.add_output_file(
+            filename=f'{self.mesh_filename[:-3]}_ismip6_regionMasks.nc')
         self.add_input_file(
             filename='antarctica_8km_2024_01_29.nc',
             target='antarctica_8km_2024_01_29.nc',
@@ -86,12 +86,6 @@ class Mesh(Step):
                 self, section_name=section_name,
                 gridded_dataset=bm_updated_gridded_dataset)
 
-        # Preprocess the gridded AIS source datasets to work
-        # with the rest of the workflow
-        logger.info('calling preprocess_ais_data')
-        preprocessed_gridded_dataset = preprocess_ais_data(
-            self, bm_updated_gridded_dataset, floodFillMask)
-
         # Now build the base mesh and perform the standard interpolation
         build_mali_mesh(
             self, cell_width, x1, y1, geom_points, geom_edges,
@@ -113,12 +107,19 @@ class Mesh(Step):
             data.variables['iceMask'][:] = 0.
         data.close()
 
-        # interpolate fields from composite dataset
-        # Note: this was already done in build_mali_mesh() using
-        # bilinear interpolation.  Redoing it here again is likely
-        # not needed.  Also, it should be assessed if bilinear or
-        # barycentric used here is preferred for this application.
-        # Current thinking is they are both equally appropriate.
+        # Preprocess the gridded AIS source datasets to work
+        # with the rest of the workflow
+        logger.info('calling preprocess_ais_data')
+        preprocessed_gridded_dataset = preprocess_ais_data(
+            self, bm_updated_gridded_dataset, floodFillMask)
+
+        # interpolate fields from *preprocessed* composite dataset
+        # NOTE: while this has already been done in `build_mali_mesh()`
+        #       we are using an updated version of the gridded dataset here,
+        #       which has had unit conversion and extrapolation done.
+        #       Also, it should be assessed if bilinear or
+        #       barycentric used here is preferred for this application.
+        #       Current thinking is they are both equally appropriate.
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
                 preprocessed_gridded_dataset,
