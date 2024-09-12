@@ -41,8 +41,10 @@ class Mesh(Step):
         self.mesh_filename = 'GIS.nc'
         self.add_output_file(filename='graph.info')
         self.add_output_file(filename=self.mesh_filename)
-        self.add_output_file(filename=f'{self.mesh_filename[:-3]}_'
-                                      f'regionMasks.nc')
+        self.add_output_file(
+            filename=f'{self.mesh_filename[:-3]}_ismip6_regionMasks.nc')
+        self.add_output_file(
+            filename=f'{self.mesh_filename[:-3]}_zwally_regionMasks.nc')
         # input files
         self.add_input_file(
             filename='greenland_1km_2024_01_29.epsg3413.icesheetonly.nc',
@@ -118,14 +120,14 @@ class Mesh(Step):
                         graph_filename='graph.info')
 
         # create region masks
-        mask_filename = f'{mesh_name[:-3]}_ismip6_regionMasks.nc'
-        make_region_masks(self, mesh_name, mask_filename,
+        mask_filename = f'{self.mesh_filename[:-3]}_ismip6_regionMasks.nc'
+        make_region_masks(self, self.mesh_filename, mask_filename,
                           self.cpus_per_task,
                           tags=["Greenland", "ISMIP6", "Shelf"],
                           component='ocean')
 
-        mask_filename = f'{mesh_name[:-3]}_zwally_regionMasks.nc'
-        make_region_masks(self, mesh_name, mask_filename,
+        mask_filename = f'{self.mesh_filename[:-3]}_zwally_regionMasks.nc'
+        make_region_masks(self, self.mesh_filename, mask_filename,
                           self.cpus_per_task,
                           tags=['eastCentralGreenland',
                                 'northEastGreenland',
