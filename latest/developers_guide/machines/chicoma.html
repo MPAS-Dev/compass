@@ -143,6 +143,23 @@ script similar to:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span><span class="o">[</span><span class="nv">DEBUG</span><span class="o">=</span>true<span class="o">]</span><span class="w"> </span>gnu-cray
 </pre></div>
 </div>
+<section id="debug-jobs">
+<h3>debug jobs<a class="headerlink" href="#debug-jobs" title="Link to this heading">¶</a></h3>
+<p>In order to run jobs in the debug queue, you will need to use:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Config options related to creating a job script</span>
+<span class="k">[job]</span>
+
+<span class="c1"># The job partition to use</span>
+<span class="na">partition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">debug</span>
+
+<span class="c1"># The job reservation to use (needed for debug jobs)</span>
+<span class="na">reservation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">debug</span>
+
+<span class="c1"># The job quality of service (QOS) to use</span>
+<span class="na">qos</span><span class="w"> </span><span class="o">=</span>
+</pre></div>
+</div>
+</section>
 </section>
 </section>
 
