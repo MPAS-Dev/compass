@@ -1050,11 +1050,12 @@ def interp_gridded2mali(self, source_file, mali_scrip, nProcs, dest_file, proj,
     source_scrip = __guess_scrip_name(os.path.basename(source_file))
     weights_filename = "gridded_to_MPAS_weights.nc"
 
-    if variables != "all":
-        # make sure this is a list
-
-        # if list, then join the list making it a space seprated list for cli
-        variables = " ".join(variables)
+    # make sure variables is a list, encompasses the variables="all" case
+    if isinstance(variables, str):
+        variables = [variables]
+    if not isinstance(variables, list):
+        raise TypeError("Arugment 'variables' is of incorrect type, must"
+                        " either the string 'all' or a list string")
 
     logger.info('creating scrip file for source dataset')
     # Note: writing scrip file to workdir
@@ -1085,7 +1086,7 @@ def interp_gridded2mali(self, source_file, mali_scrip, nProcs, dest_file, proj,
             '-d', dest_file,
             '-m', 'e',
             '-w', weights_filename,
-            '-v', variables]
+            '-v'] + variables
 
     check_call(args, logger=logger)
 
