@@ -82,6 +82,11 @@ def write_job_script(config, machine, target_cores, min_cores, work_dir,
         else:
             constraint = ''
 
+    if config.has_option('job', 'reservation'):
+        reservation = config.get('job', 'reservation')
+    else:
+        reservation = ''
+
     job_name = config.get('job', 'job_name')
     if job_name == '<<<default>>>':
         if suite == '':
@@ -96,7 +101,8 @@ def write_job_script(config, machine, target_cores, min_cores, work_dir,
     text = template.render(job_name=job_name, account=account,
                            nodes=f'{nodes}', wall_time=wall_time, qos=qos,
                            partition=partition, constraint=constraint,
-                           suite=suite, pre_run_commands=pre_run_commands,
+                           reservation=reservation, suite=suite,
+                           pre_run_commands=pre_run_commands,
                            post_run_commands=post_run_commands)
     text = _clean_up_whitespace(text)
     if suite == '':

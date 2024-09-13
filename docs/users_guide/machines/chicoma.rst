@@ -138,9 +138,12 @@ when setting up test cases or a test suite:
     # The job partition to use
     partition = standard
 
+    # The job reservation to use (needed for debug jobs)
+    reservation =
+
     # The job quality of service (QOS) to use
     qos = standard
-
+    
 
 Additionally, some relevant config options come from the
 `mache <https://github.com/E3SM-Project/mache/>`_ package:

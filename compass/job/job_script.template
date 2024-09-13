@@ -10,6 +10,9 @@
 {% if qos != '' -%}
 #SBATCH  --qos={{ qos }}
 {%- endif %}
+{% if reservation != '' -%}
+#SBATCH  --reservation={{ reservation }}
+{%- endif %}
 {% if partition != '' -%}
 #SBATCH  --partition={{ partition }}
 {%- endif %}
