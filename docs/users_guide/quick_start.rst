@@ -430,8 +430,8 @@ The output is:
       -c ocean -t quwisc240_for_e3sm
       -c ocean -t so12to60
       -c ocean -t sowisc12to60
-      -c ocean -t wc14
-      -c ocean -t wcwisc14
+      -c ocean -t narrm14
+      -c ocean -t narrmwisc14
       -c ocean -t wetdry
 
 You can set up a suite as follows:

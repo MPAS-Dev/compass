@@ -347,7 +347,7 @@ looks like:
     add_metadata = True
 
     ## metadata related to the mesh
-    # the prefix (e.g. QU, EC, WC, SO)
+    # the prefix (e.g. QU, EC, NARRM, SO)
     # source: /home/xylar/code/compass/customize_config_parser/compass/ocean/tests/global_ocean/mesh/qu240/qu240.cfg
     prefix = QU
 
