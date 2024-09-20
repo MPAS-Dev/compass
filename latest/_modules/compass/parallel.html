@@ -180,6 +180,11 @@
         <span class="n">cores_per_node</span><span class="o">=</span><span class="n">cores_per_node</span><span class="p">,</span>
         <span class="n">mpi_allowed</span><span class="o">=</span><span class="n">mpi_allowed</span>
     <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;gpus_per_node&#39;</span><span class="p">):</span>
+        <span class="n">available_resources</span><span class="p">[</span><span class="s1">&#39;gpus_per_node&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;gpus_per_node&#39;</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">available_resources</span></div>
 
 
