@@ -116,6 +116,7 @@
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">importlib.resources</span> <span class="kn">import</span> <span class="n">contents</span><span class="p">,</span> <span class="n">read_text</span>
 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">from</span> <span class="nn">jinja2</span> <span class="kn">import</span> <span class="n">Template</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
@@ -319,7 +320,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_smooth_topography</span><span class="p">()</span>
+        <span class="n">topo_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smooth_topography</span><span class="p">()</span>
 
         <span class="n">interfaces</span> <span class="o">=</span> <span class="n">generate_1d_grid</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
 
@@ -348,7 +349,15 @@
             <span class="n">namelist</span><span class="p">[</span><span class="s1">&#39;config_rx1_min_layer_thickness&#39;</span><span class="p">]</span> <span class="o">=</span> \
                 <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cavity_min_layer_thickness</span><span class="si">}</span><span class="s1">&#39;</span>
 
+            <span class="n">min_water_column_thickness</span> <span class="o">=</span> \
+                <span class="n">cavity_min_layer_thickness</span> <span class="o">*</span> <span class="n">cavity_min_levels</span>
+
+            <span class="n">topo_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dig_cavity_bed_elevation</span><span class="p">(</span>
+                <span class="n">topo_filename</span><span class="p">,</span> <span class="n">min_water_column_thickness</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span><span class="n">namelist</span><span class="p">)</span>
+
+        <span class="n">symlink</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">topo_filename</span><span class="p">,</span> <span class="n">link_name</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">)</span>
 
         <span class="n">update_pio</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;init_update_pio&#39;</span><span class="p">)</span>
         <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_pio</span><span class="o">=</span><span class="n">update_pio</span><span class="p">)</span>
@@ -376,10 +385,8 @@
         <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">]</span>
         <span class="n">num_passes</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;topo_smooth_num_passes&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">num_passes</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="c1"># just symlink the culled topography to be the topography used for</span>
-            <span class="c1"># the initial condition</span>
-            <span class="n">symlink</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s1">&#39;topography_culled.nc&#39;</span><span class="p">,</span> <span class="n">link_name</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">)</span>
-            <span class="k">return</span>
+            <span class="c1"># just return the culled topography file name</span>
+            <span class="k">return</span> <span class="s1">&#39;topography_culled.nc&#39;</span>
 
         <span class="n">distance_limit</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;topo_smooth_distance_limit&#39;</span><span class="p">)</span>
         <span class="n">std_deviation</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;topo_smooth_std_deviation&#39;</span><span class="p">)</span>
@@ -400,7 +407,8 @@
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ocean_smooth_topo_before_init&#39;</span><span class="p">],</span>
                    <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
 
-        <span class="k">with</span> <span class="p">(</span><span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;topography_culled.nc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds_topo</span><span class="p">):</span>
+        <span class="n">out_filename</span> <span class="o">=</span> <span class="s1">&#39;topography_smoothed.nc&#39;</span>
+        <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;topography_culled.nc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds_topo</span><span class="p">:</span>
             <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;topography_orig_and_smooth.nc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds_smooth</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bed_elevation&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceDraftObserved&#39;</span><span class="p">,</span>
                               <span class="s1">&#39;landIceThkObserved&#39;</span><span class="p">]:</span>
@@ -408,7 +416,26 @@
                     <span class="n">ds_topo</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_smooth</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s1">New&#39;</span><span class="p">]</span>
                     <span class="n">ds_topo</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">attrs</span>
 
-            <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_topo</span><span class="p">,</span> <span class="s1">&#39;topography.nc&#39;</span><span class="p">)</span></div>
+            <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_topo</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out_filename</span>
+
+    <span class="k">def</span> <span class="nf">_dig_cavity_bed_elevation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_filename</span><span class="p">,</span>
+                                  <span class="n">min_water_column_thickness</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Dig bed elevation to preserve minimum water-column thickness &quot;&quot;&quot;</span>
+
+        <span class="n">out_filename</span> <span class="o">=</span> <span class="s1">&#39;topography_dig_bed.nc&#39;</span>
+        <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">in_filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds_topo</span><span class="p">:</span>
+            <span class="n">bed</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="o">.</span><span class="n">bed_elevation</span>
+            <span class="n">attrs</span> <span class="o">=</span> <span class="n">bed</span><span class="o">.</span><span class="n">attrs</span>
+            <span class="n">draft</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="o">.</span><span class="n">landIceDraftObserved</span>
+            <span class="n">max_bed</span> <span class="o">=</span> <span class="n">draft</span> <span class="o">-</span> <span class="n">min_water_column_thickness</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">draft</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">bed</span> <span class="o">&lt;</span> <span class="n">max_bed</span><span class="p">)</span>
+            <span class="n">bed</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">bed</span><span class="p">,</span> <span class="n">max_bed</span><span class="p">)</span>
+            <span class="n">ds_topo</span><span class="p">[</span><span class="s1">&#39;bed_elevation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bed</span>
+            <span class="n">ds_topo</span><span class="p">[</span><span class="s1">&#39;bed_elevation&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">attrs</span>
+
+            <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_topo</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out_filename</span></div>
 
 </pre></div>
 
