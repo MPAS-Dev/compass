@@ -312,8 +312,9 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
             # conda packages don't like dashes
             version_conda = version.replace('-', '')
             packages = f'{packages} "compass={version_conda}={mpi_prefix}_*"'
-            commands = f'{activate_base} && ' \
-                       f'conda create -y -n {env_name} {channels} {packages}'
+            commands = \
+                f'{activate_base} && ' \
+                f'conda create -y -n {env_name} {channels} {packages}'
             check_call(commands, logger=logger)
     else:
         if env_type == 'dev':
@@ -336,7 +337,7 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
                 f'git submodule update --init alphaBetaLab &&' \
                 f'cd {source_path}/alphaBetaLab&& ' \
                 f'conda install -y --file dev-spec.txt && ' \
-                f'python -m pip install --no-deps -e .'
+                f'python -m pip install --no-deps --no-build-isolation -e .'
             check_call(commands, logger=logger)
 
         if recreate or update_jigsaw:
@@ -348,7 +349,7 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
             f'{activate_env} && ' \
             f'cd {source_path} && ' \
             f'rm -rf compass.egg-info && ' \
-            f'python -m pip install --no-deps -e .'
+            f'python -m pip install --no-deps --no-build-isolation -e .'
         check_call(commands, logger=logger)
 
         print('Installing pre-commit\n')
@@ -402,13 +403,13 @@ def build_jigsaw(activate_env, source_path, env_path, logger):
     commands = \
         f'{activate_env} && ' \
         f'cd {source_path}/jigsaw-python && ' \
-        f'python -m pip install --no-deps -e . && ' \
+        f'python -m pip install --no-deps --no-build-isolation -e . && ' \
         f'cp jigsawpy/_bin/* ${{CONDA_PREFIX}}/bin'
     check_call(commands, logger=logger)
 
     t1 = time.time()
     total = int(t1 - t0 + 0.5)
-    message = f'JIGSAW install took {total:.1f} s.'
+    message = f'JIGSAW install took {total:.1f} s.'  # noqa: 231
     if logger is None:
         print(message)
     else:
@@ -424,11 +425,12 @@ def get_env_vars(machine, compiler, mpilib):
     env_vars = 'export MPAS_EXTERNAL_LIBS=""\n'
 
     if 'intel' in compiler and machine == 'anvil':
-        env_vars = f'{env_vars}' \
-                   f'export I_MPI_CC=icc\n' \
-                   f'export I_MPI_CXX=icpc\n' \
-                   f'export I_MPI_F77=ifort\n' \
-                   f'export I_MPI_F90=ifort\n'
+        env_vars = \
+            f'{env_vars}' \
+            f'export I_MPI_CC=icc\n' \
+            f'export I_MPI_CXX=icpc\n' \
+            f'export I_MPI_F77=ifort\n' \
+            f'export I_MPI_F90=ifort\n'
 
     if machine.startswith('conda'):
         # we're using parallelio so we don't have ADIOS support
@@ -442,9 +444,10 @@ def get_env_vars(machine, compiler, mpilib):
             f'export MPAS_EXTERNAL_LIBS="${{MPAS_EXTERNAL_LIBS}} -lgomp"\n'
 
     if mpilib == 'mvapich':
-        env_vars = f'{env_vars}' \
-                   f'export MV2_ENABLE_AFFINITY=0\n' \
-                   f'export MV2_SHOW_CPU_BINDING=1\n'
+        env_vars = \
+            f'{env_vars}' \
+            f'export MV2_ENABLE_AFFINITY=0\n' \
+            f'export MV2_SHOW_CPU_BINDING=1\n'
 
     if machine.startswith('chicoma') or machine.startswith('pm'):
         env_vars = \
@@ -525,8 +528,9 @@ def build_spack_env(config, update_spack, machine, compiler, mpi,  # noqa: C901
             f'"scorpio'
             f'@{scorpio}+pnetcdf~timing+internal-timing~tools+malloc"')
         # make sure scorpio, not esmf, libraries are linked
-        lib_path = f'{spack_branch_base}/var/spack/environments/' \
-                   f'{spack_env}/.spack-env/view/lib'
+        lib_path = \
+            f'{spack_branch_base}/var/spack/environments/' \
+            f'{spack_env}/.spack-env/view/lib'
         scorpio_lib_path = '$(spack find --format "{prefix}" scorpio)'
         custom_spack = \
             f'{custom_spack}' \
@@ -572,8 +576,9 @@ def build_spack_env(config, update_spack, machine, compiler, mpi,  # noqa: C901
                        custom_spack=custom_spack, spack_mirror=spack_mirror)
 
         # remove ESMC/ESMF include files that interfere with MPAS time keeping
-        include_path = f'{spack_branch_base}/var/spack/environments/' \
-                       f'{spack_env}/.spack-env/view/include'
+        include_path = \
+            f'{spack_branch_base}/var/spack/environments/' \
+            f'{spack_env}/.spack-env/view/include'
         for prefix in ['ESMC', 'esmf']:
             files = glob.glob(os.path.join(include_path, f'{prefix}*'))
             for filename in files:
@@ -587,10 +592,12 @@ def build_spack_env(config, update_spack, machine, compiler, mpi,  # noqa: C901
         include_e3sm_hdf5_netcdf=e3sm_hdf5_netcdf,
         yaml_template=yaml_template)
 
-    spack_view = f'{spack_branch_base}/var/spack/environments/' \
-                 f'{spack_env}/.spack-env/view'
-    env_vars = f'{env_vars}' \
-               f'export PIO={spack_view}\n'
+    spack_view = \
+        f'{spack_branch_base}/var/spack/environments/' \
+        f'{spack_env}/.spack-env/view'
+    env_vars = \
+        f'{env_vars}' \
+        f'export PIO={spack_view}\n'
     if parallelio != 'None':
         env_vars = \
             f'{env_vars}' \
@@ -619,14 +626,16 @@ def build_spack_env(config, update_spack, machine, compiler, mpi,  # noqa: C901
             f'${{ALBANY_LINK_LIBS}} {stdcxx} {mpicxx}"\n'
 
     if lapack != 'None':
-        env_vars = f'{env_vars}' \
-                   f'export LAPACK={spack_view}\n' \
-                   f'export USE_LAPACK=true\n'
+        env_vars = \
+            f'{env_vars}' \
+            f'export LAPACK={spack_view}\n' \
+            f'export USE_LAPACK=true\n'
 
     if petsc != 'None':
-        env_vars = f'{env_vars}' \
-                   f'export PETSC={spack_view}\n' \
-                   f'export USE_PETSC=true\n'
+        env_vars = \
+            f'{env_vars}' \
+            f'export PETSC={spack_view}\n' \
+            f'export USE_PETSC=true\n'
 
     return spack_branch_base, spack_script, env_vars
 
@@ -636,7 +645,7 @@ def set_ld_library_path(spack_branch_base, spack_env, logger):
         f'source {spack_branch_base}/share/spack/setup-env.sh && ' \
         f'spack env activate {spack_env} && ' \
         f'spack config add modules:prefix_inspections:lib:[LD_LIBRARY_PATH] && ' \
-        f'spack config add modules:prefix_inspections:lib64:[LD_LIBRARY_PATH]'  # noqa: E501
+        f'spack config add modules:prefix_inspections:lib64:[LD_LIBRARY_PATH]'  # noqa: E501,E231
     check_call(commands, logger=logger)
 
 
@@ -658,21 +667,26 @@ def write_load_compass(template_path, activ_path, conda_base, env_type,
         script_filename = '{}/{}{}.sh'.format(activ_path, prefix, activ_suffix)
 
     if not env_only:
-        env_vars = f'{env_vars}\n' \
-                   f'export USE_PIO2=true'
+        env_vars = \
+            f'{env_vars}\n' \
+            f'export USE_PIO2=true'
     if without_openmp:
-        env_vars = f'{env_vars}\n' \
-                   f'export OPENMP=false'
+        env_vars = \
+            f'{env_vars}\n' \
+            f'export OPENMP=false'
     else:
-        env_vars = f'{env_vars}\n' \
-                   f'export OPENMP=true'
+        env_vars = \
+            f'{env_vars}\n' \
+            f'export OPENMP=true'
 
-    env_vars = f'{env_vars}\n' \
-               f'export HDF5_USE_FILE_LOCKING=FALSE\n' \
-               f'export LOAD_COMPASS_ENV={script_filename}'
+    env_vars = \
+        f'{env_vars}\n' \
+        f'export HDF5_USE_FILE_LOCKING=FALSE\n' \
+        f'export LOAD_COMPASS_ENV={script_filename}'
     if machine is not None and not machine.startswith('conda'):
-        env_vars = f'{env_vars}\n' \
-                   f'export COMPASS_MACHINE={machine}'
+        env_vars = \
+            f'{env_vars}\n' \
+            f'export COMPASS_MACHINE={machine}'
 
     filename = f'{template_path}/load_compass.template'
     with open(filename, 'r') as f:
@@ -688,7 +702,8 @@ def write_load_compass(template_path, activ_path, conda_base, env_type,
                mkdir -p conda/logs
                echo Reinstalling compass package in edit mode...
                rm -rf compass.egg-info
-               python -m pip install --no-deps -e . &> conda/logs/install_compass.log
+               python -m pip install --no-deps --no-build-isolation -e . \\
+                   &> conda/logs/install_compass.log
                echo Done.
                echo
             fi
@@ -1089,11 +1104,12 @@ def main():  # noqa: C901
 
             if local_mache:
                 print('Install local mache\n')
-                commands = f'source {conda_base}/etc/profile.d/conda.sh && ' \
-                           f'conda activate {conda_env_name} && ' \
-                           f'cd ../build_mache/mache && ' \
-                           f'conda install -y --file spec-file.txt && ' \
-                           f'python -m pip install --no-deps .'
+                commands = \
+                    f'source {conda_base}/etc/profile.d/conda.sh && ' \
+                    f'conda activate {conda_env_name} && ' \
+                    f'cd ../build_mache/mache && ' \
+                    f'conda install -y --file spec-file.txt && ' \
+                    f'python -m pip install --no-deps --no-build-isolation .'
                 check_call(commands, logger=logger)
 
             previous_conda_env = conda_env_name
@@ -1109,10 +1125,11 @@ def main():  # noqa: C901
                     config, args.update_spack, machine, compiler, mpi,
                     spack_env, spack_base, spack_template_path, env_vars,
                     args.tmpdir, logger)
-                spack_script = f'echo Loading Spack environment...\n' \
-                               f'{spack_script}\n' \
-                               f'echo Done.\n' \
-                               f'echo\n'
+                spack_script = \
+                    f'echo Loading Spack environment...\n' \
+                    f'{spack_script}\n' \
+                    f'echo Done.\n' \
+                    f'echo\n'
             else:
                 env_vars = \
                     f'{env_vars}' \

@@ -30,8 +30,9 @@ def bootstrap(activate_install_env, source_path, local_conda_build):
 
     print('Creating the compass conda environment\n')
     bootstrap_command = f'{source_path}/conda/bootstrap.py'
-    command = f'{activate_install_env} && ' \
-              f'{bootstrap_command} {" ".join(sys.argv[1:])}'
+    command = \
+        f'{activate_install_env} && ' \
+        f'{bootstrap_command} {" ".join(sys.argv[1:])}'
     if local_conda_build is not None:
         command = f'{command} --local_conda_build {local_conda_build}'
     check_call(command)
@@ -51,8 +52,9 @@ def setup_install_env(env_name, activate_base, use_local, logger, recreate,
                    f'conda create -y -n {env_name} {channels} {packages}'
     else:
         print('Updating conda environment for installing compass\n')
-        commands = f'{activate_base} && ' \
-                   f'conda install -y -n {env_name} {channels} {packages}'
+        commands = \
+            f'{activate_base} && ' \
+            f'conda install -y -n {env_name} {channels} {packages}'
 
     check_call(commands, logger=logger)
 
@@ -107,15 +109,16 @@ def main():
 
     if local_mache:
         print('Clone and install local mache\n')
-        commands = f'{activate_install_env} && ' \
-                   f'rm -rf conda/build_mache && ' \
-                   f'mkdir -p conda/build_mache && ' \
-                   f'cd conda/build_mache && ' \
-                   f'git clone -b {args.mache_branch} ' \
-                   f'git@github.com:{args.mache_fork}.git mache && ' \
-                   f'cd mache && ' \
-                   f'conda install -y --file spec-file.txt && ' \
-                   f'python -m pip install --no-deps .'
+        commands = \
+            f'{activate_install_env} && ' \
+            f'rm -rf conda/build_mache && ' \
+            f'mkdir -p conda/build_mache && ' \
+            f'cd conda/build_mache && ' \
+            f'git clone -b {args.mache_branch} ' \
+            f'git@github.com:{args.mache_fork}.git mache && ' \
+            f'cd mache && ' \
+            f'conda install -y --file spec-file.txt && ' \
+            f'python -m pip install --no-deps --no-build-isolation .'  # noqa: E231,E501
 
         check_call(commands, logger=logger)
 
