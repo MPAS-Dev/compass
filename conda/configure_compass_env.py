@@ -115,7 +115,7 @@ def main():
                    f'git@github.com:{args.mache_fork}.git mache && ' \
                    f'cd mache && ' \
                    f'conda install -y --file spec-file.txt && ' \
-                   f'python -m pip install --no-deps .'
+                   f'python -m pip install --no-deps --no-build-isolation .'
 
         check_call(commands, logger=logger)
 

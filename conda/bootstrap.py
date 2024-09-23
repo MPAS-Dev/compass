@@ -336,7 +336,7 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
                 f'git submodule update --init alphaBetaLab &&' \
                 f'cd {source_path}/alphaBetaLab&& ' \
                 f'conda install -y --file dev-spec.txt && ' \
-                f'python -m pip install --no-deps -e .'
+                f'python -m pip install --no-deps --no-build-isolation -e .'
             check_call(commands, logger=logger)
 
         if recreate or update_jigsaw:
@@ -348,7 +348,7 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
             f'{activate_env} && ' \
             f'cd {source_path} && ' \
             f'rm -rf compass.egg-info && ' \
-            f'python -m pip install --no-deps -e .'
+            f'python -m pip install --no-deps --no-build-isolation -e .'
         check_call(commands, logger=logger)
 
         print('Installing pre-commit\n')
@@ -402,7 +402,7 @@ def build_jigsaw(activate_env, source_path, env_path, logger):
     commands = \
         f'{activate_env} && ' \
         f'cd {source_path}/jigsaw-python && ' \
-        f'python -m pip install --no-deps -e . && ' \
+        f'python -m pip install --no-deps --no-build-isolation -e . && ' \
         f'cp jigsawpy/_bin/* ${{CONDA_PREFIX}}/bin'
     check_call(commands, logger=logger)
 
@@ -688,7 +688,8 @@ def write_load_compass(template_path, activ_path, conda_base, env_type,
                mkdir -p conda/logs
                echo Reinstalling compass package in edit mode...
                rm -rf compass.egg-info
-               python -m pip install --no-deps -e . &> conda/logs/install_compass.log
+               python -m pip install --no-deps --no-build-isolation -e . \\
+                   &> conda/logs/install_compass.log
                echo Done.
                echo
             fi
@@ -1093,7 +1094,7 @@ def main():  # noqa: C901
                            f'conda activate {conda_env_name} && ' \
                            f'cd ../build_mache/mache && ' \
                            f'conda install -y --file spec-file.txt && ' \
-                           f'python -m pip install --no-deps .'
+                           f'python -m pip install --no-deps --no-build-isolation .'
                 check_call(commands, logger=logger)
 
             previous_conda_env = conda_env_name
