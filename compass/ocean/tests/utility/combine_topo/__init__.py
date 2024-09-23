@@ -3,10 +3,10 @@ import subprocess
 from datetime import datetime
 
 import numpy as np
-import progressbar
 import pyproj
 import xarray as xr
-from pyremap import LatLonGridDescriptor, ProjectionGridDescriptor, Remapper
+from dask.diagnostics import ProgressBar
+from pyremap import ProjectionGridDescriptor
 
 from compass.step import Step
 from compass.testcase import TestCase
@@ -57,13 +57,14 @@ class Combine(Step):
         test_case : compass.ocean.tests.utility.combine_topo.CombineTopo
             The test case this step belongs to
         target_grid : `str`, either "lat_lon" or "cubed_sphere"
-        date_stamp : `datetime.datetime`, date when test was run
         """
         super().__init__(
             test_case, name='combine', ntasks=None, min_tasks=None,
         )
         self.target_grid = target_grid
-        self.date_stamp = None
+        self.resolution = None
+        self.resolution_name = None
+
 
     def setup(self):
         """
@@ -78,16 +79,20 @@ class Combine(Step):
         # Get input filenames and resolution
         antarctic_filename = section.get('antarctic_filename')
         global_filename = section.get('global_filename')
-        resolution = section.getint('resolution')
 
-        # Datestamp
-        self.datestamp = datetime.now().strftime('%Y%m%d')
+        # Parse resolution
+        if self.target_grid == 'cubed_sphere':
+            self.resolution = section.getint('resolution')
+            self.resolution_name = f'ne{self.resolution}'
+        elif self.target_grid == 'lat_lon':
+            self.resolution = section.getfloat('resolution')
+            self.resolution_name = f'{self.resolution:.4f}_degree'
 
-        # Build output filename
-        combined_filename = _get_combined_filename(
-            self.target_grid, self.datestamp, resolution,
-            antarctic_filename, global_filename,
-        )
+        # Build combined filename
+        combined_filename = '_'.join([
+            antarctic_filename.strip('.nc'), global_filename.strip('.nc'),
+            self.resolution_name, datetime.now().strftime('%Y%m%d.nc'),
+        ])
 
         # Add bathymetry data input files
         self.add_input_file(
@@ -102,12 +107,10 @@ class Combine(Step):
         )
         self.add_output_file(filename=combined_filename)
 
-        # Make tiles directory
-        os.makedirs('tiles', exist_ok=True)
-
         # Get ntasks and min_tasks
         self.ntasks = section.getint('ntasks')
         self.min_tasks = section.getint('min_tasks')
+
 
     def constrain_resources(self, available_resources):
         """
@@ -124,61 +127,19 @@ class Combine(Step):
         self.min_tasks = config.getint('combine_topo', 'min_tasks')
         super().constrain_resources(available_resources)
 
+
     def run(self):
         """
         Run this step of the test case
         """
-        self._modify_bedmachine()
         self._modify_gebco()
-        self._tile_gebco()
-        self._create_ne_scrip()
-        self._create_bedmachine_scrip()
-        self._get_map_gebco()
-        self._get_map_bedmachine()
+        self._modify_bedmachine()
+        self._create_gebco_tiles()
+        self._create_bedmachine_scrip_file()
+        self._create_target_scrip_file()
         self._remap_gebco()
         self._remap_bedmachine()
-        self._combine()
 
-    def _modify_bedmachine(self):
-        """
-        Modify BedMachineAntarctica to compute the fields needed by MPAS-Ocean
-        """
-        logger = self.logger
-        logger.info('Modifying BedMachineAntarctica with MPAS-Ocean names')
-
-        config = self.config
-        in_filename = config.get('combine_topo', 'antarctic_filename')
-        out_filename = in_filename.replace('.nc', '_mod.nc')
-
-        bedmachine = xr.open_dataset(in_filename)
-        mask = bedmachine.mask
-        ice_mask = (mask != 0).astype(float)
-        ocean_mask = (np.logical_or(mask == 0, mask == 3)).astype(float)
-        grounded_mask = np.logical_or(np.logical_or(mask == 1, mask == 2),
-                                      mask == 4).astype(float)
-
-        bedmachine['bathymetry'] = bedmachine.bed
-        bedmachine['ice_draft'] = bedmachine.surface - bedmachine.thickness
-        bedmachine.ice_draft.attrs['units'] = 'meters'
-        bedmachine['thickness'] = bedmachine.thickness
-
-        bedmachine['bathymetry'] = bedmachine['bathymetry'].where(ocean_mask, 0.)
-        bedmachine['ice_draft'] = bedmachine['ice_draft'].where(ocean_mask, 0.)
-        bedmachine['thickness'] = bedmachine['thickness'].where(ocean_mask, 0.)
-
-        bedmachine['ice_mask'] = ice_mask
-        bedmachine['grounded_mask'] = grounded_mask
-        bedmachine['ocean_mask'] = ocean_mask
-
-        varlist = [
-            'bathymetry', 'ice_draft', 'thickness',
-            'ice_mask', 'grounded_mask', 'ocean_mask',
-        ]
-
-        bedmachine = bedmachine[varlist]
-
-        bedmachine.to_netcdf(out_filename)
-        logger.info('  Done.')
 
     def _modify_gebco(self):
         """
@@ -187,15 +148,17 @@ class Combine(Step):
         logger = self.logger
         logger.info('Adding bounds to GEBCO lat/lon')
 
+        # Parse config
         config = self.config
         in_filename = config.get('combine_topo', 'global_filename')
         out_filename = in_filename.replace('.nc', '_cf.nc')
 
+        # Modify GEBCO
         gebco = xr.open_dataset(in_filename)
         lat = gebco.lat
         lon = gebco.lon
-        dlat = gebco.lat.isel(lat=1) - gebco.lat.isel(lat=0)
-        dlon = gebco.lon.isel(lon=1) - gebco.lon.isel(lon=0)
+        dlat = lat.isel(lat=1) - lat.isel(lat=0)
+        dlon = lon.isel(lon=1) - lon.isel(lon=0)
         lat_bnds = xr.concat([lat - 0.5 * dlat, lat + 0.5 * dlat], dim='bnds')
         lon_bnds = xr.concat([lon - 0.5 * dlon, lon + 0.5 * dlon], dim='bnds')
         gebco['lat_bnds'] = lat_bnds.transpose('lat', 'bnds')
@@ -203,100 +166,157 @@ class Combine(Step):
         gebco.lat.attrs['bounds'] = 'lat_bnds'
         gebco.lon.attrs['bounds'] = 'lon_bnds'
 
+        # Write modified GEBCO to netCDF
         gebco.to_netcdf(out_filename)
         logger.info('  Done.')
 
-    def _tile_gebco(self):
+
+    def _modify_bedmachine(self):
         """
-        Tile GEBCO
+        Modify BedMachineAntarctica to compute the fields needed by MPAS-Ocean
         """
         logger = self.logger
-        logger.info('Tiling GEBCO data')
+        logger.info('Modifying BedMachineAntarctica with MPAS-Ocean names')
 
+        # Parse config
+        config = self.config
+        in_filename = config.get('combine_topo', 'antarctic_filename')
+        out_filename = in_filename.replace('.nc', '_mod.nc')
+
+        # Load BedMachine and get ice, ocean and grounded masks
+        bedmachine = xr.open_dataset(in_filename)
+        mask = bedmachine.mask
+        ice_mask = (mask != 0).astype(float)
+        ocean_mask = np.logical_or(mask == 0, mask == 3).astype(float)
+        grounded_mask = np.logical_or(np.logical_or(mask == 1, mask == 2),
+            mask == 4).astype(float)
+
+        # Add new variables and apply ocean mask
+        bedmachine['bathymetry'] = bedmachine.bed.where(ocean_mask, 0.)
+        bedmachine['thickness'] = bedmachine.thickness.where(ocean_mask, 0.)
+        bedmachine['ice_draft'] = \
+            (bedmachine.surface - bedmachine.thickness).where(ocean_mask, 0.)
+        bedmachine.ice_draft.attrs['units'] = 'meters'
+        bedmachine['ice_mask'] = ice_mask
+        bedmachine['grounded_mask'] = grounded_mask
+        bedmachine['ocean_mask'] = ocean_mask
+
+        # Remove all other variables
+        varlist = [
+            'bathymetry', 'ice_draft', 'thickness',
+            'ice_mask', 'grounded_mask', 'ocean_mask',
+        ]
+        bedmachine = bedmachine[varlist]
+
+        # Write modified BedMachine to netCDF
+        bedmachine.to_netcdf(out_filename)
+        logger.info('  Done.')
+
+
+    def _create_gebco_tile(self, lon_tile, lat_tile):
+        """
+        Create GEBCO tile
+        """
+        logger = self.logger
+
+        # Parse config
         config = self.config
         section = config['combine_topo']
-        global_filename = section.get('global_filename')
         lat_tiles = section.getint('lat_tiles')
         lon_tiles = section.getint('lon_tiles')
+        global_name = section.get('global_filename').strip('.nc')
 
-        in_filename = global_filename.replace('.nc', '_cf.nc')
+        # Load GEBCO
+        gebco = xr.open_dataset(f'{global_name}_cf.nc')
 
-        gebco = xr.open_dataset(in_filename)
-        gebco = gebco.chunk({'lat': lat_tiles * lon_tiles})
+        # Build lat and lon arrays for tile
         nlat = gebco.sizes['lat']
         nlon = gebco.sizes['lon']
         nlat_tile = nlat // lat_tiles
         nlon_tile = nlon // lon_tiles
+
+        # Build tile latlon indices
+        lat_indices = [lat_tile * nlat_tile, (lat_tile + 1) * nlat_tile]
+        lon_indices = [lon_tile * nlon_tile, (lon_tile + 1) * nlon_tile]
+        if lat_tile == lat_tiles - 1:
+            lat_indices[1] = max([lat_indices[1], nlat])
+        else:
+            lat_indices[1] += 1
+        if lon_tile == lon_tiles - 1:
+            lon_indices[1] = max([lon_indices[1], nlon])
+        else:
+            lon_indices[1] += 1
+        lat_indices = np.arange(*lat_indices)
+        lon_indices = np.arange(*lon_indices)
+
+        # Duplicate top and bottom rows to account for poles
+        if lat_tile == 0:
+            lat_indices = np.insert(lat_indices, 0, 0)
+        if lat_tile == lat_tiles - 1:
+            lat_indices = np.append(lat_indices, lat_indices[-1])
+
+        # Select tile from GEBCO
+        tile = gebco.isel(lat=lat_indices, lon=lon_indices)
+        if lat_tile == 0:
+            tile.lat.values[0] = -90.  # Correct south pole
+        if lat_tile == lat_tiles - 1:
+            tile.lat.values[-1] = 90.  # Correct north pole
+
+        # Write tile to netCDF
+        out_filename = f'tiles/{global_name}_tile_{lon_tile}_{lat_tile}.nc'
+        write_job = tile.to_netcdf(out_filename, compute=False)
+        with ProgressBar():
+            logger.info(f'    writing {out_filename}')
+            write_job.compute()
+
+
+    def _create_gebco_tiles(self):
+        """
+        Create GEBCO tiles. Wrapper around `_create_gebco_tile`
+        """
+        logger = self.logger
+        logger.info('Creating GEBCO tiles')
+
+        # Make tiles directory
+        os.makedirs('tiles', exist_ok=True)
+
+        # Parse config
+        config = self.config
+        section = config['combine_topo']
+        lat_tiles = section.getint('lat_tiles')
+        lon_tiles = section.getint('lon_tiles')
+
+        # Loop through tiles
         for lat_tile in range(lat_tiles):
             for lon_tile in range(lon_tiles):
-                src_filename, _, _ = _get_tile_filenames(global_filename, resolution, method, lat_tile, lon_tile)
 
-                lat_indices = np.arange(
-                    lat_tile * nlat_tile - 1, (lat_tile + 1) * nlat_tile + 1
-                )
-                lon_indices = np.arange(
-                    lon_tile * nlon_tile, (lon_tile + 1) * nlon_tile + 1
-                )
-                lat_indices = np.minimum(np.maximum(lat_indices, 0), nlat - 1)
-                lon_indices = np.mod(lon_indices, nlon)
-                ds_local = gebco.isel(lat=lat_indices, lon=lon_indices)
-                if lat_tile == 0:
-                    # need to handle south pole
-                    ds_local.lat.values[0] = -90.
-                if lat_tile == lat_tiles - 1:
-                    # need to handle north pole
-                    ds_local.lat.values[-1] = 90.
-
-                write_job = ds_local.to_netcdf(out_filename, compute=False)
-                with ProgressBar():
-                    logger.info(f'   writing {out_filename}')
-                    write_job.compute()
+                # Create GEBCO tile
+                self._create_gebco_tile(lon_tile, lat_tile)
 
         logger.info('  Done.')
 
-    def _create_ne_scrip(self):
+
+    def _create_bedmachine_scrip_file(self):
         """
-        Create SCRIP file for the NExxx (cubed-sphere) mesh
-        Reference:
-          https://acme-climate.atlassian.net/wiki/spaces/DOC/pages/872579110/
-          Running+E3SM+on+New+Atmosphere+Grids
+        Create SCRIP file for BedMachineAntarctica data
         """
         logger = self.logger
-        logger.info('Creating NE scrip file')
+        logger.info('Creating BedMachine SCRIP file')
 
-        resolution = self.resolution
+        # Parse config
+        config = self.config
+        section = config['combine_topo']
+        antarctic_name = section.get('antarctic_filename').strip('.nc')
+        in_filename = f'{antarctic_name}_mod.nc'
+        out_filename = f'{antarctic_name}.scrip.nc'
 
-        args = [
-            'GenerateCSMesh', '--alt', '--res', f'{resolution}',
-            '--file', f'ne{resolution}.g',
-        ]
-        logger.info(f'    Running: {" ".join(args)}')
-        subprocess.check_call(args)
-
-        args = [
-            'ConvertMeshToSCRIP', '--in', f'ne{resolution}.g',
-            '--out', f'ne{resolution}.scrip.nc',
-        ]
-        logger.info(f'    Running: {" ".join(args)}')
-        subprocess.check_call(args)
-
-        logger.info('  Done.')
-
-    def _create_bedmachine_scrip(self):
-        """
-        Create SCRIP file for the BedMachineAntarctica-v3 bathymetry
-        """
-        logger = self.logger
-        logger.info('Creating Bedmachine scrip file')
-
-        in_filename = self.antarctic_filename
-        out_filename = in_filename.replace('.nc', '.scrip.nc')
-
+        # Define projection
         projection = pyproj.Proj(
             '+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0 '
             '+k_0=1.0 +x_0=0.0 +y_0=0.0 +ellps=WGS84'
         )
 
+        # Create SCRIP file
         bedmachine_descriptor = ProjectionGridDescriptor.read(
             projection, in_filename, 'BedMachineAntarctica500m',
         )
@@ -304,220 +324,201 @@ class Combine(Step):
 
         logger.info('  Done.')
 
-    def _get_map_gebco(self):
+
+    def _create_target_scrip_file(self):
         """
-        Create mapping files for GEBCO tiles onto NE grid
+        Create SCRIP file for either the x.xxxx degree (lat-lon) mesh or
+        the NExxx (cubed-sphere) mesh, depending on the value of `self.target_grid`
+        References:
+          https://github.com/ClimateGlobalChange/tempestremap
+          https://acme-climate.atlassian.net/wiki/spaces/DOC/pages/872579110/
+          Running+E3SM+on+New+Atmosphere+Grids
         """
         logger = self.logger
-        logger.info('Creating mapping files for GEBCO tiles')
+        logger.info('Creating EXODUS and SCRIP files')
 
-        config = self.config
-        section = config['combine_topo']
-        method = section.get('method')
-        lat_tiles = section.getint('lat_tiles')
-        lon_tiles = section.getint('lon_tiles')
-        resolution = self.resolution
+        # Create EXODUS file
+        if self.target_grid == 'cubed_sphere':
+            args = [
+                'GenerateCSMesh', '--alt', '--res', f'{self.resolution}',
+                '--file', f'{self.resolution_name}.g',
+            ]
+        elif self.target_grid == 'lat_lon':
+            nlon = int(360 / self.resolution)
+            nlat = int(nlon / 2)
+            args = [
+                'GenerateRLLMesh',
+                '--lon', f'{nlon}', '--lat', f'{nlat}',
+                '--file', f'{self.resolution_name}.g',
+            ]
+        logger.info(f'    Running: {" ".join(args)}')
+        subprocess.run(args, check=True)
 
-        global_name = self.global_filename.strip('.nc')
-        tile_prefix = f'tiles/{global_name}_tile'
-        map_prefix = f'tiles/map_{global_name}_to_ne{resolution}_{method}_tile'
-        ne_scrip_filename = f'ne{resolution}.scrip.nc'
-
-        for lat_tile in range(self.lat_tiles):
-            for lon_tile in range(self.lon_tiles):
-                in_filename = f'{tile_prefix}_{lon_tile}_{lat_tile}.nc'
-                out_filename = f'{map_prefix}_{lon_tile}_{lat_tile}.nc'
-
-                args = [
-                    'srun', '-n', f'{self.ntasks}',
-                    'ESMF_RegridWeightGen',
-                    '--source', in_filename,
-                    '--destination', ne_scrip_filename,
-                    '--weight', out_filename,
-                    '--method', method,
-                    '--netcdf4',
-                    '--src_regional',
-                    '--ignore_unmapped',
-                ]
-                logger.info(f'    Running: {" ".join(args)}')
-                subprocess.check_call(args)
+        # Create SCRIP file
+        args = [
+            'ConvertMeshToSCRIP', '--in', f'{self.resolution_name}.g',
+            '--out', f'{self.resolution_name}.scrip.nc',
+        ]
+        logger.info(f'    Running: {" ".join(args)}')
+        subprocess.run(args, check=True)
 
         logger.info('  Done.')
 
-    def _get_map_bedmachine(self):
+
+    def _create_weights(self, in_filename, out_filename):
         """
-        Create BedMachine to NE mapping file
+        Create weights file for remapping to `self.target_grid`
         """
         logger = self.logger
-        logger.info('Creating BedMachine mapping file')
 
         config = self.config
         method = config.get('combine_topo', 'method')
-        resolution = self.resolution
-        antarctic_name = self.antarctic_filename.strip('.nc')
-        in_filename = f'{antarctic_name}.scrip.nc'
-        out_filename = f'map_{antarctic_name}_to_ne{resolution}_{method}.nc'
-        ne_scrip_filename = f'ne{resolution}.scrip.nc'
 
+        # Generate weights file
         args = [
             'srun', '-n', f'{self.ntasks}',
             'ESMF_RegridWeightGen',
             '--source', in_filename,
-            '--destination', ne_scrip_filename,
+            '--destination', f'{self.resolution_name}.scrip.nc',
             '--weight', out_filename,
             '--method', method,
             '--netcdf4',
-            '--src_regional'
-            '--ignore_unmapped'
+            '--src_regional',
+            '--ignore_unmapped',
         ]
-        logger.info(f'    Running: {" ".join(args)}')
-        subprocess.check_call(args)
+        logger.info(f'    running: {" ".join(args)}')
+        subprocess.run(args, check=True)
 
-        logger.info('  Done.')
+
+    def _remap_to_target(self, in_filename, mapping_filename, out_filename, default_dims=True):
+        """
+        Remap to `self.target_grid`
+        """
+        logger = self.logger
+
+        config = self.config
+        section = config['combine_topo']
+        renorm_thresh = section.getfloat('renorm_thresh')
+
+        # Build command args
+        args = [
+            'ncremap', '-m', mapping_filename, '--vrb=1',
+            f'--renormalize={renorm_thresh}',
+        ]
+
+        # Append non-default dimensions, if any
+        if not default_dims:
+            args = args + ['-R', '--rgr lat_nm=y --rgr lon_nm=x']
+
+        # Append input and output file names
+        args = args + [in_filename, out_filename]
+
+        # Remap to target grid
+        logger.info(f'    Running: {" ".join(args)}')
+        subprocess.run(args, check=True)
+
 
     def _remap_gebco(self):
         """
-        Remap GEBCO tiles to NE grid
+        Remap GEBCO
         """
         logger = self.logger
-        logger.info('Remapping GEBCO tiles to NE grid')
+        logger.info('Remapping GEBCO data')
 
-        global_name = self.global_filename.strip('.nc')
-        tile_prefix = f'tiles/{global_name}_tile'
-        ne_prefix = f'tiles/{global_name}_on_ne_tile'
-        map_prefix = f'tiles/map_{global_name}_to_ne{resolution}_{method}_tile'
+        # Parse config
+        config = self.config
+        section = config['combine_topo']
+        global_name = section.get('global_filename').strip('.nc')
+        method = section.get('method')
+        lat_tiles = section.getint('lat_tiles')
+        lon_tiles = section.getint('lon_tiles')
 
-        for lat_tile in range(self.lat_tiles):
-            for lon_tile in range(self.lon_tiles):
-                in_filename = f'{tile_prefix}_{lon_tile}_{lat_tile}.nc'
-                out_filename = f'{ne_prefix}_{lon_tile}_{lat_tile}.nc'
-                mapping_filename = f'{map_prefix}_{lon_tile}_{lat_tile}.nc'
+        # Create tile maps and remapped tiles
+        for lat_tile in range(lat_tiles):
+            for lon_tile in range(lon_tiles):
 
-                args = [
-                    'ncremap',
-                    '-m', mapping_filename,
-                    '--vrb=1',
-                    f'--renormalize={self.renorm_thresh}',
-                    in_filename,
-                    out_filename,
-                ]
-                logger.info(f'    Running: {" ".join(args)}')
-                subprocess.check_call(args)
+                # File names
+                tile_suffix = f'tile_{lon_tile}_{lat_tile}.nc'
+                tile_filename = f'tiles/{global_name}_{tile_suffix}'
+                mapping_filename = f'tiles/map_{global_name}_to_{self.resolution_name}_{method}_{tile_suffix}'
+                remapped_filename = f'tiles/{global_name}_{self.resolution_name}_{tile_suffix}'
+
+                # Call remapping functions
+                self._create_weights(tile_filename, mapping_filename)
+                self._remap_to_target(tile_filename, mapping_filename, remapped_filename)
 
         logger.info('  Done.')
+
 
     def _remap_bedmachine(self):
         """
-        Remap BedMachine to NE grid
-        Still need:
-          bedmachine_filename, bedmachine_on_ne_filename,
-          mapping_filename, renorm_thresh
+        Remap BedMachineAntarctica
         """
         logger = self.logger
-        logger.info('Remapping BedMachine to NE grid')
+        logger.info('Remapping BedMachine data')
 
-        args = [
-            'ncremap',
-            '-m', mapping_filename,
-            '--vrb=1',
-            f'--renormalize={renorm_thresh}',
-            '-R', '--rgr lat_nm=y --rgr lon_nm=x',
-            bedmachine_filename,
-            bedmachine_on_ne_filename,
-        ]
-        logger.info(f'    Running: {" ".join(args)}')
-        subprocess.check_call(args)
+        # Parse config
+        config = self.config
+        section = config['combine_topo']
+        antarctic_name = section.get('antarctic_filename').strip('.nc')
+        method = section.get('method')
+
+        # File names
+        in_filename = f'{antarctic_name}_mod.nc'
+        scrip_filename = f'{antarctic_name}.scrip.nc'
+        mapping_filename = f'map_{antarctic_name}_to_{self.resolution_name}_{method}.nc'
+        remapped_filename = f'{antarctic_name}_{self.resolution_name}.nc'
+
+        # Call remapping functions
+        self._create_weights(scrip_filename, mapping_filename)
+        self._remap_to_target(
+            in_filename, mapping_filename, remapped_filename, default_dims=False,
+        )
 
         logger.info('  Done.')
+
 
     def _combine(self):
         """
         """
-        logger = self.logger
-        logger.info('Combine BedMachineAntarctica and GEBCO')
 
         combined = xr.Dataset()
+
+        # Combine remapped GEBCO tiles
+        tile_prefix = f'tiles/{global_name}_{self.resolution_name}_tile'
         for lat_tile in range(lat_tiles):
             for lon_tile in range(lon_tiles):
-                gebco_filename = f'{gebco_prefix}_{lon_tile}_{lat_tile}.nc'
-                gebco = xr.open_dataset(gebco_filename)
-                tile = gebco.elevation
-                tile = tile.where(tile.notnull(), 0.)
+                in_filename = f'{tile_prefix}_{lon_tile}_{lat_tile}.nc'
+                tile = xr.open_dataset(in_filename)
+                bathy = tile.elevation
+                mask = bathy.notnull()
+                bathy = bathy.where(mask, 0.)
                 if 'bathymetry' in combined:
-                    combined['bathymetry'] = combined.bathymetry + tile
+                    combined['bathymetry'] = combined.bathymetry + bathy
                 else:
-                    combined['bathymetry'] = tile
+                    combined['bathymetry'] = bathy
 
-        bedmachine = xr.open_dataset(bedmachine_filename)
-
+        # Open BedMachine and blend into combined bathy with alpha factor
+        bedmachine = xr.open_dataset(antarctic_filename)
         alpha = (combined.lat - latmin) / (latmax - latmin)
         alpha = np.maximum(np.minimum(alpha, 1.0), 0.0)
+        bathy = bedmachine.bathymetry
+        valid = bathy.notnull()
+        bathy = bathy.where(valid, 0.)
+        combined['bathymetry'] = alpha * combined.bathymetry + (1.0 - alpha) * bathy
+        combined['bathymetry'] = combined.bathymetry.where(combined.bathymetry < 0, 0.)
 
-        bedmachine_bathy = bedmachine.bathymetry
-        valid = bedmachine_bathy.notnull()
-        bedmachine_bathy = bedmachine_bathy.where(valid, 0.)
-
-        combined['bathymetry'] = (
-            alpha * combined.bathymetry + (1.0 - alpha) * bedmachine_bathy
-        )
-
-        mask = combined.bathymetry < 0.
-        combined['bathymetry'] = combined.bathymetry.where(mask, 0.)
-
+        # Handle remaining variables
         for field in ['ice_draft', 'thickness']:
             combined[field] = bedmachine[field].astype(float)
         for field in ['bathymetry', 'ice_draft', 'thickness']:
             combined[field].attrs['unit'] = 'meters'
-
-        fill = {
-            'ice_mask': 0.,
-            'grounded_mask': 0.,
-            'ocean_mask': combined.bathymetry < 0.
-        }
-
-        for field, fill_val in fill.items():
+        fill = {'ice_mask': 0., 'grounded_mask': 0., 'ocean_mask': combined['bathymetry'] < 0.}
+        for field in fill.keys():
             valid = bedmachine[field].notnull()
-            combined[field] = bedmachine[field].where(valid, fill_val)
-
-        combined['water_column'] = combined.ice_draft - combined.bathymetry
+            combined[field] = bedmachine[field].where(valid, fill[field])
+        combined['water_column'] = combined['ice_draft'] - combined['bathymetry']
         combined.water_column.attrs['units'] = 'meters'
         combined = combined.drop_vars(['x', 'y'])
 
         combined.to_netcdf(combined_filename)
-
-        logger.info('  Done.')
-
-def _get_combined_filename(
-        target_grid, datestamp, resolution,
-        antarctic_filename, global_filename,
-):
-    """
-    """
-
-    # Parse resolution
-    if target_grid == 'cubed_sphere':
-        resolution_str = f'ne{resolution}'
-    elif target_grid == 'lat_lon':
-        resolution_str = f'{resolution}_degree'
-    else:
-        raise ValueError('Unknown target grid ' + target_grid)
-
-    # Build combined filename
-    combined_filename = '_'.join([
-        antarctic_filename.strip('.nc'), global_filename.strip('.nc'),
-        resolution_str, datestamp.strftime('%Y%m%d.nc'),
-    ])
-
-    return combined_filename
-
-def _get_tile_filenames(global_filename, resolution, method, lat_tile, lon_tile, tiledir='tiles'):
-    """
-    """
-
-    # Tiles
-    global_name = global_filename.strip('.nc')
-    src_filename = os.path.join(tiledir, f'{global_name}_tile_{lon_tile}_{lat_tile}.nc')
-    tgt_filename = os.path.join(tiledir, f'{global_name}_on_ne_tile_{lon_tile}_{lat_tile}.nc')
-    map_filename = os.path.join(tiledir, f'map_{global_name}_to_ne{resolution}_{method}_tile_{lon_tile}_{lat_tile}.nc')
-
-    return src_filename, tgt_filename, map_filename

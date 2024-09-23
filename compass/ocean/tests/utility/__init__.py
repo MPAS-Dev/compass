@@ -19,7 +19,7 @@ class Utility(TestGroup):
         """
         super().__init__(mpas_core=mpas_core, name='utility')
 
-        self.add_test_case(CombineTopo(test_group=self))
+        self.add_test_case(CombineTopo(test_group=self, target_grid='lat_lon'))
         self.add_test_case(CullRestarts(test_group=self))
         self.add_test_case(ExtrapWoa(test_group=self))
         self.add_test_case(CreateSalinRestoring(test_group=self))
