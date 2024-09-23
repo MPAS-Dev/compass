@@ -382,7 +382,7 @@ switch branches.
 
     .. code-block:: bash
 
-        python -m pip install -e .
+        python -m pip install --no-deps --no-build-isolation -e .
 
     The activation script will do this automatically when you source it in
     the root directory of your compass branch.  The activation script will also
@@ -446,7 +446,7 @@ to the current directory.
 
     .. code-block:: bash
 
-        python -m pip install -e .
+        python -m pip install --no-deps --no-build-isolation -e .
 
     This will be substantially faster than rerunning
     ``./conda/configure_compass_env.py ...`` but at the risk that dependencies are
