@@ -1,14 +1,14 @@
 import os
-import subprocess
-from glob import glob
 from datetime import datetime
+from glob import glob
 
 import numpy as np
 import pyproj
 import xarray as xr
-from dask.diagnostics import ProgressBar
+from mpas_tools.logging import check_call
 from pyremap import ProjectionGridDescriptor, get_lat_lon_descriptor
 
+from compass.parallel import run_command
 from compass.step import Step
 from compass.testcase import TestCase
 
@@ -187,13 +187,12 @@ class Combine(Step):
         ice_mask = (mask != 0).astype(float)
         ocean_mask = np.logical_or(mask == 0, mask == 3).astype(float)
         grounded_mask = np.logical_or(np.logical_or(mask == 1, mask == 2),
-            mask == 4).astype(float)
+                                      mask == 4).astype(float)
 
         # Add new variables and apply ocean mask
-        bedmachine['bathymetry'] = bedmachine.bed.where(ocean_mask, 0.)
-        bedmachine['thickness'] = bedmachine.thickness.where(ocean_mask, 0.)
-        bedmachine['ice_draft'] = \
-            (bedmachine.surface - bedmachine.thickness).where(ocean_mask, 0.)
+        bedmachine['bathymetry'] = bedmachine.bed
+        bedmachine['thickness'] = bedmachine.thickness
+        bedmachine['ice_draft'] = bedmachine.surface - bedmachine.thickness
         bedmachine.ice_draft.attrs['units'] = 'meters'
         bedmachine['ice_mask'] = ice_mask
         bedmachine['grounded_mask'] = grounded_mask
@@ -317,16 +316,14 @@ class Combine(Step):
                 'GenerateCSMesh', '--alt', '--res', f'{self.resolution}',
                 '--file', f'{self.resolution_name}.g',
             ]
-            logger.info(f'    Running: {" ".join(args)}')
-            subprocess.run(args, check=True)
+            check_call(args, logger)
 
             # Create SCRIP file
             args = [
                 'ConvertMeshToSCRIP', '--in', f'{self.resolution_name}.g',
                 '--out', out_filename,
             ]
-            logger.info(f'    Running: {" ".join(args)}')
-            subprocess.run(args, check=True)
+            check_call(args, logger)
 
         # Build lat-lon SCRIP file using pyremap
         elif self.target_grid == 'lat_lon':
@@ -348,14 +345,11 @@ class Combine(Step):
         in_filename : `str`, source file name
         out_filename : `str`, weights file name
         """
-        logger = self.logger
-
         config = self.config
         method = config.get('combine_topo', 'method')
 
         # Generate weights file
         args = [
-            'srun', '-n', f'{self.ntasks}',
             'ESMF_RegridWeightGen',
             '--source', in_filename,
             '--destination', f'{self.resolution_name}.scrip.nc',
@@ -365,8 +359,10 @@ class Combine(Step):
             '--src_regional',
             '--ignore_unmapped',
         ]
-        logger.info(f'    running: {" ".join(args)}')
-        subprocess.run(args, check=True)
+        run_command(
+            args, self.cpus_per_task, self.ntasks,
+            self.openmp_threads, config, self.logger,
+        )
 
     def _remap_to_target(
         self, in_filename, mapping_filename, out_filename, default_dims=True,
@@ -383,8 +379,6 @@ class Combine(Step):
         default_dims : `bool`, default `True`,
             if `False` specify non-default source dims y,x
         """
-        logger = self.logger
-
         config = self.config
         section = config['combine_topo']
         renorm_thresh = section.getfloat('renorm_thresh')
@@ -417,8 +411,7 @@ class Combine(Step):
         args.extend([in_filename, out_filename])
 
         # Remap to target grid
-        logger.info(f'    Running: {" ".join(args)}')
-        subprocess.run(args, check=True)
+        check_call(args, self.logger)
 
     def _remap_gebco(self):
         """
@@ -473,7 +466,7 @@ class Combine(Step):
                     )
                 else:
                     gebco_remapped['bathymetry'] = bathy
-        
+
         # Write tile to netCDF
         out_filename = f'{global_name}_{self.resolution_name}.nc'
         logger.info(f'    writing {out_filename}')
@@ -522,50 +515,56 @@ class Combine(Step):
         # Parse config
         config = self.config
         section = config['combine_topo']
-        global_name = section.get('global_filename').strip('.nc')
-        antarctic_name = section.get('antarctic_filename').strip('.nc')
+        sfx = f'_{self.resolution_name}.nc'
+        global_fname = section.get('global_filename').replace('.nc', sfx)
+        antarctic_fname = section.get('antarctic_filename').replace('.nc', sfx)
         latmin = section.getfloat('latmin')
         latmax = section.getfloat('latmax')
 
-        # Initialize combined xarray.Dataset
-        in_filename = f'{global_name}_{self.resolution_name}.nc'
-        combined = xr.open_dataset(in_filename)
+        # Load and mask GEBCO
+        gebco = xr.open_dataset(global_fname)
+        gebco_bathy = gebco.bathymetry
+        gebco_bathy = gebco_bathy.where(gebco_bathy.notnull(), 0.)
+        gebco_bathy = gebco_bathy.where(gebco_bathy < 0., 0.)
 
-        # Create blending factor alpha
-        alpha = (combined.lat - latmin) / (latmax - latmin)
+        # Load and mask BedMachine
+        bedmachine = xr.open_dataset(antarctic_fname)
+        bed_bathy = bedmachine.bathymetry
+        bed_bathy = bed_bathy.where(bed_bathy.notnull(), 0.)
+        bed_bathy = bed_bathy.where(bed_bathy < 0., 0.)
+
+        # Blend data sets into combined data set
+        combined = xr.Dataset()
+        alpha = (gebco.lat - latmin) / (latmax - latmin)
         alpha = np.maximum(np.minimum(alpha, 1.0), 0.0)
-
-        # Open remapped BedMachine and blend into combined bathy
-        in_filename = f'{antarctic_name}_{self.resolution_name}.nc'
-        bedmachine = xr.open_dataset(in_filename)
-        bathy = bedmachine.bathymetry
-        bathy = bathy.where(bathy.notnull(), 0.)
         combined['bathymetry'] = (
-            alpha * combined.bathymetry + (1.0 - alpha) * bathy
+            alpha * gebco_bathy + (1.0 - alpha) * bed_bathy
         )
-        ocean_mask = combined.bathymetry < 0.
-        combined['bathymetry'] = combined.bathymetry.where(ocean_mask, 0.)
+        bathy_mask = xr.where(combined.bathymetry < 0., 1.0, 0.0)
 
         # Add remaining Bedmachine variables to combined Dataset
         for field in ['ice_draft', 'thickness']:
-            combined[field] = bedmachine[field].astype(float)
+            combined[field] = bathy_mask * bedmachine[field]
         combined['water_column'] = combined.ice_draft - combined.bathymetry
         for field in ['bathymetry', 'ice_draft', 'thickness', 'water_column']:
             combined[field].attrs['unit'] = 'meters'
-        
-        # Add Bedmachine masks to combined Dataset
-        masks = {
+
+        # Add masks
+        combined['bathymetry_mask'] = bathy_mask
+        for field in ['ice_mask', 'grounded_mask', 'ocean_mask']:
+            combined[field] = bedmachine[field]
+
+        # Add fill values
+        fill_vals = {
+            'ice_draft': 0.,
+            'thickness': 0.,
             'ice_mask': 0.,
             'grounded_mask': 0.,
-            'ocean_mask': ocean_mask,
+            'ocean_mask': bathy_mask,
         }
-        for field in masks:
-            combined[field] = bedmachine[field].where(
-                bedmachine[field].notnull(), masks[field],
-            )
-
-        # Drop x,y coordinates
-        #combined = combined.drop_vars(['x', 'y'])
+        for field, fill_val in fill_vals.items():
+            valid = combined[field].notnull()
+            combined[field] = combined[field].where(valid, fill_val)
 
         # Save combined bathy to NetCDF
         combined.to_netcdf(self.outputs[0])
