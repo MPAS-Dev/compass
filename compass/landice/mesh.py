@@ -13,6 +13,7 @@ from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 from mpas_tools.mesh.conversion import convert, cull
 from mpas_tools.mesh.creation import build_planar_mesh
+from mpas_tools.mesh.creation.sort_mesh import sort_mesh
 from netCDF4 import Dataset
 from scipy.interpolate import NearestNDInterpolator, interpn
 
@@ -745,10 +746,11 @@ def build_mali_mesh(self, cell_width, x1, y1, geom_points,
 
     check_call(args, logger=logger)
 
-    logger.info('culling and converting')
+    logger.info('culling, converting, and sorting')
     dsMesh = xarray.open_dataset('culled.nc')
     dsMesh = cull(dsMesh, logger=logger)
     dsMesh = convert(dsMesh, logger=logger)
+    dsMesh = sort_mesh(dsMesh)
     write_netcdf(dsMesh, 'dehorned.nc')
 
     args = ['create_landice_grid_from_generic_MPAS_grid.py', '-i',
