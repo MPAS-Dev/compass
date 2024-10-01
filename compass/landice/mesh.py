@@ -443,7 +443,7 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y,
     elif window_size < min(high_dist, high_dist_bed):
         logger.info('WARNING: window_size was set to a value smaller'
                     ' than high_dist and/or high_dist_bed. Resetting'
-                    f' window_size to {max(high_dist, high_dist_bed)}, '
+                    f' window_size to {max(high_dist, high_dist_bed)},'
                     ' which is max(high_dist, high_dist_bed)')
         window_size = max(high_dist, high_dist_bed)
 
@@ -972,7 +972,7 @@ def preprocess_ais_data(self, source_gridded_dataset,
         tic = time.perf_counter()
         logger.info(f"Beginning interpolation for {field}")
         # NOTE: Do not need to evaluate the extrapolator at all grid cells.
-        #       Only needed for ice-free grid cells, since it's NN extrapolation
+        #       Only needed for ice-free grid cells, since is NN extrapolation
         data.variables[field][0, :] = interp(xGrid, yGrid)
         toc = time.perf_counter()
         logger.info(f"Interpolation completed in {toc - tic} seconds")
@@ -1029,8 +1029,8 @@ def interp_gridded2mali(self, source_file, mali_scrip, nProcs, dest_file, proj,
     proj: str
         projection of the source dataset
 
-    variables: str or list of strings
-
+    variables: "all" or list of strings
+        either the string "all" or a list of strings
     """
 
     def __guess_scrip_name(filename):
@@ -1057,7 +1057,7 @@ def interp_gridded2mali(self, source_file, mali_scrip, nProcs, dest_file, proj,
         variables = [variables]
     if not isinstance(variables, list):
         raise TypeError("Arugment 'variables' is of incorrect type, must"
-                        " either the string 'all' or a list string")
+                        " either the string 'all' or a list of strings")
 
     logger.info('creating scrip file for source dataset')
     # Note: writing scrip file to workdir
@@ -1089,9 +1089,6 @@ def interp_gridded2mali(self, source_file, mali_scrip, nProcs, dest_file, proj,
             '-v'] + variables
 
     check_call(args, logger=logger)
-
-    # should I delted the weights file, since that could cause namespace
-    # conflicts when multiple interpolations are done?
 
 
 def clean_up_after_interp(fname):
