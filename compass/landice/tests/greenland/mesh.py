@@ -103,7 +103,7 @@ class Mesh(Step):
         interp_gridded2mali(self, bedmachine_dataset, dst_scrip_file, nProcs,
                             self.mesh_filename, src_proj, variables="all")
 
-        # only interpolate a subset of MEASURES varibles onto the MALI mesh
+        # only interpolate a subset of MEaSUREs variables onto the MALI mesh
         measures_vars = ['observedSurfaceVelocityX',
                          'observedSurfaceVelocityY',
                          'observedSurfaceVelocityUncertainty']
@@ -149,7 +149,7 @@ class Mesh(Step):
         dHdtErr = np.abs(dHdt) * 0.05
         # Use threshold of |dHdt| > 1.0 to determine invalid data
         mask = np.abs(dHdt) > 1.0
-        # Assign 100% uncertainty where data is missing
+        # Assign very large uncertainty where data is missing
         dHdtErr = dHdtErr.where(~mask, 1.0)
         # Remove ridiculous values
         dHdt = dHdt.where(~mask, 0.0)

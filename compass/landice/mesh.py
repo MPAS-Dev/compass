@@ -444,7 +444,7 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y,
         logger.info('WARNING: window_size was set to a value smaller'
                     ' than high_dist and/or high_dist_bed. Resetting'
                     f' window_size to {max(high_dist, high_dist_bed)}, '
-                    ' which is  max(high_dist, high_dist_bed)')
+                    ' which is max(high_dist, high_dist_bed)')
         window_size = max(high_dist, high_dist_bed)
 
     dx = x[1] - x[0]  # assumed constant and equal in x and y
@@ -971,8 +971,8 @@ def preprocess_ais_data(self, source_gridded_dataset,
 
         tic = time.perf_counter()
         logger.info(f"Beginning interpolation for {field}")
-        # NOTE: Do not need to evaluate the extrapolator at all gridcells.
-        #       Only needed for ice-free gricells, since it's NN extrapolation
+        # NOTE: Do not need to evaluate the extrapolator at all grid cells.
+        #       Only needed for ice-free grid cells, since it's NN extrapolation
         data.variables[field][0, :] = interp(xGrid, yGrid)
         toc = time.perf_counter()
         logger.info(f"Interpolation completed in {toc - tic} seconds")
@@ -1027,7 +1027,7 @@ def interp_gridded2mali(self, source_file, mali_scrip, nProcs, dest_file, proj,
         MALI input file to which data should be remapped
 
     proj: str
-        projection of the source dataset ...
+        projection of the source dataset
 
     variables: str or list of strings
 
@@ -1069,8 +1069,6 @@ def interp_gridded2mali(self, source_file, mali_scrip, nProcs, dest_file, proj,
     check_call(args, logger=logger)
 
     # Generate remapping weights
-    # Testing shows 5 badger/grizzly nodes works well.
-    # 2 nodes is too few. I have not tested anything in between.
     logger.info('generating gridded dataset -> MPAS weights')
     args = ['srun', '-n', nProcs, 'ESMF_RegridWeightGen',
             '--source', source_scrip,

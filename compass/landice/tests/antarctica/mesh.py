@@ -74,7 +74,7 @@ class Mesh(Step):
 
         section_name = 'mesh'
 
-        # do we want to add this to the config file?
+        # TODO: do we want to add this to the config file?
         source_gridded_dataset = 'antarctica_8km_2024_01_29.nc'
 
         bm_updated_gridded_dataset = add_bedmachine_thk_to_ais_gridded_data(
@@ -141,7 +141,7 @@ class Mesh(Step):
         interp_gridded2mali(self, bedmachine_dataset, dst_scrip_file, nProcs,
                             self.mesh_filename, src_proj, variables="all")
 
-        # only interpolate a subset of MEASURES varibles onto the MALI mesh
+        # only interpolate a subset of MEaSUREs variables onto the MALI mesh
         measures_vars = ['observedSurfaceVelocityX',
                          'observedSurfaceVelocityY',
                          'observedSurfaceVelocityUncertainty']

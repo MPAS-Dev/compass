@@ -57,9 +57,9 @@ clean up steps after interpolation for the AIS mesh case.
 to the gridded dataset in order to separate the ice sheet from peripheral ice.
 
 :py:func:`compass.landice.mesh.interp_gridded2mali()` interpolates gridded data
-(e.g. BedMachine thickness or MEASURES ice velocity) to a MALI mesh, accounting
+(e.g. BedMachine thickness or MEaSUREs ice velocity) to a MALI mesh, accounting
 for masking of the ice extent to avoid interpolation ramps. This functions works
-for either the Antarctic or Greenland Icesheets. 
+for both Antarctica and Greenland. 
 
 :py:func:`compass.landice.mesh.preprocess_ais_data()` performs adjustments to
 gridded AIS datasets needed for rest of compass workflow to utilize them.
