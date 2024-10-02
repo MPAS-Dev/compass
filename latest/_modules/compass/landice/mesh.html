@@ -112,6 +112,7 @@
              
   <h1>Source code for compass.landice.mesh</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">shutil</span> <span class="kn">import</span> <span class="n">copyfile</span>
@@ -125,6 +126,7 @@
 <span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.mesh.conversion</span> <span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">cull</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.mesh.creation</span> <span class="kn">import</span> <span class="n">build_planar_mesh</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.mesh.creation.sort_mesh</span> <span class="kn">import</span> <span class="n">sort_mesh</span>
 <span class="kn">from</span> <span class="nn">netCDF4</span> <span class="kn">import</span> <span class="n">Dataset</span>
 <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">NearestNDInterpolator</span><span class="p">,</span> <span class="n">interpn</span>
 
@@ -569,7 +571,7 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;WARNING: window_size was set to a value smaller&#39;</span>
                     <span class="s1">&#39; than high_dist and/or high_dist_bed. Resetting&#39;</span>
                     <span class="sa">f</span><span class="s1">&#39; window_size to </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">high_dist</span><span class="p">,</span><span class="w"> </span><span class="n">high_dist_bed</span><span class="p">)</span><span class="si">}</span><span class="s1">,&#39;</span>
-                    <span class="s1">&#39; which is  max(high_dist, high_dist_bed)&#39;</span><span class="p">)</span>
+                    <span class="s1">&#39; which is max(high_dist, high_dist_bed)&#39;</span><span class="p">)</span>
         <span class="n">window_size</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">high_dist</span><span class="p">,</span> <span class="n">high_dist_bed</span><span class="p">)</span>
 
     <span class="n">dx</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># assumed constant and equal in x and y</span>
@@ -877,10 +879,11 @@
 
     <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;culling and converting&#39;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;culling, converting, and sorting&#39;</span><span class="p">)</span>
     <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;culled.nc&#39;</span><span class="p">)</span>
     <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
     <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">sort_mesh</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">)</span>
     <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;dehorned.nc&#39;</span><span class="p">)</span>
 
     <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;create_landice_grid_from_generic_MPAS_grid.py&#39;</span><span class="p">,</span> <span class="s1">&#39;-i&#39;</span><span class="p">,</span>
@@ -1110,6 +1113,8 @@
 
         <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Beginning interpolation for </span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># NOTE: Do not need to evaluate the extrapolator at all grid cells.</span>
+        <span class="c1">#       Only needed for ice-free grid cells, since is NN extrapolation</span>
         <span class="n">data</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="n">field</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">interp</span><span class="p">(</span><span class="n">xGrid</span><span class="p">,</span> <span class="n">yGrid</span><span class="p">)</span>
         <span class="n">toc</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Interpolation completed in </span><span class="si">{</span><span class="n">toc</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">tic</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span>
@@ -1145,17 +1150,17 @@
 
 
 
-<div class="viewcode-block" id="interp_ais_bedmachine">
-<a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.mesh.interp_ais_bedmachine.html#compass.landice.mesh.interp_ais_bedmachine">[docs]</a>
-<span class="k">def</span> <span class="nf">interp_ais_bedmachine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_path</span><span class="p">,</span> <span class="n">mali_scrip</span><span class="p">,</span> <span class="n">nProcs</span><span class="p">,</span> <span class="n">dest_file</span><span class="p">):</span>
+<div class="viewcode-block" id="interp_gridded2mali">
+<a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.mesh.interp_gridded2mali.html#compass.landice.mesh.interp_gridded2mali">[docs]</a>
+<span class="k">def</span> <span class="nf">interp_gridded2mali</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_file</span><span class="p">,</span> <span class="n">mali_scrip</span><span class="p">,</span> <span class="n">nProcs</span><span class="p">,</span> <span class="n">dest_file</span><span class="p">,</span> <span class="n">proj</span><span class="p">,</span>
+                        <span class="n">variables</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Interpolates BedMachine thickness and bedTopography dataset</span>
-<span class="sd">    to a MALI mesh</span>
+<span class="sd">    Interpolate gridded dataset (e.g. MEASURES, BedMachine) onto a MALI mesh</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    data_path : str</span>
-<span class="sd">        path to AIS datasets, including BedMachine</span>
+<span class="sd">    source_file : str</span>
+<span class="sd">        filepath to the source gridded datatset to be interpolated</span>
 
 <span class="sd">    mali_scrip : str</span>
 <span class="sd">        name of scrip file corresponding to destination MALI mesh</span>
@@ -1165,31 +1170,55 @@
 
 <span class="sd">    dest_file: str</span>
 <span class="sd">        MALI input file to which data should be remapped</span>
+
+<span class="sd">    proj: str</span>
+<span class="sd">        projection of the source dataset</span>
+
+<span class="sd">    variables: &quot;all&quot; or list of strings</span>
+<span class="sd">        either the string &quot;all&quot; or a list of strings</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__guess_scrip_name</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+        <span class="c1"># try searching for string followed by a version number</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(^.*[_-]v\d*[_-])+&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+            <span class="c1"># slice string to end of match minus one to leave of final _ or -</span>
+            <span class="n">base_fn</span> <span class="o">=</span> <span class="n">filename</span><span class="p">[:</span><span class="n">match</span><span class="o">.</span><span class="n">end</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># no matches were found, just use the filename (minus extension)</span>
+            <span class="n">base_fn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_fn</span><span class="si">}</span><span class="s2">.scrip.nc&quot;</span>
 
     <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;creating scrip file for BedMachine dataset&#39;</span><span class="p">)</span>
+    <span class="n">source_scrip</span> <span class="o">=</span> <span class="n">__guess_scrip_name</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">source_file</span><span class="p">))</span>
+    <span class="n">weights_filename</span> <span class="o">=</span> <span class="s2">&quot;gridded_to_MPAS_weights.nc&quot;</span>
+
+    <span class="c1"># make sure variables is a list, encompasses the variables=&quot;all&quot; case</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="n">variables</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Arugment &#39;variables&#39; is of incorrect type, must&quot;</span>
+                        <span class="s2">&quot; either the string &#39;all&#39; or a list of strings&quot;</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;creating scrip file for source dataset&#39;</span><span class="p">)</span>
     <span class="c1"># Note: writing scrip file to workdir</span>
     <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;create_SCRIP_file_from_planar_rectangular_grid.py&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;-i&#39;</span><span class="p">,</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span>
-                         <span class="s1">&#39;BedMachineAntarctica_2020-07-15_v02_edits_floodFill_extrap_fillVostok.nc&#39;</span><span class="p">),</span>  <span class="c1"># noqa</span>
-            <span class="s1">&#39;-s&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;BedMachineAntarctica_2020-07-15_v02.scrip.nc&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;ais-bedmap2&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="n">source_file</span><span class="p">,</span>
+            <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="n">source_scrip</span><span class="p">,</span>
+            <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="n">proj</span><span class="p">,</span>
             <span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">]</span>
     <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
     <span class="c1"># Generate remapping weights</span>
-    <span class="c1"># Testing shows 5 badger/grizzly nodes works well.</span>
-    <span class="c1"># 2 nodes is too few. I have not tested anything in between.</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;generating gridded dataset -&gt; MPAS weights&#39;</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;srun&#39;</span><span class="p">,</span> <span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="n">nProcs</span><span class="p">,</span> <span class="s1">&#39;ESMF_RegridWeightGen&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;--source&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;BedMachineAntarctica_2020-07-15_v02.scrip.nc&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--source&#39;</span><span class="p">,</span> <span class="n">source_scrip</span><span class="p">,</span>
             <span class="s1">&#39;--destination&#39;</span><span class="p">,</span> <span class="n">mali_scrip</span><span class="p">,</span>
-            <span class="s1">&#39;--weight&#39;</span><span class="p">,</span> <span class="s1">&#39;BedMachine_to_MPAS_weights.nc&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--weight&#39;</span><span class="p">,</span> <span class="n">weights_filename</span><span class="p">,</span>
             <span class="s1">&#39;--method&#39;</span><span class="p">,</span> <span class="s1">&#39;conserve&#39;</span><span class="p">,</span>
             <span class="s2">&quot;--netcdf4&quot;</span><span class="p">,</span>
             <span class="s2">&quot;--dst_regional&quot;</span><span class="p">,</span> <span class="s2">&quot;--src_regional&quot;</span><span class="p">,</span> <span class="s1">&#39;--ignore_unmapped&#39;</span><span class="p">]</span>
@@ -1197,75 +1226,13 @@
 
     <span class="c1"># Perform actual interpolation using the weights</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;calling interpolate_to_mpasli_grid.py&#39;</span><span class="p">)</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;interpolate_to_mpasli_grid.py&#39;</span><span class="p">,</span> <span class="s1">&#39;-s&#39;</span><span class="p">,</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span>
-                         <span class="s1">&#39;BedMachineAntarctica_2020-07-15_v02_edits_floodFill_extrap_fillVostok.nc&#39;</span><span class="p">),</span>  <span class="c1"># noqa</span>
-            <span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="n">dest_file</span><span class="p">,</span>
-            <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;-w&#39;</span><span class="p">,</span> <span class="s1">&#39;BedMachine_to_MPAS_weights.nc&#39;</span><span class="p">]</span>
-    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="interp_ais_measures">
-<a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.mesh.interp_ais_measures.html#compass.landice.mesh.interp_ais_measures">[docs]</a>
-<span class="k">def</span> <span class="nf">interp_ais_measures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_path</span><span class="p">,</span> <span class="n">mali_scrip</span><span class="p">,</span> <span class="n">nProcs</span><span class="p">,</span> <span class="n">dest_file</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Interpolates MEASURES ice velocity dataset</span>
-<span class="sd">    to a MALI mesh</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    data_path : str</span>
-<span class="sd">        path to AIS datasets, including BedMachine</span>
-
-<span class="sd">    mali_scrip : str</span>
-<span class="sd">        name of scrip file corresponding to destination MALI mesh</span>
-
-<span class="sd">    nProcs : int</span>
-<span class="sd">        number of processors to use for generating remapping weights</span>
-
-<span class="sd">    dest_file: str</span>
-<span class="sd">        MALI input file to which data should be remapped</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
-
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;creating scrip file for velocity dataset&#39;</span><span class="p">)</span>
-    <span class="c1"># Note: writing scrip file to workdir</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;create_SCRIP_file_from_planar_rectangular_grid.py&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;-i&#39;</span><span class="p">,</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span>
-                         <span class="s1">&#39;antarctica_ice_velocity_450m_v2_edits_extrap.nc&#39;</span><span class="p">),</span>
-            <span class="s1">&#39;-s&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;antarctica_ice_velocity_450m_v2.scrip.nc&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;ais-bedmap2&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">]</span>
-    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-
-    <span class="c1"># Generate remapping weights</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;generating gridded dataset -&gt; MPAS weights&#39;</span><span class="p">)</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;srun&#39;</span><span class="p">,</span> <span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="n">nProcs</span><span class="p">,</span> <span class="s1">&#39;ESMF_RegridWeightGen&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;--source&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;antarctica_ice_velocity_450m_v2.scrip.nc&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;--destination&#39;</span><span class="p">,</span> <span class="n">mali_scrip</span><span class="p">,</span>
-            <span class="s1">&#39;--weight&#39;</span><span class="p">,</span> <span class="s1">&#39;measures_to_MPAS_weights.nc&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;--method&#39;</span><span class="p">,</span> <span class="s1">&#39;conserve&#39;</span><span class="p">,</span>
-            <span class="s2">&quot;--netcdf4&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;--dst_regional&quot;</span><span class="p">,</span> <span class="s2">&quot;--src_regional&quot;</span><span class="p">,</span> <span class="s1">&#39;--ignore_unmapped&#39;</span><span class="p">]</span>
-    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;calling interpolate_to_mpasli_grid.py&#39;</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;interpolate_to_mpasli_grid.py&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;-s&#39;</span><span class="p">,</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span>
-                         <span class="s1">&#39;antarctica_ice_velocity_450m_v2_edits_extrap.nc&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="n">source_file</span><span class="p">,</span>
             <span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="n">dest_file</span><span class="p">,</span>
             <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;-w&#39;</span><span class="p">,</span> <span class="s1">&#39;measures_to_MPAS_weights.nc&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;observedSurfaceVelocityX&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;observedSurfaceVelocityY&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;observedSurfaceVelocityUncertainty&#39;</span><span class="p">]</span>
+            <span class="s1">&#39;-w&#39;</span><span class="p">,</span> <span class="n">weights_filename</span><span class="p">,</span>
+            <span class="s1">&#39;-v&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">variables</span>
+
     <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
 
 
