@@ -56,13 +56,10 @@ clean up steps after interpolation for the AIS mesh case.
 :py:func:`compass.landice.mesh.gridded_flood_fill()` applies a flood-fill algorithm
 to the gridded dataset in order to separate the ice sheet from peripheral ice.
 
-:py:func:`compass.landice.mesh.interp_ais_bedmachine()` interpolates BedMachine
-thickness and bedTopography dataset to a MALI mesh, accounting for masking of
-the ice extent to avoid interpolation ramps.
-
-:py:func:`compass.landice.mesh.interp_ais_interp_ais_measures()` interpolates
-MEASURES ice velocity dataset to a MALI mesh, accounting for masking at the ice
-edge and extrapolation.
+:py:func:`compass.landice.mesh.interp_gridded2mali()` interpolates gridded data
+(e.g. BedMachine thickness or MEaSUREs ice velocity) to a MALI mesh, accounting
+for masking of the ice extent to avoid interpolation ramps. This functions works
+for both Antarctica and Greenland. 
 
 :py:func:`compass.landice.mesh.preprocess_ais_data()` performs adjustments to
 gridded AIS datasets needed for rest of compass workflow to utilize them.

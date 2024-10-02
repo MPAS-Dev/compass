@@ -9,8 +9,7 @@ from compass.landice.mesh import (
     build_cell_width,
     build_mali_mesh,
     clean_up_after_interp,
-    interp_ais_bedmachine,
-    interp_ais_measures,
+    interp_gridded2mali,
     make_region_masks,
     preprocess_ais_data,
 )
@@ -44,10 +43,10 @@ class Mesh(Step):
         self.mesh_filename = 'Antarctica.nc'
         self.add_output_file(filename='graph.info')
         self.add_output_file(filename=self.mesh_filename)
-        self.add_output_file(filename=f'{self.mesh_filename[:-3]}_'
-                                      f'imbie_regionMasks.nc')
-        self.add_output_file(filename=f'{self.mesh_filename[:-3]}_'
-                                      f'ismip6_regionMasks.nc')
+        self.add_output_file(
+            filename=f'{self.mesh_filename[:-3]}_imbie_regionMasks.nc')
+        self.add_output_file(
+            filename=f'{self.mesh_filename[:-3]}_ismip6_regionMasks.nc')
         self.add_input_file(
             filename='antarctica_8km_2024_01_29.nc',
             target='antarctica_8km_2024_01_29.nc',
@@ -61,37 +60,38 @@ class Mesh(Step):
         """
         logger = self.logger
         config = self.config
+
         section_ais = config['antarctica']
-        data_path = section_ais.get('data_path')
+
         nProcs = section_ais.get('nProcs')
+        src_proj = section_ais.get("src_proj")
+        data_path = section_ais.get('data_path')
+        measures_filename = section_ais.get("measures_filename")
+        bedmachine_filename = section_ais.get("bedmachine_filename")
+
+        measures_dataset = os.path.join(data_path, measures_filename)
+        bedmachine_dataset = os.path.join(data_path, bedmachine_filename)
 
         section_name = 'mesh'
 
+        # TODO: do we want to add this to the config file?
         source_gridded_dataset = 'antarctica_8km_2024_01_29.nc'
-        bedmachine_path = os.path.join(
-            data_path,
-            'BedMachineAntarctica_2020-07-15_v02_edits_floodFill_extrap_fillVostok.nc')  # noqa
 
         bm_updated_gridded_dataset = add_bedmachine_thk_to_ais_gridded_data(
-            self, source_gridded_dataset, bedmachine_path)
+            self, source_gridded_dataset, bedmachine_dataset)
+
         logger.info('calling build_cell_width')
         cell_width, x1, y1, geom_points, geom_edges, floodFillMask = \
             build_cell_width(
                 self, section_name=section_name,
                 gridded_dataset=bm_updated_gridded_dataset)
 
-        # Preprocess the gridded AIS source datasets to work
-        # with the rest of the workflow
-        logger.info('calling preprocess_ais_data')
-        preprocessed_gridded_dataset = preprocess_ais_data(
-            self, bm_updated_gridded_dataset, floodFillMask)
-
         # Now build the base mesh and perform the standard interpolation
         build_mali_mesh(
             self, cell_width, x1, y1, geom_points, geom_edges,
             mesh_name=self.mesh_filename, section_name=section_name,
             gridded_dataset=bm_updated_gridded_dataset,
-            projection='ais-bedmap2', geojson_file=None)
+            projection=src_proj, geojson_file=None)
 
         # Now that we have base mesh with standard interpolation
         # perform advanced interpolation for specific fields
@@ -107,12 +107,19 @@ class Mesh(Step):
             data.variables['iceMask'][:] = 0.
         data.close()
 
-        # interpolate fields from composite dataset
-        # Note: this was already done in build_mali_mesh() using
-        # bilinear interpolation.  Redoing it here again is likely
-        # not needed.  Also, it should be assessed if bilinear or
-        # barycentric used here is preferred for this application.
-        # Current thinking is they are both equally appropriate.
+        # Preprocess the gridded AIS source datasets to work
+        # with the rest of the workflow
+        logger.info('calling preprocess_ais_data')
+        preprocessed_gridded_dataset = preprocess_ais_data(
+            self, bm_updated_gridded_dataset, floodFillMask)
+
+        # interpolate fields from *preprocessed* composite dataset
+        # NOTE: while this has already been done in `build_mali_mesh()`
+        #       we are using an updated version of the gridded dataset here,
+        #       which has had unit conversion and extrapolation done.
+        #       Also, it should be assessed if bilinear or
+        #       barycentric used here is preferred for this application.
+        #       Current thinking is they are both equally appropriate.
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
                 preprocessed_gridded_dataset,
@@ -131,10 +138,16 @@ class Mesh(Step):
 
         # Now perform bespoke interpolation of geometry and velocity data
         # from their respective sources
-        interp_ais_bedmachine(self, data_path, dst_scrip_file, nProcs,
-                              self.mesh_filename)
-        interp_ais_measures(self, data_path, dst_scrip_file, nProcs,
-                            self.mesh_filename)
+        interp_gridded2mali(self, bedmachine_dataset, dst_scrip_file, nProcs,
+                            self.mesh_filename, src_proj, variables="all")
+
+        # only interpolate a subset of MEaSUREs variables onto the MALI mesh
+        measures_vars = ['observedSurfaceVelocityX',
+                         'observedSurfaceVelocityY',
+                         'observedSurfaceVelocityUncertainty']
+        interp_gridded2mali(self, measures_dataset, dst_scrip_file, nProcs,
+                            self.mesh_filename, src_proj,
+                            variables=measures_vars)
 
         # perform some final cleanup details
         clean_up_after_interp(self.mesh_filename)
