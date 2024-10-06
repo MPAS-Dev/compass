@@ -19,10 +19,15 @@ dataset.
 combine
 ~~~~~~~
 The class :py:class:`compass.ocean.tests.utility.combine_topo.Combine`
-defines a step for combining the datasets above.  The GEBCO data is downsampled
-to a 1/80 degree latitude-longitude grid to make later remapping to MPAS meshes
-more manageable.  The BedMachine data is remapped to this same mesh and the
-two datasets are blended between 60 and 62 degrees south latitude.
+defines a step for combining the datasets above. The GEBCO and BedMachine data
+are remapped to a common global grid to make later remapping to MPAS meshes
+more manageable, and the two datasets are blended between 60 and 62 degrees
+south latitude. The GEBCO global dataset is divided into regional tiles prior
+to remapping to improve performance. Two common global target grid options are
+provided: a 1/80 degree latitude-longitude grid and an ne3000 cubed sphere
+grid. These target grid options are selectable via the ``target_grid`` argument
+in the :py:class:`compass.ocean.tests.utility.combine_topo.CombineTopo` test
+case class.
 
 cull_restarts
 -------------

@@ -90,10 +90,13 @@ class Combine(Step):
             self.resolution = section.getfloat('resolution_latlon')
             self.resolution_name = f'{self.resolution:.4f}_degree'
 
-        # Build combined filename
+        # Build output filenames
+        datestamp = datetime.now().strftime('%Y%m%d')
+        scrip_filename = f'{self.resolution_name}_{datestamp}.scrip.nc'
         combined_filename = '_'.join([
-            antarctic_filename.strip('.nc'), global_filename.strip('.nc'),
-            self.resolution_name, datetime.now().strftime('%Y%m%d.nc'),
+            antarctic_filename.strip('.nc'),
+            global_filename.strip('.nc'),
+            self.resolution_name, f'{datestamp}.nc',
         ])
 
         # Add bathymetry data input files
@@ -107,6 +110,7 @@ class Combine(Step):
             target=global_filename,
             database='bathymetry_database',
         )
+        self.add_output_file(filename=scrip_filename)
         self.add_output_file(filename=combined_filename)
 
         # Get ntasks and min_tasks
@@ -306,7 +310,7 @@ class Combine(Step):
         logger = self.logger
         logger.info(f'Create SCRIP file for {self.resolution_name} mesh')
 
-        out_filename = f'{self.resolution_name}.scrip.nc'
+        out_filename = self.outputs[0]
 
         # Build cubed sphere SCRIP file using tempestremap
         if self.target_grid == 'cubed_sphere':
@@ -352,7 +356,7 @@ class Combine(Step):
         args = [
             'ESMF_RegridWeightGen',
             '--source', in_filename,
-            '--destination', f'{self.resolution_name}.scrip.nc',
+            '--destination', self.outputs[0],
             '--weight', out_filename,
             '--method', method,
             '--netcdf4',
@@ -567,7 +571,7 @@ class Combine(Step):
             combined[field] = combined[field].where(valid, fill_val)
 
         # Save combined bathy to NetCDF
-        combined.to_netcdf(self.outputs[0])
+        combined.to_netcdf(self.outputs[1])
 
         logger.info('  Done.')
 
