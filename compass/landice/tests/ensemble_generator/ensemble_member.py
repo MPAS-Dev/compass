@@ -5,7 +5,6 @@ from importlib import resources
 
 import netCDF4
 import numpy as np
-import yaml
 
 from compass.io import symlink
 from compass.job import write_job_script
@@ -337,21 +336,19 @@ def _adjust_friction_exponent(orig_fric_exp, new_fric_exp, filename,
     extrapolate_variable(filename, 'muFriction', 'min')
 
     # now set exp in albany yaml file
-    with open(albany_input_yaml, 'r') as stream:
-        try:
-            loaded = yaml.safe_load(stream)
-        except yaml.YAMLError as exc:
-            print(exc)
-    # Change value
-    (loaded['ANONYMOUS']['Problem']['LandIce BCs']['BC 0']
-        ['Basal Friction Coefficient']
-        ['Power Exponent']) = float(new_fric_exp)
-    # write out again
-    with open(albany_input_yaml, 'w') as stream:
-        try:
-            yaml.dump(loaded, stream, default_flow_style=False)
-        except yaml.YAMLError as exc:
-            print(exc)
+    # using text replacement rather than yaml parser because yaml
+    # parser can sometimes mangle Albany yaml files due to formatting not
+    # being fully yaml-compliant.  It also writes out the yaml in an
+    # arbitrary ordering, which is inconvenient.
+    with open(albany_input_yaml, 'r') as file:
+        yamldata = file.readlines()
+    for linenum in range(len(yamldata)):
+        line = yamldata[linenum]
+        if 'Power Exponent' in line:
+            yamldata[linenum] = (line.split(':')[0] +
+                                 f': {float(new_fric_exp)}\n')
+    with open(albany_input_yaml, 'w') as file:
+        file.writelines(yamldata)
 
 
 def _adjust_basal_melt_params(filename, gamma0=None, deltaT=None):
