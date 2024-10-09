@@ -137,20 +137,14 @@ class Mesh(TestCase):
         if config is None:
             config = self.config
         config.add_from_package('compass.mesh', 'mesh.cfg', exception=True)
-        # a description of the bathymetry
         if 'remap_topography' in self.steps:
             config.add_from_package('compass.ocean.mesh',
                                     'remap_topography.cfg', exception=True)
 
-        if not self.high_res_topography:
-            filename = 'BedMachineAntarctica_v2_and_GEBCO_2022_0.05_degree_20220729.nc'  # noqa: E501
-            description = 'Bathymetry is from GEBCO 2022, combined with ' \
-                          'BedMachine Antarctica v2 around Antarctica.'
-            config.set('remap_topography', 'topo_filename', filename)
-            config.set('remap_topography', 'bathy_frac_var', 'ocean_mask')
-            config.set('remap_topography', 'description', description)
-            config.set('remap_topography', 'ntasks', '64')
-            config.set('remap_topography', 'min_tasks', '4')
+            if not self.high_res_topography:
+                config.add_from_package('compass.ocean.mesh',
+                                        'low_res_topography.cfg',
+                                        exception=True)
 
         if self.mesh_name.startswith('Kuroshio'):
             # add the config options for all kuroshio meshes
