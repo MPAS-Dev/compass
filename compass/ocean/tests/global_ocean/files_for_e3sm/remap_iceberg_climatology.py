@@ -5,7 +5,6 @@ import xarray as xr
 from mpas_tools.io import write_netcdf
 from pyremap import LatLonGridDescriptor, MpasCellMeshDescriptor, Remapper
 
-from compass.io import symlink
 from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step import (  # noqa: E501
     FilesForE3SMStep,
 )
@@ -34,7 +33,13 @@ class RemapIcebergClimatology(FilesForE3SMStep):
             target='Iceberg_Interannual_Merino.nc',
             database='initial_condition_database')
 
-        self.add_output_file(filename='Iceberg_Climatology_Merino_MPAS.nc')
+    def setup(self):
+        """
+        setup output files based on config options
+        """
+        super().setup()
+        if self.with_ice_shelf_cavities:
+            self.add_output_file(filename='Iceberg_Climatology_Merino_MPAS.nc')
 
     def run(self):
         """
@@ -48,12 +53,7 @@ class RemapIcebergClimatology(FilesForE3SMStep):
         ntasks = self.ntasks
 
         in_filename = 'Iceberg_Interannual_Merino.nc'
-
-        prefix = 'Iceberg_Climatology_Merino'
-        suffix = f'{self.mesh_short_name}.{self.creation_date}'
-
-        remapped_filename = f'{prefix}_MPAS.nc'
-        dest_filename = f'{prefix}.{suffix}.nc'
+        remapped_filename = 'Iceberg_Climatology_Merino_MPAS.nc'
 
         parallel_executable = config.get('parallel', 'parallel_executable')
 
@@ -68,10 +68,6 @@ class RemapIcebergClimatology(FilesForE3SMStep):
                             land_ice_mask_filename, remapped_filename,
                             logger=logger, mpi_tasks=ntasks,
                             parallel_executable=parallel_executable)
-
-        symlink(
-            os.path.abspath(remapped_filename),
-            f'{self.seaice_inputdata_dir}/{dest_filename}')
 
 
 def remap_iceberg_climo(in_filename, mesh_filename, mesh_name,
