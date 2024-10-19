@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
@@ -6,16 +8,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM) &mdash; compass latest documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=7ab3649f" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../_static/documentation_options.js?v=c6e86fd7"></script>
-        <script src="../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=c6e86fd7"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -34,9 +32,6 @@
           <a href="../index.html" class="icon icon-home">
             compass
           </a>
-              <div class="version">
-                latest
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -449,7 +444,8 @@ variables:
 </pre></div>
 </div>
 <p>You can get take a look at the map of resolution in <code class="docutils literal notranslate"><span class="pre">cellWidthGlobal.png</span></code>:</p>
-<a class="reference internal image-reference" href="../_images/qu60.png"><img alt="../_images/qu60.png" class="align-center" src="../_images/qu60.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="../_images/qu60.png"><img alt="../_images/qu60.png" class="align-center" src="../_images/qu60.png" style="width: 500px;" />
+</a>
 <p>Not very interesting so far but it will be informative once we start to
 vary the resolution later.</p>
 <p>If you want to view the mesh, you can copy the file
@@ -457,7 +453,8 @@ vary the resolution later.</p>
 open it in ParaView.  See
 <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/visualization.html#paraview-vtk-extractor">ParaView VTK Extractor</a>
 for more details on the tool used to extract the mesh VTK file.</p>
-<a class="reference internal image-reference" href="../_images/qu60_base_paraview.png"><img alt="../_images/qu60_base_paraview.png" class="align-center" src="../_images/qu60_base_paraview.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="../_images/qu60_base_paraview.png"><img alt="../_images/qu60_base_paraview.png" class="align-center" src="../_images/qu60_base_paraview.png" style="width: 500px;" />
+</a>
 <p>The <code class="docutils literal notranslate"><span class="pre">remap_topography</span></code> step will produce:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>../remap_topography/
 $<span class="w"> </span>ls
@@ -489,7 +486,8 @@ culled_mesh_vtk
 <p>Here, the main output is <code class="docutils literal notranslate"><span class="pre">culled_mesh.nc</span></code>.  Similarly to the base mesh, you
 can look at the the culled mesh in ParaVeiw by copying
 <code class="docutils literal notranslate"><span class="pre">culled_mesh_vtk/staticFieldsOnCells.vtp</span></code> to your laptop or desktop.</p>
-<a class="reference internal image-reference" href="../_images/qu60_culled_paraview.png"><img alt="../_images/qu60_culled_paraview.png" class="align-center" src="../_images/qu60_culled_paraview.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="../_images/qu60_culled_paraview.png"><img alt="../_images/qu60_culled_paraview.png" class="align-center" src="../_images/qu60_culled_paraview.png" style="width: 500px;" />
+</a>
 <p>Here, we have placed a white sphere inside the mesh so the land regions are
 easier to see.  After culling, the land just appears as holes in the mesh.</p>
 </section>
@@ -541,10 +539,12 @@ a different work directory name, e.g.:</p>
 </div>
 <p>Switch back to your other terminal to submit the job and look at the results.
 The map of resolution in <code class="docutils literal notranslate"><span class="pre">base_mesh/cellWidthGlobal.png</span></code> should look like:</p>
-<a class="reference internal image-reference" href="../_images/ec30to60.png"><img alt="../_images/ec30to60.png" class="align-center" src="../_images/ec30to60.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="../_images/ec30to60.png"><img alt="../_images/ec30to60.png" class="align-center" src="../_images/ec30to60.png" style="width: 500px;" />
+</a>
 <p>After culling, the mesh in <code class="docutils literal notranslate"><span class="pre">culled_mesh/culled_mesh_vtk/staticFieldsOnCells.vtp</span></code>
 should look like:</p>
-<a class="reference internal image-reference" href="../_images/ec30to60_culled_paraview.png"><img alt="../_images/ec30to60_culled_paraview.png" class="align-center" src="../_images/ec30to60_culled_paraview.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="../_images/ec30to60_culled_paraview.png"><img alt="../_images/ec30to60_culled_paraview.png" class="align-center" src="../_images/ec30to60_culled_paraview.png" style="width: 500px;" />
+</a>
 </section>
 <section id="adding-regions-of-higher-resolution">
 <span id="dev-tutorial-add-rrm-add-high-res"></span><h2>Adding regions of higher resolution<a class="headerlink" href="#adding-regions-of-higher-resolution" title="Link to this heading">¶</a></h2>
@@ -554,7 +554,8 @@ files.  The easiest way to create them is to go to <a class="reference external"
 There, you can find your way to the part of the globe you want to refine
 and use the polygon tool to make a shape that will act as the boundary for your
 high resolution region.</p>
-<a class="reference internal image-reference" href="../_images/geojson_io_south_atl.png"><img alt="../_images/geojson_io_south_atl.png" class="align-center" src="../_images/geojson_io_south_atl.png" style="width: 800px;" /></a>
+<a class="reference internal image-reference" href="../_images/geojson_io_south_atl.png"><img alt="../_images/geojson_io_south_atl.png" class="align-center" src="../_images/geojson_io_south_atl.png" style="width: 800px;" />
+</a>
 <p>In my case, I have defined a region across the south Atlantic ocean with its
 western side centered around the outlet of the Amazon river.  My plan is to
 define a region of moderately higher resolution across a fairly broad region
@@ -765,17 +766,20 @@ tail<span class="w"> </span>-f<span class="w"> </span>compass.o*
 </div>
 <p>The map of resolution in <code class="docutils literal notranslate"><span class="pre">base_mesh/cellWidthGlobal.png</span></code> should look
 like:</p>
-<a class="reference internal image-reference" href="../_images/atl20km.png"><img alt="../_images/atl20km.png" class="align-center" src="../_images/atl20km.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="../_images/atl20km.png"><img alt="../_images/atl20km.png" class="align-center" src="../_images/atl20km.png" style="width: 500px;" />
+</a>
 <p>After culling, the mesh in <code class="docutils literal notranslate"><span class="pre">culled_mesh/culled_mesh_vtk/staticFieldsOnCells.vtp</span></code>
 should look like:</p>
-<a class="reference internal image-reference" href="../_images/atl20km_culled_paraview.png"><img alt="../_images/atl20km_culled_paraview.png" class="align-center" src="../_images/atl20km_culled_paraview.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="../_images/atl20km_culled_paraview.png"><img alt="../_images/atl20km_culled_paraview.png" class="align-center" src="../_images/atl20km_culled_paraview.png" style="width: 500px;" />
+</a>
 </section>
 <section id="adding-a-very-high-resolution-region">
 <span id="dev-tutorial-add-rrm-add-very-high-res"></span><h2>Adding a very high resolution region<a class="headerlink" href="#adding-a-very-high-resolution-region" title="Link to this heading">¶</a></h2>
 <p>Using the same approach as in the previous section, we can define another
 region where we will increase the resolution to 10 km.</p>
 <p>I used geojson.io to create a region around the Amazon River delta:</p>
-<a class="reference internal image-reference" href="../_images/geojson_io_amazon_delta.png"><img alt="../_images/geojson_io_amazon_delta.png" class="align-center" src="../_images/geojson_io_amazon_delta.png" style="width: 800px;" /></a>
+<a class="reference internal image-reference" href="../_images/geojson_io_amazon_delta.png"><img alt="../_images/geojson_io_amazon_delta.png" class="align-center" src="../_images/geojson_io_amazon_delta.png" style="width: 800px;" />
+</a>
 <p>Then, I copied the code and pasted it into a file:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>compass/ocean/tests/global_ocean/mesh/yam10to60
 vim<span class="w"> </span>amazon_delta.geojson
@@ -911,10 +915,12 @@ tail<span class="w"> </span>-f<span class="w"> </span>compass.o*
 </div>
 <p>The map of resolution in <code class="docutils literal notranslate"><span class="pre">base_mesh/cellWidthGlobal.png</span></code> should look
 like:</p>
-<a class="reference internal image-reference" href="../_images/yam10to60.png"><img alt="../_images/yam10to60.png" class="align-center" src="../_images/yam10to60.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="../_images/yam10to60.png"><img alt="../_images/yam10to60.png" class="align-center" src="../_images/yam10to60.png" style="width: 500px;" />
+</a>
 <p>After culling, the mesh in <code class="docutils literal notranslate"><span class="pre">culled_mesh/culled_mesh_vtk/staticFieldsOnCells.vtp</span></code>
 should look like:</p>
-<a class="reference internal image-reference" href="../_images/yam10to60_culled_paraview.png"><img alt="../_images/yam10to60_culled_paraview.png" class="align-center" src="../_images/yam10to60_culled_paraview.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="../_images/yam10to60_culled_paraview.png"><img alt="../_images/yam10to60_culled_paraview.png" class="align-center" src="../_images/yam10to60_culled_paraview.png" style="width: 500px;" />
+</a>
 </section>
 <section id="adding-an-initial-condition-and-performance-test">
 <span id="dev-tutorial-add-rrm-add-init"></span><h2>Adding an initial condition and performance test<a class="headerlink" href="#adding-an-initial-condition-and-performance-test" title="Link to this heading">¶</a></h2>
@@ -1711,12 +1717,14 @@ run:</p>
 </div>
 <p>Then, transfer the contents of <code class="docutils literal notranslate"><span class="pre">vtk_files</span></code> to your laptop or desktop and open
 the file <code class="docutils literal notranslate"><span class="pre">fieldsOnCells.pvd</span></code> or <code class="docutils literal notranslate"><span class="pre">fieldsOnEdges.pvd</span></code> in ParaView.</p>
-<a class="reference internal image-reference" href="../_images/simulation_sst.png"><img alt="../_images/simulation_sst.png" class="align-center" src="../_images/simulation_sst.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="../_images/simulation_sst.png"><img alt="../_images/simulation_sst.png" class="align-center" src="../_images/simulation_sst.png" style="width: 500px;" />
+</a>
 <p>Note that <code class="docutils literal notranslate"><span class="pre">normalVelocity</span></code> is a pretty noisy field because its orientation
 differs by on the order of 60 degrees between adjacent edges.  It helps to take
 the absolute value as shown below, in which case it it can indicate where
 strong currents are present.</p>
-<a class="reference internal image-reference" href="../_images/simulation_norm_vel_mag.png"><img alt="../_images/simulation_norm_vel_mag.png" class="align-center" src="../_images/simulation_norm_vel_mag.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="../_images/simulation_norm_vel_mag.png"><img alt="../_images/simulation_norm_vel_mag.png" class="align-center" src="../_images/simulation_norm_vel_mag.png" style="width: 500px;" />
+</a>
 <p>Alternatively, you can add fields like <code class="docutils literal notranslate"><span class="pre">kineticEnergyCell</span></code> to the <code class="docutils literal notranslate"><span class="pre">output</span></code>
 stream in <code class="docutils literal notranslate"><span class="pre">streams.ocean</span></code> before running the step, and then you will have
 this field available to visualize.</p>
