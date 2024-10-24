@@ -40,7 +40,7 @@ class InitialState(Step):
         Whether the run includes a thin film below grounded ice
     """
     def __init__(self, test_case, resolution, experiment, vertical_coordinate,
-                 time_varying_forcing, thin_film_present):
+                 time_varying_forcing, thin_film_present, include_viz=False):
         """
         Create the step
 
@@ -65,6 +65,7 @@ class InitialState(Step):
             Whether the run includes a thin film below grounded ice
         """
         super().__init__(test_case=test_case, name='initial_state')
+        self.include_viz = include_viz
         self.resolution = resolution
         self.experiment = experiment
         self.vertical_coordinate = vertical_coordinate
@@ -88,7 +89,8 @@ class InitialState(Step):
         """
         ds, frac = self._compute_initial_condition()
         self._compute_restoring(ds, frac)
-        self._plot(ds)
+        if self.include_viz:
+            self._plot(ds)
 
     def _compute_initial_condition(self):
         config = self.config
