@@ -122,7 +122,7 @@ class InitialState(Step):
         if initial_condition == 'WOA23':
             self.add_input_file(
                 filename='woa23.nc',
-                target='woa23_decav_0.25_extrap.20230416.nc',
+                target='woa23_decav_0.25_jan_extrap.20230416.nc',
                 database='initial_condition_database')
         elif initial_condition == 'PHC':
             self.add_input_file(
