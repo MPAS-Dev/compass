@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from functools import partial
 from multiprocessing import Pool
 
@@ -48,7 +49,9 @@ class ExtrapStep(Step):
         """
         Determine the output filename
         """
-        self.woa_filename = 'woa23_decav_0.25_extrap.nc'
+        now = datetime.now()
+        datestring = now.strftime("%Y%m%d")
+        self.woa_filename = f'woa23_decav_0.25_jan_extrap.{datestring}.nc'
         self.add_output_file(self.woa_filename)
 
     def run(self):
@@ -162,7 +165,7 @@ class ExtrapStep(Step):
             out_filename = 'extrap_ocean/woa_extrap.nc'
         else:
             in_filename = 'extrap_land/woa_extrap_horiz.nc'
-            out_filename = 'woa23_decav_0.25_extrap.nc'
+            out_filename = self.woa_filename
 
         ds = xr.open_dataset(in_filename)
 
