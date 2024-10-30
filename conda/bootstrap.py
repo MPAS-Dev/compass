@@ -470,6 +470,8 @@ def build_spack_env(config, update_spack, machine, compiler, mpi,  # noqa: C901
                     tmpdir, logger):
 
     albany = config.get('deploy', 'albany')
+    albany_variants = config.get('deploy', 'albany_variants')
+    trilinos_variants = config.get('deploy', 'trilinos_variants')
     cmake = config.get('deploy', 'cmake')
     esmf = config.get('deploy', 'esmf')
     lapack = config.get('deploy', 'lapack')
@@ -478,9 +480,6 @@ def build_spack_env(config, update_spack, machine, compiler, mpi,  # noqa: C901
     petsc = config.get('deploy', 'petsc')
     scorpio = config.get('deploy', 'scorpio')
     parallelio = config.get('deploy', 'parallelio')
-
-    # for now, we'll assume Cuda is needed anytime GPUs are present
-    with_cuda = config.has_option('parallel', 'gpus_per_node')
 
     if config.has_option('deploy', 'spack_mirror'):
         spack_mirror = config.get('deploy', 'spack_mirror')
@@ -543,14 +542,8 @@ def build_spack_env(config, update_spack, machine, compiler, mpi,  # noqa: C901
             f'@{parallelio}+pnetcdf~timing"')
 
     if albany != 'None':
-        if with_cuda:
-            albany_cuda = '+cuda+uvm+sfad sfadsize=12'
-            trilinos_cuda = '+cuda+uvm'
-        else:
-            albany_cuda = ''
-            trilinos_cuda = ''
-        specs.append(f'"trilinos-for-albany@{albany}{trilinos_cuda}"')
-        specs.append(f'"albany@{albany}+mpas~py+unit_tests{albany_cuda}"')
+        specs.append(f'"trilinos-for-albany@{albany}{trilinos_variants}"')
+        specs.append(f'"albany@{albany}{albany_variants}"')
 
     yaml_template = f'{spack_template_path}/{machine}_{compiler}_{mpi}.yaml'
     if not os.path.exists(yaml_template):
