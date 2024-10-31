@@ -1,0 +1,130 @@
+<streams>
+
+<immutable_stream name="mesh"
+                  type="input"
+                  filename_template="input.nc"
+                  input_interval="initial_only"/>
+
+<immutable_stream name="input"
+                  type="input"
+                  filename_template="input.nc"
+                  input_interval="initial_only"/>
+
+<immutable_stream name="restart"
+                  type="input;output"
+                  filename_template="restarts/restart.$Y-$M-$D_$h.$m.$s.nc"
+                  filename_interval="output_interval"
+                  reference_time="0001-01-01_00:00:00"
+                  clobber_mode="truncate"
+                  input_interval="initial_only"
+                  output_interval="0005_00:00:00"/>
+
+<immutable_stream name="atmospheric_forcing"
+                  type="input"
+                  filename_template="atmospheric_forcing.nc"
+                  filename_interval="none"
+                  packages="timeVaryingAtmosphericForcingPKG"
+                  input_interval="none"/>
+
+
+<stream name="subgrid"
+        type="input"
+        filename_template="input.nc"
+        input_interval="initial_only">
+
+    <var name="subgridWetVolumeCellTable"/>
+    <var name="subgridWetVolumeEdgeTable"/>
+    <var name="subgridWetVolumeVertexTable"/>
+    <var name="subgridWetFractionCellTable"/>
+    <var name="subgridWetFractionEdgeTable"/>
+    <var name="subgridWetFractionVertexTable"/>
+    <var name="subgridSshCellTableRange"/>
+    <var name="subgridSshEdgeTableRange"/>
+    <var name="subgridSshVertexTableRange"/>
+    <var name="subgridEdgeBathymetryMean"/>
+    <var name="subgridVertexBathymetryMean"/>
+    <var name="subgridCellBathymetryMin"/>
+    <var name="subgridEdgeBathymetryMin"/>
+    <var name="subgridVertexBathymetryMin"/>
+    <var name="subgridLayerThicknessDebug"/>
+    <var name="ssh"/>
+</stream>
+
+<stream name="output"
+        type="output"
+        filename_template="output.nc"
+        filename_interval="01-00-00_00:00:00"
+        reference_time="0001-01-01_00:00:00"
+        clobber_mode="truncate"
+        output_interval="12:00:00">
+
+    <var name="xtime"/>
+    <var name="layerThickness"/>
+    <var name="atmosphericPressure"/>
+    <var name="windSpeedMagnitude"/>
+    <var name="ssh"/>
+    <var name="kineticEnergyCell"/>
+</stream>
+
+<stream name="pointLocationsInput"
+        type="input"
+        filename_template="points.nc"
+        input_interval="initial_only"
+        runtime_format="single_file"
+        mode="forward;analysis">
+
+    <var name="pointCellGlobalID"/>
+</stream>
+
+<stream name="timeSeriesStatsCustomOutput"
+        type="output"
+        filename_template="maxWaterLevel.nc"
+        filename_interval="00-01-00_00:00:00"
+        reference_time="01-01-01_00:00:00"
+        clobber_mode="truncate"
+        useMissingValMask="true"
+        precision="single"
+        io_type="pnetcdf"
+        packages="timeSeriesStatsCustomAMPKG"
+        output_interval="00-00-00_01:00:00">
+
+    <var name="lonCell"/>
+    <var name="latCell"/>
+    <var name="xtime"/>
+    <var name="ssh"/>
+    <var name="bottomDepth"/>
+</stream>
+
+<stream name="timeSeriesStatsCustomRestart"
+        type="input;output"
+        filename_template="restarts/mpaso.rst.am.timeSeriesStatsCustom.$Y-$M-$D_$S.nc"
+        filename_interval="output_interval"
+        reference_time="0001-01-01_00:00:00"
+        clobber_mode="truncate"
+        packages="timeSeriesStatsCustomAMPKG"
+        input_interval="initial_only"
+        output_interval="stream:restart:output_interval">
+
+</stream>
+
+<stream name="pointwiseStatsOutput"
+        type="output"
+        filename_template="pointwiseStats.nc"
+        filename_interval="01-00-00_00:00:00"
+        reference_time="0001-01-01_00:00:00"
+        clobber_mode="truncate"
+        precision="single"
+        packages="pointwiseStatsAMPKG"
+        output_interval="00:30:00"
+        mode="forward;analysis"
+        io_type="netcdf"
+        runtime_format="single_file">
+
+    <var name="pointCellGlobalID"/>
+    <var name="xtime"/>
+    <var name="latCell"/>
+    <var name="lonCell"/>
+    <var name="ssh"/>
+</stream>
+
+</streams>

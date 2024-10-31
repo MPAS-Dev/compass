@@ -23,7 +23,7 @@ class Init(TestCase):
     mesh : compass.ocean.tests.hurricane.mesh.Mesh
         The test case that creates the mesh used by this test case
     """
-    def __init__(self, test_group, mesh, storm, use_lts):
+    def __init__(self, test_group, mesh, storm, use_lts, wetdry):
         """
         Create the test case
 
@@ -49,13 +49,16 @@ class Init(TestCase):
             name = 'init_lts'
         elif use_lts == 'FB_LTS':
             name = 'init_fblts'
+        elif wetdry == 'subgrid':
+            name = 'init_subgrid'
         else:
             name = 'init'
         mesh_name = mesh.mesh_name
         subdir = os.path.join(mesh_name, name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
-        self.add_step(InitialState(test_case=self, mesh=mesh, use_lts=use_lts))
+        self.add_step(InitialState(test_case=self, mesh=mesh,
+                                   use_lts=use_lts, wetdry=wetdry))
         self.add_step(InterpolateAtmForcing(test_case=self, mesh=mesh,
                                             storm=storm))
 

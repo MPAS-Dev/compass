@@ -4,6 +4,10 @@ from compass.ocean.tests.hurricane.lts.mesh.lts_regions import LTSRegionsStep
 from compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2 import (
     DEQU120at30cr10rr2BaseMesh,
 )
+from compass.ocean.tests.hurricane.mesh.devr45to5rr1 import (
+    DEVR45to5rr1BaseMesh,
+)
+from compass.ocean.tests.tides.dem import CreatePixelFile
 from compass.testcase import TestCase
 
 
@@ -47,6 +51,17 @@ class Mesh(TestCase):
             base_mesh_step = DEQU120at30cr10rr2BaseMesh(
                 self, name=name, preserve_floodplain=True)
             mesh_lower = 'dequ120at30cr10rr2'
+        elif mesh_name == 'DEVR45to5rr1':
+            pixel_step = CreatePixelFile(self)
+            self.add_step(pixel_step)
+            base_mesh_step = DEVR45to5rr1BaseMesh(
+                self, pixel_step,
+                name='base_mesh', subdir=None,
+                elev_file='RTopo_2_0_4_GEBCO_v2023_30sec_pixel.nc',
+                spac_dhdx=0.125, spac_hmin=5, spac_hmax=45, spac_hbar=45,
+                ncell_nwav=80, ncell_nslp=4,
+                filt_sdev=0.5, filt_halo=50, filt_plev=0.325)
+            mesh_lower = 'devr45to5rr1'
         else:
             raise ValueError(f'Unexpected mesh name {mesh_name}')
 

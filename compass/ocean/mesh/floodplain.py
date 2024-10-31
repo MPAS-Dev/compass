@@ -58,6 +58,18 @@ class FloodplainMeshStep(QuasiUniformSphericalMeshStep):
         if self.preserve_floodplain:
             floodplain_elevation = config.getfloat('spherical_mesh',
                                                    'floodplain_elevation')
+            min_depth_outside_floodplain = config.getfloat(
+                'spherical_mesh',
+                'min_depth_outside_floodplain')
+            if config.has_option('spherical_mesh', 'floodplain_resolution'):
+                floodplain_resolution = config.getfloat(
+                    'spherical_mesh',
+                    'floodplain_resolution')
+            else:
+                floodplain_resolution = 1e10
+
             inject_preserve_floodplain(
                 mesh_file=mesh_filename,
-                floodplain_elevation=floodplain_elevation)
+                floodplain_elevation=floodplain_elevation,
+                floodplain_resolution=floodplain_resolution,
+                min_depth_outside_floodplain=min_depth_outside_floodplain)

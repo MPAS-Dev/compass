@@ -17,24 +17,29 @@ class Hurricane(TestGroup):
                          name='hurricane')
 
         storm = 'sandy'
-        mesh_name = 'DEQU120at30cr10rr2'
+        mesh_names = ['DEQU120at30cr10rr2', 'DEVR45to5rr1']
+        wetdry_options = ['off', 'standard', 'subgrid']
 
-        for use_lts in [False, 'LTS', 'FB_LTS']:
+        for mesh_name in mesh_names:
+            for wetdry in wetdry_options:
+                for use_lts in [False, 'LTS', 'FB_LTS']:
 
-            mesh = Mesh(test_group=self,
-                        mesh_name=mesh_name,
-                        use_lts=use_lts)
-            self.add_test_case(mesh)
+                    mesh = Mesh(test_group=self,
+                                mesh_name=mesh_name,
+                                use_lts=use_lts)
+                    self.add_test_case(mesh)
 
-            init = Init(test_group=self,
-                        mesh=mesh,
-                        storm=storm,
-                        use_lts=use_lts)
-            self.add_test_case(init)
+                    init = Init(test_group=self,
+                                mesh=mesh,
+                                storm=storm,
+                                use_lts=use_lts,
+                                wetdry=wetdry)
+                    self.add_test_case(init)
 
-            forward = Forward(test_group=self,
-                              mesh=mesh,
-                              storm=storm,
-                              init=init,
-                              use_lts=use_lts)
-            self.add_test_case(forward)
+                    forward = Forward(test_group=self,
+                                      mesh=mesh,
+                                      storm=storm,
+                                      init=init,
+                                      use_lts=use_lts,
+                                      wetdry=wetdry)
+                    self.add_test_case(forward)

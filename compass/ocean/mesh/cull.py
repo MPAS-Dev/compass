@@ -14,7 +14,11 @@ from mpas_tools.mesh.conversion import cull
 from mpas_tools.mesh.creation.sort_mesh import sort_mesh
 from mpas_tools.mesh.cull import cull_dataset, map_culled_to_base
 from mpas_tools.mesh.mask import compute_mpas_flood_fill_mask
-from mpas_tools.ocean import inject_bathymetry
+from mpas_tools.ocean import (
+    find_floodplain,
+    inject_bathymetry,
+    limit_bathymetry_outside_floodplain,
+)
 from mpas_tools.ocean.coastline_alteration import (
     add_critical_land_blockages,
     add_land_locked_cells_to_mask,
@@ -201,7 +205,25 @@ class CullMeshStep(Step):
                   sweep_count=sweep_count)
 
         if do_inject_bathymetry:
-            inject_bathymetry(mesh_file='culled_mesh.nc')
+            mesh_file = 'culled_mesh.nc'
+            inject_bathymetry(mesh_file=mesh_file)
+
+            if preserve_floodplain:
+                floodplain_elevation = config.getfloat('spherical_mesh',
+                                                       'floodplain_elevation')
+                floodplain_resolution = config.getfloat(
+                    'spherical_mesh',
+                    'floodplain_resolution')
+                min_depth_outside_floodplain = config.getfloat(
+                    'spherical_mesh',
+                    'min_depth_outside_floodplain')
+                floodplain = find_floodplain(mesh_file,
+                                             floodplain_elevation,
+                                             floodplain_resolution)
+                limit_bathymetry_outside_floodplain(
+                    mesh_file,
+                    floodplain,
+                    min_depth_outside_floodplain)
 
 
 def cull_mesh(with_cavities=False, with_critical_passages=False,

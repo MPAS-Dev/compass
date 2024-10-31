@@ -18,7 +18,7 @@ class Forward(TestCase):
     init : compass.ocean.tests.hurricane.init.Init
         The test case that produces the initial condition for this run
     """
-    def __init__(self, test_group, mesh, storm, init, use_lts):
+    def __init__(self, test_group, mesh, storm, init, use_lts, wetdry):
         """
         Create test case
 
@@ -45,6 +45,8 @@ class Forward(TestCase):
             name = f'{storm}_lts'
         elif use_lts == 'FB_LTS':
             name = f'{storm}_fblts'
+        elif wetdry == 'subgrid':
+            name = f'{storm}_subgrid'
         else:
             name = storm
         subdir = os.path.join(mesh_name, name)
@@ -56,7 +58,8 @@ class Forward(TestCase):
         step = ForwardStep(test_case=self,
                            mesh=mesh,
                            init=init,
-                           use_lts=use_lts)
+                           use_lts=use_lts,
+                           wetdry=wetdry)
 
         step.add_output_file(filename='output.nc')
         step.add_output_file(filename='pointwiseStats.nc')

@@ -18,7 +18,7 @@ class ForwardStep(Step):
     use_lts: bool
         Whether local time-stepping is used
     """
-    def __init__(self, test_case, mesh, init, use_lts,
+    def __init__(self, test_case, mesh, init, use_lts, wetdry,
                  name='forward', subdir=None):
         """
         Create a new step
@@ -75,8 +75,20 @@ class ForwardStep(Step):
             mesh_package = mesh.package
             self.add_namelist_file(mesh_package, 'namelist.ocean')
 
-        initial_state_target = \
-            f'{init.path}/initial_state/ocean.nc'
+        if wetdry == 'subgrid':
+            self.add_namelist_file(
+                'compass.ocean.tests.hurricane.forward',
+                'namelist.ocean.subgrid')
+            self.add_streams_file(
+                'compass.ocean.tests.hurricane.forward',
+                'streams.ocean_subgrid')
+
+        if wetdry == 'subgrid':
+            initial_state_target = \
+                f'{init.path}/initial_state/ocean_subgrid2.nc'
+        else:
+            initial_state_target = \
+                f'{init.path}/initial_state/ocean.nc'
         self.add_input_file(filename='input.nc',
                             work_dir_target=initial_state_target)
         self.add_input_file(
