@@ -36,16 +36,12 @@ class ExtrapStep(Step):
                          min_cpus_per_task=1, openmp_threads=1)
 
         self.add_input_file(
-            filename='woa_surface_salinity_monthly.nc',
-            target='../salinity_restoring/woa_surface_salinity_monthly.nc')
+            filename='woa.nc',
+            target='../combine/woa_combined.nc')
 
-#        self.add_input_file(
-#            filename='woa.nc',
-#            target='../combine/woa_combined.nc')
-
-#        self.add_input_file(
-#            filename='topography.nc',
-#            target='../remap_topography/topography_remapped.nc')
+        self.add_input_file(
+            filename='topography.nc',
+            target='../remap_topography/topography_remapped.nc')
 
         self.woa_filename = None
 

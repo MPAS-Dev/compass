@@ -29,8 +29,8 @@ class RemapSeaSurfaceSalinityRestoring(FilesForE3SMStep):
                          ntasks=512, min_tasks=1)
 
         self.add_input_file(
-            filename='woa_decav_0.25_sss_monthly_extrap.20241031.nc',
-            target='woa_decav_0.25_sss_monthly_extrap.20241031.nc',
+            filename='woa23_decav_0.25_sss_monthly_extrap.20241031.nc',
+            target='woa23_decav_0.25_sss_monthly_extrap.20241031.nc',
             database='initial_condition_database')
 
         self.add_output_file(filename='sss.WOA23_monthlyClimatology.nc')

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import numpy as np
 import xarray as xr
 from scipy.signal import convolve2d
@@ -7,8 +9,8 @@ from compass.step import Step
 
 class ExtrapSalin(Step):
     """
-    Extrapolate WOA 2023 monthly sea surface salinity data into missing ocean 
-	regions, including ice cavities and coasts
+    Extrapolate WOA 2023 monthly sea surface salinity data into missing ocean
+    regions, including ice cavities and coasts
 
     Attributes
     ----------
@@ -22,7 +24,8 @@ class ExtrapSalin(Step):
 
         Parameters
         ----------
-        test_case : compass.ocean.tests.utility.extrap_woa.ExtrapWoa
+        test_case : compass.ocean.tests.utility.create_salin_restoring.
+        CreateSalinRestoring
             The test case this step belongs to
 
         """
@@ -39,7 +42,13 @@ class ExtrapSalin(Step):
         """
         Determine the output filename
         """
-        self.woa_filename = 'woa_surface_salinity_monthly_extrap.nc'
+
+        now = datetime.now()
+
+        datestring = now.strftime("%Y%m%d")
+
+        self.woa_filename = f'woa23_decav_0.25_sss_monthly_extrap.\
+                              {datestring}.nc'
         self.add_output_file(self.woa_filename)
 
     def run(self):
@@ -48,9 +57,10 @@ class ExtrapSalin(Step):
         cavities.
         """
         # extrapolate horizontally using the ocean mask
-        _extrap_level(self.woa_filename)
+        _extrap(self.woa_filename)
 
-def _extrap_level(out_filename):
+
+def _extrap(out_filename):
 
     in_filename = 'woa_surface_salinity_monthly.nc'
     ds = xr.open_dataset(in_filename)
@@ -69,12 +79,12 @@ def _extrap_level(out_filename):
     lon_no_halo = list(range(2, nlon + 2))
 
     for i in range(12):
-        valid = np.isfinite(field[i,:,:])
+        valid = np.isfinite(field[i, :, :])
         orig_mask = valid
         prev_fill_count = 0
         while True:
             valid_weight_sum = _extrap_with_halo(valid, kernel, valid,
-                                               lon_with_halo, lon_no_halo)
+                                                 lon_with_halo, lon_no_halo)
 
             new_valid = valid_weight_sum > threshold
 
@@ -87,9 +97,10 @@ def _extrap_level(out_filename):
                 # no change so we're done
                 break
 
-            field_extrap = _extrap_with_halo(field[i,:,:], kernel, valid,
-                                           lon_with_halo, lon_no_halo)
-            field[i,fill_mask] = field_extrap[fill_mask]/valid_weight_sum[fill_mask]
+            field_extrap = _extrap_with_halo(field[i, :, :], kernel, valid,
+                                             lon_with_halo, lon_no_halo)
+            field[i, fill_mask] = field_extrap[fill_mask] / \
+                valid_weight_sum[fill_mask]
 
             valid = new_valid
             prev_fill_count = fill_count
@@ -100,6 +111,7 @@ def _extrap_level(out_filename):
     ds['SALT'].attrs = attrs
 
     ds.to_netcdf(out_filename)
+
 
 def _extrap_with_halo(field, kernel, valid, lon_with_halo, lon_no_halo):
     field = field.copy()
