@@ -1,5 +1,4 @@
 from compass.ocean.tests.utility.extrap_woa.combine import Combine
-from compass.ocean.tests.utility.extrap_woa.salinity_restoring import Salinity
 from compass.ocean.tests.utility.extrap_woa.extrap_step import ExtrapStep
 from compass.ocean.tests.utility.extrap_woa.remap_topography import (
     RemapTopography,
@@ -25,7 +24,6 @@ class ExtrapWoa(TestCase):
         """
         super().__init__(test_group=test_group, name='extrap_woa')
 
-        self.add_step(Salinity(test_case=self))
         self.add_step(Combine(test_case=self))
         self.add_step(RemapTopography(test_case=self))
         self.add_step(ExtrapStep(test_case=self))

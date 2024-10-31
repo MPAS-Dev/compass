@@ -1,4 +1,5 @@
 import numpy as np
+from mpas_tools.io import write_netcdf
 import xarray as xr
 
 from compass.step import Step
@@ -49,7 +50,8 @@ class Salinity(Step):
                       nov='woa23_decav91C0_s11_04.nc',
                       dec='woa23_decav91C0_s12_04.nc')
 
-        for month in ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'octo', 'nov', 'dec']:
+        for month in ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep',
+			          'octo', 'nov', 'dec']:
             woa_filename = woa_files[month]
             woa_url = f'{base_url}/{woa_dir}/{woa_filename}'
 
@@ -72,7 +74,8 @@ class Salinity(Step):
             ds_out[f'{var}_bnds'] = ds_jan[f'{var}_bnds']
 
         slices = list()
-        for month in ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'octo', 'nov', 'dec']: 
+        for month in ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep',
+                      'octo', 'nov', 'dec']:
             ds = xr.open_dataset(
                     f'woa_salin_{month}.nc',
                     decode_times=False).isel(depth=0).drop_vars('depth')
@@ -84,14 +87,26 @@ class Salinity(Step):
         #Change names of variables and alter attributes
         ds_out = ds_out.rename_dims({'time':'Time'})
         ds_out = ds_out.rename_vars({'s_an':'SALT'})
-#        ds_out.SALT.attrs['coordinates'] = "Time lat lon"
+        #ds_out.SALT.attrs['coordinates'] = "Time lat lon"
         ds_out = ds_out.drop_vars('time')
 
-		# Create a time index 
-        time_var = np.arange(0.5,12,1)
+        # Create a time index
+        time_var = np.arange(1,12.1,1)
         ds_out = ds_out.assign(Time=xr.DataArray(time_var, dims=['Time']))
+
+        # Create a xtime array
+        xtime_list = []
+        for i in range(1,13):
+            xtime_string = f"0000-{i:02d}-15_00:00:00"
+            xtime_list.append(xtime_string)
+        xtime_out = np.array(xtime_list,dtype='S64')
+
+        ds_out = ds_out.assign(xtime=xr.DataArray(xtime_out, dims=['Time']))
+
+        #Change attributes to be consistent with PHC restoring file
         ds_out.Time.attrs['long_name'] = "Month Index"
         ds_out.Time.attrs['units'] = "month"
         ds_out.Time.attrs['axis'] = "T"
-        ds_out.to_netcdf('woa_surface_salinity_monthly.nc', unlimited_dims=["Time"])
 
+        #Save file and change time dimension to unlimited
+        write_netcdf(ds_out,'woa_surface_salinity_monthly.nc')

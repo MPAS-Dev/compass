@@ -29,11 +29,11 @@ class RemapSeaSurfaceSalinityRestoring(FilesForE3SMStep):
                          ntasks=512, min_tasks=1)
 
         self.add_input_file(
-            filename='PHC2_salx.2004_08_03.filled_double_precision.nc',
-            target='PHC2_salx.2004_08_03.filled_double_precision.nc',
+            filename='woa_decav_0.25_sss_monthly_extrap.20241031.nc',
+            target='woa_decav_0.25_sss_monthly_extrap.20241031.nc',
             database='initial_condition_database')
 
-        self.add_output_file(filename='sss.PHC2_monthlyClimatology.nc')
+        self.add_output_file(filename='sss.WOA23_monthlyClimatology.nc')
 
     def run(self):
         """
@@ -44,9 +44,9 @@ class RemapSeaSurfaceSalinityRestoring(FilesForE3SMStep):
         config = self.config
         ntasks = self.ntasks
 
-        in_filename = 'PHC2_salx.2004_08_03.filled_double_precision.nc'
+        in_filename = 'WOA23_monthly_sfc_salin.20241030.nc'
 
-        prefix = 'sss.PHC2_monthlyClimatology'
+        prefix = 'sss.WOA23_monthlyClimatology'
         suffix = f'{self.mesh_short_name}.{self.creation_date}'
 
         remapped_filename = f'{prefix}.nc'
