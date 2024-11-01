@@ -47,8 +47,8 @@ class ExtrapSalin(Step):
 
         datestring = now.strftime("%Y%m%d")
 
-        self.woa_filename = f'woa23_decav_0.25_sss_monthly_extrap.\
-                              {datestring}.nc'
+        self.woa_filename = f'woa23_decav_0.25_sss_monthly_extrap.' \
+                            f'{datestring}.nc'
         self.add_output_file(self.woa_filename)
 
     def run(self):
