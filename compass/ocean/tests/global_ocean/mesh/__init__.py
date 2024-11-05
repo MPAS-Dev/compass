@@ -1,3 +1,5 @@
+import os
+
 from compass.mesh.spherical import (
     IcosahedralMeshStep,
     QuasiUniformSphericalMeshStep,
@@ -15,6 +17,9 @@ from compass.ocean.tests.global_ocean.mesh.qu import (
     IcosMeshFromConfigStep,
     QUMeshFromConfigStep,
 )
+from compass.ocean.tests.global_ocean.mesh.remap_mali_topography import (
+    RemapMaliTopography,
+)
 from compass.ocean.tests.global_ocean.mesh.rrs6to18 import RRS6to18BaseMesh
 from compass.ocean.tests.global_ocean.mesh.so12to30 import SO12to30BaseMesh
 from compass.ocean.tests.global_ocean.mesh.wc14 import WC14BaseMesh
@@ -31,6 +36,13 @@ class Mesh(TestCase):
 
     Attributes
     ----------
+    mesh_name : str
+        The name of the mesh
+
+    mesh_subdir : str
+        The subdirectory within the test group for all test cases with this
+        mesh and topography
+
     package : str
         The python package for the mesh
 
@@ -43,8 +55,14 @@ class Mesh(TestCase):
     high_res_topography : bool
         Whether to remap a high resolution topography data set.  A lower
         res data set is used for low resolution meshes.
+
+    mali_ais_topo : str
+        Short name for the MALI dataset to use for Antarctic Ice Sheet
+        topography
     """
-    def __init__(self, test_group, mesh_name, high_res_topography):
+
+    def __init__(self, test_group, mesh_name,  # noqa: C901
+                 high_res_topography, mali_ais_topo=None):
         """
         Create test case for creating a global MPAS-Ocean mesh
 
@@ -59,9 +77,20 @@ class Mesh(TestCase):
         high_res_topography : bool
             Whether to remap a high resolution topography data set.  A lower
             res data set is used for low resolution meshes.
+
+        mali_ais_topo : str, optional
+            Short name for the MALI dataset to use for Antarctic Ice Sheet
+            topography
         """
         name = 'mesh'
-        subdir = f'{mesh_name}/{name}'
+        if mali_ais_topo is None:
+            self.mesh_subdir = mesh_name
+        else:
+            self.mesh_subdir = os.path.join(mesh_name,
+                                            f'MALI_topo_{mali_ais_topo}')
+
+        subdir = os.path.join(self.mesh_subdir, name)
+
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
         with_ice_shelf_cavities = 'wISC' in mesh_name
@@ -75,6 +104,7 @@ class Mesh(TestCase):
         self.mesh_config_filename = f'{mesh_lower}.cfg'
 
         self.mesh_name = mesh_name
+        self.mali_ais_topo = mali_ais_topo
         self.with_ice_shelf_cavities = with_ice_shelf_cavities
         self.high_res_topography = high_res_topography
 
@@ -117,9 +147,15 @@ class Mesh(TestCase):
 
         self.add_step(base_mesh_step)
 
-        remap_step = RemapTopography(test_case=self,
-                                     base_mesh_step=base_mesh_step,
-                                     mesh_name=mesh_name)
+        if mali_ais_topo is None:
+            remap_step = RemapTopography(test_case=self,
+                                         base_mesh_step=base_mesh_step,
+                                         mesh_name=mesh_name)
+        else:
+            remap_step = RemapMaliTopography(
+                test_case=self, base_mesh_step=base_mesh_step,
+                mesh_name=mesh_name, mali_ais_topo=mali_ais_topo)
+
         self.add_step(remap_step)
 
         self.add_step(CullMeshStep(
@@ -145,6 +181,13 @@ class Mesh(TestCase):
                 config.add_from_package('compass.ocean.mesh',
                                         'low_res_topography.cfg',
                                         exception=True)
+
+        if self.mali_ais_topo is not None:
+            package = 'compass.ocean.tests.global_ocean.mesh.' \
+                      'remap_mali_topography'
+            config.add_from_package(package,
+                                    f'{self.mali_ais_topo.lower()}.cfg',
+                                    exception=True)
 
         if self.mesh_name.startswith('Kuroshio'):
             # add the config options for all kuroshio meshes

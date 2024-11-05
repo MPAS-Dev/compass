@@ -53,10 +53,15 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'compass'
-copyright = u'Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;' \
-            u'Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR).'
-author = u'Xylar Asay-Davis, Matt Hoffman, Doug Jacobsen, Mark Petersen, ' \
-         u'Philip Wolfram, Luke Van Roekel, Tong Zhang'
+copyright = u'Copyright (c) 2013-2024, Triad National Security, LLC ' \
+            u'(Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the ' \
+            u'University Corporation for Atmospheric Research (UCAR).'
+author = u'Xylar Asay-Davis, Alice Barthel, Carolyn Begeman, Pete Bosler, ' \
+         u'Riley Brady, Steven Brus, Sara Calandrini, Zhendong Cao, ' \
+         u'Giacomo Capodaglio, Max Carlson, Althea Denlinger, ' \
+         u'Yaris Eidenbenz, Darren Engwirda, Holly Han, Jeremy Lilly, ' \
+         u'Mauro Perego, Mark Petersen, Cameron Smith, Yohei Takano, ' \
+         u'Irena Vankova, Luke Van Roekel, Philip Wolfram, Tong Zhang'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -96,14 +101,7 @@ todo_include_todos = False
 # a list of builtin themes.
 #
 
-# on_rtd is whether we are on readthedocs.org, this line of code grabbed from
-# docs.readthedocs.org
-on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
-
-if not on_rtd:  # only import and set the theme if we're building docs locally
-    import sphinx_rtd_theme
-    html_theme = 'sphinx_rtd_theme'
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
