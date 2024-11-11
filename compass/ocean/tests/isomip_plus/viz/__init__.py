@@ -106,6 +106,20 @@ class Viz(Step):
         plotter.plot_horiz_series(delSurfacePressure,
                                   'delSurfacePressure', 'delSurfacePressure',
                                   True, vmin=1e5, vmax=1e7, cmap_scale='log')
+        # Cannot currently plot because it is on edges
+        for t in range(dsOut.sizes['Time']):
+            fig = plt.figure()
+            sc = plt.scatter(
+                dsOut.xEdge, dsOut.yEdge, 10,
+                dsOut.wettingVelocityFactor.isel(nVertLevels=0, Time=t),
+                vmin=0, vmax=1, cmap='cmo.thermal')
+            current_cmap = sc.get_cmap()
+            current_cmap.set_under('k')
+            current_cmap.set_over('r')
+            plt.colorbar()
+            fig.gca().set_aspect('equal')
+            plt.savefig(f'wettingVelocityFactor_{t:02g}.png')
+            plt.close(fig)
 
         if 'tidal' in expt:
             delssh = dsOut.ssh - dsOut.ssh[0, :]
