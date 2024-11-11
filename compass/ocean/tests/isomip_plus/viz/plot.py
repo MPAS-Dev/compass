@@ -84,6 +84,8 @@ class TimeSeriesPlotter(object):
         mean thermal driving, mean friction velocity
         """
 
+        if 'timeMonthly_avg_landIceFreshwaterFlux' not in self.ds.keys():
+            return
         rho_fw = 1000.
         secPerYear = 365 * 24 * 60 * 60
 
@@ -351,6 +353,8 @@ class MoviePlotter(object):
         vmin, vmax : float, optional
             The minimum and maximum values for the colorbar
         """
+        if 'timeMonthly_avg_landIceFreshwaterFlux' not in self.ds.keys():
+            return
         rho_fw = 1000.
         secPerYear = 365 * 24 * 60 * 60
 
@@ -369,6 +373,8 @@ class MoviePlotter(object):
         ice
         """
 
+        if 'timeMonthly_avg_landIceFreshwaterFlux' not in self.ds.keys():
+            return
         self.plot_horiz_series(self.ds.timeMonthly_avg_landIceHeatFlux,
                                'heat flux from ocean to ice-ocean interface',
                                prefix='oceanHeatFlux',
