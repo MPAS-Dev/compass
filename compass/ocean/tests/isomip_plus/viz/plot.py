@@ -84,6 +84,8 @@ class TimeSeriesPlotter(object):
         mean thermal driving, mean friction velocity
         """
 
+        if 'timeMonthly_avg_landIceFreshwaterFlux' not in self.ds.keys():
+            return
         rho_fw = 1000.
         secPerYear = 365 * 24 * 60 * 60
 
@@ -239,10 +241,12 @@ class MoviePlotter(object):
         self.sectionY = sectionY
         self.showProgress = showProgress
 
+        if 'Time' in dsMesh.dims:
+            dsMesh = dsMesh.isel(Time=0)
         self.dsMesh = dsMesh
         self.ds = ds
 
-        landIceMask = self.dsMesh.landIceMask.isel(Time=0) > 0
+        landIceMask = self.dsMesh.landIceMask > 0
         self.oceanMask = self.dsMesh.maxLevelCell - 1 >= 0
         self.cavityMask = numpy.logical_and(self.oceanMask, landIceMask)
 
@@ -349,6 +353,8 @@ class MoviePlotter(object):
         vmin, vmax : float, optional
             The minimum and maximum values for the colorbar
         """
+        if 'timeMonthly_avg_landIceFreshwaterFlux' not in self.ds.keys():
+            return
         rho_fw = 1000.
         secPerYear = 365 * 24 * 60 * 60
 
@@ -367,6 +373,8 @@ class MoviePlotter(object):
         ice
         """
 
+        if 'timeMonthly_avg_landIceFreshwaterFlux' not in self.ds.keys():
+            return
         self.plot_horiz_series(self.ds.timeMonthly_avg_landIceHeatFlux,
                                'heat flux from ocean to ice-ocean interface',
                                prefix='oceanHeatFlux',
@@ -508,7 +516,9 @@ class MoviePlotter(object):
             The time indices at which to plot. If not provided, set to all.
         """
 
-        nTime = self.ds.sizes['Time']
+        if 'Time' not in da.dims:
+            da = da.expand_dims(dim='Time', axis=0)
+        nTime = da.sizes['Time']
         if self.showProgress:
             widgets = ['plotting {}: '.format(nameInTitle),
                        progressbar.Percentage(), ' ',

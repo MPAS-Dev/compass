@@ -99,6 +99,27 @@ class Viz(Step):
                                   True, vmin=min_column_thickness + 1e-10,
                                   vmax=700, cmap_set_under='r',
                                   cmap_scale='log')
+        plotter.plot_horiz_series(dsOut.surfacePressure,
+                                  'surfacePressure', 'surfacePressure',
+                                  True, vmin=1e5, vmax=1e7, cmap_scale='log')
+        delSurfacePressure = dsOut.landIcePressure - dsOut.surfacePressure
+        plotter.plot_horiz_series(delSurfacePressure,
+                                  'delSurfacePressure', 'delSurfacePressure',
+                                  True, vmin=1e5, vmax=1e7, cmap_scale='log')
+        # Cannot currently plot because it is on edges
+        for t in range(dsOut.sizes['Time']):
+            fig = plt.figure()
+            sc = plt.scatter(
+                dsOut.xEdge, dsOut.yEdge, 10,
+                dsOut.wettingVelocityFactor.isel(nVertLevels=0, Time=t),
+                vmin=0, vmax=1, cmap='cmo.thermal')
+            current_cmap = sc.get_cmap()
+            current_cmap.set_under('k')
+            current_cmap.set_over('r')
+            plt.colorbar()
+            fig.gca().set_aspect('equal')
+            plt.savefig(f'wettingVelocityFactor_{t:02g}.png')
+            plt.close(fig)
 
         if 'tidal' in expt:
             delssh = dsOut.ssh - dsOut.ssh[0, :]
@@ -111,10 +132,10 @@ class Viz(Step):
         wct_thin = wct[:, idx_thin]
         wct_mean = wct_thin.mean(dim='nCells').values
         time = dsOut.daysSinceStartOfSim.values
-        fig = plt.figure()
+        plt.figure()
         plt.plot(time, wct_mean, '.')
-        fig.set_xlabel('Time (days)')
-        fig.set_ylabel('Mean thickness of thin film (m)')
+        plt.xlabel('Time (days)')
+        plt.ylabel('Mean thickness of thin film (m)')
         plt.savefig('wct_thin_t.png')
         plt.close()
 
