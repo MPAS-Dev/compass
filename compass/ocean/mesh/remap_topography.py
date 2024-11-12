@@ -145,11 +145,19 @@ class RemapTopography(Step):
         logger = self.logger
         logger.info('Partition SCRIP file')
 
+        # Convert to 64-bit NetCDF
+        args = [
+            'ncks', '-5',
+            in_filename,
+            in_filename.replace('.nc', '.64bit.nc'),
+        ]
+        check_call(args, logger)
+
         # Convert source SCRIP to mbtempest
         args = [
             'mbconvert', '-B',
-            in_filename,
-            in_filename.replace('.nc', '.h5m'),
+            in_filename.replace('.nc', '.64bit.nc'),
+            in_filename.replace('.nc', '.64bit.h5m'),
         ]
         check_call(args, logger)
 
@@ -157,8 +165,8 @@ class RemapTopography(Step):
         args = [
             'mbpart', f'{self.ntasks}',
             '-z', 'RCB',
-            in_filename.replace('.nc', '.h5m'),
-            in_filename.replace('.nc', f'.p{self.ntasks}.h5m'),
+            in_filename.replace('.nc', '.64bit.h5m'),
+            in_filename.replace('.nc', f'.64bit.p{self.ntasks}.h5m'),
         ]
         check_call(args, logger)
 
@@ -173,8 +181,8 @@ class RemapTopography(Step):
 
         args = [
             'mbtempest', '--type', '5',
-            '--load', f'source.scrip.p{self.ntasks}.h5m',
-            '--load', f'target.scrip.p{self.ntasks}.h5m',
+            '--load', f'source.scrip.64bit.p{self.ntasks}.h5m',
+            '--load', f'target.scrip.64bit.p{self.ntasks}.h5m',
             '--file', f'mapfv_source_to_target.nomask_{self.ntasks}_gnom.nc',
             '--intx', 'moab_intx_source_target.h5m',
             '--weights', '--verbose', '--gnomonic', '--boxeps', '1e-9',
