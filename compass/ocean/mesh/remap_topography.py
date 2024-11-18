@@ -107,10 +107,19 @@ class RemapTopography(Step):
         """
         Run this step of the test case
         """
+        config = self.config
+        weight_generator = config.get('remap_topography', 'weight_generator')
+
         self._create_target_scrip_file()
-        self._partition_scrip_file('source.scrip.nc')
-        self._partition_scrip_file('target.scrip.nc')
-        self._create_weights()
+        if weight_generator == 'tempest':
+            self._partition_scrip_file('source.scrip.nc')
+            self._partition_scrip_file('target.scrip.nc')
+            self._create_weights_tempest()
+        elif weight_generator == 'esmf':
+            self._create_weights_esmf()
+        else:
+            msg = f'Unsupported weight generator function {weight_generator}'
+            raise ValueError(msg)
         self._remap_to_target()
         self._modify_remapped_bathymetry()
 
@@ -145,7 +154,7 @@ class RemapTopography(Step):
         logger = self.logger
         logger.info('Partition SCRIP file')
 
-        # Convert to 64-bit NetCDF
+        # Convert to NetCDF3 64-bit
         args = [
             'ncks', '-5',
             in_filename,
@@ -172,21 +181,54 @@ class RemapTopography(Step):
 
         logger.info('  Done.')
 
-    def _create_weights(self):
+    def _create_weights_tempest(self):
         """
-        Create mapping weights file using mbtempest
+        Create mapping weights file using TempestRemap
         """
         logger = self.logger
         logger.info('Create weights file')
+
+        config = self.config
+        method = config.get('remap_topography', 'method')
+        if method != 'conserve':
+            raise ValueError(f'Unsupported method {method} for TempestRemap')
 
         args = [
             'mbtempest', '--type', '5',
             '--load', f'source.scrip.64bit.p{self.ntasks}.h5m',
             '--load', f'target.scrip.64bit.p{self.ntasks}.h5m',
-            '--file', f'mapfv_source_to_target.nomask_{self.ntasks}_gnom.nc',
-            '--intx', 'moab_intx_source_target.h5m',
-            '--weights', '--verbose', '--gnomonic', '--boxeps', '1e-9',
+            '--file', f'map_source_to_target_{method}.nc',
+            '--weights', '--gnomonic',
+            '--boxeps', '1e-9',
         ]
+
+        run_command(
+            args, self.cpus_per_task, self.ntasks,
+            self.openmp_threads, self.config, self.logger,
+        )
+
+        logger.info('  Done.')
+
+    def _create_weights_esmf(self):
+        """
+        Create mapping weights file using ESMF_RegridWeightGen
+        """
+        logger = self.logger
+        logger.info('Create weights file')
+
+        config = self.config
+        method = config.get('remap_topography', 'method')
+
+        args = [
+            'ESMF_RegridWeightGen',
+            '--source', 'source.scrip.nc',
+            '--destination', 'target.scrip.nc',
+            '--weight', f'map_source_to_target_{method}.nc',
+            '--method', method,
+            '--netcdf4',
+            '--ignore_unmapped',
+        ]
+
         run_command(
             args, self.cpus_per_task, self.ntasks,
             self.openmp_threads, self.config, self.logger,
@@ -201,13 +243,16 @@ class RemapTopography(Step):
         logger = self.logger
         logger.info('Remap to target')
 
+        config = self.config
+        method = config.get('remap_topography', 'method')
+
         # Build command args
         # Unused options:
         # -P mpas, handles some MPAS-specific index ordering, CF, etc...
         # -C climatology, basically bypasses fill values
         args = [
             'ncremap',
-            '-m', f'mapfv_source_to_target.nomask_{self.ntasks}_gnom.nc',
+            '-m', f'map_source_to_target_{method}.nc',
             '--vrb=1',
             'topography.nc', 'topography_ncremap.nc',
         ]
