@@ -61,10 +61,10 @@ class CalculateWaveDrag(Step):
             work_dir_target=f'{mesh_path}/culled_mesh.nc')
 
         bathy_path = mesh.steps['pixel'].path
+        pixel_file = f'{bathy_path}/RTopo_2_0_4_GEBCO_v2023_30sec_pixel.nc'
         self.add_input_file(
             filename=self.bathy_file,
-            work_dir_target=f'{bathy_path}/'
-                            'RTopo_2_0_4_GEBCO_v2023_30sec_pixel.nc')
+            work_dir_target=pixel_file)
 
         self.output_file = 'topographic_wave_drag.nc'
         self.add_output_file(filename=self.output_file)
@@ -186,18 +186,26 @@ class CalculateWaveDrag(Step):
 
         # Fix some nn issues
         print("Fixing nans in data")
-        while (np.sum(np.isnan(stddev)) > 0):
+        i = 0
+        while ((np.sum(np.isnan(stddev)) > 0) and (i < 10)):
             print("stddev", np.sum(np.isnan(stddev)))
             stddev = self.fix_nans(stddev, md)
-        while (np.sum(np.isnan(bed_slope_edges)) > 0):
+            i = i + 1
+        i = 0
+        while ((np.sum(np.isnan(bed_slope_edges)) > 0) and (i < 10)):
             print("bed_slope_edges", np.sum(np.isnan(stddev)))
             bed_slope_edges = self.fix_nans(bed_slope_edges, md)
-        while (np.sum(np.isnan(xGradEdges)) > 0):
+            i = i + 1
+        i = 0
+        while ((np.sum(np.isnan(xGradEdges)) > 0) and (i < 10)):
             print("xGradEdges", np.sum(np.isnan(stddev)))
             xGradEdges = self.fix_nans(xGradEdges, md)
-        while (np.sum(np.isnan(yGradEdges)) > 0):
+            i = i + 1
+        i = 0
+        while ((np.sum(np.isnan(yGradEdges)) > 0) and (i < 10)):
             print("yGradEdges", np.sum(np.isnan(stddev)))
             yGradEdge = self.fix_nans(yGradEdges, md)
+            i = i + 1
 
         # Remove any 0s from the bottom Depth
         # bottomDepthEdges[bottomDepthEdges==0.0] = 0.01
