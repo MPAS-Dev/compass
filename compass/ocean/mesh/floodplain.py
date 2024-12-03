@@ -1,5 +1,7 @@
+# import netCDF4 as nc4
 from mpas_tools.ocean import inject_bathymetry, inject_preserve_floodplain
 
+# import compass.ocean.tests.tides.dem.dem_remap as dem_remap
 from compass.mesh.spherical import QuasiUniformSphericalMeshStep
 
 
@@ -44,6 +46,12 @@ class FloodplainMeshStep(QuasiUniformSphericalMeshStep):
                             target='SRTM15_plus_earth_relief_15s.nc',
                             database='bathymetry_database')
 
+        # pixel_path = test_case.steps['pixel'].path
+        # pixel_file = f'{pixel_path}/RTopo_2_0_4_GEBCO_v2023_30sec_pixel.nc'
+        # self.add_input_file(
+        #     filename='bathy.nc',
+        #     work_dir_target=pixel_file)
+
     def run(self):
         """
         Run this step of the test case
@@ -55,6 +63,19 @@ class FloodplainMeshStep(QuasiUniformSphericalMeshStep):
         mesh_filename = config.get('spherical_mesh', 'mpas_mesh_filename')
 
         inject_bathymetry(mesh_file=mesh_filename)
+        # dem_remap.dem_remap('bathy.nc', mesh_filename)
+
+        # Create new NetCDF variables in mesh file, if necessary
+        # nc_mesh = nc4.Dataset(mesh_filename, 'r+')
+        # nc_vars = nc_mesh.variables.keys()
+        # if 'bottomDepthObserved' not in nc_vars:
+        #     nc_mesh.createVariable('bottomDepthObserved', 'f8', ('nCells'))
+
+        # Write to mesh file
+        # nc_mesh.variables['bottomDepthObserved'][:] = \
+        #     nc_mesh.variables['bed_elevation'][:]
+        # nc_mesh.close()
+
         if self.preserve_floodplain:
             floodplain_elevation = config.getfloat('spherical_mesh',
                                                    'floodplain_elevation')
