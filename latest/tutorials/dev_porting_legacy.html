@@ -785,15 +785,15 @@ for this step.  In legacy COMPASS, the XML for defining the run scrip was:</p>
 <p>First, we make a doubly periodic mesh.  Rather than hard-coding the mesh size,
 we get the relevant config options.  Legacy COMPASS used the command-line
 tool <code class="docutils literal notranslate"><span class="pre">planar_hex</span></code>, but <code class="docutils literal notranslate"><span class="pre">compass</span></code> will typically use the
-<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.planar_hex.make_planar_hex_mesh.html#mpas_tools.planar_hex.make_planar_hex_mesh" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.planar_hex.make_planar_hex_mesh()</span></code></a> function instead to
+<code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.planar_hex.make_planar_hex_mesh()</span></code> function instead to
 avoid the complexity of <code class="docutils literal notranslate"><span class="pre">subprocess</span></code> calls and unnecessary file I/O.  The
-result is an <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2024.10.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a> containing the mesh.</p>
+result is an <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2024.11.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a> containing the mesh.</p>
 <p>Second, we make sure any land cells are culled by calling the cell culler.
 In legacy COMPASS, this is done with the command-line tool <code class="docutils literal notranslate"><span class="pre">MpasCellCuller.x</span></code>
 but in <code class="docutils literal notranslate"><span class="pre">compass</span></code>, the same can be achieved with
-<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.mesh.conversion.cull.html#mpas_tools.mesh.conversion.cull" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.mesh.conversion.cull()</span></code></a> (which is a wrapper around a
+<code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.mesh.conversion.cull()</span></code> (which is a wrapper around a
 <code class="docutils literal notranslate"><span class="pre">subprocess`</span></code> call to <code class="docutils literal notranslate"><span class="pre">MpasCellCuller.x</span></code>).  <code class="docutils literal notranslate"><span class="pre">cull()</span></code> has
-<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2024.10.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a> objects as its input an return value, and also
+<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2024.11.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a> objects as its input an return value, and also
 takes a “logger” where it can write output (sometimes a log file and sometimes
 directly to the terminal via stdout).  You should always pass <code class="docutils literal notranslate"><span class="pre">self.logger</span></code>
 so <code class="docutils literal notranslate"><span class="pre">compass</span></code> can figure out whether a file or stdout is the right place for
@@ -805,7 +805,7 @@ the mesh is doubly periodic, so the call to the cell culler is probably
 not needed, but it has been retained because many test cases <em>will</em> need
 it.</p>
 </div>
-<p>Third, we call <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.mesh.conversion.convert.html#mpas_tools.mesh.conversion.convert" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.mesh.conversion.convert()</span></code></a> to ensure that the
+<p>Third, we call <code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.mesh.conversion.convert()</span></code> to ensure that the
 mesh conforms to the MPAS conventions.  In the legacy COMPASS version, the
 equivalent is achieved with a call to <code class="docutils literal notranslate"><span class="pre">MpasMeshConverter.x</span></code>.  Then, we write
 out the mesh to a file <code class="docutils literal notranslate"><span class="pre">mesh.nc</span></code>.</p>
