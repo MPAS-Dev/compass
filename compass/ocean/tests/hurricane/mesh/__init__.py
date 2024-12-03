@@ -42,6 +42,9 @@ class Mesh(TestCase):
         subdir = '{}/{}'.format(mesh_name, name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
+        pixel_step = CreatePixelFile(self)
+        self.add_step(pixel_step)
+
         name = 'base_mesh'
         if mesh_name == 'DEQU120at30cr10rr2':
             base_mesh_step = DEQU120at30cr10rr2BaseMesh(
@@ -52,8 +55,6 @@ class Mesh(TestCase):
                 self, name=name, preserve_floodplain=True)
             mesh_lower = 'dequ120at30cr10rr2'
         elif mesh_name == 'DEVR45to5rr1':
-            pixel_step = CreatePixelFile(self)
-            self.add_step(pixel_step)
             base_mesh_step = DEVR45to5rr1BaseMesh(
                 self, pixel_step,
                 name='base_mesh', subdir=None,
