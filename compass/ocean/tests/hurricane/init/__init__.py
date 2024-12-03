@@ -8,9 +8,10 @@ from compass.ocean.tests.hurricane.init.initial_state import InitialState
 from compass.ocean.tests.hurricane.init.interpolate_atm_forcing import (
     InterpolateAtmForcing,
 )
-from compass.ocean.tests.hurricane.lts.init.topographic_wave_drag import (
-    ComputeTopographicWaveDrag,
+from compass.ocean.tests.tides.init.calculate_wave_drag import (
+    CalculateWaveDrag,
 )
+from compass.ocean.tests.tides.init.remap_bathymetry import RemapBathymetry
 from compass.testcase import TestCase
 
 
@@ -57,15 +58,12 @@ class Init(TestCase):
         subdir = os.path.join(mesh_name, name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
+        self.add_step(CalculateWaveDrag(test_case=self, mesh=mesh))
+        self.add_step(RemapBathymetry(test_case=self, mesh=mesh))
         self.add_step(InitialState(test_case=self, mesh=mesh,
                                    use_lts=use_lts, wetdry=wetdry))
         self.add_step(InterpolateAtmForcing(test_case=self, mesh=mesh,
                                             storm=storm))
-
-        if use_lts:
-            topo = ComputeTopographicWaveDrag(test_case=self, mesh=mesh)
-            self.add_step(topo)
-
         self.add_step(CreatePointstatsFile(test_case=self, mesh=mesh,
                                            storm=storm))
 
