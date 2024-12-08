@@ -32,3 +32,11 @@ ice-shelf cavities and coastal regions, then into land, grounded ice and below
 bathymetry.  It is provided mainly for developers to update for use on
 future datasets and is not intended for users, so we do not provide full
 documentation here.
+
+create_salin_restoring
+----------------------
+The ``ocean/utility/create_salin_restoring`` test case is used to download monthly 
+average `WOA 2023 <https://www.ncei.noaa.gov/products/world-ocean-atlas>`_ data, 
+extracts the surface layer and extrapolates into ice-shelf cavities and across
+continents.  It is provided mainly for developers to update the salinity restoring
+data and is not intended for users, so we do not provide full documentation here.
