@@ -372,7 +372,7 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
     # that distance.
     if dist_to_edge is not None:
         mask = np.logical_and(
-            thk == 0.0, dist_to_edge > (3. * cull_distance))
+            thk == 0.0, dist_to_edge > (35. * np.abs(cull_distance)))
         logger.info('Setting cell_width in outer regions to max_spac '
                     f'for {mask.sum()} cells')
         cell_width[mask] = max_spac
