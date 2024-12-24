@@ -66,6 +66,13 @@ def _extrap(out_filename):
     ds = xr.open_dataset(in_filename)
 
     field = ds.SALT.values.copy()
+    lat = ds.lat.values
+
+    # create a latitude based mask array for smoothing
+    arr = np.zeros_like(field[0,:,:])
+    inds = np.where(lat >= 45.0)[0]
+    arr[inds,:] = 1
+    smooth_mask = np.array(arr,dtype="bool")
 
     # a small averaging kernel
     x = np.arange(-1, 2)
@@ -104,6 +111,13 @@ def _extrap(out_filename):
 
             valid = new_valid
             prev_fill_count = fill_count
+
+        for j in range(30):
+            valid_weight_sum = _extrap_with_halo(smooth_mask, kernel, smooth_mask,
+                                                 lon_with_halo, lon_no_halo)
+            field_extrap = _extrap_with_halo(field[i,:,:], kernel, smooth_mask,
+                                              lon_with_halo, lon_no_halo)
+            field[i,smooth_mask] = field_extrap[smooth_mask] / valid_weight_sum[smooth_mask]
 
     attrs = ds.SALT.attrs
     dims = ds.SALT.dims
