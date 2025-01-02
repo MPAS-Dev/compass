@@ -794,10 +794,10 @@ class MoviePlotter(object):
             return
 
         if oceanDomain:
-            localPatches = copy.copy(self.oceanPatches)
+            localPatches = copy.deepcopy(self.oceanPatches)
             localPatches.set_array(field[self.oceanMask])
         else:
-            localPatches = copy.copy(self.cavityPatches)
+            localPatches = copy.deepcopy(self.cavityPatches)
             localPatches.set_array(field[self.cavityMask])
 
         if cmap is not None:
