@@ -954,10 +954,10 @@
             <span class="k">return</span>
 
         <span class="k">if</span> <span class="n">oceanDomain</span><span class="p">:</span>
-            <span class="n">localPatches</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oceanPatches</span><span class="p">)</span>
+            <span class="n">localPatches</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oceanPatches</span><span class="p">)</span>
             <span class="n">localPatches</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="n">field</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">oceanMask</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">localPatches</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cavityPatches</span><span class="p">)</span>
+            <span class="n">localPatches</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cavityPatches</span><span class="p">)</span>
             <span class="n">localPatches</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="n">field</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">cavityMask</span><span class="p">])</span>
 
         <span class="k">if</span> <span class="n">cmap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
