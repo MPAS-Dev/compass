@@ -82,23 +82,6 @@ class Combine(Step):
         antarctic_filename = section.get('antarctic_filename')
         global_filename = section.get('global_filename')
 
-        # Parse resolution and assign resolution attributes
-        if self.target_grid == 'cubed_sphere':
-            self.resolution = section.getint('resolution_cubedsphere')
-            self.resolution_name = f'ne{self.resolution}'
-        elif self.target_grid == 'lat_lon':
-            self.resolution = section.getfloat('resolution_latlon')
-            self.resolution_name = f'{self.resolution:.4f}_degree'
-
-        # Build output filenames
-        datestamp = datetime.now().strftime('%Y%m%d')
-        scrip_filename = f'{self.resolution_name}_{datestamp}.scrip.nc'
-        combined_filename = '_'.join([
-            antarctic_filename.strip('.nc'),
-            global_filename.strip('.nc'),
-            self.resolution_name, f'{datestamp}.nc',
-        ])
-
         # Add bathymetry data input files
         self.add_input_file(
             filename=antarctic_filename,
@@ -110,8 +93,7 @@ class Combine(Step):
             target=global_filename,
             database='bathymetry_database',
         )
-        self.add_output_file(filename=scrip_filename)
-        self.add_output_file(filename=combined_filename)
+        self._set_res_and_outputs(update=False)
 
         # Get ntasks and min_tasks
         self.ntasks = section.getint('ntasks')
@@ -136,6 +118,7 @@ class Combine(Step):
         """
         Run this step of the test case
         """
+        self._set_res_and_outputs(update=True)
         self._modify_gebco()
         self._modify_bedmachine()
         self._create_target_scrip_file()
@@ -143,6 +126,53 @@ class Combine(Step):
         self._remap_bedmachine()
         self._combine()
         self._cleanup()
+
+    def _set_res_and_outputs(self, update):
+        """
+        Set or update the resolution and output filenames based on config
+        options
+        """
+        config = self.config
+        section = config['combine_topo']
+
+        # Get input filenames and resolution
+        antarctic_filename = section.get('antarctic_filename')
+        global_filename = section.get('global_filename')
+        # Parse resolution and update resolution attributes
+        if self.target_grid == 'cubed_sphere':
+            resolution = section.getint('resolution_cubedsphere')
+            if update and resolution == self.resolution:
+                # nothing to do
+                return
+            self.resolution = resolution
+            self.resolution_name = f'ne{resolution}'
+        elif self.target_grid == 'lat_lon':
+            resolution = section.getfloat('resolution_latlon')
+            if update and resolution == self.resolution:
+                # nothing to do
+                return
+            self.resolution = resolution
+            self.resolution_name = f'{resolution:.4f}_degree'
+
+        # Start over with empty outputs
+        self.outputs = []
+
+        # Build output filenames
+        datestamp = datetime.now().strftime('%Y%m%d')
+        scrip_filename = f'{self.resolution_name}_{datestamp}.scrip.nc'
+        combined_filename = '_'.join([
+            antarctic_filename.strip('.nc'),
+            global_filename.strip('.nc'),
+            self.resolution_name, f'{datestamp}.nc',
+        ])
+        self.add_output_file(filename=scrip_filename)
+        self.add_output_file(filename=combined_filename)
+
+        if update:
+            # We need to set absolute paths
+            step_dir = self.work_dir
+            self.outputs = [os.path.abspath(os.path.join(step_dir, filename))
+                            for filename in self.outputs]
 
     def _modify_gebco(self):
         """
