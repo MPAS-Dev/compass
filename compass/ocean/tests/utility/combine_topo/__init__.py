@@ -2,6 +2,7 @@ import os
 from datetime import datetime
 from glob import glob
 
+import netCDF4
 import numpy as np
 import pyproj
 import xarray as xr
@@ -200,7 +201,7 @@ class Combine(Step):
         gebco.lon.attrs['bounds'] = 'lon_bnds'
 
         # Write modified GEBCO to netCDF
-        gebco.to_netcdf(out_filename)
+        _write_netcdf_with_fill_values(gebco, out_filename)
         logger.info('  Done.')
 
     def _modify_bedmachine(self):
@@ -240,7 +241,7 @@ class Combine(Step):
         bedmachine = bedmachine[varlist]
 
         # Write modified BedMachine to netCDF
-        bedmachine.to_netcdf(out_filename)
+        _write_netcdf_with_fill_values(bedmachine, out_filename)
         logger.info('  Done.')
 
     def _create_gebco_tile(self, lon_tile, lat_tile):
@@ -301,7 +302,7 @@ class Combine(Step):
             tile.lat.values[-1] = 90.  # Correct north pole
 
         # Write tile to netCDF
-        tile.to_netcdf(out_filename)
+        _write_netcdf_with_fill_values(tile, out_filename)
 
     def _create_bedmachine_scrip_file(self):
         """
@@ -504,7 +505,7 @@ class Combine(Step):
         # Write tile to netCDF
         out_filename = f'{global_name}_{self.resolution_name}.nc'
         logger.info(f'    writing {out_filename}')
-        gebco_remapped.to_netcdf(out_filename)
+        _write_netcdf_with_fill_values(gebco_remapped, out_filename)
 
         logger.info('  Done.')
 
@@ -601,7 +602,7 @@ class Combine(Step):
             combined[field] = combined[field].where(valid, fill_val)
 
         # Save combined bathy to NetCDF
-        combined.to_netcdf(self.outputs[1])
+        _write_netcdf_with_fill_values(combined, self.outputs[1])
 
         logger.info('  Done.')
 
@@ -617,3 +618,23 @@ class Combine(Step):
             os.remove(f)
 
         logger.info('  Done.')
+
+
+def _write_netcdf_with_fill_values(ds, filename):
+    """ Write an xarray Dataset with NetCDF4 fill values where needed """
+    fill_values = netCDF4.default_fillvals
+    encoding = {}
+    vars = list(ds.data_vars.keys()) + list(ds.coords.keys())
+    for var_name in vars:
+        # If there's already a fill value attribute, drop it
+        ds[var_name].attrs.pop("_FillValue", None)
+        is_numeric = np.issubdtype(ds[var_name].dtype, np.number)
+        if is_numeric:
+            dtype = ds[var_name].dtype
+            for fill_type in fill_values:
+                if dtype == np.dtype(fill_type):
+                    encoding[var_name] = {"_FillValue": fill_values[fill_type]}
+                    break
+        else:
+            encoding[var_name] = {"_FillValue": None}
+    ds.to_netcdf(filename, encoding=encoding)
