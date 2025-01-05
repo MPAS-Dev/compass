@@ -463,7 +463,7 @@ class Combine(Step):
         lon_tiles = section.getint('lon_tiles')
 
         # Make tiles directory
-        os.mkdir('tiles')
+        os.makedirs('tiles', exist_ok=True)
 
         # Initialize combined xarray.Dataset
         gebco_remapped = xr.Dataset()
