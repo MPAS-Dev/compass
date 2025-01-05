@@ -232,11 +232,12 @@ class Combine(Step):
         bedmachine['ice_mask'] = ice_mask
         bedmachine['grounded_mask'] = grounded_mask
         bedmachine['ocean_mask'] = ocean_mask
+        bedmachine['valid_mask'] = xr.ones_like(ocean_mask)
 
         # Remove all other variables
         varlist = [
             'bathymetry', 'ice_draft', 'thickness',
-            'ice_mask', 'grounded_mask', 'ocean_mask',
+            'ice_mask', 'grounded_mask', 'ocean_mask', 'valid_mask'
         ]
         bedmachine = bedmachine[varlist]
 
@@ -414,15 +415,11 @@ class Combine(Step):
         default_dims : `bool`, default `True`,
             if `False` specify non-default source dims y,x
         """
-        config = self.config
-        section = config['combine_topo']
-        renorm_thresh = section.getfloat('renorm_thresh')
-
         # Build command args
         args = [
             'ncremap',
             '-m', mapping_filename,
-            '--vrb=1', f'--renormalize={renorm_thresh}',
+            '--vrb=1'
         ]
 
         # Add non-default gridding args
@@ -547,6 +544,10 @@ class Combine(Step):
         logger = self.logger
         logger.info('Combine BedMachineAntarctica and GEBCO')
 
+        config = self.config
+        section = config['combine_topo']
+        renorm_thresh = section.getfloat('renorm_thresh')
+
         # Parse config
         config = self.config
         section = config['combine_topo']
@@ -564,6 +565,19 @@ class Combine(Step):
 
         # Load and mask BedMachine
         bedmachine = xr.open_dataset(antarctic_fname)
+
+        # renormalize variables
+        denom = bedmachine.valid_mask
+        renorm_mask = denom >= renorm_thresh
+        denom = xr.where(renorm_mask, denom, 1.0)
+        vars = ['bathymetry', 'thickness', 'ice_draft', 'ice_mask',
+                'grounded_mask', 'ocean_mask']
+
+        for var in vars:
+            attrs = bedmachine[var].attrs
+            bedmachine[var] = (bedmachine[var] / denom).where(renorm_mask)
+            bedmachine[var].attrs = attrs
+
         bed_bathy = bedmachine.bathymetry
         bed_bathy = bed_bathy.where(bed_bathy.notnull(), 0.)
         bed_bathy = bed_bathy.where(bed_bathy < 0., 0.)
