@@ -156,7 +156,7 @@ class RemapTopography(Step):
 
         # Convert to NetCDF3 64-bit
         args = [
-            'ncks', '-5',
+            'ncks', '-O', '-5',
             in_filename,
             in_filename.replace('.nc', '.64bit.nc'),
         ]
