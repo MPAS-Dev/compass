@@ -28,7 +28,8 @@ class CombineTopo(TestCase):
         ----------
         test_group : compass.ocean.tests.utility.Utility
             The test group that this test case belongs to
-        target_grid : `str`, either "lat_lon" or "cubed_sphere"
+        target_grid : str
+            either "lat_lon" or "cubed_sphere"
         """
 
         subdir = os.path.join('combine_topo', target_grid)
@@ -47,9 +48,12 @@ class Combine(Step):
 
     Attributes
     ----------
-    target_grid : `str`, either "lat_lon" or "cubed_sphere"
-    resolution : `float` degrees, or `int` NExxx
-    resolution_name: `str`, either x.xxxx_degrees or NExxx
+    target_grid : str
+        either "lat_lon" or "cubed_sphere"
+    resolution : float
+        degrees (float) or face subdivisions (int)
+    resolution_name: str
+        either x.xxxx_degrees or NExxx
     """
 
     def __init__(self, test_case, target_grid):
@@ -60,7 +64,8 @@ class Combine(Step):
         ----------
         test_case : compass.ocean.tests.utility.combine_topo.CombineTopo
             The test case this step belongs to
-        target_grid : `str`, either "lat_lon" or "cubed_sphere"
+        target_grid : str
+            either "lat_lon" or "cubed_sphere"
         """
         super().__init__(
             test_case, name='combine', ntasks=None, min_tasks=None,
@@ -251,8 +256,10 @@ class Combine(Step):
 
         Parameters
         ----------
-        lon_tile : `int`, tile number along lon dim
-        lat_tile : `int`, tile number along lat dim
+        lon_tile : int
+            tile number along lon dim
+        lat_tile : int
+            tile number along lat dim
         """
         logger = self.logger
 
@@ -378,8 +385,10 @@ class Combine(Step):
 
         Parameters
         ----------
-        in_filename : `str`, source file name
-        out_filename : `str`, weights file name
+        in_filename : str
+            source file name
+        out_filename : str
+            weights file name
         """
         config = self.config
         method = config.get('combine_topo', 'method')
@@ -409,11 +418,14 @@ class Combine(Step):
 
         Parameters
         ----------
-        in_filename : `str`, source file name
-        mapping_filename : `str`, weights file name
-        out_filename : `str`, remapped file name
-        default_dims : `bool`, default `True`,
-            if `False` specify non-default source dims y,x
+        in_filename : str
+            source file name
+        mapping_filename : str
+            weights file name
+        out_filename : str
+            remapped file name
+        default_dims : bool
+            default True, if False specify non-default source dims y,x
         """
         # Build command args
         args = [
