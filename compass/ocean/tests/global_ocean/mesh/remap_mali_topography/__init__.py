@@ -63,7 +63,7 @@ class RemapMaliTopography(RemapTopography):
         mali_filename = self.config.get('remap_mali_topography',
                                         'mali_filename')
         self.add_input_file(
-            filename='mali_topography.nc',
+            filename='mali_topography_orig.nc',
             target=mali_filename,
             database='mali_topo')
 
@@ -76,33 +76,40 @@ class RemapMaliTopography(RemapTopography):
         self._combine_topo()
 
     def _remap_mali_topo(self):
-        config = self.config
-        logger = self.logger
-
         in_mesh_name = self.mali_ais_topo
-        in_descriptor = MpasCellMeshDescriptor(fileName='mali_topography.nc',
-                                               meshName=in_mesh_name)
+        in_descriptor = MpasCellMeshDescriptor(
+            fileName='mali_topography_orig.nc',
+            meshName=in_mesh_name)
         in_descriptor.format = 'NETCDF3_64BIT'
-        in_descriptor.to_scrip('mali_scrip.nc')
+        in_descriptor.to_scrip('mali.scrip.nc')
+        self._partition_scrip_file('mali.scrip.nc')
 
         out_mesh_name = self.mesh_name
-        out_descriptor = MpasCellMeshDescriptor(fileName='base_mesh.nc',
-                                                meshName=out_mesh_name)
+        out_descriptor = MpasCellMeshDescriptor(
+            fileName='base_mesh.nc',
+            meshName=out_mesh_name)
         out_descriptor.format = 'NETCDF3_64BIT'
-        out_descriptor.to_scrip('mpaso_scrip.nc')
+        out_descriptor.to_scrip('mpaso.scrip.nc')
+        self._partition_scrip_file('mpaso.scrip.nc')
 
-        args = ['mbtempest',
-                '--type', '5',
-                '--load', 'mali_scrip.nc',
-                '--load', 'mpaso_scrip.nc',
-                '--intx', 'moab_intx_mali_mpaso.h5m',
-                '--rrmgrids']
+        map_filename = \
+            f'map_{in_mesh_name}_to_{out_mesh_name}_mbtraave.nc'
 
-        run_command(args=args, cpus_per_task=self.cpus_per_task,
-                    ntasks=self.ntasks, openmp_threads=self.openmp_threads,
-                    config=config, logger=logger)
+        self._create_mali_to_mpaso_weights(map_filename)
 
-        ds_mali = xr.open_dataset('mali_topography.nc')
+        self._modify_mali_topo()
+
+        self._remap_mali_to_mpaso(map_filename)
+
+    def _modify_mali_topo(self):
+        """
+        Modify MALI topography to have desired fields and names
+        """
+        logger = self.logger
+        config = self.config
+        logger.info('Modifying MALI topography fields and names')
+
+        ds_mali = xr.open_dataset('mali_topography_orig.nc')
         if 'Time' in ds_mali.dims:
             ds_mali = ds_mali.isel(Time=0)
         bed = ds_mali.bedTopography
@@ -142,57 +149,49 @@ class RemapMaliTopography(RemapTopography):
         ds_in['oceanFrac'] = ocean_frac
         ds_in['maliFrac'] = mali_frac
 
-        mbtempest_args = {'conserve': ['--order', '1',
-                                       '--order', '1',
-                                       '--fvmethod', 'none',
-                                       '--rrmgrids'],
-                          'bilinear': ['--order', '1',
-                                       '--order', '1',
-                                       '--fvmethod', 'bilin']}
+        write_netcdf(ds_in, 'mali_topography_mod.nc')
 
-        suffix = {'conserve': 'mbtraave',
-                  'bilinear': 'mbtrbilin'}
+        logger.info('  Done.')
 
-        method = 'conserve'
-        mapping_file_name = \
-            f'map_{in_mesh_name}_to_{out_mesh_name}_{suffix[method]}.nc'
+    def _create_mali_to_mpaso_weights(self, map_filename):
+        """
+        Create mapping weights file using TempestRemap
+        """
+        logger = self.logger
+        logger.info('Create weights file')
 
-        # split the parallel executable into constituents in case it
-        # includes flags
-        args = ['mbtempest',
-                '--type', '5',
-                '--load', 'mali_scrip.nc',
-                '--load', 'mpaso_scrip.nc',
-                '--intx', 'moab_intx_mali_mpaso.h5m',
-                '--weights',
-                '--method', 'fv',
-                '--method', 'fv',
-                '--file', mapping_file_name] + mbtempest_args[method]
+        args = [
+            'mbtempest', '--type', '5',
+            '--load', f'mali.scrip.p{self.ntasks}.h5m',
+            '--load', f'mpaso.scrip.p{self.ntasks}.h5m',
+            '--file', map_filename,
+            '--weights', '--gnomonic',
+            '--boxeps', '1e-9',
+        ]
 
-        if method == 'bilinear':
-            # unhappy in parallel for now
-            check_call(args, logger)
-        else:
+        run_command(
+            args, self.cpus_per_task, self.ntasks,
+            self.openmp_threads, self.config, self.logger,
+        )
 
-            run_command(args=args, cpus_per_task=self.cpus_per_task,
-                        ntasks=self.ntasks,
-                        openmp_threads=self.openmp_threads,
-                        config=config, logger=logger)
+        logger.info('  Done.')
 
-        in_filename = f'mali_topography_{method}.nc'
-        out_filename = f'mali_topography_ncremap_{method}.nc'
-        write_netcdf(ds_in, in_filename)
+    def _remap_mali_to_mpaso(self, map_filename):
+        """
+        Remap combined bathymetry onto MPAS target mesh
+        """
+        logger = self.logger
+        logger.info('Remap to target')
 
-        # remapping with the -P mpas flag leads to undesired
-        # renormalization
-        args = ['ncremap',
-                '-m', mapping_file_name,
-                '--vrb=1',
-                in_filename,
-                out_filename]
+        args = [
+            'ncremap',
+            '-m', map_filename,
+            '--vrb=1',
+            'mali_topography_mod.nc', 'mali_topography_ncremap.nc',
+        ]
         check_call(args, logger)
 
-        ds_remapped = xr.open_dataset(out_filename)
+        ds_remapped = xr.open_dataset('mali_topography_ncremap.nc')
         ds_out = xr.Dataset()
         for var_name in ds_remapped:
             var = ds_remapped[var_name]
@@ -203,6 +202,8 @@ class RemapMaliTopography(RemapTopography):
             ds_out[var_name] = var
 
         write_netcdf(ds_out, 'mali_topography_remapped.nc')
+
+        logger.info('  Done.')
 
     def _combine_topo(self):
         os.rename('topography_remapped.nc',
