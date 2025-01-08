@@ -1,3 +1,6 @@
+import netCDF4 as nc
+import numpy as np
+
 from compass.model import run_model
 from compass.step import Step
 
@@ -144,11 +147,94 @@ class InitialState(Step):
         Run this step of the testcase
         """
         run_model(self)
+
         if self.wetdry == 'subgrid':
             run_model(self, namelist='namelist.ocean_subgrid1',
                       streams='streams.ocean_subgrid1')
             run_model(self, namelist='namelist.ocean_subgrid2',
                       streams='streams.ocean_subgrid2')
+
+        init = nc.Dataset("ocean_subgrid2.nc", "r+")
+        mesh = nc.Dataset("mesh.nc", "r")
+
+        # -- Estimate vert. grid for ice-shelves, min.-thicknesses, etc
+        # -- Darren Engwirda
+
+        print("Est. layering to account for ice-shelves")
+
+        botd = np.asarray(-mesh["bottomDepthObserved"][:], dtype=np.float64)
+        # ossh = np.asarray(init["ssh"][0,:], dtype=np.float64)
+        ossh = 0. * botd  # assume ssh is zero
+
+        grav = 9.80665  # gravitational accel.
+        irho = float(init.config_land_ice_flux_rho_ice)
+        orho = float(init.config_density0)
+        minh = float(init.config_drying_min_cell_height) / 2.
+
+        print("ice-shelf density:", irho)
+        print("ocn-const density:", orho)
+        print("min-layer thickness:", minh)
+
+        iceh = np.asarray(mesh["ice_thickness"][:], dtype=np.float64)
+        # icef = np.asarray(mesh["ice_cover"][:], dtype=np.float64)
+
+        icep = irho * grav * iceh  # ice pressure
+        iced = icep / grav / orho  # ice draft
+
+        # ensure thin-layer beneath ice-shelves
+        iced = np.minimum(iced, +botd - minh)
+        iced = np.maximum(iced, +0.0)
+        ossh = ossh - iced
+
+        icep[iced <= 0.] = 0.
+
+        # allow thin-layer in partially flooded zone
+        ossh = np.maximum(ossh, -botd + minh)
+
+        print("max ice-draft:", np.max(iced))
+        print("max ice-pressure:", np.max(icep))
+
+        if ("ssh" not in init.variables.keys()):
+            init.createVariable("ssh", "f8", ("Time", "nCells"))
+
+        if ("landIceDraft" not in init.variables.keys()):
+            init.createVariable("landIceDraft", "f8", ("Time", "nCells"))
+
+        if ("landIcePressure" not in init.variables.keys()):
+            init.createVariable("landIcePressure", "f8", ("Time", "nCells"))
+
+        if ("landIceMask" not in init.variables.keys()):
+            init.createVariable("landIceMask", "i4", ("Time", "nCells"))
+
+        if ("landIceFloatingMask" not in init.variables.keys()):
+            init.createVariable("landIceFloatingMask", "i4",
+                                ("Time", "nCells"))
+
+        if ("landIceFraction" not in init.variables.keys()):
+            init.createVariable("landIceFraction", "f8", ("Time", "nCells"))
+
+        if ("landIceFloatingFraction" not in init.variables.keys()):
+            init.createVariable("landIceFloatingFraction", "f8",
+                                ("Time", "nCells"))
+
+        lat_mask = np.where(init["latCell"][:] < -59.0 * np.pi / 180.0)[0]
+        init["landIceDraft"][0, :] = -iced  # NB. sign
+        init["landIcePressure"][0, :] = icep
+        init["landIceMask"][0, :] = (icep > 0.)
+        init["landIceFloatingMask"][0, :] = (icep > 0.)
+        init["landIceFraction"][0, :] = (icep > 0.)
+        init["landIceFloatingFraction"][0, :] = (icep > 0.)
+
+        init["bottomDepth"][lat_mask] = botd[lat_mask]
+        ssh = init["ssh"][:]
+        ssh[0, lat_mask] = ossh[lat_mask]
+        init["ssh"][:] = ssh
+
+        layerThickness = init["layerThickness"][:]
+        layerThickness[0, lat_mask, 0] = ossh[lat_mask] + botd[lat_mask]
+        init["layerThickness"][:] = layerThickness
+
+        init.close()
 
     def _get_resources(self):
         # get the these properties from the config options
