@@ -65,7 +65,7 @@ class Analysis(Step):
         package = self.__module__
 
         if self.storm == 'sandy':
-            self.min_date = '2012 10 10 00 00'
+            self.min_date = '2012 10 24 00 00'
             self.max_date = '2012 11 04 00 00'
             self.pointstats_file = {'MPAS-O': './pointwiseStats.nc'}
 
