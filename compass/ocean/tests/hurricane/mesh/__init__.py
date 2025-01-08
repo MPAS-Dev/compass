@@ -1,4 +1,5 @@
 from compass.ocean.mesh.cull import CullMeshStep
+from compass.ocean.mesh.remap_topography import RemapTopography
 from compass.ocean.tests.hurricane.configure import configure_hurricane
 from compass.ocean.tests.hurricane.lts.mesh.lts_regions import LTSRegionsStep
 from compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2 import (
@@ -71,10 +72,15 @@ class Mesh(TestCase):
 
         self.add_step(base_mesh_step)
 
+        remap_step = RemapTopography(test_case=self,
+                                     base_mesh_step=base_mesh_step,
+                                     mesh_name=mesh_name)
+        self.add_step(remap_step)
+
         cull_mesh_step = CullMeshStep(
             test_case=self, base_mesh_step=base_mesh_step,
-            with_ice_shelf_cavities=False, do_inject_bathymetry=True,
-            preserve_floodplain=True)
+            with_ice_shelf_cavities=True, do_inject_bathymetry=True,
+            preserve_floodplain=True, remap_topography=remap_step)
 
         self.add_step(cull_mesh_step)
 

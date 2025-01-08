@@ -1,8 +1,10 @@
-# import netCDF4 as nc4
-from mpas_tools.ocean import inject_bathymetry, inject_preserve_floodplain
+import netCDF4 as nc4
+import numpy as np
 
-# import compass.ocean.tests.tides.dem.dem_remap as dem_remap
+import compass.ocean.tests.tides.dem.dem_remap as dem_remap
 from compass.mesh.spherical import QuasiUniformSphericalMeshStep
+
+# from mpas_tools.ocean import inject_bathymetry, inject_preserve_floodplain
 
 
 class FloodplainMeshStep(QuasiUniformSphericalMeshStep):
@@ -46,11 +48,13 @@ class FloodplainMeshStep(QuasiUniformSphericalMeshStep):
                             target='SRTM15_plus_earth_relief_15s.nc',
                             database='bathymetry_database')
 
-        # pixel_path = test_case.steps['pixel'].path
-        # pixel_file = f'{pixel_path}/RTopo_2_0_4_GEBCO_v2023_30sec_pixel.nc'
-        # self.add_input_file(
-        #     filename='bathy.nc',
-        #     work_dir_target=pixel_file)
+        pixel_path = test_case.steps['pixel'].path
+        pixel_file = f'{pixel_path}/RTopo_2_0_4_GEBCO_v2023_30sec_pixel.nc'
+        self.add_input_file(
+            filename='bathy.nc',
+            work_dir_target=pixel_file)
+
+        self.bottomDepth_varname = 'bottomDepthObserved'
 
     def run(self):
         """
@@ -62,19 +66,18 @@ class FloodplainMeshStep(QuasiUniformSphericalMeshStep):
 
         mesh_filename = config.get('spherical_mesh', 'mpas_mesh_filename')
 
-        inject_bathymetry(mesh_file=mesh_filename)
-        # dem_remap.dem_remap('bathy.nc', mesh_filename)
+        dem_remap.dem_remap('bathy.nc', mesh_filename)
 
         # Create new NetCDF variables in mesh file, if necessary
-        # nc_mesh = nc4.Dataset(mesh_filename, 'r+')
-        # nc_vars = nc_mesh.variables.keys()
-        # if 'bottomDepthObserved' not in nc_vars:
-        #     nc_mesh.createVariable('bottomDepthObserved', 'f8', ('nCells'))
+        nc_mesh = nc4.Dataset(mesh_filename, 'r+')
+        nc_vars = nc_mesh.variables.keys()
+        if 'bottomDepthObserved' not in nc_vars:
+            nc_mesh.createVariable('bottomDepthObserved', 'f8', ('nCells'))
 
         # Write to mesh file
-        # nc_mesh.variables['bottomDepthObserved'][:] = \
-        #     nc_mesh.variables['bed_elevation'][:]
-        # nc_mesh.close()
+        nc_mesh.variables['bottomDepthObserved'][:] = \
+            nc_mesh.variables['bed_elevation'][:]
+        nc_mesh.close()
 
         if self.preserve_floodplain:
             floodplain_elevation = config.getfloat('spherical_mesh',
@@ -89,8 +92,49 @@ class FloodplainMeshStep(QuasiUniformSphericalMeshStep):
             else:
                 floodplain_resolution = 1e10
 
-            inject_preserve_floodplain(
+            self.inject_preserve_floodplain(
                 mesh_file=mesh_filename,
                 floodplain_elevation=floodplain_elevation,
                 floodplain_resolution=floodplain_resolution,
                 min_depth_outside_floodplain=min_depth_outside_floodplain)
+
+    def inject_preserve_floodplain(self, mesh_file, floodplain_elevation,
+                                   floodplain_resolution=1e10,
+                                   min_depth_outside_floodplain=5.0):
+
+        nc_mesh = nc4.Dataset(mesh_file, 'r+')
+        nc_vars = nc_mesh.variables.keys()
+
+        if 'regionCellMasks' not in nc_vars:
+            nc_mesh.createDimension('nRegions', 1)
+            nc_mesh.createVariable('regionCellMasks', 'i',
+                                   ('nCells', 'nRegions'))
+        nc_mesh.variables['regionCellMasks'][:] = 0.0
+
+        if 'transectCellMasks' not in nc_vars:
+            nc_mesh.createDimension('nTransects', 1)
+            nc_mesh.createVariable('transectCellMasks', 'i',
+                                   ('nCells', 'nTransects'))
+        nc_mesh.variables['transectCellMasks'][:] = 0.0
+
+        floodplain = self.find_floodplain(mesh_file, floodplain_elevation,
+                                          floodplain_resolution)
+
+        nc_mesh.variables['regionCellMasks'][:] = floodplain
+
+        nc_mesh.close()
+
+    def find_floodplain(self, mesh_file, floodplain_elevation,
+                        floodplain_resolution):
+
+        nc_mesh = nc4.Dataset(mesh_file, 'r+')
+
+        bottomDepth = self.bottomDepth_varname
+        h = 2.0 * np.sqrt(nc_mesh.variables['areaCell'][:] / np.pi) / 1000.0
+        floodplain = np.logical_and(
+            h < floodplain_resolution,
+            nc_mesh.variables[bottomDepth][:] < floodplain_elevation)
+
+        nc_mesh.close()
+
+        return floodplain
