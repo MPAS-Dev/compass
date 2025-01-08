@@ -95,11 +95,10 @@ class ForwardStep(Step):
             filename='atmospheric_forcing.nc',
             work_dir_target=f'{init.path}/interpolate/atmospheric_forcing.nc')
 
-        if use_lts:
-            file_in = 'topographic_wave_drag.nc'
-            self.add_input_file(
-                filename='topographic_wave_drag.nc',
-                work_dir_target=f'{init.path}/topodrag/{file_in}')
+        file_in = 'topographic_wave_drag.nc'
+        self.add_input_file(
+            filename='topographic_wave_drag.nc',
+            work_dir_target=f'{init.path}/wave_drag/{file_in}')
 
         self.add_input_file(
             filename='points.nc',
