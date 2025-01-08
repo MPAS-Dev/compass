@@ -63,9 +63,18 @@ class DEVR45to5rr1BaseMesh(VRTidesMesh, FloodplainMeshStep):
             params, cell_width, lon, lat)
 
         # Delaware Bay high-resolution (2km)
+        Delaware_restrict = {"include": [np.array([[-75.853, 39.732],
+                                                   [-74.939, 36.678],
+                                                   [-71.519, 40.156],
+                                                   [-74.784, 40.296]]),
+                                         np.array([[-76.024, 37.188],
+                                                   [-75.214, 36.756],
+                                                   [-74.512, 37.925],
+                                                   [-75.274, 38.318]])],
+                             "exclude": []}
         params["region_box"] = ct.Delaware_Bay
         params["plot_box"] = ct.Delaware
-        params["restrict_box"] = ct.Delaware_restrict
+        params["restrict_box"] = Delaware_restrict
         params["dx_min_coastal"] = 0.125
         params["trans_width"] = 100.0 * km
         params["trans_start"] = 17.0 * km
