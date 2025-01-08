@@ -4,8 +4,6 @@ import numpy as np
 import compass.ocean.tests.tides.dem.dem_remap as dem_remap
 from compass.mesh.spherical import QuasiUniformSphericalMeshStep
 
-# from mpas_tools.ocean import inject_bathymetry, inject_preserve_floodplain
-
 
 class FloodplainMeshStep(QuasiUniformSphericalMeshStep):
     """
@@ -43,10 +41,6 @@ class FloodplainMeshStep(QuasiUniformSphericalMeshStep):
                          cell_width=cell_width)
 
         self.preserve_floodplain = preserve_floodplain
-
-        self.add_input_file(filename='earth_relief_15s.nc',
-                            target='SRTM15_plus_earth_relief_15s.nc',
-                            database='bathymetry_database')
 
         pixel_path = test_case.steps['pixel'].path
         pixel_file = f'{pixel_path}/RTopo_2_0_4_GEBCO_v2023_30sec_pixel.nc'
