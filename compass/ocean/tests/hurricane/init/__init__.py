@@ -59,7 +59,8 @@ class Init(TestCase):
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
         self.add_step(CalculateWaveDrag(test_case=self, mesh=mesh))
-        self.add_step(RemapBathymetry(test_case=self, mesh=mesh))
+        self.add_step(RemapBathymetry(test_case=self, mesh=mesh,
+                                      limit_bathy_outside_refinement=True))
         self.add_step(InitialState(test_case=self, mesh=mesh,
                                    use_lts=use_lts, wetdry=wetdry))
         self.add_step(InterpolateAtmForcing(test_case=self, mesh=mesh,
