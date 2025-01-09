@@ -73,14 +73,14 @@ class CreateSlmMappingFiles(Step):
         args = ['ncremap',
                 '-g', slm_scripfile,
                 '-G',
-                f'latlon={nglv},{2*int(nglv)}#lat_typ=gss#lat_drc=n2s']
+                f'latlon={nglv},{2 * int(nglv)}#lat_typ=gss#lat_drc=n2s']
 
         check_call(args, logger=logger)
 
         # mali scripfile
         # first have to adjust lat-lon values as if they are on sphere
         shutil.copy(init_cond_path, mali_meshfile)
-        args = ['set_lat_lon_fields_in_planar_grid.py',
+        args = ['set_lat_lon_fields_in_planar_grid',
                 '--file', mali_meshfile,
                 '--proj', 'ais-bedmap2-sphere']
 

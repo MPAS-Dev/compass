@@ -119,7 +119,7 @@ class SetupMesh(Step):
         levels = section.get('levels')
         vertMethod = section.get('vetical_layer_distribution')
 
-        args = ['create_landice_grid_from_generic_MPAS_grid.py',
+        args = ['create_landice_grid_from_generic_mpas_grid',
                 '-i', 'mpas_grid.nc',
                 '-o', 'landice_grid.nc',
                 '-l', levels,

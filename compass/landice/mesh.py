@@ -688,14 +688,14 @@ def build_mali_mesh(self, cell_width, x1, y1, geom_points,
     logger.info('writing grid_converted.nc')
     write_netcdf(dsMesh, 'grid_converted.nc')
     levels = section.get('levels')
-    args = ['create_landice_grid_from_generic_MPAS_grid.py',
+    args = ['create_landice_grid_from_generic_mpas_grid',
             '-i', 'grid_converted.nc',
             '-o', 'grid_preCull.nc',
             '-l', levels, '-v', 'glimmer']
 
     check_call(args, logger=logger)
 
-    args = ['interpolate_to_mpasli_grid.py', '-s',
+    args = ['interpolate_to_mpasli_grid', '-s',
             gridded_dataset, '-d',
             'grid_preCull.nc', '-m', 'b', '-t']
 
@@ -703,7 +703,7 @@ def build_mali_mesh(self, cell_width, x1, y1, geom_points,
 
     cullDistance = section.get('cull_distance')
     if float(cullDistance) > 0.:
-        args = ['define_cullMask.py', '-f',
+        args = ['define_landice_cull_mask', '-f',
                 'grid_preCull.nc', '-m',
                 'distance', '-d', cullDistance]
 
@@ -715,7 +715,7 @@ def build_mali_mesh(self, cell_width, x1, y1, geom_points,
     if geojson_file is not None:
         # This step is only necessary because the GeoJSON region
         # is defined by lat-lon.
-        args = ['set_lat_lon_fields_in_planar_grid.py', '-f',
+        args = ['set_lat_lon_fields_in_planar_grid', '-f',
                 'grid_preCull.nc', '-p', projection]
 
         check_call(args, logger=logger)
@@ -742,7 +742,7 @@ def build_mali_mesh(self, cell_width, x1, y1, geom_points,
     write_netcdf(dsMesh, 'culled.nc')
 
     logger.info('Marking horns for culling')
-    args = ['mark_horns_for_culling.py', '-f', 'culled.nc']
+    args = ['mark_horns_for_culling', '-f', 'culled.nc']
 
     check_call(args, logger=logger)
 
@@ -753,24 +753,24 @@ def build_mali_mesh(self, cell_width, x1, y1, geom_points,
     dsMesh = sort_mesh(dsMesh)
     write_netcdf(dsMesh, 'dehorned.nc')
 
-    args = ['create_landice_grid_from_generic_MPAS_grid.py', '-i',
+    args = ['create_landice_grid_from_generic_mpas_grid', '-i',
             'dehorned.nc', '-o',
             mesh_name, '-l', levels, '-v', 'glimmer',
             '--beta', '--thermal', '--obs', '--diri']
 
     check_call(args, logger=logger)
 
-    args = ['interpolate_to_mpasli_grid.py', '-s',
+    args = ['interpolate_to_mpasli_grid', '-s',
             gridded_dataset, '-d', mesh_name, '-m', 'b']
 
     check_call(args, logger=logger)
 
     logger.info('Marking domain boundaries dirichlet')
-    args = ['mark_domain_boundaries_dirichlet.py',
+    args = ['mark_domain_boundaries_dirichlet',
             '-f', mesh_name]
     check_call(args, logger=logger)
 
-    args = ['set_lat_lon_fields_in_planar_grid.py', '-f',
+    args = ['set_lat_lon_fields_in_planar_grid', '-f',
             mesh_name, '-p', projection]
     check_call(args, logger=logger)
 
@@ -1064,7 +1064,7 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
 
     logger.info('creating scrip file for source dataset')
     # Note: writing scrip file to workdir
-    args = ['create_SCRIP_file_from_planar_rectangular_grid.py',
+    args = ['create_scrip_file_from_planar_rectangular_grid',
             '-i', source_file,
             '-s', source_scrip,
             '-p', proj,
@@ -1083,8 +1083,8 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
     check_call(args, logger=logger)
 
     # Perform actual interpolation using the weights
-    logger.info('calling interpolate_to_mpasli_grid.py')
-    args = ['interpolate_to_mpasli_grid.py',
+    logger.info('calling interpolate_to_mpasli_grid')
+    args = ['interpolate_to_mpasli_grid',
             '-s', source_file,
             '-d', dest_file,
             '-m', 'e',

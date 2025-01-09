@@ -73,7 +73,7 @@ def build_mapping_file(config, cores, logger, ismip6_grid_file, mapping_file,
     if scrip_from_latlon:
         create_scrip_from_latlon(ismip6_grid_file, source_grid_scripfile)
     else:
-        args = ["create_SCRIP_file_from_planar_rectangular_grid.py",
+        args = ["create_scrip_file_from_planar_rectangular_grid",
                 "--input", ismip6_grid_file,
                 "--scrip", source_grid_scripfile,
                 "--proj", ismip6_projection,
@@ -89,7 +89,7 @@ def build_mapping_file(config, cores, logger, ismip6_grid_file, mapping_file,
     mali_mesh_copy = f"{mali_mesh_file}_copy"
     shutil.copy(mali_mesh_file, f"{mali_mesh_file}_copy")
 
-    args = ["set_lat_lon_fields_in_planar_grid.py",
+    args = ["set_lat_lon_fields_in_planar_grid",
             "--file", mali_mesh_copy,
             "--proj", ismip6_projection]
 
@@ -133,7 +133,7 @@ def create_scrip_from_latlon(source_grid_file, source_grid_scripfile):
     dataset.
 
     This function is needed, c.f. the scrip utility in the MPAS-Tools repo
-    (i.e. `create_SCRIP_file_from_planar_rectangular_grid.py`), when a dataset
+    (i.e. `create_scrip_file_from_planar_rectangular_grid`), when a dataset
     does not have `x`/`y` coordinates to generate the scrip file from. This is
     the case for the atmospheric forcing datasets from ISMIP6
     and for RACMO products.
