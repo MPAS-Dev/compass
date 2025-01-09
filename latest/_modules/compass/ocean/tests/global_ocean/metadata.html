@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.tests.global_ocean.metadata &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -107,16 +107,16 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.global_ocean.metadata</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">xarray</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span>
 
 
-<span class="k">def</span> <span class="nf">get_author_and_email_from_git</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_author_and_email_from_git</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the author and email address config options from git if they are set to</span>
 <span class="sd">    autodetect</span>
@@ -153,7 +153,7 @@
 
 <div class="viewcode-block" id="get_e3sm_mesh_names">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.metadata.get_e3sm_mesh_names.html#compass.ocean.tests.global_ocean.metadata.get_e3sm_mesh_names">[docs]</a>
-<span class="k">def</span> <span class="nf">get_e3sm_mesh_names</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">levels</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_e3sm_mesh_names</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">levels</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get short and long E3SM mesh name from config options and the given number</span>
 <span class="sd">    of vertical levels (typically taken from an initial condition or restart</span>
@@ -198,7 +198,7 @@
 
 <div class="viewcode-block" id="add_mesh_and_init_metadata">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.metadata.add_mesh_and_init_metadata.html#compass.ocean.tests.global_ocean.metadata.add_mesh_and_init_metadata">[docs]</a>
-<span class="k">def</span> <span class="nf">add_mesh_and_init_metadata</span><span class="p">(</span><span class="n">output_filenames</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">init_filename</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_mesh_and_init_metadata</span><span class="p">(</span><span class="n">output_filenames</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">init_filename</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Add MPAS mesh and initial condition metadata to NetCDF outputs of the given</span>
 <span class="sd">    step</span>
@@ -233,7 +233,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_get_metadata</span><span class="p">(</span><span class="n">dsInit</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_metadata</span><span class="p">(</span><span class="n">dsInit</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; add metadata to a given dataset &quot;&quot;&quot;</span>
 
     <span class="n">author</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;author&#39;</span><span class="p">)</span>
@@ -317,7 +317,7 @@
     <span class="k">return</span> <span class="n">metadata</span>
 
 
-<span class="k">def</span> <span class="nf">_get_conda_package_version</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_conda_package_version</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
     <span class="n">conda</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s1">&#39;conda&#39;</span><span class="p">,</span> <span class="s1">&#39;list&#39;</span><span class="p">,</span> <span class="n">package</span><span class="p">])</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
     <span class="n">lines</span> <span class="o">=</span> <span class="n">conda</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>

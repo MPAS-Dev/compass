@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.landice.tests.calving_dt_convergence.dt_convergence_test &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -107,19 +107,19 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice.tests.calving_dt_convergence.dt_convergence_test</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">matplotlib.cm</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">netCDF4</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.cm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">netCDF4</span>
 <span class="c1"># from compass.validate import compare_variables  # not currently used</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 
-<span class="kn">from</span> <span class="nn">compass.landice.tests.calving_dt_convergence.run_model</span> <span class="kn">import</span> <span class="n">RunModel</span>
-<span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.calving_dt_convergence.run_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.testcase</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestCase</span>
 
 
 <div class="viewcode-block" id="DtConvergenceTest">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.calving_dt_convergence.dt_convergence_test.DtConvergenceTest.html#compass.landice.tests.calving_dt_convergence.dt_convergence_test.DtConvergenceTest">[docs]</a>
-<span class="k">class</span> <span class="nc">DtConvergenceTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DtConvergenceTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A test case for running the same configuration with a series of</span>
 <span class="sd">    values for config_adaptive_timestep_calvingCFL_fraction</span>
@@ -133,7 +133,7 @@
 
 <div class="viewcode-block" id="DtConvergenceTest.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.calving_dt_convergence.dt_convergence_test.DtConvergenceTest.html#compass.landice.tests.calving_dt_convergence.dt_convergence_test.DtConvergenceTest.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">calving</span><span class="p">,</span> <span class="n">velo</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">calving</span><span class="p">,</span> <span class="n">velo</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the test case</span>
 
@@ -174,7 +174,7 @@
 
 <div class="viewcode-block" id="DtConvergenceTest.validate">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.calving_dt_convergence.dt_convergence_test.DtConvergenceTest.validate.html#compass.landice.tests.calving_dt_convergence.dt_convergence_test.DtConvergenceTest.validate">[docs]</a>
-    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test cases can override this method to perform validation of variables</span>
 <span class="sd">        and timers</span>

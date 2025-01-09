@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.landice.tests.ismip6_forcing.create_mapfile &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -107,14 +107,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice.tests.ismip6_forcing.create_mapfile</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 
-<span class="kn">import</span> <span class="nn">netCDF4</span>
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.scrip.from_mpas</span> <span class="kn">import</span> <span class="n">scrip_from_mpas</span>
-<span class="kn">from</span> <span class="nn">pyremap.descriptor.utility</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">netCDF4</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_call</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.scrip.from_mpas</span><span class="w"> </span><span class="kn">import</span> <span class="n">scrip_from_mpas</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyremap.descriptor.utility</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">create_scrip</span><span class="p">,</span>
     <span class="n">interp_extrap_corners_2d</span><span class="p">,</span>
     <span class="n">unwrap_corners</span><span class="p">,</span>
@@ -123,7 +123,7 @@
 
 <div class="viewcode-block" id="build_mapping_file">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.create_mapfile.build_mapping_file.html#compass.landice.tests.ismip6_forcing.create_mapfile.build_mapping_file">[docs]</a>
-<span class="k">def</span> <span class="nf">build_mapping_file</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">cores</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">ismip6_grid_file</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_mapping_file</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">cores</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">ismip6_grid_file</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
                        <span class="n">scrip_from_latlon</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                        <span class="n">method_remap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -241,7 +241,7 @@
 
 <div class="viewcode-block" id="create_scrip_from_latlon">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.create_mapfile.create_scrip_from_latlon.html#compass.landice.tests.ismip6_forcing.create_mapfile.create_scrip_from_latlon">[docs]</a>
-<span class="k">def</span> <span class="nf">create_scrip_from_latlon</span><span class="p">(</span><span class="n">source_grid_file</span><span class="p">,</span> <span class="n">source_grid_scripfile</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_scrip_from_latlon</span><span class="p">(</span><span class="n">source_grid_file</span><span class="p">,</span> <span class="n">source_grid_scripfile</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a scripfile based on the `lat`/`lon` coordinates of a source</span>
 <span class="sd">    dataset.</span>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.setup &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -105,23 +105,23 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.setup</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
-<span class="kn">from</span> <span class="nn">compass</span> <span class="kn">import</span> <span class="n">provenance</span>
-<span class="kn">from</span> <span class="nn">compass.config</span> <span class="kn">import</span> <span class="n">CompassConfigParser</span>
-<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span>
-<span class="kn">from</span> <span class="nn">compass.job</span> <span class="kn">import</span> <span class="n">write_job_script</span>
-<span class="kn">from</span> <span class="nn">compass.machines</span> <span class="kn">import</span> <span class="n">discover_machine</span>
-<span class="kn">from</span> <span class="nn">compass.mpas_cores</span> <span class="kn">import</span> <span class="n">get_mpas_cores</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass</span><span class="w"> </span><span class="kn">import</span> <span class="n">provenance</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompassConfigParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">symlink</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.job</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_job_script</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.machines</span><span class="w"> </span><span class="kn">import</span> <span class="n">discover_machine</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.mpas_cores</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_mpas_cores</span>
 
 
 <div class="viewcode-block" id="setup_cases">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.setup.setup_cases.html#compass.setup.setup_cases">[docs]</a>
-<span class="k">def</span> <span class="nf">setup_cases</span><span class="p">(</span><span class="n">tests</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">machine</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># noqa: C901, E501</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">setup_cases</span><span class="p">(</span><span class="n">tests</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">machine</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># noqa: C901, E501</span>
                 <span class="n">work_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">baseline_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">suite_name</span><span class="o">=</span><span class="s1">&#39;custom&#39;</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">copy_executable</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -286,7 +286,7 @@
 
 <div class="viewcode-block" id="setup_case">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.setup.setup_case.html#compass.setup.setup_case">[docs]</a>
-<span class="k">def</span> <span class="nf">setup_case</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">config_file</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">work_dir</span><span class="p">,</span> <span class="n">baseline_dir</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">setup_case</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">config_file</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">work_dir</span><span class="p">,</span> <span class="n">baseline_dir</span><span class="p">,</span>
                <span class="n">mpas_model_path</span><span class="p">,</span> <span class="n">cached_steps</span><span class="p">,</span> <span class="n">copy_executable</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Set up one or more test cases</span>
@@ -444,7 +444,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
         <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Set up one or more test cases&#39;</span><span class="p">,</span> <span class="n">prog</span><span class="o">=</span><span class="s1">&#39;compass setup&#39;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-t&quot;</span><span class="p">,</span> <span class="s2">&quot;--test&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">,</span>
@@ -503,7 +503,7 @@
                 <span class="n">cached</span><span class="o">=</span><span class="n">cached</span><span class="p">,</span> <span class="n">copy_executable</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">copy_executable</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_get_required_cores</span><span class="p">(</span><span class="n">test_cases</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_required_cores</span><span class="p">(</span><span class="n">test_cases</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Get the maximum number of target cores and the max of min cores &quot;&quot;&quot;</span>
 
     <span class="n">max_cores</span> <span class="o">=</span> <span class="mi">1</span>
@@ -529,7 +529,7 @@
     <span class="k">return</span> <span class="n">max_cores</span><span class="p">,</span> <span class="n">max_of_min_cores</span>
 
 
-<span class="k">def</span> <span class="nf">_get_basic_config</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_basic_config</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get a base config parser for the machine and MPAS core but not a specific</span>
 <span class="sd">    test</span>
@@ -573,7 +573,7 @@
     <span class="k">return</span> <span class="n">config</span>
 
 
-<span class="k">def</span> <span class="nf">_symlink_load_script</span><span class="p">(</span><span class="n">work_dir</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_symlink_load_script</span><span class="p">(</span><span class="n">work_dir</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; make a symlink to the script for loading the compass conda env. &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s1">&#39;LOAD_COMPASS_ENV&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
         <span class="n">script_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;LOAD_COMPASS_ENV&#39;</span><span class="p">]</span>

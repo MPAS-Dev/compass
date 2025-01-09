@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.validate &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -105,16 +105,16 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.validate</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">xarray</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">fnmatch</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">fnmatch</span>
 
 
 <div class="viewcode-block" id="compare_variables">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.validate.compare_variables.html#compass.validate.compare_variables">[docs]</a>
-<span class="k">def</span> <span class="nf">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">variables</span><span class="p">,</span> <span class="n">filename1</span><span class="p">,</span> <span class="n">filename2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">variables</span><span class="p">,</span> <span class="n">filename1</span><span class="p">,</span> <span class="n">filename2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                       <span class="n">l1_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">linf_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                       <span class="n">check_outputs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">skip_if_step_not_run</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -271,7 +271,7 @@
 
 <div class="viewcode-block" id="compare_timers">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.validate.compare_timers.html#compass.validate.compare_timers">[docs]</a>
-<span class="k">def</span> <span class="nf">compare_timers</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">timers</span><span class="p">,</span> <span class="n">rundir1</span><span class="p">,</span> <span class="n">rundir2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compare_timers</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">timers</span><span class="p">,</span> <span class="n">rundir1</span><span class="p">,</span> <span class="n">rundir2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compare variables between files in the current test case and/or with the</span>
 <span class="sd">    baseline results.</span>
@@ -315,7 +315,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_compare_variables</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">filename1</span><span class="p">,</span> <span class="n">filename2</span><span class="p">,</span> <span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compare_variables</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">filename1</span><span class="p">,</span> <span class="n">filename2</span><span class="p">,</span> <span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="p">,</span>
                        <span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; compare fields in the two files &quot;&quot;&quot;</span>
 
@@ -403,7 +403,7 @@
     <span class="k">return</span> <span class="n">all_pass</span>
 
 
-<span class="k">def</span> <span class="nf">_compute_norms</span><span class="p">(</span><span class="n">da1</span><span class="p">,</span> <span class="n">da2</span><span class="p">,</span> <span class="n">quiet</span><span class="p">,</span> <span class="n">max_l1_norm</span><span class="p">,</span> <span class="n">max_l2_norm</span><span class="p">,</span> <span class="n">max_linf_norm</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_norms</span><span class="p">(</span><span class="n">da1</span><span class="p">,</span> <span class="n">da2</span><span class="p">,</span> <span class="n">quiet</span><span class="p">,</span> <span class="n">max_l1_norm</span><span class="p">,</span> <span class="n">max_l2_norm</span><span class="p">,</span> <span class="n">max_linf_norm</span><span class="p">,</span>
                    <span class="n">time_index</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Compute norms between variables in two DataArrays &quot;&quot;&quot;</span>
 
@@ -445,7 +445,7 @@
     <span class="k">return</span> <span class="n">result</span>
 
 
-<span class="k">def</span> <span class="nf">_compute_timers</span><span class="p">(</span><span class="n">base_directory</span><span class="p">,</span> <span class="n">comparison_directory</span><span class="p">,</span> <span class="n">timers</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_timers</span><span class="p">(</span><span class="n">base_directory</span><span class="p">,</span> <span class="n">comparison_directory</span><span class="p">,</span> <span class="n">timers</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Find timers and compute speedup between two run directories &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">timer</span> <span class="ow">in</span> <span class="n">timers</span><span class="p">:</span>
         <span class="n">timer1_found</span><span class="p">,</span> <span class="n">timer1</span> <span class="o">=</span> <span class="n">_find_timer_value</span><span class="p">(</span><span class="n">timer</span><span class="p">,</span> <span class="n">base_directory</span><span class="p">)</span>
@@ -466,7 +466,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;          Speedup: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">speedup</span><span class="p">))</span>
 
 
-<span class="k">def</span> <span class="nf">_find_timer_value</span><span class="p">(</span><span class="n">timer_name</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_find_timer_value</span><span class="p">(</span><span class="n">timer_name</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Find a timer in the given directory &quot;&quot;&quot;</span>
     <span class="c1"># Build a regular expression for any two characters with a space between</span>
     <span class="c1"># them.</span>
@@ -507,7 +507,7 @@
     <span class="k">return</span> <span class="n">timer_found</span><span class="p">,</span> <span class="n">timer</span>
 
 
-<span class="k">def</span> <span class="nf">_rename_duplicate_dims</span><span class="p">(</span><span class="n">da</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_rename_duplicate_dims</span><span class="p">(</span><span class="n">da</span><span class="p">):</span>
     <span class="n">dims</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">da</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
     <span class="n">new_dims</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dims</span><span class="p">)</span>
     <span class="n">duplicates</span> <span class="o">=</span> <span class="kc">False</span>

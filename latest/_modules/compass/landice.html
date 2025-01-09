@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.landice &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -105,38 +105,38 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.landice.tests.antarctica</span> <span class="kn">import</span> <span class="n">Antarctica</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.calving_dt_convergence</span> <span class="kn">import</span> <span class="n">CalvingDtConvergence</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.circular_shelf</span> <span class="kn">import</span> <span class="n">CircularShelf</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.crane</span> <span class="kn">import</span> <span class="n">Crane</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.dome</span> <span class="kn">import</span> <span class="n">Dome</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.eismint2</span> <span class="kn">import</span> <span class="n">Eismint2</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.ensemble_generator</span> <span class="kn">import</span> <span class="n">EnsembleGenerator</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.enthalpy_benchmark</span> <span class="kn">import</span> <span class="n">EnthalpyBenchmark</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.greenland</span> <span class="kn">import</span> <span class="n">Greenland</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.humboldt</span> <span class="kn">import</span> <span class="n">Humboldt</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.hydro_radial</span> <span class="kn">import</span> <span class="n">HydroRadial</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.ismip6_forcing</span> <span class="kn">import</span> <span class="n">Ismip6Forcing</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.ismip6_run</span> <span class="kn">import</span> <span class="n">Ismip6Run</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.isunnguata_sermia</span> <span class="kn">import</span> <span class="n">IsunnguataSermia</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.kangerlussuaq</span> <span class="kn">import</span> <span class="n">Kangerlussuaq</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.koge_bugt_s</span> <span class="kn">import</span> <span class="n">KogeBugtS</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.mesh_modifications</span> <span class="kn">import</span> <span class="n">MeshModifications</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.mismipplus</span> <span class="kn">import</span> <span class="n">MISMIPplus</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.thwaites</span> <span class="kn">import</span> <span class="n">Thwaites</span>
-<span class="kn">from</span> <span class="nn">compass.mpas_core</span> <span class="kn">import</span> <span class="n">MpasCore</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.antarctica</span><span class="w"> </span><span class="kn">import</span> <span class="n">Antarctica</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.calving_dt_convergence</span><span class="w"> </span><span class="kn">import</span> <span class="n">CalvingDtConvergence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.circular_shelf</span><span class="w"> </span><span class="kn">import</span> <span class="n">CircularShelf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.crane</span><span class="w"> </span><span class="kn">import</span> <span class="n">Crane</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.dome</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dome</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.eismint2</span><span class="w"> </span><span class="kn">import</span> <span class="n">Eismint2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ensemble_generator</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnsembleGenerator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.enthalpy_benchmark</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnthalpyBenchmark</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.greenland</span><span class="w"> </span><span class="kn">import</span> <span class="n">Greenland</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.humboldt</span><span class="w"> </span><span class="kn">import</span> <span class="n">Humboldt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.hydro_radial</span><span class="w"> </span><span class="kn">import</span> <span class="n">HydroRadial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip6_forcing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ismip6Forcing</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip6_run</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ismip6Run</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.isunnguata_sermia</span><span class="w"> </span><span class="kn">import</span> <span class="n">IsunnguataSermia</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.kangerlussuaq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kangerlussuaq</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.koge_bugt_s</span><span class="w"> </span><span class="kn">import</span> <span class="n">KogeBugtS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.mesh_modifications</span><span class="w"> </span><span class="kn">import</span> <span class="n">MeshModifications</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.mismipplus</span><span class="w"> </span><span class="kn">import</span> <span class="n">MISMIPplus</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.thwaites</span><span class="w"> </span><span class="kn">import</span> <span class="n">Thwaites</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.mpas_core</span><span class="w"> </span><span class="kn">import</span> <span class="n">MpasCore</span>
 
 
 <div class="viewcode-block" id="Landice">
 <a class="viewcode-back" href="../../developers_guide/landice/generated/compass.landice.Landice.html#compass.landice.Landice">[docs]</a>
-<span class="k">class</span> <span class="nc">Landice</span><span class="p">(</span><span class="n">MpasCore</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Landice</span><span class="p">(</span><span class="n">MpasCore</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The collection of all test case for the MALI core</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Landice.__init__">
 <a class="viewcode-back" href="../../developers_guide/landice/generated/compass.landice.Landice.html#compass.landice.Landice.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the collection of MALI test cases</span>
 <span class="sd">        &quot;&quot;&quot;</span>

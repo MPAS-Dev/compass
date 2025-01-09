@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.tests.isomip_plus.misomip &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -107,20 +107,20 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.isomip_plus.misomip</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">from</span> <span class="nn">netCDF4</span> <span class="kn">import</span> <span class="n">Dataset</span>
-<span class="kn">from</span> <span class="nn">progressbar</span> <span class="kn">import</span> <span class="n">ETA</span><span class="p">,</span> <span class="n">Bar</span><span class="p">,</span> <span class="n">Percentage</span><span class="p">,</span> <span class="n">ProgressBar</span>
-<span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="kn">import</span> <span class="n">LineString</span><span class="p">,</span> <span class="n">Polygon</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">netCDF4</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">progressbar</span><span class="w"> </span><span class="kn">import</span> <span class="n">ETA</span><span class="p">,</span> <span class="n">Bar</span><span class="p">,</span> <span class="n">Percentage</span><span class="p">,</span> <span class="n">ProgressBar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">LineString</span><span class="p">,</span> <span class="n">Polygon</span>
 
-<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
 
 <div class="viewcode-block" id="Misomip">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.misomip.Misomip.html#compass.ocean.tests.isomip_plus.misomip.Misomip">[docs]</a>
-<span class="k">class</span> <span class="nc">Misomip</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Misomip</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for interpolating output to the MISOMIP1 grid from an ISOMIP+</span>
 <span class="sd">    simulation</span>
@@ -135,7 +135,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Misomip.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.misomip.Misomip.html#compass.ocean.tests.isomip_plus.misomip.Misomip.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">experiment</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">experiment</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the step</span>
 
@@ -172,7 +172,7 @@
 
 <div class="viewcode-block" id="Misomip.run">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.misomip.Misomip.run.html#compass.ocean.tests.isomip_plus.misomip.Misomip.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -192,8 +192,8 @@
 
 
 
-<span class="k">def</span> <span class="nf">_compute_misomip_interp_coeffs</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="n">show_progress</span><span class="p">):</span>  <span class="c1"># noqa: C901</span>
-    <span class="k">def</span> <span class="nf">getTransectWeights</span><span class="p">(</span><span class="n">outFileName</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_misomip_interp_coeffs</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="n">show_progress</span><span class="p">):</span>  <span class="c1"># noqa: C901</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getTransectWeights</span><span class="p">(</span><span class="n">outFileName</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
 
         <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
             <span class="n">pbar</span> <span class="o">=</span> <span class="n">ProgressBar</span><span class="p">(</span>
@@ -465,10 +465,10 @@
         <span class="n">getTransectWeights</span><span class="p">(</span><span class="n">yTransectFileName</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_interp_misomip</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="n">sf_dir</span><span class="p">,</span> <span class="n">out_file_name</span><span class="p">,</span>  <span class="c1"># noqa: C901</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_interp_misomip</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="n">sf_dir</span><span class="p">,</span> <span class="n">out_file_name</span><span class="p">,</span>  <span class="c1"># noqa: C901</span>
                     <span class="n">show_progress</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="nf">interpHoriz</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">inMask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">outFraction</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">interpHoriz</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">inMask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">outFraction</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">inMask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">field</span> <span class="o">=</span> <span class="n">field</span> <span class="o">*</span> <span class="n">inMask</span>
         <span class="n">outField</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">outNy</span><span class="p">,</span> <span class="n">outNx</span><span class="p">))</span>
@@ -484,13 +484,13 @@
             <span class="n">outField</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">mask</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">0.</span>
         <span class="k">return</span> <span class="n">outField</span>
 
-    <span class="k">def</span> <span class="nf">interpHorizOcean</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">interpHorizOcean</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">interpHoriz</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">cellOceanMask</span><span class="p">,</span> <span class="n">xyOceanFraction</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">interpHorizCavity</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">interpHorizCavity</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">interpHoriz</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">inCavityFraction</span><span class="p">,</span> <span class="n">outCavityFraction</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">interpXZTransect</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">interpXZTransect</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="n">outField</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">outNz</span><span class="p">,</span> <span class="n">outNx</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">sliceIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">xzNSlices</span><span class="p">):</span>
@@ -525,7 +525,7 @@
 
         <span class="k">return</span> <span class="n">outField</span>
 
-    <span class="k">def</span> <span class="nf">interpYZTransect</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">interpYZTransect</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="n">outField</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">outNz</span><span class="p">,</span> <span class="n">outNy</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">sliceIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">yzNSlices</span><span class="p">):</span>
@@ -560,10 +560,10 @@
 
         <span class="k">return</span> <span class="n">outField</span>
 
-    <span class="k">def</span> <span class="nf">writeMetric</span><span class="p">(</span><span class="n">varName</span><span class="p">,</span> <span class="n">metric</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">writeMetric</span><span class="p">(</span><span class="n">varName</span><span class="p">,</span> <span class="n">metric</span><span class="p">):</span>
         <span class="nb">vars</span><span class="p">[</span><span class="n">varName</span><span class="p">][</span><span class="n">tIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">metric</span>
 
-    <span class="k">def</span> <span class="nf">writeVar</span><span class="p">(</span><span class="n">varName</span><span class="p">,</span> <span class="n">varField</span><span class="p">,</span> <span class="n">varMask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">writeVar</span><span class="p">(</span><span class="n">varName</span><span class="p">,</span> <span class="n">varField</span><span class="p">,</span> <span class="n">varMask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">varMask</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">maskedVar</span> <span class="o">=</span> <span class="n">varField</span>
         <span class="k">else</span><span class="p">:</span>
@@ -925,7 +925,7 @@
     <span class="n">bsfFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
 
-<span class="k">def</span> <span class="nf">_get_out_grid</span><span class="p">(</span><span class="n">corners</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_out_grid</span><span class="p">(</span><span class="n">corners</span><span class="p">):</span>
 
     <span class="n">outDx</span> <span class="o">=</span> <span class="mf">2e3</span>
     <span class="n">outX0</span> <span class="o">=</span> <span class="mf">320e3</span>

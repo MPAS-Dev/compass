@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.tests.utility.extrap_woa.combine &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -108,16 +108,16 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.utility.extrap_woa.combine</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">gsw</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gsw</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
 
-<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
 
 <div class="viewcode-block" id="Combine">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.utility.extrap_woa.Combine.html#compass.ocean.tests.utility.extrap_woa.Combine">[docs]</a>
-<span class="k">class</span> <span class="nc">Combine</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Combine</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for combining a January and an annual WOA 2023 climatology into</span>
 <span class="sd">    a single file, where the January data is used where available and the</span>
@@ -126,7 +126,7 @@
 
 <div class="viewcode-block" id="Combine.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.utility.extrap_woa.Combine.html#compass.ocean.tests.utility.extrap_woa.Combine.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new step</span>
 
@@ -141,7 +141,7 @@
 
 <div class="viewcode-block" id="Combine.setup">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.utility.extrap_woa.Combine.setup.html#compass.ocean.tests.utility.extrap_woa.Combine.setup">[docs]</a>
-    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set up the step in the work directory, including downloading any</span>
 <span class="sd">        dependencies.</span>
@@ -179,7 +179,7 @@
 
 <div class="viewcode-block" id="Combine.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.utility.extrap_woa.Combine.run.html#compass.ocean.tests.utility.extrap_woa.Combine.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -216,7 +216,7 @@
 
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_temp_to_pot_temp</span><span class="p">(</span><span class="n">ds</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_temp_to_pot_temp</span><span class="p">(</span><span class="n">ds</span><span class="p">):</span>
         <span class="n">dims</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">t_an</span><span class="o">.</span><span class="n">dims</span>
 
         <span class="n">slices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>

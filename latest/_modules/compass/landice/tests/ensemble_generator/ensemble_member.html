@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.landice.tests.ensemble_generator.ensemble_member &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -107,24 +107,24 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice.tests.ensemble_generator.ensemble_member</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">configparser</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">resources</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">configparser</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">importlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">resources</span>
 
-<span class="kn">import</span> <span class="nn">netCDF4</span>
-<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">netCDF4</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
 
-<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span>
-<span class="kn">from</span> <span class="nn">compass.job</span> <span class="kn">import</span> <span class="n">write_job_script</span>
-<span class="kn">from</span> <span class="nn">compass.landice.extrapolate</span> <span class="kn">import</span> <span class="n">extrapolate_variable</span>
-<span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">make_graph_file</span><span class="p">,</span> <span class="n">run_model</span>
-<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">symlink</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.job</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_job_script</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.extrapolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">extrapolate_variable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_graph_file</span><span class="p">,</span> <span class="n">run_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
 
 <div class="viewcode-block" id="EnsembleMember">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.html#compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember">[docs]</a>
-<span class="k">class</span> <span class="nc">EnsembleMember</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">EnsembleMember</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for setting up a single ensemble member</span>
 
@@ -166,7 +166,7 @@
 
 <div class="viewcode-block" id="EnsembleMember.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.html#compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">run_num</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">run_num</span><span class="p">,</span>
                  <span class="n">basal_fric_exp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">mu_scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">stiff_scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -228,7 +228,7 @@
 
 <div class="viewcode-block" id="EnsembleMember.setup">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.setup.html#compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.setup">[docs]</a>
-    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set up this run by setting up a baseline run configuration</span>
 <span class="sd">        and then modifying parameters for this ensemble member based on</span>
@@ -395,7 +395,7 @@
 
 <div class="viewcode-block" id="EnsembleMember.run">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.run.html#compass.landice.tests.ensemble_generator.ensemble_member.EnsembleMember.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this member of the ensemble.</span>
 <span class="sd">        Eventually we want this function to handle restarts.</span>
@@ -408,7 +408,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_adjust_friction_exponent</span><span class="p">(</span><span class="n">orig_fric_exp</span><span class="p">,</span> <span class="n">new_fric_exp</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_adjust_friction_exponent</span><span class="p">(</span><span class="n">orig_fric_exp</span><span class="p">,</span> <span class="n">new_fric_exp</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span>
                               <span class="n">albany_input_yaml</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to adjust the basal friction parameter by adjusting muFriction</span>
@@ -448,7 +448,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_adjust_basal_melt_params</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">gamma0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">deltaT</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_adjust_basal_melt_params</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">gamma0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">deltaT</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to adjust gamma0 and deltaT in a MALI input file for basal melt</span>
 <span class="sd">    parameters.</span>

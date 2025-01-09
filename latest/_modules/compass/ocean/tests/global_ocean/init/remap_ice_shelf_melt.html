@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -108,22 +108,22 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">h5py</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pyproj</span>
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.mesh.cull</span> <span class="kn">import</span> <span class="n">write_map_culled_to_base</span>
-<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">,</span> <span class="n">ProjectionGridDescriptor</span><span class="p">,</span> <span class="n">Remapper</span>
-<span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">KDTree</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">h5py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyproj</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.cime.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.mesh.cull</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_map_culled_to_base</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyremap</span><span class="w"> </span><span class="kn">import</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">,</span> <span class="n">ProjectionGridDescriptor</span><span class="p">,</span> <span class="n">Remapper</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial</span><span class="w"> </span><span class="kn">import</span> <span class="n">KDTree</span>
 
-<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
 
 <div class="viewcode-block" id="RemapIceShelfMelt">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt.html#compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt">[docs]</a>
-<span class="k">class</span> <span class="nc">RemapIceShelfMelt</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RemapIceShelfMelt</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for for remapping observed melt rates to the MPAS grid</span>
 
@@ -134,7 +134,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="RemapIceShelfMelt.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt.html#compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new step</span>
 
@@ -181,7 +181,7 @@
 
 <div class="viewcode-block" id="RemapIceShelfMelt.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt.run.html#compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -213,7 +213,7 @@
 
 <div class="viewcode-block" id="remap_paolo">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.remap_paolo.html#compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.remap_paolo">[docs]</a>
-<span class="k">def</span> <span class="nf">remap_paolo</span><span class="p">(</span><span class="n">in_filename</span><span class="p">,</span> <span class="n">base_mesh_filename</span><span class="p">,</span> <span class="n">culled_mesh_filename</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">remap_paolo</span><span class="p">(</span><span class="n">in_filename</span><span class="p">,</span> <span class="n">base_mesh_filename</span><span class="p">,</span> <span class="n">culled_mesh_filename</span><span class="p">,</span>
                 <span class="n">mesh_name</span><span class="p">,</span> <span class="n">land_ice_mask_filename</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
                 <span class="n">mapping_directory</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;conserve&#39;</span><span class="p">,</span>
                 <span class="n">renormalization_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mpi_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
@@ -420,7 +420,7 @@
 
 <div class="viewcode-block" id="remap_adusumilli">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.remap_adusumilli.html#compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.remap_adusumilli">[docs]</a>
-<span class="k">def</span> <span class="nf">remap_adusumilli</span><span class="p">(</span><span class="n">in_filename</span><span class="p">,</span> <span class="n">base_mesh_filename</span><span class="p">,</span> <span class="n">culled_mesh_filename</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">remap_adusumilli</span><span class="p">(</span><span class="n">in_filename</span><span class="p">,</span> <span class="n">base_mesh_filename</span><span class="p">,</span> <span class="n">culled_mesh_filename</span><span class="p">,</span>
                      <span class="n">mesh_name</span><span class="p">,</span> <span class="n">land_ice_mask_filename</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
                      <span class="n">mapping_directory</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;conserve&#39;</span><span class="p">,</span>
                      <span class="n">renormalization_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mpi_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
@@ -565,7 +565,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_land_ice_mask_on_base_mesh</span><span class="p">(</span><span class="n">base_mesh_filename</span><span class="p">,</span> <span class="n">land_ice_mask_filename</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_land_ice_mask_on_base_mesh</span><span class="p">(</span><span class="n">base_mesh_filename</span><span class="p">,</span> <span class="n">land_ice_mask_filename</span><span class="p">,</span>
                                 <span class="n">map_culled_to_base_filename</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Map the land-ice mask back to the base mesh &quot;&quot;&quot;</span>
 
@@ -585,7 +585,7 @@
     <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_base_mask</span><span class="p">,</span> <span class="s1">&#39;land_ice_mask_on_base.nc&#39;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_reroute_missing_flux</span><span class="p">(</span><span class="n">base_mesh_filename</span><span class="p">,</span> <span class="n">map_culled_to_base_filename</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_reroute_missing_flux</span><span class="p">(</span><span class="n">base_mesh_filename</span><span class="p">,</span> <span class="n">map_culled_to_base_filename</span><span class="p">,</span>
                           <span class="n">out_filename</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    For each flux cell not within an ice shelf, find the closest ice-shelf cell</span>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.tests.isomip_plus.viz.plot &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -108,24 +108,24 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.isomip_plus.viz.plot</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
 
-<span class="kn">import</span> <span class="nn">cmocean</span>  <span class="c1"># noqa: F401</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">progressbar</span>
-<span class="kn">import</span> <span class="nn">xarray</span>
-<span class="kn">from</span> <span class="nn">matplotlib.collections</span> <span class="kn">import</span> <span class="n">PatchCollection</span>
-<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LogNorm</span>
-<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Polygon</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cmocean</span>  <span class="c1"># noqa: F401</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">progressbar</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">PatchCollection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogNorm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Polygon</span>
 
 
 <div class="viewcode-block" id="TimeSeriesPlotter">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.TimeSeriesPlotter.html#compass.ocean.tests.isomip_plus.viz.plot.TimeSeriesPlotter">[docs]</a>
-<span class="k">class</span> <span class="nc">TimeSeriesPlotter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TimeSeriesPlotter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A plotter object to hold on to some info needed for plotting time series</span>
 <span class="sd">    from ISOMIP+ simulation results</span>
@@ -143,7 +143,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="TimeSeriesPlotter.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.TimeSeriesPlotter.html#compass.ocean.tests.isomip_plus.viz.plot.TimeSeriesPlotter.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inFolder</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">outFolder</span><span class="o">=</span><span class="s1">&#39;plots&#39;</span><span class="p">,</span> <span class="n">expt</span><span class="o">=</span><span class="s1">&#39;Ocean0&#39;</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inFolder</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">outFolder</span><span class="o">=</span><span class="s1">&#39;plots&#39;</span><span class="p">,</span> <span class="n">expt</span><span class="o">=</span><span class="s1">&#39;Ocean0&#39;</span><span class="p">,</span>
                  <span class="n">dsMesh</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a plotter object to hold on to some info needed for plotting</span>
@@ -194,7 +194,7 @@
 
 <div class="viewcode-block" id="TimeSeriesPlotter.plot_melt_time_series">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.TimeSeriesPlotter.plot_melt_time_series.html#compass.ocean.tests.isomip_plus.viz.plot.TimeSeriesPlotter.plot_melt_time_series">[docs]</a>
-    <span class="k">def</span> <span class="nf">plot_melt_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sshMax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_melt_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sshMax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot a series of image for each of several variables related to melt</span>
 <span class="sd">        at the ice shelf-ocean interface: mean melt rate, total melt flux,</span>
@@ -241,7 +241,7 @@
 
 <div class="viewcode-block" id="TimeSeriesPlotter.plot_time_series">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.TimeSeriesPlotter.plot_time_series.html#compass.ocean.tests.isomip_plus.viz.plot.TimeSeriesPlotter.plot_time_series">[docs]</a>
-    <span class="k">def</span> <span class="nf">plot_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">da</span><span class="p">,</span> <span class="n">nameInTitle</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">da</span><span class="p">,</span> <span class="n">nameInTitle</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                          <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 
         <span class="n">fileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outFolder</span><span class="p">,</span> <span class="n">prefix</span><span class="p">)</span>
@@ -270,7 +270,7 @@
 
 <div class="viewcode-block" id="MoviePlotter">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter">[docs]</a>
-<span class="k">class</span> <span class="nc">MoviePlotter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MoviePlotter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A plotter object to hold on to some info needed for plotting images from</span>
 <span class="sd">    ISOMIP+ simulation results</span>
@@ -323,7 +323,7 @@
 
 <div class="viewcode-block" id="MoviePlotter.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">streamfunctionFolder</span><span class="p">,</span> <span class="n">outFolder</span><span class="p">,</span> <span class="n">expt</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">streamfunctionFolder</span><span class="p">,</span> <span class="n">outFolder</span><span class="p">,</span> <span class="n">expt</span><span class="p">,</span>
                  <span class="n">sectionY</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">showProgress</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a plotter object to hold on to some info needed for plotting</span>
@@ -385,7 +385,7 @@
 
 <div class="viewcode-block" id="MoviePlotter.plot_barotropic_streamfunction">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_barotropic_streamfunction.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_barotropic_streamfunction">[docs]</a>
-    <span class="k">def</span> <span class="nf">plot_barotropic_streamfunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_barotropic_streamfunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot a series of image of the barotropic streamfunction</span>
 
@@ -433,7 +433,7 @@
 
 <div class="viewcode-block" id="MoviePlotter.plot_overturning_streamfunction">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_overturning_streamfunction.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_overturning_streamfunction">[docs]</a>
-    <span class="k">def</span> <span class="nf">plot_overturning_streamfunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.3</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_overturning_streamfunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.3</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot a series of image of the overturning streamfunction</span>
 
@@ -475,7 +475,7 @@
 
 <div class="viewcode-block" id="MoviePlotter.plot_melt_rates">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_melt_rates.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_melt_rates">[docs]</a>
-    <span class="k">def</span> <span class="nf">plot_melt_rates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">100.</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">100.</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_melt_rates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">100.</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">100.</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot a series of image of the melt rate</span>
 
@@ -497,7 +497,7 @@
 
 <div class="viewcode-block" id="MoviePlotter.plot_ice_shelf_boundary_variables">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_ice_shelf_boundary_variables.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_ice_shelf_boundary_variables">[docs]</a>
-    <span class="k">def</span> <span class="nf">plot_ice_shelf_boundary_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_ice_shelf_boundary_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot a series of image for each of several variables related to the</span>
 <span class="sd">        ice shelf-ocean interface: heat flux from the ocean, heat flux into the</span>
@@ -548,7 +548,7 @@
 
 <div class="viewcode-block" id="MoviePlotter.plot_temperature">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_temperature.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_temperature">[docs]</a>
-    <span class="k">def</span> <span class="nf">plot_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot a series of images of temperature at the sea surface or</span>
 <span class="sd">        ice-ocean interface, sea floor and in an x-z section</span>
@@ -564,7 +564,7 @@
 
 <div class="viewcode-block" id="MoviePlotter.plot_salinity">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_salinity.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_salinity">[docs]</a>
-    <span class="k">def</span> <span class="nf">plot_salinity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_salinity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot a series of images of salinity at the sea surface or</span>
 <span class="sd">        ice-ocean interface, sea floor and in an x-z section</span>
@@ -580,7 +580,7 @@
 
 <div class="viewcode-block" id="MoviePlotter.plot_potential_density">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_potential_density.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_potential_density">[docs]</a>
-    <span class="k">def</span> <span class="nf">plot_potential_density</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_potential_density</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot a series of images of salinity at the sea surface or</span>
 <span class="sd">        ice-ocean interface, sea floor and in an x-z section</span>
@@ -594,7 +594,7 @@
                                            <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.dense&#39;</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">plot_haney_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">haneyFolder</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_haney_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">haneyFolder</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot a series of images of the Haney number rx1 at the sea surface or</span>
 <span class="sd">        ice-ocean interface, sea floor and in an x-z section</span>
@@ -616,7 +616,7 @@
 
 <div class="viewcode-block" id="MoviePlotter.plot_horiz_series">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_horiz_series.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_horiz_series">[docs]</a>
-    <span class="k">def</span> <span class="nf">plot_horiz_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">da</span><span class="p">,</span> <span class="n">nameInTitle</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">oceanDomain</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_horiz_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">da</span><span class="p">,</span> <span class="n">nameInTitle</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">oceanDomain</span><span class="p">,</span>
                           <span class="n">units</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                           <span class="n">cmap_set_under</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap_set_over</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                           <span class="n">cmap_scale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">time_indices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -693,7 +693,7 @@
 
 <div class="viewcode-block" id="MoviePlotter.plot_3d_field_top_bot_section">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_3d_field_top_bot_section.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_3d_field_top_bot_section">[docs]</a>
-    <span class="k">def</span> <span class="nf">plot_3d_field_top_bot_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">da</span><span class="p">,</span> <span class="n">nameInTitle</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_3d_field_top_bot_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">da</span><span class="p">,</span> <span class="n">nameInTitle</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span>
                                       <span class="n">units</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                       <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap_set_under</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                       <span class="n">cmap_set_over</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -811,7 +811,7 @@
 
 <div class="viewcode-block" id="MoviePlotter.plot_layer_interfaces">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_layer_interfaces.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_layer_interfaces">[docs]</a>
-    <span class="k">def</span> <span class="nf">plot_layer_interfaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">5</span><span class="p">)):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_layer_interfaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">5</span><span class="p">)):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot layer interfaces, the sea surface height and the bottom topography</span>
 <span class="sd">        of the cross section at fixed y.</span>
@@ -893,7 +893,7 @@
 
 <div class="viewcode-block" id="MoviePlotter.images_to_movies">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.images_to_movies.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.images_to_movies">[docs]</a>
-    <span class="k">def</span> <span class="nf">images_to_movies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outFolder</span><span class="p">,</span> <span class="n">framesPerSecond</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;mp4&#39;</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">images_to_movies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outFolder</span><span class="p">,</span> <span class="n">framesPerSecond</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;mp4&#39;</span><span class="p">,</span>
                          <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert all the image sequences into movies with ffmpeg</span>
@@ -924,7 +924,7 @@
                 <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">logFile</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">logFile</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">update_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tIndex</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tIndex</span><span class="p">):</span>
         <span class="k">if</span> <span class="s1">&#39;xtime_startMonthly&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="p">:</span>
             <span class="n">var</span> <span class="o">=</span> <span class="s1">&#39;xtime_startMonthly&#39;</span>
         <span class="k">elif</span> <span class="s1">&#39;xtime&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="p">:</span>
@@ -940,7 +940,7 @@
         <span class="n">day</span> <span class="o">=</span> <span class="n">xtime</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">-</span><span class="si">{}</span><span class="s1">-</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_plot_horiz_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span> <span class="n">oceanDomain</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_plot_horiz_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span> <span class="n">oceanDomain</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                           <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                           <span class="n">cmap_set_under</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap_set_over</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                           <span class="n">cmap_scale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">):</span>
@@ -987,7 +987,7 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">outFileName</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_plot_vert_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inX</span><span class="p">,</span> <span class="n">inZ</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_plot_vert_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inX</span><span class="p">,</span> <span class="n">inZ</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span>
                          <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                          <span class="n">show_boundaries</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
@@ -1026,7 +1026,7 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">outFileName</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="s1">&#39;figure&#39;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_compute_section_x_z</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_section_x_z</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="s1">&#39;xIsomipCell&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">_interp_extrap_corner</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">xIsomipCell</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionCellIndices</span><span class="p">])</span>
@@ -1071,7 +1071,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_compute_cell_patches</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">mask</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_cell_patches</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">mask</span><span class="p">):</span>
     <span class="n">patches</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">nVerticesOnCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">nEdgesOnCell</span><span class="o">.</span><span class="n">values</span>
     <span class="n">verticesOnCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">verticesOnCell</span><span class="o">.</span><span class="n">values</span> <span class="o">-</span> <span class="mi">1</span>
@@ -1098,7 +1098,7 @@
     <span class="k">return</span> <span class="n">p</span>
 
 
-<span class="k">def</span> <span class="nf">_compute_section_cell_indices</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_section_cell_indices</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">):</span>
     <span class="k">if</span> <span class="s1">&#39;xIsomipCell&#39;</span> <span class="ow">in</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="n">xCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">xIsomipCell</span><span class="o">.</span><span class="n">values</span>
         <span class="n">yCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">yIsomipCell</span><span class="o">.</span><span class="n">values</span>
@@ -1118,7 +1118,7 @@
     <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cellIndices</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_interp_extrap_corner</span><span class="p">(</span><span class="n">inField</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_interp_extrap_corner</span><span class="p">(</span><span class="n">inField</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Interpolate/extrapolate a 1D field from grid centers to grid corners&quot;&quot;&quot;</span>
 
     <span class="n">outField</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inField</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>

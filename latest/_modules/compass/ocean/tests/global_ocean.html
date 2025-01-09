@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.tests.global_ocean &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -106,34 +106,34 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.global_ocean</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.analysis_test</span> <span class="kn">import</span> <span class="n">AnalysisTest</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.daily_output_test</span> <span class="kn">import</span> <span class="n">DailyOutputTest</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.decomp_test</span> <span class="kn">import</span> <span class="n">DecompTest</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.dynamic_adjustment</span> <span class="kn">import</span> <span class="p">(</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.analysis_test</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.daily_output_test</span><span class="w"> </span><span class="kn">import</span> <span class="n">DailyOutputTest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.decomp_test</span><span class="w"> </span><span class="kn">import</span> <span class="n">DecompTest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.dynamic_adjustment</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">DynamicAdjustment</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm</span> <span class="kn">import</span> <span class="n">FilesForE3SM</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.init</span> <span class="kn">import</span> <span class="n">Init</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh</span> <span class="kn">import</span> <span class="n">Mesh</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.monthly_output_test</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm</span><span class="w"> </span><span class="kn">import</span> <span class="n">FilesForE3SM</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.init</span><span class="w"> </span><span class="kn">import</span> <span class="n">Init</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mesh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.monthly_output_test</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">MonthlyOutputTest</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.performance_test</span> <span class="kn">import</span> <span class="n">PerformanceTest</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.restart_test</span> <span class="kn">import</span> <span class="n">RestartTest</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.threads_test</span> <span class="kn">import</span> <span class="n">ThreadsTest</span>
-<span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.performance_test</span><span class="w"> </span><span class="kn">import</span> <span class="n">PerformanceTest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.restart_test</span><span class="w"> </span><span class="kn">import</span> <span class="n">RestartTest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.threads_test</span><span class="w"> </span><span class="kn">import</span> <span class="n">ThreadsTest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.testgroup</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestGroup</span>
 
 
 <div class="viewcode-block" id="GlobalOcean">
 <a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.GlobalOcean.html#compass.ocean.tests.global_ocean.GlobalOcean">[docs]</a>
-<span class="k">class</span> <span class="nc">GlobalOcean</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GlobalOcean</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A test group for setting up global initial conditions and performing</span>
 <span class="sd">    regression testing and dynamic adjustment for MPAS-Ocean</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="GlobalOcean.__init__">
 <a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.GlobalOcean.html#compass.ocean.tests.global_ocean.GlobalOcean.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        mpas_core : compass.MpasCore</span>
 <span class="sd">            the MPAS core that this test group belongs to</span>
@@ -175,7 +175,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">FilesForE3SM</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_add_tests</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_names</span><span class="p">,</span> <span class="n">high_res_topography</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_tests</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_names</span><span class="p">,</span> <span class="n">high_res_topography</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                    <span class="n">include_rk4</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                    <span class="n">include_regression</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_phc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                    <span class="n">include_en4_1900</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>

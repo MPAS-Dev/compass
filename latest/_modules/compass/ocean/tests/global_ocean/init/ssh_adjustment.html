@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.tests.global_ocean.init.ssh_adjustment &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -108,27 +108,27 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.global_ocean.init.ssh_adjustment</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">importlib.resources</span> <span class="kn">import</span> <span class="n">contents</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">importlib.resources</span><span class="w"> </span><span class="kn">import</span> <span class="n">contents</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_call</span>
 
-<span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">partition</span><span class="p">,</span> <span class="n">run_model</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.forward</span> <span class="kn">import</span> <span class="n">ForwardStep</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">partition</span><span class="p">,</span> <span class="n">run_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.forward</span><span class="w"> </span><span class="kn">import</span> <span class="n">ForwardStep</span>
 
 
 <div class="viewcode-block" id="SshAdjustment">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.html#compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment">[docs]</a>
-<span class="k">class</span> <span class="nc">SshAdjustment</span><span class="p">(</span><span class="n">ForwardStep</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SshAdjustment</span><span class="p">(</span><span class="n">ForwardStep</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for iteratively adjusting the pressure from the weight of the ice</span>
 <span class="sd">    shelf to match the sea-surface height as part of ice-shelf 2D test cases</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="SshAdjustment.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.html#compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">init_path</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ssh_adjustment&#39;</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">init_path</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ssh_adjustment&#39;</span><span class="p">,</span>
                  <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the step</span>
@@ -189,7 +189,7 @@
 
 <div class="viewcode-block" id="SshAdjustment.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.run.html#compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the testcase</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -202,7 +202,7 @@
                          <span class="n">convert_to_cdf5</span><span class="o">=</span><span class="n">convert_to_cdf5</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_adjust_ssh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_pio</span><span class="p">,</span> <span class="n">convert_to_cdf5</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_adjust_ssh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_pio</span><span class="p">,</span> <span class="n">convert_to_cdf5</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adjust the sea surface height to be dynamically consistent with</span>
 <span class="sd">        land-ice pressure.</span>

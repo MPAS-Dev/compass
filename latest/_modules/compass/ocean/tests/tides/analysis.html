@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.tests.tides.analysis &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -107,22 +107,22 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.tides.analysis</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
-<span class="kn">import</span> <span class="nn">cartopy.feature</span> <span class="k">as</span> <span class="nn">cfeature</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">netCDF4</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">colormaps</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cartopy.crs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ccrs</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cartopy.feature</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cfeature</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">netCDF4</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">colormaps</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_call</span>
 
-<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
 
 <div class="viewcode-block" id="Analysis">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.analysis.Analysis.html#compass.ocean.tests.tides.analysis.Analysis">[docs]</a>
-<span class="k">class</span> <span class="nc">Analysis</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Analysis</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for producing harmonic constituent errors and validation plots</span>
 
@@ -142,7 +142,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Analysis.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.analysis.Analysis.html#compass.ocean.tests.tides.analysis.Analysis.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the step</span>
 
@@ -168,7 +168,7 @@
 
 <div class="viewcode-block" id="Analysis.setup">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.analysis.Analysis.setup.html#compass.ocean.tests.tides.analysis.Analysis.setup">[docs]</a>
-    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Setup test case and download data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -209,7 +209,7 @@
 
 <div class="viewcode-block" id="Analysis.write_coordinate_file">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.analysis.Analysis.write_coordinate_file.html#compass.ocean.tests.tides.analysis.Analysis.write_coordinate_file">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_coordinate_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write_coordinate_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Write mesh coordinates for TPXO extraction</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -229,7 +229,7 @@
 
 <div class="viewcode-block" id="Analysis.setup_otps2">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.analysis.Analysis.setup_otps2.html#compass.ocean.tests.tides.analysis.Analysis.setup_otps2">[docs]</a>
-    <span class="k">def</span> <span class="nf">setup_otps2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_otps2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Write input files for TPXO extraction</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -280,7 +280,7 @@
 
 <div class="viewcode-block" id="Analysis.run_otps2">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.analysis.Analysis.run_otps2.html#compass.ocean.tests.tides.analysis.Analysis.run_otps2">[docs]</a>
-    <span class="k">def</span> <span class="nf">run_otps2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_otps2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform TPXO extraction</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -295,7 +295,7 @@
 
 <div class="viewcode-block" id="Analysis.read_otps2_output">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.analysis.Analysis.read_otps2_output.html#compass.ocean.tests.tides.analysis.Analysis.read_otps2_output">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_otps2_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_otps2_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Read TPXO extraction output</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -325,7 +325,7 @@
 
 <div class="viewcode-block" id="Analysis.append_tpxo_data">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.analysis.Analysis.append_tpxo_data.html#compass.ocean.tests.tides.analysis.Analysis.append_tpxo_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">append_tpxo_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">append_tpxo_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Inject TPXO data into harmonic analysis file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -363,7 +363,7 @@
 
 <div class="viewcode-block" id="Analysis.check_tpxo_data">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.analysis.Analysis.check_tpxo_data.html#compass.ocean.tests.tides.analysis.Analysis.check_tpxo_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">check_tpxo_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_tpxo_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if TPXO data exists in harmonic analysis file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -387,7 +387,7 @@
 
 <div class="viewcode-block" id="Analysis.plot">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.analysis.Analysis.plot.html#compass.ocean.tests.tides.analysis.Analysis.plot">[docs]</a>
-    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate errors and plot consitituents</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -564,7 +564,7 @@
 
 <div class="viewcode-block" id="Analysis.run">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.analysis.Analysis.run.html#compass.ocean.tests.tides.analysis.Analysis.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>

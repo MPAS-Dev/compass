@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.tests.isomip_plus.streamfunction &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -107,22 +107,22 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.isomip_plus.streamfunction</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">progressbar</span>
-<span class="kn">import</span> <span class="nn">scipy.sparse</span>
-<span class="kn">import</span> <span class="nn">scipy.sparse.linalg</span>
-<span class="kn">import</span> <span class="nn">xarray</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">progressbar</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.sparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.sparse.linalg</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
 
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.viz</span> <span class="kn">import</span> <span class="n">file_complete</span>
-<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.isomip_plus.viz</span><span class="w"> </span><span class="kn">import</span> <span class="n">file_complete</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
 
 <div class="viewcode-block" id="Streamfunction">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.streamfunction.Streamfunction.html#compass.ocean.tests.isomip_plus.streamfunction.Streamfunction">[docs]</a>
-<span class="k">class</span> <span class="nc">Streamfunction</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Streamfunction</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for computing the barotropic and overturning streamfunctions from</span>
 <span class="sd">    ISOMIP+ simulation results</span>
@@ -137,7 +137,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Streamfunction.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.streamfunction.Streamfunction.html#compass.ocean.tests.isomip_plus.streamfunction.Streamfunction.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">experiment</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">experiment</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the step</span>
 
@@ -165,7 +165,7 @@
 
 <div class="viewcode-block" id="Streamfunction.run">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.streamfunction.Streamfunction.run.html#compass.ocean.tests.isomip_plus.streamfunction.Streamfunction.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -194,7 +194,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_compute_barotropic_streamfunction</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span> <span class="n">show_progress</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_barotropic_streamfunction</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span> <span class="n">show_progress</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    compute the barotropic streamfunction for the given mesh and monthly-mean</span>
 <span class="sd">    data set</span>
@@ -222,7 +222,7 @@
     <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsBSF</span><span class="p">,</span> <span class="n">bsfFileName</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_compute_overturning_streamfunction</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mf">2e3</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="mf">5.</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_overturning_streamfunction</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mf">2e3</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="mf">5.</span><span class="p">,</span>
                                         <span class="n">show_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    compute the overturning streamfunction for the given mesh and monthly-mean</span>
@@ -271,7 +271,7 @@
                                                  <span class="n">cacheFileName</span><span class="p">,</span> <span class="n">show_progress</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_compute_barotropic_transport</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_barotropic_transport</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the barotropic transport for inner edges (not on the domain</span>
 <span class="sd">    boundary) for the given mesh and monthly-mean data set</span>
@@ -300,7 +300,7 @@
     <span class="k">return</span> <span class="n">innerEdges</span><span class="p">,</span> <span class="n">transport</span>
 
 
-<span class="k">def</span> <span class="nf">_compute_barotropic_streamfunction_vertex</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">show_progress</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_barotropic_streamfunction_vertex</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">show_progress</span><span class="p">):</span>
     <span class="n">innerEdges</span><span class="p">,</span> <span class="n">transport</span> <span class="o">=</span> <span class="n">_compute_barotropic_transport</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
 
     <span class="n">nVertices</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertices&#39;</span><span class="p">]</span>
@@ -378,7 +378,7 @@
     <span class="k">return</span> <span class="n">bsfVertex</span>
 
 
-<span class="k">def</span> <span class="nf">_compute_barotropic_streamfunction_cell</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">bsfVertex</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_barotropic_streamfunction_cell</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">bsfVertex</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Interpolate the barotropic streamfunction from vertices to cells</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -399,7 +399,7 @@
     <span class="k">return</span> <span class="n">bsfCell</span>
 
 
-<span class="k">def</span> <span class="nf">_compute_horizontal_transport_mpas</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_horizontal_transport_mpas</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    compute the horizontal transport through edges on the native MPAS grid.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -494,7 +494,7 @@
     <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsOut</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_interpolate_horizontal_transport_zlevel</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_interpolate_horizontal_transport_zlevel</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span>
                                              <span class="n">show_progress</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    interpolate the horizontal transport through edges onto a z-level grid.</span>
@@ -595,7 +595,7 @@
     <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsOut</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_vertical_cumsum_horizontal_transport</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_vertical_cumsum_horizontal_transport</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    compute the cumsum in the vertical of the horizontal transport</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -644,7 +644,7 @@
     <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsOut</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_compute_region_boundary_edges</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">cellMask</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_region_boundary_edges</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">cellMask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a mask of cells in a region, find the indices and signs (indicating</span>
 <span class="sd">    fluxes into the masked region) of non-boundary edges</span>
@@ -683,7 +683,7 @@
         <span class="k">return</span> <span class="n">edgeIndices</span><span class="p">,</span> <span class="n">edgeSign</span>
 
 
-<span class="k">def</span> <span class="nf">_horizontally_bin_overturning_streamfunction</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">osfFileName</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_horizontally_bin_overturning_streamfunction</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">osfFileName</span><span class="p">,</span>
                                                  <span class="n">cacheFileName</span><span class="p">,</span> <span class="n">showProgress</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    bin and sum the vertically cumsummed horizontal transport on the z-level</span>

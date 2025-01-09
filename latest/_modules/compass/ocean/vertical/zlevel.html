@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.vertical.zlevel &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -107,16 +107,16 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.vertical.zlevel</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">xarray</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 
-<span class="kn">from</span> <span class="nn">compass.ocean.vertical.grid_1d</span> <span class="kn">import</span> <span class="n">add_1d_grid</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.vertical.partial_cells</span> <span class="kn">import</span> <span class="n">alter_bottom_depth</span><span class="p">,</span> <span class="n">alter_ssh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.vertical.grid_1d</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_1d_grid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.vertical.partial_cells</span><span class="w"> </span><span class="kn">import</span> <span class="n">alter_bottom_depth</span><span class="p">,</span> <span class="n">alter_ssh</span>
 
 
 <div class="viewcode-block" id="init_z_level_vertical_coord">
 <a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.vertical.zlevel.init_z_level_vertical_coord.html#compass.ocean.vertical.zlevel.init_z_level_vertical_coord">[docs]</a>
-<span class="k">def</span> <span class="nf">init_z_level_vertical_coord</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_z_level_vertical_coord</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a z-level vertical coordinate based on the config options in the</span>
 <span class="sd">    ``vertical_grid`` section and the ``bottomDepth`` and ``ssh`` variables of</span>
@@ -193,7 +193,7 @@
 
 <div class="viewcode-block" id="compute_min_max_level_cell">
 <a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.vertical.zlevel.compute_min_max_level_cell.html#compass.ocean.vertical.zlevel.compute_min_max_level_cell">[docs]</a>
-<span class="k">def</span> <span class="nf">compute_min_max_level_cell</span><span class="p">(</span><span class="n">refTopDepth</span><span class="p">,</span> <span class="n">refBottomDepth</span><span class="p">,</span> <span class="n">ssh</span><span class="p">,</span> <span class="n">bottomDepth</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_min_max_level_cell</span><span class="p">(</span><span class="n">refTopDepth</span><span class="p">,</span> <span class="n">refBottomDepth</span><span class="p">,</span> <span class="n">ssh</span><span class="p">,</span> <span class="n">bottomDepth</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute ``minLevelCell`` and ``maxLevelCell`` indices as well as a cell</span>
 <span class="sd">    mask for the given reference grid and top and bottom topography.</span>
@@ -244,7 +244,7 @@
 
 <div class="viewcode-block" id="compute_z_level_layer_thickness">
 <a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.vertical.zlevel.compute_z_level_layer_thickness.html#compass.ocean.vertical.zlevel.compute_z_level_layer_thickness">[docs]</a>
-<span class="k">def</span> <span class="nf">compute_z_level_layer_thickness</span><span class="p">(</span><span class="n">refTopDepth</span><span class="p">,</span> <span class="n">refBottomDepth</span><span class="p">,</span> <span class="n">ssh</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_z_level_layer_thickness</span><span class="p">(</span><span class="n">refTopDepth</span><span class="p">,</span> <span class="n">refBottomDepth</span><span class="p">,</span> <span class="n">ssh</span><span class="p">,</span>
                                     <span class="n">bottomDepth</span><span class="p">,</span> <span class="n">minLevelCell</span><span class="p">,</span> <span class="n">maxLevelCell</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute z-level layer thickness from ssh and bottomDepth</span>
@@ -292,7 +292,7 @@
 
 <div class="viewcode-block" id="compute_z_level_resting_thickness">
 <a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.vertical.zlevel.compute_z_level_resting_thickness.html#compass.ocean.vertical.zlevel.compute_z_level_resting_thickness">[docs]</a>
-<span class="k">def</span> <span class="nf">compute_z_level_resting_thickness</span><span class="p">(</span><span class="n">layerThickness</span><span class="p">,</span> <span class="n">ssh</span><span class="p">,</span> <span class="n">bottomDepth</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_z_level_resting_thickness</span><span class="p">(</span><span class="n">layerThickness</span><span class="p">,</span> <span class="n">ssh</span><span class="p">,</span> <span class="n">bottomDepth</span><span class="p">,</span>
                                       <span class="n">minLevelCell</span><span class="p">,</span> <span class="n">maxLevelCell</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute z-level resting thickness by &quot;unstretching&quot; layerThickness</span>

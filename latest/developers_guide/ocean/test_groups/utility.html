@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>utility &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -85,6 +85,9 @@
 <li class="toctree-l4"><a class="reference internal" href="#combine-topo">combine_topo</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#cull-restarts">cull_restarts</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#extrap-woa">extrap_woa</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#create-salin-restoring">create_salin_restoring</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#salinity-restoring">salinity_restoring</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#extrap-salin">extrap_salin</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ziso.html">ziso</a></li>
@@ -248,6 +251,30 @@ be layers with no valid WOA data at all (which is not presently the case).</p></
 <p>The resulting file is ready to be placed in compass’ initial condition database
 (see <a class="reference internal" href="../../organization.html#dev-step-input-download"><span class="std std-ref">Downloading and symlinking input files</span></a> for details on databases).</p>
 </section>
+</section>
+<section id="create-salin-restoring">
+<h2>create_salin_restoring<a class="headerlink" href="#create-salin-restoring" title="Link to this heading">¶</a></h2>
+<p>The class <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.utility.create_salin_restoring.CreateSalinRestoring</span></code>
+defines a test case for creating a monthly average sea surface salinity dataset based on the
+<a class="reference external" href="https://www.ncei.noaa.gov/products/world-ocean-atlas">WOA 2023</a> data.  It also extrapolates
+the twelve months of data into ice-shelf cavities and across continents.</p>
+</section>
+<section id="salinity-restoring">
+<h2>salinity_restoring<a class="headerlink" href="#salinity-restoring" title="Link to this heading">¶</a></h2>
+<p>The class <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.utility.create_salin_restoring.Salinity</span></code>
+defines a step to download and combine January through December sea surface salinity into a single
+file that serves as the base dataset for salinity restoring in forced ocean sea-ice cases (FOSI).
+The surface level of WOA 2023 data is utilized.</p>
+<p>The reference date for each month of data is assumed to be the 15th of each month.  In a simulation,
+this implies that for a model start time of January 1, the salinity is restored to the average of
+the December and January sea surface salinities.</p>
+</section>
+<section id="extrap-salin">
+<h2>extrap_salin<a class="headerlink" href="#extrap-salin" title="Link to this heading">¶</a></h2>
+<p>The class <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.utility.create_salin_restoring.ExtrapSalin</span></code>
+defines a step to extrapolate the combined January through December sea surface salinities
+into missing ocean regions such as ice-shelf cavities and across continents.  Since this is only
+extrapolation of surface values, masks are not utilized.</p>
 </section>
 </section>
 

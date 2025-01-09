@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -105,45 +105,45 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.mpas_core</span> <span class="kn">import</span> <span class="n">MpasCore</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel</span> <span class="kn">import</span> <span class="n">BaroclinicChannel</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_gyre</span> <span class="kn">import</span> <span class="n">BaroclinicGyre</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.buttermilk_bay</span> <span class="kn">import</span> <span class="n">ButtermilkBay</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.dam_break</span> <span class="kn">import</span> <span class="n">DamBreak</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.drying_slope</span> <span class="kn">import</span> <span class="n">DryingSlope</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_convergence</span> <span class="kn">import</span> <span class="n">GlobalConvergence</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean</span> <span class="kn">import</span> <span class="n">GlobalOcean</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.gotm</span> <span class="kn">import</span> <span class="n">Gotm</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.hurricane</span> <span class="kn">import</span> <span class="n">Hurricane</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.ice_shelf_2d</span> <span class="kn">import</span> <span class="n">IceShelf2d</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.internal_wave</span> <span class="kn">import</span> <span class="n">InternalWave</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus</span> <span class="kn">import</span> <span class="n">IsomipPlus</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.lock_exchange</span> <span class="kn">import</span> <span class="n">LockExchange</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.merry_go_round</span> <span class="kn">import</span> <span class="n">MerryGoRound</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.nonhydro</span> <span class="kn">import</span> <span class="n">Nonhydro</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.overflow</span> <span class="kn">import</span> <span class="n">Overflow</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.parabolic_bowl</span> <span class="kn">import</span> <span class="n">ParabolicBowl</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.planar_convergence</span> <span class="kn">import</span> <span class="n">PlanarConvergence</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.soma</span> <span class="kn">import</span> <span class="n">Soma</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.sphere_transport</span> <span class="kn">import</span> <span class="n">SphereTransport</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.spherical_harmonic_transform</span> <span class="kn">import</span> <span class="p">(</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.mpas_core</span><span class="w"> </span><span class="kn">import</span> <span class="n">MpasCore</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.baroclinic_channel</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaroclinicChannel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.baroclinic_gyre</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaroclinicGyre</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.buttermilk_bay</span><span class="w"> </span><span class="kn">import</span> <span class="n">ButtermilkBay</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.dam_break</span><span class="w"> </span><span class="kn">import</span> <span class="n">DamBreak</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.drying_slope</span><span class="w"> </span><span class="kn">import</span> <span class="n">DryingSlope</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_convergence</span><span class="w"> </span><span class="kn">import</span> <span class="n">GlobalConvergence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean</span><span class="w"> </span><span class="kn">import</span> <span class="n">GlobalOcean</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.gotm</span><span class="w"> </span><span class="kn">import</span> <span class="n">Gotm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.hurricane</span><span class="w"> </span><span class="kn">import</span> <span class="n">Hurricane</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.ice_shelf_2d</span><span class="w"> </span><span class="kn">import</span> <span class="n">IceShelf2d</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.internal_wave</span><span class="w"> </span><span class="kn">import</span> <span class="n">InternalWave</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.isomip_plus</span><span class="w"> </span><span class="kn">import</span> <span class="n">IsomipPlus</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.lock_exchange</span><span class="w"> </span><span class="kn">import</span> <span class="n">LockExchange</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.merry_go_round</span><span class="w"> </span><span class="kn">import</span> <span class="n">MerryGoRound</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.nonhydro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Nonhydro</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.overflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">Overflow</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.parabolic_bowl</span><span class="w"> </span><span class="kn">import</span> <span class="n">ParabolicBowl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.planar_convergence</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlanarConvergence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.soma</span><span class="w"> </span><span class="kn">import</span> <span class="n">Soma</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.sphere_transport</span><span class="w"> </span><span class="kn">import</span> <span class="n">SphereTransport</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.spherical_harmonic_transform</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">SphericalHarmonicTransform</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.tides</span> <span class="kn">import</span> <span class="n">Tides</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.utility</span> <span class="kn">import</span> <span class="n">Utility</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.ziso</span> <span class="kn">import</span> <span class="n">Ziso</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.tides</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tides</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">Utility</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.ziso</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ziso</span>
 
 
 <div class="viewcode-block" id="Ocean">
 <a class="viewcode-back" href="../../developers_guide/ocean/generated/compass.ocean.Ocean.html#compass.ocean.Ocean">[docs]</a>
-<span class="k">class</span> <span class="nc">Ocean</span><span class="p">(</span><span class="n">MpasCore</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Ocean</span><span class="p">(</span><span class="n">MpasCore</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The collection of all test case for the MPAS-Ocean core</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Ocean.__init__">
 <a class="viewcode-back" href="../../developers_guide/ocean/generated/compass.ocean.Ocean.html#compass.ocean.Ocean.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the collection of MPAS-Ocean test cases</span>
 <span class="sd">        &quot;&quot;&quot;</span>

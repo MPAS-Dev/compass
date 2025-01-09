@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.suite &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -105,17 +105,17 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.suite</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">resources</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">importlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">resources</span>
 
-<span class="kn">from</span> <span class="nn">compass.setup</span> <span class="kn">import</span> <span class="n">setup_cases</span>
-<span class="kn">from</span> <span class="nn">compass.clean</span> <span class="kn">import</span> <span class="n">clean_cases</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.setup</span><span class="w"> </span><span class="kn">import</span> <span class="n">setup_cases</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.clean</span><span class="w"> </span><span class="kn">import</span> <span class="n">clean_cases</span>
 
 
 <div class="viewcode-block" id="setup_suite">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.suite.setup_suite.html#compass.suite.setup_suite">[docs]</a>
-<span class="k">def</span> <span class="nf">setup_suite</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">suite_name</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">machine</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">setup_suite</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">suite_name</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">machine</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">work_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">baseline_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">copy_executable</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -167,7 +167,7 @@
 
 <div class="viewcode-block" id="clean_suite">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.suite.clean_suite.html#compass.suite.clean_suite">[docs]</a>
-<span class="k">def</span> <span class="nf">clean_suite</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">suite_name</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">clean_suite</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">suite_name</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Clean up a test suite by removing its test cases and run script</span>
 
@@ -195,7 +195,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
         <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Set up a regression test suite&#39;</span><span class="p">,</span> <span class="n">prog</span><span class="o">=</span><span class="s1">&#39;compass suite&#39;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="s2">&quot;--core&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;core&quot;</span><span class="p">,</span>
@@ -249,7 +249,7 @@
                     <span class="n">copy_executable</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">copy_executable</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_parse_suite</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_suite</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Parse the text of a file defining a test suite &quot;&quot;&quot;</span>
 
     <span class="n">tests</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>

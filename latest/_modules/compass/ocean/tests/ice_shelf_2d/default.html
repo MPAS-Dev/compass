@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.tests.ice_shelf_2d.default &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -107,18 +107,18 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.ice_shelf_2d.default</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests</span> <span class="kn">import</span> <span class="n">ice_shelf_2d</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.ice_shelf_2d.forward</span> <span class="kn">import</span> <span class="n">Forward</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.ice_shelf_2d.initial_state</span> <span class="kn">import</span> <span class="n">InitialState</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.ice_shelf_2d.ssh_adjustment</span> <span class="kn">import</span> <span class="n">SshAdjustment</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.ice_shelf_2d.viz</span> <span class="kn">import</span> <span class="n">Viz</span>
-<span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
-<span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">ice_shelf_2d</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.ice_shelf_2d.forward</span><span class="w"> </span><span class="kn">import</span> <span class="n">Forward</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.ice_shelf_2d.initial_state</span><span class="w"> </span><span class="kn">import</span> <span class="n">InitialState</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.ice_shelf_2d.ssh_adjustment</span><span class="w"> </span><span class="kn">import</span> <span class="n">SshAdjustment</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.ice_shelf_2d.viz</span><span class="w"> </span><span class="kn">import</span> <span class="n">Viz</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.testcase</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestCase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.validate</span><span class="w"> </span><span class="kn">import</span> <span class="n">compare_variables</span>
 
 
 <div class="viewcode-block" id="Default">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ice_shelf_2d.default.Default.html#compass.ocean.tests.ice_shelf_2d.default.Default">[docs]</a>
-<span class="k">class</span> <span class="nc">Default</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Default</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The default ice-shelf 2D test case, which performs a short forward run with</span>
 <span class="sd">    the z-star vertical coordinate and with 15 iterations of adjustment to make</span>
@@ -135,7 +135,7 @@
 
 <div class="viewcode-block" id="Default.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ice_shelf_2d.default.Default.html#compass.ocean.tests.ice_shelf_2d.default.Default.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">coord_type</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">coord_type</span><span class="p">,</span>
                  <span class="n">tidal_forcing</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the test case</span>
@@ -182,7 +182,7 @@
 
 <div class="viewcode-block" id="Default.configure">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ice_shelf_2d.default.Default.configure.html#compass.ocean.tests.ice_shelf_2d.default.Default.configure">[docs]</a>
-    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Modify the configuration options for this test case.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -191,7 +191,7 @@
 
     <span class="c1"># no run() method is needed</span>
 
-    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test cases can override this method to perform validation of variables</span>
 <span class="sd">        and timers</span>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -108,12 +108,12 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">pyproj</span>
-<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyproj</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyremap</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">MpasCellMeshDescriptor</span><span class="p">,</span>
     <span class="n">MpasVertexMeshDescriptor</span><span class="p">,</span>
     <span class="n">ProjectionGridDescriptor</span><span class="p">,</span>
@@ -121,22 +121,22 @@
     <span class="n">get_lat_lon_descriptor</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">symlink</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
     <span class="n">FilesForE3SMStep</span><span class="p">,</span>
 <span class="p">)</span>
 
 
 <div class="viewcode-block" id="DiagnosticMaps">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps.DiagnosticMaps.html#compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps.DiagnosticMaps">[docs]</a>
-<span class="k">class</span> <span class="nc">DiagnosticMaps</span><span class="p">(</span><span class="n">FilesForE3SMStep</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DiagnosticMaps</span><span class="p">(</span><span class="n">FilesForE3SMStep</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for creating mapping files for use in MPAS-Analysis</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="DiagnosticMaps.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps.DiagnosticMaps.html#compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps.DiagnosticMaps.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a step</span>
 
@@ -156,7 +156,7 @@
 
 <div class="viewcode-block" id="DiagnosticMaps.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps.DiagnosticMaps.run.html#compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps.DiagnosticMaps.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the testcase</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -168,7 +168,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">make_diagnostics_maps</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">ntasks</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_diagnostics_maps</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">ntasks</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Run this step of the testcase</span>
 
@@ -209,7 +209,7 @@
                 <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">link_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_make_analysis_lat_lon_map</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">ntasks</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_make_analysis_lat_lon_map</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">ntasks</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
     <span class="n">mesh_filename</span> <span class="o">=</span> <span class="s1">&#39;restart.nc&#39;</span>
 
     <span class="n">lat_res</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span> <span class="s1">&#39;comparisonLatResolution&#39;</span><span class="p">)</span>
@@ -225,7 +225,7 @@
 
 
 <span class="c1"># copied from MPAS-Analysis for now</span>
-<span class="k">def</span> <span class="nf">_get_pyproj_projection</span><span class="p">(</span><span class="n">comparison_grid_name</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_pyproj_projection</span><span class="p">(</span><span class="n">comparison_grid_name</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the projection from the comparison_grid_name.</span>
 <span class="sd">    Parameters</span>
@@ -269,7 +269,7 @@
 
 
 <span class="c1"># A lot of duplication from MPAS-Analysis for now.</span>
-<span class="k">def</span> <span class="nf">_make_analysis_projection_map</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">projection_name</span><span class="p">,</span> <span class="n">ntasks</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_make_analysis_projection_map</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">projection_name</span><span class="p">,</span> <span class="n">ntasks</span><span class="p">,</span>
                                   <span class="n">logger</span><span class="p">):</span>
     <span class="n">mesh_filename</span> <span class="o">=</span> <span class="s1">&#39;restart.nc&#39;</span>
     <span class="n">section</span> <span class="o">=</span> <span class="s1">&#39;files_for_e3sm&#39;</span>
@@ -320,7 +320,7 @@
                        <span class="n">ntasks</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_make_mapping_file</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">out_grid_name</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span> <span class="n">out_descriptor</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_make_mapping_file</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">out_grid_name</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span> <span class="n">out_descriptor</span><span class="p">,</span>
                        <span class="n">ntasks</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
 
     <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;parallel_executable&#39;</span><span class="p">)</span>

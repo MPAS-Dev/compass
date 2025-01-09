@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.tests.global_convergence.cosine_bell &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -107,23 +107,23 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.global_convergence.cosine_bell</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.config</span> <span class="kn">import</span> <span class="n">CompassConfigParser</span>
-<span class="kn">from</span> <span class="nn">compass.mesh.spherical</span> <span class="kn">import</span> <span class="p">(</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompassConfigParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.mesh.spherical</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">IcosahedralMeshStep</span><span class="p">,</span>
     <span class="n">QuasiUniformSphericalMeshStep</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_convergence.cosine_bell.analysis</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_convergence.cosine_bell.analysis</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">Analysis</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_convergence.cosine_bell.forward</span> <span class="kn">import</span> <span class="n">Forward</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_convergence.cosine_bell.init</span> <span class="kn">import</span> <span class="n">Init</span>
-<span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
-<span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_convergence.cosine_bell.forward</span><span class="w"> </span><span class="kn">import</span> <span class="n">Forward</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_convergence.cosine_bell.init</span><span class="w"> </span><span class="kn">import</span> <span class="n">Init</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.testcase</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestCase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.validate</span><span class="w"> </span><span class="kn">import</span> <span class="n">compare_variables</span>
 
 
 <div class="viewcode-block" id="CosineBell">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_convergence.cosine_bell.CosineBell.html#compass.ocean.tests.global_convergence.cosine_bell.CosineBell">[docs]</a>
-<span class="k">class</span> <span class="nc">CosineBell</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CosineBell</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A test case for creating a global MPAS-Ocean mesh</span>
 
@@ -137,7 +137,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="CosineBell.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_convergence.cosine_bell.CosineBell.html#compass.ocean.tests.global_convergence.cosine_bell.CosineBell.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">icosahedral</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">icosahedral</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create test case for creating a global MPAS-Ocean mesh</span>
 
@@ -167,7 +167,7 @@
 
 <div class="viewcode-block" id="CosineBell.configure">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_convergence.cosine_bell.CosineBell.configure.html#compass.ocean.tests.global_convergence.cosine_bell.CosineBell.configure">[docs]</a>
-    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set config options for the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -192,7 +192,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">update_cores</span><span class="p">()</span></div>
 
 
-    <span class="k">def</span> <span class="nf">update_cores</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_cores</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Update the number of cores and min_tasks for each forward step &quot;&quot;&quot;</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
@@ -226,7 +226,7 @@
                        <span class="nb">str</span><span class="p">(</span><span class="n">min_tasks</span><span class="p">),</span>
                        <span class="n">comment</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Minimum core count for </span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1"> km mesh&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_setup_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setup_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; setup steps given resolutions &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">icosahedral</span><span class="p">:</span>
             <span class="n">default_resolutions</span> <span class="o">=</span> <span class="s1">&#39;60, 120, 240, 480&#39;</span>
@@ -275,7 +275,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Analysis</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolutions</span><span class="o">=</span><span class="n">resolutions</span><span class="p">,</span>
                                <span class="n">icosahedral</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">icosahedral</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validate variables against a baseline</span>
 <span class="sd">        &quot;&quot;&quot;</span>

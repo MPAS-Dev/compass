@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.tests.hurricane.lts.mesh.lts_regions &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -107,23 +107,23 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.hurricane.lts.mesh.lts_regions</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="kn">import</span> <span class="nn">netCDF4</span> <span class="k">as</span> <span class="nn">nc</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.viz.paraview_extractor</span> <span class="kn">import</span> <span class="n">extract_vtk</span>
-<span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="kn">import</span> <span class="n">Point</span>
-<span class="kn">from</span> <span class="nn">shapely.geometry.polygon</span> <span class="kn">import</span> <span class="n">Polygon</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">netCDF4</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.viz.paraview_extractor</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_vtk</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Point</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry.polygon</span><span class="w"> </span><span class="kn">import</span> <span class="n">Polygon</span>
 
-<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
 
 <div class="viewcode-block" id="LTSRegionsStep">
 <a class="viewcode-back" href="../../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.lts.mesh.lts_regions.LTSRegionsStep.html#compass.ocean.tests.hurricane.lts.mesh.lts_regions.LTSRegionsStep">[docs]</a>
-<span class="k">class</span> <span class="nc">LTSRegionsStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LTSRegionsStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for adding LTS regions to a global MPAS-Ocean mesh</span>
 
@@ -134,7 +134,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="LTSRegionsStep.__init__">
 <a class="viewcode-back" href="../../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.lts.mesh.lts_regions.LTSRegionsStep.html#compass.ocean.tests.hurricane.lts.mesh.lts_regions.LTSRegionsStep.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">cull_mesh_step</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">cull_mesh_step</span><span class="p">,</span>
                  <span class="n">num_interface_adjacent</span><span class="p">,</span>
                  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;lts_regions&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="s1">&#39;lts_regions&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -165,7 +165,7 @@
 
 <div class="viewcode-block" id="LTSRegionsStep.setup">
 <a class="viewcode-back" href="../../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.lts.mesh.lts_regions.LTSRegionsStep.setup.html#compass.ocean.tests.hurricane.lts.mesh.lts_regions.LTSRegionsStep.setup">[docs]</a>
-    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set up the test case in the work directory, including downloading any</span>
 <span class="sd">        dependencies.</span>
@@ -189,7 +189,7 @@
 
 <div class="viewcode-block" id="LTSRegionsStep.run">
 <a class="viewcode-back" href="../../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.lts.mesh.lts_regions.LTSRegionsStep.run.html#compass.ocean.tests.hurricane.lts.mesh.lts_regions.LTSRegionsStep.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -219,7 +219,7 @@
 
 <div class="viewcode-block" id="label_mesh">
 <a class="viewcode-back" href="../../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.lts.mesh.lts_regions.label_mesh.html#compass.ocean.tests.hurricane.lts.mesh.lts_regions.label_mesh">[docs]</a>
-<span class="k">def</span> <span class="nf">label_mesh</span><span class="p">(</span><span class="n">fine_region</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">graph_info</span><span class="p">,</span> <span class="n">num_interface</span><span class="p">,</span>  <span class="c1"># noqa: C901</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">label_mesh</span><span class="p">(</span><span class="n">fine_region</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">graph_info</span><span class="p">,</span> <span class="n">num_interface</span><span class="p">,</span>  <span class="c1"># noqa: C901</span>
                <span class="n">num_interface_adjacent</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">use_progress_bar</span><span class="p">):</span>
 
     <span class="c1"># read in mesh data</span>

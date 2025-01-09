@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.tests.global_ocean.mesh.wc14 &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -108,29 +108,29 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.global_ocean.mesh.wc14</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
-<span class="kn">import</span> <span class="nn">cartopy.feature</span> <span class="k">as</span> <span class="nn">cfeature</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">mpas_tools.mesh.creation.mesh_definition_tools</span> <span class="k">as</span> <span class="nn">mdt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">read_feature_collection</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.mesh.creation.signed_distance</span> <span class="kn">import</span> <span class="p">(</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cartopy.crs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ccrs</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cartopy.feature</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cfeature</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mpas_tools.mesh.creation.mesh_definition_tools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mdt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">geometric_features</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_feature_collection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.cime.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.mesh.creation.signed_distance</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">mask_from_geojson</span><span class="p">,</span>
     <span class="n">signed_distance_from_geojson</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.viz.colormaps</span> <span class="kn">import</span> <span class="n">register_sci_viz_colormaps</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.viz.colormaps</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_sci_viz_colormaps</span>
 
-<span class="kn">from</span> <span class="nn">compass.mesh</span> <span class="kn">import</span> <span class="n">QuasiUniformSphericalMeshStep</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuasiUniformSphericalMeshStep</span>
 
 
 <div class="viewcode-block" id="WC14BaseMesh">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.mesh.wc14.WC14BaseMesh.html#compass.ocean.tests.global_ocean.mesh.wc14.WC14BaseMesh">[docs]</a>
-<span class="k">class</span> <span class="nc">WC14BaseMesh</span><span class="p">(</span><span class="n">QuasiUniformSphericalMeshStep</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">WC14BaseMesh</span><span class="p">(</span><span class="n">QuasiUniformSphericalMeshStep</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for creating WC14 mesh</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add some input files</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -153,7 +153,7 @@
 
 <div class="viewcode-block" id="WC14BaseMesh.build_cell_width_lat_lon">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.mesh.wc14.WC14BaseMesh.build_cell_width_lat_lon.html#compass.ocean.tests.global_ocean.mesh.wc14.WC14BaseMesh.build_cell_width_lat_lon">[docs]</a>
-    <span class="k">def</span> <span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create cell width array for this mesh on a regular latitude-longitude</span>
 <span class="sd">        grid</span>
@@ -320,7 +320,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_plot_cartopy</span><span class="p">(</span><span class="n">nPlot</span><span class="p">,</span> <span class="n">varName</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">map_name</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_plot_cartopy</span><span class="p">(</span><span class="n">nPlot</span><span class="p">,</span> <span class="n">varName</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">map_name</span><span class="p">):</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">nPlot</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_global</span><span class="p">()</span>
 

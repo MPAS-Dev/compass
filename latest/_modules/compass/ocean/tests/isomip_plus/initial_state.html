@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.tests.isomip_plus.initial_state &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -107,25 +107,25 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.isomip_plus.initial_state</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 
-<span class="kn">import</span> <span class="nn">cmocean</span>  <span class="c1"># noqa: F401</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cmocean</span>  <span class="c1"># noqa: F401</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.cime.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
 
-<span class="kn">from</span> <span class="nn">compass.ocean.iceshelf</span> <span class="kn">import</span> <span class="n">compute_land_ice_pressure_and_draft</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.geom</span> <span class="kn">import</span> <span class="n">interpolate_geom</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.viz.plot</span> <span class="kn">import</span> <span class="n">MoviePlotter</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.vertical</span> <span class="kn">import</span> <span class="n">init_vertical_coord</span>
-<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.iceshelf</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_land_ice_pressure_and_draft</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.isomip_plus.geom</span><span class="w"> </span><span class="kn">import</span> <span class="n">interpolate_geom</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.isomip_plus.viz.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">MoviePlotter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.vertical</span><span class="w"> </span><span class="kn">import</span> <span class="n">init_vertical_coord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
 
 <div class="viewcode-block" id="InitialState">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.initial_state.InitialState.html#compass.ocean.tests.isomip_plus.initial_state.InitialState">[docs]</a>
-<span class="k">class</span> <span class="nc">InitialState</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">InitialState</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for creating a mesh and initial condition for ISOMIP+ test cases</span>
 
@@ -148,7 +148,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="InitialState.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.initial_state.InitialState.html#compass.ocean.tests.isomip_plus.initial_state.InitialState.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">experiment</span><span class="p">,</span> <span class="n">vertical_coordinate</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">experiment</span><span class="p">,</span> <span class="n">vertical_coordinate</span><span class="p">,</span>
                  <span class="n">time_varying_forcing</span><span class="p">,</span> <span class="n">thin_film_present</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the step</span>
@@ -194,7 +194,7 @@
 
 <div class="viewcode-block" id="InitialState.run">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.initial_state.InitialState.run.html#compass.ocean.tests.isomip_plus.initial_state.InitialState.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -203,7 +203,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_plot</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_compute_initial_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_initial_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">thin_film_present</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thin_film_present</span>
 
@@ -320,7 +320,7 @@
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;initial_state.nc&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ds</span><span class="p">,</span> <span class="n">frac</span>
 
-    <span class="k">def</span> <span class="nf">_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot several fields from the initial condition</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -420,7 +420,7 @@
             <span class="n">ds</span><span class="o">.</span><span class="n">salinity</span><span class="p">,</span> <span class="n">nameInTitle</span><span class="o">=</span><span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;salin&#39;</span><span class="p">,</span>
             <span class="n">units</span><span class="o">=</span><span class="s1">&#39;PSU&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">33.8</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">34.7</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.haline&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_compute_restoring</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">frac</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_restoring</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">frac</span><span class="p">):</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">]</span>
 
@@ -480,7 +480,7 @@
 
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_forcing</span><span class="p">,</span> <span class="s1">&#39;init_mode_forcing_data.nc&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_write_time_varying_forcing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds_init</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_write_time_varying_forcing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds_init</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Write time-varying land-ice forcing and update the initial condition</span>
 <span class="sd">        &quot;&quot;&quot;</span>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.tests.global_ocean.mesh &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -107,36 +107,36 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.global_ocean.mesh</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.mesh.spherical</span> <span class="kn">import</span> <span class="p">(</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.mesh.spherical</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">IcosahedralMeshStep</span><span class="p">,</span>
     <span class="n">QuasiUniformSphericalMeshStep</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.mesh.cull</span> <span class="kn">import</span> <span class="n">CullMeshStep</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.mesh.remap_topography</span> <span class="kn">import</span> <span class="n">RemapTopography</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.arrm10to60</span> <span class="kn">import</span> <span class="n">ARRM10to60BaseMesh</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.ec30to60</span> <span class="kn">import</span> <span class="n">EC30to60BaseMesh</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.fris01to60</span> <span class="kn">import</span> <span class="n">FRIS01to60BaseMesh</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.fris02to60</span> <span class="kn">import</span> <span class="n">FRIS02to60BaseMesh</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.fris04to60</span> <span class="kn">import</span> <span class="n">FRIS04to60BaseMesh</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.fris08to60</span> <span class="kn">import</span> <span class="n">FRIS08to60BaseMesh</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.kuroshio</span> <span class="kn">import</span> <span class="n">KuroshioBaseMesh</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.qu</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.mesh.cull</span><span class="w"> </span><span class="kn">import</span> <span class="n">CullMeshStep</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.mesh.remap_topography</span><span class="w"> </span><span class="kn">import</span> <span class="n">RemapTopography</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.mesh.arrm10to60</span><span class="w"> </span><span class="kn">import</span> <span class="n">ARRM10to60BaseMesh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.mesh.ec30to60</span><span class="w"> </span><span class="kn">import</span> <span class="n">EC30to60BaseMesh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.mesh.fris01to60</span><span class="w"> </span><span class="kn">import</span> <span class="n">FRIS01to60BaseMesh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.mesh.fris02to60</span><span class="w"> </span><span class="kn">import</span> <span class="n">FRIS02to60BaseMesh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.mesh.fris04to60</span><span class="w"> </span><span class="kn">import</span> <span class="n">FRIS04to60BaseMesh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.mesh.fris08to60</span><span class="w"> </span><span class="kn">import</span> <span class="n">FRIS08to60BaseMesh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.mesh.kuroshio</span><span class="w"> </span><span class="kn">import</span> <span class="n">KuroshioBaseMesh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.mesh.qu</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">IcosMeshFromConfigStep</span><span class="p">,</span>
     <span class="n">QUMeshFromConfigStep</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.rrs6to18</span> <span class="kn">import</span> <span class="n">RRS6to18BaseMesh</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.so12to30</span> <span class="kn">import</span> <span class="n">SO12to30BaseMesh</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.wc14</span> <span class="kn">import</span> <span class="n">WC14BaseMesh</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.metadata</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.mesh.rrs6to18</span><span class="w"> </span><span class="kn">import</span> <span class="n">RRS6to18BaseMesh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.mesh.so12to30</span><span class="w"> </span><span class="kn">import</span> <span class="n">SO12to30BaseMesh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.mesh.wc14</span><span class="w"> </span><span class="kn">import</span> <span class="n">WC14BaseMesh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.metadata</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">get_author_and_email_from_git</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
-<span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.testcase</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestCase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.validate</span><span class="w"> </span><span class="kn">import</span> <span class="n">compare_variables</span>
 
 
 <div class="viewcode-block" id="Mesh">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.mesh.Mesh.html#compass.ocean.tests.global_ocean.mesh.Mesh">[docs]</a>
-<span class="k">class</span> <span class="nc">Mesh</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Mesh</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A test case for creating a global MPAS-Ocean mesh</span>
 
@@ -157,7 +157,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Mesh.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.mesh.Mesh.html#compass.ocean.tests.global_ocean.mesh.Mesh.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">high_res_topography</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">high_res_topography</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create test case for creating a global MPAS-Ocean mesh</span>
 
@@ -243,7 +243,7 @@
 
 <div class="viewcode-block" id="Mesh.configure">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.mesh.Mesh.configure.html#compass.ocean.tests.global_ocean.mesh.Mesh.configure">[docs]</a>
-    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Modify the configuration options for this test case</span>
 
@@ -303,7 +303,7 @@
         <span class="n">get_author_and_email_from_git</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test cases can override this method to perform validation of variables</span>
 <span class="sd">        and timers</span>
@@ -312,7 +312,7 @@
         <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
                           <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;cull_mesh/culled_mesh.nc&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_cull_mesh_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_cull_mesh_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the path of the cull mesh step (for input files)</span>
 <span class="sd">        Returns</span>

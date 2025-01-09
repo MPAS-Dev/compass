@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.tests.planar_convergence.conv_test_case &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -107,15 +107,15 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.planar_convergence.conv_test_case</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.config</span> <span class="kn">import</span> <span class="n">CompassConfigParser</span>
-<span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.planar_convergence.forward</span> <span class="kn">import</span> \
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompassConfigParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.testcase</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestCase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.planar_convergence.forward</span><span class="w"> </span><span class="kn">import</span> \
     <span class="n">Forward</span>
 
 
 <div class="viewcode-block" id="ConvTestCase">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.planar_convergence.conv_test_case.ConvTestCase.html#compass.ocean.tests.planar_convergence.conv_test_case.ConvTestCase">[docs]</a>
-<span class="k">class</span> <span class="nc">ConvTestCase</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConvTestCase</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A test case for various convergence tests on in MPAS-Ocean with planar,</span>
 <span class="sd">    doubly periodic meshes</span>
@@ -126,7 +126,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="ConvTestCase.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.planar_convergence.conv_test_case.ConvTestCase.html#compass.ocean.tests.planar_convergence.conv_test_case.ConvTestCase.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create test case for creating a global MPAS-Ocean mesh</span>
 
@@ -150,7 +150,7 @@
 
 <div class="viewcode-block" id="ConvTestCase.configure">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.planar_convergence.conv_test_case.ConvTestCase.configure.html#compass.ocean.tests.planar_convergence.conv_test_case.ConvTestCase.configure">[docs]</a>
-    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set config options for the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -163,7 +163,7 @@
 
 <div class="viewcode-block" id="ConvTestCase.update_cores">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.planar_convergence.conv_test_case.ConvTestCase.update_cores.html#compass.ocean.tests.planar_convergence.conv_test_case.ConvTestCase.update_cores">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_cores</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_cores</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Update the number of cores and min_tasks for each forward step &quot;&quot;&quot;</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
@@ -197,7 +197,7 @@
                        <span class="nb">str</span><span class="p">(</span><span class="n">min_tasks</span><span class="p">))</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_setup_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setup_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        setup steps given resolutions</span>
 
@@ -225,7 +225,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">create_analysis</span><span class="p">(</span><span class="n">resolutions</span><span class="o">=</span><span class="n">resolutions</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">create_init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        Child class must override this to return an instance of a</span>
@@ -244,7 +244,7 @@
 
         <span class="k">pass</span>
 
-    <span class="k">def</span> <span class="nf">create_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolutions</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolutions</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        Child class must override this to return an instance of a</span>

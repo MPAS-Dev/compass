@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.tests.isomip_plus.geom &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -107,14 +107,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.isomip_plus.geom</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">xarray</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.mesh.interpolation</span> <span class="kn">import</span> <span class="n">interp_bilin</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.mesh.interpolation</span><span class="w"> </span><span class="kn">import</span> <span class="n">interp_bilin</span>
 
 
 <div class="viewcode-block" id="interpolate_ocean_mask">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask.html#compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask">[docs]</a>
-<span class="k">def</span> <span class="nf">interpolate_ocean_mask</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds_geom</span><span class="p">,</span> <span class="n">min_ocean_fraction</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">interpolate_ocean_mask</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds_geom</span><span class="p">,</span> <span class="n">min_ocean_fraction</span><span class="p">,</span>
                            <span class="n">thin_film_present</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Interpolate the ocean mask from the original BISICLES grid to the MPAS</span>
@@ -172,7 +172,7 @@
 
 <div class="viewcode-block" id="interpolate_geom">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.geom.interpolate_geom.html#compass.ocean.tests.isomip_plus.geom.interpolate_geom">[docs]</a>
-<span class="k">def</span> <span class="nf">interpolate_geom</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds_geom</span><span class="p">,</span> <span class="n">min_ocean_fraction</span><span class="p">,</span> <span class="n">thin_film_present</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">interpolate_geom</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds_geom</span><span class="p">,</span> <span class="n">min_ocean_fraction</span><span class="p">,</span> <span class="n">thin_film_present</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Interpolate the ice geometry from the original BISICLES grid to the MPAS</span>
 <span class="sd">    mesh.</span>
@@ -264,7 +264,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_get_geom_fields</span><span class="p">(</span><span class="n">ds_geom</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">thin_film_present</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_geom_fields</span><span class="p">(</span><span class="n">ds_geom</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">thin_film_present</span><span class="p">):</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">ds_geom</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">values</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">ds_geom</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">values</span>
     <span class="n">x_cell</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">xIsomipCell</span><span class="o">.</span><span class="n">values</span>

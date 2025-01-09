@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.landice.tests.antarctica.mesh &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -107,13 +107,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice.tests.antarctica.mesh</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="kn">import</span> <span class="nn">netCDF4</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.scrip.from_mpas</span> <span class="kn">import</span> <span class="n">scrip_from_mpas</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">netCDF4</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_call</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.scrip.from_mpas</span><span class="w"> </span><span class="kn">import</span> <span class="n">scrip_from_mpas</span>
 
-<span class="kn">from</span> <span class="nn">compass.landice.mesh</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">add_bedmachine_thk_to_ais_gridded_data</span><span class="p">,</span>
     <span class="n">build_cell_width</span><span class="p">,</span>
     <span class="n">build_mali_mesh</span><span class="p">,</span>
@@ -122,13 +122,13 @@
     <span class="n">make_region_masks</span><span class="p">,</span>
     <span class="n">preprocess_ais_data</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">make_graph_file</span>
-<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_graph_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
 
 <div class="viewcode-block" id="Mesh">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.antarctica.mesh.Mesh.html#compass.landice.tests.antarctica.mesh.Mesh">[docs]</a>
-<span class="k">class</span> <span class="nc">Mesh</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Mesh</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for creating a mesh and initial condition for Antarctica test cases</span>
 
@@ -140,7 +140,7 @@
 
 <div class="viewcode-block" id="Mesh.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.antarctica.mesh.Mesh.html#compass.landice.tests.antarctica.mesh.Mesh.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the step</span>
 
@@ -170,7 +170,7 @@
 
 <div class="viewcode-block" id="Mesh.run">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.antarctica.mesh.Mesh.run.html#compass.landice.tests.antarctica.mesh.Mesh.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.iceshelf &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -106,22 +106,22 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.iceshelf</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">xarray</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.cime.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
 
-<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span>
-<span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">partition</span><span class="p">,</span> <span class="n">run_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">symlink</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">partition</span><span class="p">,</span> <span class="n">run_model</span>
 
 
 <div class="viewcode-block" id="compute_land_ice_pressure_and_draft">
 <a class="viewcode-back" href="../../../developers_guide/ocean/generated/compass.ocean.iceshelf.compute_land_ice_pressure_and_draft.html#compass.ocean.iceshelf.compute_land_ice_pressure_and_draft">[docs]</a>
-<span class="k">def</span> <span class="nf">compute_land_ice_pressure_and_draft</span><span class="p">(</span><span class="n">ssh</span><span class="p">,</span> <span class="n">modify_mask</span><span class="p">,</span> <span class="n">ref_density</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_land_ice_pressure_and_draft</span><span class="p">(</span><span class="n">ssh</span><span class="p">,</span> <span class="n">modify_mask</span><span class="p">,</span> <span class="n">ref_density</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the pressure from and overlying ice shelf and the ice-shelf draft</span>
 
@@ -154,7 +154,7 @@
 
 <div class="viewcode-block" id="adjust_ssh">
 <a class="viewcode-back" href="../../../developers_guide/ocean/generated/compass.ocean.iceshelf.adjust_ssh.html#compass.ocean.iceshelf.adjust_ssh">[docs]</a>
-<span class="k">def</span> <span class="nf">adjust_ssh</span><span class="p">(</span><span class="n">variable</span><span class="p">,</span> <span class="n">iteration_count</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">update_pio</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">adjust_ssh</span><span class="p">(</span><span class="n">variable</span><span class="p">,</span> <span class="n">iteration_count</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">update_pio</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                <span class="n">convert_to_cdf5</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">delta_ssh_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Adjust the sea surface height or land-ice pressure to be dynamically</span>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.mesh.cull &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -106,37 +106,37 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.mesh.cull</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="kn">import</span> <span class="nn">mpas_tools.io</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mpas_tools.io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">geometric_features</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">FeatureCollection</span><span class="p">,</span>
     <span class="n">GeometricFeatures</span><span class="p">,</span>
     <span class="n">read_feature_collection</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">LoggingContext</span><span class="p">,</span> <span class="n">check_call</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.mesh.conversion</span> <span class="kn">import</span> <span class="n">cull</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.mesh.creation.sort_mesh</span> <span class="kn">import</span> <span class="n">sort_mesh</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.mesh.cull</span> <span class="kn">import</span> <span class="n">cull_dataset</span><span class="p">,</span> <span class="n">map_culled_to_base</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.mesh.mask</span> <span class="kn">import</span> <span class="n">compute_mpas_flood_fill_mask</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.ocean</span> <span class="kn">import</span> <span class="n">inject_bathymetry</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.ocean.coastline_alteration</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoggingContext</span><span class="p">,</span> <span class="n">check_call</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.mesh.conversion</span><span class="w"> </span><span class="kn">import</span> <span class="n">cull</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.mesh.creation.sort_mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">sort_mesh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.mesh.cull</span><span class="w"> </span><span class="kn">import</span> <span class="n">cull_dataset</span><span class="p">,</span> <span class="n">map_culled_to_base</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.mesh.mask</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_mpas_flood_fill_mask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.ocean</span><span class="w"> </span><span class="kn">import</span> <span class="n">inject_bathymetry</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.ocean.coastline_alteration</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">add_critical_land_blockages</span><span class="p">,</span>
     <span class="n">add_land_locked_cells_to_mask</span><span class="p">,</span>
     <span class="n">widen_transect_edge_masks</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.viz.paraview_extractor</span> <span class="kn">import</span> <span class="n">extract_vtk</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.viz.paraview_extractor</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_vtk</span>
 
-<span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">make_graph_file</span>
-<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_graph_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
 
 <div class="viewcode-block" id="CullMeshStep">
 <a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.mesh.cull.CullMeshStep.html#compass.ocean.mesh.cull.CullMeshStep">[docs]</a>
-<span class="k">class</span> <span class="nc">CullMeshStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CullMeshStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for culling a global MPAS-Ocean mesh</span>
 
@@ -164,7 +164,7 @@
 
 <div class="viewcode-block" id="CullMeshStep.__init__">
 <a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.mesh.cull.CullMeshStep.html#compass.ocean.mesh.cull.CullMeshStep.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">base_mesh_step</span><span class="p">,</span> <span class="n">with_ice_shelf_cavities</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">base_mesh_step</span><span class="p">,</span> <span class="n">with_ice_shelf_cavities</span><span class="p">,</span>
                  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;cull_mesh&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">do_inject_bathymetry</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">preserve_floodplain</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">remap_topography</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -218,7 +218,7 @@
 
 <div class="viewcode-block" id="CullMeshStep.setup">
 <a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.mesh.cull.CullMeshStep.setup.html#compass.ocean.mesh.cull.CullMeshStep.setup">[docs]</a>
-    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set up the test case in the work directory, including downloading any</span>
 <span class="sd">        dependencies.</span>
@@ -252,7 +252,7 @@
                                                <span class="s1">&#39;cull_mesh_min_cpus_per_task&#39;</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_resources</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_resources</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constrain ``cpus_per_task`` and ``ntasks`` based on the number of</span>
 <span class="sd">        cores available to this step</span>
@@ -271,7 +271,7 @@
 
 <div class="viewcode-block" id="CullMeshStep.run">
 <a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.mesh.cull.CullMeshStep.run.html#compass.ocean.mesh.cull.CullMeshStep.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -310,7 +310,7 @@
 
 <div class="viewcode-block" id="cull_mesh">
 <a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.mesh.cull.cull_mesh.html#compass.ocean.mesh.cull.cull_mesh">[docs]</a>
-<span class="k">def</span> <span class="nf">cull_mesh</span><span class="p">(</span><span class="n">with_cavities</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">with_critical_passages</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cull_mesh</span><span class="p">(</span><span class="n">with_cavities</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">with_critical_passages</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
               <span class="n">custom_critical_passages</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">custom_land_blockages</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
               <span class="n">preserve_floodplain</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_progress_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
               <span class="n">process_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">convert_to_cdf5</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">latitude_threshold</span><span class="o">=</span><span class="mf">43.</span><span class="p">,</span>
@@ -394,7 +394,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_cull_mesh_with_logging</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">with_cavities</span><span class="p">,</span> <span class="n">with_critical_passages</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_cull_mesh_with_logging</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">with_cavities</span><span class="p">,</span> <span class="n">with_critical_passages</span><span class="p">,</span>
                             <span class="n">custom_critical_passages</span><span class="p">,</span> <span class="n">custom_land_blockages</span><span class="p">,</span>
                             <span class="n">preserve_floodplain</span><span class="p">,</span> <span class="n">use_progress_bar</span><span class="p">,</span>
                             <span class="n">process_count</span><span class="p">,</span> <span class="n">convert_to_cdf5</span><span class="p">,</span> <span class="n">latitude_threshold</span><span class="p">,</span>
@@ -598,7 +598,7 @@
                     <span class="n">use_progress_bar</span><span class="o">=</span><span class="n">use_progress_bar</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_cull_topo</span><span class="p">(</span><span class="n">with_cavities</span><span class="p">,</span> <span class="n">process_count</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">latitude_threshold</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_cull_topo</span><span class="p">(</span><span class="n">with_cavities</span><span class="p">,</span> <span class="n">process_count</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">latitude_threshold</span><span class="p">,</span>
                <span class="n">sweep_count</span><span class="p">,</span> <span class="n">ds_preserve</span><span class="p">):</span>
 
     <span class="n">ds_topo</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">)</span>
@@ -628,7 +628,7 @@
     <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_culled_topo</span><span class="p">,</span> <span class="s1">&#39;topography_culled.nc&#39;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_land_mask_from_topo</span><span class="p">(</span><span class="n">with_cavities</span><span class="p">,</span> <span class="n">topo_filename</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_land_mask_from_topo</span><span class="p">(</span><span class="n">with_cavities</span><span class="p">,</span> <span class="n">topo_filename</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">):</span>
     <span class="n">ds_topo</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">topo_filename</span><span class="p">)</span>
 
     <span class="n">ocean_frac</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="o">.</span><span class="n">oceanFracObserved</span>
@@ -650,7 +650,7 @@
     <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_mask</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_flood_fill_and_add_land_ice_mask</span><span class="p">(</span><span class="n">ds_topo</span><span class="p">,</span> <span class="n">ds_base_mesh</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_flood_fill_and_add_land_ice_mask</span><span class="p">(</span><span class="n">ds_topo</span><span class="p">,</span> <span class="n">ds_base_mesh</span><span class="p">,</span>
                                       <span class="n">ds_map_culled_to_base</span><span class="p">,</span> <span class="n">ds_perserve</span><span class="p">,</span>
                                       <span class="n">logger</span><span class="p">,</span> <span class="n">latitude_threshold</span><span class="p">,</span> <span class="n">sweep_count</span><span class="p">):</span>
 
@@ -735,7 +735,7 @@
     <span class="n">ds_topo</span><span class="p">[</span><span class="s1">&#39;regionCellMasks&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">region_cell_mask</span>
 
 
-<span class="k">def</span> <span class="nf">_land_mask_from_geojson</span><span class="p">(</span><span class="n">with_cavities</span><span class="p">,</span> <span class="n">process_count</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_land_mask_from_geojson</span><span class="p">(</span><span class="n">with_cavities</span><span class="p">,</span> <span class="n">process_count</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
                             <span class="n">mesh_filename</span><span class="p">,</span> <span class="n">geojson_filename</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">):</span>
     <span class="n">gf</span> <span class="o">=</span> <span class="n">GeometricFeatures</span><span class="p">()</span>
 

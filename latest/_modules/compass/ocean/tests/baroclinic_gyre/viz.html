@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.tests.baroclinic_gyre.viz &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -107,18 +107,18 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.baroclinic_gyre.viz</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">cmocean</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">xarray</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cmocean</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.cime.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span>
 
-<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
 
 <div class="viewcode-block" id="Viz">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.baroclinic_gyre.viz.Viz.html#compass.ocean.tests.baroclinic_gyre.viz.Viz">[docs]</a>
-<span class="k">class</span> <span class="nc">Viz</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Viz</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for visualizing output from baroclinic gyre</span>
 
@@ -129,7 +129,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Viz.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.baroclinic_gyre.viz.Viz.html#compass.ocean.tests.baroclinic_gyre.viz.Viz.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the step</span>
 
@@ -147,7 +147,7 @@
 
 <div class="viewcode-block" id="Viz.run">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.baroclinic_gyre.viz.Viz.run.html#compass.ocean.tests.baroclinic_gyre.viz.Viz.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -163,7 +163,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_plot_spinup</span><span class="p">(</span><span class="n">mon_dir</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_plot_moc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_plot_moc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot the time-mean moc state for the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -194,7 +194,7 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">out_dir</span><span class="si">}</span><span class="s1">/time_avg_moc_last</span><span class="si">{</span><span class="n">avg_len</span><span class="si">}</span><span class="s1">years.png&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_plot_spinup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mon_dir</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_plot_spinup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mon_dir</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot the timeseries of monthy layer-mean</span>
 <span class="sd">        kinetic energy and temperature for the test case</span>
@@ -222,7 +222,7 @@
         <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Layer Mean Temperature ($^{\circ}$C)&#39;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">out_dir</span><span class="si">}</span><span class="s1">/spinup_ft.png&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_plot_mean_surface_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mon_dir</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_plot_mean_surface_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mon_dir</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">):</span>
 
         <span class="n">lon</span> <span class="o">=</span> <span class="mf">180.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;lonCell&#39;</span><span class="p">][:]</span>
         <span class="n">lat</span> <span class="o">=</span> <span class="mf">180.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;latCell&#39;</span><span class="p">][:]</span>

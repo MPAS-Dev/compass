@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.model &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -105,17 +105,17 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.model</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_call</span>
 
-<span class="kn">from</span> <span class="nn">compass.parallel</span> <span class="kn">import</span> <span class="n">run_command</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.parallel</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_command</span>
 
 
 <div class="viewcode-block" id="run_model">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.model.run_model.html#compass.model.run_model">[docs]</a>
-<span class="k">def</span> <span class="nf">run_model</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">update_pio</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">partition_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">run_model</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">update_pio</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">partition_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
               <span class="n">graph_file</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span> <span class="n">namelist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">streams</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Run the model after determining the number of tasks and threads</span>
@@ -173,7 +173,7 @@
 
 <div class="viewcode-block" id="partition">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.model.partition.html#compass.model.partition">[docs]</a>
-<span class="k">def</span> <span class="nf">partition</span><span class="p">(</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">graph_file</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">partition</span><span class="p">(</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">graph_file</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Partition the domain for the requested number of tasks</span>
 
@@ -202,7 +202,7 @@
 
 <div class="viewcode-block" id="make_graph_file">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.model.make_graph_file.html#compass.model.make_graph_file">[docs]</a>
-<span class="k">def</span> <span class="nf">make_graph_file</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">,</span> <span class="n">graph_filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_graph_file</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">,</span> <span class="n">graph_filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
                     <span class="n">weight_field</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Make a graph file from the MPAS mesh for use in the Metis graph</span>

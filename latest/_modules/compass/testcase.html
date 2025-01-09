@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.testcase &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -105,12 +105,12 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.testcase</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
 
 <div class="viewcode-block" id="TestCase">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.TestCase.html#compass.TestCase">[docs]</a>
-<span class="k">class</span> <span class="nc">TestCase</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestCase</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The base class for test cases---such as a decomposition, threading or</span>
 <span class="sd">    restart test---that are made up of one or more steps</span>
@@ -185,7 +185,7 @@
 
 <div class="viewcode-block" id="TestCase.__init__">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.TestCase.html#compass.TestCase.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new test case</span>
 
@@ -233,7 +233,7 @@
 
 <div class="viewcode-block" id="TestCase.configure">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.TestCase.configure.html#compass.TestCase.configure">[docs]</a>
-    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Modify the configuration options for this test case. Test cases should</span>
 <span class="sd">        override this method if they want to add config options specific to</span>
@@ -247,7 +247,7 @@
 
 <div class="viewcode-block" id="TestCase.run">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.TestCase.run.html#compass.TestCase.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method is deprecated. Use ``step.constrain_resources()`` and</span>
 <span class="sd">        ``step.runtime_setup()`` instead</span>
@@ -257,7 +257,7 @@
 
 <div class="viewcode-block" id="TestCase.validate">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.TestCase.validate.html#compass.TestCase.validate">[docs]</a>
-    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test cases can override this method to perform validation of variables</span>
 <span class="sd">        and timers</span>
@@ -267,7 +267,7 @@
 
 <div class="viewcode-block" id="TestCase.add_step">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.TestCase.add_step.html#compass.TestCase.add_step">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">run_by_default</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">run_by_default</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a step to the test case</span>
 
@@ -286,7 +286,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">check_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check the test case&#39;s &quot;validation&quot; dictionary to see if validation</span>
 <span class="sd">        failed.</span>

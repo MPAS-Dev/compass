@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.landice.tests.ismip6_forcing.atmosphere.process_smb &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -108,30 +108,30 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice.tests.ismip6_forcing.atmosphere.process_smb</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_call</span>
 
-<span class="kn">from</span> <span class="nn">compass.landice.tests.ismip6_forcing.create_mapfile</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ismip6_forcing.create_mapfile</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">build_mapping_file</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
 
 <div class="viewcode-block" id="ProcessSMB">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.atmosphere.process_smb.ProcessSMB.html#compass.landice.tests.ismip6_forcing.atmosphere.process_smb.ProcessSMB">[docs]</a>
-<span class="k">class</span> <span class="nc">ProcessSMB</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ProcessSMB</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for processing the ISMIP6 surface mass balance data</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ProcessSMB.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.atmosphere.process_smb.ProcessSMB.html#compass.landice.tests.ismip6_forcing.atmosphere.process_smb.ProcessSMB.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">input_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">input_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the step</span>
 
@@ -149,7 +149,7 @@
 
 <div class="viewcode-block" id="ProcessSMB.setup">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.atmosphere.process_smb.ProcessSMB.setup.html#compass.landice.tests.ismip6_forcing.atmosphere.process_smb.ProcessSMB.setup">[docs]</a>
-    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set up this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -211,7 +211,7 @@
 
 <div class="viewcode-block" id="ProcessSMB.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.atmosphere.process_smb.ProcessSMB.run.html#compass.landice.tests.ismip6_forcing.atmosphere.process_smb.ProcessSMB.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -343,7 +343,7 @@
 
 <div class="viewcode-block" id="ProcessSMB.remap_ismip6_smb_to_mali">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.atmosphere.process_smb.ProcessSMB.remap_ismip6_smb_to_mali.html#compass.landice.tests.ismip6_forcing.atmosphere.process_smb.ProcessSMB.remap_ismip6_smb_to_mali">[docs]</a>
-    <span class="k">def</span> <span class="nf">remap_ismip6_smb_to_mali</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">mali_mesh_name</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remap_ismip6_smb_to_mali</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">mali_mesh_name</span><span class="p">,</span>
                                  <span class="n">mali_mesh_file</span><span class="p">,</span> <span class="n">method_remap</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remap the input ismip6 smb forcing data onto mali mesh</span>
@@ -394,7 +394,7 @@
 
 <div class="viewcode-block" id="ProcessSMB.rename_ismip6_smb_to_mali_vars">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.atmosphere.process_smb.ProcessSMB.rename_ismip6_smb_to_mali_vars.html#compass.landice.tests.ismip6_forcing.atmosphere.process_smb.ProcessSMB.rename_ismip6_smb_to_mali_vars">[docs]</a>
-    <span class="k">def</span> <span class="nf">rename_ismip6_smb_to_mali_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remapped_file_temp</span><span class="p">,</span> <span class="n">output_file</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rename_ismip6_smb_to_mali_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remapped_file_temp</span><span class="p">,</span> <span class="n">output_file</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Rename variables in the remapped source input data</span>
 <span class="sd">        to the ones that MALI uses.</span>
@@ -449,7 +449,7 @@
 
 <div class="viewcode-block" id="ProcessSMB.correct_smb_anomaly_for_climatology">
 <a class="viewcode-back" href="../../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.atmosphere.process_smb.ProcessSMB.correct_smb_anomaly_for_climatology.html#compass.landice.tests.ismip6_forcing.atmosphere.process_smb.ProcessSMB.correct_smb_anomaly_for_climatology">[docs]</a>
-    <span class="k">def</span> <span class="nf">correct_smb_anomaly_for_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">correct_smb_anomaly_for_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                             <span class="n">racmo_clim_file</span><span class="p">,</span>
                                             <span class="n">output_clim_ismip6_file</span><span class="p">,</span>
                                             <span class="n">output_file_final</span><span class="p">):</span>

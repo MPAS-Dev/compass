@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.particles &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -106,11 +106,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.particles</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">netCDF4</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">pyamg.classical</span> <span class="kn">import</span> <span class="n">interpolate</span> <span class="k">as</span> <span class="n">amginterp</span>
-<span class="kn">from</span> <span class="nn">pyamg.classical</span> <span class="kn">import</span> <span class="n">split</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span><span class="p">,</span> <span class="n">spatial</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">netCDF4</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyamg.classical</span><span class="w"> </span><span class="kn">import</span> <span class="n">interpolate</span> <span class="k">as</span> <span class="n">amginterp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyamg.classical</span><span class="w"> </span><span class="kn">import</span> <span class="n">split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">sparse</span><span class="p">,</span> <span class="n">spatial</span>
 
 
 <span class="n">VERTICAL_TREATMENTS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;indexLevel&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -126,7 +126,7 @@
 
 <div class="viewcode-block" id="write">
 <a class="viewcode-back" href="../../../developers_guide/ocean/generated/compass.ocean.particles.write.html#compass.ocean.particles.write">[docs]</a>
-<span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">init_filename</span><span class="p">,</span> <span class="n">graph_filename</span><span class="p">,</span> <span class="n">particle_filename</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">write</span><span class="p">(</span><span class="n">init_filename</span><span class="p">,</span> <span class="n">graph_filename</span><span class="p">,</span> <span class="n">particle_filename</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span>
           <span class="n">n_vert_levels</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">vert_seed_type</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">n_buoy_surf</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span>
           <span class="n">pot_dens_min</span><span class="o">=</span><span class="mf">1028.5</span><span class="p">,</span> <span class="n">pot_dens_max</span><span class="o">=</span><span class="mf">1030.0</span><span class="p">,</span> <span class="n">spatial_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
           <span class="n">downsample</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">seed_center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed_vertex</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -212,7 +212,7 @@
 
 <div class="viewcode-block" id="remap_particles">
 <a class="viewcode-back" href="../../../developers_guide/ocean/generated/compass.ocean.particles.remap_particles.html#compass.ocean.particles.remap_particles">[docs]</a>
-<span class="k">def</span> <span class="nf">remap_particles</span><span class="p">(</span><span class="n">init_filename</span><span class="p">,</span> <span class="n">particle_filename</span><span class="p">,</span> <span class="n">graph_filename</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">remap_particles</span><span class="p">(</span><span class="n">init_filename</span><span class="p">,</span> <span class="n">particle_filename</span><span class="p">,</span> <span class="n">graph_filename</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Remap particles onto a new grid decomposition.</span>
 
@@ -278,7 +278,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">build_particle_simple</span><span class="p">(</span><span class="n">f_grid</span><span class="p">,</span> <span class="n">f_name</span><span class="p">,</span> <span class="n">f_decomp</span><span class="p">,</span> <span class="n">buoySurf</span><span class="p">,</span> <span class="n">vertexReconst</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_particle_simple</span><span class="p">(</span><span class="n">f_grid</span><span class="p">,</span> <span class="n">f_name</span><span class="p">,</span> <span class="n">f_decomp</span><span class="p">,</span> <span class="n">buoySurf</span><span class="p">,</span> <span class="n">vertexReconst</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                           <span class="n">horizTreatment</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">timeInt</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">verticalTreatment</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
@@ -363,20 +363,20 @@
     <span class="n">f_out</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
 
-<span class="k">def</span> <span class="nf">_use_defaults</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_use_defaults</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">val</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">DEFAULTS</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
 
 
-<span class="k">def</span> <span class="nf">_ensure_shape</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_ensure_shape</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
         <span class="n">new</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">new</span>
 
 
-<span class="k">def</span> <span class="nf">_southern_ocean_only_xyz</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">maxNorth</span><span class="o">=-</span><span class="mf">45.0</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_southern_ocean_only_xyz</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">maxNorth</span><span class="o">=-</span><span class="mf">45.0</span><span class="p">):</span>
     <span class="n">sq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">z</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">lat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="n">z</span> <span class="o">/</span> <span class="n">sq</span><span class="p">)</span>
     <span class="n">ok</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span> <span class="o">*</span> <span class="n">maxNorth</span>
@@ -384,12 +384,12 @@
     <span class="k">return</span> <span class="n">ids</span>
 
 
-<span class="k">def</span> <span class="nf">_southern_ocean_only_planar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">maxy</span><span class="o">=</span><span class="mf">1000.0</span> <span class="o">*</span> <span class="mf">1e3</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_southern_ocean_only_planar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">maxy</span><span class="o">=</span><span class="mf">1000.0</span> <span class="o">*</span> <span class="mf">1e3</span><span class="p">):</span>
     <span class="n">ids</span> <span class="o">=</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">maxy</span>
     <span class="k">return</span> <span class="n">ids</span>
 
 
-<span class="k">def</span> <span class="nf">_downsample_points</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">tri</span><span class="p">,</span> <span class="n">nsplit</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_downsample_points</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">tri</span><span class="p">,</span> <span class="n">nsplit</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Downsample points using algebraic multigrid splitting.</span>
 
@@ -438,8 +438,8 @@
     <span class="k">return</span> <span class="n">Cpts</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="n">Cpts</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">Cpts</span><span class="p">],</span> <span class="n">z</span><span class="p">[</span><span class="n">Cpts</span><span class="p">]</span>
 
 
-<span class="k">class</span> <span class="nc">Particles</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Particles</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">x</span><span class="p">,</span>
         <span class="n">y</span><span class="p">,</span>
@@ -500,7 +500,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">zreset</span> <span class="o">=</span> <span class="n">_ensure_shape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">zreset</span><span class="p">)[</span><span class="n">ids</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">zlevelreset</span> <span class="o">=</span> <span class="n">_ensure_shape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">zlevelreset</span><span class="p">)[</span><span class="n">ids</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">compute_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Ripped out whole-sale from latlon_coordinate_transforms.py</span>
 <span class="sd">        PJW 01/15/2019</span>
@@ -514,11 +514,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">lonParticle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">ParticleList</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">particlelist</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ParticleList</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">particlelist</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">particlelist</span> <span class="o">=</span> <span class="n">particlelist</span>
 
-    <span class="k">def</span> <span class="nf">aggregate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">aggregate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">()</span>
 
         <span class="c1"># buoyancysurf</span>
@@ -533,20 +533,20 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">buoysurf</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="c1"># __getattr__ ensures self.x is concatenated properly</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">concatenate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">varname</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">concatenate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">varname</span><span class="p">):</span>
         <span class="n">var</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">particlelist</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">varname</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">alist</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">particlelist</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
             <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">alist</span><span class="p">,</span> <span class="n">varname</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">var</span>
 
-    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">particlelist</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">particlelist</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">particlelist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">particlelist</span><span class="p">[:])</span>
 
-    <span class="k">def</span> <span class="nf">len</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nparticles</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">alist</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">particlelist</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">nparticles</span> <span class="o">+=</span> <span class="n">alist</span><span class="o">.</span><span class="n">nparticles</span>
@@ -556,11 +556,11 @@
     <span class="c1"># probably a cleaner way to have this &quot;fall through&quot; to the particle</span>
     <span class="c1"># instances themselves, but didn&#39;t have time to sort this all out so this</span>
     <span class="c1"># isn&#39;t general for now</span>
-    <span class="k">def</span> <span class="nf">compute_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">alist</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">particlelist</span><span class="p">:</span>
             <span class="n">alist</span><span class="o">.</span><span class="n">compute_lat_lon</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f_name</span><span class="p">,</span> <span class="n">f_decomp</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f_name</span><span class="p">,</span> <span class="n">f_decomp</span><span class="p">):</span>
 
         <span class="n">decomp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">f_decomp</span><span class="p">)</span>
 
@@ -642,7 +642,7 @@
         <span class="n">f_out</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
 
-<span class="k">def</span> <span class="nf">_rescale_for_shell</span><span class="p">(</span><span class="n">f_init</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_rescale_for_shell</span><span class="p">(</span><span class="n">f_init</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
     <span class="n">rearth</span> <span class="o">=</span> <span class="n">f_init</span><span class="o">.</span><span class="n">sphere_radius</span>
     <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">y</span> <span class="o">+</span> <span class="n">z</span> <span class="o">*</span> <span class="n">z</span><span class="p">)</span>
     <span class="n">x</span> <span class="o">*=</span> <span class="n">rearth</span> <span class="o">/</span> <span class="n">r</span>
@@ -651,7 +651,7 @@
     <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span>
 
 
-<span class="k">def</span> <span class="nf">_get_particle_coords</span><span class="p">(</span><span class="n">f_init</span><span class="p">,</span> <span class="n">seed_center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed_vertex</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_particle_coords</span><span class="p">(</span><span class="n">f_init</span><span class="p">,</span> <span class="n">seed_center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed_vertex</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                          <span class="n">add_noise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">CFLmin</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">xCell</span> <span class="o">=</span> <span class="n">f_init</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;xCell&quot;</span><span class="p">][:]</span>
     <span class="n">yCell</span> <span class="o">=</span> <span class="n">f_init</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;yCell&quot;</span><span class="p">][:]</span>
@@ -768,11 +768,11 @@
     <span class="k">return</span> <span class="n">cells</span><span class="p">,</span> <span class="n">cpts</span>
 
 
-<span class="k">def</span> <span class="nf">_expand_nlevels</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_expand_nlevels</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">n</span><span class="p">))</span>
 
 
-<span class="k">def</span> <span class="nf">_particle_coords</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_particle_coords</span><span class="p">(</span>
     <span class="n">f_init</span><span class="p">,</span> <span class="n">downsample</span><span class="p">,</span> <span class="n">seed_center</span><span class="p">,</span> <span class="n">seed_vertex</span><span class="p">,</span> <span class="n">add_noise</span><span class="p">,</span> <span class="n">CFLmin</span>
 <span class="p">):</span>
 
@@ -791,7 +791,7 @@
     <span class="k">return</span> <span class="n">cpts</span><span class="p">,</span> <span class="n">xCell</span><span class="p">,</span> <span class="n">yCell</span><span class="p">,</span> <span class="n">zCell</span>
 
 
-<span class="k">def</span> <span class="nf">_build_isopycnal_particles</span><span class="p">(</span><span class="n">cpts</span><span class="p">,</span> <span class="n">xCell</span><span class="p">,</span> <span class="n">yCell</span><span class="p">,</span> <span class="n">zCell</span><span class="p">,</span> <span class="n">buoysurf</span><span class="p">,</span> <span class="n">afilter</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_isopycnal_particles</span><span class="p">(</span><span class="n">cpts</span><span class="p">,</span> <span class="n">xCell</span><span class="p">,</span> <span class="n">yCell</span><span class="p">,</span> <span class="n">zCell</span><span class="p">,</span> <span class="n">buoysurf</span><span class="p">,</span> <span class="n">afilter</span><span class="p">):</span>
 
     <span class="n">nparticles</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xCell</span><span class="p">)</span>
     <span class="n">nbuoysurf</span> <span class="o">=</span> <span class="n">buoysurf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -811,7 +811,7 @@
                      <span class="n">spatialfilter</span><span class="o">=</span><span class="n">afilter</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_build_passive_floats</span><span class="p">(</span><span class="n">cpts</span><span class="p">,</span> <span class="n">xCell</span><span class="p">,</span> <span class="n">yCell</span><span class="p">,</span> <span class="n">zCell</span><span class="p">,</span> <span class="n">f_init</span><span class="p">,</span> <span class="n">nvertlevels</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_passive_floats</span><span class="p">(</span><span class="n">cpts</span><span class="p">,</span> <span class="n">xCell</span><span class="p">,</span> <span class="n">yCell</span><span class="p">,</span> <span class="n">zCell</span><span class="p">,</span> <span class="n">f_init</span><span class="p">,</span> <span class="n">nvertlevels</span><span class="p">,</span>
                           <span class="n">afilter</span><span class="p">,</span> <span class="n">vertseedtype</span><span class="p">):</span>
 
     <span class="n">x</span> <span class="o">=</span> <span class="n">_expand_nlevels</span><span class="p">(</span><span class="n">xCell</span><span class="p">,</span> <span class="n">nvertlevels</span><span class="p">)</span>
@@ -838,7 +838,7 @@
         <span class="n">spatialfilter</span><span class="o">=</span><span class="n">afilter</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_dense_center_seeding</span><span class="p">(</span><span class="n">nVert</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_dense_center_seeding</span><span class="p">(</span><span class="n">nVert</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Distributes passive floats with 50% of them occurring between 40% and 60%</span>
 <span class="sd">    of the bottom depth.</span>
@@ -855,7 +855,7 @@
     <span class="k">return</span> <span class="n">c_wgts</span>
 
 
-<span class="k">def</span> <span class="nf">_build_surface_floats</span><span class="p">(</span><span class="n">cpts</span><span class="p">,</span> <span class="n">xCell</span><span class="p">,</span> <span class="n">yCell</span><span class="p">,</span> <span class="n">zCell</span><span class="p">,</span> <span class="n">afilter</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_surface_floats</span><span class="p">(</span><span class="n">cpts</span><span class="p">,</span> <span class="n">xCell</span><span class="p">,</span> <span class="n">yCell</span><span class="p">,</span> <span class="n">zCell</span><span class="p">,</span> <span class="n">afilter</span><span class="p">):</span>
 
     <span class="n">x</span> <span class="o">=</span> <span class="n">_expand_nlevels</span><span class="p">(</span><span class="n">xCell</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">_expand_nlevels</span><span class="p">(</span><span class="n">yCell</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -866,7 +866,7 @@
                      <span class="n">zlevel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">spatialfilter</span><span class="o">=</span><span class="n">afilter</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_build_particle_file</span><span class="p">(</span><span class="n">f_init</span><span class="p">,</span> <span class="n">f_name</span><span class="p">,</span> <span class="n">f_decomp</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="n">spatialfilter</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_particle_file</span><span class="p">(</span><span class="n">f_init</span><span class="p">,</span> <span class="n">f_name</span><span class="p">,</span> <span class="n">f_decomp</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="n">spatialfilter</span><span class="p">,</span>
                          <span class="n">buoySurf</span><span class="p">,</span> <span class="n">nVertLevels</span><span class="p">,</span> <span class="n">downsample</span><span class="p">,</span> <span class="n">vertseedtype</span><span class="p">,</span>
                          <span class="n">seed_center</span><span class="p">,</span> <span class="n">seed_vertex</span><span class="p">,</span> <span class="n">add_noise</span><span class="p">,</span> <span class="n">CFLmin</span><span class="p">):</span>
 

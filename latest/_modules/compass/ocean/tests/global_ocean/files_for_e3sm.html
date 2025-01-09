@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.tests.global_ocean.files_for_e3sm &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -107,62 +107,62 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.global_ocean.files_for_e3sm</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">package_path</span><span class="p">,</span> <span class="n">symlink</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.add_total_iceberg_ice_shelf_melt</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">package_path</span><span class="p">,</span> <span class="n">symlink</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.add_total_iceberg_ice_shelf_melt</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
     <span class="n">AddTotalIcebergIceShelfMelt</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">DiagnosticMaps</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_masks</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_masks</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">DiagnosticMasks</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.e3sm_to_cmip_maps</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.e3sm_to_cmip_maps</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">E3smToCmipMaps</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
     <span class="n">OceanGraphPartition</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
     <span class="n">OceanInitialCondition</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.ocean_mesh</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.ocean_mesh</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
     <span class="n">OceanMesh</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.remap_ice_shelf_melt</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.remap_ice_shelf_melt</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
     <span class="n">RemapIceShelfMelt</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.remap_iceberg_climatology</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.remap_iceberg_climatology</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
     <span class="n">RemapIcebergClimatology</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.remap_sea_surface_salinity_restoring</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.remap_sea_surface_salinity_restoring</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
     <span class="n">RemapSeaSurfaceSalinityRestoring</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.remap_tidal_mixing</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.remap_tidal_mixing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
     <span class="n">RemapTidalMixing</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.scrip</span> <span class="kn">import</span> <span class="n">Scrip</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.seaice_graph_partition</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.scrip</span><span class="w"> </span><span class="kn">import</span> <span class="n">Scrip</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.seaice_graph_partition</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
     <span class="n">SeaiceGraphPartition</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
     <span class="n">SeaiceInitialCondition</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.seaice_mesh</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.seaice_mesh</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
     <span class="n">SeaiceMesh</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.write_coeffs_reconstruct</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.write_coeffs_reconstruct</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
     <span class="n">WriteCoeffsReconstruct</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.forward</span> <span class="kn">import</span> <span class="n">get_forward_subdir</span>
-<span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.forward</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_forward_subdir</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.testcase</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestCase</span>
 
 
 <div class="viewcode-block" id="FilesForE3SM">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM.html#compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM">[docs]</a>
-<span class="k">class</span> <span class="nc">FilesForE3SM</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FilesForE3SM</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A test case for assembling files needed for MPAS-Ocean and MPAS-Seaice</span>
 <span class="sd">    initial conditions in E3SM as well as files needed for diagnostics from</span>
@@ -182,7 +182,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
 <div class="viewcode-block" id="FilesForE3SM.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM.html#compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">dynamic_adjustment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create test case for creating a global MPAS-Ocean mesh</span>
@@ -241,7 +241,7 @@
 
 <div class="viewcode-block" id="FilesForE3SM.configure">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM.configure.html#compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM.configure">[docs]</a>
-    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Modify the configuration options for this test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.vertical &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -106,17 +106,17 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.vertical</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">xarray</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span>
 
-<span class="kn">from</span> <span class="nn">compass.ocean.vertical.sigma</span> <span class="kn">import</span> <span class="n">init_sigma_vertical_coord</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.vertical.zlevel</span> <span class="kn">import</span> <span class="n">init_z_level_vertical_coord</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.vertical.zstar</span> <span class="kn">import</span> <span class="n">init_z_star_vertical_coord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.vertical.sigma</span><span class="w"> </span><span class="kn">import</span> <span class="n">init_sigma_vertical_coord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.vertical.zlevel</span><span class="w"> </span><span class="kn">import</span> <span class="n">init_z_level_vertical_coord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.vertical.zstar</span><span class="w"> </span><span class="kn">import</span> <span class="n">init_z_star_vertical_coord</span>
 
 
 <div class="viewcode-block" id="init_vertical_coord">
 <a class="viewcode-back" href="../../../developers_guide/ocean/generated/compass.ocean.vertical.init_vertical_coord.html#compass.ocean.vertical.init_vertical_coord">[docs]</a>
-<span class="k">def</span> <span class="nf">init_vertical_coord</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_vertical_coord</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a vertical coordinate based on the config options in the</span>
 <span class="sd">    ``vertical_grid`` section and the ``bottomDepth`` and ``ssh`` variables of</span>
@@ -213,7 +213,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">compute_cell_mask</span><span class="p">(</span><span class="n">minLevelCell</span><span class="p">,</span> <span class="n">maxLevelCell</span><span class="p">,</span> <span class="n">nVertLevels</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_cell_mask</span><span class="p">(</span><span class="n">minLevelCell</span><span class="p">,</span> <span class="n">maxLevelCell</span><span class="p">,</span> <span class="n">nVertLevels</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute cellMask for any vertical coordinate</span>
 
@@ -244,7 +244,7 @@
     <span class="k">return</span> <span class="n">cellMask</span>
 
 
-<span class="k">def</span> <span class="nf">compute_ssh_from_layer_thickness</span><span class="p">(</span><span class="n">layerThickness</span><span class="p">,</span> <span class="n">bottomDepth</span><span class="p">,</span> <span class="n">cellMask</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_ssh_from_layer_thickness</span><span class="p">(</span><span class="n">layerThickness</span><span class="p">,</span> <span class="n">bottomDepth</span><span class="p">,</span> <span class="n">cellMask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the sea surface height by integrating layer thickness up from the</span>
 <span class="sd">    ocean bottom</span>
@@ -277,7 +277,7 @@
     <span class="k">return</span> <span class="n">ssh</span>
 
 
-<span class="k">def</span> <span class="nf">compute_zmid_from_layer_thickness</span><span class="p">(</span><span class="n">layerThickness</span><span class="p">,</span> <span class="n">ssh</span><span class="p">,</span> <span class="n">cellMask</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_zmid_from_layer_thickness</span><span class="p">(</span><span class="n">layerThickness</span><span class="p">,</span> <span class="n">ssh</span><span class="p">,</span> <span class="n">cellMask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute zMid from ssh and layerThickness for any vertical coordinate</span>
 

@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass python package &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
@@ -382,13 +382,13 @@ cases).</p>
 rather than via string manipulation within python scripts as is the case in the
 current COMPASS implementation:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
-<span class="kn">import</span> <span class="nn">configparser</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">configparser</span>
 
-<span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">LoggingContext</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoggingContext</span>
 
 
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;test_case_{{ test_case.name }}.pickle&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
         <span class="n">test_case</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
     <span class="n">test_case</span><span class="o">.</span><span class="n">steps_to_run</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;{{ step.name }}&#39;</span><span class="p">]</span>
@@ -531,11 +531,11 @@ used to indicate what the input and output files for the step are and how to
 create the namelist and streams files.  Here is an example of a step that
 that is defined using a combination of methods from <code class="docutils literal notranslate"><span class="pre">Step</span></code> (e.g.
 <code class="docutils literal notranslate"><span class="pre">self.add_input_file()</span></code>) and framework functions (e.g. <code class="docutils literal notranslate"><span class="pre">run_model()</span></code>):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">run_model</span>
-<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
 
-<span class="k">class</span> <span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for performing forward MPAS-Ocean runs as part of baroclinic</span>
 <span class="sd">    channel test cases.</span>
@@ -545,7 +545,7 @@ that is defined using a combination of methods from <code class="docutils litera
 <span class="sd">    resolution : str</span>
 <span class="sd">        The resolution of the test case</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new test case</span>
@@ -603,14 +603,14 @@ that is defined using a combination of methods from <code class="docutils litera
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set up the test case in the work directory, including downloading any</span>
 <span class="sd">        dependencies</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -682,7 +682,7 @@ shared infrastructure will take care of determining if sufficient cores are
 available and how many to run each step with if so.  Developers of individual
 test cases will not need to worry about this.  Here is an example from the
 <code class="docutils literal notranslate"><span class="pre">Init</span></code> test case from the <code class="docutils literal notranslate"><span class="pre">GlobalOcean</span></code> test group:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Run each step of the testcase</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -989,7 +989,7 @@ base class’ constructor <code class="docutils literal notranslate"><span class
 and the name of the test case or step as arguments.</p>
 <p>As an example, here is the constructor for the <code class="docutils literal notranslate"><span class="pre">Default</span></code> test case in the
 <code class="docutils literal notranslate"><span class="pre">BaroclinicChannel</span></code> test group in the <code class="docutils literal notranslate"><span class="pre">Ocean</span></code> MPAS core:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Default</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Default</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The default test case for the baroclinic channel test group simply creates</span>
 <span class="sd">    the mesh and initial condition, then performs a short forward run on 4</span>
@@ -1001,7 +1001,7 @@ and the name of the test case or step as arguments.</p>
 <span class="sd">        The resolution of the test case</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the test case</span>
 
@@ -1026,7 +1026,7 @@ and the name of the test case or step as arguments.</p>
 </pre></div>
 </div>
 <p>And here is the constructor of the <code class="docutils literal notranslate"><span class="pre">InitialState</span></code> step:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">InitialState</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">InitialState</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for creating a mesh and initial condition for baroclinic channel</span>
 <span class="sd">    test cases</span>
@@ -1036,7 +1036,7 @@ and the name of the test case or step as arguments.</p>
 <span class="sd">    resolution : str</span>
 <span class="sd">        The resolution of the test case</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the dictionary of step properties</span>
 
@@ -1063,7 +1063,7 @@ attribute <code class="docutils literal notranslate"><span class="pre">self.reso
 add any number of parameters as attributes of each class in this way for later
 use in the test case or step.  For example, the <code class="docutils literal notranslate"><span class="pre">Default</span></code> test case later
 uses the resolution to call a shared <code class="docutils literal notranslate"><span class="pre">configure()</span></code> function:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Modify the configuration options for this test case.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1071,7 +1071,7 @@ uses the resolution to call a shared <code class="docutils literal notranslate">
 </pre></div>
 </div>
 <p>The shared function uses the resolution to determine other config options:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Modify the configuration options for one of the baroclinic test cases</span>
 
@@ -1143,8 +1143,8 @@ config_use_debugTracers = .true.
 </pre></div>
 </div>
 <p>Such a file can be added within <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> like this:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ForwardStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ForwardStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span>
                  <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="o">...</span>
 
@@ -1213,12 +1213,12 @@ and a test case can override the <code class="docutils literal notranslate"><spa
 options. One way to update <code class="docutils literal notranslate"><span class="pre">config</span></code> is by calling
 <code class="docutils literal notranslate"><span class="pre">compass.config.add_config()</span></code> to add options from  a config file, typically
 found in the package (directory) for the test case:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.config</span> <span class="kn">import</span> <span class="n">add_config</span>
-<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">symlink</span>
 
 <span class="o">...</span>
 
-<span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Modify the configuration options for this test case</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1231,7 +1231,7 @@ found in the package (directory) for the test case:</p>
 </pre></div>
 </div>
 <p>Another way is to call the <code class="docutils literal notranslate"><span class="pre">config.set()</span></code> method:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Modify the configuration options for this test case</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1287,11 +1287,11 @@ that a step can use</p></li>
 </ul>
 </div></blockquote>
 <p>Here is a relatively complex example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.validate</span><span class="w"> </span><span class="kn">import</span> <span class="n">compare_variables</span>
 
 <span class="o">...</span>
 
-<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Run each step of the testcase</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1313,11 +1313,11 @@ that a step can use</p></li>
 contents will very much depend on the purpose of the step.  Many steps will
 use Metis to split the domain across processors and then call the MPAS model,
 which can be done trivially with a call to <code class="docutils literal notranslate"><span class="pre">run_model()</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">run_model</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_model</span>
 
 <span class="o">...</span>
 
-<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Run this step of the testcase</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1365,16 +1365,16 @@ defining meshes.  <code class="docutils literal notranslate"><span class="pre">M
 that child classes must override to define the mesh resolution.</p>
 <p>To implement a new global mesh, one would need to define the resolution
 in the <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> file:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.mesh</span> <span class="kn">import</span> <span class="n">MeshStep</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.mesh.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">MeshStep</span>
 
 
-<span class="k">class</span> <span class="nc">QU240Mesh</span><span class="p">(</span><span class="n">MeshStep</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">QU240Mesh</span><span class="p">(</span><span class="n">MeshStep</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for creating QU240 and QUwISC240 meshes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">with_ice_shelf_cavities</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">with_ice_shelf_cavities</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new step</span>
 
@@ -1394,7 +1394,7 @@ in the <code class="docutils literal notranslate"><span class="pre">__init__.py<
                          <span class="n">package</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span>
                          <span class="n">mesh_config_filename</span><span class="o">=</span><span class="s1">&#39;qu240.cfg&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create cell width array for this mesh on a regular latitude-longitude</span>
 <span class="sd">        grid</span>
@@ -1494,18 +1494,18 @@ metadata to include in the output files:</p>
 using one of the existing spin-up test cases as a kind of a template.  These
 test cases descend from the <code class="docutils literal notranslate"><span class="pre">DynamicalAdjustment</span></code> class, which itself
 descends from <code class="docutils literal notranslate"><span class="pre">TestCase</span></code>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.dynamic_adjustment</span> <span class="kn">import</span> \
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.dynamic_adjustment</span><span class="w"> </span><span class="kn">import</span> \
     <span class="n">DynamicAdjustment</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.forward</span> <span class="kn">import</span> <span class="n">ForwardStep</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.forward</span><span class="w"> </span><span class="kn">import</span> <span class="n">ForwardStep</span>
 
 
-<span class="k">class</span> <span class="nc">QU240DynamicAdjustment</span><span class="p">(</span><span class="n">DynamicAdjustment</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">QU240DynamicAdjustment</span><span class="p">(</span><span class="n">DynamicAdjustment</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A test case performing dynamic adjustment (dissipating fast-moving waves)</span>
 <span class="sd">    from an initial condition on the QU240 MPAS-Ocean mesh</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the test case</span>
 
@@ -1714,11 +1714,11 @@ related to files created for E3SM initial conditions.</p></li>
 <p>Then, the <code class="docutils literal notranslate"><span class="pre">configure()</span></code> method is called on the test case itself.  All of
 the current ocean test cases first call a shared <code class="docutils literal notranslate"><span class="pre">configure()</span></code> function at
 the test group level, e.g.:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.configure</span> <span class="kn">import</span> <span class="n">configure_global_ocean</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.configure</span><span class="w"> </span><span class="kn">import</span> <span class="n">configure_global_ocean</span>
 
 <span class="o">...</span>
 
-<span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Modify the configuration options for this test case</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1726,10 +1726,10 @@ the test group level, e.g.:</p>
 </pre></div>
 </div>
 <p>where <code class="docutils literal notranslate"><span class="pre">configure_global_ocean()</span></code> is:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.config</span> <span class="kn">import</span> <span class="n">add_config</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_config</span>
 
 
-<span class="k">def</span> <span class="nf">configure_global_ocean</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">configure_global_ocean</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Modify the configuration options for this test case</span>
 
@@ -1906,7 +1906,7 @@ minimum number of required cores is reasonable.</p>
 be set.  The most straightforward is to set them by calling the base class’
 <code class="docutils literal notranslate"><span class="pre">__init__()</span></code>.  They could be passed through from calls to the child class’
 <code class="docutils literal notranslate"><span class="pre">__init__()</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a new test case</span>
 
@@ -1931,7 +1931,7 @@ be set.  The most straightforward is to set them by calling the base class’
 </pre></div>
 </div>
 <p>or just hard coded:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a new test case</span>
 
@@ -1953,7 +1953,7 @@ made.)  In <code class="docutils literal notranslate"><span class="pre">global_o
 using config options.  Since users could modify these before calling the
 <code class="docutils literal notranslate"><span class="pre">run.py</span></code> script, they are parsed in the test case’s <code class="docutils literal notranslate"><span class="pre">run()</span></code> function
 before <code class="docutils literal notranslate"><span class="pre">run_steps()</span></code> is called:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Run each step of the testcase</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1977,7 +1977,7 @@ requesting that one step.  Some test cases include steps that are not run by
 default, and this is specified by passing <code class="docutils literal notranslate"><span class="pre">run_by_default=False</span></code> as an
 argument to <code class="docutils literal notranslate"><span class="pre">self.add_step()</span></code> when adding the step in the test case’s
 constructor:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh_type</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh_type</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create the test case</span>
 

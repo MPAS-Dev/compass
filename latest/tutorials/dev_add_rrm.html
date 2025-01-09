@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM) &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
@@ -201,17 +201,17 @@ latitude-longitude map of the distance between cell centers in km.  To begin
 with , we will start out with something really simple: a quasi-uniform 60 km
 mesh.  We will make a 2D field called <code class="docutils literal notranslate"><span class="pre">cellWidth</span></code> on a 0.1 degree, regular
 latitude-longitude grid.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">compass.mesh</span> <span class="kn">import</span> <span class="n">QuasiUniformSphericalMeshStep</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuasiUniformSphericalMeshStep</span>
 
 
-<span class="k">class</span> <span class="nc">YAM10to60BaseMesh</span><span class="p">(</span><span class="n">QuasiUniformSphericalMeshStep</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">YAM10to60BaseMesh</span><span class="p">(</span><span class="n">QuasiUniformSphericalMeshStep</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for creating YAM10to60 meshes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create cell width array for this mesh on a regular latitude-longitude</span>
 <span class="sd">        grid</span>
@@ -251,20 +251,20 @@ vim<span class="w"> </span>__init__.py
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
 
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.so12to30</span> <span class="kn">import</span> <span class="n">SO12to30BaseMesh</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.wc14</span> <span class="kn">import</span> <span class="n">WC14BaseMesh</span>
-<span class="hll"><span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.yam10to60</span> <span class="kn">import</span> <span class="n">YAM10to60BaseMesh</span>
-</span><span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.metadata</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.mesh.so12to30</span><span class="w"> </span><span class="kn">import</span> <span class="n">SO12to30BaseMesh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.mesh.wc14</span><span class="w"> </span><span class="kn">import</span> <span class="n">WC14BaseMesh</span>
+<span class="hll"><span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.mesh.yam10to60</span><span class="w"> </span><span class="kn">import</span> <span class="n">YAM10to60BaseMesh</span>
+</span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.metadata</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">get_author_and_email_from_git</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="o">...</span>
 
-<span class="k">class</span> <span class="nc">Mesh</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Mesh</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 
 <span class="o">...</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">remap_topography</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">remap_topography</span><span class="p">):</span>
 
     <span class="o">...</span>
 
@@ -290,11 +290,11 @@ vim<span class="w"> </span>__init__.py
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
 
-<span class="k">class</span> <span class="nc">GlobalOcean</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GlobalOcean</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
 
     <span class="o">...</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
 
         <span class="o">...</span>
 
@@ -507,17 +507,17 @@ function from the
 <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/mesh_creation.html#mesh-definition-tools">mesh_definition_tools</a>
 module from MPAS-Tools. The default EC mesh has resolutions of 35 km at the
 poles, 60 km at mid-latitudes and 30 km at the equator.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="hll"><span class="kn">import</span> <span class="nn">mpas_tools.mesh.creation.mesh_definition_tools</span> <span class="k">as</span> <span class="nn">mdt</span>
-</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="hll"><span class="kn">import</span><span class="w"> </span><span class="nn">mpas_tools.mesh.creation.mesh_definition_tools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mdt</span>
+</span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">compass.mesh</span> <span class="kn">import</span> <span class="n">QuasiUniformSphericalMeshStep</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuasiUniformSphericalMeshStep</span>
 
 
-<span class="k">class</span> <span class="nc">YAM10to60BaseMesh</span><span class="p">(</span><span class="n">QuasiUniformSphericalMeshStep</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">YAM10to60BaseMesh</span><span class="p">(</span><span class="n">QuasiUniformSphericalMeshStep</span><span class="p">):</span>
 
     <span class="o">...</span>
 
-    <span class="k">def</span> <span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="o">...</span>
 
@@ -640,18 +640,18 @@ a higher resolution region:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vim<span class="w"> </span>__init__.py
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mpas_tools.mesh.creation.mesh_definition_tools</span> <span class="k">as</span> <span class="nn">mdt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="hll"><span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">read_feature_collection</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">mpas_tools.mesh.creation.mesh_definition_tools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mdt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="hll"><span class="kn">from</span><span class="w"> </span><span class="nn">geometric_features</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_feature_collection</span>
 </span>
-<span class="kn">from</span> <span class="nn">compass.mesh</span> <span class="kn">import</span> <span class="n">QuasiUniformSphericalMeshStep</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuasiUniformSphericalMeshStep</span>
 
 
-<span class="k">class</span> <span class="nc">YAM10to60BaseMesh</span><span class="p">(</span><span class="n">QuasiUniformSphericalMeshStep</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">YAM10to60BaseMesh</span><span class="p">(</span><span class="n">QuasiUniformSphericalMeshStep</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for creating YAM10to60 meshes</span>
 <span class="hll"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span class="hll">    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class="hll">    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span class="hll"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span class="hll"><span class="sd">        Add some input files</span>
 </span><span class="hll"><span class="sd">        &quot;&quot;&quot;</span>
@@ -660,7 +660,7 @@ a higher resolution region:</p>
 </span><span class="hll">                            <span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">)</span>
 </span><span class="hll">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
 </span><span class="hll">
-</span>    <span class="k">def</span> <span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span>    <span class="k">def</span><span class="w"> </span><span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="o">...</span>
 
@@ -684,20 +684,20 @@ higher resolution region:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vim<span class="w"> </span>__init__.py
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mpas_tools.mesh.creation.mesh_definition_tools</span> <span class="k">as</span> <span class="nn">mdt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">read_feature_collection</span>
-<span class="hll"><span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span>
-</span><span class="hll"><span class="kn">from</span> <span class="nn">mpas_tools.mesh.creation.signed_distance</span> <span class="kn">import</span> <span class="p">(</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">mpas_tools.mesh.creation.mesh_definition_tools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mdt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">geometric_features</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_feature_collection</span>
+<span class="hll"><span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.cime.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span>
+</span><span class="hll"><span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.mesh.creation.signed_distance</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
 </span><span class="hll">    <span class="n">signed_distance_from_geojson</span><span class="p">,</span>
 </span><span class="hll"><span class="p">)</span>
 </span>
-<span class="kn">from</span> <span class="nn">compass.mesh</span> <span class="kn">import</span> <span class="n">QuasiUniformSphericalMeshStep</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuasiUniformSphericalMeshStep</span>
 
 
-<span class="k">class</span> <span class="nc">YAM10to60BaseMesh</span><span class="p">(</span><span class="n">QuasiUniformSphericalMeshStep</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">YAM10to60BaseMesh</span><span class="p">(</span><span class="n">QuasiUniformSphericalMeshStep</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="o">...</span>
 
@@ -851,8 +851,8 @@ vim<span class="w"> </span>amazon_delta.geojson
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
 
-<span class="k">class</span> <span class="nc">YAM10to60BaseMesh</span><span class="p">(</span><span class="n">QuasiUniformSphericalMeshStep</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">YAM10to60BaseMesh</span><span class="p">(</span><span class="n">QuasiUniformSphericalMeshStep</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add some input files</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -863,7 +863,7 @@ vim<span class="w"> </span>amazon_delta.geojson
 </span><span class="hll">                            <span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">)</span>
 </span>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="o">...</span>
 
@@ -1083,11 +1083,11 @@ vim<span class="w"> </span>__init__.py
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
 
-<span class="k">class</span> <span class="nc">GlobalOcean</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GlobalOcean</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
 
     <span class="o">...</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
 
         <span class="o">...</span>
 
@@ -1189,13 +1189,13 @@ mkdir<span class="w"> </span>dynamic_adjustment
 vim<span class="w"> </span>__init__.py
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.dynamic_adjustment</span> <span class="kn">import</span> <span class="p">(</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.dynamic_adjustment</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">DynamicAdjustment</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.forward</span> <span class="kn">import</span> <span class="n">ForwardStep</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.forward</span><span class="w"> </span><span class="kn">import</span> <span class="n">ForwardStep</span>
 
 
-<span class="k">class</span> <span class="nc">YAM10to60DynamicAdjustment</span><span class="p">(</span><span class="n">DynamicAdjustment</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">YAM10to60DynamicAdjustment</span><span class="p">(</span><span class="n">DynamicAdjustment</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A test case performing dynamic adjustment (dissipating fast-moving waves)</span>
 <span class="sd">    from an initial condition on the YAM10to60 MPAS-Ocean mesh</span>
@@ -1206,7 +1206,7 @@ vim<span class="w"> </span>__init__.py
 <span class="sd">        A list of restart files from each dynamic-adjustment step</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the test case</span>
 
@@ -1312,23 +1312,23 @@ vim<span class="w"> </span>__init__.py
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
 
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.wc14.dynamic_adjustment</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.mesh.wc14.dynamic_adjustment</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">WC14DynamicAdjustment</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="hll"><span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.yam10to60.dynamic_adjustment</span> <span class="kn">import</span> <span class="p">(</span> <span class="c1"># noqa: E501</span>
+<span class="hll"><span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.mesh.yam10to60.dynamic_adjustment</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span> <span class="c1"># noqa: E501</span>
 </span><span class="hll">    <span class="n">YAM10to60DynamicAdjustment</span><span class="p">,</span>
 </span><span class="hll"><span class="p">)</span>
-</span><span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.monthly_output_test</span> <span class="kn">import</span> <span class="p">(</span>
+</span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.monthly_output_test</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">MonthlyOutputTest</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="o">...</span>
 
-<span class="k">class</span> <span class="nc">GlobalOcean</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GlobalOcean</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
 
     <span class="o">...</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
 
         <span class="o">...</span>
 
@@ -1448,11 +1448,11 @@ second step that runs longer (8 days) with less damping:</p>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
 
-<span class="k">class</span> <span class="nc">YAM10to60DynamicAdjustment</span><span class="p">(</span><span class="n">DynamicAdjustment</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">YAM10to60DynamicAdjustment</span><span class="p">(</span><span class="n">DynamicAdjustment</span><span class="p">):</span>
 
     <span class="o">...</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">):</span>
 
         <span class="o">...</span>
 
@@ -1515,11 +1515,11 @@ subdirectory:</p>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
 
-<span class="k">class</span> <span class="nc">YAM10to60DynamicAdjustment</span><span class="p">(</span><span class="n">DynamicAdjustment</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">YAM10to60DynamicAdjustment</span><span class="p">(</span><span class="n">DynamicAdjustment</span><span class="p">):</span>
 
     <span class="o">...</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">):</span>
 
         <span class="o">...</span>
 
@@ -1580,11 +1580,11 @@ coding terminal:</p>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
 
-<span class="k">class</span> <span class="nc">YAM10to60DynamicAdjustment</span><span class="p">(</span><span class="n">DynamicAdjustment</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">YAM10to60DynamicAdjustment</span><span class="p">(</span><span class="n">DynamicAdjustment</span><span class="p">):</span>
 
     <span class="o">...</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">):</span>
 
         <span class="o">...</span>
 
@@ -1643,11 +1643,11 @@ time step:</p>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
 
-<span class="k">class</span> <span class="nc">YAM10to60DynamicAdjustment</span><span class="p">(</span><span class="n">DynamicAdjustment</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">YAM10to60DynamicAdjustment</span><span class="p">(</span><span class="n">DynamicAdjustment</span><span class="p">):</span>
 
     <span class="o">...</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">):</span>
 
         <span class="o">...</span>
 
@@ -1744,11 +1744,11 @@ vim<span class="w"> </span>__init__.py
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
 
-<span class="k">class</span> <span class="nc">GlobalOcean</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GlobalOcean</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
 
     <span class="o">...</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
 
         <span class="o">...</span>
 

@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.landice.tests.mismipplus.setup_mesh &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -107,20 +107,20 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice.tests.mismipplus.setup_mesh</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.mesh.conversion</span> <span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">cull</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.planar_hex</span> <span class="kn">import</span> <span class="n">make_planar_hex_mesh</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_call</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.mesh.conversion</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">cull</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.planar_hex</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_planar_hex_mesh</span>
 
-<span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">make_graph_file</span>
-<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_graph_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
 
 <div class="viewcode-block" id="SetupMesh">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.setup_mesh.SetupMesh.html#compass.landice.tests.mismipplus.setup_mesh.SetupMesh">[docs]</a>
-<span class="k">class</span> <span class="nc">SetupMesh</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SetupMesh</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for creating a mesh and initial condition for MISMIP+ test cases</span>
 <span class="sd">    Experimental protocol described in:</span>
@@ -148,7 +148,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="SetupMesh.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.setup_mesh.SetupMesh.html#compass.landice.tests.mismipplus.setup_mesh.SetupMesh.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the step</span>
 
@@ -175,7 +175,7 @@
 
 <div class="viewcode-block" id="SetupMesh.run">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.setup_mesh.SetupMesh.run.html#compass.landice.tests.mismipplus.setup_mesh.SetupMesh.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -257,7 +257,7 @@
 
 <div class="viewcode-block" id="calculate_mesh_params">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.setup_mesh.calculate_mesh_params.html#compass.landice.tests.mismipplus.setup_mesh.calculate_mesh_params">[docs]</a>
-<span class="k">def</span> <span class="nf">calculate_mesh_params</span><span class="p">(</span><span class="n">nominal_resolution</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_mesh_params</span><span class="p">(</span><span class="n">nominal_resolution</span><span class="p">,</span>
                           <span class="n">Lx</span><span class="o">=</span><span class="mf">640e3</span><span class="p">,</span>
                           <span class="n">Ly</span><span class="o">=</span><span class="mf">80e3</span><span class="p">,</span>
                           <span class="n">gutter_length</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
@@ -281,7 +281,7 @@
 <span class="sd">        will ensure there are two extra cell for the gutter.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">calculate_ny</span><span class="p">(</span><span class="n">nominal_resolution</span><span class="p">,</span> <span class="n">Ly</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_ny</span><span class="p">(</span><span class="n">nominal_resolution</span><span class="p">,</span> <span class="n">Ly</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        Parameters</span>
@@ -306,7 +306,7 @@
 
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">ny</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">calculate_dc</span><span class="p">(</span><span class="n">Ly</span><span class="p">,</span> <span class="n">ny</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_dc</span><span class="p">(</span><span class="n">Ly</span><span class="p">,</span> <span class="n">ny</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the cell spacing that conforms to the desired `ny`</span>
 
@@ -328,7 +328,7 @@
 
         <span class="k">return</span> <span class="n">dc</span>
 
-    <span class="k">def</span> <span class="nf">calculate_nx</span><span class="p">(</span><span class="n">Lx</span><span class="p">,</span> <span class="n">dc</span><span class="p">,</span> <span class="n">gutter_length</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_nx</span><span class="p">(</span><span class="n">Lx</span><span class="p">,</span> <span class="n">dc</span><span class="p">,</span> <span class="n">gutter_length</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Caluculate the number of x gridcell, per the required `dc` with</span>
 <span class="sd">        considerations for the requested gutter length</span>
@@ -383,7 +383,7 @@
 
 <div class="viewcode-block" id="mark_cull_cells_for_MISMIP">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.setup_mesh.mark_cull_cells_for_MISMIP.html#compass.landice.tests.mismipplus.setup_mesh.mark_cull_cells_for_MISMIP">[docs]</a>
-<span class="k">def</span> <span class="nf">mark_cull_cells_for_MISMIP</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mark_cull_cells_for_MISMIP</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Parameters</span>
@@ -412,7 +412,7 @@
 
 <div class="viewcode-block" id="center_trough">
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.mismipplus.setup_mesh.center_trough.html#compass.landice.tests.mismipplus.setup_mesh.center_trough">[docs]</a>
-<span class="k">def</span> <span class="nf">center_trough</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">center_trough</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Shift the origin so that the bed trough is centered about the Y-axis and</span>
 <span class="sd">    the X-axis is shifted all the way to the left.</span>
@@ -492,7 +492,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_mismipplus_bed</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_mismipplus_bed</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Equations 1-4 from Asay-Davis et al. (2016).</span>
 
@@ -529,7 +529,7 @@
     <span class="k">return</span> <span class="n">z_b</span>
 
 
-<span class="k">def</span> <span class="nf">_setup_MISMPPlus_IC</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_setup_MISMPPlus_IC</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Add the inital condition for the MISMIP+ spinup to the given MPAS mesh file</span>
 

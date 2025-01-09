@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.list &mdash; compass latest documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -105,19 +105,19 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.list</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">resources</span>
-<span class="kn">from</span> <span class="nn">importlib.resources</span> <span class="kn">import</span> <span class="n">contents</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">importlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">resources</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">importlib.resources</span><span class="w"> </span><span class="kn">import</span> <span class="n">contents</span>
 
-<span class="kn">from</span> <span class="nn">compass.mpas_cores</span> <span class="kn">import</span> <span class="n">get_mpas_cores</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.mpas_cores</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_mpas_cores</span>
 
 
 <div class="viewcode-block" id="list_cases">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.list.list_cases.html#compass.list.list_cases">[docs]</a>
-<span class="k">def</span> <span class="nf">list_cases</span><span class="p">(</span><span class="n">test_expr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">list_cases</span><span class="p">(</span><span class="n">test_expr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    List the available test cases</span>
 
@@ -191,7 +191,7 @@
 
 <div class="viewcode-block" id="list_machines">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.list.list_machines.html#compass.list.list_machines">[docs]</a>
-<span class="k">def</span> <span class="nf">list_machines</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">list_machines</span><span class="p">():</span>
     <span class="n">machine_configs</span> <span class="o">=</span> <span class="n">contents</span><span class="p">(</span><span class="s1">&#39;compass.machines&#39;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Machines:&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">machine_configs</span><span class="p">:</span>
@@ -202,7 +202,7 @@
 
 <div class="viewcode-block" id="list_suites">
 <a class="viewcode-back" href="../../developers_guide/generated/compass.list.list_suites.html#compass.list.list_suites">[docs]</a>
-<span class="k">def</span> <span class="nf">list_suites</span><span class="p">(</span><span class="n">cores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">list_suites</span><span class="p">(</span><span class="n">cores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">cores</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">cores</span> <span class="o">=</span> <span class="p">[</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">mpas_core</span> <span class="ow">in</span> <span class="n">get_mpas_cores</span><span class="p">()]</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Suites:&#39;</span><span class="p">)</span>
@@ -237,7 +237,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
         <span class="n">description</span><span class="o">=</span><span class="s1">&#39;List the available test cases or machines&#39;</span><span class="p">,</span>
         <span class="n">prog</span><span class="o">=</span><span class="s1">&#39;compass list&#39;</span><span class="p">)</span>
