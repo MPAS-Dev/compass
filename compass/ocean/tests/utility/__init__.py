@@ -1,4 +1,7 @@
 from compass.ocean.tests.utility.combine_topo import CombineTopo
+from compass.ocean.tests.utility.create_salin_restoring import (
+    CreateSalinRestoring,
+)
 from compass.ocean.tests.utility.cull_restarts import CullRestarts
 from compass.ocean.tests.utility.extrap_woa import ExtrapWoa
 from compass.testgroup import TestGroup
@@ -19,3 +22,4 @@ class Utility(TestGroup):
         self.add_test_case(CombineTopo(test_group=self))
         self.add_test_case(CullRestarts(test_group=self))
         self.add_test_case(ExtrapWoa(test_group=self))
+        self.add_test_case(CreateSalinRestoring(test_group=self))
