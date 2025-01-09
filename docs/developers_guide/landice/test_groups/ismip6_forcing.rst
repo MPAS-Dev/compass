@@ -9,7 +9,7 @@ atmospheric and oceanic forcing data of the Ice Sheet Model
 Intercomparison for CMIP6 (ISMIP6) protocol from its native polarstereo grid to
 the unstructure MALI mesh. The test group includes five test cases:
 ``atmosphere``, ``ocean_basal``, ``ocean_thermal_obs``, ``ocean_thermal`` and
-``shelf_collapse``. The ``atmosphere`` test case has two steps: 
+``shelf_collapse``. The ``atmosphere`` test case has two steps:
 ``process_smb`` and ``process_smb_racmo``; the ``ocean_basal`` and ``shelf_collpase``
 test cases each have one step, ``process_basal_melt`` and ``process_shelf_collpase``
 (respectively); the ``ocean_thermal_obs`` and ``ocean_thermal``
@@ -34,15 +34,15 @@ create_mapfile
 
 The module :py:class:`compass.landice.tests.ismip6_forcing.create_mapfile` defines
 a unified framework for creating the SCRIP and mapping files from the ISMIP6
-source data files. The function 
+source data files. The function
 :py:func:`compass.landice.tests.ismip6_forcing.create_mapfile.build_mapping_file`
 is the common interface to build the SCRIP files and mapping files. The
 ``scrip_from_latlon`` keyword argument is used to call the appropriate function
 for generating the SCRIP file. If ``scrip_from_latlon`` is ``false`` the
-``create_SCRIP_file_from_planar_rectangular_grid.py`` command line executable
-from the ``MPAS_Tools`` conda package is used, otherwise the 
+``create_scrip_file_from_planar_rectangular_grid`` command line executable
+from the ``MPAS_Tools`` conda package is used, otherwise the
 :py:func:`compass.landice.tests.ismip6_forcing.create_mapfile.create_scrip_from_latlon`
-function is used. Multiple methods for creating SCRIP files are necessary due to 
+function is used. Multiple methods for creating SCRIP files are necessary due to
 inconsistent dimensions names across the different ISMIP6 datasets.
 
 Test cases
@@ -87,4 +87,4 @@ shelf_collapse
 ~~~~~~~~~~~~~~
 The :py:class:`compass.landice.tests.ismip6_forcing.shelf_collapse.ShelfCollapse`
 test case performs the processing of ice shelf collapse masks by remapping the
-original ISMIP6 forcing data to MALI's unstructured grid and renaming variables. 
+original ISMIP6 forcing data to MALI's unstructured grid and renaming variables.

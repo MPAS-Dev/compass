@@ -1868,7 +1868,7 @@ run:
 
 .. code-block:: bash
 
-    paraview_vtk_field_extractor.py -m init.nc \
+    paraview_vtk_field_extractor -m init.nc \
         -f output.nc -v normalVelocity,temperature,salinity \
         -d nVertLevels=0
 
