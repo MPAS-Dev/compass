@@ -652,7 +652,8 @@ class Combine(Step):
             combined[field] = combined[field].where(valid, fill_val)
 
         # Save combined bathy to NetCDF
-        _write_netcdf_with_fill_values(combined, self.outputs[1])
+        _write_netcdf_with_fill_values(combined, self.outputs[1],
+                                       format='NETCDF3_64BIT_DATA')
 
         logger.info('  Done.')
 
@@ -670,7 +671,7 @@ class Combine(Step):
         logger.info('  Done.')
 
 
-def _write_netcdf_with_fill_values(ds, filename):
+def _write_netcdf_with_fill_values(ds, filename, format='NETCDF4'):
     """ Write an xarray Dataset with NetCDF4 fill values where needed """
     fill_values = netCDF4.default_fillvals
     encoding = {}
@@ -687,4 +688,4 @@ def _write_netcdf_with_fill_values(ds, filename):
                     break
         else:
             encoding[var_name] = {"_FillValue": None}
-    ds.to_netcdf(filename, encoding=encoding)
+    ds.to_netcdf(filename, encoding=encoding, format=format)
