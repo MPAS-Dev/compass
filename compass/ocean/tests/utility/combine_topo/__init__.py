@@ -584,6 +584,10 @@ class Combine(Step):
         section = config['combine_topo']
         renorm_thresh = section.getfloat('renorm_thresh')
 
+        out_filename = self.outputs[1]
+        stem = pathlib.Path(out_filename).stem
+        netcdf4_filename = f'{stem}.netcdf4.nc'
+
         # Parse config
         config = self.config
         section = config['combine_topo']
@@ -652,8 +656,16 @@ class Combine(Step):
             combined[field] = combined[field].where(valid, fill_val)
 
         # Save combined bathy to NetCDF
-        _write_netcdf_with_fill_values(combined, self.outputs[1],
-                                       format='NETCDF3_64BIT_DATA')
+        _write_netcdf_with_fill_values(combined, netcdf4_filename)
+
+        # writing directly in NETCDF3_64BIT_DATA proved prohibitively slow
+        # so we will use ncks to convert
+        args = [
+            'ncks', '-O', '-5',
+            netcdf4_filename,
+            out_filename,
+        ]
+        check_call(args, logger)
 
         logger.info('  Done.')
 
