@@ -325,6 +325,7 @@ class Combine(Step):
         section = config['combine_topo']
         antarctic_name = section.get('antarctic_filename').strip('.nc')
         in_filename = f'{antarctic_name}_mod.nc'
+        netcdf4_filename = f'{antarctic_name}.scrip.netcdf4.nc'
         out_filename = f'{antarctic_name}.scrip.nc'
 
         # Define projection
@@ -337,8 +338,18 @@ class Combine(Step):
         bedmachine_descriptor = ProjectionGridDescriptor.read(
             projection, in_filename, 'BedMachineAntarctica500m',
         )
-        bedmachine_descriptor.format = 'NETCDF3_64BIT_DATA'
-        bedmachine_descriptor.to_scrip(out_filename)
+        bedmachine_descriptor.to_scrip(netcdf4_filename)
+
+        # writing directly in NETCDF3_64BIT_DATA proved prohibitively slow
+        # so we will use ncks to convert
+        args = [
+            'ncks', '-O', '-5',
+            netcdf4_filename,
+            out_filename,
+        ]
+        check_call(args, logger)
+
+        logger.info('  Done.')
 
     def _create_target_scrip_file(self):
         """
@@ -372,22 +383,21 @@ class Combine(Step):
             ]
             check_call(args, logger)
 
-            # ConvertMeshToSCRIP doesn't support NETCDF3_64BIT_DATA, so use
-            # ncks
-            args = [
-                'ncks', '-O', '-5',
-                netcdf4_filename,
-                out_filename,
-            ]
-            check_call(args, logger)
-
         # Build lat-lon SCRIP file using pyremap
         elif self.target_grid == 'lat_lon':
             descriptor = get_lat_lon_descriptor(
                 dLon=self.resolution, dLat=self.resolution,
             )
-            descriptor.format = 'NETCDF3_64BIT_DATA'
-            descriptor.to_scrip(out_filename)
+            descriptor.to_scrip(netcdf4_filename)
+
+        # writing out directly to NETCDF3_64BIT_DATA is either very slow or
+        # unsupported, so use ncks
+        args = [
+            'ncks', '-O', '-5',
+            netcdf4_filename,
+            out_filename,
+        ]
+        check_call(args, logger)
 
         logger.info('  Done.')
 
