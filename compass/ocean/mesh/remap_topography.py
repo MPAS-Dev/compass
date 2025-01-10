@@ -1,4 +1,5 @@
 import os
+import pathlib
 
 import numpy as np
 import xarray as xr
@@ -154,19 +155,15 @@ class RemapTopography(Step):
         logger = self.logger
         logger.info('Partition SCRIP file')
 
-        # Convert to NetCDF3 64-bit
-        args = [
-            'ncks', '-O', '-5',
-            in_filename,
-            in_filename.replace('.nc', '.64bit.nc'),
-        ]
-        check_call(args, logger)
+        stem = pathlib.Path(in_filename).stem
+        h5m_filename = f'{stem}.h5m'
+        part_filename = f'{stem}.p{self.ntasks}.h5m'
 
         # Convert source SCRIP to mbtempest
         args = [
             'mbconvert', '-B',
-            in_filename.replace('.nc', '.64bit.nc'),
-            in_filename.replace('.nc', '.64bit.h5m'),
+            in_filename,
+            h5m_filename,
         ]
         check_call(args, logger)
 
@@ -174,8 +171,8 @@ class RemapTopography(Step):
         args = [
             'mbpart', f'{self.ntasks}',
             '-z', 'RCB',
-            in_filename.replace('.nc', '.64bit.h5m'),
-            in_filename.replace('.nc', f'.64bit.p{self.ntasks}.h5m'),
+            h5m_filename,
+            part_filename,
         ]
         check_call(args, logger)
 
@@ -195,8 +192,8 @@ class RemapTopography(Step):
 
         args = [
             'mbtempest', '--type', '5',
-            '--load', f'source.scrip.64bit.p{self.ntasks}.h5m',
-            '--load', f'target.scrip.64bit.p{self.ntasks}.h5m',
+            '--load', f'source.scrip.p{self.ntasks}.h5m',
+            '--load', f'target.scrip.p{self.ntasks}.h5m',
             '--file', f'map_source_to_target_{method}.nc',
             '--weights', '--gnomonic',
             '--boxeps', '1e-9',
