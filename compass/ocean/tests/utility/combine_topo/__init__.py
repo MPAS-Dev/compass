@@ -1,4 +1,5 @@
 import os
+import pathlib
 from datetime import datetime
 from glob import glob
 
@@ -336,6 +337,7 @@ class Combine(Step):
         bedmachine_descriptor = ProjectionGridDescriptor.read(
             projection, in_filename, 'BedMachineAntarctica500m',
         )
+        bedmachine_descriptor.format = 'NETCDF3_64BIT_DATA'
         bedmachine_descriptor.to_scrip(out_filename)
 
     def _create_target_scrip_file(self):
@@ -350,6 +352,8 @@ class Combine(Step):
         logger.info(f'Create SCRIP file for {self.resolution_name} mesh')
 
         out_filename = self.outputs[0]
+        stem = pathlib.Path(out_filename).stem
+        netcdf4_filename = f'{stem}.netcdf4.nc'
 
         # Build cubed sphere SCRIP file using tempestremap
         if self.target_grid == 'cubed_sphere':
@@ -364,7 +368,16 @@ class Combine(Step):
             # Create SCRIP file
             args = [
                 'ConvertMeshToSCRIP', '--in', f'{self.resolution_name}.g',
-                '--out', out_filename,
+                '--out', netcdf4_filename,
+            ]
+            check_call(args, logger)
+
+            # ConvertMeshToSCRIP doesn't support NETCDF3_64BIT_DATA, so use
+            # ncks
+            args = [
+                'ncks', '-O', '-5',
+                netcdf4_filename,
+                out_filename,
             ]
             check_call(args, logger)
 
@@ -373,6 +386,7 @@ class Combine(Step):
             descriptor = get_lat_lon_descriptor(
                 dLon=self.resolution, dLat=self.resolution,
             )
+            descriptor.format = 'NETCDF3_64BIT_DATA'
             descriptor.to_scrip(out_filename)
 
         logger.info('  Done.')
