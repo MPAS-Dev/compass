@@ -244,9 +244,6 @@ class RemapTopography(Step):
         method = config.get('remap_topography', 'method')
 
         # Build command args
-        # Unused options:
-        # -P mpas, handles some MPAS-specific index ordering, CF, etc...
-        # -C climatology, basically bypasses fill values
         args = [
             'ncremap',
             '-m', f'map_source_to_target_{method}.nc',
