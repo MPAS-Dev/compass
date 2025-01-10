@@ -57,12 +57,14 @@ thickness, grounded and floating land-ice masks, etc.) to the MPAS mesh.  This
 step is controlled by config options described in
 :ref:`ocean_remap_topography`.
 
-The step uses the `pyremap <https://mpas-dev.github.io/pyremap/stable/>`_
-package to call
+By default, the step creates a partitioned SCRIP file and generates a mapping
+file using the `tempest <https://github.com/ClimateGlobalChange/tempestremap>`_
+and `MOAB <https://sigma.mcs.anl.gov/moab-library/>`_
+tools. It can optionally use ESMF's
 `ESMF_RegridWeightGen <https://earthsystemmodeling.org/docs/release/ESMF_8_4_1/ESMF_refdoc/node3.html#SECTION03020000000000000000>`_
-to generate a mapping file, then it uses
+tool to generate a mapping files. In either case, the step then uses
 `ncremap <https://nco.sourceforge.net/nco.html#ncremap-netCDF-Remapper>`_
-to perform remapping to the MPAS mesh.  Then, it renames the
+to perform remapping to the MPAS mesh.  Finally, it renames the
 topography variables to the following names, expected in MPAS-Ocean's init mode
 for the global ocean:
 
