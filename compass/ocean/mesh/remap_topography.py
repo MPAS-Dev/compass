@@ -279,15 +279,14 @@ class RemapTopography(Step):
 
         ds_out = xr.Dataset()
         rename = {
-            'bathymetry_var': 'bed_elevation',
-            'ice_thickness_var': 'landIceThkObserved',
-            'ice_frac_var': 'landIceFracObserved',
-            'grounded_ice_frac_var': 'landIceGroundedFracObserved',
-            'ocean_frac_var': 'oceanFracObserved',
-            'bathy_frac_var': 'bathyFracObserved',
+            'bathymetry': 'bed_elevation',
+            'thickness': 'landIceThkObserved',
+            'ice_mask': 'landIceFracObserved',
+            'grounded_mask': 'landIceGroundedFracObserved',
+            'ocean_mask': 'oceanFracObserved',
+            'bathymetry_mask': 'bathyFracObserved',
         }
-        for option, out_var in rename.items():
-            in_var = section.get(option)
+        for in_var, out_var in rename.items():
             ds_out[out_var] = ds_in[in_var]
 
         ds_out['landIceFloatingFracObserved'] = \
