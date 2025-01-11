@@ -11,6 +11,8 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=c6e86fd7"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
@@ -144,13 +146,13 @@
            <div itemprop="articleBody">
              
   <section id="buttermilk-bay">
-<span id="ocean-buttermilk-bay"></span><h1>buttermilk_bay<a class="headerlink" href="#buttermilk-bay" title="Link to this heading">¶</a></h1>
+<span id="ocean-buttermilk-bay"></span><h1>buttermilk_bay<a class="headerlink" href="#buttermilk-bay" title="Link to this heading"></a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">buttermilk_bay</span></code> test group implements a realistic regional
 simulation of tidally forced circulation in a multi-bay system
 connected by narrow channels. The computational domain is
 <a class="reference external" href="https://tinyurl.com/4zpz36ft">Buttermilk Bay, Massachusetts</a>.</p>
 <section id="default">
-<span id="ocean-buttermilk-bay-default"></span><h2>default<a class="headerlink" href="#default" title="Link to this heading">¶</a></h2>
+<span id="ocean-buttermilk-bay-default"></span><h2>default<a class="headerlink" href="#default" title="Link to this heading"></a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">default</span></code> test case implements the Buttermilk Bay test case found in
 <a class="reference external" href="https://doi.org/10.1016/j.ocemod.2019.101491">Kennedy et al. (2019)</a>.
 The tidal forcing is applied to a portion of the bottom boundary with an
@@ -162,7 +164,7 @@ is used by default for both the standard and subgrid versions of this test case.
 The result of the <code class="docutils literal notranslate"><span class="pre">viz</span></code> step of the test case is plots of the solution at
 different times, a time series at various points, and a convergence plot.</p>
 <section id="standard">
-<h3>standard<a class="headerlink" href="#standard" title="Link to this heading">¶</a></h3>
+<h3>standard<a class="headerlink" href="#standard" title="Link to this heading"></a></h3>
 <p>The standard version of the test case uses the standard wetting and drying
 approach. At coarser resolutions, the bathymetric representation lacks
 sufficient detail to resolve the connectivity between the upper and lower
@@ -173,7 +175,7 @@ bays. As a consequence, the results of the simulation are quite poor:</p>
 </a>
 </section>
 <section id="subgrid">
-<h3>subgrid<a class="headerlink" href="#subgrid" title="Link to this heading">¶</a></h3>
+<h3>subgrid<a class="headerlink" href="#subgrid" title="Link to this heading"></a></h3>
 <p>The subgrid version of the test case includes a subgrid correction scheme
 to incorporate the effects of subgrid scale bathymetric variations on
 the flow. This allows the small-scale connectivity between bays to be
@@ -185,7 +187,7 @@ wetting and drying approach:</p>
 </a>
 </section>
 <section id="config-options">
-<h3>config options<a class="headerlink" href="#config-options" title="Link to this heading">¶</a></h3>
+<h3>config options<a class="headerlink" href="#config-options" title="Link to this heading"></a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">buttermilk_bay</span></code> config options include:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for buttermilk bay</span>
 <span class="k">[buttermilk_bay]</span>
@@ -219,7 +221,7 @@ wetting and drying approach:</p>
 </div>
 </section>
 <section id="resolutions">
-<h3>resolutions<a class="headerlink" href="#resolutions" title="Link to this heading">¶</a></h3>
+<h3>resolutions<a class="headerlink" href="#resolutions" title="Link to this heading"></a></h3>
 <p>The default resolutions (in m) used in the test case are:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">resolutions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">256, 128, 64</span>
 </pre></div>
@@ -235,14 +237,14 @@ of <code class="docutils literal notranslate"><span class="pre">Lx</span></code>
 directions used to generate the mesh.</p>
 </section>
 <section id="time-step">
-<h3>time step<a class="headerlink" href="#time-step" title="Link to this heading">¶</a></h3>
+<h3>time step<a class="headerlink" href="#time-step" title="Link to this heading"></a></h3>
 <p>The time step for forward integration is determined by multiplying the
 resolution by <code class="docutils literal notranslate"><span class="pre">dt_per_m</span></code>, so that coarser meshes have longer time steps.
 You can alter this before setup (in a user config file) or before running the
 test case (in the config file in the work directory).</p>
 </section>
 <section id="cores">
-<h3>cores<a class="headerlink" href="#cores" title="Link to this heading">¶</a></h3>
+<h3>cores<a class="headerlink" href="#cores" title="Link to this heading"></a></h3>
 <p>The number of cores (and the minimum) is proportional to the number of cells,
 so that the number of cells per core is roughly constant.  You can alter how
 many cells are allocated to each core with <code class="docutils literal notranslate"><span class="pre">goal_cells_per_core</span></code>.  You can
@@ -252,7 +254,7 @@ aren’t enough processors to handle the finest resolution, you will see that
 the step (and therefore the test case) has failed.</p>
 </section>
 <section id="viz">
-<h3>viz<a class="headerlink" href="#viz" title="Link to this heading">¶</a></h3>
+<h3>viz<a class="headerlink" href="#viz" title="Link to this heading"></a></h3>
 <p>The visualization step can be configured to plot the timeseries for an
 arbitrary set of coordinates by setting <code class="docutils literal notranslate"><span class="pre">points</span></code>. By default, these
 are set to the locations used in Kennedy et al. 2019. Also, the interval

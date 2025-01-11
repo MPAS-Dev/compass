@@ -476,7 +476,7 @@ The mesh has 12-km resolution around Antarctica and 30-km resolution elsewhere.
 The mesh includes the :ref:`global_ocean_ice_shelf_cavities` around Antarctica
 in the ocean domain.
 
-.. image:: images/sowisc12to30.png
+.. image:: images/sowisc12to60.png
    :width: 500 px
    :align: center
 

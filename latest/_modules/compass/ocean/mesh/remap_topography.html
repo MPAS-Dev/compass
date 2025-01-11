@@ -10,6 +10,8 @@
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
 
   
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../../_static/documentation_options.js?v=c6e86fd7"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
@@ -107,13 +109,16 @@
              
   <h1>Source code for compass.ocean.mesh.remap_topography</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.cime.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyremap</span><span class="w"> </span><span class="kn">import</span> <span class="n">LatLonGridDescriptor</span><span class="p">,</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">,</span> <span class="n">Remapper</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_call</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyremap</span><span class="w"> </span><span class="kn">import</span> <span class="n">MpasCellMeshDescriptor</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.parallel</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_command</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
 
@@ -135,8 +140,10 @@
 
 <div class="viewcode-block" id="RemapTopography.__init__">
 <a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.mesh.remap_topography.RemapTopography.html#compass.ocean.mesh.remap_topography.RemapTopography.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">base_mesh_step</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span>
-                 <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="s1">&#39;MPAS_mesh&#39;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">base_mesh_step</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">mesh_name</span><span class="o">=</span><span class="s1">&#39;MPAS_mesh&#39;</span><span class="p">,</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new step</span>
 
@@ -174,20 +181,30 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">topo_filename</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;topo_filename&#39;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">]</span>
+        <span class="n">topo_filename</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;topo_filename&#39;</span><span class="p">)</span>
+        <span class="n">src_scrip_filename</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;src_scrip_filename&#39;</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">,</span>
             <span class="n">target</span><span class="o">=</span><span class="n">topo_filename</span><span class="p">,</span>
-            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;bathymetry_database&#39;</span><span class="p">)</span>
+            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;bathymetry_database&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;source.scrip.nc&#39;</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="n">src_scrip_filename</span><span class="p">,</span>
+            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;bathymetry_database&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
 
         <span class="n">base_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_mesh_step</span><span class="o">.</span><span class="n">path</span>
         <span class="n">base_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_mesh_step</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-            <span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas_mesh_filename&#39;</span><span class="p">)</span>
+            <span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas_mesh_filename&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="n">base_filename</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span> <span class="n">work_dir_target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;ntasks&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;min_tasks&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ntasks&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;min_tasks&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="RemapTopography.constrain_resources">
@@ -215,64 +232,196 @@
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
-        <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;parallel_executable&#39;</span><span class="p">)</span>
+        <span class="n">weight_generator</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;weight_generator&#39;</span><span class="p">)</span>
 
-        <span class="n">lon_var</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;lon_var&#39;</span><span class="p">)</span>
-        <span class="n">lat_var</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;lat_var&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_target_scrip_file</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">weight_generator</span> <span class="o">==</span> <span class="s1">&#39;tempest&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_partition_scrip_file</span><span class="p">(</span><span class="s1">&#39;source.scrip.nc&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_partition_scrip_file</span><span class="p">(</span><span class="s1">&#39;target.scrip.nc&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_create_weights_tempest</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">weight_generator</span> <span class="o">==</span> <span class="s1">&#39;esmf&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_create_weights_esmf</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Unsupported weight generator function </span><span class="si">{</span><span class="n">weight_generator</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_remap_to_target</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_modify_remapped_bathymetry</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_target_scrip_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create target SCRIP file from MPAS mesh file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Create source SCRIP file&#39;</span><span class="p">)</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">]</span>
+        <span class="n">expandDist</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;expandDist&#39;</span><span class="p">)</span>
+        <span class="n">expandFactor</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;expandFactor&#39;</span><span class="p">)</span>
+
+        <span class="n">descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span>
+            <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span>
+            <span class="n">meshName</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_name</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">descriptor</span><span class="o">.</span><span class="n">to_scrip</span><span class="p">(</span>
+            <span class="s1">&#39;target.scrip.nc&#39;</span><span class="p">,</span>
+            <span class="n">expandDist</span><span class="o">=</span><span class="n">expandDist</span><span class="p">,</span>
+            <span class="n">expandFactor</span><span class="o">=</span><span class="n">expandFactor</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Done.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_partition_scrip_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_filename</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Partition SCRIP file for parallel mbtempest use</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Partition SCRIP file&#39;</span><span class="p">)</span>
+
+        <span class="n">stem</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">in_filename</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span>
+        <span class="n">h5m_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">stem</span><span class="si">}</span><span class="s1">.h5m&#39;</span>
+        <span class="n">part_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">stem</span><span class="si">}</span><span class="s1">.p</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="si">}</span><span class="s1">.h5m&#39;</span>
+
+        <span class="c1"># Convert source SCRIP to mbtempest</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;mbconvert&#39;</span><span class="p">,</span> <span class="s1">&#39;-B&#39;</span><span class="p">,</span>
+            <span class="n">in_filename</span><span class="p">,</span>
+            <span class="n">h5m_filename</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+
+        <span class="c1"># Partition source SCRIP</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;mbpart&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;-z&#39;</span><span class="p">,</span> <span class="s1">&#39;RCB&#39;</span><span class="p">,</span>
+            <span class="n">h5m_filename</span><span class="p">,</span>
+            <span class="n">part_filename</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Done.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_weights_tempest</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create mapping weights file using TempestRemap</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Create weights file&#39;</span><span class="p">)</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">method</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;method&#39;</span><span class="p">)</span>
-        <span class="n">renorm_threshold</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span>
-                                           <span class="s1">&#39;renorm_threshold&#39;</span><span class="p">)</span>
-        <span class="n">ice_density</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;ice_density&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">!=</span> <span class="s1">&#39;conserve&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unsupported method </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1"> for TempestRemap&#39;</span><span class="p">)</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;mbtempest&#39;</span><span class="p">,</span> <span class="s1">&#39;--type&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--load&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;source.scrip.p</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="si">}</span><span class="s1">.h5m&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--load&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;target.scrip.p</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="si">}</span><span class="s1">.h5m&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--file&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;map_source_to_target_</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--weights&#39;</span><span class="p">,</span> <span class="s1">&#39;--gnomonic&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--boxeps&#39;</span><span class="p">,</span> <span class="s1">&#39;1e-9&#39;</span><span class="p">,</span>
+        <span class="p">]</span>
+
+        <span class="n">run_command</span><span class="p">(</span>
+            <span class="n">args</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">openmp_threads</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Done.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_weights_esmf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create mapping weights file using ESMF_RegridWeightGen</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Create weights file&#39;</span><span class="p">)</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;method&#39;</span><span class="p">)</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;ESMF_RegridWeightGen&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--source&#39;</span><span class="p">,</span> <span class="s1">&#39;source.scrip.nc&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--destination&#39;</span><span class="p">,</span> <span class="s1">&#39;target.scrip.nc&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--weight&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;map_source_to_target_</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--method&#39;</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span>
+            <span class="s1">&#39;--netcdf4&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--ignore_unmapped&#39;</span><span class="p">,</span>
+        <span class="p">]</span>
+
+        <span class="n">run_command</span><span class="p">(</span>
+            <span class="n">args</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">openmp_threads</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Done.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_remap_to_target</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remap combined bathymetry onto MPAS target mesh</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Remap to target&#39;</span><span class="p">)</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;method&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Build command args</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;ncremap&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;map_source_to_target_</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--vrb=1&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;topography.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;topography_ncremap.nc&#39;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Done.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_modify_remapped_bathymetry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Modify remapped bathymetry</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Modify remapped bathymetry&#39;</span><span class="p">)</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">]</span>
+        <span class="n">renorm_threshold</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;renorm_threshold&#39;</span><span class="p">)</span>
+        <span class="n">ice_density</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;ice_density&#39;</span><span class="p">)</span>
         <span class="n">ocean_density</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_RHOSW&#39;</span><span class="p">]</span>
         <span class="n">g</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_G&#39;</span><span class="p">]</span>
 
-        <span class="n">in_descriptor</span> <span class="o">=</span> <span class="n">LatLonGridDescriptor</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">,</span>
-                                                  <span class="n">lonVarName</span><span class="o">=</span><span class="n">lon_var</span><span class="p">,</span>
-                                                  <span class="n">latVarName</span><span class="o">=</span><span class="n">lat_var</span><span class="p">)</span>
-
-        <span class="n">in_mesh_name</span> <span class="o">=</span> <span class="n">in_descriptor</span><span class="o">.</span><span class="n">meshName</span>
-
-        <span class="n">out_mesh_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_name</span>
-        <span class="n">out_descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span>
-                                                <span class="n">meshName</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_name</span><span class="p">)</span>
-
-        <span class="n">mapping_file_name</span> <span class="o">=</span> \
-            <span class="sa">f</span><span class="s1">&#39;map_</span><span class="si">{</span><span class="n">in_mesh_name</span><span class="si">}</span><span class="s1">_to_</span><span class="si">{</span><span class="n">out_mesh_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">.nc&#39;</span>
-        <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span><span class="n">in_descriptor</span><span class="p">,</span> <span class="n">out_descriptor</span><span class="p">,</span> <span class="n">mapping_file_name</span><span class="p">)</span>
-
-        <span class="n">remapper</span><span class="o">.</span><span class="n">build_mapping_file</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">mpiTasks</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="p">,</span>
-                                    <span class="n">tempdir</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
-                                    <span class="n">esmf_parallel_exec</span><span class="o">=</span><span class="n">parallel_executable</span><span class="p">)</span>
-
-        <span class="n">remapper</span><span class="o">.</span><span class="n">remap_file</span><span class="p">(</span><span class="n">inFileName</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">,</span>
-                            <span class="n">outFileName</span><span class="o">=</span><span class="s1">&#39;topography_ncremap.nc&#39;</span><span class="p">,</span>
-                            <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-
         <span class="n">ds_in</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;topography_ncremap.nc&#39;</span><span class="p">)</span>
         <span class="n">ds_in</span> <span class="o">=</span> <span class="n">ds_in</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;ncol&#39;</span><span class="p">:</span> <span class="s1">&#39;nCells&#39;</span><span class="p">})</span>
-        <span class="n">ds_out</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
-        <span class="n">rename</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;bathymetry_var&#39;</span><span class="p">:</span> <span class="s1">&#39;bed_elevation&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;ice_thickness_var&#39;</span><span class="p">:</span> <span class="s1">&#39;landIceThkObserved&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;ice_frac_var&#39;</span><span class="p">:</span> <span class="s1">&#39;landIceFracObserved&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;grounded_ice_frac_var&#39;</span><span class="p">:</span> <span class="s1">&#39;landIceGroundedFracObserved&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;ocean_frac_var&#39;</span><span class="p">:</span> <span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;bathy_frac_var&#39;</span><span class="p">:</span> <span class="s1">&#39;bathyFracObserved&#39;</span><span class="p">}</span>
 
-        <span class="k">for</span> <span class="n">option</span><span class="p">,</span> <span class="n">out_var</span> <span class="ow">in</span> <span class="n">rename</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">in_var</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
+        <span class="n">ds_out</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+        <span class="n">rename</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;bathymetry&#39;</span><span class="p">:</span> <span class="s1">&#39;bed_elevation&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;thickness&#39;</span><span class="p">:</span> <span class="s1">&#39;landIceThkObserved&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;ice_mask&#39;</span><span class="p">:</span> <span class="s1">&#39;landIceFracObserved&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;grounded_mask&#39;</span><span class="p">:</span> <span class="s1">&#39;landIceGroundedFracObserved&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;ocean_mask&#39;</span><span class="p">:</span> <span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;bathymetry_mask&#39;</span><span class="p">:</span> <span class="s1">&#39;bathyFracObserved&#39;</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">in_var</span><span class="p">,</span> <span class="n">out_var</span> <span class="ow">in</span> <span class="n">rename</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">ds_out</span><span class="p">[</span><span class="n">out_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_in</span><span class="p">[</span><span class="n">in_var</span><span class="p">]</span>
 
         <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIceFloatingFracObserved&#39;</span><span class="p">]</span> <span class="o">=</span> \
             <span class="n">ds_out</span><span class="o">.</span><span class="n">landIceFracObserved</span> <span class="o">-</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">landIceGroundedFracObserved</span>
 
-        <span class="c1"># make sure fractions don&#39;t exceed 1</span>
-        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;landIceFracObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceGroundedFracObserved&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;landIceFloatingFracObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;bathyFracObserved&#39;</span><span class="p">]:</span>
+        <span class="c1"># Make sure fractions don&#39;t exceed 1</span>
+        <span class="n">varNames</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;landIceFracObserved&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;landIceGroundedFracObserved&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;landIceFloatingFracObserved&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;bathyFracObserved&#39;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">varNames</span><span class="p">:</span>
             <span class="n">ds_out</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">ds_out</span><span class="p">[</span><span class="n">var</span><span class="p">],</span> <span class="mf">1.</span><span class="p">)</span>
 
-        <span class="c1"># renormalize elevation variables</span>
+        <span class="c1"># Renormalize elevation variables</span>
         <span class="n">norm</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">bathyFracObserved</span>
         <span class="n">valid</span> <span class="o">=</span> <span class="n">norm</span> <span class="o">&gt;</span> <span class="n">renorm_threshold</span>
         <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bed_elevation&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceThkObserved&#39;</span><span class="p">]:</span>
@@ -284,17 +433,16 @@
         <span class="c1"># not allowed to be thicker than the flotation thickness</span>
         <span class="n">thickness</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">thickness</span><span class="p">,</span> <span class="n">flotation_thickness</span><span class="p">)</span>
         <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIceThkObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">thickness</span>
-
         <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIcePressureObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ice_density</span> <span class="o">*</span> <span class="n">g</span> <span class="o">*</span> <span class="n">thickness</span>
 
         <span class="c1"># compute the ice draft to be consistent with the land ice pressure</span>
         <span class="c1"># and using E3SM&#39;s density of seawater</span>
-
         <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIceDraftObserved&#39;</span><span class="p">]</span> <span class="o">=</span> \
             <span class="o">-</span> <span class="p">(</span><span class="n">ice_density</span> <span class="o">/</span> <span class="n">ocean_density</span><span class="p">)</span> <span class="o">*</span> <span class="n">thickness</span>
 
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="s1">&#39;topography_remapped.nc&#39;</span><span class="p">)</span></div>
-</div>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="s1">&#39;topography_remapped.nc&#39;</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Done.&#39;</span><span class="p">)</span></div>
 
 </pre></div>
 

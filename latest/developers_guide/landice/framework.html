@@ -11,6 +11,8 @@
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
@@ -119,22 +121,22 @@
            <div itemprop="articleBody">
              
   <section id="land-ice-framework">
-<span id="dev-landice-framework"></span><h1>Land-ice Framework<a class="headerlink" href="#land-ice-framework" title="Link to this heading">¶</a></h1>
+<span id="dev-landice-framework"></span><h1>Land-ice Framework<a class="headerlink" href="#land-ice-framework" title="Link to this heading"></a></h1>
 <section id="ais-observations">
-<h2>ais_observations<a class="headerlink" href="#ais-observations" title="Link to this heading">¶</a></h2>
+<h2>ais_observations<a class="headerlink" href="#ais-observations" title="Link to this heading"></a></h2>
 <p>The landice framework module <code class="docutils literal notranslate"><span class="pre">compass/landice/ais_observations.py</span></code> contains
 observational data for various Antarctic basins.  These are based on the
 ISMIP6 basin definitions, but it need not be limited to those.  The basins do
 not need to be mutually exclusive, so more can be added as needed.</p>
 </section>
 <section id="extrapolate">
-<h2>extrapolate<a class="headerlink" href="#extrapolate" title="Link to this heading">¶</a></h2>
+<h2>extrapolate<a class="headerlink" href="#extrapolate" title="Link to this heading"></a></h2>
 <p>The landice framework module <code class="docutils literal notranslate"><span class="pre">compass/landice/extrapolate.py</span></code> provides a
 function for extrapolating variables into undefined regions.  It is copied
 from a similar script in MPAS-Tools.</p>
 </section>
 <section id="iceshelf-melt">
-<h2>iceshelf_melt<a class="headerlink" href="#iceshelf-melt" title="Link to this heading">¶</a></h2>
+<h2>iceshelf_melt<a class="headerlink" href="#iceshelf-melt" title="Link to this heading"></a></h2>
 <p>The landice framework module <code class="docutils literal notranslate"><span class="pre">compass/landice/iceshelf_melt.py</span></code> provides
 functionality related to ice-shelf basal melting.  Currently, there is a
 single function <code class="docutils literal notranslate"><span class="pre">calc_mean_TF</span></code> that calculated the mean thermal forcing
@@ -142,7 +144,7 @@ along the ice-shelf draft in a domain for a given geometry file and thermal
 forcing file.</p>
 </section>
 <section id="mesh">
-<h2>mesh<a class="headerlink" href="#mesh" title="Link to this heading">¶</a></h2>
+<h2>mesh<a class="headerlink" href="#mesh" title="Link to this heading"></a></h2>
 <p>The landice framework module <code class="xref py py-mod docutils literal notranslate"><span class="pre">compass.landice.mesh</span></code> provides functions
 used by all <code class="docutils literal notranslate"><span class="pre">mesh_gen</span></code> tests cases, which currently exist within the
 <code class="docutils literal notranslate"><span class="pre">antarctica</span></code>, <code class="docutils literal notranslate"><span class="pre">crane</span></code>, <code class="docutils literal notranslate"><span class="pre">greenland</span></code>, <code class="docutils literal notranslate"><span class="pre">humboldt</span></code>, <code class="docutils literal notranslate"><span class="pre">kangerlussuaq</span></code>,
@@ -175,7 +177,7 @@ gridded AIS datasets needed for rest of compass workflow to utilize them.</p>
 <p><a class="reference internal" href="generated/compass.landice.mesh.set_rectangular_geom_points_and_edges.html#compass.landice.mesh.set_rectangular_geom_points_and_edges" title="compass.landice.mesh.set_rectangular_geom_points_and_edges"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.set_rectangular_geom_points_and_edges()</span></code></a> sets node
 and edge coordinates to pass to py:func:<cite>mpas_tools.mesh.creation.build_mesh.build_planar_mesh()</cite>.</p>
 <p><a class="reference internal" href="generated/compass.landice.mesh.set_cell_width.html#compass.landice.mesh.set_cell_width" title="compass.landice.mesh.set_cell_width"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.set_cell_width()</span></code></a> sets cell widths based on settings
-in config file to pass to <code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.mesh.creation.build_mesh.build_planar_mesh()</span></code>.
+in config file to pass to <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/master/generated/mpas_tools.mesh.creation.build_mesh.build_planar_mesh.html#mpas_tools.mesh.creation.build_mesh.build_planar_mesh" title="(in mpas_tools v0.36.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.mesh.creation.build_mesh.build_planar_mesh()</span></code></a>.
 Requires the following options to be set in the given config section: <code class="docutils literal notranslate"><span class="pre">min_spac</span></code>,
 <code class="docutils literal notranslate"><span class="pre">max_spac</span></code>, <code class="docutils literal notranslate"><span class="pre">high_log_speed</span></code>, <code class="docutils literal notranslate"><span class="pre">low_log_speed</span></code>, <code class="docutils literal notranslate"><span class="pre">high_dist</span></code>, <code class="docutils literal notranslate"><span class="pre">low_dist</span></code>,
 <code class="docutils literal notranslate"><span class="pre">high_dist_bed</span></code>, <code class="docutils literal notranslate"><span class="pre">low_dist_bed</span></code>, <code class="docutils literal notranslate"><span class="pre">high_bed</span></code>, <code class="docutils literal notranslate"><span class="pre">low_bed</span></code>, <code class="docutils literal notranslate"><span class="pre">cull_distance</span></code>,

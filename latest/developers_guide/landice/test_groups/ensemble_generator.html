@@ -11,6 +11,8 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=c6e86fd7"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
@@ -140,7 +142,7 @@
            <div itemprop="articleBody">
              
   <section id="ensemble-generator">
-<span id="dev-landice-ensemble-generator"></span><h1>ensemble_generator<a class="headerlink" href="#ensemble-generator" title="Link to this heading">¶</a></h1>
+<span id="dev-landice-ensemble-generator"></span><h1>ensemble_generator<a class="headerlink" href="#ensemble-generator" title="Link to this heading"></a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">ensemble_generator</span></code> test group (<code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ensemble_generator</span></code>)
 creates an ensemble of MALI
 simulations with different parameter values.  The ensemble framework
@@ -148,11 +150,11 @@ sets up a user-defined number of simulations with parameter values selected
 by uniform sampling or from a space-filling Sobol sequence
 (see <a class="reference internal" href="../../../users_guide/landice/test_groups/ensemble_generator.html#landice-ensemble-generator"><span class="std std-ref">ensemble_generator</span></a>).</p>
 <section id="framework">
-<span id="dev-landice-ensemble-generator-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Link to this heading">¶</a></h2>
+<span id="dev-landice-ensemble-generator-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Link to this heading"></a></h2>
 <p>The shared config options for the <code class="docutils literal notranslate"><span class="pre">ensemble_generator</span></code> test group are described
 in <a class="reference internal" href="../../../users_guide/landice/test_groups/ensemble_generator.html#landice-ensemble-generator"><span class="std std-ref">ensemble_generator</span></a> in the User’s Guide.</p>
 <section id="ensemble-member">
-<h3>ensemble_member<a class="headerlink" href="#ensemble-member" title="Link to this heading">¶</a></h3>
+<h3>ensemble_member<a class="headerlink" href="#ensemble-member" title="Link to this heading"></a></h3>
 <p>The class <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ensemble_generator.EnsembleMember</span></code>
 defines a step for a single ensemble member (model run).  The constructor
 stores the run number and name, as well as the parameter values to be used
@@ -203,7 +205,7 @@ there is a function <code class="docutils literal notranslate"><span class="pre"
 deltaT in a basal melt parameter file.</p>
 </section>
 <section id="ensemble-manager">
-<h3>ensemble_manager<a class="headerlink" href="#ensemble-manager" title="Link to this heading">¶</a></h3>
+<h3>ensemble_manager<a class="headerlink" href="#ensemble-manager" title="Link to this heading"></a></h3>
 <p>The class <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ensemble_generator.EnsembleManager</span></code>
 defines a step for managing the entire ensemble.  The constructor and setup
 methods perform minimal operations.  The <code class="docutils literal notranslate"><span class="pre">run</span></code> method submits each run in
@@ -212,7 +214,7 @@ to assess if runs need restarts and modify them to be submitted as such.</p>
 </section>
 </section>
 <section id="spinup-ensemble">
-<h2>spinup_ensemble<a class="headerlink" href="#spinup-ensemble" title="Link to this heading">¶</a></h2>
+<h2>spinup_ensemble<a class="headerlink" href="#spinup-ensemble" title="Link to this heading"></a></h2>
 <p>The <a class="reference internal" href="../generated/compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble.html#compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble" title="compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ensemble_generator.spinup_ensemble.SpinupEnsemble</span></code></a>
 uses the framework described above to set up an ensemble of spinup or historical
 simulations from a common initial condition.
@@ -242,7 +244,7 @@ ensemble, but there is not a formal analysis step that can be run through
 compass.</p>
 </section>
 <section id="branch-ensemble">
-<h2>branch_ensemble<a class="headerlink" href="#branch-ensemble" title="Link to this heading">¶</a></h2>
+<h2>branch_ensemble<a class="headerlink" href="#branch-ensemble" title="Link to this heading"></a></h2>
 <p>The <a class="reference internal" href="../generated/compass.landice.tests.ensemble_generator.branch_ensemble.BranchEnsemble.html#compass.landice.tests.ensemble_generator.branch_ensemble.BranchEnsemble" title="compass.landice.tests.ensemble_generator.branch_ensemble.BranchEnsemble"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ensemble_generator.branch_ensemble.BranchEnsemble</span></code></a>
 sets up an ensemble of runs each of which are branched from an ensemble
 member of a previously run spinup ensemble.
