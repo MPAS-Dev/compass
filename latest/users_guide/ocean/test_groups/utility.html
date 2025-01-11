@@ -72,7 +72,8 @@
 <li class="toctree-l3"><a class="reference internal" href="spherical_harmonic_transform.html">spherical_harmonic_transform</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tides.html">tides</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">utility</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#combine-topo">combine_topo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#combine-topo-lat-lon">combine_topo/lat_lon</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#combine-topo-cubed-sphere">combine_topo/cubed_sphere</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#cull-restarts">cull_restarts</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#extrap-woa">extrap_woa</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#create-salin-restoring">create_salin_restoring</a></li>
@@ -152,13 +153,22 @@
 may create datasets for other test groups to use.  It is partly designed to
 provide provenance for data processing that may be more complex than a single,
 short script.</p>
-<section id="combine-topo">
-<h2>combine_topo<a class="headerlink" href="#combine-topo" title="Link to this heading">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">ocean/utility/combine_topo</span></code> test case is used to combine the
+<section id="combine-topo-lat-lon">
+<h2>combine_topo/lat_lon<a class="headerlink" href="#combine-topo-lat-lon" title="Link to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">ocean/utility/combine_topo/lat_lon</span></code> test case is used to combine the
 <a class="reference external" href="https://nsidc.org/data/nsidc-0756/versions/3">BedMachine Antarctica v3</a>
 dataset with the <a class="reference external" href="https://www.gebco.net/data_and_products/gridded_bathymetry_data/">GEBCO 2023</a>
 dataset.  The result is on a 1/80 degree latitude-longitude grid.  This utility
-is intended for provenance.  It is intended to doucment the process for
+is intended for provenance.  It is intended to document the process for
+producing the topography dataset used for E3SM ocean meshes.</p>
+</section>
+<section id="combine-topo-cubed-sphere">
+<h2>combine_topo/cubed_sphere<a class="headerlink" href="#combine-topo-cubed-sphere" title="Link to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">ocean/utility/combine_topo/cubed_sphere</span></code> test case is used to combine the
+<a class="reference external" href="https://nsidc.org/data/nsidc-0756/versions/3">BedMachine Antarctica v3</a>
+dataset with the <a class="reference external" href="https://www.gebco.net/data_and_products/gridded_bathymetry_data/">GEBCO 2023</a>
+dataset.  The result is on an ne3000 cubed sphere grid.  This utility
+is intended for provenance.  It is intended to document the process for
 producing the topography dataset used for E3SM ocean meshes.</p>
 </section>
 <section id="cull-restarts">

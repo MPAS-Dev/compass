@@ -163,10 +163,15 @@ dataset.</p>
 <section id="combine">
 <h3>combine<a class="headerlink" href="#combine" title="Link to this heading">¶</a></h3>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.utility.combine_topo.Combine.html#compass.ocean.tests.utility.combine_topo.Combine" title="compass.ocean.tests.utility.combine_topo.Combine"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.utility.combine_topo.Combine</span></code></a>
-defines a step for combining the datasets above.  The GEBCO data is downsampled
-to a 1/80 degree latitude-longitude grid to make later remapping to MPAS meshes
-more manageable.  The BedMachine data is remapped to this same mesh and the
-two datasets are blended between 60 and 62 degrees south latitude.</p>
+defines a step for combining the datasets above. The GEBCO and BedMachine data
+are remapped to a common global grid to make later remapping to MPAS meshes
+more manageable, and the two datasets are blended between 60 and 62 degrees
+south latitude. The GEBCO global dataset is divided into regional tiles prior
+to remapping to improve performance. Two common global target grid options are
+provided: a 1/80 degree latitude-longitude grid and an ne3000 cubed sphere
+grid. These target grid options are selectable via the <code class="docutils literal notranslate"><span class="pre">target_grid</span></code> argument
+in the <a class="reference internal" href="../generated/compass.ocean.tests.utility.combine_topo.CombineTopo.html#compass.ocean.tests.utility.combine_topo.CombineTopo" title="compass.ocean.tests.utility.combine_topo.CombineTopo"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.utility.combine_topo.CombineTopo</span></code></a> test
+case class.</p>
 </section>
 </section>
 <section id="cull-restarts">

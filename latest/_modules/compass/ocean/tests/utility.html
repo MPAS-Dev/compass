@@ -131,7 +131,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;utility&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">CombineTopo</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">target_grid</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;lat_lon&#39;</span><span class="p">,</span> <span class="s1">&#39;cubed_sphere&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                <span class="n">CombineTopo</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_grid</span><span class="o">=</span><span class="n">target_grid</span><span class="p">),</span>
+            <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">CullRestarts</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">ExtrapWoa</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">CreateSalinRestoring</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span></div>
