@@ -96,14 +96,7 @@ todo_include_todos = False
 # a list of builtin themes.
 #
 
-# on_rtd is whether we are on readthedocs.org, this line of code grabbed from
-# docs.readthedocs.org
-on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
-
-if not on_rtd:  # only import and set the theme if we're building docs locally
-    import sphinx_rtd_theme
-    html_theme = 'sphinx_rtd_theme'
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -179,9 +172,9 @@ intersphinx_mapping = {
     'numpy': ('https://numpy.org/doc/stable/', None),
     'xarray': ('http://xarray.pydata.org/en/stable/', None),
     'geometric_features':
-        ('http://mpas-dev.github.io/geometric_features/stable/', None),
+        ('http://mpas-dev.github.io/geometric_features/main/', None),
     'mpas_tools':
-        ('http://mpas-dev.github.io/MPAS-Tools/stable/', None)}
+        ('http://mpas-dev.github.io/MPAS-Tools/master/', None)}
 
 
 github_doc_root = 'https://github.com/rtfd/recommonmark/tree/master/doc/'
