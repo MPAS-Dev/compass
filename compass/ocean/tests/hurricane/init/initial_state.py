@@ -217,13 +217,21 @@ class InitialState(Step):
             init.createVariable("landIceFloatingFraction", "f8",
                                 ("Time", "nCells"))
 
+        zeros = np.zeros_like(iced)
+        init["landIceDraft"][0, :] = zeros
+        init["landIcePressure"][0, :] = zeros
+        init["landIceMask"][0, :] = zeros
+        init["landIceFloatingMask"][0, :] = zeros
+        init["landIceFraction"][0, :] = zeros
+        init["landIceFloatingFraction"][0, :] = zeros
+
         lat_mask = np.where(init["latCell"][:] < -59.0 * np.pi / 180.0)[0]
-        init["landIceDraft"][0, :] = -iced  # NB. sign
-        init["landIcePressure"][0, :] = icep
-        init["landIceMask"][0, :] = (icep > 0.)
-        init["landIceFloatingMask"][0, :] = (icep > 0.)
-        init["landIceFraction"][0, :] = (icep > 0.)
-        init["landIceFloatingFraction"][0, :] = (icep > 0.)
+        init["landIceDraft"][0, lat_mask] = -iced[lat_mask]  # NB. sign
+        init["landIcePressure"][0, lat_mask] = icep[lat_mask]
+        init["landIceMask"][0, lat_mask] = (icep[lat_mask] > 0.)
+        init["landIceFloatingMask"][0, lat_mask] = (icep[lat_mask] > 0.)
+        init["landIceFraction"][0, lat_mask] = (icep[lat_mask] > 0.)
+        init["landIceFloatingFraction"][0, lat_mask] = (icep[lat_mask] > 0.)
 
         init["bottomDepth"][lat_mask] = botd[lat_mask]
         ssh = init["ssh"][:]
