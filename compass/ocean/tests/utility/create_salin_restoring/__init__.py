@@ -1,9 +1,6 @@
-from compass.ocean.tests.utility.create_salin_restoring.extrap_salin import (
-    ExtrapSalin,
-)
-from compass.ocean.tests.utility.create_salin_restoring.salinity_restoring import (  # noqa: E501
-    Salinity,
-)
+from compass.ocean.tests.utility.create_salin_restoring.combine import Combine
+from compass.ocean.tests.utility.create_salin_restoring.extrap import Extrap
+from compass.ocean.tests.utility.create_salin_restoring.remap import Remap
 from compass.testcase import TestCase
 
 
@@ -25,5 +22,6 @@ class CreateSalinRestoring(TestCase):
         """
         super().__init__(test_group=test_group, name='create_salin_restoring')
 
-        self.add_step(Salinity(test_case=self))
-        self.add_step(ExtrapSalin(test_case=self))
+        self.add_step(Combine(test_case=self))
+        self.add_step(Extrap(test_case=self))
+        self.add_step(Remap(test_case=self))

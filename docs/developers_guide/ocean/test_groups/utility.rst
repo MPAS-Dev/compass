@@ -123,26 +123,34 @@ The resulting file is ready to be placed in compass' initial condition database
 create_salin_restoring
 ----------------------
 The class :py:class:`compass.ocean.tests.utility.create_salin_restoring.CreateSalinRestoring`
-defines a test case for creating a monthly average sea surface salinity dataset based on the 
+defines a test case for creating a monthly average sea surface salinity dataset based on the
 `WOA 2023 <https://www.ncei.noaa.gov/products/world-ocean-atlas>`_ data.  It also extrapolates
 the twelve months of data into ice-shelf cavities and across continents.
 
-salinity_restoring
-------------------
+combine
+~~~~~~~
 
-The class :py:class:`compass.ocean.tests.utility.create_salin_restoring.Salinity`
+The class :py:class:`compass.ocean.tests.utility.create_salin_restoring.Combine`
 defines a step to download and combine January through December sea surface salinity into a single
-file that serves as the base dataset for salinity restoring in forced ocean sea-ice cases (FOSI).  
+file that serves as the base dataset for salinity restoring in forced ocean sea-ice cases (FOSI).
 The surface level of WOA 2023 data is utilized.
 
 The reference date for each month of data is assumed to be the 15th of each month.  In a simulation,
-this implies that for a model start time of January 1, the salinity is restored to the average of 
+this implies that for a model start time of January 1, the salinity is restored to the average of
 the December and January sea surface salinities.
 
-extrap_salin
-------------
+extrap
+~~~~~~
 
-The class :py:class:`compass.ocean.tests.utility.create_salin_restoring.ExtrapSalin`
-defines a step to extrapolate the combined January through December sea surface salinities 
+The class :py:class:`compass.ocean.tests.utility.create_salin_restoring.Extrap`
+defines a step to extrapolate the combined January through December sea surface salinities
 into missing ocean regions such as ice-shelf cavities and across continents.  Since this is only
 extrapolation of surface values, masks are not utilized.
+
+remap
+~~~~~
+
+The class :py:class:`compass.ocean.tests.utility.create_salin_restoring.Remap`
+defines a step to remap the extrapolated data to a cubed-sphere grid at ne300
+(~10 km) resolution. The cubed-sphere grid is much more favorable to remapping
+to MPAS meshes, particularly at the poles and with significant smoothing.
