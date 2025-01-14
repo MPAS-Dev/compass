@@ -5,7 +5,7 @@ from mpas_tools.io import write_netcdf
 from compass.step import Step
 
 
-class Salinity(Step):
+class Combine(Step):
     """
     A step for combining January through December sea surface salinity
     data into a single file for salinity restoring in G-cases.
@@ -14,15 +14,14 @@ class Salinity(Step):
 
     def __init__(self, test_case):
         """
-        Create a new step
+        Create the step
 
         Parameters
         ----------
-        test_case : compass.ocean.tests.utility.create_salin_restoring.
-        CreateSalinRestoring
-        The test case this step belongs to
-        """
-        super().__init__(test_case, name='salinity_restoring', ntasks=1,
+        test_case : compass.ocean.tests.utility.create_salin_restoring.CreateSalinRestoring
+            The test case this step belongs to
+        """  # noqa: E501
+        super().__init__(test_case, name='combine', ntasks=1,
                          min_tasks=1)
         self.add_output_file(filename='woa_surface_salinity_monthly.nc')
 

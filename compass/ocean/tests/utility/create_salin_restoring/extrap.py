@@ -7,7 +7,7 @@ from scipy.signal import convolve2d
 from compass.step import Step
 
 
-class ExtrapSalin(Step):
+class Extrap(Step):
     """
     Extrapolate WOA 2023 monthly sea surface salinity data into missing ocean
     regions, including ice cavities and coasts
@@ -20,21 +20,19 @@ class ExtrapSalin(Step):
     """
     def __init__(self, test_case):
         """
-        Create a new test case
+        Create the step
 
         Parameters
         ----------
-        test_case : compass.ocean.tests.utility.create_salin_restoring.
-        CreateSalinRestoring
+        test_case : compass.ocean.tests.utility.create_salin_restoring.CreateSalinRestoring
             The test case this step belongs to
-
-        """
+        """  # noqa: E501
         super().__init__(test_case=test_case, name='extrap', cpus_per_task=64,
                          min_cpus_per_task=1, openmp_threads=1)
 
         self.add_input_file(
             filename='woa_surface_salinity_monthly.nc',
-            target='../salinity_restoring/woa_surface_salinity_monthly.nc')
+            target='../combine/woa_surface_salinity_monthly.nc')
 
         self.woa_filename = None
 
@@ -42,6 +40,7 @@ class ExtrapSalin(Step):
         """
         Determine the output filename
         """
+        super().setup()
 
         now = datetime.now()
 
@@ -56,6 +55,8 @@ class ExtrapSalin(Step):
         Extrapolate WOA 2023 model temperature and salinity into ice-shelf
         cavities.
         """
+        super().run()
+
         # extrapolate horizontally using the ocean mask
         _extrap(self.woa_filename)
 
