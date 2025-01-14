@@ -88,8 +88,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#cull-restarts">cull_restarts</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#extrap-woa">extrap_woa</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#create-salin-restoring">create_salin_restoring</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#salinity-restoring">salinity_restoring</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#extrap-salin">extrap_salin</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ziso.html">ziso</a></li>
@@ -261,14 +259,13 @@ be layers with no valid WOA data at all (which is not presently the case).</p></
 </section>
 <section id="create-salin-restoring">
 <h2>create_salin_restoring<a class="headerlink" href="#create-salin-restoring" title="Link to this heading"></a></h2>
-<p>The class <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.utility.create_salin_restoring.CreateSalinRestoring</span></code>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.utility.create_salin_restoring.CreateSalinRestoring.html#compass.ocean.tests.utility.create_salin_restoring.CreateSalinRestoring" title="compass.ocean.tests.utility.create_salin_restoring.CreateSalinRestoring"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.utility.create_salin_restoring.CreateSalinRestoring</span></code></a>
 defines a test case for creating a monthly average sea surface salinity dataset based on the
 <a class="reference external" href="https://www.ncei.noaa.gov/products/world-ocean-atlas">WOA 2023</a> data.  It also extrapolates
 the twelve months of data into ice-shelf cavities and across continents.</p>
-</section>
-<section id="salinity-restoring">
-<h2>salinity_restoring<a class="headerlink" href="#salinity-restoring" title="Link to this heading"></a></h2>
-<p>The class <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.utility.create_salin_restoring.Salinity</span></code>
+<section id="id3">
+<h3>combine<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.utility.create_salin_restoring.Combine.html#compass.ocean.tests.utility.create_salin_restoring.Combine" title="compass.ocean.tests.utility.create_salin_restoring.Combine"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.utility.create_salin_restoring.Combine</span></code></a>
 defines a step to download and combine January through December sea surface salinity into a single
 file that serves as the base dataset for salinity restoring in forced ocean sea-ice cases (FOSI).
 The surface level of WOA 2023 data is utilized.</p>
@@ -276,12 +273,20 @@ The surface level of WOA 2023 data is utilized.</p>
 this implies that for a model start time of January 1, the salinity is restored to the average of
 the December and January sea surface salinities.</p>
 </section>
-<section id="extrap-salin">
-<h2>extrap_salin<a class="headerlink" href="#extrap-salin" title="Link to this heading"></a></h2>
-<p>The class <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.utility.create_salin_restoring.ExtrapSalin</span></code>
+<section id="extrap">
+<h3>extrap<a class="headerlink" href="#extrap" title="Link to this heading"></a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.utility.create_salin_restoring.Extrap.html#compass.ocean.tests.utility.create_salin_restoring.Extrap" title="compass.ocean.tests.utility.create_salin_restoring.Extrap"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.utility.create_salin_restoring.Extrap</span></code></a>
 defines a step to extrapolate the combined January through December sea surface salinities
 into missing ocean regions such as ice-shelf cavities and across continents.  Since this is only
 extrapolation of surface values, masks are not utilized.</p>
+</section>
+<section id="remap">
+<h3>remap<a class="headerlink" href="#remap" title="Link to this heading"></a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.utility.create_salin_restoring.Remap.html#compass.ocean.tests.utility.create_salin_restoring.Remap" title="compass.ocean.tests.utility.create_salin_restoring.Remap"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.utility.create_salin_restoring.Remap</span></code></a>
+defines a step to remap the extrapolated data to a cubed-sphere grid at ne300
+(~10 km) resolution. The cubed-sphere grid is much more favorable to remapping
+to MPAS meshes, particularly at the poles and with significant smoothing.</p>
+</section>
 </section>
 </section>
 

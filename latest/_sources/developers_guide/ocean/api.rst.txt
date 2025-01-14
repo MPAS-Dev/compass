@@ -971,6 +971,11 @@ utility
    combine_topo.Combine.setup
    combine_topo.Combine.run
 
+   create_salin_restoring.CreateSalinRestoring
+   create_salin_restoring.Combine
+   create_salin_restoring.Extrap
+   create_salin_restoring.Remap
+
    cull_restarts.CullRestarts
    cull_restarts.Cull
    cull_restarts.Cull.run
