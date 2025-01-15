@@ -154,7 +154,8 @@ class Mesh(TestCase):
         else:
             remap_step = RemapMaliTopography(
                 test_case=self, base_mesh_step=base_mesh_step,
-                mesh_name=mesh_name, mali_ais_topo=mali_ais_topo)
+                mesh_name=mesh_name, mali_ais_topo=mali_ais_topo,
+                ocean_includes_grounded=True)
 
         self.add_step(remap_step)
 

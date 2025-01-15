@@ -22,9 +22,14 @@ class RemapMaliTopography(RemapTopography):
     mali_ais_topo : str
         Short name for the MALI dataset to use for Antarctic Ice Sheet
         topography
+
+    ocean_includes_grounded : bool, optional
+        Whether to include grounded cells that are below sea level in the
+        ocean domain
     """
 
-    def __init__(self, test_case, base_mesh_step, mesh_name, mali_ais_topo):
+    def __init__(self, test_case, base_mesh_step, mesh_name, mali_ais_topo,
+                 ocean_includes_grounded):
         """
         Create a new step
 
@@ -46,10 +51,15 @@ class RemapMaliTopography(RemapTopography):
         mali_ais_topo : str, optional
             Short name for the MALI dataset to use for Antarctic Ice Sheet
             topography
+
+        ocean_includes_grounded : bool
+            Whether to include grounded cells that are below sea level in the
+            ocean domain
         """
         super().__init__(test_case=test_case, base_mesh_step=base_mesh_step,
                          mesh_name=mesh_name)
         self.mali_ais_topo = mali_ais_topo
+        self.ocean_includes_grounded = ocean_includes_grounded
 
         self.add_output_file(filename='mali_topography_remapped.nc')
 
@@ -128,8 +138,12 @@ class RemapMaliTopography(RemapTopography):
             ice_mask,
             ice_density / ocean_density * thickness <= sea_level - bed)
         grounded_mask = np.logical_and(ice_mask, np.logical_not(floating_mask))
-        ocean_mask = np.logical_and(np.logical_not(grounded_mask),
-                                    bed < sea_level)
+
+        if self.ocean_includes_grounded:
+            ocean_mask = bed < sea_level
+        else:
+            ocean_mask = np.logical_and(np.logical_not(grounded_mask),
+                                        bed < sea_level)
 
         lithop = ice_density * g * thickness
         ice_frac = xr.where(ice_mask, 1., 0.)
