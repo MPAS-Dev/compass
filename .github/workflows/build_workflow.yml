@@ -58,6 +58,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+      fail-fast: false
     steps:
       - id: skip_check
         uses: fkirc/skip-duplicate-actions@master
@@ -75,7 +76,7 @@ jobs:
           # Increase this value to reset cache if conda-dev-spec.template has not changed in the workflow
           CACHE_NUMBER: 0
         with:
-          path: ~/conda_pkgs_dir
+          path: ~/conda_pkgs_dir_py${{ matrix.python-version }}
           key:
             ${{ runner.os }}-${{ matrix.python-version }}-conda-${{ env.CACHE_NUMBER }}-${{
             hashFiles('conda/configure_compass_env.py,conda/*,conda/compass_env/*') }}
