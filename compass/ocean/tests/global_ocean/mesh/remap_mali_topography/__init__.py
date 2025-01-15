@@ -253,8 +253,9 @@ class RemapMaliTopography(RemapTopography):
             (1.0 - alpha) * ds_bedmachine.bed_elevation)
 
         alpha = ds_out.maliFrac
+        # NOTE: MALI's ocean fraction is already scaled by the MALI fraction
         ds_out['oceanFracObserved'] = (
-            alpha * ds_mali.oceanFrac +
+            ds_mali.oceanFrac +
             (1.0 - alpha) * ds_bedmachine.oceanFracObserved)
 
         ds_out['ssh'] = ds_out.landIceDraftObserved
