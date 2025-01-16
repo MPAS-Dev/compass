@@ -271,6 +271,7 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
     # Cell spacing function based on union of masks
     if section.get('use_bed') == 'True':
         logger.info('Using bed elevation for spacing.')
+
         if flood_fill_iStart is not None and flood_fill_jStart is not None:
             logger.info('calling gridded_flood_fill to find \
                         bedTopography <= low_bed connected to the ocean.')
@@ -290,18 +291,30 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
         k = 0.05  # This works well, but could try other values
         spacing_bed = min_spac + (max_spac - min_spac) / (1.0 + np.exp(
             -k * (bed - np.mean([high_bed, low_bed]))))
-        # We only want bed topography to influence spacing within high_dist_bed
-        # from the ice margin. In the region between high_dist_bed and
-        # low_dist_bed, use a linear ramp to damp influence of bed topo.
-        spacing_bed[dist_to_grounding_line >= low_dist_bed] = (
-            (1.0 - (dist_to_grounding_line[
-                dist_to_grounding_line >= low_dist_bed] -
-                low_dist_bed) / (high_dist_bed - low_dist_bed)) *
-            spacing_bed[dist_to_grounding_line >= low_dist_bed] +
-            (dist_to_grounding_line[dist_to_grounding_line >=
-                                    low_dist_bed] - low_dist_bed) /
-            (high_dist_bed - low_dist_bed) * max_spac)
-        spacing_bed[dist_to_grounding_line >= high_dist_bed] = max_spac
+
+        # If max_res_in_ocn is true, use the minimum cell spacing for
+        # all ocean cells. Important for ocean-coupled runs where
+        # resolving fjords and ocean bathymetry is necessary for
+        # thermal forcing parameterizations. Otherwize, telescope out
+        # to coarse resolution with distance from the ice front.
+        if section.get('max_res_in_ocn') == 'True':
+            spacing_bed[np.logical_and(bed < 0, thk == 0)] = min_spac
+            print("Maximizing resolution in ocean. {} ocean cells \
+                  ".format(np.sum(np.logical_and(bed < 0, thk == 0))))
+        else:
+            # We only want bed topography to influence spacing within
+            # high_dist_bed from the ice margin. In the region
+            # between high_dist_bed and low_dist_bed, use a linear
+            # ramp to damp influence of bed topo.
+            spacing_bed[dist_to_grounding_line >= low_dist_bed] = (
+                (1.0 - (dist_to_grounding_line[
+                    dist_to_grounding_line >= low_dist_bed] -
+                    low_dist_bed) / (high_dist_bed - low_dist_bed)) *
+                spacing_bed[dist_to_grounding_line >= low_dist_bed] +
+                (dist_to_grounding_line[dist_to_grounding_line >=
+                                        low_dist_bed] - low_dist_bed) /
+                (high_dist_bed - low_dist_bed) * max_spac)
+            spacing_bed[dist_to_grounding_line >= high_dist_bed] = max_spac
         if flood_fill_iStart is not None and flood_fill_jStart is not None:
             spacing_bed[low_bed_mask == 0] = max_spac
             # Do one more flood fill to eliminate isolated pockets
@@ -366,13 +379,21 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
     for width in [spacing_bed, spacing_speed, spacing_edge, spacing_gl]:
         cell_width = np.minimum(cell_width, width)
 
-    # Set large cell_width in areas we are going to cull anyway (speeds up
-    # whole process). Use 3x the cull_distance to avoid this affecting
-    # cell size in the final mesh. There may be a more rigorous way to set
-    # that distance.
+    # Set large cell_width in areas we are going to cull anyway (speeds
+    # up whole process). If max_res_in_ocn is True, then use a larger
+    # multiplier to ensure ocean cells are not accidentally coarsened
+    # within the final domain. Otherwise, we can get away with
+    # something smaller, like 3x the cull_distance, to avoid this
+    # affecting the cell size in the final mesh. There may eventually
+    # be a more rigorous way to set this distance.
     if dist_to_edge is not None:
-        mask = np.logical_and(
-            thk == 0.0, dist_to_edge > (3. * cull_distance))
+        if section.get('max_res_in_ocn') == 'True':
+            mask = np.logical_and(
+                # Try 20x cull_distance for now
+                thk == 0.0, dist_to_edge > (20. * cull_distance))
+        else:
+            mask = np.logical_and(
+                thk == 0.0, dist_to_edge > (3. * cull_distance))
         logger.info('Setting cell_width in outer regions to max_spac '
                     f'for {mask.sum()} cells')
         cell_width[mask] = max_spac
