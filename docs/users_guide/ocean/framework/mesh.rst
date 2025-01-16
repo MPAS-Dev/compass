@@ -52,10 +52,10 @@ controlled by the following config options:
 
     # smoothing parameters
     # no smoothing (required for esmf):
-    #     expandDist = 0   [m]
-    #     expandFactor = 1 [cell fraction]
-    expandDist = 0
-    expandFactor = 1
+    #     expand_distance = 0   [m]
+    #     expand_factor = 1 [cell fraction]
+    expand_distance = 0
+    expand_factor = 1
 
 The topography and source SCRIP filenames should be something from the ocean
 `bathymetry database <https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-ocean/bathymetry_database/>`_.
