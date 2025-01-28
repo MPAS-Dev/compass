@@ -1,0 +1,513 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ensemble_generator &mdash; compass 1.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/documentation_options.js?v=9172181d"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="enthalpy_benchmark" href="enthalpy_benchmark.html" />
+    <link rel="prev" title="eismint2" href="eismint2.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_suites.html">Test Suites</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Landice core</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Test Groups</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="antarctica.html">antarctica</a></li>
+<li class="toctree-l3"><a class="reference internal" href="calving_dt_convergence.html">calving_dt_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="circular_shelf.html">circular_shelf</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crane.html">crane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dome.html">dome</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eismint2.html">eismint2</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ensemble_generator</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#spinup-ensemble">spinup_ensemble</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#branch-ensemble">branch_ensemble</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="enthalpy_benchmark.html">enthalpy_benchmark</a></li>
+<li class="toctree-l3"><a class="reference internal" href="greenland.html">greenland</a></li>
+<li class="toctree-l3"><a class="reference internal" href="humboldt.html">humboldt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydro_radial.html">hydro_radial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ismip6_forcing.html">ismip6_forcing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ismip6_run.html">ismip6_run</a></li>
+<li class="toctree-l3"><a class="reference internal" href="isunnguata_sermia.html">isunnguata_sermia</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kangerlussuaq.html">kangerlussuaq</a></li>
+<li class="toctree-l3"><a class="reference internal" href="koge_bugt_s.html">koge_bugt_s</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesh_modifications.html">mesh_modifications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mismipplus.html">mismipplus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thwaites.html">thwaites</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../suites.html">Test suites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../framework.html">Land-ice Framework</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Landice core</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Test Groups</a></li>
+      <li class="breadcrumb-item active">ensemble_generator</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/users_guide/landice/test_groups/ensemble_generator.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ensemble-generator">
+<span id="landice-ensemble-generator"></span><h1>ensemble_generator<a class="headerlink" href="#ensemble-generator" title="Link to this heading">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">landice/ensemble_generator</span></code> test group creates ensembles of MALI
+simulations with different parameter values.  The ensemble framework
+sets up a user-defined number of simulations with parameter values selected
+from either uniform sampling or a space-filling Sobol sequence.</p>
+<p>A test case in this test group consists of a number of ensemble members,
+and one ensemble manager.
+Each ensemble member is a step of the test case, and can be run separately
+or as part of the complete ensemble.  Ensemble members are identified by a
+three digit run number, starting with 000.
+A config file specifies the run numbers to set up, as well as some common
+information about the run configuration.</p>
+<p>The test case can be generated multiple times to set up and run additional
+runs with a different range of run numbers after being run initially. This
+allows one to perform a small ensemble (e.g. 2-10 runs) to make sure results
+look as expected before spending time on a larger ensemble. This also allows
+one to add more ensemble members from the Sobol sequence later if UQ analysis
+indicates the original sample size was insufficient.</p>
+<p>A number of possible parameters are supported and whether they are active and
+what parameter value ranges should be used are specified in a user-supplied
+config file.  Currently these parameters are supported:</p>
+<ul class="simple">
+<li><p>basal friction power law exponent</p></li>
+<li><p>scaling factor on muFriction</p></li>
+<li><p>scaling factor on stiffnessFactor</p></li>
+<li><p>von Mises threshold stress for calving</p></li>
+<li><p>calving rate speed limit</p></li>
+<li><p>gamma0 melt sensitivity parameter in ISMIP6-AIS ice-shelf basal melting
+parameterization</p></li>
+<li><p>target ice-shelf basal melt rate for ISMIP6-AIS ice-shelf basal melting
+parameterization.  In the model setup, the deltaT thermal forcing bias
+adjustment is adjusted to obtain the target melt rate for a given gamma0</p></li>
+</ul>
+<p>Additional parameters can be easily added in the future.</p>
+<p><code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code> will set up the simulations and the ensemble manager.
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> from the test case work directory will submit each run as a
+separate slurm job.
+Individual runs can be run independently through the job script or
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> executed in the
+run directory.  (E.g., if you want to test or debug a run without running the
+entire ensemble.)</p>
+<p>Simulation output can be analyzed with the <code class="docutils literal notranslate"><span class="pre">plot_ensemble.py</span></code> visualization
+script, which generates plots of basic quantities of interest as a function
+of parameter values, as well as identifies runs that did not reach the
+target year.  The visualization script plots a small number of quantities of
+interest as a function of each active parameter.  It also plots pairwise
+parameter sensitivities for each pair of parameters being varied.  Finally,
+it plots time-series plots for the quantities of interest for all runs in the
+ensemble.  There are a number of options in the visualization script that
+can be manually set near the top of script.</p>
+<p>Future improvements may include:</p>
+<ul class="simple">
+<li><p>enabling the ensemble manager to identify runs that need to be restarted
+so the restarts in the spinup_ensemble do not need to be managed manually</p></li>
+<li><p>safety checks or warnings before submitting ensembles that will use large
+amounts of computing resources</p></li>
+<li><p>a method for maintaining namelist, streams, and albany_input.yaml files for
+different ensembles.  Currently, these input files are specific to the Amery
+Ice Shelf ensemble run in 2023.</p></li>
+</ul>
+<p>The test group includes two test cases:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">spinup_ensemble</span></code>: a set of simulations from the same initial condition
+but with different parameter values.  This could either be fixed climate
+relaxation spinup or forced by time-evolving historical conditions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">branch_ensemble</span></code>: a set of simulations branched from each member of the
+spinup_ensemble in a specified year with a different forcing.  Multiple
+branch ensembles can be branched from one spinup_ensemble</p></li>
+</ul>
+<section id="config-options">
+<h2>config options<a class="headerlink" href="#config-options" title="Link to this heading">¶</a></h2>
+<p>Test cases in this test group have the following common config options.</p>
+<p>This test group is intended for expert users, and it is expected that it
+will typically be run with a customized cfg file.  Note the default run
+numbers create a small ensemble, but uncertainty quantification applications
+will typically need dozens or more simulations.</p>
+<p>The test-case-specific config options are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[ensemble]</span>
+
+<span class="c1"># start and end numbers for runs to set up and run</span>
+<span class="c1"># Run numbers should be zero-based.</span>
+<span class="c1"># Additional runs can be added and run to an existing ensemble</span>
+<span class="c1"># without affecting existing runs, but trying to set up a run</span>
+<span class="c1"># that already exists will generate a warning and skip that run.</span>
+<span class="c1"># If using uniform sampling, start_run should be 0 and end_run should be</span>
+<span class="c1"># equal to (max_samples - 1), otherwise unexpected behavior may result.</span>
+<span class="c1"># These values do not affect viz/analysis, which will include any</span>
+<span class="c1"># runs it finds.</span>
+<span class="na">start_run</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+<span class="na">end_run</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
+
+<span class="c1"># sampling_method can be either &#39;sobol&#39; for a space-filling Sobol sequence</span>
+<span class="c1"># or &#39;uniform&#39; for uniform sampling.  Uniform sampling is most appropriate</span>
+<span class="c1"># for a single parameter sensitivity study.  It will sample uniformly across</span>
+<span class="c1"># all dimensions simultaneously, thus sampling only a small fraction of</span>
+<span class="c1"># parameter space</span>
+<span class="na">sampling_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">sobol</span>
+
+<span class="c1"># maximum number of samples to be considered.</span>
+<span class="c1"># max_samples needs to be greater or equal to (end_run + 1)</span>
+<span class="c1"># When using uniform sampling, max_samples should equal (end_run + 1).</span>
+<span class="c1"># When using Sobol sequence, max_samples ought to be a power of 2.</span>
+<span class="c1"># max_samples should not be changed after the first set of ensemble.</span>
+<span class="c1"># So, when using Sobol sequence, max_samples might be set larger than</span>
+<span class="c1"># (end_run + 1) if you plan to add more samples to the ensemble later.</span>
+<span class="na">max_samples</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1024</span>
+
+<span class="c1"># basin for comparing model results with observational estimates in</span>
+<span class="c1"># visualization script.</span>
+<span class="c1"># Basin options are defined in compass/landice/ais_observations.py</span>
+<span class="c1"># If desired basin does not exist, it can be added to that dataset.</span>
+<span class="c1"># (They need not be mutually exclusive.)</span>
+<span class="c1"># If a basin is not provided, observational comparisons will not be made.</span>
+<span class="na">basin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ISMIP6BasinBC</span>
+
+<span class="c1"># fraction of CFL-limited time step to be used by the adaptive timestepper</span>
+<span class="c1"># This value is explicitly included here to force the user to consciously</span>
+<span class="c1"># select the value to use.  Model run time tends to be inversely proportional</span>
+<span class="c1"># to scaling this value (e.g., 0.2 will be ~4x more expensive than 0.8).</span>
+<span class="c1"># Value should be less than or equal to 1.0, and values greater than 0.9 are</span>
+<span class="c1"># not recommended.</span>
+<span class="c1"># Values of 0.7-0.9 typically work for most simulations, but some runs may</span>
+<span class="c1"># fail.  Values of 0.2-0.5 are more conservative and will allow more runs</span>
+<span class="c1"># to succeed, but will result in substantially more expensive runs</span>
+<span class="c1"># However, because the range of parameter combinations being simulated</span>
+<span class="c1"># are likely to stress the model, a smaller number than usual may be</span>
+<span class="c1"># necessary to effectively cover parameter space.</span>
+<span class="c1"># A user may want to do a few small ensembles with different values</span>
+<span class="c1"># to inform the choice for a large production ensemble.</span>
+<span class="na">cfl_fraction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.7</span>
+
+<span class="c1"># Path to the initial condition input file.</span>
+<span class="c1"># Eventually this could be hard-coded to use files on the input data</span>
+<span class="c1"># server, but initially we want flexibility to experiment with different</span>
+<span class="c1"># inputs and forcings</span>
+<span class="na">input_file_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/MALI_projects/Amery_UQ/Amery_4to20km_from_whole_AIS/Amery.nc</span>
+
+<span class="c1"># the value of the friction exponent used for the calculation of muFriction</span>
+<span class="c1"># in the input file</span>
+<span class="na">orig_fric_exp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.2</span>
+
+<span class="c1"># Path to ISMIP6 ice-shelf basal melt parameter input file.</span>
+<span class="na">basal_melt_param_file_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/MALI_projects/Amery_UQ/Amery_4to20km_from_whole_AIS/forcing/basal_melt/parameterizations/Amery_4to20km_basin_and_coeff_gamma0_DeltaT_quadratic_non_local_median_allBasin2.nc</span>
+
+<span class="c1"># Path to thermal forcing file for the mesh to be used</span>
+<span class="na">TF_file_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/MALI_projects/Amery_UQ/Amery_4to20km_from_whole_AIS/forcing/ocean_thermal_forcing/obs/Amery_4to20km_obs_TF_1995-2017_8km_x_60m.nc</span>
+
+<span class="c1"># Path to SMB forcing file for the mesh to be used</span>
+<span class="na">SMB_file_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/MALI_projects/Amery_UQ/Amery_4to20km_from_whole_AIS/forcing/atmosphere_forcing/RACMO_climatology_1995-2017/Amery_4to20km_RACMO2.3p2_ANT27_smb_climatology_1995-2017_no_xtime_noBareLandAdvance.nc</span>
+
+<span class="c1"># number of tasks that each ensemble member should be run with</span>
+<span class="c1"># Eventually, compass could determine this, but we want explicit control for now</span>
+<span class="na">ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">128</span>
+
+<span class="c1"># whether basal friction exponent is being varied</span>
+<span class="c1"># [unitless]</span>
+<span class="na">use_fric_exp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="c1"># min value to vary over</span>
+<span class="na">fric_exp_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.1</span>
+<span class="c1"># max value to vary over</span>
+<span class="na">fric_exp_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.33333</span>
+
+<span class="c1"># whether a scaling factor on muFriction is being varied</span>
+<span class="c1"># [unitless: 1.0=no scaling]</span>
+<span class="na">use_mu_scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="c1"># min value to vary over</span>
+<span class="na">mu_scale_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.8</span>
+<span class="c1"># max value to vary over</span>
+<span class="na">mu_scale_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.2</span>
+
+<span class="c1"># whether a scaling factor on stiffnessFactor is being varied</span>
+<span class="c1"># [unitless: 1.0=no scaling]</span>
+<span class="na">use_stiff_scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="c1"># min value to vary over</span>
+<span class="na">stiff_scale_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.8</span>
+<span class="c1"># max value to vary over</span>
+<span class="na">stiff_scale_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.2</span>
+
+<span class="c1"># whether the von Mises threshold stress (sigma_max) is being varied</span>
+<span class="c1"># [units: Pa]</span>
+<span class="na">use_von_mises_threshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="c1"># min value to vary over</span>
+<span class="na">von_mises_threshold_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">80.0e3</span>
+<span class="c1"># max value to vary over</span>
+<span class="na">von_mises_threshold_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">180.0e3</span>
+
+<span class="c1"># whether the calving speed limit is being varied</span>
+<span class="c1"># [units: km/yr]</span>
+<span class="na">use_calv_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+<span class="c1"># min value to vary over</span>
+<span class="na">calv_limit_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5.0</span>
+<span class="c1"># max value to vary over</span>
+<span class="na">calv_limit_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">50.0</span>
+
+<span class="c1"># whether ocean melt parameterization coefficient is being varied</span>
+<span class="c1"># [units: m/yr]</span>
+<span class="na">use_gamma0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="c1"># min value to vary over</span>
+<span class="na">gamma0_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">9620.0</span>
+<span class="c1"># max value to vary over</span>
+<span class="na">gamma0_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">471000.0</span>
+
+<span class="c1"># whether target ice-shelf basal melt flux is being varied</span>
+<span class="c1"># [units: Gt/yr]</span>
+<span class="na">use_meltflux</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="c1"># min value to vary over</span>
+<span class="na">meltflux_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">12.</span>
+<span class="c1"># max value to vary over</span>
+<span class="na">meltflux_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">58.</span>
+<span class="c1"># ice-shelf area associated with target melt rates</span>
+<span class="c1"># [units: m^2]</span>
+<span class="na">iceshelf_area_obs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">60654.e6</span>
+</pre></div>
+</div>
+<p>A user should copy the default config file to a user-defined config file
+before setting up the test case and any necessary adjustments made.
+Importantly, the user-defined config should be modified
+to also include the following options that will be used for submitting the
+jobs for each ensemble member.</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[parallel]</span>
+<span class="na">account</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ALLOCATION_NAME_HERE</span>
+<span class="na">qos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">regular</span>
+
+<span class="k">[job]</span>
+<span class="na">wall_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1:30:00</span>
+</pre></div>
+</div>
+<p>Note that currently there is not functionality
+to automatically enable restart settings if runs in the spinup_ensemble
+do not reach the desired year.  This could be added in the future, but to
+date it has been practical to set <code class="docutils literal notranslate"><span class="pre">wall_time</span></code> long enough to ensure this
+is not a problem.  Runs in a branch_ensemble are set as restarts from the
+spinup_ensemble runs, so there is no need to change settings if runs
+need to be continued beyond the first job.</p>
+</section>
+<section id="spinup-ensemble">
+<h2>spinup_ensemble<a class="headerlink" href="#spinup-ensemble" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">landice/ensemble_generator/spinup_ensemble</span></code> uses the ensemble framework to create
+an ensemble of simulations integrated over a specified time range.  The test case
+can be applied to any domain and set of input files.  If the default namelist
+and streams settings are not appropriate, they can be adjusted or a new test
+case can be set up mirroring the existing one.</p>
+<p>The default model configuration uses:</p>
+<ul class="simple">
+<li><p>first-order velocity solver</p></li>
+<li><p>power law basal friction</p></li>
+<li><p>evolving temperature</p></li>
+<li><p>von Mises calving</p></li>
+<li><p>ISMIP6 surface mass balance and sub-ice-shelf melting using climatological
+mean forcing</p></li>
+</ul>
+<p>The initial condition and forcing files are specified in the
+<code class="docutils literal notranslate"><span class="pre">ensemble_generator.cfg</span></code> file or a user modification of it.</p>
+</section>
+<section id="branch-ensemble">
+<h2>branch_ensemble<a class="headerlink" href="#branch-ensemble" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">landice/ensemble_generator/branch_ensemble</span></code> uses the ensemble framework to create
+an ensemble of simulations that are branched from corresponding runs of the
+<code class="docutils literal notranslate"><span class="pre">spinup_ensemble</span></code> at a specified year with a different forcing.  In general,
+any namelist or streams modifications can be applied to the branch runs.</p>
+<p>The branch_ensemble test-case-specific config options are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for setting up an ensemble</span>
+
+<span class="c1"># config options for branching an ensemble</span>
+<span class="k">[branch_ensemble]</span>
+
+<span class="c1"># start and end numbers for runs to set up and run</span>
+<span class="c1"># branch runs.</span>
+<span class="c1"># It is assumed that spinup runs have already been</span>
+<span class="c1"># conducted for these runs.</span>
+<span class="na">start_run</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+<span class="na">end_run</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
+
+<span class="c1"># Path to thermal forcing file for the mesh to be used in the branch run</span>
+<span class="na">TF_file_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/MALI_projects/Amery_UQ/Amery_4to20km_from_whole_AIS/forcing/ocean_thermal_forcing/UKESM1-0-LL_SSP585/1995-2300/Amery_4to20km_TF_UKESM1-0-LL_SSP585_2300.nc</span>
+
+<span class="c1"># Path to SMB forcing file for the mesh to be used in the branch run</span>
+<span class="na">SMB_file_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/MALI_projects/Amery_UQ/Amery_4to20km_from_whole_AIS/forcing/atmosphere_forcing/UKESM1-0-LL_SSP585/1995-2300/Amery_4to20km_SMB_UKESM1-0-LL_SSP585_2300_noBareLandAdvance.nc</span>
+
+<span class="c1"># location of spinup ensemble to branch from</span>
+<span class="na">spinup_test_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/pscratch/sd/h/hoffman2/AMERY_corrected_forcing_6param_ensemble_2023-03-18/landice/ensemble_generator/ensemble</span>
+
+<span class="c1"># year of spinup simulation from which to branch runs</span>
+<span class="na">branch_year</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2050</span>
+
+<span class="c1"># whether to only set up branch runs for filtered runs or all runs</span>
+<span class="na">set_up_filtered_only</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+
+<span class="c1"># path to pickle file containing filtering information generated by plot_ensemble.py</span>
+<span class="na">ensemble_pickle_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
+</pre></div>
+</div>
+<section id="steps-for-setting-up-and-running-an-ensmble">
+<h3>Steps for setting up and running an ensmble<a class="headerlink" href="#steps-for-setting-up-and-running-an-ensmble" title="Link to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p>With a compass conda environment set up, run, e.g.,
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span> <span class="pre">-t</span> <span class="pre">landice/ensemble_generator/spinup_ensemble</span> <span class="pre">-w</span> <span class="pre">WORK_DIR_PATH</span> <span class="pre">-f</span> <span class="pre">USER.cfg</span></code>
+where <code class="docutils literal notranslate"><span class="pre">WORK_DIR_PATH</span></code> is a location that can store the whole
+ensemble (typically a scratch drive) and <code class="docutils literal notranslate"><span class="pre">USER.cfg</span></code> is the
+user-defined config described in the previous section that includes
+options for <code class="docutils literal notranslate"><span class="pre">[parallel]</span></code> and <code class="docutils literal notranslate"><span class="pre">[job]</span></code>, as well as any required
+modifications to the <code class="docutils literal notranslate"><span class="pre">[ensemble]</span></code> section.  Likely, most or all
+attributes in the <code class="docutils literal notranslate"><span class="pre">[ensemble]</span></code> section need to be customized for a
+given application.</p></li>
+<li><p>After <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code> completes and all runs are set up, go to the
+<code class="docutils literal notranslate"><span class="pre">WORK_DIR_PATH</span></code> and change to the
+<code class="docutils literal notranslate"><span class="pre">landice/ensemble_generator/spinup_ensemble</span></code> subdirectory.
+From there you will see subdirectories for each run, a subdirectory for the
+<code class="docutils literal notranslate"><span class="pre">ensemble_manager</span></code> and symlink to the visualization script.</p></li>
+<li><p>To submit jobs for the entire ensemble, change to the <code class="docutils literal notranslate"><span class="pre">ensemble_manager</span></code>
+subdirectory and execute <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code>.  Be careful, as it is possible to
+consume a large number of computing resources quickly with this tool!</p></li>
+<li><p>Each run will have its own batch job that can be monitored with <code class="docutils literal notranslate"><span class="pre">squeue</span></code>
+or similar commands.</p></li>
+<li><p>When the ensemble has completed, or as it is progressing,
+you can assess the result through the
+basic visualization script <code class="docutils literal notranslate"><span class="pre">plot_ensemble.py</span></code>.  The script will skip runs
+that are incomplete or failed, so you can run it while an ensemble is
+still running to assess progress.</p></li>
+<li><p>If you want to run add additional ensemble members, adjust
+<code class="docutils literal notranslate"><span class="pre">start_run</span></code> and <code class="docutils literal notranslate"><span class="pre">end_run</span></code> in your config file and redo steps 1-5.
+The ensemble_manager will always be set to run the most recent run
+numbers defined in the config when <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code> was run.
+The visualization script is independent of the run manager and will
+process all runs it finds.</p></li>
+</ol>
+<p>It is also possible to run an individual run manually by changing to the run
+directory and submitting the job script yourself with <code class="docutils literal notranslate"><span class="pre">sbatch</span></code>.</p>
+<p>Setting up and running a branch ensemble follows the same steps.  Multiple
+branch ensembles (e.g., with different climate forcing scenarios) can be
+conducted from one spinup ensemble.</p>
+<p>It is intended that a single MALI executable is used for all simulations in an
+ensemble.  If the version of the code is updated, it is up to the user to anticipate
+undesirable consequences.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eismint2.html" class="btn btn-neutral float-left" title="eismint2" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="enthalpy_benchmark.html" class="btn btn-neutral float-right" title="enthalpy_benchmark" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

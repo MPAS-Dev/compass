@@ -1,0 +1,295 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>buttermilk_bay &mdash; compass 1.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/documentation_options.js?v=9172181d"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="dam_break" href="dam_break.html" />
+    <link rel="prev" title="baroclinic_gyre" href="baroclinic_gyre.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../landice/index.html">Landice core</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Ocean core</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Test groups</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="baroclinic_channel.html">baroclinic_channel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="baroclinic_gyre.html">baroclinic_gyre</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">buttermilk_bay</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#default">default</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="dam_break.html">dam_break</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drying_slope.html">drying_slope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="global_convergence.html">global_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="global_ocean.html">global_ocean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gotm.html">gotm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hurricane.html">hurricane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ice_shelf_2d.html">ice_shelf_2d</a></li>
+<li class="toctree-l3"><a class="reference internal" href="internal_wave.html">internal_wave</a></li>
+<li class="toctree-l3"><a class="reference internal" href="isomip_plus.html">isomip_plus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lock_exchange.html">lock_exchange</a></li>
+<li class="toctree-l3"><a class="reference internal" href="merry_go_round.html">merry_go_round</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nonhydro.html">nonhydro</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overflow.html">overflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="parabolic_bowl.html">parabolic_bowl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="planar_convergence.html">planar_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soma.html">soma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sphere_transport.html">sphere_transport</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spherical_harmonic_transform.html">spherical_harmonic_transform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tides.html">tides</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utility.html">utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ziso.html">ziso</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../framework/index.html">Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../suites.html">Test suites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Ocean core</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Test groups</a></li>
+      <li class="breadcrumb-item active">buttermilk_bay</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/users_guide/ocean/test_groups/buttermilk_bay.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="buttermilk-bay">
+<span id="ocean-buttermilk-bay"></span><h1>buttermilk_bay<a class="headerlink" href="#buttermilk-bay" title="Link to this heading">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">buttermilk_bay</span></code> test group implements a realistic regional
+simulation of tidally forced circulation in a multi-bay system
+connected by narrow channels. The computational domain is
+<a class="reference external" href="https://tinyurl.com/4zpz36ft">Buttermilk Bay, Massachusetts</a>.</p>
+<section id="default">
+<span id="ocean-buttermilk-bay-default"></span><h2>default<a class="headerlink" href="#default" title="Link to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">default</span></code> test case implements the Buttermilk Bay test case found in
+<a class="reference external" href="https://doi.org/10.1016/j.ocemod.2019.101491">Kennedy et al. (2019)</a>.
+The tidal forcing is applied to a portion of the bottom boundary with an
+amplitude of 2 m and a period of 0.5 days.</p>
+<p>By default, the resolution is varied from  256 m to 64 m by doubling the resolution,
+with the time step proportional to resolution.
+The wetting/drying ramp feature (<code class="docutils literal notranslate"><span class="pre">config_zero_drying_velocity_ramp</span> <span class="pre">=</span> <span class="pre">.true.</span></code>)
+is used by default for both the standard and subgrid versions of this test case.
+The result of the <code class="docutils literal notranslate"><span class="pre">viz</span></code> step of the test case is plots of the solution at
+different times, a time series at various points, and a convergence plot.</p>
+<section id="standard">
+<h3>standard<a class="headerlink" href="#standard" title="Link to this heading">¶</a></h3>
+<p>The standard version of the test case uses the standard wetting and drying
+approach. At coarser resolutions, the bathymetric representation lacks
+sufficient detail to resolve the connectivity between the upper and lower
+bays. As a consequence, the results of the simulation are quite poor:</p>
+<a class="reference internal image-reference" href="../../../_images/buttermilk_bay_standard_solution_169.png"><img alt="../../../_images/buttermilk_bay_standard_solution_169.png" class="align-center" src="../../../_images/buttermilk_bay_standard_solution_169.png" style="width: 500px;" />
+</a>
+<a class="reference internal image-reference" href="../../../_images/buttermilk_bay_standard_points.png"><img alt="../../../_images/buttermilk_bay_standard_points.png" class="align-center" src="../../../_images/buttermilk_bay_standard_points.png" style="width: 500px;" />
+</a>
+</section>
+<section id="subgrid">
+<h3>subgrid<a class="headerlink" href="#subgrid" title="Link to this heading">¶</a></h3>
+<p>The subgrid version of the test case includes a subgrid correction scheme
+to incorporate the effects of subgrid scale bathymetric variations on
+the flow. This allows the small-scale connectivity between bays to be
+represented, leading to significant improvements over the standard
+wetting and drying approach:</p>
+<a class="reference internal image-reference" href="../../../_images/buttermilk_bay_subgrid_solution_169.png"><img alt="../../../_images/buttermilk_bay_subgrid_solution_169.png" class="align-center" src="../../../_images/buttermilk_bay_subgrid_solution_169.png" style="width: 500px;" />
+</a>
+<a class="reference internal image-reference" href="../../../_images/buttermilk_bay_subgrid_points.png"><img alt="../../../_images/buttermilk_bay_subgrid_points.png" class="align-center" src="../../../_images/buttermilk_bay_subgrid_points.png" style="width: 500px;" />
+</a>
+</section>
+<section id="config-options">
+<h3>config options<a class="headerlink" href="#config-options" title="Link to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">buttermilk_bay</span></code> config options include:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for buttermilk bay</span>
+<span class="k">[buttermilk_bay]</span>
+
+<span class="c1"># dimensions of domain in x and y directions (m)</span>
+<span class="na">Lx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4608</span>
+<span class="na">Ly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4608</span>
+
+<span class="c1"># a list of resolutions (m) to test</span>
+<span class="na">resolutions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">256, 128, 64</span>
+
+<span class="c1"># time step per resolution (s/m), since dt is proportional to resolution</span>
+<span class="na">dt_per_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.02</span>
+
+<span class="c1"># the number of cells per core to aim for</span>
+<span class="na">goal_cells_per_core</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">300</span>
+
+<span class="c1"># the approximate maximum number of cells per core (the test will fail if too</span>
+<span class="c1"># few cores are available)</span>
+<span class="na">max_cells_per_core</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3000</span>
+
+<span class="c1"># config options for visualizing drying slope ouptut</span>
+<span class="k">[buttermilk_bay_viz]</span>
+
+<span class="c1"># coordinates (in km) for timeseries plot</span>
+<span class="na">points</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[2.8, 0.53], [1.9, 1.66], [2.4, 3.029], [2.51, 3.027], [1.26, 1.56]</span>
+
+<span class="c1"># generate contour plots at a specified interval between output timesnaps</span>
+<span class="na">plot_interval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+</pre></div>
+</div>
+</section>
+<section id="resolutions">
+<h3>resolutions<a class="headerlink" href="#resolutions" title="Link to this heading">¶</a></h3>
+<p>The default resolutions (in m) used in the test case are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">resolutions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">256, 128, 64</span>
+</pre></div>
+</div>
+<p>To alter the resolutions used in this test, you will need to create your own
+config file (or add a <code class="docutils literal notranslate"><span class="pre">buttermilk_bay</span></code> section to a config file if you’re
+already using one).  The resolutions are a comma-separated list of the
+resolution of the mesh in meters.  If you specify a different list
+before setting up <code class="docutils literal notranslate"><span class="pre">buttermilk_bay</span></code>, steps will be generated with the requested
+resolutions.  (If you alter <code class="docutils literal notranslate"><span class="pre">resolutions</span></code> in the test case’s config file in
+the work directory, nothing will happen.) The resolution value along the values
+of <code class="docutils literal notranslate"><span class="pre">Lx</span></code> and <code class="docutils literal notranslate"><span class="pre">Ly</span></code> are used to determine the number of cells in the x and y
+directions used to generate the mesh.</p>
+</section>
+<section id="time-step">
+<h3>time step<a class="headerlink" href="#time-step" title="Link to this heading">¶</a></h3>
+<p>The time step for forward integration is determined by multiplying the
+resolution by <code class="docutils literal notranslate"><span class="pre">dt_per_m</span></code>, so that coarser meshes have longer time steps.
+You can alter this before setup (in a user config file) or before running the
+test case (in the config file in the work directory).</p>
+</section>
+<section id="cores">
+<h3>cores<a class="headerlink" href="#cores" title="Link to this heading">¶</a></h3>
+<p>The number of cores (and the minimum) is proportional to the number of cells,
+so that the number of cells per core is roughly constant.  You can alter how
+many cells are allocated to each core with <code class="docutils literal notranslate"><span class="pre">goal_cells_per_core</span></code>.  You can
+control the maximum number of cells that are allowed to be placed on a single
+core (before the test case will fail) with <code class="docutils literal notranslate"><span class="pre">max_cells_per_core</span></code>.  If there
+aren’t enough processors to handle the finest resolution, you will see that
+the step (and therefore the test case) has failed.</p>
+</section>
+<section id="viz">
+<h3>viz<a class="headerlink" href="#viz" title="Link to this heading">¶</a></h3>
+<p>The visualization step can be configured to plot the timeseries for an
+arbitrary set of coordinates by setting <code class="docutils literal notranslate"><span class="pre">points</span></code>. By default, these
+are set to the locations used in Kennedy et al. 2019. Also, the interval
+between contour plot time snaps can be controlled with <code class="docutils literal notranslate"><span class="pre">plot_interval</span></code>.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="baroclinic_gyre.html" class="btn btn-neutral float-left" title="baroclinic_gyre" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dam_break.html" class="btn btn-neutral float-right" title="dam_break" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

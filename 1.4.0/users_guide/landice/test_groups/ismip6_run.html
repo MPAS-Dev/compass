@@ -1,0 +1,369 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ismip6_run &mdash; compass 1.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/documentation_options.js?v=9172181d"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="isunnguata_sermia" href="isunnguata_sermia.html" />
+    <link rel="prev" title="ismip6_forcing" href="ismip6_forcing.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_suites.html">Test Suites</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Landice core</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Test Groups</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="antarctica.html">antarctica</a></li>
+<li class="toctree-l3"><a class="reference internal" href="calving_dt_convergence.html">calving_dt_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="circular_shelf.html">circular_shelf</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crane.html">crane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dome.html">dome</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eismint2.html">eismint2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ensemble_generator.html">ensemble_generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="enthalpy_benchmark.html">enthalpy_benchmark</a></li>
+<li class="toctree-l3"><a class="reference internal" href="greenland.html">greenland</a></li>
+<li class="toctree-l3"><a class="reference internal" href="humboldt.html">humboldt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydro_radial.html">hydro_radial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ismip6_forcing.html">ismip6_forcing</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ismip6_run</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ismip6-ais-proj2300">ismip6_ais_proj2300</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#steps-for-setting-up-and-running-experiments">Steps for setting up and running experiments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#important-notes-for-running-coupled-mali-slm-simulations">Important notes for running coupled MALI-SLM simulations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="isunnguata_sermia.html">isunnguata_sermia</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kangerlussuaq.html">kangerlussuaq</a></li>
+<li class="toctree-l3"><a class="reference internal" href="koge_bugt_s.html">koge_bugt_s</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesh_modifications.html">mesh_modifications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mismipplus.html">mismipplus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thwaites.html">thwaites</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../suites.html">Test suites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../framework.html">Land-ice Framework</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Landice core</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Test Groups</a></li>
+      <li class="breadcrumb-item active">ismip6_run</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/users_guide/landice/test_groups/ismip6_run.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ismip6-run">
+<span id="landice-ismip6-run"></span><h1>ismip6_run<a class="headerlink" href="#ismip6-run" title="Link to this heading">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">landice/ismip6_run</span></code> test group includes a test case for setting up
+one or more experiments from the <a class="reference external" href="https://www.climate-cryosphere.org/wiki/index.php?title=ISMIP6_wiki_page">ISMIP6 set of experiments</a>.
+This functionality assumes the initial condition, parameter, and forcing files
+have already been generated using the <a class="reference internal" href="ismip6_forcing.html#landice-ismip6-forcing"><span class="std std-ref">ismip6_forcing</span></a> test case.
+It creates a consistent set of run directories
+for the experiments requested.  It is not meant for automated running of the
+experiments, and expert knowledge is recommended for conducting the actual
+experiments.</p>
+<p>At present, there is a single test case for the
+ISMIP6-Projections2300-Antarctica ensemble.</p>
+<section id="ismip6-ais-proj2300">
+<h2>ismip6_ais_proj2300<a class="headerlink" href="#ismip6-ais-proj2300" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">landice/ismip6_run/ismip6_ais_proj2300</span></code> sets up one or more experiments
+from the protocol for
+<a class="reference external" href="https://www.climate-cryosphere.org/wiki/index.php?title=ISMIP6-Projections2300-Antarctica">ISMIP6-Projections2300-Antarctica</a>.</p>
+<p>The user should review and modify all values in the default config for
+specifying input files and model information.  See config comments for
+detailed information about each option.
+Note that default filepaths refer to files at NERSC and may need to be updated
+depending on what machine is being used and user permissions.
+It may also be necessary to
+alter namelist, streams, or test case code if non-standard configurations
+are to be used.</p>
+</section>
+<section id="config-options">
+<h2>config options<a class="headerlink" href="#config-options" title="Link to this heading">¶</a></h2>
+<p>All config options should be reviewed and altered as needed.
+Example cfg files are included in the test case directory within the
+<code class="docutils literal notranslate"><span class="pre">compass</span></code> repo for previously used configurations on specific
+machines to facilitate reproducibility and form a useful starting place
+for new runs</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[ismip6_run_ais_2300]</span>
+
+<span class="c1"># list of experiments to set up.</span>
+<span class="c1"># Can be &quot;tier1&quot;, &quot;tier2&quot;, &quot;all&quot;, or a comma-delimited list of runs</span>
+<span class="c1"># &quot;tier1&quot; is expAE01-expAE06 plus hist and ctrlAE</span>
+<span class="c1"># &quot;tier2&quot; is expAE07-expAE14</span>
+<span class="na">exp_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">tier1</span>
+
+<span class="c1"># Resolution that will be set up, in km.  Should be one of 4, 8, as those are</span>
+<span class="c1"># the two resolutions currently supported.</span>
+<span class="c1"># mesh_res is informational only and is used for directory naming conventions</span>
+<span class="c1"># The filepaths below must manually be set to be consistent.</span>
+<span class="na">mesh_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span>
+
+<span class="c1"># number of tasks to use for each run</span>
+<span class="na">ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">128</span>
+
+<span class="c1"># value to use for config_pio_stride.</span>
+<span class="c1"># Should be divisible into ntasks</span>
+<span class="na">pio_stride</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">128</span>
+
+<span class="c1"># Base path to the processed input ismip6 ocean and smb forcing files.</span>
+<span class="c1"># User has to supply.</span>
+<span class="na">forcing_basepath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/MALI_projects/ISMIP6-2300/forcing/ais_mesh_8to30km_res</span>
+
+<span class="c1"># Path to the initial condition file. User has to supply.</span>
+<span class="na">init_cond_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/MALI_projects/ISMIP6-2300/initial_conditions/AIS_8to30km_20221027/relaxation_0TGmelt_10yr_muCap/AIS_8to30km_r01_20220906.smooth3.basinsFineTuned_carvedRonne_CIRWIP_relaxation_0TGmelt_10yr_muCap.nc</span>
+
+<span class="c1"># Path to the file for the basal melt parametrization coefficients.</span>
+<span class="na">melt_params_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/MALI_projects/ISMIP6-2300/initial_conditions/AIS_8to30km_20221027/basin_and_coeff_gamma0_DeltaT_quadratic_non_local.nc</span>
+
+<span class="c1"># Path to the region mask file</span>
+<span class="na">region_mask_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/MALI_projects/ISMIP6-2300/initial_conditions/AIS_8to30km_20221027/AIS_8to30km_r01_20220607.regionMask_ismip6.nc</span>
+
+<span class="c1"># Calving method to use.  Should be one of:</span>
+<span class="c1"># &#39;restore&#39; for restore-calving front method (fixed calving front)</span>
+<span class="c1"># &#39;von_mises&#39; for von Mises threshold stress calving law</span>
+<span class="na">calving_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">restore</span>
+
+<span class="c1"># Path to the file containing the von Mises parameter fields</span>
+<span class="c1"># groundedVonMisesThresholdStress and floatingVonMisesThresholdStress.</span>
+<span class="c1"># Only required if calving_method is set to &#39;von_mises&#39;</span>
+<span class="na">von_mises_parameter_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">UNKNOWN</span>
+
+<span class="c1"># Whether facemelting should be included in the runs</span>
+<span class="na">include_face_melting</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+
+<span class="c1"># True if running coupled MALI-sea level model simulation</span>
+<span class="na">sea_level_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+
+<span class="c1"># NOTE: for the directories related to the sea-level model input/outputs, the slash &#39;/&#39; at the end of the directory name is necessary.</span>
+<span class="c1"># Path to the base directory containing globally defined ice thickness field for the sea-level model</span>
+<span class="na">slm_input_ice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/MALI_projects/SeaLevelModel_Inputs/icemodel/</span>
+
+<span class="c1"># Path to the directory containing earth model for the sea-level model</span>
+<span class="na">slm_input_earth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/MALI_projects/SeaLevelModel_Inputs/earthmodel/</span>
+
+<span class="c1"># Earth structure profile</span>
+<span class="c1"># possible values: any file name string of earth model file.</span>
+<span class="c1"># Note that there is no single representative earth model for the globe or</span>
+<span class="c1"># any region of the globe (e.g., West Antarctica, East Antarctica, Greenland)</span>
+<span class="c1"># But for this test, we use &#39;prem_512.l60K2C.sum18p6.dum19p2.tz19p4.lm22&#39; for West Antarctica</span>
+<span class="c1"># and &#39;prem_coll_512.l120C.ump5.lm10&#39; for East Antarctica. Other earthmodels that can be used</span>
+<span class="c1"># should exist in the path defined in the config option &#39;slm_input_earth&#39;.</span>
+<span class="na">slm_earth_structure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">prem_512.l60K2C.sum18p6.dum19p2.tz19p4.lm22</span>
+
+<span class="c1"># Path to the diectory containing other input files (present-day global topography and sea-level model grid files)</span>
+<span class="na">slm_input_others</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/MALI_projects/SeaLevelModel_Inputs/others/</span>
+
+<span class="c1"># number of gauss-legendre nodes in latitude (typically an integer multiple of 512)</span>
+<span class="na">nglv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2048</span>
+</pre></div>
+</div>
+<p>Additionally, a user should also include the following options (and possibly
+others) that will be used for submitting the jobs for each ensemble member
+(set to appropriate values for their usage situation):</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[parallel]</span>
+<span class="na">account</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ALLOCATION_NAME_HERE</span>
+<span class="na">qos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">regular</span>
+
+<span class="k">[job]</span>
+<span class="na">wall_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10:00:00</span>
+</pre></div>
+</div>
+</section>
+<section id="steps-for-setting-up-and-running-experiments">
+<h2>Steps for setting up and running experiments<a class="headerlink" href="#steps-for-setting-up-and-running-experiments" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>With a compass conda environment set up, run, e.g.,
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span> <span class="pre">-t</span> <span class="pre">landice/ismip6_run/ismip6_ais_proj2300</span> <span class="pre">-w</span> <span class="pre">WORK_DIR_PATH</span> <span class="pre">-f</span> <span class="pre">USER.cfg</span></code>
+where <code class="docutils literal notranslate"><span class="pre">WORK_DIR_PATH</span></code> is a location that can store the whole
+ensemble (typically a scratch drive) and <code class="docutils literal notranslate"><span class="pre">USER.cfg</span></code> is the
+user-defined config described in the previous section that includes
+options for <code class="docutils literal notranslate"><span class="pre">[parallel]</span></code> and <code class="docutils literal notranslate"><span class="pre">[job]</span></code>, as well as any required
+modifications to the <code class="docutils literal notranslate"><span class="pre">[ismip6_run_ais_2300]</span></code> section.  Likely, most or all
+attributes in the <code class="docutils literal notranslate"><span class="pre">[ismip6_run_ais_2300]</span></code> section need to be customized for a
+given application.  It is possible to set up the test case without the
+<code class="docutils literal notranslate"><span class="pre">-f</span></code> option, but generally users will need to make their own
+adjustments to the example syntax above include it.  Also, if you
+do not compile MALI in the <code class="docutils literal notranslate"><span class="pre">MALI-Dev</span></code> submodule within compass, you will
+need to include the <code class="docutils literal notranslate"><span class="pre">-p</span></code> option specifying the path to where you compiled
+MALI.</p></li>
+<li><p>After <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code> completes and all runs are set up, go to the
+<code class="docutils literal notranslate"><span class="pre">WORK_DIR_PATH</span></code> and change to the
+<code class="docutils literal notranslate"><span class="pre">landice/ismip6_run/ismip6_ais_proj2300</span></code> subdirectory.
+From there you will see subdirectories for each experiment.</p></li>
+<li><p>Each experiment is to be run individually.  Change to the subdirectory
+of the experiment you would like to run.  It is suggested you review the
+job script, namelist, and streams files to be sure everything is set as
+expected.  Then use <code class="docutils literal notranslate"><span class="pre">sbatch</span></code> to submit the job script.</p></li>
+</ol>
+<p>Note that the <code class="docutils literal notranslate"><span class="pre">hist</span></code> run must be completed before any of the other
+experiments can be run.  A symlink to the <code class="docutils literal notranslate"><span class="pre">hist</span></code> restart file from year
+2015 exists in each of the other experiment subdirectories.</p>
+</section>
+<section id="important-notes-for-running-coupled-mali-slm-simulations">
+<h2>Important notes for running coupled MALI-SLM simulations<a class="headerlink" href="#important-notes-for-running-coupled-mali-slm-simulations" title="Link to this heading">¶</a></h2>
+<section id="projection-handling">
+<h3>Projection handling<a class="headerlink" href="#projection-handling" title="Link to this heading">¶</a></h3>
+<p>Currently, MALI uses a planar mesh that projects the south pole with
+polar stereographic projection of ellipsoidal Earth, and the sea-level model
+uses a global grid of spherical Earth. This inconsistency in the Earth’s
+assumed shape (ellipsoid vs. sphere) in MALI and the SLM causes discrepancies
+in the comparison of post-simulation ice mass calculations from the model outputs.
+To address this issue, an interim solution has been made to project the southern
+polar region onto the MALI planar mesh assuming a sphere (this is done by setting
+the lat/long in the MALI mesh using the ‘aid-bedmap2-sphere’ projection string in
+calling the function in ‘set_lat_lon_fields_in_planar_grid.py’. Thus, the resulting
+MALI mesh for coupled MALI-SLM simulations that are setup from this testgroup have
+the lat/long values based off sphere. Once the simulation outputs are generated,
+it is necessary to calculate and apply the scaling factors to the MALI outputs
+to correct for the areal distortion arose from projecting the south pole on a sphere
+onto plane. Only after applying the scaling factor, the MALI outputs will be
+comparable to the SLM outputs. The equations to calculate the scaling factors are shown in
+Eqn. 21-4 in <a class="reference external" href="https://pubs.usgs.gov/pp/1395/report.pdf">https://pubs.usgs.gov/pp/1395/report.pdf</a>
+An example of the calculation for the MALI-SLM case can also be found in
+the <code class="docutils literal notranslate"><span class="pre">compass</span></code> testgroup/testcase/ <code class="docutils literal notranslate"><span class="pre">compass/landice/test/slm/circ_icesheet/</span></code>,
+<code class="docutils literal notranslate"><span class="pre">visualize</span></code> step (<a class="reference external" href="https://github.com/MPAS-Dev/compass/pull/748">https://github.com/MPAS-Dev/compass/pull/748</a>).</p>
+</section>
+<section id="mapping-files">
+<h3>Mapping files<a class="headerlink" href="#mapping-files" title="Link to this heading">¶</a></h3>
+<p>Coupling between the Sea-Level Model and MALI requires the generation of mapping files
+before simulations are run.  When <code class="docutils literal notranslate"><span class="pre">sea_level_model=True</span></code> in the cfg file, an
+additional test case step is created named <code class="docutils literal notranslate"><span class="pre">mapping_files</span></code>.  Before any MALI
+simulations are started, the user should run this step.  It will generate the required
+mapping files, and they will be available in each experiment directory through symlinks.
+Once the mapping files have been generated, the user can proceed to running the <code class="docutils literal notranslate"><span class="pre">hist</span></code>
+experiment.</p>
+</section>
+<section id="restarts">
+<h3>Restarts<a class="headerlink" href="#restarts" title="Link to this heading">¶</a></h3>
+<p>Additionally, for restarts with the SLM to work correctly, the entire history of the
+<code class="docutils literal notranslate"><span class="pre">OUTPUT_SLM</span></code> and <code class="docutils literal notranslate"><span class="pre">ICELOAD_SLM</span></code> directories must be present.  Because the projection
+experiments (ctrl and exp*) are branched off the hist run as restarts, this means these
+two directories from the hist run must be manually copied to each projection run before
+beginning it. There is not an easy way for this to happen automatically, so this step
+must be done manually.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ismip6_forcing.html" class="btn btn-neutral float-left" title="ismip6_forcing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="isunnguata_sermia.html" class="btn btn-neutral float-right" title="isunnguata_sermia" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
