@@ -1,0 +1,269 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mesh_modifications &mdash; compass 1.6.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=72d88caf"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="mismipplus" href="mismipplus.html" />
+    <link rel="prev" title="koge_bugt_s" href="koge_bugt_s.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_suites.html">Test Suites</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Landice core</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Test Groups</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="antarctica.html">antarctica</a></li>
+<li class="toctree-l3"><a class="reference internal" href="calving_dt_convergence.html">calving_dt_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="circular_shelf.html">circular_shelf</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crane.html">crane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dome.html">dome</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eismint2.html">eismint2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ensemble_generator.html">ensemble_generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="enthalpy_benchmark.html">enthalpy_benchmark</a></li>
+<li class="toctree-l3"><a class="reference internal" href="greenland.html">greenland</a></li>
+<li class="toctree-l3"><a class="reference internal" href="humboldt.html">humboldt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydro_radial.html">hydro_radial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ismip6_forcing.html">ismip6_forcing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ismip6_run.html">ismip6_run</a></li>
+<li class="toctree-l3"><a class="reference internal" href="isunnguata_sermia.html">isunnguata_sermia</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kangerlussuaq.html">kangerlussuaq</a></li>
+<li class="toctree-l3"><a class="reference internal" href="koge_bugt_s.html">koge_bugt_s</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">mesh_modifications</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subdomain-extractor">subdomain_extractor</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mismipplus.html">mismipplus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thwaites.html">thwaites</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../suites.html">Test suites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../framework.html">Land-ice Framework</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Landice core</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Test Groups</a></li>
+      <li class="breadcrumb-item active">mesh_modifications</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/users_guide/landice/test_groups/mesh_modifications.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="mesh-modifications">
+<span id="id1"></span><h1>mesh_modifications<a class="headerlink" href="#mesh-modifications" title="Link to this heading"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">mesh_modifications</span></code> test group includes test cases for modifying
+existing meshes.</p>
+<p>It currently contains one test case for extracting a subdomain from an
+existing larger domain.</p>
+<section id="subdomain-extractor">
+<h2>subdomain_extractor<a class="headerlink" href="#subdomain-extractor" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">landice/mesh_modifications/subdomain_extractor</span></code> extracts a subdomain from a
+larger domain.  The region to be extracted can be defined be either a region_mask
+file with a region number or with a geojson file.</p>
+<p>If using a region_mask file, there is the option of extending the mask into the open
+ocean by a specified number of cells.  This was implemented because many region
+masks end at the present-day ice front, which would leave no gutter on the
+subdomain mesh.  It is recommended to first try the subdomain extraction without
+the ocean extension, and if results are clipped too close to the ice front, then
+try adding an ocean buffer.  If results with the ocean buffer do not achieve
+the desired effect, one should switch to the geojson method and manually create
+or modify the region, e.g. in QGIS.</p>
+<p>There are two methods available for performing the remapping: using ncremap
+or standard MALI interpolation methods.  The standard MALI interpolation method
+is faster and potentially less fragile, as it relies on fewer underlying tools.
+However, the ncremap option provides the ability to additionally remap up to five
+ancillary files (e.g. SMB, TF, basal melt param, von Mises parameter files).
+The MALI interpolation method can likely be run quickly on a login node, but the
+ncremap method will likely need a compute node.</p>
+<p>The user should modify the default config for their application.</p>
+<section id="config-options">
+<h3>config options<a class="headerlink" href="#config-options" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">subdomain_extractor</span></code> test case uses the following default config
+options.  They should be adjusted by the user before setting up and running
+the test case.</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[subdomain]</span>
+
+<span class="c1"># path to file from which to extract subdomain</span>
+<span class="na">source_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">TO BE SUPPLIED BY USER</span>
+
+<span class="c1"># method for defining region</span>
+<span class="c1"># one of &#39;region_mask_file&#39; or &#39;geojson&#39;</span>
+<span class="na">region_definition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">region_mask_file</span>
+
+<span class="c1"># path to geojson file to be used if region_definition=&#39;geojson&#39;</span>
+<span class="na">geojson_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">TO BE SUPPLIED BY USER</span>
+
+<span class="c1"># path to region mask file for if region_definition=&#39;region_mask_file&#39;</span>
+<span class="na">region_mask_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">TO BE SUPPLIED BY USER</span>
+
+<span class="c1"># region number to extract if region_definition=&#39;region_mask_file&#39;</span>
+<span class="na">region_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+
+<span class="c1"># filename for the subdomain to be generated</span>
+<span class="na">dest_file_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">subdomain.nc</span>
+
+<span class="c1"># mesh projection to be used for setting lat/lon values</span>
+<span class="c1"># Should match the projection used in the source_file</span>
+<span class="c1"># Likely one of &#39;ais-bedmap2&#39; or &#39;gis-gimp&#39;</span>
+<span class="na">mesh_projection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ais-bedmap2</span>
+
+<span class="c1"># whether to extend mesh into the open ocean along the ice-shelf margin</span>
+<span class="c1"># This is necessary if the region mask ends right along the ice-shelf edge,</span>
+<span class="c1"># or if the ice-shelf is covered by two regions.</span>
+<span class="c1"># It is recommended to try extracting a subdomain with this False, and if the</span>
+<span class="c1"># ocean buffer is inadequate, trying again with this True.</span>
+<span class="na">extend_ocean_buffer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+
+<span class="c1"># number of iterations to grow open ocean buffer along ice-shelf margin</span>
+<span class="c1"># Only used if extend_ocean_buffer is True</span>
+<span class="c1"># Should be equal to approximately the number of ocean buffer cells in the</span>
+<span class="c1"># source_file</span>
+<span class="na">grow_iters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">15</span>
+
+<span class="c1"># method for performing interpolation</span>
+<span class="c1"># &#39;ncremap&#39; uses pyremap to call ESMF_RegridWeightGen to generate a</span>
+<span class="c1"># nstd weight file and then uses ncremap to perform remapping.</span>
+<span class="c1"># This method supports interpolating ancillary files (below)</span>
+<span class="c1"># but likely needs to be run on a compute node and is more fragile.</span>
+<span class="c1"># &#39;mali_interp&#39; uses the MALI interpolation script interpolate_to_mpasli_grid.py</span>
+<span class="c1"># This method does not support ancillary files but may be more robust</span>
+<span class="c1"># and can likely be run quickly on a login node.</span>
+<span class="na">interp_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ncremap</span>
+
+<span class="c1"># optional forcing files that could also be interpolated</span>
+<span class="c1"># e.g. SMB or TF files</span>
+<span class="c1"># interpolating these files requires using the &#39;ncremap&#39; interp_method</span>
+<span class="na">extra_file1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
+<span class="na">extra_file2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
+<span class="na">extra_file3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
+<span class="na">extra_file4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
+<span class="na">extra_file5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="koge_bugt_s.html" class="btn btn-neutral float-left" title="koge_bugt_s" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mismipplus.html" class="btn btn-neutral float-right" title="mismipplus" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

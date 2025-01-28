@@ -1,0 +1,382 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>baroclinic_gyre &mdash; compass 1.6.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=72d88caf"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="buttermilk_bay" href="buttermilk_bay.html" />
+    <link rel="prev" title="baroclinic_channel" href="baroclinic_channel.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../landice/index.html">Landice core</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Ocean core</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Test groups</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="baroclinic_channel.html">baroclinic_channel</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">baroclinic_gyre</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#forcing">Forcing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#initial-state">Initial state</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#analysis">Analysis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#performance-test">performance_test</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#year-test">3_year_test</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="buttermilk_bay.html">buttermilk_bay</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dam_break.html">dam_break</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drying_slope.html">drying_slope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="global_convergence.html">global_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="global_ocean.html">global_ocean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gotm.html">gotm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hurricane.html">hurricane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ice_shelf_2d.html">ice_shelf_2d</a></li>
+<li class="toctree-l3"><a class="reference internal" href="internal_wave.html">internal_wave</a></li>
+<li class="toctree-l3"><a class="reference internal" href="isomip_plus.html">isomip_plus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lock_exchange.html">lock_exchange</a></li>
+<li class="toctree-l3"><a class="reference internal" href="merry_go_round.html">merry_go_round</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nonhydro.html">nonhydro</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overflow.html">overflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="parabolic_bowl.html">parabolic_bowl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="planar_convergence.html">planar_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soma.html">soma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sphere_transport.html">sphere_transport</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spherical_harmonic_transform.html">spherical_harmonic_transform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tides.html">tides</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utility.html">utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ziso.html">ziso</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../framework/index.html">Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../suites.html">Test suites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Ocean core</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Test groups</a></li>
+      <li class="breadcrumb-item active">baroclinic_gyre</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/users_guide/ocean/test_groups/baroclinic_gyre.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="baroclinic-gyre">
+<span id="id1"></span><h1>baroclinic_gyre<a class="headerlink" href="#baroclinic-gyre" title="Link to this heading"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">baroclinic_gyre</span></code> test group implements variants of the
+baroclinic ocean gyre set-up from the <a class="reference external" href="https://mitgcm.readthedocs.io/en/latest/examples/baroclinic_gyre/baroclinic_gyre.html">MITgcm test case</a>.</p>
+<p>This test simulates a baroclinic, wind and buoyancy-forced, double-gyre ocean
+circulation. The grid employs spherical polar coordinates with 15 vertical
+layers. The configuration is similar to the double-gyre setup first solved
+numerically in <a class="reference external" href="https://journals.ametsoc.org/view/journals/phoc/14/4/1520-0485_1984_014_0674_anmotv_2_0_co_2.xml">Cox and Bryan (1984)</a>:
+the model is configured to represent an enclosed sector of fluid on a sphere,
+spanning the tropics to mid-latitudes,
+<span class="math notranslate nohighlight">\(60^{\circ} \times 60^{\circ}\)</span> in lateral extent.
+The fluid is <span class="math notranslate nohighlight">\(1.8\)</span>km deep and is forced by a zonal wind stress which
+is constant in time, <span class="math notranslate nohighlight">\(\tau_{\lambda}\)</span>, varying sinusoidally in the
+north-south direction.</p>
+<figure class="align-center" id="baroclinic-gyre-config">
+<a class="reference internal image-reference" href="../../../_images/baroclinic_gyre_config.png"><img alt="baroclinic gyre configuration" src="../../../_images/baroclinic_gyre_config.png" style="width: 95%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">Schematic of simulation domain and wind-stress forcing function for
+baroclinic gyre numerical experiment. The domain is enclosed by solid walls.
+From <a class="reference external" href="https://mitgcm.readthedocs.io/en/latest/examples/baroclinic_gyre/baroclinic_gyre.html">MITgcm test case</a>.</span><a class="headerlink" href="#baroclinic-gyre-config" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<section id="forcing">
+<h2>Forcing<a class="headerlink" href="#forcing" title="Link to this heading"></a></h2>
+<p>The Coriolis parameter, <span class="math notranslate nohighlight">\(f\)</span>, is defined
+according to latitude <span class="math notranslate nohighlight">\(\varphi\)</span></p>
+<div class="math notranslate nohighlight">
+\[f(\varphi) = 2 \Omega \sin( \varphi )\]</div>
+<p>with the rotation rate, <span class="math notranslate nohighlight">\(\Omega\)</span> set to
+<span class="math notranslate nohighlight">\(\frac{2 \pi}{86164} \text{s}^{-1}\)</span> (i.e., corresponding to the
+standard Earth rotation rate, using the CIME constant to ensure consistency).
+The sinusoidal wind-stress variations are defined according to</p>
+<div class="math notranslate nohighlight">
+\[\tau_{\lambda}(\varphi) = -\tau_{0}\cos \left(2 \pi \frac{\varphi-\varphi_o}{L_{\varphi}} \right)\]</div>
+<p>where <span class="math notranslate nohighlight">\(L_{\varphi}\)</span> is the lateral domain extent
+(<span class="math notranslate nohighlight">\(60^{\circ}\)</span>), <span class="math notranslate nohighlight">\(\varphi_o\)</span> is set to <span class="math notranslate nohighlight">\(15^{\circ} \text{N}\)</span>
+and <span class="math notranslate nohighlight">\(\tau_0\)</span> is <span class="math notranslate nohighlight">\(0.1 \text{ N m}^{-2}\)</span>.
+<a class="reference internal" href="#baroclinic-gyre-cfg"><span class="std std-ref">config options</span></a> summarizes the configuration options used in this
+simulation.</p>
+<p>Temperature is restored in the surface layer to a linear profile:</p>
+<div class="math notranslate nohighlight" id="equation-baroc-restore-theta">
+<span class="eqno">(1)<a class="headerlink" href="#equation-baroc-restore-theta" title="Link to this equation"></a></span>\[{\cal F}_\theta = - U_{piston} (\theta-\theta^*), \phantom{WWW}
+\theta^* = \frac{\theta_{\rm max} - \theta_{\rm min}}{L_\varphi} (\varphi_{\rm max} - \varphi) + \theta_{\rm min}\]</div>
+<p>where the piston velocity <span class="math notranslate nohighlight">\(U_{piston}\)</span> (in m.s^{-1}) is calculated by
+applying a relaxation timescale of 30 days (set in config file) over the
+thickness of the top layer (50 m by default) and
+<span class="math notranslate nohighlight">\(\theta_{\rm max}=30^{\circ}\)</span> C, <span class="math notranslate nohighlight">\(\theta_{\rm min}=0^{\circ}\)</span> C.</p>
+</section>
+<section id="initial-state">
+<h2>Initial state<a class="headerlink" href="#initial-state" title="Link to this heading"></a></h2>
+<p>Initially the fluid is stratified with a reference potential temperature
+profile that varies from (approximately) <span class="math notranslate nohighlight">\(\theta=30.6 \text{ } ^{\circ}\)</span>C
+in the surface layer to <span class="math notranslate nohighlight">\(\theta=1.56 \text{ } ^{\circ}\)</span>C in the
+bottom layer. To ensure that the profile is independent of the vertical
+discretization, the profile is now set by a surface value (at the top
+interface) and a bottom value (at the bottom interface), set in the <code class="docutils literal notranslate"><span class="pre">.cfg</span></code>
+file. The default values have been chosen for the layer values (calculated
+with <code class="docutils literal notranslate"><span class="pre">zMid</span></code>) to approximate the discrete values presented in the MITgcm
+test case. The temperature functional form (and inner parameter <code class="docutils literal notranslate"><span class="pre">cc</span></code>  was
+determined by fitting an analytical function to the MITgcm discrete layer
+values (originally ranging from 2 to <span class="math notranslate nohighlight">\(30 \text{ } ^{\circ}\)</span>C. If the
+<code class="docutils literal notranslate"><span class="pre">bottom_depth</span></code> is different from the default 1800m value, the temperature
+profile is stretched in the vertical to fit the surface and bottom
+temperature constraints, but the thermocline depth and the discrete layer
+values will move away from the MITgcm test case.
+The equation of state used in this experiment is linear:</p>
+<div class="math notranslate nohighlight" id="equation-rho-lineareos">
+<span class="eqno">(2)<a class="headerlink" href="#equation-rho-lineareos" title="Link to this equation"></a></span>\[\rho = \rho_{0} ( 1 - \alpha_{\theta}\theta^{\prime} )\]</div>
+<p>with <span class="math notranslate nohighlight">\(\rho_{0}=999.8\,{\rm kg\,m}^{-3}\)</span> and
+<span class="math notranslate nohighlight">\(\alpha_{\theta}=2\times10^{-4}\,{\rm K}^{-1}\)</span>. The salinity is set to
+a uniform value of <span class="math notranslate nohighlight">\(S=34\)</span>psu (set in the <cite>.cfg</cite> file)
+Given the linear equation of state, in this configuration the model state
+variable for temperature is equivalent to either in-situ temperature,
+<span class="math notranslate nohighlight">\(T\)</span>, or potential temperature, <span class="math notranslate nohighlight">\(\theta\)</span>. For simplicity, here we
+use the variable <span class="math notranslate nohighlight">\(\theta\)</span> to represent temperature.</p>
+</section>
+<section id="analysis">
+<h2>Analysis<a class="headerlink" href="#analysis" title="Link to this heading"></a></h2>
+<p>For scientific validation, this test case is meant to be run to quasi-steady
+state and its mean state compared to the MITgcm test case and / or
+theoretical scaling. This is done through an analysis step in the
+<code class="docutils literal notranslate"><span class="pre">3_year_test</span></code> case. Note that 3 years are likely insufficient to bring the
+test case to full equilibrium.  Examples of qualitative plots include:
+i) equilibrated SSH contours on top of surface heat fluxes,
+ii) barotropic streamfunction (compared to MITgcm or a barotropic gyre test
+case).</p>
+<p>Examples of checks against theory include:
+iii) max of simulated barotropic streamfunction ~ Sverdrup transport,
+iv) simulated thermocline depth ~ scaling argument for penetration depth
+(Vallis (2017) or Cushman-Roisin and Beckers (2011)).</p>
+<p>Consider the Sverdrup transport:</p>
+<div class="math notranslate nohighlight">
+\[\rho v_{\rm bt} = \hat{\boldsymbol{k}} \cdot \frac{ \nabla  \times \vec{\boldsymbol{\tau}}}{\beta}\]</div>
+<p>If we plug in a typical mid-latitude value for <span class="math notranslate nohighlight">\(\beta\)</span>
+(<span class="math notranslate nohighlight">\(2 \times 10^{-11}\)</span> m<sup>-1</sup> s<sup>-1</sup>) and note that
+<span class="math notranslate nohighlight">\(\tau\)</span> varies by <span class="math notranslate nohighlight">\(0.1\)</span> Nm<sup>2</sup> over <span class="math notranslate nohighlight">\(15^{\circ}\)</span>
+latitude, and multiply by the width of our ocean sector, we obtain an
+estimate of approximately 20 Sv.</p>
+<p>This scaling is obtained via thermal wind and the linearized barotropic
+vorticity equation), the depth of the thermocline <span class="math notranslate nohighlight">\(h\)</span> should scale as:</p>
+<div class="math notranslate nohighlight">
+\[h = \left( \frac{w_{\rm Ek} f^2 L_x}{\beta \Delta b} \right) ^2 = \left( \frac{(\tau / L_y) f L_x}{\beta \rho'} \right) ^2\]</div>
+<p>where <span class="math notranslate nohighlight">\(w_{\rm Ek}\)</span> is a representive value for Ekman pumping,
+<span class="math notranslate nohighlight">\(\Delta b = g \rho' / \rho_0\)</span>
+is the variation in buoyancy across the gyre,
+and <span class="math notranslate nohighlight">\(L_x\)</span> and <span class="math notranslate nohighlight">\(L_y\)</span> are length scales in the
+<span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> directions, respectively.
+Plugging in applicable values at <span class="math notranslate nohighlight">\(30^{\circ}\)</span>N,
+we obtain an estimate for <span class="math notranslate nohighlight">\(h\)</span> of 200 m.</p>
+</section>
+<section id="config-options">
+<span id="baroclinic-gyre-cfg"></span><h2>config options<a class="headerlink" href="#config-options" title="Link to this heading"></a></h2>
+<p>All 2 test cases share the same set of config options:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
+<span class="k">[vertical_grid]</span>
+
+<span class="c1"># the type of vertical grid</span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">linear_dz</span>
+
+<span class="c1"># the linear rate of thickness (m) increase for linear_dz</span>
+<span class="na">linear_dz_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.</span>
+
+<span class="c1"># Number of vertical levels</span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">15</span>
+
+<span class="c1"># Total water column depth in m</span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1800.</span>
+
+<span class="c1"># The type of vertical coordinate (e.g. z-level, z-star)</span>
+<span class="na">coord_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">z-star</span>
+
+<span class="c1"># Whether to use &quot;partial&quot; or &quot;full&quot;, or &quot;None&quot; to not alter the topography</span>
+<span class="na">partial_cell_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
+
+<span class="c1"># The minimum fraction of a layer for partial cells</span>
+<span class="na">min_pc_fraction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.1</span>
+
+
+<span class="c1"># config options for the baroclinic gyre</span>
+<span class="k">[baroclinic_gyre]</span>
+<span class="c1"># Basin dimensions</span>
+<span class="na">lat_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">15</span>
+<span class="na">lat_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">75</span>
+<span class="na">lon_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+<span class="na">lon_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">60</span>
+
+<span class="c1"># Initial vertical temperature profile (C)</span>
+<span class="na">initial_temp_top</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">33.</span>
+<span class="na">initial_temp_bot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.</span>
+
+<span class="c1"># Constant salinity value (also used in restoring)</span>
+<span class="na">initial_salinity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">34.</span>
+
+<span class="c1"># Maximum zonal wind stress value (N m-2)</span>
+<span class="na">wind_stress_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.1</span>
+
+<span class="c1"># Surface temperature restoring profile</span>
+<span class="na">restoring_temp_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.</span>
+<span class="na">restoring_temp_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">30.</span>
+
+<span class="c1"># Restoring timescale for surface temperature (in days)</span>
+<span class="na">restoring_temp_timescale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">30.</span>
+
+
+<span class="c1"># config options for the post processing (moc and viz)</span>
+<span class="k">[baroclinic_gyre_post]</span>
+<span class="c1"># latitude bin increment for the moc calculation</span>
+<span class="na">dlat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.25</span>
+<span class="c1"># number of years to average over for the mean state plots</span>
+<span class="na">time_averaging_length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+</pre></div>
+</div>
+</section>
+<section id="performance-test">
+<h2>performance_test<a class="headerlink" href="#performance-test" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ocean/baroclinic_gyre/performance_test</span></code> is the default version of the
+baroclinic_gyre test case for a short (3 time steps) test run and validation
+of prognostic variables for regression testing.</p>
+</section>
+<section id="year-test">
+<h2>3_year_test<a class="headerlink" href="#year-test" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ocean/baroclinic_gyre/3_year_test</span></code> is an additional version of the
+baroclinic_gyre test case with a longer (3-year) spin-up. By default, it
+includes monthly mean output, and plots the mean state of the simulation for
+the last 1 year (option in the config file). Note that for the 80km
+configuration, the estimated time to equilibration is roughly 50 years
+(approx 3 hours of compute time on default layout). This can be done by
+running the <code class="docutils literal notranslate"><span class="pre">forward</span></code> step several times (adding 3 years each time), or by
+editing the <code class="docutils literal notranslate"><span class="pre">forward/namelist.ocean</span></code> file to set the <code class="docutils literal notranslate"><span class="pre">config_run_duration</span></code>
+to the desired simulation duration.
+For a detailed comparison of the mean state against theory and results from
+other models, the mean state at 100 years may be most appropriate to be
+aligned with the MITgcm results.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="baroclinic_channel.html" class="btn btn-neutral float-left" title="baroclinic_channel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="buttermilk_bay.html" class="btn btn-neutral float-right" title="buttermilk_bay" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

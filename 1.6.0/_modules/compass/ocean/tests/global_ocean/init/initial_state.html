@@ -1,0 +1,466 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.ocean.tests.global_ocean.init.initial_state &mdash; compass 1.6.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=72d88caf"></script>
+      <script src="../../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../../ocean.html">compass.ocean</a></li>
+          <li class="breadcrumb-item"><a href="../../global_ocean.html">compass.ocean.tests.global_ocean</a></li>
+          <li class="breadcrumb-item"><a href="../init.html">compass.ocean.tests.global_ocean.init</a></li>
+      <li class="breadcrumb-item active">compass.ocean.tests.global_ocean.init.initial_state</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.ocean.tests.global_ocean.init.initial_state</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">importlib.resources</span><span class="w"> </span><span class="kn">import</span> <span class="n">contents</span><span class="p">,</span> <span class="n">read_text</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jinja2</span><span class="w"> </span><span class="kn">import</span> <span class="n">Template</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_call</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">symlink</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_initial_state</span><span class="p">,</span> <span class="n">plot_vertical_grid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.metadata</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">add_mesh_and_init_metadata</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.vertical.grid_1d</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_1d_grid</span><span class="p">,</span> <span class="n">write_1d_grid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
+
+
+<div class="viewcode-block" id="InitialState">
+<a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.initial_state.InitialState.html#compass.ocean.tests.global_ocean.init.initial_state.InitialState">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">InitialState</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A step for creating a mesh and initial condition for baroclinic channel</span>
+<span class="sd">    test cases</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mesh : compass.ocean.tests.global_ocean.mesh.mesh.MeshStep</span>
+<span class="sd">        The step for creating the mesh</span>
+
+<span class="sd">    initial_condition : {&#39;WOA23&#39;, &#39;PHC&#39;, &#39;EN4_1900&#39;}</span>
+<span class="sd">        The initial condition dataset to use</span>
+
+<span class="sd">    adjustment_fraction : float</span>
+<span class="sd">        The fraction of the way through iterative ssh adjustment for this</span>
+<span class="sd">        step</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="InitialState.__init__">
+<a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.initial_state.InitialState.html#compass.ocean.tests.global_ocean.init.initial_state.InitialState.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">initial_condition</span><span class="p">,</span>
+                 <span class="n">culled_topo_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;initial_state&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">adjustment_fraction</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the step</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.ocean.tests.global_ocean.init.Init</span>
+<span class="sd">            The test case this step belongs to</span>
+
+<span class="sd">        mesh : compass.ocean.tests.global_ocean.mesh.Mesh</span>
+<span class="sd">            The test case that creates the mesh used by this test case</span>
+
+<span class="sd">        initial_condition : {&#39;WOA23&#39;, &#39;PHC&#39;, &#39;EN4_1900&#39;}</span>
+<span class="sd">            The initial condition dataset to use</span>
+
+<span class="sd">        culled_topo_path : str, optional</span>
+<span class="sd">            The path to a step where ``topography_culled.nc`` is provided</span>
+
+<span class="sd">        name : str, optional</span>
+<span class="sd">            The name of the step</span>
+
+<span class="sd">        subdir : str, optional</span>
+<span class="sd">            The subdirectory for the step</span>
+
+<span class="sd">        adjustment_fraction : float, optional</span>
+<span class="sd">            The fraction of the way through iterative ssh adjustment for this</span>
+<span class="sd">            step</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">initial_condition</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;WOA23&#39;</span><span class="p">,</span> <span class="s1">&#39;PHC&#39;</span><span class="p">,</span> <span class="s1">&#39;EN4_1900&#39;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unknown initial_condition </span><span class="si">{</span><span class="n">initial_condition</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_condition</span> <span class="o">=</span> <span class="n">initial_condition</span>
+        <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span> <span class="ow">and</span> <span class="n">adjustment_fraction</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Must provide adjustment_fraction for &#39;</span>
+                             <span class="s1">&#39;initializing meshes with ice-shelf cavities&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adjustment_fraction</span> <span class="o">=</span> <span class="n">adjustment_fraction</span>
+
+        <span class="n">package</span> <span class="o">=</span> <span class="s1">&#39;compass.ocean.tests.global_ocean.init&#39;</span>
+
+        <span class="c1"># generate the namelist, replacing a few default options</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;namelist.init&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
+            <span class="n">package</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;namelist.</span><span class="si">{</span><span class="n">initial_condition</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;namelist.wisc&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+
+        <span class="c1"># generate the streams file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;streams.init&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;streams.wisc&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+
+        <span class="n">mesh_package</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">package</span>
+        <span class="n">mesh_package_contents</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">contents</span><span class="p">(</span><span class="n">mesh_package</span><span class="p">))</span>
+        <span class="n">mesh_namelist</span> <span class="o">=</span> <span class="s1">&#39;namelist.init&#39;</span>
+        <span class="k">if</span> <span class="n">mesh_namelist</span> <span class="ow">in</span> <span class="n">mesh_package_contents</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">mesh_package</span><span class="p">,</span> <span class="n">mesh_namelist</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+
+        <span class="n">mesh_streams</span> <span class="o">=</span> <span class="s1">&#39;streams.init&#39;</span>
+        <span class="k">if</span> <span class="n">mesh_streams</span> <span class="ow">in</span> <span class="n">mesh_package_contents</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">mesh_package</span><span class="p">,</span> <span class="n">mesh_streams</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+
+        <span class="n">options</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;config_global_ocean_topography_source&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;mpas_variable&#39;&quot;</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;streams.topo&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">culled_topo_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cull_step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;cull_mesh&#39;</span><span class="p">]</span>
+            <span class="n">culled_topo_path</span> <span class="o">=</span> <span class="n">cull_step</span><span class="o">.</span><span class="n">path</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">culled_topo_path</span><span class="p">,</span> <span class="s1">&#39;topography_culled.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;topography_culled.nc&#39;</span><span class="p">,</span>
+                            <span class="n">work_dir_target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;wind_stress.nc&#39;</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;windStress.ncep_1958-2000avg.interp3600x2431.151106.nc&#39;</span><span class="p">,</span>
+            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;initial_condition_database&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">initial_condition</span> <span class="o">==</span> <span class="s1">&#39;WOA23&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;woa23.nc&#39;</span><span class="p">,</span>
+                <span class="n">target</span><span class="o">=</span><span class="s1">&#39;woa23_decav_0.25_jan_extrap.20230416.nc&#39;</span><span class="p">,</span>
+                <span class="n">database</span><span class="o">=</span><span class="s1">&#39;initial_condition_database&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">initial_condition</span> <span class="o">==</span> <span class="s1">&#39;PHC&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;temperature.nc&#39;</span><span class="p">,</span>
+                <span class="n">target</span><span class="o">=</span><span class="s1">&#39;PotentialTemperature.01.filled.60levels.PHC.151106.nc&#39;</span><span class="p">,</span>
+                <span class="n">database</span><span class="o">=</span><span class="s1">&#39;initial_condition_database&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;salinity.nc&#39;</span><span class="p">,</span>
+                <span class="n">target</span><span class="o">=</span><span class="s1">&#39;Salinity.01.filled.60levels.PHC.151106.nc&#39;</span><span class="p">,</span>
+                <span class="n">database</span><span class="o">=</span><span class="s1">&#39;initial_condition_database&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># EN4_1900</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;temperature.nc&#39;</span><span class="p">,</span>
+                <span class="n">target</span><span class="o">=</span><span class="s1">&#39;PotentialTemperature.100levels.Levitus.&#39;</span>
+                       <span class="s1">&#39;EN4_1900estimate.200813.nc&#39;</span><span class="p">,</span>
+                <span class="n">database</span><span class="o">=</span><span class="s1">&#39;initial_condition_database&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;salinity.nc&#39;</span><span class="p">,</span>
+                <span class="n">target</span><span class="o">=</span><span class="s1">&#39;Salinity.100levels.Levitus.EN4_1900estimate.200813.nc&#39;</span><span class="p">,</span>
+                <span class="n">database</span><span class="o">=</span><span class="s1">&#39;initial_condition_database&#39;</span><span class="p">)</span>
+
+        <span class="n">mesh_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">get_cull_mesh_path</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/culled_graph.info&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;land_ice_mask.nc&#39;</span><span class="p">,</span>
+                <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/land_ice_mask.nc&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;initial_state.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;init_mode_forcing_data.nc&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;graph.info&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">file</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InitialState.setup">
+<a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.initial_state.InitialState.setup.html#compass.ocean.tests.global_ocean.init.initial_state.InitialState.setup">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get resources at setup from config options</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_resources</span><span class="p">()</span>
+        <span class="n">rx1_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;rx1_max&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">({</span><span class="s1">&#39;config_rx1_max&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">rx1_max</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">},</span>
+                                  <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_resources</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update resources at runtime from config options</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_resources</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">constrain_resources</span><span class="p">(</span><span class="n">available_resources</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">runtime_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the Haney number at runtime based on the config option.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rx1_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;rx1_max&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">({</span><span class="s1">&#39;config_rx1_max&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">rx1_max</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">})</span>
+
+<div class="viewcode-block" id="InitialState.run">
+<a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.initial_state.InitialState.run.html#compass.ocean.tests.global_ocean.init.initial_state.InitialState.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run this step of the testcase</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">]</span>
+        <span class="n">topo_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smooth_topography</span><span class="p">()</span>
+
+        <span class="n">interfaces</span> <span class="o">=</span> <span class="n">generate_1d_grid</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+
+        <span class="n">write_1d_grid</span><span class="p">(</span><span class="n">interfaces</span><span class="o">=</span><span class="n">interfaces</span><span class="p">,</span> <span class="n">out_filename</span><span class="o">=</span><span class="s1">&#39;vertical_grid.nc&#39;</span><span class="p">)</span>
+        <span class="n">plot_vertical_grid</span><span class="p">(</span><span class="n">grid_filename</span><span class="o">=</span><span class="s1">&#39;vertical_grid.nc&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+                           <span class="n">out_filename</span><span class="o">=</span><span class="s1">&#39;vertical_grid.png&#39;</span><span class="p">)</span>
+
+        <span class="n">min_levels</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;min_levels&#39;</span><span class="p">)</span>
+        <span class="c1"># minimum depth will be the depth of the middle of the minimum layer</span>
+        <span class="c1"># so that MPAS-Ocean init mode will convert it back to the same</span>
+        <span class="c1"># minimm number of levels</span>
+        <span class="n">min_depth</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">interfaces</span><span class="p">[</span><span class="n">min_levels</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
+                           <span class="n">interfaces</span><span class="p">[</span><span class="n">min_levels</span><span class="p">])</span>
+        <span class="n">namelist</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_global_ocean_minimum_depth&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">min_depth</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
+            <span class="n">frac</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adjustment_fraction</span>
+            <span class="n">cavity_min_levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;cavity_min_levels&#39;</span><span class="p">)</span>
+            <span class="n">min_thick_init</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span>
+                <span class="s1">&#39;cavity_min_layer_thickness_initial&#39;</span><span class="p">)</span>
+            <span class="n">min_thick_final</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span>
+                <span class="s1">&#39;cavity_min_layer_thickness_final&#39;</span><span class="p">)</span>
+            <span class="n">cavity_min_layer_thickness</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">frac</span><span class="p">)</span> <span class="o">*</span> <span class="n">min_thick_init</span> <span class="o">+</span> <span class="n">frac</span> <span class="o">*</span> <span class="n">min_thick_final</span><span class="p">)</span>
+            <span class="n">namelist</span><span class="p">[</span><span class="s1">&#39;config_rx1_min_levels&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cavity_min_levels</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">namelist</span><span class="p">[</span><span class="s1">&#39;config_rx1_min_layer_thickness&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cavity_min_layer_thickness</span><span class="si">}</span><span class="s1">&#39;</span>
+
+            <span class="n">min_water_column_thickness</span> <span class="o">=</span> \
+                <span class="n">cavity_min_layer_thickness</span> <span class="o">*</span> <span class="n">cavity_min_levels</span>
+
+            <span class="n">topo_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dig_cavity_bed_elevation</span><span class="p">(</span>
+                <span class="n">topo_filename</span><span class="p">,</span> <span class="n">min_water_column_thickness</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span><span class="n">namelist</span><span class="p">)</span>
+
+        <span class="n">symlink</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">topo_filename</span><span class="p">,</span> <span class="n">link_name</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">)</span>
+
+        <span class="n">update_pio</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;init_update_pio&#39;</span><span class="p">)</span>
+        <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_pio</span><span class="o">=</span><span class="n">update_pio</span><span class="p">)</span>
+
+        <span class="n">add_mesh_and_init_metadata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span>
+                                   <span class="n">init_filename</span><span class="o">=</span><span class="s1">&#39;initial_state.nc&#39;</span><span class="p">)</span>
+
+        <span class="n">plot_initial_state</span><span class="p">(</span><span class="n">input_file_name</span><span class="o">=</span><span class="s1">&#39;initial_state.nc&#39;</span><span class="p">,</span>
+                           <span class="n">output_file_name</span><span class="o">=</span><span class="s1">&#39;initial_state.png&#39;</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># get the these properties from the config options</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;init_ntasks&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;init_min_tasks&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">openmp_threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;init_threads&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span>
+                                           <span class="s1">&#39;init_cpus_per_task&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_cpus_per_task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_smooth_topography</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Smooth the topography using a Gaussian filter &quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">]</span>
+        <span class="n">num_passes</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;topo_smooth_num_passes&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">num_passes</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># just return the culled topography file name</span>
+            <span class="k">return</span> <span class="s1">&#39;topography_culled.nc&#39;</span>
+
+        <span class="n">distance_limit</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;topo_smooth_distance_limit&#39;</span><span class="p">)</span>
+        <span class="n">std_deviation</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;topo_smooth_std_deviation&#39;</span><span class="p">)</span>
+
+        <span class="n">template</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">read_text</span><span class="p">(</span>
+            <span class="s1">&#39;compass.ocean.tests.global_ocean.init&#39;</span><span class="p">,</span> <span class="s1">&#39;smooth_topo.template&#39;</span><span class="p">))</span>
+
+        <span class="n">text</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">num_passes</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">num_passes</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                               <span class="n">distance_limit</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">distance_limit</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                               <span class="n">std_deviation</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">std_deviation</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># add trailing end line</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;smooth_depth_in&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ocean_smooth_topo_before_init&#39;</span><span class="p">],</span>
+                   <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+
+        <span class="n">out_filename</span> <span class="o">=</span> <span class="s1">&#39;topography_smoothed.nc&#39;</span>
+        <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;topography_culled.nc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds_topo</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;topography_orig_and_smooth.nc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds_smooth</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bed_elevation&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceDraftObserved&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;landIceThkObserved&#39;</span><span class="p">]:</span>
+                    <span class="n">attrs</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span>
+                    <span class="n">ds_topo</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_smooth</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s1">New&#39;</span><span class="p">]</span>
+                    <span class="n">ds_topo</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">attrs</span>
+
+            <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_topo</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out_filename</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_dig_cavity_bed_elevation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_filename</span><span class="p">,</span>
+                                  <span class="n">min_water_column_thickness</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Dig bed elevation to preserve minimum water-column thickness &quot;&quot;&quot;</span>
+
+        <span class="n">out_filename</span> <span class="o">=</span> <span class="s1">&#39;topography_dig_bed.nc&#39;</span>
+        <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">in_filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds_topo</span><span class="p">:</span>
+            <span class="n">bed</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="o">.</span><span class="n">bed_elevation</span>
+            <span class="n">attrs</span> <span class="o">=</span> <span class="n">bed</span><span class="o">.</span><span class="n">attrs</span>
+            <span class="n">draft</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="o">.</span><span class="n">landIceDraftObserved</span>
+            <span class="n">max_bed</span> <span class="o">=</span> <span class="n">draft</span> <span class="o">-</span> <span class="n">min_water_column_thickness</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">draft</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">bed</span> <span class="o">&lt;</span> <span class="n">max_bed</span><span class="p">)</span>
+            <span class="n">bed</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">bed</span><span class="p">,</span> <span class="n">max_bed</span><span class="p">)</span>
+            <span class="n">ds_topo</span><span class="p">[</span><span class="s1">&#39;bed_elevation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bed</span>
+            <span class="n">ds_topo</span><span class="p">[</span><span class="s1">&#39;bed_elevation&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">attrs</span>
+
+            <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_topo</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out_filename</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,311 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.ocean.tests.isomip_plus.geom &mdash; compass 1.6.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=72d88caf"></script>
+      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../ocean.html">compass.ocean</a></li>
+          <li class="breadcrumb-item"><a href="../isomip_plus.html">compass.ocean.tests.isomip_plus</a></li>
+      <li class="breadcrumb-item active">compass.ocean.tests.isomip_plus.geom</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.ocean.tests.isomip_plus.geom</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.mesh.interpolation</span><span class="w"> </span><span class="kn">import</span> <span class="n">interp_bilin</span>
+
+
+<div class="viewcode-block" id="interpolate_ocean_mask">
+<a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask.html#compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">interpolate_ocean_mask</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds_geom</span><span class="p">,</span> <span class="n">min_ocean_fraction</span><span class="p">,</span>
+                           <span class="n">thin_film_present</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Interpolate the ocean mask from the original BISICLES grid to the MPAS</span>
+<span class="sd">    mesh.  This is handled separately from other fields because the ocean mask</span>
+<span class="sd">    is needed to cull land cells from the MPAS mesh before interpolating the</span>
+<span class="sd">    remaining fields.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ds_mesh : xarray.Dataset</span>
+<span class="sd">        An MPAS-Ocean mesh</span>
+
+<span class="sd">    ds_geom : xarray.Dataset</span>
+<span class="sd">        Ice-sheet topography produced by</span>
+<span class="sd">        :py:class:`compass.ocean.tests.isomip_plus.process_geom.ProcessGeom`</span>
+
+<span class="sd">    min_ocean_fraction : float</span>
+<span class="sd">        The minimum ocean fraction after interpolation, below which the cell</span>
+<span class="sd">        is masked as land (which is not distinguished from grounded ice)</span>
+
+<span class="sd">    thin_film_present: bool</span>
+<span class="sd">        Whether domain contains a thin film below grounded ice</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ds_mask : xarray.Dataset</span>
+<span class="sd">        A dataset containing ``regionCellMasks``, a field with the ocean mask</span>
+<span class="sd">        that can be used to cull land cells from the mesh</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x_cell</span><span class="p">,</span> <span class="n">y_cell</span><span class="p">,</span> <span class="n">ocean_fraction</span> <span class="o">=</span> <span class="n">_get_geom_fields</span><span class="p">(</span>
+        <span class="n">ds_geom</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">thin_film_present</span><span class="p">)</span>
+
+    <span class="n">ds_mask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+
+    <span class="n">valid</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">x_cell</span> <span class="o">&gt;=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x_cell</span> <span class="o">&lt;=</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">y_cell</span> <span class="o">&gt;=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y_cell</span> <span class="o">&lt;=</span> <span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="n">x_cell</span> <span class="o">=</span> <span class="n">x_cell</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span>
+    <span class="n">y_cell</span> <span class="o">=</span> <span class="n">y_cell</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span>
+    <span class="n">ocean_frac_observed</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ds_mesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">])</span>
+    <span class="n">ocean_frac_observed</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span> <span class="o">=</span> <span class="n">interp_bilin</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ocean_fraction</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                                              <span class="n">x_cell</span><span class="p">,</span> <span class="n">y_cell</span><span class="p">)</span>
+
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">ocean_frac_observed</span> <span class="o">&gt;</span> <span class="n">min_ocean_fraction</span>
+
+    <span class="n">n_cells</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">ds_mask</span><span class="p">[</span><span class="s1">&#39;regionCellMasks&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nRegions&#39;</span><span class="p">),</span>
+                                  <span class="n">mask</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_cells</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">ds_mask</span></div>
+
+
+
+<div class="viewcode-block" id="interpolate_geom">
+<a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.geom.interpolate_geom.html#compass.ocean.tests.isomip_plus.geom.interpolate_geom">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">interpolate_geom</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds_geom</span><span class="p">,</span> <span class="n">min_ocean_fraction</span><span class="p">,</span> <span class="n">thin_film_present</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Interpolate the ice geometry from the original BISICLES grid to the MPAS</span>
+<span class="sd">    mesh.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ds_mesh : xarray.Dataset</span>
+<span class="sd">        An MPAS-Ocean mesh</span>
+
+<span class="sd">    ds_geom : xarray.Dataset</span>
+<span class="sd">        Ice-sheet topography produced by</span>
+<span class="sd">        :py:class:`compass.ocean.tests.isomip_plus.process_geom.ProcessGeom`</span>
+
+<span class="sd">    min_ocean_fraction : float</span>
+<span class="sd">        The minimum ocean fraction after interpolation, below which the cell</span>
+<span class="sd">        is masked as land (which is not distinguished from grounded ice)</span>
+
+<span class="sd">    thin_film_present: bool</span>
+<span class="sd">        Whether domain contains a thin film below grounded ice</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ds_out : xarray.Dataset</span>
+<span class="sd">        A dataset containing :</span>
+
+<span class="sd">        * ``bottomDepthObserved`` -- the bedrock elevation (positive up)</span>
+
+<span class="sd">        * ``ssh`` -- the sea surface height</span>
+
+<span class="sd">        * ``oceanFracObserved`` -- the fraction of the mesh cell that is ocean</span>
+
+<span class="sd">        * ``landIceFraction`` -- the fraction of the mesh cell that is covered</span>
+<span class="sd">          by land ice, grounded or floating</span>
+
+<span class="sd">        * ``landIceFloatingFraction`` -- the fraction of the mesh cell that is</span>
+<span class="sd">          covered by an ice shelf</span>
+
+<span class="sd">        * ``smoothedDraftMask`` -- a smoothed version of the floating mask that</span>
+<span class="sd">          may be useful for determining where to alter the vertical coordinate</span>
+<span class="sd">          to accommodate ice-shelf cavities</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x_cell</span><span class="p">,</span> <span class="n">y_cell</span><span class="p">,</span> <span class="n">ocean_fraction</span> <span class="o">=</span> <span class="n">_get_geom_fields</span><span class="p">(</span>
+        <span class="n">ds_geom</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">thin_film_present</span><span class="p">)</span>
+
+    <span class="n">ds_out</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">)</span>
+    <span class="n">ds_out</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">attrs</span>
+
+    <span class="n">ds_geom</span><span class="p">[</span><span class="s1">&#39;oceanFraction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ocean_fraction</span>
+    <span class="n">ds_geom</span><span class="p">[</span><span class="s1">&#39;landIceFraction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">ds_geom</span><span class="o">.</span><span class="n">landIceFloatingFraction</span> <span class="o">+</span>
+                                  <span class="n">ds_geom</span><span class="o">.</span><span class="n">landIceGroundedFraction</span><span class="p">)</span>
+
+    <span class="c1"># mask the topography to the ocean region before interpolation</span>
+    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Z_bed&#39;</span><span class="p">,</span> <span class="s1">&#39;Z_ice_draft&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceFraction&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;landIceFloatingFraction&#39;</span><span class="p">,</span> <span class="s1">&#39;smoothedDraftMask&#39;</span><span class="p">]:</span>
+        <span class="n">ds_geom</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_geom</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">*</span> <span class="n">ds_geom</span><span class="p">[</span><span class="s1">&#39;oceanFraction&#39;</span><span class="p">]</span>
+
+    <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;bottomDepthObserved&#39;</span><span class="p">:</span> <span class="s1">&#39;Z_bed&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;ssh&#39;</span><span class="p">:</span> <span class="s1">&#39;Z_ice_draft&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">:</span> <span class="s1">&#39;oceanFraction&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;landIceFraction&#39;</span><span class="p">:</span> <span class="s1">&#39;landIceFraction&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;landIceGroundedFraction&#39;</span><span class="p">:</span> <span class="s1">&#39;landIceGroundedFraction&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;landIceFloatingFraction&#39;</span><span class="p">:</span> <span class="s1">&#39;landIceFloatingFraction&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;smoothedDraftMask&#39;</span><span class="p">:</span> <span class="s1">&#39;smoothedDraftMask&#39;</span><span class="p">}</span>
+
+    <span class="n">valid</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">x_cell</span> <span class="o">&gt;=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x_cell</span> <span class="o">&lt;=</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">y_cell</span> <span class="o">&gt;=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y_cell</span> <span class="o">&lt;=</span> <span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">valid</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Something went wrong with culling.  There are still &#39;</span>
+                         <span class="s1">&#39;out-of-range cells in the culled mesh.&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">outfield</span><span class="p">,</span> <span class="n">infield</span> <span class="ow">in</span> <span class="n">fields</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="n">interp_bilin</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ds_geom</span><span class="p">[</span><span class="n">infield</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">x_cell</span><span class="p">,</span> <span class="n">y_cell</span><span class="p">)</span>
+        <span class="n">ds_out</span><span class="p">[</span><span class="n">outfield</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nCells&#39;</span><span class="p">,),</span> <span class="n">field</span><span class="p">)</span>
+
+    <span class="n">ocean_frac_observed</span> <span class="o">=</span> <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">ocean_frac_observed</span> <span class="o">&gt;</span> <span class="n">min_ocean_fraction</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Something went wrong with culling.  There are still &#39;</span>
+                         <span class="s1">&#39;non-ocean cells in the culled mesh.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Do not include landIceFloatingFraction here so that fractional melt</span>
+    <span class="c1"># fluxes are represented</span>
+    <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bottomDepthObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;ssh&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceFraction&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;smoothedDraftMask&#39;</span><span class="p">]:</span>
+        <span class="n">ds_out</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_out</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">/</span> <span class="n">ocean_frac_observed</span>
+
+    <span class="k">return</span> <span class="n">ds_out</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_geom_fields</span><span class="p">(</span><span class="n">ds_geom</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">thin_film_present</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">ds_geom</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">ds_geom</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">x_cell</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">xIsomipCell</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">y_cell</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">yIsomipCell</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="k">if</span> <span class="n">thin_film_present</span><span class="p">:</span>
+        <span class="n">ocean_fraction</span> <span class="o">=</span> <span class="o">-</span> <span class="n">ds_geom</span><span class="p">[</span><span class="s1">&#39;landFraction&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1.0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ocean_fraction</span> <span class="o">=</span> <span class="p">(</span><span class="n">ds_geom</span><span class="p">[</span><span class="s1">&#39;landIceFloatingFraction&#39;</span><span class="p">]</span> <span class="o">+</span>
+                          <span class="n">ds_geom</span><span class="p">[</span><span class="s1">&#39;openOceanFraction&#39;</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x_cell</span><span class="p">,</span> <span class="n">y_cell</span><span class="p">,</span> <span class="n">ocean_fraction</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

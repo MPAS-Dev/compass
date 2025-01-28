@@ -1,0 +1,369 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perlmutter &mdash; compass 1.6.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=72d88caf"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Quick Start for Developers" href="../../developers_guide/quick_start.html" />
+    <link rel="prev" title="CompyMcNodeFace" href="compy.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Machines</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#config-options">config options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#slurm-job-queueing">Slurm job queueing</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#supported-machines">Supported Machines</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="anvil.html">Anvil</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chicoma.html">Chicoma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chrysalis.html">Chrysalis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compy.html">CompyMcNodeFace</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Perlmutter</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#perlmutter-cpu">Perlmutter-CPU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#jupyter-notebook-on-remote-data">Jupyter notebook on remote data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#other-machines">Other Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id4">MPICH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id5">OpenMPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#no-mpi-from-conda-forge">No MPI from conda-forge</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Machines</a></li>
+      <li class="breadcrumb-item active">Perlmutter</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/users_guide/machines/perlmutter.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="perlmutter">
+<span id="machine-perlmutter"></span><h1>Perlmutter<a class="headerlink" href="#perlmutter" title="Link to this heading"></a></h1>
+<p>login: <code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">$my_username&#64;perlmutter-p1.nersc.gov</span></code></p>
+<p>interactive login:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># for CPU:</span>
+salloc<span class="w"> </span>--partition<span class="o">=</span>debug<span class="w"> </span>--nodes<span class="o">=</span><span class="m">1</span><span class="w"> </span>--time<span class="o">=</span><span class="m">30</span>:00<span class="w"> </span>-C<span class="w"> </span>cpu
+
+<span class="c1"># for GPU:</span>
+salloc<span class="w"> </span>--partition<span class="o">=</span>debug<span class="w"> </span>--nodes<span class="o">=</span><span class="m">1</span><span class="w"> </span>--time<span class="o">=</span><span class="m">30</span>:00<span class="w"> </span>-C<span class="w"> </span>gpu
+</pre></div>
+</div>
+<p>Compute time:</p>
+<ul class="simple">
+<li><p>Check hours of compute usage at <a class="reference external" href="https://iris.nersc.gov/">https://iris.nersc.gov/</a></p></li>
+</ul>
+<p>File system:</p>
+<ul class="simple">
+<li><p>Overview: <a class="reference external" href="https://docs.nersc.gov/filesystems/">https://docs.nersc.gov/filesystems/</a></p></li>
+<li><p>home directory: <code class="docutils literal notranslate"><span class="pre">$HOME</span></code></p></li>
+<li><p>scratch directory: <code class="docutils literal notranslate"><span class="pre">$SCRATCH</span></code></p></li>
+<li><p>Check your individual disk usage with <code class="docutils literal notranslate"><span class="pre">myquota</span></code></p></li>
+<li><p>Check the group disk usage with <code class="docutils literal notranslate"><span class="pre">prjquota</span>&#160; <span class="pre">projectID</span></code>, i.e.
+<code class="docutils literal notranslate"><span class="pre">prjquota</span>&#160; <span class="pre">m1795</span></code> or <code class="docutils literal notranslate"><span class="pre">prjquota</span>&#160; <span class="pre">e3sm</span></code></p></li>
+</ul>
+<p>Archive:</p>
+<ul class="simple">
+<li><p>NERSC uses HPSS with the commands <code class="docutils literal notranslate"><span class="pre">hsi</span></code> and <code class="docutils literal notranslate"><span class="pre">htar</span></code></p></li>
+<li><p>overview: <a class="reference external" href="https://docs.nersc.gov/filesystems/archive/">https://docs.nersc.gov/filesystems/archive/</a></p></li>
+<li><p>E3SM uses <a class="reference external" href="https://e3sm-project.github.io/zstash/">zstash</a></p></li>
+</ul>
+<section id="perlmutter-cpu">
+<h2>Perlmutter-CPU<a class="headerlink" href="#perlmutter-cpu" title="Link to this heading"></a></h2>
+<p><strong>There has not yet been a release with Perlmutter-CPU, so the following applies
+to the release of compass v1.2.0, when it happens.</strong></p>
+<p>Perlmutter’s CPU and GPU nodes have different configuration options and
+compilers.  We only support Perlmutter-CPU at this time.</p>
+<section id="config-options">
+<h3>config options<a class="headerlink" href="#config-options" title="Link to this heading"></a></h3>
+<p>Here are the default
+config options added when you choose <code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">pm-cpu</span></code> when setting up test
+cases or a test suite:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The paths section describes paths that are used within the ocean core test</span>
+<span class="c1"># cases.</span>
+<span class="k">[paths]</span>
+
+<span class="c1"># A shared root directory where MPAS standalone data can be found</span>
+<span class="na">database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/e3sm/mpas_standalonedata</span>
+
+<span class="c1"># the path to the base conda environment where compass environments have</span>
+<span class="c1"># been created</span>
+<span class="na">compass_envs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/common/software/e3sm/compass/pm-cpu/base</span>
+
+
+<span class="c1"># Options related to deploying a compass conda environment on supported</span>
+<span class="c1"># machines</span>
+<span class="k">[deploy]</span>
+
+<span class="c1"># the compiler set to use for system libraries and MPAS builds</span>
+<span class="na">compiler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">gnu</span>
+
+<span class="c1"># the system MPI library to use for gnu compiler</span>
+<span class="na">mpi_gnu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpich</span>
+
+<span class="c1"># the base path for spack environments used by compass</span>
+<span class="na">spack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/e3sm/software/compass/pm-cpu/spack</span>
+
+<span class="c1"># whether to use the same modules for hdf5, netcdf-c, netcdf-fortran and</span>
+<span class="c1"># pnetcdf as E3SM (spack modules are used otherwise)</span>
+<span class="na">use_e3sm_hdf5_netcdf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+
+<span class="c1"># The parallel section describes options related to running jobs in parallel.</span>
+<span class="c1"># Most options in this section come from mache so here we just add or override</span>
+<span class="c1"># some defaults</span>
+<span class="k">[parallel]</span>
+
+<span class="c1"># cores per node on the machine</span>
+<span class="na">cores_per_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">128</span>
+
+<span class="c1"># threads per core (set to 1 because trying to hyperthread seems to be causing</span>
+<span class="c1"># hanging on perlmutter)</span>
+<span class="na">threads_per_core</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+</pre></div>
+</div>
+<p>Additionally, some relevant config options come from the
+<a class="reference external" href="https://github.com/E3SM-Project/mache/">mache</a> package:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The parallel section describes options related to running jobs in parallel</span>
+<span class="k">[parallel]</span>
+
+<span class="c1"># parallel system of execution: slurm, cobalt or single_node</span>
+<span class="na">system</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">slurm</span>
+
+<span class="c1"># whether to use mpirun or srun to run a task</span>
+<span class="na">parallel_executable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">srun</span>
+
+<span class="c1"># cores per node on the machine</span>
+<span class="na">cores_per_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">256</span>
+
+<span class="c1"># account for running diagnostics jobs</span>
+<span class="na">account</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">e3sm</span>
+
+<span class="c1"># available constraint(s) (default is the first)</span>
+<span class="na">constraints</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">cpu</span>
+
+<span class="c1"># quality of service (default is the first)</span>
+<span class="na">qos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">regular, premium, debug</span>
+
+<span class="c1"># Config options related to spack environments</span>
+<span class="k">[spack]</span>
+
+<span class="c1"># whether to load modules from the spack yaml file before loading the spack</span>
+<span class="c1"># environment</span>
+<span class="na">modules_before</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+
+<span class="c1"># whether to load modules from the spack yaml file after loading the spack</span>
+<span class="c1"># environment</span>
+<span class="na">modules_after</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+
+<span class="c1"># whether the machine uses cray compilers</span>
+<span class="na">cray_compilers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+</pre></div>
+</div>
+</section>
+<section id="hyperthreading">
+<h3>Hyperthreading<a class="headerlink" href="#hyperthreading" title="Link to this heading"></a></h3>
+<p>By default, hyperthreading has been disable on Perlmutter. We had found some
+some issues with runs hanging in early testing that seemed to be mitigated by
+disabling hyperthreading.  We disable hyperthreading by setting
+<code class="docutils literal notranslate"><span class="pre">threads_per_core</span> <span class="pre">=</span> <span class="pre">1</span></code> and reducing <code class="docutils literal notranslate"><span class="pre">cores_per_node</span></code> to not include the
+2 hyperthreads.  You can re-enable hyperthreading on Perlmutter by providing a
+user config file where you set <code class="docutils literal notranslate"><span class="pre">threads_per_core</span></code> and <code class="docutils literal notranslate"><span class="pre">cores_per_node</span></code>
+as follows:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The parallel section describes options related to running jobs in parallel</span>
+<span class="k">[parallel]</span>
+
+<span class="c1"># cores per node on the machine (including hyperthreading)</span>
+<span class="na">cores_per_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">256</span>
+
+<span class="c1"># threads per core with hyperthreading</span>
+<span class="na">threads_per_core</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
+</pre></div>
+</div>
+</section>
+<section id="gnu-on-perlmutter-cpu">
+<h3>Gnu on Perlmutter-CPU<a class="headerlink" href="#gnu-on-perlmutter-cpu" title="Link to this heading"></a></h3>
+<p>To load the compass environment and modules, and set appropriate environment
+variables:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>/global/cfs/cdirs/e3sm/software/compass/pm-cpu/load_latest_compass_gnu_mpich.sh
+</pre></div>
+</div>
+<p>To build the MPAS model with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span><span class="o">[</span><span class="nv">DEBUG</span><span class="o">=</span>true<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="nv">OPENMP</span><span class="o">=</span>true<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="nv">ALBANY</span><span class="o">=</span>true<span class="o">]</span><span class="w"> </span>gnu-cray
+</pre></div>
+</div>
+</section>
+</section>
+<section id="jupyter-notebook-on-remote-data">
+<h2>Jupyter notebook on remote data<a class="headerlink" href="#jupyter-notebook-on-remote-data" title="Link to this heading"></a></h2>
+<p>You can run Jupyter notebooks on NERSC with direct access to scratch data as
+follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>-Y<span class="w"> </span>-L<span class="w"> </span><span class="m">8844</span>:localhost:8844<span class="w"> </span>MONIKER@perlmutter-p1.nersc.gov
+jupyter<span class="w"> </span>notebook<span class="w"> </span>--no-browser<span class="w"> </span>--port<span class="w"> </span><span class="m">8844</span>
+<span class="c1"># in local browser, go to:</span>
+http://localhost:8844/
+</pre></div>
+</div>
+<p>Note that on NERSC, you can also use their
+<a class="reference external" href="https://jupyter.nersc.gov/">Jupyter server</a>,
+it’s really nice and grabs a compute node for you automatically on logon.
+You’ll need to create a python kernel from e3sm-unified following these steps
+(taken from <a class="reference external" href="https://docs.nersc.gov/connect/jupyter/">https://docs.nersc.gov/connect/jupyter/</a>).  After creating the
+kernel, you just go to “Change Kernel” in the Jupyter notebook and you’re ready
+to go.</p>
+<p>You can use one of NERSC’s default Python 3 or R kernels. If you have a
+Conda environment, depending on how it is installed, it may just show up in the
+list of kernels you can use. If not, use the following procedure to enable a
+custom kernel based on a Conda environment. Let’s start by assuming you are a
+user with username <code class="docutils literal notranslate"><span class="pre">user</span></code> who wants to create a Conda environment on
+Perlmutter and use it from Jupyter.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module<span class="w"> </span>load<span class="w"> </span>python
+conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>myenv<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7<span class="w"> </span>ipykernel<span class="w"> </span>&lt;further-packages-to-install&gt;
+&lt;...<span class="w"> </span>installation<span class="w"> </span>messages<span class="w"> </span>...&gt;
+<span class="nb">source</span><span class="w"> </span>activate<span class="w"> </span>myenv
+python<span class="w"> </span>-m<span class="w"> </span>ipykernel<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>--name<span class="w"> </span>myenv<span class="w"> </span>--display-name<span class="w"> </span>MyEnv
+<span class="w">   </span>Installed<span class="w"> </span>kernelspec<span class="w"> </span>myenv<span class="w"> </span><span class="k">in</span><span class="w"> </span>/global/u1/u/user/.local/share/jupyter/kernels/myenv
+</pre></div>
+</div>
+<p>Be sure to specify what version of Python interpreter you want installed. This
+will create and install a JSON file called a “kernel spec” in <code class="docutils literal notranslate"><span class="pre">kernel.json</span></code> at
+the path described in the install command output.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;argv&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;/global/homes/u/user/.conda/envs/myenv/bin/python&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;-m&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ipykernel_launcher&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;-f&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;{connection_file}&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;display_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MyEnv&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;language&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;python&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="compy.html" class="btn btn-neutral float-left" title="CompyMcNodeFace" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../developers_guide/quick_start.html" class="btn btn-neutral float-right" title="Quick Start for Developers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
