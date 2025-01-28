@@ -1,0 +1,1439 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>global_ocean &mdash; compass 1.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/documentation_options.js?v=1f29e9d3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="gotm" href="gotm.html" />
+    <link rel="prev" title="global_convergence" href="global_convergence.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../landice/index.html">Landice core</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Ocean core</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Test groups</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="baroclinic_channel.html">baroclinic_channel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dam_break.html">dam_break</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drying_slope.html">drying_slope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="global_convergence.html">global_convergence</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">global_ocean</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#framework">Framework</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-cases">Test cases</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gotm.html">gotm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hurricane.html">hurricane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ice_shelf_2d.html">ice_shelf_2d</a></li>
+<li class="toctree-l3"><a class="reference internal" href="internal_wave.html">internal_wave</a></li>
+<li class="toctree-l3"><a class="reference internal" href="isomip_plus.html">isomip_plus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lock_exchange.html">lock_exchange</a></li>
+<li class="toctree-l3"><a class="reference internal" href="merry_go_round.html">merry_go_round</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nonhydro.html">nonhydro</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overflow.html">overflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="parabolic_bowl.html">parabolic_bowl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="planar_convergence.html">planar_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soma.html">soma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sphere_transport.html">sphere_transport</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spherical_harmonic_transform.html">spherical_harmonic_transform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tides.html">tides</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utility.html">utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ziso.html">ziso</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../framework.html">Ocean framework</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Ocean core</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Test groups</a></li>
+      <li class="breadcrumb-item active">global_ocean</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/developers_guide/ocean/test_groups/global_ocean.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="global-ocean">
+<span id="dev-ocean-global-ocean"></span><h1>global_ocean<a class="headerlink" href="#global-ocean" title="Link to this heading">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> test group
+(<a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.GlobalOcean.html#compass.ocean.tests.global_ocean.GlobalOcean" title="compass.ocean.tests.global_ocean.GlobalOcean"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.GlobalOcean</span></code></a>)
+creates meshes and initial conditions, and performs testing and dynamic
+adjustment for global, realistic ocean domains. It includes 9 test cases on 5
+meshes, with the expectation that more meshes from <a class="reference internal" href="../../../index.html#legacy-compass"><span class="std std-ref">Legacy COMPASS</span></a> will
+be added in the near future.</p>
+<section id="framework">
+<span id="dev-ocean-global-ocean-framework"></span><h2>Framework<a class="headerlink" href="#framework" title="Link to this heading">¶</a></h2>
+<p>The shared config options for the <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> test group
+are described in <a class="reference internal" href="../../../users_guide/ocean/test_groups/global_ocean.html#ocean-global-ocean"><span class="std std-ref">global_ocean</span></a> in the User’s Guide.</p>
+<p>Additionally, the test group has several shared namelist and streams files,
+some for shared parameters and streams for forward runs (<code class="docutils literal notranslate"><span class="pre">namelist.forward</span></code>
+and <code class="docutils literal notranslate"><span class="pre">streams.forward</span></code>), and one specific to meshes with ice-shelf cavities
+(<code class="docutils literal notranslate"><span class="pre">namelist.wisc</span></code>).</p>
+<section id="metadata">
+<span id="dev-ocean-global-ocean-metadata"></span><h3>metadata<a class="headerlink" href="#metadata" title="Link to this heading">¶</a></h3>
+<p>The module <code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.metadata</span></code> determines the values
+of a set of metadata related to the E3SM mesh name, initial condition, conda
+environment, etc. that are added to nearly all <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> NetCDF output.
+See <a class="reference internal" href="../../../users_guide/ocean/test_groups/global_ocean.html#global-ocean-metadata"><span class="std std-ref">Metadata</span></a> in the User’s Guide for more details on
+what the metadata looks like.</p>
+<p>The values of some of the metadata are given in config options:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for global ocean testcases</span>
+<span class="k">[global_ocean]</span>
+
+<span class="na">...</span>
+
+<span class="c1">## metadata related to the mesh</span>
+<span class="c1"># whether to add metadata to output files</span>
+<span class="na">add_metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="c1"># the prefix (e.g. QU, EC, WC, SO)</span>
+<span class="na">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">PREFIX</span>
+<span class="c1"># a description of the mesh</span>
+<span class="na">mesh_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
+<span class="c1"># a description of the bathymetry</span>
+<span class="na">bathy_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
+<span class="c1"># a description of the mesh with ice-shelf cavities</span>
+<span class="na">init_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
+<span class="c1"># E3SM version that the mesh is intended for</span>
+<span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
+<span class="c1"># The revision number of the mesh, which should be incremented each time the</span>
+<span class="c1"># mesh is revised</span>
+<span class="na">mesh_revision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;Missing&gt;&gt;</span>
+<span class="c1"># the minimum (finest) resolution in the mesh</span>
+<span class="na">min_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
+<span class="c1"># the maximum (coarsest) resolution in the mesh, can be the same as min_res</span>
+<span class="na">max_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
+<span class="c1"># the maximum depth of the ocean, always detected automatically</span>
+<span class="na">max_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span>
+<span class="c1"># the number of vertical levels, always detected automatically</span>
+<span class="na">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span>
+
+<span class="c1"># the date the mesh was created as YYMMDD, typically detected automatically</span>
+<span class="na">creation_date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span>
+<span class="c1"># The following options are detected from .gitconfig if not explicitly entered</span>
+<span class="na">author</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span>
+<span class="na">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span>
+<span class="c1"># The URL of the pull request documenting the creation of the mesh</span>
+<span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>Each mesh should define a number of these config options, e.g. <code class="docutils literal notranslate"><span class="pre">EC30to60</span></code>
+defines:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for global ocean testcases</span>
+<span class="k">[global_ocean]</span>
+
+<span class="na">...</span>
+
+<span class="c1">## metadata related to the mesh</span>
+<span class="c1"># the prefix (e.g. QU, EC, WC, SO)</span>
+<span class="na">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">EC</span>
+<span class="c1"># a description of the mesh and initial condition</span>
+<span class="na">mesh_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MPAS Eddy Closure mesh for E3SM version ${e3sm_version} with</span>
+<span class="w">                   </span><span class="na">enhanced resolution around the equator (30 km), South pole</span>
+<span class="w">                   </span><span class="na">(35 km), Greenland (${min_res} km), ${max_res}-km resolution</span>
+<span class="w">                   </span><span class="na">at mid latitudes, and &lt;&lt;&lt;levels&gt;&gt;&gt; vertical levels</span>
+<span class="c1"># E3SM version that the mesh is intended for</span>
+<span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
+<span class="c1"># The revision number of the mesh, which should be incremented each time the</span>
+<span class="c1"># mesh is revised</span>
+<span class="na">mesh_revision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
+<span class="c1"># the minimum (finest) resolution in the mesh</span>
+<span class="na">min_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">30</span>
+<span class="c1"># the maximum (coarsest) resolution in the mesh, can be the same as min_res</span>
+<span class="na">max_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">60</span>
+<span class="c1"># The URL of the pull request documenting the creation of the mesh</span>
+<span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">&lt;&lt;&lt;levels&gt;&gt;&gt;</span></code> is a custom placeholder for the number of vertical
+levels, since this isn’t known until runtime.  There are similar placeholders
+for <code class="docutils literal notranslate"><span class="pre">&lt;&lt;&lt;creation_date&gt;&gt;&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;&lt;&lt;bottom_depth&gt;&gt;&gt;</span></code> for similar reasons.</p>
+<p>In this particular case, the <code class="docutils literal notranslate"><span class="pre">pull_request</span></code> has not yet been defined.  Each
+time the mesh is revised, the <code class="docutils literal notranslate"><span class="pre">mesh_revision</span></code> should be updated and the
+associated pull request to <a class="reference external" href="https://github.com/MPAS-Dev/compass/">https://github.com/MPAS-Dev/compass/</a> should be
+added here.</p>
+<p>The function <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.metadata.get_e3sm_mesh_names.html#compass.ocean.tests.global_ocean.metadata.get_e3sm_mesh_names" title="compass.ocean.tests.global_ocean.metadata.get_e3sm_mesh_names"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.metadata.get_e3sm_mesh_names()</span></code></a>
+is used to construct the “short” and “long” names of the mesh using a
+standard naming convention for E3SM:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">short_mesh_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_prefix</span><span class="si">}{</span><span class="n">res</span><span class="si">}</span><span class="s1">E</span><span class="si">{</span><span class="n">e3sm_version</span><span class="si">}</span><span class="s1">r</span><span class="si">{</span><span class="n">mesh_revision</span><span class="si">}</span><span class="s1">&#39;</span>
+<span class="n">long_mesh_name</span> <span class="o">=</span> \
+    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_prefix</span><span class="si">}{</span><span class="n">res</span><span class="si">}</span><span class="s1">kmL</span><span class="si">{</span><span class="n">levels</span><span class="si">}</span><span class="s1">E3SMv</span><span class="si">{</span><span class="n">e3sm_version</span><span class="si">}</span><span class="s1">r</span><span class="si">{</span><span class="n">mesh_revision</span><span class="si">}</span><span class="s1">&#39;</span>
+</pre></div>
+</div>
+<p>For example, the <code class="docutils literal notranslate"><span class="pre">QU240</span></code> mesh has the E3SM short name <code class="docutils literal notranslate"><span class="pre">QU240E2r1</span></code> and
+long name <code class="docutils literal notranslate"><span class="pre">QU240kmL16E3SMv2r1</span></code>.</p>
+</section>
+<section id="tasks">
+<span id="dev-ocean-global-ocean-tasks"></span><h3>tasks<a class="headerlink" href="#tasks" title="Link to this heading">¶</a></h3>
+<p>The function <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.tasks.get_ntasks_from_cell_count.html#compass.ocean.tests.global_ocean.tasks.get_ntasks_from_cell_count" title="compass.ocean.tests.global_ocean.tasks.get_ntasks_from_cell_count"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.tasks.get_ntasks_from_cell_count()</span></code></a>
+can be used to compute a good number of MPI tasks (both the target and the
+minimum) for MPAS-Ocean to use based on the <code class="docutils literal notranslate"><span class="pre">goal_cells_per_core</span></code> and
+<code class="docutils literal notranslate"><span class="pre">max_cells_per_core</span></code> config options as well as the number of cells in a mesh.
+The idea is that we want to run MPAS-Ocean with about 200 cells per core
+(the default value of <code class="docutils literal notranslate"><span class="pre">goal_cells_per_core</span></code>) but that we would be okay
+with as many as 2000 cells per core (the default <code class="docutils literal notranslate"><span class="pre">max_cells_per_core</span></code>).</p>
+<p>A complication of using this function is that the number of cells in a mesh
+is not known at setup time, but we do need to know how many cores and nodes
+we will use at that time.  So the meshes in <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> have a config
+option <code class="docutils literal notranslate"><span class="pre">approx_cell_count</span></code> that is used to estimate the number of cells in
+the mesh during setup.  Then, the actual number of cells is used at runtime,
+when it can be known, to determine the core and node counts for MPAS-Ocean runs
+on various meshes.  Some test cases still specify the number of MPI tasks
+explicitly because it is part of their testing protocol.</p>
+</section>
+<section id="forward-test-case">
+<span id="dev-ocean-global-ocean-forward-test"></span><h3>forward test case<a class="headerlink" href="#forward-test-case" title="Link to this heading">¶</a></h3>
+<p>The parent class for test cases in <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> that include running
+MPAS-Ocean forward in time is
+<a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.forward.ForwardTestCase.html#compass.ocean.tests.global_ocean.forward.ForwardTestCase" title="compass.ocean.tests.global_ocean.forward.ForwardTestCase"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.forward.ForwardTestCase</span></code></a>.  This
+class has attributes <code class="docutils literal notranslate"><span class="pre">self.mesh</span></code> and <code class="docutils literal notranslate"><span class="pre">self.init</span></code> to keep track of the
+<a class="reference internal" href="#dev-ocean-global-ocean-mesh"><span class="std std-ref">mesh test case</span></a> and <a class="reference internal" href="#dev-ocean-global-ocean-init"><span class="std std-ref">init test case</span></a> made
+the mesh and initial condition that this test case will use.  It also has an
+attribute <code class="docutils literal notranslate"><span class="pre">self.time_integrator</span></code> to determine whether <code class="docutils literal notranslate"><span class="pre">split-explicit</span></code> or
+<code class="docutils literal notranslate"><span class="pre">RK4</span></code> time integration will be used.</p>
+<p>In its <code class="docutils literal notranslate"><span class="pre">configure()</span></code> method, <code class="docutils literal notranslate"><span class="pre">ForwardTestCase</span></code> takes care of config options
+by calling <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.init.Init.configure.html#compass.ocean.tests.global_ocean.init.Init.configure" title="compass.ocean.tests.global_ocean.init.Init.configure"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.init.Init.configure()</span></code></a>
+to also pick up config options (e.g. metadata) related to the mesh and
+initial condition.</p>
+<p>In its <code class="docutils literal notranslate"><span class="pre">run()</span></code> method, it sets the number of target and minimum number of
+cores as well as the number of threads based on config options.  Then, it calls
+the base class’ <code class="docutils literal notranslate"><span class="pre">run()</span></code> method to run its steps.</p>
+</section>
+<section id="forward-step">
+<span id="dev-ocean-global-ocean-forward-step"></span><h3>forward step<a class="headerlink" href="#forward-step" title="Link to this heading">¶</a></h3>
+<p>The parent class for steps in <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> that run MPAS-Ocean forward in
+time is <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.forward.ForwardStep.html#compass.ocean.tests.global_ocean.forward.ForwardStep" title="compass.ocean.tests.global_ocean.forward.ForwardStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.forward.ForwardStep</span></code></a>.
+The constructor for <code class="docutils literal notranslate"><span class="pre">ForwardStep</span></code> takes several arguments.  At a minimum,
+the parent test case and the test cases for the mesh and initial-condition
+that will be used for the forward model run are needed, along with the
+time integrator (<code class="docutils literal notranslate"><span class="pre">split-explicit</span></code> or <code class="docutils literal notranslate"><span class="pre">RK4</span></code>).  Here is an example from the
+<a class="reference internal" href="#dev-ocean-global-ocean-performance-test"><span class="std std-ref">performance_test test case</span></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">PerformanceTest</span><span class="p">(</span><span class="n">ForwardTestCase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A test case for performing a short forward run with an MPAS-Ocean global</span>
+<span class="sd">    initial condition assess performance and compare with previous results</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create test case</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_group : compass.ocean.tests.global_ocean.GlobalOcean</span>
+<span class="sd">            The global ocean test group that this test case belongs to</span>
+
+<span class="sd">        mesh : compass.ocean.tests.global_ocean.mesh.Mesh</span>
+<span class="sd">            The test case that produces the mesh for this run</span>
+
+<span class="sd">        init : compass.ocean.tests.global_ocean.init.Init</span>
+<span class="sd">            The test case that produces the initial condition for this run</span>
+
+<span class="sd">        time_integrator : {&#39;split_explicit&#39;, &#39;RK4&#39;}</span>
+<span class="sd">            The time integrator to use for the forward run</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
+                         <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">,</span>
+                         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;performance_test&#39;</span><span class="p">)</span>
+
+        <span class="n">step</span> <span class="o">=</span> <span class="n">ForwardStep</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
+                           <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span>
+            <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;namelist.wisc&#39;</span><span class="p">)</span>
+            <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;streams.wisc&#39;</span><span class="p">)</span>
+            <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;land_ice_fluxes.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As in the example above, these are typically passed along from the arguments
+to the the test case’s own constructor.</p>
+<p>Performance-related parameters—<code class="docutils literal notranslate"><span class="pre">ntasks</span></code>, <code class="docutils literal notranslate"><span class="pre">min_tasks</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">openmp_threads</span></code>—can be passed as optional arguments, but they are more
+typically read from the corresponding <code class="docutils literal notranslate"><span class="pre">forward_&lt;param&gt;</span></code> config options in the
+<code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> section of the config file.  This lets users update these
+values as appropriate if the machine and/or mesh defaults aren’t quite right
+for them.</p>
+<p>There is also a parameter <code class="docutils literal notranslate"><span class="pre">get_dt_from_min_res</span></code> that allows the time step
+for a given mesh to be determined automatically based on the finest
+resolution of the mesh and the <code class="docutils literal notranslate"><span class="pre">dt_per_km</span></code> or <code class="docutils literal notranslate"><span class="pre">btr_dt_per_km</span></code> config
+options.  Unless this parameter is explicitly set to <code class="docutils literal notranslate"><span class="pre">False</span></code> (e.g. in
+restart tests or dynamic adjustment), the time step will be the product of
+the minimum resolution and <code class="docutils literal notranslate"><span class="pre">dt_per_km</span></code> for split-explicit runs, and
+the barotropic or 4th-order Runge-Kutta time step will be  product of
+the minimum resolution and <code class="docutils literal notranslate"><span class="pre">btr_dt_per_km</span></code>.</p>
+<p>During init, the <code class="docutils literal notranslate"><span class="pre">forward</span></code> and <code class="docutils literal notranslate"><span class="pre">wisc</span></code> namelist replacements and streams
+files are added as appropriate based on whether the mesh includes ice-shelf
+cavities. Further namelist replacements and streams files can be added in the
+test case before adding the step, as in the example above.</p>
+<p>The MPAS model is linked in as in input to the step in the <code class="docutils literal notranslate"><span class="pre">setup()</span></code> method,
+which also updates the <code class="docutils literal notranslate"><span class="pre">self.ntasks</span></code>, <code class="docutils literal notranslate"><span class="pre">self.min_tasks</span></code> and
+<code class="docutils literal notranslate"><span class="pre">self.openmp_threads</span></code> attributes from config options if they have not been
+set explicitly in the constructor.  Then, in the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method, it runs
+MPAS-Ocean (including updating PIO namelist options and generating a graph
+partition), then <a class="reference internal" href="../../../users_guide/ocean/test_groups/global_ocean.html#global-ocean-metadata"><span class="std std-ref">Metadata</span></a> is added to the output NetCDF
+files.</p>
+</section>
+</section>
+<section id="test-cases">
+<span id="dev-ocean-global-ocean-testcases"></span><h2>Test cases<a class="headerlink" href="#test-cases" title="Link to this heading">¶</a></h2>
+<p>There are 9 <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> test cases.  First, <code class="docutils literal notranslate"><span class="pre">mesh</span></code> must be run to
+generate and cull the mesh, then one of the variants of <code class="docutils literal notranslate"><span class="pre">init</span></code> must be run
+to create an initial condition on that mesh.  After that, any of the
+regression-focused test cases (<code class="docutils literal notranslate"><span class="pre">performance_test</span></code>, <code class="docutils literal notranslate"><span class="pre">restart_test</span></code>,
+<code class="docutils literal notranslate"><span class="pre">decomp_test</span></code>, <code class="docutils literal notranslate"><span class="pre">threads_test</span></code>, <code class="docutils literal notranslate"><span class="pre">analysis_test</span></code>, or <code class="docutils literal notranslate"><span class="pre">daily_output_test</span></code>)
+can be run in any order and as desired.  If an initial condition for E3SM is
+desired, the user (or test suite) should first run <code class="docutils literal notranslate"><span class="pre">dynamic_adjustment</span></code> and
+then <code class="docutils literal notranslate"><span class="pre">files_for_e3sm</span></code>.</p>
+<section id="mesh-test-case">
+<span id="dev-ocean-global-ocean-mesh"></span><h3>mesh test case<a class="headerlink" href="#mesh-test-case" title="Link to this heading">¶</a></h3>
+<p>This test case generates an MPAS horizontal mesh, then culls out the land cells
+to improve model efficiency.</p>
+<p>A <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.Mesh.html#compass.ocean.tests.global_ocean.mesh.Mesh" title="compass.ocean.tests.global_ocean.mesh.Mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.Mesh</span></code></a> object is constructed
+with the <code class="docutils literal notranslate"><span class="pre">mesh_name</span></code> as one of its arguments.  Based on this argument, it
+determines the appropriate child class of
+<a class="reference internal" href="../../generated/compass.mesh.spherical.SphericalBaseStep.html#compass.mesh.spherical.SphericalBaseStep" title="compass.mesh.spherical.SphericalBaseStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.mesh.spherical.SphericalBaseStep</span></code></a> to create the base mesh
+and adds a <a class="reference internal" href="../generated/compass.ocean.mesh.cull.CullMeshStep.html#compass.ocean.mesh.cull.CullMeshStep" title="compass.ocean.mesh.cull.CullMeshStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.mesh.cull.CullMeshStep</span></code></a>.</p>
+<p>This class also stores attributes:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">self.mesh_name</span></code></dt><dd><p>the name of the mesh</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">self.with_ice_shelf_cavities</span></code></dt><dd><p>whether the mesh should include ice-shelf cavities</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">self.package</span></code></dt><dd><p>the module (package) where the config options, namelist and streams files
+specific to the mesh can be found</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">self.mesh_config_filename</span></code></dt><dd><p>the name of the config file with mesh-specific config options</p>
+</dd>
+</dl>
+<section id="meshes">
+<span id="dev-ocean-global-ocean-meshes"></span><h4>meshes<a class="headerlink" href="#meshes" title="Link to this heading">¶</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> currently defines 5 meshes, with more to come.</p>
+<section id="qu240-and-quwisc240">
+<span id="dev-ocean-global-ocean-qu240"></span><h5>QU240 and QUwISC240<a class="headerlink" href="#qu240-and-quwisc240" title="Link to this heading">¶</a></h5>
+<p>The <code class="docutils literal notranslate"><span class="pre">QU240</span></code> mesh is a quasi-uniform mesh with 240-km resolution. The
+<code class="docutils literal notranslate"><span class="pre">QUwISC240</span></code> mesh is identical except that it includes the cavities below ice
+shelves in the ocean domain. The mesh is defined by
+<a class="reference internal" href="../../generated/compass.mesh.QuasiUniformSphericalMeshStep.html#compass.mesh.QuasiUniformSphericalMeshStep" title="compass.mesh.QuasiUniformSphericalMeshStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.mesh.QuasiUniformSphericalMeshStep</span></code></a>.  The
+<code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.qu240</span></code> module includes namelist
+options appropriate for forward simulations with both RK4 and split-explicit
+time integration on these meshes.  These set the time step and default run
+duration for short runs with these meshes.</p>
+<p>The default config options for these meshes are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
+<span class="k">[vertical_grid]</span>
+
+<span class="c1"># the type of vertical grid</span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">tanh_dz</span>
+
+<span class="c1"># Number of vertical levels</span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">16</span>
+
+<span class="c1"># Depth of the bottom of the ocean</span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3000.0</span>
+
+<span class="c1"># The minimum layer thickness</span>
+<span class="na">min_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3.0</span>
+
+<span class="c1"># The maximum layer thickness</span>
+<span class="na">max_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">500.0</span>
+
+
+<span class="c1"># options for spherical meshes</span>
+<span class="k">[spherical_mesh]</span>
+
+<span class="c1">## config options related to the step for culling land from the mesh</span>
+<span class="c1"># number of cores to use</span>
+<span class="na">cull_mesh_cpus_per_task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">18</span>
+<span class="c1"># minimum of cores, below which the step fails</span>
+<span class="na">cull_mesh_min_cpus_per_task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="c1"># maximum memory usage allowed (in MB)</span>
+<span class="na">cull_mesh_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span>
+
+
+<span class="c1"># options for global ocean testcases</span>
+<span class="k">[global_ocean]</span>
+
+<span class="c1">## config options related to the initial_state step</span>
+<span class="c1"># number of cores to use</span>
+<span class="na">init_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span>
+<span class="c1"># minimum of cores, below which the step fails</span>
+<span class="na">init_min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+
+<span class="c1"># the approximate number of cells in the mesh</span>
+<span class="na">approx_cell_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">7400</span>
+
+<span class="c1">## metadata related to the mesh</span>
+<span class="c1"># the prefix (e.g. QU, EC, WC, SO)</span>
+<span class="na">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">QU</span>
+<span class="c1"># a description of the mesh</span>
+<span class="na">mesh_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MPAS quasi-uniform mesh for E3SM version ${e3sm_version} at</span>
+<span class="w">                   </span><span class="na">${min_res}-km global resolution with &lt;&lt;&lt;levels&gt;&gt;&gt; vertical</span>
+<span class="w">                   </span><span class="na">level</span>
+
+<span class="c1"># E3SM version that the mesh is intended for</span>
+<span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
+<span class="c1"># The revision number of the mesh, which should be incremented each time the</span>
+<span class="c1"># mesh is revised</span>
+<span class="na">mesh_revision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="c1"># the minimum (finest) resolution in the mesh</span>
+<span class="na">min_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">240</span>
+<span class="c1"># the maximum (coarsest) resolution in the mesh, can be the same as min_res</span>
+<span class="na">max_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">240</span>
+<span class="c1"># The URL of the pull request documenting the creation of the mesh</span>
+<span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>The vertical grid is a <code class="docutils literal notranslate"><span class="pre">tanh_dz</span></code> profile (see <a class="reference internal" href="../framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a>)
+with 16 vertical levels ranging in thickness from 3 to 500 m.</p>
+</section>
+<section id="icos240-and-icoswisc240">
+<span id="dev-ocean-global-ocean-isco240"></span><h5>Icos240 and IcoswISC240<a class="headerlink" href="#icos240-and-icoswisc240" title="Link to this heading">¶</a></h5>
+<p>The <code class="docutils literal notranslate"><span class="pre">Icos240</span></code> mesh is a subdivided icosahedral mesh with 240-km resolution
+using the <a class="reference internal" href="../../generated/compass.mesh.IcosahedralMeshStep.html#compass.mesh.IcosahedralMeshStep" title="compass.mesh.IcosahedralMeshStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.mesh.IcosahedralMeshStep</span></code></a> class. The
+<code class="docutils literal notranslate"><span class="pre">IcoswISC240</span></code> mesh is identical except that it includes the cavities below
+ice shelves in the ocean domain. Aside from the base mesh, these are identical
+to <a class="reference internal" href="#dev-ocean-global-ocean-qu240"><span class="std std-ref">QU240 and QUwISC240</span></a>.</p>
+</section>
+<section id="qu-quwisc-icos-and-icoswisc">
+<span id="dev-ocean-global-ocean-qu-icos"></span><h5>QU, QUwISC, Icos and IcoswISC<a class="headerlink" href="#qu-quwisc-icos-and-icoswisc" title="Link to this heading">¶</a></h5>
+<p>The generalized <code class="docutils literal notranslate"><span class="pre">QU</span></code> and <code class="docutils literal notranslate"><span class="pre">Icos</span></code> meshes are quasi-uniform meshes with
+user-defined resolutions (120 km by default). The <code class="docutils literal notranslate"><span class="pre">QUwISC</span></code> and <code class="docutils literal notranslate"><span class="pre">IcoswISC</span></code>
+meshes are identical except that they include the cavities below ice shelves in
+the ocean domain. The classes
+<a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.qu.QUMeshFromConfigStep.html#compass.ocean.tests.global_ocean.mesh.qu.QUMeshFromConfigStep" title="compass.ocean.tests.global_ocean.mesh.qu.QUMeshFromConfigStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.qu.QUMeshFromConfigStep</span></code></a> and
+<a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.qu.IcosMeshFromConfigStep.html#compass.ocean.tests.global_ocean.mesh.qu.IcosMeshFromConfigStep" title="compass.ocean.tests.global_ocean.mesh.qu.IcosMeshFromConfigStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.qu.IcosMeshFromConfigStep</span></code></a>
+create the <code class="docutils literal notranslate"><span class="pre">QU</span></code> and <code class="docutils literal notranslate"><span class="pre">Icos</span></code> base meshes, respectively (with or without
+ice-shelf cavities). The <code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.qu</span></code>
+module includes config and namelist options appropriate for initialization and
+forward simulations with split-explicit (but not RK4) time integration on these
+meshes.  The number of target and minimum number of MPI tasks, and also the
+baroclinic and barotropic time steps are set algorithmically based on the
+number of cells in the mesh and its resolution.</p>
+<p>The default config options for these meshes are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
+<span class="k">[vertical_grid]</span>
+
+<span class="c1"># the type of vertical grid</span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">index_tanh_dz</span>
+
+<span class="c1"># Number of vertical levels</span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">64</span>
+
+<span class="c1"># Depth of the bottom of the ocean</span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5500.0</span>
+
+<span class="c1"># The minimum layer thickness</span>
+<span class="na">min_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span>
+
+<span class="c1"># The maximum layer thickness</span>
+<span class="na">max_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">250.0</span>
+
+<span class="c1"># The characteristic number of levels over which the transition between</span>
+<span class="c1"># the min and max occurs</span>
+<span class="na">transition_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">28</span>
+
+
+<span class="c1"># options for global ocean testcases</span>
+<span class="k">[global_ocean]</span>
+
+<span class="c1">## metadata related to the mesh</span>
+<span class="c1"># the prefix (e.g. QU, EC, WC, SO)</span>
+<span class="na">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">QU</span>
+
+<span class="c1"># a description of the mesh</span>
+<span class="na">mesh_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MPAS quasi-uniform mesh for E3SM version ${e3sm_version} at</span>
+<span class="w">                   </span><span class="na">${min_res}-km global resolution with &lt;&lt;&lt;levels&gt;&gt;&gt; vertical</span>
+<span class="w">                   </span><span class="na">level</span>
+
+<span class="c1"># E3SM version that the mesh is intended for</span>
+<span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
+<span class="c1"># The revision number of the mesh, which should be incremented each time the</span>
+<span class="c1"># mesh is revised</span>
+<span class="na">mesh_revision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
+<span class="c1"># the minimum (finest) resolution in the mesh</span>
+<span class="na">min_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">${qu_resolution}</span>
+<span class="c1"># the maximum (coarsest) resolution in the mesh, can be the same as min_res</span>
+<span class="na">max_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">${qu_resolution}</span>
+<span class="c1"># The URL of the pull request documenting the creation of the mesh</span>
+<span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
+
+<span class="c1"># the resolution of the QU or Icos mesh in km</span>
+<span class="na">qu_resolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">120</span>
+</pre></div>
+</div>
+<p>The Icos and IcoswISC meshes have these config options that replace the
+corresponding QU config options above:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for global ocean testcases</span>
+<span class="k">[global_ocean]</span>
+
+<span class="c1">## metadata related to the mesh</span>
+<span class="c1"># the prefix (e.g. QU, EC, WC, SO)</span>
+<span class="na">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Icos</span>
+
+<span class="c1"># a description of the mesh</span>
+<span class="na">mesh_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MPAS subdivided icosahedral mesh for E3SM version</span>
+<span class="w">                   </span><span class="na">${e3sm_version} at ${min_res}-km global resolution with</span>
+<span class="w">                   </span><span class="na">&lt;&lt;&lt;levels&gt;&gt;&gt; vertical level</span>
+</pre></div>
+</div>
+<p>The vertical grid is an <code class="docutils literal notranslate"><span class="pre">index_tanh_dz</span></code> profile (see
+<a class="reference internal" href="../framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a>) with 64 vertical levels ranging in
+thickness from 10 to 250 m.</p>
+<p>The resolution of the mesh is controlled by <code class="docutils literal notranslate"><span class="pre">qu_resolution</span></code>.</p>
+</section>
+<section id="ec30to60-and-ecwisc30to60">
+<span id="dev-ocean-global-ocean-ec30to60"></span><h5>EC30to60 and ECwISC30to60<a class="headerlink" href="#ec30to60-and-ecwisc30to60" title="Link to this heading">¶</a></h5>
+<p>The <code class="docutils literal notranslate"><span class="pre">EC30to60</span></code> mesh is an “eddy-closure” mesh with 30-km resolution at the
+equator, 60-km resolution at mid latitudes, and 35-km resolution at the poles.
+The mesh resolution is purely a function of latitude. The <code class="docutils literal notranslate"><span class="pre">ECwISC30to60</span></code> mesh
+is identical except that it includes the cavities below ice shelves in the
+ocean domain.</p>
+<p>The class
+<a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.ec30to60.EC30to60BaseMesh.html#compass.ocean.tests.global_ocean.mesh.ec30to60.EC30to60BaseMesh" title="compass.ocean.tests.global_ocean.mesh.ec30to60.EC30to60BaseMesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.ec30to60.EC30to60BaseMesh</span></code></a> defines
+the resolution for both meshes. The <code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.ec30to60</span></code>
+module includes  namelist options appropriate for forward simulations with
+split-explicit (but not RK4) time integration on these meshes.  These set the time
+step and default run duration for short runs with these meshes.</p>
+<p>The default config options for these meshes are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
+<span class="k">[vertical_grid]</span>
+
+<span class="c1"># the type of vertical grid</span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">index_tanh_dz</span>
+
+<span class="c1"># Number of vertical levels</span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">64</span>
+
+<span class="c1"># Depth of the bottom of the ocean</span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5500.0</span>
+
+<span class="c1"># The minimum layer thickness</span>
+<span class="na">min_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span>
+
+<span class="c1"># The maximum layer thickness</span>
+<span class="na">max_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">250.0</span>
+
+<span class="c1"># The characteristic number of levels over which the transition between</span>
+<span class="c1"># the min and max occurs</span>
+<span class="na">transition_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">28</span>
+
+
+<span class="c1"># options for global ocean testcases</span>
+<span class="k">[global_ocean]</span>
+
+<span class="c1"># the approximate number of cells in the mesh</span>
+<span class="na">approx_cell_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">240000</span>
+
+<span class="c1">## metadata related to the mesh</span>
+<span class="c1"># the prefix (e.g. QU, EC, WC, SO)</span>
+<span class="na">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">EC</span>
+<span class="c1"># a description of the mesh and initial condition</span>
+<span class="na">mesh_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MPAS Eddy Closure mesh for E3SM version ${e3sm_version} with</span>
+<span class="w">                   </span><span class="na">enhanced resolution around the equator (30 km), South pole</span>
+<span class="w">                   </span><span class="na">(35 km), Greenland (${min_res} km), ${max_res}-km resolution</span>
+<span class="w">                   </span><span class="na">at mid latitudes, and &lt;&lt;&lt;levels&gt;&gt;&gt; vertical levels</span>
+<span class="c1"># E3SM version that the mesh is intended for</span>
+<span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
+<span class="c1"># The revision number of the mesh, which should be incremented each time the</span>
+<span class="c1"># mesh is revised</span>
+<span class="na">mesh_revision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="c1"># the minimum (finest) resolution in the mesh</span>
+<span class="na">min_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">30</span>
+<span class="c1"># the maximum (coarsest) resolution in the mesh, can be the same as min_res</span>
+<span class="na">max_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">60</span>
+<span class="c1"># The URL of the pull request documenting the creation of the mesh</span>
+<span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>The vertical grid is an <code class="docutils literal notranslate"><span class="pre">index_tanh_dz</span></code> profile (see
+<a class="reference internal" href="../framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a>) with 64 vertical levels ranging in
+thickness from 10 to 250 m.</p>
+</section>
+<section id="kuroshio8to60-and-kuroshio12to60">
+<span id="dev-ocean-global-ocean-kuroshio"></span><h5>Kuroshio8to60 and Kuroshio12to60<a class="headerlink" href="#kuroshio8to60-and-kuroshio12to60" title="Link to this heading">¶</a></h5>
+<p>The <code class="docutils literal notranslate"><span class="pre">Kuroshio8to60</span></code> and <code class="docutils literal notranslate"><span class="pre">Kuroshio12to60</span></code> mehses are designed to explore
+dynamics of the Western Boundary Current (WBC) in the North Pacific Ocean,
+the Kuroshio.</p>
+<p>The class
+<code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.kuroshio.KuroshioBaseMesh</span></code>
+defines the resolution for the meshes, where the finest resolution comes from
+the <code class="docutils literal notranslate"><span class="pre">min_res</span></code> config option in the <code class="docutils literal notranslate"><span class="pre">[global_ocean]</span></code> section of the config
+file.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.kuroshio8to60</span></code> and
+<code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.kuroshio12to60</span></code> modules include
+namelist options appropriate for forward simulations with split-explicit (but
+not RK4) time integration on these meshes.  These set the time step and default
+run duration for short runs with these meshes.</p>
+<p>Except for <code class="docutils literal notranslate"><span class="pre">min_res</span></code>, default config options for these meshes come from a
+shared config file in the <code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.kuroshio</span></code>
+module:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options related to the vertical grid</span>
+<span class="k">[vertical_grid]</span>
+
+<span class="c1"># the type of vertical grid</span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">60layerPHC</span>
+
+<span class="c1"># options for global ocean testcases</span>
+<span class="k">[global_ocean]</span>
+
+<span class="c1">## metadata related to the mesh</span>
+<span class="c1"># the prefix (e.g. QU, EC, WC, SO, Kuroshio)</span>
+<span class="na">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Kuroshio</span>
+<span class="c1"># a description of the mesh and initial condition</span>
+<span class="na">mesh_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MPAS Kuroshio regionally refined mesh for E3SM version</span>
+<span class="w">                   </span><span class="na">${e3sm_version} with enhanced resolution (${min_res} km) in</span>
+<span class="w">                   </span><span class="na">Kuroshio-Oyashio Extension, 45-km resolution in the mid latitudes,</span>
+<span class="w">                   </span><span class="na">30-km resolution in a 15-degree band around the equator, 60-km</span>
+<span class="w">                   </span><span class="na">resolution in northern mid latitudes, 30 km in the north</span>
+<span class="w">                   </span><span class="na">Atlantic and 35 km in the Arctic.  This mesh has &lt;&lt;&lt;levels&gt;&gt;&gt;</span>
+<span class="w">                   </span><span class="na">vertical levels.</span>
+<span class="c1"># E3SM version that the mesh is intended for</span>
+<span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
+<span class="c1"># The revision number of the mesh, which should be incremented each time the</span>
+<span class="c1"># mesh is revised</span>
+<span class="na">mesh_revision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="c1"># the maximum (coarsest) resolution in the mesh, can be the same as min_res</span>
+<span class="na">max_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">60</span>
+<span class="c1"># the URL of the pull request documenting the creation of the mesh</span>
+<span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">https://github.com/MPAS-Dev/compass/pull/525</span>
+</pre></div>
+</div>
+<p>The vertical grid is a <code class="docutils literal notranslate"><span class="pre">60layerPHC</span></code> profile (see
+<a class="reference internal" href="../framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a>) with 60 vertical levels ranging in
+thickness from 10 to 250 m.</p>
+</section>
+<section id="rrs6to18-and-rrswisc6to18">
+<span id="dev-ocean-global-ocean-rrs6to18"></span><h5>RRS6to18 and RRSwISC6to18<a class="headerlink" href="#rrs6to18-and-rrswisc6to18" title="Link to this heading">¶</a></h5>
+<p>The <code class="docutils literal notranslate"><span class="pre">RRS6to18</span></code> and <code class="docutils literal notranslate"><span class="pre">RRSwISC6to18</span></code> Rossby-radius-scaling (RRS) meshes are
+the E3SM v3 “high resolution” meshes.  They have resolution that scales as
+a function of latitude approximately with the Rossby radius of deformation
+from 6 km at the poles to 18 km at the equator.</p>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.rrs6to18.RRS6to18BaseMesh.html#compass.ocean.tests.global_ocean.mesh.rrs6to18.RRS6to18BaseMesh" title="compass.ocean.tests.global_ocean.mesh.rrs6to18.RRS6to18BaseMesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.rrs6to18.RRS6to18BaseMesh</span></code></a>
+defines the resolution for the meshes. The
+<code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.rrs6to18</span></code> module includes namelist options
+appropriate for forward simulations with split-explicit (but not RK4) time
+integration on these meshes.  These set the time step and default run duration
+for short runs with these meshes.</p>
+<p>The default config options for these meshes are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
+<span class="k">[vertical_grid]</span>
+
+<span class="c1"># the type of vertical grid</span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">80layerE3SMv1</span>
+
+
+<span class="c1"># options for spherical meshes</span>
+<span class="k">[spherical_mesh]</span>
+
+<span class="c1"># Whether to convert the culled mesh file to CDF5 format</span>
+<span class="na">convert_culled_mesh_to_cdf5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+
+
+<span class="c1"># Options relate to adjusting the sea-surface height or land-ice pressure</span>
+<span class="c1"># below ice shelves to they are dynamically consistent with one another</span>
+<span class="k">[ssh_adjustment]</span>
+
+<span class="c1"># Whether to convert adjusted initial condition files to CDF5 format during</span>
+<span class="c1"># ssh adjustment under ice shelves</span>
+<span class="na">convert_to_cdf5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+
+
+<span class="c1"># options for global ocean testcases</span>
+<span class="k">[global_ocean]</span>
+
+<span class="c1"># minimum number of vertical levels, both in the open ocean and in ice-shelf</span>
+<span class="c1"># cavities</span>
+<span class="na">min_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span>
+
+<span class="c1"># minimum thickness of layers in ice-shelf cavities</span>
+<span class="na">cavity_min_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2.5</span>
+
+<span class="c1">## config options related to the initial_state step</span>
+<span class="c1"># number of cores to use</span>
+<span class="na">init_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">512</span>
+<span class="c1"># minimum of cores, below which the step fails</span>
+<span class="na">init_min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">64</span>
+<span class="c1"># The number of cores per task in init mode -- used to avoid running out of</span>
+<span class="c1"># memory where needed</span>
+<span class="na">init_cpus_per_task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span>
+<span class="c1"># whether to update PIO tasks and stride</span>
+<span class="na">init_update_pio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+
+<span class="c1"># whether to update PIO tasks and stride</span>
+<span class="na">forward_update_pio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+
+<span class="c1"># the approximate number of cells in the mesh</span>
+<span class="na">approx_cell_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4000000</span>
+
+<span class="c1">## metadata related to the mesh</span>
+<span class="c1"># the prefix (e.g. QU, EC, WC, SO)</span>
+<span class="na">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">RRS</span>
+<span class="c1"># a description of the mesh and initial condition</span>
+<span class="na">mesh_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MPAS Eddy Closure mesh for E3SM version ${e3sm_version} with</span>
+<span class="w">                </span><span class="na">enhanced resolution around the equator (30 km), South pole</span>
+<span class="w">                </span><span class="na">(35 km), Greenland (${min_res} km), ${max_res}-km resolution</span>
+<span class="w">                </span><span class="na">at mid latitudes, and ${levels} vertical levels</span>
+<span class="c1"># E3SM version that the mesh is intended for</span>
+<span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
+<span class="c1"># The revision number of the mesh, which should be incremented each time the</span>
+<span class="c1"># mesh is revised</span>
+<span class="na">mesh_revision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="c1"># the minimum (finest) resolution in the mesh</span>
+<span class="na">min_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6</span>
+<span class="c1"># the maximum (coarsest) resolution in the mesh, can be the same as min_res</span>
+<span class="na">max_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">18</span>
+<span class="c1"># The URL of the pull request documenting the creation of the mesh</span>
+<span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
+
+
+<span class="c1"># config options related to remapping topography to an MPAS-Ocean mesh</span>
+<span class="k">[remap_topography]</span>
+
+<span class="c1"># the target and minimum number of MPI tasks to use in remapping</span>
+<span class="na">ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4096</span>
+<span class="na">min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2048</span>
+
+<span class="c1"># The io section describes options related to file i/o</span>
+<span class="k">[io]</span>
+
+<span class="c1"># the NetCDF file format: NETCDF4, NETCDF4_CLASSIC, NETCDF3_64BIT, or</span>
+<span class="c1"># NETCDF3_CLASSIC</span>
+<span class="na">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NETCDF4</span>
+
+<span class="c1"># the NetCDF output engine: netcdf4 or scipy</span>
+<span class="na">engine</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">netcdf4</span>
+
+<span class="c1"># config options related to initial condition and diagnostics support files</span>
+<span class="c1"># for E3SM</span>
+<span class="k">[files_for_e3sm]</span>
+
+<span class="c1"># The minimum and maximum cells per core for creating graph partitions</span>
+<span class="na">max_cells_per_core</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">30000</span>
+<span class="c1"># We&#39;re seeing gpmetis failures for more than 750,000 tasks so we&#39;ll stay under</span>
+<span class="na">min_cells_per_core</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6</span>
+</pre></div>
+</div>
+<p>The vertical grid is a <code class="docutils literal notranslate"><span class="pre">80LayerE3SMv1</span></code> profile (see
+<a class="reference internal" href="../framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a>) with 80 vertical levels ranging in
+thickness from 2 to 150 m.</p>
+<p>Because of the large number of cells in these meshes, they have various
+requirement that other meshes do not.</p>
+<p>MPAS-ocean file output needs to be in
+<a class="reference external" href="http://cucis.ece.northwestern.edu/projects/PnetCDF/CDF-5.html">CDF-5</a>
+format.  This is handled by adding <code class="docutils literal notranslate"><span class="pre">io_type=&quot;pnetcdf,cdf5&quot;</span></code> to output
+streams.</p>
+<p>Python NetCDF file output needs to be in
+<a class="reference external" href="https://unidata.github.io/netcdf4-python/#creatingopeningclosing-a-netcdf-file">NETCDF4</a>
+format.  In in the sea surface height adjustment step (see
+<a class="reference internal" href="#dev-ocean-global-ocean-init"><span class="std std-ref">init test case</span></a>), adjusted initial condition files need to
+first be written out in <code class="docutils literal notranslate"><span class="pre">NETCDF4</span></code> format and then converted to <code class="docutils literal notranslate"><span class="pre">CDF-5</span></code>
+format, which is accomplished by setting the <code class="docutils literal notranslate"><span class="pre">convert_to_cdf5</span> <span class="pre">=</span> <span class="pre">True</span></code> config
+option.</p>
+<p>During initialization, the Haney-number vertical coordinate was not converging.
+This has been fixed by increasing the relative weights for smoothing and the
+z-star coordinate relative to the slope.  It also helped to increase the
+number of inner iterations and to smooth over more open ocean cells.  Given
+the higher surface resolution of the 80-layer RRS vertical coordinate.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>config_rx1_inner_iter_count = 20
+config_rx1_horiz_smooth_weight = 10.0
+config_rx1_vert_smooth_weight = 10.0
+config_rx1_slope_weight = 1e-1
+config_rx1_zstar_weight = 10.0
+config_rx1_horiz_smooth_open_ocean_cells = 40
+config_rx1_min_layer_thickness = 0.1
+</pre></div>
+</div>
+</section>
+<section id="so12to60-and-sowisc12to60">
+<span id="dev-ocean-global-ocean-sowisc12to60"></span><h5>SO12to60 and SOwISC12to60<a class="headerlink" href="#so12to60-and-sowisc12to60" title="Link to this heading">¶</a></h5>
+<p>The <code class="docutils literal notranslate"><span class="pre">SO12to60</span></code> and <code class="docutils literal notranslate"><span class="pre">SOwISC12to60</span></code> meshes are Southern Ocean regionally
+refined meshes with 12-km resolution around the Southern Ocean and Antarctica,
+45-km at southern mid-latitudes, 30-km at the equator and in the North
+Atlantic, 60-km resolution in the North Pacific, and 35-km resolution in the
+Arctic.</p>
+<p>The class
+<a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60BaseMesh.html#compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60BaseMesh" title="compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60BaseMesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60BaseMesh</span></code></a> defines
+the resolution for the meshes. The <code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.so12to60</span></code>
+module includes namelist options appropriate for forward simulations with
+split-explicit (but not RK4) time integration on these meshes.  These set the time
+step and default run duration for short runs with these meshes.</p>
+<p>The default config options for these meshes are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
+<span class="k">[vertical_grid]</span>
+
+<span class="c1"># the type of vertical grid</span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">index_tanh_dz</span>
+
+<span class="c1"># Number of vertical levels</span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">64</span>
+
+<span class="c1"># Depth of the bottom of the ocean</span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5500.0</span>
+
+<span class="c1"># The minimum layer thickness</span>
+<span class="na">min_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span>
+
+<span class="c1"># The maximum layer thickness</span>
+<span class="na">max_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">250.0</span>
+
+<span class="c1"># The characteristic number of levels over which the transition between</span>
+<span class="c1"># the min and max occurs</span>
+<span class="na">transition_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">28</span>
+
+
+<span class="c1"># options for global ocean testcases</span>
+<span class="k">[global_ocean]</span>
+
+<span class="c1"># the approximate number of cells in the mesh</span>
+<span class="na">approx_cell_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">570000</span>
+
+<span class="c1">## metadata related to the mesh</span>
+<span class="c1"># the prefix (e.g. QU, EC, WC, SO)</span>
+<span class="na">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">SO</span>
+<span class="c1"># a description of the mesh and initial condition</span>
+<span class="na">mesh_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MPAS Southern Ocean regionally refined mesh for E3SM version</span>
+<span class="w">                   </span><span class="na">${e3sm_version} with enhanced resolution (${min_res} km) around</span>
+<span class="w">                   </span><span class="na">Antarctica, 45-km resolution in the mid southern latitudes,</span>
+<span class="w">                   </span><span class="na">30-km resolution in a 15-degree band around the equator, 60-km</span>
+<span class="w">                   </span><span class="na">resolution in northern mid latitudes, 30 km in the north</span>
+<span class="w">                   </span><span class="na">Atlantic and 35 km in the Arctic.  This mesh has &lt;&lt;&lt;levels&gt;&gt;&gt;</span>
+<span class="w">                   </span><span class="na">vertical levels and includes cavities under the ice shelves</span>
+<span class="w">                   </span><span class="na">around Antarctica.</span>
+<span class="c1"># E3SM version that the mesh is intended for</span>
+<span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
+<span class="c1"># The revision number of the mesh, which should be incremented each time the</span>
+<span class="c1"># mesh is revised</span>
+<span class="na">mesh_revision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="c1"># the minimum (finest) resolution in the mesh</span>
+<span class="na">min_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">12</span>
+<span class="c1"># the maximum (coarsest) resolution in the mesh, can be the same as min_res</span>
+<span class="na">max_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">60</span>
+<span class="c1"># The URL of the pull request documenting the creation of the mesh</span>
+<span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">https://github.com/MPAS-Dev/compass/pull/460</span>
+
+
+<span class="c1"># config options related to initial condition and diagnostics support files</span>
+<span class="c1"># for E3SM</span>
+<span class="k">[files_for_e3sm]</span>
+
+<span class="c1"># CMIP6 grid resolution</span>
+<span class="na">cmip6_grid_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">180x360</span>
+</pre></div>
+</div>
+<p>The vertical grid is an <code class="docutils literal notranslate"><span class="pre">index_tanh_dz</span></code> profile (see
+<a class="reference internal" href="../framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a>) with 64 vertical levels ranging in
+thickness from 10 to 250 m.</p>
+</section>
+<section id="wc14-and-wcwisc14">
+<span id="dev-ocean-global-ocean-wc14"></span><h5>WC14 and WCwISC14<a class="headerlink" href="#wc14-and-wcwisc14" title="Link to this heading">¶</a></h5>
+<p>The <code class="docutils literal notranslate"><span class="pre">WC14</span></code> and <code class="docutils literal notranslate"><span class="pre">WCwISC14</span></code> meshes are the Water Cycle regionally refined
+meshes for E3SM v3.  They have higher resolution (~14-km) around the continental
+US, the Arctic Ocean, and a section of the North Atlantic containing the Gulf
+Stream. The resolution elsewhere varies between 35 km at the South Pole to 60
+km at mid latitudes, with a band of 30-km resolution around the equator.</p>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.wc14.WC14BaseMesh.html#compass.ocean.tests.global_ocean.mesh.wc14.WC14BaseMesh" title="compass.ocean.tests.global_ocean.mesh.wc14.WC14BaseMesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.wc14.WC14BaseMesh</span></code></a>
+defines the resolution for the meshes. The
+<code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.wc14</span></code> module includes namelist options
+appropriate for forward simulations with split-explicit (but not RK4) time
+integration on these meshes.  These set the time step and default run duration for
+short runs with these meshes.</p>
+<p>The default config options for these meshes are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
+<span class="k">[vertical_grid]</span>
+
+<span class="c1"># the type of vertical grid</span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">index_tanh_dz</span>
+
+<span class="c1"># Number of vertical levels</span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">64</span>
+
+<span class="c1"># Depth of the bottom of the ocean</span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5500.0</span>
+
+<span class="c1"># The minimum layer thickness</span>
+<span class="na">min_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span>
+
+<span class="c1"># The maximum layer thickness</span>
+<span class="na">max_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">250.0</span>
+
+<span class="c1"># The characteristic number of levels over which the transition between</span>
+<span class="c1"># the min and max occurs</span>
+<span class="na">transition_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">28</span>
+
+
+<span class="c1"># options for global ocean testcases</span>
+<span class="k">[global_ocean]</span>
+
+<span class="c1"># the approximate number of cells in the mesh</span>
+<span class="na">approx_cell_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">410000</span>
+
+<span class="c1">## metadata related to the mesh</span>
+<span class="c1"># the prefix (e.g. QU, EC, WC, SO)</span>
+<span class="na">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">WC</span>
+<span class="c1"># a description of the mesh and initial condition</span>
+<span class="na">mesh_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MPAS North America and Arctic Focused Water Cycle mesh for E3SM version</span>
+<span class="w">                   </span><span class="na">${e3sm_version}, with a focused ${min_res}-km resolution</span>
+<span class="w">                   </span><span class="na">around North America and &lt;&lt;&lt;levels&gt;&gt;&gt; vertical levels</span>
+
+<span class="c1"># E3SM version that the mesh is intended for</span>
+<span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
+<span class="c1"># The revision number of the mesh, which should be incremented each time the</span>
+<span class="c1"># mesh is revised</span>
+<span class="na">mesh_revision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="c1"># the minimum (finest) resolution in the mesh</span>
+<span class="na">min_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">14</span>
+<span class="c1"># the maximum (coarsest) resolution in the mesh, can be the same as min_res</span>
+<span class="na">max_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">60</span>
+<span class="c1"># The URL of the pull request documenting the creation of the mesh</span>
+<span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">https://github.com/MPAS-Dev/MPAS-Model/pull/628</span>
+
+
+<span class="c1"># config options related to initial condition and diagnostics support files</span>
+<span class="c1"># for E3SM</span>
+<span class="k">[files_for_e3sm]</span>
+
+<span class="c1"># CMIP6 grid resolution</span>
+<span class="na">cmip6_grid_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">180x360</span>
+</pre></div>
+</div>
+<p>The vertical grid is an <code class="docutils literal notranslate"><span class="pre">index_tanh_dz</span></code> profile (see
+<a class="reference internal" href="../framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a>) with 64 vertical levels ranging in
+thickness from 10 to 250 m.</p>
+</section>
+</section>
+</section>
+<section id="init-test-case">
+<span id="dev-ocean-global-ocean-init"></span><h3>init test case<a class="headerlink" href="#init-test-case" title="Link to this heading">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.init.Init.html#compass.ocean.tests.global_ocean.init.Init" title="compass.ocean.tests.global_ocean.init.Init"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.init.Init</span></code></a> defines a test
+case for creating a global initial condition using MPAS-Ocean’s init mode.
+Currently there are 3 choices for the potential temperature and salinity
+fields used for initialization:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the World Ocean Atlas 2023
+(<a class="reference external" href="https://www.ncei.noaa.gov/products/world-ocean-atlas">WOA23</a>)
+climatology from 1991-2020</p></li>
+<li><p>the Polar science center Hydrographic Climatology
+(<a class="reference external" href="http://psc.apl.washington.edu/nonwp_projects/PHC/Climatology.html">PHC</a>)</p></li>
+<li><p>the UK MetOffice’s EN4 estimated climatology for the year 1900
+(<a class="reference external" href="https://www.metoffice.gov.uk/hadobs/en4/download-en4-2-0.html">EN4_1900</a>).</p></li>
+</ul>
+</div></blockquote>
+<p>In its <code class="docutils literal notranslate"><span class="pre">configure()</span></code> method, <code class="docutils literal notranslate"><span class="pre">Init</span></code> brings in config options related to
+the mesh (e.g. metadata) by calling
+<a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.Mesh.configure.html#compass.ocean.tests.global_ocean.mesh.Mesh.configure" title="compass.ocean.tests.global_ocean.mesh.Mesh.configure"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.Mesh.configure()</span></code></a>.</p>
+<p>The test case includes 5 namelist replacement files and 3 streams files.
+<code class="docutils literal notranslate"><span class="pre">namelist.init</span></code> and <code class="docutils literal notranslate"><span class="pre">streams.init</span></code> modify the namelist options and set up
+the streams needed for the test case, regardless of the particular
+test group.  <code class="docutils literal notranslate"><span class="pre">namelist.woa23</span></code>, <code class="docutils literal notranslate"><span class="pre">namelist.phc</span></code> and <code class="docutils literal notranslate"><span class="pre">namelist.en4_1900</span></code> set
+namelist options specific to those 3 sets of input files.  <code class="docutils literal notranslate"><span class="pre">namelist.wisc</span></code>
+and <code class="docutils literal notranslate"><span class="pre">streams.wisc</span></code> configure the test case for meshes that include
+<a class="reference internal" href="../../../users_guide/ocean/test_groups/global_ocean.html#global-ocean-ice-shelf-cavities"><span class="std std-ref">Ice-shelf cavities</span></a>.</p>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.init.initial_state.InitialState.html#compass.ocean.tests.global_ocean.init.initial_state.InitialState" title="compass.ocean.tests.global_ocean.init.initial_state.InitialState"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.init.initial_state.InitialState</span></code></a>
+defines the step for creating the initial state, including defining the
+topography, wind stress, shortwave, potential temperature, salinity, and
+ecosystem input data files.</p>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt.html#compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt" title="compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.init.remap_ice_shelf_melt.RemapIceShelfMelt</span></code></a>
+defines a step that remaps melt rates from the satellite-derived dataset
+from <a class="reference external" href="https://doi.org/10.5194/tc-17-3409-2023">Paolo et al. (2023)</a>.</p>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.html#compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment" title="compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment</span></code></a>
+defines a step to adjust the <code class="docutils literal notranslate"><span class="pre">landIcePressure</span></code> variable to be in closer to
+dynamical balance with the sea-surface height (SSH) in configurations with
+<a class="reference internal" href="../framework.html#dev-ocean-framework-iceshelf"><span class="std std-ref">Ice-shelf cavities</span></a>.</p>
+<p>If the test case is being compared with a baseline, the potential temperature,
+salinity, and layerThickness are compared with those in the baseline initial
+condition to make sure they are identical.  In simulations with ice-shelf
+cavities, the SSH and land-ice pressure are compared against the baseline.</p>
+</section>
+<section id="performance-test-test-case">
+<span id="dev-ocean-global-ocean-performance-test"></span><h3>performance_test test case<a class="headerlink" href="#performance-test-test-case" title="Link to this heading">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.performance_test.PerformanceTest.html#compass.ocean.tests.global_ocean.performance_test.PerformanceTest" title="compass.ocean.tests.global_ocean.performance_test.PerformanceTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.performance_test.PerformanceTest</span></code></a>
+defines a test case for performing 1 or 2 short MPAS-Ocean simulations as
+“smoke tests” to make sure nothing is clearly wrong with the configuration.</p>
+<p>If ice-shelf cavities are not present, the test case includes 1 <code class="docutils literal notranslate"><span class="pre">forward</span></code>
+step.</p>
+<p>In configurations with ice-shelf cavities, the test performs 2 short forward
+runs, one with prognostic ice-shelf melt fluxes and one with “data” ice shelf
+melt fluxes derived from satellite observations.</p>
+<p>The module includes <code class="docutils literal notranslate"><span class="pre">namelist.wisc</span></code> and <code class="docutils literal notranslate"><span class="pre">streams.wisc</span></code>, which enable melt
+fluxes below ice shelves and write out related fields if the mesh includes
+<a class="reference internal" href="../framework.html#dev-ocean-framework-iceshelf"><span class="std std-ref">Ice-shelf cavities</span></a>.</p>
+<p>If a baseline is provided, prognostic variables and ice-shelf melt fluxes (if
+ice-shelf cavities are included in the mesh) are compared with a baseline, and
+the <code class="docutils literal notranslate"><span class="pre">time</span> <span class="pre">integration</span></code> timer is compared with that of the baseline.</p>
+</section>
+<section id="restart-test-test-case">
+<span id="dev-ocean-global-ocean-restart-test"></span><h3>restart_test test case<a class="headerlink" href="#restart-test-test-case" title="Link to this heading">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.restart_test.RestartTest.html#compass.ocean.tests.global_ocean.restart_test.RestartTest" title="compass.ocean.tests.global_ocean.restart_test.RestartTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.restart_test.RestartTest</span></code></a>
+defines a test case for comparing a <code class="docutils literal notranslate"><span class="pre">full_run</span></code> of a longer duration with a
+<code class="docutils literal notranslate"><span class="pre">restart_run</span></code> that is made up of two segments if half the duration with a
+restart in between. The length of the full and restart runs depends on the time
+integrator.  For the <code class="docutils literal notranslate"><span class="pre">split-explicit</span></code> integrator, an 8-hour full run is
+compared with two 4-hour segments in the restart run.  For the <code class="docutils literal notranslate"><span class="pre">RK4</span></code>
+integrator, the full run is 20 minutes long, while the restart segments are
+each 10 minutes.  The test case ensures that the main prognostic
+variables—<code class="docutils literal notranslate"><span class="pre">temperature</span></code>, <code class="docutils literal notranslate"><span class="pre">salinity</span></code>, <code class="docutils literal notranslate"><span class="pre">layerThickness</span></code> and
+<code class="docutils literal notranslate"><span class="pre">normalVelocity</span></code>—are identical at the end of the two runs (as well as with
+a baseline if one is provided when calling <a class="reference internal" href="../../command_line.html#dev-compass-setup"><span class="std std-ref">compass setup</span></a>).</p>
+<p>The various steps and time integrators are configured with
+<code class="docutils literal notranslate"><span class="pre">namelist.&lt;time_integrator&gt;.&lt;step&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">streams.&lt;time_integrator&gt;.&lt;step&gt;</span></code>
+namelist replacements and streams files.</p>
+</section>
+<section id="decomp-test-test-case">
+<span id="dev-ocean-global-ocean-decomp-test"></span><h3>decomp_test test case<a class="headerlink" href="#decomp-test-test-case" title="Link to this heading">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.decomp_test.DecompTest.html#compass.ocean.tests.global_ocean.decomp_test.DecompTest" title="compass.ocean.tests.global_ocean.decomp_test.DecompTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.decomp_test.DecompTest</span></code></a>
+defines a test case that performs a short run once on 4 cores and once on 8
+cores.  It ensures that <code class="docutils literal notranslate"><span class="pre">temperature</span></code>, <code class="docutils literal notranslate"><span class="pre">salinity</span></code>, <code class="docutils literal notranslate"><span class="pre">layerThickness</span></code> and
+<code class="docutils literal notranslate"><span class="pre">normalVelocity</span></code> are identical at the end of the two runs (as well as with a
+baseline if one is provided when calling <a class="reference internal" href="../../command_line.html#dev-compass-setup"><span class="std std-ref">compass setup</span></a>).</p>
+<p>The duration of the run depends on the mesh and time integrator.  For the
+<a class="reference internal" href="#dev-ocean-global-ocean-qu240"><span class="std std-ref">QU240 and QUwISC240</span></a> meshes (the only meshes that this test case
+is currently being generated for), the duration is 6 hours for the
+<code class="docutils literal notranslate"><span class="pre">split-explicit</span></code> integrator and 10 minutes for <code class="docutils literal notranslate"><span class="pre">RK4</span></code>.</p>
+</section>
+<section id="threads-test-test-case">
+<span id="dev-ocean-global-ocean-threads-test"></span><h3>threads_test test case<a class="headerlink" href="#threads-test-test-case" title="Link to this heading">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.threads_test.ThreadsTest.html#compass.ocean.tests.global_ocean.threads_test.ThreadsTest" title="compass.ocean.tests.global_ocean.threads_test.ThreadsTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.threads_test.ThreadsTest</span></code></a>
+defines a test case that performs a short run once on 4 cores, each with 1
+thread and once on 4 cores, each with 2 threads.  It ensures that
+<code class="docutils literal notranslate"><span class="pre">temperature</span></code>, <code class="docutils literal notranslate"><span class="pre">salinity</span></code>, <code class="docutils literal notranslate"><span class="pre">layerThickness</span></code> and <code class="docutils literal notranslate"><span class="pre">normalVelocity</span></code> are
+identical at the end of the two runs (as well as with a baseline if one is
+provided when calling <a class="reference internal" href="../../command_line.html#dev-compass-setup"><span class="std std-ref">compass setup</span></a>).</p>
+<p>The duration of the run depends on the mesh and time integrator.  For the
+<a class="reference internal" href="#dev-ocean-global-ocean-qu240"><span class="std std-ref">QU240 and QUwISC240</span></a> meshes (the only meshes that this test case
+is currently being generated for), the duration is 6 hours for the
+<code class="docutils literal notranslate"><span class="pre">split-explicit</span></code> integrator and 10 minutes for <code class="docutils literal notranslate"><span class="pre">RK4</span></code>.</p>
+</section>
+<section id="analysis-test-test-case">
+<span id="dev-ocean-global-ocean-analysis-test"></span><h3>analysis_test test case<a class="headerlink" href="#analysis-test-test-case" title="Link to this heading">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.analysis_test.AnalysisTest.html#compass.ocean.tests.global_ocean.analysis_test.AnalysisTest" title="compass.ocean.tests.global_ocean.analysis_test.AnalysisTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.analysis_test.AnalysisTest</span></code></a>
+defines a test case that performs a short run with 14 analysis members (see
+<a class="reference internal" href="../../../users_guide/ocean/test_groups/global_ocean.html#global-ocean-analysis-test"><span class="std std-ref">analysis_test test case</span></a> in the User’s Guide). The <code class="docutils literal notranslate"><span class="pre">namelist.forward</span></code>
+and <code class="docutils literal notranslate"><span class="pre">streams.forward</span></code> files ensure that the analysis members are enabled and
+that the appropriate output is written out.  The test ensures that the
+prognostic variables as well as a few variables from each analysis member are
+identical to those from the baseline if one is provided when calling
+<a class="reference internal" href="../../command_line.html#dev-compass-setup"><span class="std std-ref">compass setup</span></a>.</p>
+<p>The duration of the run depends on the mesh and time integrator.  For the
+<a class="reference internal" href="#dev-ocean-global-ocean-qu240"><span class="std std-ref">QU240 and QUwISC240</span></a> meshes (the only meshes that this test case
+is currently being generated for), the duration is 6 hours for the
+<code class="docutils literal notranslate"><span class="pre">split-explicit</span></code> integrator and 10 minutes for <code class="docutils literal notranslate"><span class="pre">RK4</span></code>.</p>
+</section>
+<section id="daily-output-test-test-case">
+<span id="dev-ocean-global-ocean-daily-output-test"></span><h3>daily_output_test test case<a class="headerlink" href="#daily-output-test-test-case" title="Link to this heading">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.daily_output_test.DailyOutputTest.html#compass.ocean.tests.global_ocean.daily_output_test.DailyOutputTest" title="compass.ocean.tests.global_ocean.daily_output_test.DailyOutputTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.daily_output_test.DailyOutputTest</span></code></a>
+defines a test case that performs a 1-day run with the <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsDaily</span></code>
+analysis members (see <a class="reference internal" href="../../../users_guide/ocean/test_groups/global_ocean.html#global-ocean-daily-output-test"><span class="std std-ref">daily_output_test test case</span></a> in the User’s
+Guide). The <code class="docutils literal notranslate"><span class="pre">namelist.forward</span></code> and <code class="docutils literal notranslate"><span class="pre">streams.forward</span></code> files ensure that the
+analysis member are enabled and that the appropriate output (the E3SM defaults
+for the <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthly</span></code> analysis member) is written out.  The test
+ensures that the time average of the prognostic variables as well as the
+sea-surface height are identical to those from the baseline if one is provided
+when calling <a class="reference internal" href="../../command_line.html#dev-compass-setup"><span class="std std-ref">compass setup</span></a>.</p>
+</section>
+<section id="dynamic-adjustment-test-case">
+<span id="dev-ocean-global-ocean-dynamic-adjustment"></span><h3>dynamic_adjustment test case<a class="headerlink" href="#dynamic-adjustment-test-case" title="Link to this heading">¶</a></h3>
+<p>The class
+<a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment.html#compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment" title="compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment</span></code></a>
+descends from <a class="reference internal" href="#dev-ocean-global-ocean-forward-test"><span class="std std-ref">forward test case</span></a> and defines a test
+case for performing a series of forward model runs in sequence to allow the
+ocean model to dynamically adjust to the initial condition.  This process
+involves a rapid increase in ocean velocity, the dissipation of fast-moving
+waves, and adjustment of the sea-surface height to be in balance with the
+dynamic pressure (see <a class="reference internal" href="../../../users_guide/ocean/test_groups/global_ocean.html#global-ocean-dynamic-adjustment"><span class="std std-ref">dynamic_adjustment test case</span></a> in the User’s
+Guide). This process typically require smaller times steps and artificial
+friction.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">restart_filenames</span></code> attribute keeps track of a sequence of restart files
+used in each step of the adjustment process.  The final restart file is used
+in the <a class="reference internal" href="#dev-ocean-global-ocean-files-for-e3sm"><span class="std std-ref">files_for_e3sm test case</span></a>.</p>
+<p>The test case also takes care of validating the output from the final
+<code class="docutils literal notranslate"><span class="pre">simulation</span></code> step, comparing <code class="docutils literal notranslate"><span class="pre">temperature</span></code>, <code class="docutils literal notranslate"><span class="pre">salinity</span></code>,
+<code class="docutils literal notranslate"><span class="pre">layerThickness</span></code>, and <code class="docutils literal notranslate"><span class="pre">normalVelocity</span></code> with a baseline if one is provided.</p>
+<p>Each mesh needs to have a <code class="docutils literal notranslate"><span class="pre">dynamic_adjustment.yaml</span></code> (for the split-explicit
+time integrator) and optionally a <code class="docutils literal notranslate"><span class="pre">dynamic_adjustment_rk4.yaml</span></code> (if
+there is need to support dynamic adjustment with the RK4 time integrator).
+The YAML file defines some shared properties of each dynamic adjustment step
+and a list of properties (related to namelist options) for each step.  Here is
+and example:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dynamic_adjustment</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">land_ice_flux_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data</span>
+<span class="w">  </span><span class="nt">get_dt_from_min_res</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+
+<span class="w">  </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">damped_adjustment_1</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">run_duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">output_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">restart_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">dt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">00:15:00</span>
+<span class="w">      </span><span class="nt">btr_dt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">00:00:30</span>
+<span class="w">      </span><span class="nt">Rayleigh_damping_coeff</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0e-4</span>
+
+<span class="w">    </span><span class="nt">damped_adjustment_2</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">run_duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">output_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">restart_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">dt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">00:15:00</span>
+<span class="w">      </span><span class="nt">btr_dt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">00:00:30</span>
+<span class="w">      </span><span class="nt">Rayleigh_damping_coeff</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0e-5</span>
+
+<span class="w">    </span><span class="nt">damped_adjustment_3</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">run_duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">output_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">restart_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">dt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">00:20:00</span>
+<span class="w">      </span><span class="nt">btr_dt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">00:00:40</span>
+<span class="w">      </span><span class="nt">Rayleigh_damping_coeff</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0e-6</span>
+
+<span class="w">    </span><span class="nt">simulation</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">run_duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">output_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">restart_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">dt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">00:30:00</span>
+<span class="w">      </span><span class="nt">btr_dt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">00:01:00</span>
+<span class="w">      </span><span class="nt">Rayleigh_damping_coeff</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">None</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">land_ice_flux_mode</span></code> only matters for versions of the mesh with ice-shelf
+cavities.  Fluxes below ice shelves can be off
+(<code class="docutils literal notranslate"><span class="pre">land_ice_flux_mode:</span> <span class="pre">pressure_only</span></code>), prognostic
+(<code class="docutils literal notranslate"><span class="pre">land_ice_flux_mode:</span> <span class="pre">standalone</span></code>), or come from data
+(<code class="docutils literal notranslate"><span class="pre">land_ice_flux_mode:</span> <span class="pre">data</span></code>, the suggested approach).  All steps run with
+the same <code class="docutils literal notranslate"><span class="pre">land_ice_flux_mode</span></code>.</p>
+<p>The option <code class="docutils literal notranslate"><span class="pre">get_dt_from_min_res</span></code> determines whether the time step is
+determined automatically from the mesh resolution or is specified in each
+step.  Typically, meshes will use <code class="docutils literal notranslate"><span class="pre">get_dt_from_min_res:</span> <span class="pre">False</span></code> unless they
+have been generalized to support a range of resolutions, like the
+<a class="reference internal" href="#dev-ocean-global-ocean-qu-icos"><span class="std std-ref">QU, QUwISC, Icos and IcoswISC</span></a>.</p>
+<p>Under <code class="docutils literal notranslate"><span class="pre">steps:</span></code>, each step can be named as you like except that the final
+step must be called <code class="docutils literal notranslate"><span class="pre">simulation</span></code>. The convention for the other steps is
+to name and number them <code class="docutils literal notranslate"><span class="pre">damped_adjustment_&lt;n&gt;</span></code>.  There can be any number of
+damping steps, each of which typically define:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">...</span>
+<span class="w">    </span><span class="nt">damped_adjustment_1</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">run_duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">output_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">restart_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_00:00:00</span>
+<span class="w">      </span><span class="nt">dt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">00:15:00</span>
+<span class="w">      </span><span class="nt">btr_dt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">00:00:30</span>
+<span class="w">      </span><span class="nt">Rayleigh_damping_coeff</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0e-4</span>
+</pre></div>
+</div>
+<p>Most of these entries are required.  The <code class="docutils literal notranslate"><span class="pre">run_duration</span></code> is the length of the
+simulation.  The <code class="docutils literal notranslate"><span class="pre">output_interval</span></code> is the frequency of output to the
+<code class="docutils literal notranslate"><span class="pre">output.nc</span></code> file, which contains basic prognostic variables: temperature,
+salinity, layer thickness and normal velocity.  The <code class="docutils literal notranslate"><span class="pre">restart_interval</span></code> is
+the frequency at which restart files are written out.  Note that it is
+important that there be an integer number of restart intervals from the
+beginning of the dynamic adjustment to the start of the current step, which
+limits the flexibility in selecting the restart interval.</p>
+<p>Typically, a goal of dynamic adjustment is to begin with a smaller baroclinic
+time step <code class="docutils literal notranslate"><span class="pre">dt</span></code> and the barotropic time step <code class="docutils literal notranslate"><span class="pre">btr_dt</span></code> (not applicable for
+RK4 time integration) and increase the values in subsequent damped adjustment
+steps.  The values in the <code class="docutils literal notranslate"><span class="pre">simulation</span></code> step should typically be the same as
+what the mesh will use in E3SM production runs.</p>
+<p>Another goal of dynamic adjustment is to reduce the <code class="docutils literal notranslate"><span class="pre">Rayleigh_damping_coeff</span></code>
+from a relatively high number (often <code class="docutils literal notranslate"><span class="pre">1.0e-3</span></code> or <code class="docutils literal notranslate"><span class="pre">1.0e-4</span></code>) to nothing.  The
+Rayleigh friction is a linear damping on the momentum that can reduce the
+amplitude and speed of fast barotropic waves as the ocean spins up from rest.
+For steps where Rayleigh friction should be turned off, you can either omit
+the line with <code class="docutils literal notranslate"><span class="pre">Rayleigh_damping_coeff</span></code> or use
+<code class="docutils literal notranslate"><span class="pre">Rayleigh_damping_coeff:</span> <span class="pre">None</span></code>.  The latter is slightly preferred because it
+is more explicit.</p>
+</section>
+<section id="files-for-e3sm-test-case">
+<span id="dev-ocean-global-ocean-files-for-e3sm"></span><h3>files_for_e3sm test case<a class="headerlink" href="#files-for-e3sm-test-case" title="Link to this heading">¶</a></h3>
+<p>After running a <a class="reference internal" href="#dev-ocean-global-ocean-dynamic-adjustment"><span class="std std-ref">dynamic_adjustment test case</span></a>, files can be
+prepared for use as E3SM ocean and sea-ice initial conditions using the test
+case defined in
+<a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM.html#compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM" title="compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM</span></code></a>.
+Output files from the test case are symlinked in a directory within the test
+case called <code class="docutils literal notranslate"><span class="pre">assembled_files</span></code>. See <a class="reference internal" href="../../../users_guide/ocean/test_groups/global_ocean.html#global-ocean-files-for-e3sm"><span class="std std-ref">files_for_e3sm test case</span></a> in the
+User’s Guide for more details.  Output file names involve the “mesh short
+name”, see <a class="reference internal" href="#dev-ocean-global-ocean-metadata"><span class="std std-ref">metadata</span></a>.</p>
+<p>The test case is constructed with an argument <code class="docutils literal notranslate"><span class="pre">restart_filename</span></code>, the final
+restart file produced by the <a class="reference internal" href="#dev-ocean-global-ocean-dynamic-adjustment"><span class="std std-ref">dynamic_adjustment test case</span></a>
+for the given mesh.</p>
+<p>The test case is made up of 10 steps:</p>
+<dl>
+<dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_mesh.OceanMesh.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_mesh.OceanMesh" title="compass.ocean.tests.global_ocean.files_for_e3sm.ocean_mesh.OceanMesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.ocean_mesh.OceanMesh</span></code></a></dt><dd><p>uses variables from the ocean initial condition and computes others to
+create an ocean mesh file (with both horizontal and vertical coordinate
+information), creating a symlink
+at <code class="docutils literal notranslate"><span class="pre">assembled_files/inputdata/share/meshes/mpas/ocean/&lt;mesh_short_name&gt;.&lt;datestamp&gt;.nc</span></code></p>
+</dd>
+<dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.OceanInitialCondition.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.OceanInitialCondition" title="compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.OceanInitialCondition"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.OceanInitialCondition</span></code></a></dt><dd><p>takes out the <code class="docutils literal notranslate"><span class="pre">xtime</span></code> variable from the restart file, creating a symlink
+at <code class="docutils literal notranslate"><span class="pre">assembled_files/inputdata/ocn/mpas-o/&lt;mesh_short_name&gt;/mpaso.&lt;mesh_short_name&gt;.&lt;datestamp&gt;.nc</span></code></p>
+</dd>
+<dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.OceanGraphPartition.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.OceanGraphPartition" title="compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.OceanGraphPartition"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.OceanGraphPartition</span></code></a></dt><dd><p>computes graph partitions (see <a class="reference internal" href="../../framework.html#dev-model"><span class="std std-ref">Model</span></a>) appropriate for a wide
+range of core counts between <code class="docutils literal notranslate"><span class="pre">min_graph_size</span> <span class="pre">=</span> <span class="pre">int(nCells</span> <span class="pre">/</span> <span class="pre">30000)</span></code> and
+<code class="docutils literal notranslate"><span class="pre">max_graph_size</span> <span class="pre">=</span> <span class="pre">int(nCells</span> <span class="pre">/</span> <span class="pre">2)</span></code>.  About 400 different processor counts
+are produced for each mesh (keeping only counts with small prime factors).
+Symlinks to the graph files are placed at
+<code class="docutils literal notranslate"><span class="pre">assembled_files/inputdata/ocn/mpas-o/&lt;mesh_short_name&gt;/partitions/mpas-o.graph.info.&lt;datestamp&gt;.part.&lt;core_count&gt;</span></code></p>
+</dd>
+<dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.seaice_mesh.SeaiceMesh.html#compass.ocean.tests.global_ocean.files_for_e3sm.seaice_mesh.SeaiceMesh" title="compass.ocean.tests.global_ocean.files_for_e3sm.seaice_mesh.SeaiceMesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.seaice_mesh.SeaiceMesh</span></code></a></dt><dd><p>uses variables from the ocean initial condition to create a sea-ice mesh
+file (with horizontal coordinate information), creating a symlink
+at <code class="docutils literal notranslate"><span class="pre">assembled_files/inputdata/share/meshes/mpas/sea-ice/&lt;mesh_short_name&gt;.&lt;datestamp&gt;.nc</span></code></p>
+</dd>
+<dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.SeaiceInitialCondition.html#compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.SeaiceInitialCondition" title="compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.SeaiceInitialCondition"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.SeaiceInitialCondition</span></code></a></dt><dd><p>extracts the following variables from the restart file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">keep_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;areaCell&#39;</span><span class="p">,</span> <span class="s1">&#39;cellsOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;edgesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;fCell&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;indexToCellID&#39;</span><span class="p">,</span> <span class="s1">&#39;latCell&#39;</span><span class="p">,</span> <span class="s1">&#39;lonCell&#39;</span><span class="p">,</span> <span class="s1">&#39;meshDensity&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;nEdgesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;verticesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;xCell&#39;</span><span class="p">,</span> <span class="s1">&#39;yCell&#39;</span><span class="p">,</span> <span class="s1">&#39;zCell&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;angleEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;cellsOnEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;dcEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;dvEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;edgesOnEdge&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;fEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;indexToEdgeID&#39;</span><span class="p">,</span> <span class="s1">&#39;latEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;lonEdge&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;nEdgesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;nEdgesOnEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;verticesOnEdge&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;weightsOnEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;xEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;yEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;zEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;areaTriangle&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;cellsOnVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;edgesOnVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;fVertex&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;indexToVertexID&#39;</span><span class="p">,</span> <span class="s1">&#39;kiteAreasOnVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;latVertex&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;lonVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;xVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;yVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;zVertex&#39;</span><span class="p">]</span>
+
+<span class="k">if</span> <span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
+   <span class="n">keep_vars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;landIceMask&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A symlink to the resulting file is placed at
+<code class="docutils literal notranslate"><span class="pre">assembled_files/inputdata/ocn/mpas-seaice/&lt;mesh_short_name&gt;/mpassi.&lt;mesh_short_name&gt;.&lt;datestamp&gt;.nc</span></code></p>
+</dd>
+<dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.seaice_graph_partition.SeaiceGraphPartition.html#compass.ocean.tests.global_ocean.files_for_e3sm.seaice_graph_partition.SeaiceGraphPartition" title="compass.ocean.tests.global_ocean.files_for_e3sm.seaice_graph_partition.SeaiceGraphPartition"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.seaice_graph_partition.SeaiceGraphPartition</span></code></a></dt><dd><p>computes graph partitions (see <a class="reference internal" href="../../framework.html#dev-model"><span class="std std-ref">Model</span></a>) appropriate for a wide
+range of core counts between <code class="docutils literal notranslate"><span class="pre">min_graph_size</span> <span class="pre">=</span> <span class="pre">int(nCells</span> <span class="pre">/</span> <span class="pre">30000)</span></code> and
+<code class="docutils literal notranslate"><span class="pre">max_graph_size</span> <span class="pre">=</span> <span class="pre">int(nCells</span> <span class="pre">/</span> <span class="pre">2)</span></code>.  The sea-ice graph partitions
+include cells for each processor in both polar and equatorial regions for
+better load balancing.  See <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/seaice/partition.html">Graph partitioning</a>
+from the MPAS-Tools documentation for details.  About 400 different
+processor counts are produced for each mesh (keeping only counts with small
+prime factors). Symlinks to the graph files are placed at
+<code class="docutils literal notranslate"><span class="pre">assembled_files/inputdata/ice/mpas-seaice/&lt;mesh_short_name&gt;/partitions/mpas-seaice.graph.info.&lt;datestamp&gt;.part.&lt;core_count&gt;</span></code></p>
+</dd>
+<dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.scrip.Scrip.html#compass.ocean.tests.global_ocean.files_for_e3sm.scrip.Scrip" title="compass.ocean.tests.global_ocean.files_for_e3sm.scrip.Scrip"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.scrip.Scrip</span></code></a></dt><dd><p>generates a SCRIP file (see <a class="reference internal" href="../../../users_guide/ocean/test_groups/global_ocean.html#global-ocean-files-for-e3sm"><span class="std std-ref">files_for_e3sm test case</span></a> in the
+User’s guide) describing the MPAS-Ocean mesh.  If ice-shelf cavities are
+included, the step also generates a SCRIP file without the ice-shelf
+cavities for use in coupling components that do not interact with ice-shelf
+cavities (atmosphere, land and sea-ice components).</p>
+<p>Symlinks are placed in <code class="docutils literal notranslate"><span class="pre">assembled_files/inputdata/ocn/mpas-o/&lt;mesh_short_name&gt;</span></code>
+If ice-shelf cavities are present, the two symlinks are named
+<code class="docutils literal notranslate"><span class="pre">ocean.&lt;mesh_short_name&gt;.nomask.scrip.&lt;creation_date&gt;.nc</span></code>
+and
+<code class="docutils literal notranslate"><span class="pre">ocean.&lt;mesh_short_name&gt;.mask.scrip.&lt;creation_date&gt;.nc</span></code>.
+Otherwise, only one file is symlinked, and it is named
+<code class="docutils literal notranslate"><span class="pre">ocean.&lt;mesh_short_name&gt;.scrip.&lt;creation_date&gt;.nc</span></code></p>
+</dd>
+<dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.e3sm_to_cmip_maps.E3smToCmipMaps.html#compass.ocean.tests.global_ocean.files_for_e3sm.e3sm_to_cmip_maps.E3smToCmipMaps" title="compass.ocean.tests.global_ocean.files_for_e3sm.e3sm_to_cmip_maps.E3smToCmipMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.e3sm_to_cmip_maps.E3smToCmipMaps</span></code></a></dt><dd><p>creates mapping files for
+<a class="reference external" href="https://e3sm-to-cmip.readthedocs.io/en/latest/">e3sm_to_cmip</a>.</p>
+<p>Mapping files are created from the MPAS-Ocean and -Seaice mesh to a
+standard 1-degree latitude-longitude grid using three methods: <cite>aave</cite>
+(conservative), <cite>mono</cite> (monotonic) and <cite>nco</cite> (NCO’s conservative
+algorithm). The mapping files are symlinked in the directory
+<code class="docutils literal notranslate"><span class="pre">assembled_files/diagnostics/maps/</span></code>.</p>
+</dd>
+<dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps.DiagnosticMaps.html#compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps.DiagnosticMaps" title="compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps.DiagnosticMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps.DiagnosticMaps</span></code></a></dt><dd><p>creates mapping files for
+<a class="reference external" href="https://mpas-dev.github.io/MPAS-Analysis/stable/">MPAS-Analysis</a>.</p>
+<p>Mapping files are created from the MPAS-Ocean and -Seaice mesh to 7
+standard comparison grids. Mapping files are created from both cells and
+vertices on the MPAS mesh. The vertex maps are needed for quantities like
+the barotropic streamfunction in MPAS-Ocean and ice speed in MPAS-Seaice.
+The mapping files are symlinked in the directory
+<code class="docutils literal notranslate"><span class="pre">assembled_files/diagnostics/mpas_analysis/maps/</span></code>.</p>
+</dd>
+<dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_masks.DiagnosticMasks.html#compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_masks.DiagnosticMasks" title="compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_masks.DiagnosticMasks"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_masks.DiagnosticMasks</span></code></a></dt><dd><p>creates regions masks for E3SM analysis members and
+<a class="reference external" href="https://mpas-dev.github.io/MPAS-Analysis/stable/">MPAS-Analysis</a>.</p>
+<p>Region masks are created using
+<code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_aggregator_by_name()</span></code> for
+the following region groups:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">region_groups</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Antarctic Regions&#39;</span><span class="p">,</span> <span class="s1">&#39;Arctic Ocean Regions&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;Arctic Sea Ice Regions&#39;</span><span class="p">,</span> <span class="s1">&#39;Ocean Basins&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;Ocean Subbasins&#39;</span><span class="p">,</span> <span class="s1">&#39;ISMIP6 Regions&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;Transport Transects&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>If ice-shelf cavities are present in the mesh, the <code class="docutils literal notranslate"><span class="pre">Ice</span> <span class="pre">Shelves</span></code>
+regions are also included.
+The resulting region masks are symlinked in the directory
+<code class="docutils literal notranslate"><span class="pre">assembled_files/diagnostics/mpas_analysis/region_masks/</span></code>
+and named <code class="docutils literal notranslate"><span class="pre">&lt;mesh_short_name&gt;_&lt;region_group&gt;&lt;ref_date&gt;.nc</span></code></p>
+<p>Masks are also created for the meridional overturning circulation (MOC)
+basins and the transects representing their southern boundaries.
+The resulting region mask is in the same directory as above, and named
+<code class="docutils literal notranslate"><span class="pre">&lt;mesh_short_name&gt;_moc_masks_and_transects.nc</span></code></p>
+</dd>
+<dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.remap_ice_shelf_melt.RemapIceShelfMelt.html#compass.ocean.tests.global_ocean.files_for_e3sm.remap_ice_shelf_melt.RemapIceShelfMelt" title="compass.ocean.tests.global_ocean.files_for_e3sm.remap_ice_shelf_melt.RemapIceShelfMelt"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.remap_ice_shelf_melt.RemapIceShelfMelt</span></code></a></dt><dd><p>is used to remap ice-shelf melt rates from the dataset of
+<a class="reference external" href="https://doi.org/10.5194/tc-17-3409-2023">Paolo et al. (2023)</a>
+to the MPAS mesh.  This dataset is used in E3SM for <code class="docutils literal notranslate"><span class="pre">DISMF</span></code> (data
+ice-shelf melt flux) compsets.</p>
+</dd>
+<dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.remap_sea_surface_salinity_restoring.RemapSeaSurfaceSalinityRestoring.html#compass.ocean.tests.global_ocean.files_for_e3sm.remap_sea_surface_salinity_restoring.RemapSeaSurfaceSalinityRestoring" title="compass.ocean.tests.global_ocean.files_for_e3sm.remap_sea_surface_salinity_restoring.RemapSeaSurfaceSalinityRestoring"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.remap_sea_surface_salinity_restoring.RemapSeaSurfaceSalinityRestoring</span></code></a></dt><dd><p>is used to remap sea-surface salinity from the Polar science center
+Hydrographic Climatology (PHC) to the MPAS mesh.  This dataset is used in
+E3SM for compsets with data atmospheric/land forcing.</p>
+</dd>
+<dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.remap_iceberg_climatology.RemapIcebergClimatology.html#compass.ocean.tests.global_ocean.files_for_e3sm.remap_iceberg_climatology.RemapIcebergClimatology" title="compass.ocean.tests.global_ocean.files_for_e3sm.remap_iceberg_climatology.RemapIcebergClimatology"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.remap_iceberg_climatology.RemapIcebergClimatology</span></code></a></dt><dd><p>is used to remap freshwater fluxes from an iceberg climatology from
+<a class="reference external" href="https://doi.org/10.1016/j.ocemod.2016.05.001">Merino et al. (2016)</a> to
+the MPAS mesh.  This dataset is used in E3SM for compsets with data iceberg
+freshwater fluxes (<code class="docutils literal notranslate"><span class="pre">DIB</span></code>).</p>
+</dd>
+<dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.remap_tidal_mixing.RemapTidalMixing.html#compass.ocean.tests.global_ocean.files_for_e3sm.remap_tidal_mixing.RemapTidalMixing" title="compass.ocean.tests.global_ocean.files_for_e3sm.remap_tidal_mixing.RemapTidalMixing"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.remap_tidal_mixing.RemapTidalMixing</span></code></a></dt><dd><p>is used to remap the RMS tidal velocity taken from the
+<a class="reference external" href="https://www.usap-dc.org/view/dataset/601235">CATS 2008</a> tidal model to
+the MPAS mesh.  This RMS tidal velocity field can optionally be used in
+the sub-ice-shelf melt parameterization.</p>
+</dd>
+<dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.write_coeffs_reconstruct.WriteCoeffsReconstruct.html#compass.ocean.tests.global_ocean.files_for_e3sm.write_coeffs_reconstruct.WriteCoeffsReconstruct" title="compass.ocean.tests.global_ocean.files_for_e3sm.write_coeffs_reconstruct.WriteCoeffsReconstruct"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.write_coeffs_reconstruct.WriteCoeffsReconstruct</span></code></a></dt><dd><p>is used to do a one-time-step forward run to write out coefficients
+<code class="docutils literal notranslate"><span class="pre">coeff_reconstruct</span></code> for reconstructing vector fields at cell centers from
+normal values at edges.  These can be used in combination with the</p>
+</dd>
+</dl>
+</section>
+<section id="files-for-e3sm-for-an-existing-mesh">
+<h3>files_for_e3sm for an existing mesh<a class="headerlink" href="#files-for-e3sm-for-an-existing-mesh" title="Link to this heading">¶</a></h3>
+<p>The test case <code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/files_for_e3sm</span></code> can be used to create all the
+same files as in <a class="reference internal" href="#dev-ocean-global-ocean-files-for-e3sm"><span class="std std-ref">files_for_e3sm test case</span></a> but for an
+existing mesh.  To point to the existing mesh and associated graph file, the
+following config options must be specified (typically by editing
+<code class="docutils literal notranslate"><span class="pre">files_for_e3sm.cfg</span></code> after setting up the test case):</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options related to initial condition and diagnostics support files</span>
+<span class="c1"># for E3SM</span>
+<span class="k">[files_for_e3sm]</span>
+
+<span class="c1"># the absolute path or relative path with respect to the test case&#39;s work</span>
+<span class="c1"># directory of an ocean restart file on the given mesh</span>
+<span class="na">ocean_restart_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span>
+
+<span class="c1"># the absolute path or relative path with respect to the test case&#39;s work</span>
+<span class="c1"># directory of a graph file that corresponds to the mesh</span>
+<span class="na">graph_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span>
+</pre></div>
+</div>
+<p>The following will be detected from the metadata in the ocean restart file if
+present but can be set if needed:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options related to initial condition and diagnostics support files</span>
+<span class="c1"># for E3SM</span>
+<span class="k">[files_for_e3sm]</span>
+
+<span class="c1"># the E3SM short name of the mesh or &quot;autodetect&quot; to use the</span>
+<span class="c1"># MPAS_Mesh_Short_Name attribute of the mesh file</span>
+<span class="na">mesh_short_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span>
+
+<span class="c1"># whether the mesh has ice-shelf cavities</span>
+<span class="na">with_ice_shelf_cavities</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="global_convergence.html" class="btn btn-neutral float-left" title="global_convergence" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gotm.html" class="btn btn-neutral float-right" title="gotm" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
