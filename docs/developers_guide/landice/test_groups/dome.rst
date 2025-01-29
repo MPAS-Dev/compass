@@ -47,7 +47,7 @@ The variable resolution mesh is downloaded from
     section of the config file.
 
 A MALI grid is created with the MPAS-Tools script
-``create_landice_grid_from_generic_MPAS_grid.py`` and a graph file is created
+``create_landice_grid_from_generic_mpas_grid`` and a graph file is created
 to partition the mesh before the model run.
 
 Finally, the initial condition is defined in the private function

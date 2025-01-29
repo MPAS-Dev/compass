@@ -244,7 +244,7 @@ functions.  Here is a code snippet from
         section = config['dome']
         ...
         levels = section.getfloat('levels')
-        args = ['create_landice_grid_from_generic_MPAS_grid.py',
+        args = ['create_landice_grid_from_generic_mpas_grid',
                 '-i', 'mpas_grid.nc',
                 '-o', 'landice_grid.nc',
                 '-l', levels]
@@ -253,7 +253,7 @@ functions.  Here is a code snippet from
         ...
 
 
-This example calls the script ``create_landice_grid_from_generic_MPAS_grid.py``
+This example calls the script ``create_landice_grid_from_generic_mpas_grid``
 from ``mpas_tools`` with several arguments, making use of the ``logger``.
 
 .. _dev_io:

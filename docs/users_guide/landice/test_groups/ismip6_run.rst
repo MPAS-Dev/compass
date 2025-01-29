@@ -173,7 +173,7 @@ in the comparison of post-simulation ice mass calculations from the model output
 To address this issue, an interim solution has been made to project the southern
 polar region onto the MALI planar mesh assuming a sphere (this is done by setting
 the lat/long in the MALI mesh using the 'aid-bedmap2-sphere' projection string in
-calling the function in 'set_lat_lon_fields_in_planar_grid.py'. Thus, the resulting
+calling the function in 'set_lat_lon_fields_in_planar_grid'. Thus, the resulting
 MALI mesh for coupled MALI-SLM simulations that are setup from this testgroup have
 the lat/long values based off sphere. Once the simulation outputs are generated,
 it is necessary to calculate and apply the scaling factors to the MALI outputs
