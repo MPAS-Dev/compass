@@ -263,6 +263,7 @@ def build_conda_env(env_type, recreate, mpi, conda_mpi, version,
     if env_type == 'test_release':
         # for a test release, we will be the compass package from the dev label
         channels = channels + ['-c e3sm/label/compass_dev']
+    channels = ['-c conda-forge/label/mpas_tools_dev'] + channels
     channels = channels + ['-c e3sm/label/compass']
 
     channels = f'--override-channels {" ".join(channels)}'
