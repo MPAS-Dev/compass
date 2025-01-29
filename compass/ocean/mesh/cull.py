@@ -46,15 +46,20 @@ class CullMeshStep(Step):
         Whether to leave land cells in the mesh based on bathymetry
         specified by do_inject_bathymetry
 
-    remap_topography : compass.ocean.mesh.remap_topography.RemapTopography
+    unsmoothed_topo : compass.ocean.mesh.remap_topography.RemapTopography
         A step for remapping topography. If provided, the remapped
         topography is used to determine the land mask
+
+    smoothed_topo : compass.ocean.mesh.remap_topography.RemapTopography
+        A step for remapping topography. If provided, the remapped
+        topography is culled for subsequent use in ocean initial conditions
 
     """
 
     def __init__(self, test_case, base_mesh_step, with_ice_shelf_cavities,
                  name='cull_mesh', subdir=None, do_inject_bathymetry=False,
-                 preserve_floodplain=False, remap_topography=None):
+                 preserve_floodplain=False, unsmoothed_topo=None,
+                 smoothed_topo=None):
         """
         Create a new step
 
@@ -83,14 +88,19 @@ class CullMeshStep(Step):
             Whether to leave land cells in the mesh based on bathymetry
             specified by do_inject_bathymetry
 
-        remap_topography : compass.ocean.mesh.remap_topography.RemapTopography, optional
+        unsmoothed_topo : compass.ocean.mesh.remap_topography.RemapTopography, optional
             A step for remapping topography. If provided, the remapped
             topography is used to determine the land mask
+
+        smoothed_topo : compass.ocean.mesh.remap_topography.RemapTopography, optional
+            A step for remapping topography. If provided, the remapped
+            topography is culled for subsequent use in ocean initial conditions
         """  # noqa: E501
         super().__init__(test_case, name=name, subdir=subdir,
                          cpus_per_task=None, min_cpus_per_task=None)
         self.base_mesh_step = base_mesh_step
-        self.remap_topography = remap_topography
+        self.unsmoothed_topo = unsmoothed_topo
+        self.smoothed_topo = smoothed_topo
 
         for file in ['culled_mesh.nc', 'culled_graph.info',
                      'critical_passages_mask_final.nc']:
@@ -121,10 +131,16 @@ class CullMeshStep(Step):
         target = os.path.join(base_path, base_filename)
         self.add_input_file(filename='base_mesh.nc', work_dir_target=target)
 
-        if self.remap_topography is not None:
-            topo_path = self.remap_topography.path
+        if self.unsmoothed_topo is not None:
+            if self.smoothed_topo is None:
+                self.smoothed_topo = self.unsmoothed_topo
+            topo_path = self.unsmoothed_topo.path
             target = os.path.join(topo_path, 'topography_remapped.nc')
-            self.add_input_file(filename='topography.nc',
+            self.add_input_file(filename='unsmoothed_topography.nc',
+                                work_dir_target=target)
+            topo_path = self.smoothed_topo.path
+            target = os.path.join(topo_path, 'topography_remapped.nc')
+            self.add_input_file(filename='smoothed_topography.nc',
                                 work_dir_target=target)
             self.add_output_file('topography_culled.nc')
             self.add_output_file('map_culled_to_base.nc')
@@ -290,14 +306,14 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
     netcdf_format = mpas_tools.io.default_format
     netcdf_engine = mpas_tools.io.default_engine
 
-    has_remapped_topo = os.path.exists('topography.nc')
+    has_remapped_topo = os.path.exists('unsmoothed_topography.nc')
     if with_cavities and not has_remapped_topo:
         raise ValueError('Mesh culling with caviites must be from '
                          'remapped topography.')
 
     if has_remapped_topo:
         _land_mask_from_topo(with_cavities,
-                             topo_filename='topography.nc',
+                             topo_filename='unsmoothed_topography.nc',
                              mask_filename='land_mask.nc')
     else:
         _land_mask_from_geojson(with_cavities=with_cavities,
@@ -478,7 +494,7 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
 def _cull_topo(with_cavities, process_count, logger, latitude_threshold,
                sweep_count, ds_preserve):
 
-    ds_topo = xr.open_dataset('topography.nc')
+    ds_topo = xr.open_dataset('smoothed_topography.nc')
     ds_base = xr.open_dataset('base_mesh.nc')
 
     ds_culled = xr.open_dataset('culled_mesh.nc')
@@ -488,6 +504,15 @@ def _cull_topo(with_cavities, process_count, logger, latitude_threshold,
     write_netcdf(ds_map_culled_to_base, 'map_culled_to_base.nc')
 
     if with_cavities:
+        ds_unsmoothed_topo = xr.open_dataset('unsmoothed_topography.nc')
+
+        # use fractions from unsmoothed topography so we don't have
+        # different masks for different amounts of smoothing.  This
+        # allows us to use the same E3SM mapping files for different smoothing
+        for var in ['landIceFracObserved', 'landIceGroundedFracObserved',
+                    'landIceFloatingFracObserved']:
+            ds_topo[var] = ds_unsmoothed_topo[var]
+
         _flood_fill_and_add_land_ice_mask(ds_topo, ds_base,
                                           ds_map_culled_to_base, ds_preserve,
                                           logger, latitude_threshold,
