@@ -1051,9 +1051,9 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
         return f"{base_fn}.scrip.nc"
 
     logger = self.logger
-    weights_filename = "/lore/smithc11/projects/landice/compassData/" \
-                       "alexCoarseMeshMappingData_01292025/" \
-                       "gridded_to_MPAS_weights.nc"  # HACK
+
+    source_scrip = __guess_scrip_name(os.path.basename(source_file))
+    weights_filename = "gridded_to_MPAS_weights.nc"
 
     # make sure variables is a list, encompasses the variables="all" case
     if isinstance(variables, str):
@@ -1061,6 +1061,26 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
     if not isinstance(variables, list):
         raise TypeError("Arugment 'variables' is of incorrect type, must"
                         " either the string 'all' or a list of strings")
+
+    logger.info('creating scrip file for source dataset')
+    # Note: writing scrip file to workdir
+    args = ['create_SCRIP_file_from_planar_rectangular_grid.py',
+            '-i', source_file,
+            '-s', source_scrip,
+            '-p', proj,
+            '-r', '2']
+    check_call(args, logger=logger)
+
+    # Generate remapping weights
+    logger.info('generating gridded dataset -> MPAS weights')
+    args = [parallel_executable, '-n', nProcs, 'ESMF_RegridWeightGen',
+            '--source', source_scrip,
+            '--destination', mali_scrip,
+            '--weight', weights_filename,
+            '--method', 'conserve',
+            "--netcdf4",
+            "--dst_regional", "--src_regional", '--ignore_unmapped']
+    check_call(args, logger=logger)
 
     # Perform actual interpolation using the weights
     logger.info('calling interpolate_to_mpasli_grid.py')
