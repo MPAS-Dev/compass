@@ -53,10 +53,15 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'compass'
-copyright = u'Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;' \
-            u'Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR).'
-author = u'Xylar Asay-Davis, Matt Hoffman, Doug Jacobsen, Mark Petersen, ' \
-         u'Philip Wolfram, Luke Van Roekel, Tong Zhang'
+copyright = u'Copyright (c) 2013-2024, Triad National Security, LLC ' \
+            u'(Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the ' \
+            u'University Corporation for Atmospheric Research (UCAR).'
+author = u'Xylar Asay-Davis, Alice Barthel, Carolyn Begeman, Pete Bosler, ' \
+         u'Riley Brady, Steven Brus, Sara Calandrini, Zhendong Cao, ' \
+         u'Giacomo Capodaglio, Max Carlson, Althea Denlinger, ' \
+         u'Yaris Eidenbenz, Darren Engwirda, Holly Han, Jeremy Lilly, ' \
+         u'Mauro Perego, Mark Petersen, Cameron Smith, Yohei Takano, ' \
+         u'Irena Vankova, Luke Van Roekel, Philip Wolfram, Tong Zhang'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
