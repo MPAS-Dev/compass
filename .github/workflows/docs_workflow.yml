@@ -7,6 +7,9 @@ on:
   release:
     types: [published]
 
+env:
+  PYTHON_VERSION: "3.13"
+
 jobs:
   publish-docs:
     runs-on: ubuntu-latest
@@ -22,16 +25,6 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
-      - name: Cache Conda
-        uses: actions/cache@v4
-        env:
-          # Increase this value to reset cache if deploy/conda-dev-spec.template has not changed in the workflow
-          CACHE_NUMBER: 0
-        with:
-          path: ~/conda_pkgs_dir
-          key: ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{
-            hashFiles('conda/configure_compass_env.py,conda/*,conda/compass_env/*') }}
-
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
         name: Set up Conda Environment
         uses: conda-incubator/setup-miniconda@v3
@@ -41,8 +34,8 @@ jobs:
           channels: conda-forge,e3sm/label/compass
           channel-priority: strict
           use-mamba: false
-          auto-update-conda: false
-          python-version: ${{ matrix.python-version }}
+          auto-update-conda: true
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
         name: Install compass
@@ -51,7 +44,7 @@ jobs:
           ./conda/configure_compass_env.py \
             --env_only \
             --env_name compass_test \
-            --python=${{ matrix.python-version }} \
+            --python=${{ env.PYTHON_VERSION }} \
             --verbose
           source load_compass_test.sh
 
