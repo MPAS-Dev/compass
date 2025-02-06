@@ -144,7 +144,7 @@ class ExtractRegion(Step):
 
         # mark horns for culling
         logger.info('Marking horns for culling')
-        args = ['mark_horns_for_culling.py', '-f',
+        args = ['mark_horns_for_culling', '-f',
                 os.path.join(tmpdir, f'{source_file_rootname}_culled.nc')]
         check_call(args, logger=logger)
 
@@ -158,8 +158,8 @@ class ExtractRegion(Step):
         write_netcdf(ds_out, dest_mesh_only_name)
 
         # set lat/lon
-        logger.info('calling set_lat_lon_fields_in_planar_grid.py')
-        args = ['set_lat_lon_fields_in_planar_grid.py',
+        logger.info('calling set_lat_lon_fields_in_planar_grid')
+        args = ['set_lat_lon_fields_in_planar_grid',
                 '-f', dest_mesh_only_name, '-p', mesh_projection]
         check_call(args, logger=logger)
 
@@ -206,8 +206,8 @@ class ExtractRegion(Step):
 
         elif interp_method == 'mali_interp':
             # create landice mesh
-            logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')  # noqa
-            args = ['create_landice_grid_from_generic_MPAS_grid.py',
+            logger.info('calling create_landice_grid_from_generic_mpas_grid')  # noqa
+            args = ['create_landice_grid_from_generic_mpas_grid',
                     '-i', os.path.join(tmpdir, 'dest_mesh_only.nc'),
                     '-o', dest_file_name,
                     '-l', f'{levels}', '-v', 'glimmer',
@@ -216,8 +216,8 @@ class ExtractRegion(Step):
 
             # interpolate to new mesh using nearest neighbor to ensure we get
             # identical values
-            logger.info('calling interpolate_to_mpasli_grid.py')
-            args = ['interpolate_to_mpasli_grid.py',
+            logger.info('calling interpolate_to_mpasli_grid')
+            args = ['interpolate_to_mpasli_grid',
                     '-s', source_file_path,
                     '-d', dest_file_name, '-m', 'n']
             check_call(args, logger=logger)
@@ -226,7 +226,7 @@ class ExtractRegion(Step):
 
         # mark Dirichlet boundaries
         logger.info('Marking domain boundaries dirichlet')
-        args = ['mark_domain_boundaries_dirichlet.py',
+        args = ['mark_domain_boundaries_dirichlet',
                 '-f', dest_file_name]
         check_call(args, logger=logger)
 
