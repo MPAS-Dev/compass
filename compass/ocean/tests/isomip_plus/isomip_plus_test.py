@@ -140,7 +140,8 @@ class IsomipPlusTest(TestCase):
                          experiment=experiment,
                          vertical_coordinate=vertical_coordinate,
                          time_varying_forcing=time_varying_forcing,
-                         thin_film_present=thin_film_present))
+                         thin_film_present=thin_film_present,
+                         include_viz=thin_film_present))
         self.add_step(
             SshAdjustment(test_case=self, resolution=resolution,
                           vertical_coordinate=vertical_coordinate,

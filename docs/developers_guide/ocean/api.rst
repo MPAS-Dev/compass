@@ -1042,7 +1042,9 @@ ocean framework
 
    haney.compute_haney_number
 
-   iceshelf.compute_land_ice_pressure_and_draft
+   iceshelf.compute_land_ice_draft_from_pressure
+   iceshelf.compute_land_ice_pressure_from_draft
+   iceshelf.compute_land_ice_pressure_from_thickness
    iceshelf.adjust_ssh
 
    particles.write
