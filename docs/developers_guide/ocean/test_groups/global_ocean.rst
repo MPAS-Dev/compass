@@ -874,6 +874,41 @@ The vertical grid is an ``index_tanh_dz`` profile (see
 :ref:`dev_ocean_framework_vertical`) with 64 vertical levels ranging in
 thickness from 10 to 250 m.
 
+.. _dev_ocean_global_ocean_sowisc12to30_mali_topo:
+
+SOwISC12to30 with MALI topography
++++++++++++++++++++++++++++++++++
+
+Versions of the ``SOwISC12to30`` test cases exist with topography that comes
+from the MALI model instead of from GEBCO and BedMachine Antarctica.
+
+For now, the only supported MALI initial condition is a 4-20 km resoution
+mesh with the following config options:
+
+.. code-block:: cfg
+
+    # config options related to remapping topography to an MPAS-Ocean mesh
+    [remap_topography]
+
+    # the density of ocean water (kg/m^3), equivalent to config_ocean_density in MALI
+    ocean_density = 1028.0
+
+    # the elevation of sea level, equivalent to config_sea_level in MALI
+    sea_level = 0.0
+
+
+    # config options related to remapping MALI topography to an MPAS-Ocean mesh
+    [remap_mali_topography]
+
+    # The name of the MALI topogrpahy file
+    mali_filename = ais_4to20km.20240708.nc
+
+
+The topography is remapped in a step defined in the
+:py:class:`compass.ocean.tests.global_ocean.mesh.remap_mali_topography.RemapMaliTopography`
+class, which descends from
+:py:class:`compass.ocean.mesh.remap_topography.RemapTopography`.
+
 .. _dev_ocean_global_ocean_wc14:
 
 WC14 and WCwISC14
