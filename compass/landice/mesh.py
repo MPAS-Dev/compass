@@ -1,3 +1,4 @@
+import json
 import os
 import re
 import sys
@@ -16,6 +17,8 @@ from mpas_tools.mesh.creation import build_planar_mesh
 from mpas_tools.mesh.creation.sort_mesh import sort_mesh
 from netCDF4 import Dataset
 from scipy.interpolate import NearestNDInterpolator, interpn
+
+from compass.step import add_input_file
 
 
 def mpas_flood_fill(seed_mask, grow_mask, cellsOnCell, nEdgesOnCell,
@@ -265,9 +268,6 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
     low_bed = section.getfloat('low_bed')
     high_bed = section.getfloat('high_bed')
 
-    # convert km to m
-    cull_distance = section.getfloat('cull_distance') * 1.e3
-
     # Cell spacing function based on union of masks
     if section.get('use_bed') == 'True':
         logger.info('Using bed elevation for spacing.')
@@ -378,25 +378,6 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
     cell_width = max_spac * np.ones_like(thk)
     for width in [spacing_bed, spacing_speed, spacing_edge, spacing_gl]:
         cell_width = np.minimum(cell_width, width)
-
-    # Set large cell_width in areas we are going to cull anyway (speeds
-    # up whole process). If max_res_in_ocn is True, then use a larger
-    # multiplier to ensure ocean cells are not accidentally coarsened
-    # within the final domain. Otherwise, we can get away with
-    # something smaller, like 3x the cull_distance, to avoid this
-    # affecting the cell size in the final mesh. There may eventually
-    # be a more rigorous way to set this distance.
-    if dist_to_edge is not None:
-        if section.get('max_res_in_ocn') == 'True':
-            mask = np.logical_and(
-                # Try 20x cull_distance for now
-                thk == 0.0, dist_to_edge > (20. * cull_distance))
-        else:
-            mask = np.logical_and(
-                thk == 0.0, dist_to_edge > (3. * cull_distance))
-        logger.info('Setting cell_width in outer regions to max_spac '
-                    f'for {mask.sum()} cells')
-        cell_width[mask] = max_spac
 
     return cell_width
 
@@ -603,14 +584,56 @@ def build_cell_width(self, section_name, gridded_dataset,
     f.close()
 
     # Get bounds defined by user, or use bound of gridded dataset
-    bnds = [np.min(x1), np.max(x1), np.min(y1), np.max(y1)]
-    bnds_options = ['x_min', 'x_max', 'y_min', 'y_max']
-    for index, option in enumerate(bnds_options):
-        bnd = section.get(option)
-        if bnd != 'None':
-            bnds[index] = float(bnd)
+    if section.get('define_bnds_by_geojson') == 'True':
+        # change file location either to compass or geometric_features
+        add_input_file(filename='gis_contShelfExtent.geojson',
+                       package='compass.landice.tests.greenland',
+                       target='gis_contShelfExtent.geojson',
+                       database=None)
 
-    geom_points, geom_edges = set_rectangular_geom_points_and_edges(*bnds)
+        with open('gis_contShelfExtent.geojson', 'r') as meshMarginFile:
+            geojson_data = json.load(meshMarginFile)
+
+        lon = []
+        lat = []
+        start_edge = []
+        end_edge = []
+        ct = 0
+
+        for feature in geojson_data['features']:
+            geometry = feature['geometry']
+            for coord in geometry['coordinates']:
+                for sub_coord in coord:
+                    lon.append(sub_coord[0])
+                    lat.append(sub_coord[1])
+
+                    start_edge.append(ct)
+                    end_edge.append(ct + 1)
+                    ct = ct + 1
+        lon = np.array(lon)
+        lat = np.array(lat)
+        start_edge = np.array(start_edge)
+        end_edge = np.array(end_edge)
+
+        start_edge[-1] = ct - 1
+        end_edge[-1] = 0
+
+        geom_points = np.array([((lon[i], lat[i]), 0)
+                                for i in range(len(lat))],
+                               dtype=jigsawpy.jigsaw_msh_t.VERT2_t)
+
+        geom_edges = np.array([((start_edge[i], end_edge[i]), 0)
+                               for i in range(len(start_edge))],
+                              dtype=jigsawpy.jigsaw_msh_t.EDGE2_t)
+    else:
+        bnds = [np.min(x1), np.max(x1), np.min(y1), np.max(y1)]
+        bnds_options = ['x_min', 'x_max', 'y_min', 'y_max']
+        for index, option in enumerate(bnds_options):
+            bnd = section.get(option)
+            if bnd != 'None':
+                bnds[index] = float(bnd)
+
+        geom_points, geom_edges = set_rectangular_geom_points_and_edges(*bnds)
 
     # Remove ice not connected to the ice sheet.
     flood_mask = gridded_flood_fill(thk)
