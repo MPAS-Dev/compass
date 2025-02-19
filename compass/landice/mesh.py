@@ -1,4 +1,3 @@
-import json
 import os
 import re
 import sys
@@ -17,8 +16,6 @@ from mpas_tools.mesh.creation import build_planar_mesh
 from mpas_tools.mesh.creation.sort_mesh import sort_mesh
 from netCDF4 import Dataset
 from scipy.interpolate import NearestNDInterpolator, interpn
-
-from compass.step import add_input_file
 
 
 def mpas_flood_fill(seed_mask, grow_mask, cellsOnCell, nEdgesOnCell,
@@ -520,7 +517,7 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y,
 
 
 def build_cell_width(self, section_name, gridded_dataset,
-                     flood_fill_start=[None, None]):
+                     flood_fill_start=[None, None], calc_geom_bnds=True):
     """
     Determine MPAS mesh cell size based on user-defined density function.
 
@@ -544,6 +541,11 @@ def build_cell_width(self, section_name, gridded_dataset,
         ``i`` and ``j`` indices used to define starting location for flood
         fill. Most cases will use ``[None, None]``, which will just start the
         flood fill in the center of the gridded dataset.
+
+    calc_geom_bnds : logical
+        Option to calculate geom_points and geom_edges needed for jigsaw within
+        build_cell_width. Default is to perform calculation, but the user may
+        opt out if these are determined elsewhere (e.g., using a geojson file)
 
     Returns
     -------
@@ -583,49 +585,8 @@ def build_cell_width(self, section_name, gridded_dataset,
 
     f.close()
 
-    # Get bounds defined by user, or use bound of gridded dataset
-    if section.get('define_bnds_by_geojson') == 'True':
-        # change file location either to compass or geometric_features
-        add_input_file(filename='gis_contShelfExtent.geojson',
-                       package='compass.landice.tests.greenland',
-                       target='gis_contShelfExtent.geojson',
-                       database=None)
-
-        with open('gis_contShelfExtent.geojson', 'r') as meshMarginFile:
-            geojson_data = json.load(meshMarginFile)
-
-        lon = []
-        lat = []
-        start_edge = []
-        end_edge = []
-        ct = 0
-
-        for feature in geojson_data['features']:
-            geometry = feature['geometry']
-            for coord in geometry['coordinates']:
-                for sub_coord in coord:
-                    lon.append(sub_coord[0])
-                    lat.append(sub_coord[1])
-
-                    start_edge.append(ct)
-                    end_edge.append(ct + 1)
-                    ct = ct + 1
-        lon = np.array(lon)
-        lat = np.array(lat)
-        start_edge = np.array(start_edge)
-        end_edge = np.array(end_edge)
-
-        start_edge[-1] = ct - 1
-        end_edge[-1] = 0
-
-        geom_points = np.array([((lon[i], lat[i]), 0)
-                                for i in range(len(lat))],
-                               dtype=jigsawpy.jigsaw_msh_t.VERT2_t)
-
-        geom_edges = np.array([((start_edge[i], end_edge[i]), 0)
-                               for i in range(len(start_edge))],
-                              dtype=jigsawpy.jigsaw_msh_t.EDGE2_t)
-    else:
+    # If necessary, get bounds defined by user or use bound of gridded dataset
+    if calc_geom_bnds:
         bnds = [np.min(x1), np.max(x1), np.min(y1), np.max(y1)]
         bnds_options = ['x_min', 'x_max', 'y_min', 'y_max']
         for index, option in enumerate(bnds_options):
@@ -655,8 +616,12 @@ def build_cell_width(self, section_name, gridded_dataset,
                                 flood_fill_iStart=flood_fill_start[0],
                                 flood_fill_jStart=flood_fill_start[1])
 
-    return (cell_width.astype('float64'), x1.astype('float64'),
-            y1.astype('float64'), geom_points, geom_edges, flood_mask)
+    if not calc_geom_bnds:
+        return (cell_width.astype('float64'), x1.astype('float64'),
+                y1.astype('float64'), flood_mask)
+    else:
+        return (cell_width.astype('float64'), x1.astype('float64'),
+                y1.astype('float64'), geom_points, geom_edges, flood_mask)
 
 
 def build_mali_mesh(self, cell_width, x1, y1, geom_points,
