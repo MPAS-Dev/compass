@@ -63,6 +63,7 @@ class Mesh(Step):
 
         section_ais = config['antarctica']
 
+        parallel_executable = config.get('parallel', 'parallel_executable')
         nProcs = section_ais.get('nProcs')
         src_proj = section_ais.get("src_proj")
         data_path = section_ais.get('data_path')
