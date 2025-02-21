@@ -138,14 +138,16 @@ class Mesh(Step):
 
         # Now perform bespoke interpolation of geometry and velocity data
         # from their respective sources
-        interp_gridded2mali(self, bedmachine_dataset, dst_scrip_file, nProcs,
+        interp_gridded2mali(self, bedmachine_dataset, dst_scrip_file, 
+                            parallel_executable, nProcs,
                             self.mesh_filename, src_proj, variables="all")
 
         # only interpolate a subset of MEaSUREs variables onto the MALI mesh
         measures_vars = ['observedSurfaceVelocityX',
                          'observedSurfaceVelocityY',
                          'observedSurfaceVelocityUncertainty']
-        interp_gridded2mali(self, measures_dataset, dst_scrip_file, nProcs,
+        interp_gridded2mali(self, measures_dataset, dst_scrip_file,
+                            parallel_executable, nProcs,
                             self.mesh_filename, src_proj,
                             variables=measures_vars)
 
