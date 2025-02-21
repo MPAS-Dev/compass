@@ -138,7 +138,7 @@ class Mesh(Step):
 
         # Now perform bespoke interpolation of geometry and velocity data
         # from their respective sources
-        interp_gridded2mali(self, bedmachine_dataset, dst_scrip_file, 
+        interp_gridded2mali(self, bedmachine_dataset, dst_scrip_file,
                             parallel_executable, nProcs,
                             self.mesh_filename, src_proj, variables="all")
 
