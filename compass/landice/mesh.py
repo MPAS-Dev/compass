@@ -1007,8 +1007,8 @@ def preprocess_ais_data(self, source_gridded_dataset,
     return preprocessed_gridded_dataset
 
 
-def interp_gridded2mali(self, source_file, mali_scrip, nProcs, dest_file, proj,
-                        variables="all"):
+def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
+                        nProcs, dest_file, proj, variables="all"):
     """
     Interpolate gridded dataset (e.g. MEASURES, BedMachine) onto a MALI mesh
 
@@ -1019,6 +1019,9 @@ def interp_gridded2mali(self, source_file, mali_scrip, nProcs, dest_file, proj,
 
     mali_scrip : str
         name of scrip file corresponding to destination MALI mesh
+
+    parallel_executable : str
+        executable needed to launch a parallel job
 
     nProcs : int
         number of processors to use for generating remapping weights
@@ -1070,7 +1073,7 @@ def interp_gridded2mali(self, source_file, mali_scrip, nProcs, dest_file, proj,
 
     # Generate remapping weights
     logger.info('generating gridded dataset -> MPAS weights')
-    args = ['srun', '-n', nProcs, 'ESMF_RegridWeightGen',
+    args = [parallel_executable, '-n', nProcs, 'ESMF_RegridWeightGen',
             '--source', source_scrip,
             '--destination', mali_scrip,
             '--weight', weights_filename,
