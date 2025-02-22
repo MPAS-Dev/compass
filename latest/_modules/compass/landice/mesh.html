@@ -1149,8 +1149,8 @@
 
 <div class="viewcode-block" id="interp_gridded2mali">
 <a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.mesh.interp_gridded2mali.html#compass.landice.mesh.interp_gridded2mali">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">interp_gridded2mali</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_file</span><span class="p">,</span> <span class="n">mali_scrip</span><span class="p">,</span> <span class="n">nProcs</span><span class="p">,</span> <span class="n">dest_file</span><span class="p">,</span> <span class="n">proj</span><span class="p">,</span>
-                        <span class="n">variables</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">interp_gridded2mali</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_file</span><span class="p">,</span> <span class="n">mali_scrip</span><span class="p">,</span> <span class="n">parallel_executable</span><span class="p">,</span>
+                        <span class="n">nProcs</span><span class="p">,</span> <span class="n">dest_file</span><span class="p">,</span> <span class="n">proj</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Interpolate gridded dataset (e.g. MEASURES, BedMachine) onto a MALI mesh</span>
 
@@ -1161,6 +1161,9 @@
 
 <span class="sd">    mali_scrip : str</span>
 <span class="sd">        name of scrip file corresponding to destination MALI mesh</span>
+
+<span class="sd">    parallel_executable : str</span>
+<span class="sd">        executable needed to launch a parallel job</span>
 
 <span class="sd">    nProcs : int</span>
 <span class="sd">        number of processors to use for generating remapping weights</span>
@@ -1212,7 +1215,7 @@
 
     <span class="c1"># Generate remapping weights</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;generating gridded dataset -&gt; MPAS weights&#39;</span><span class="p">)</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;srun&#39;</span><span class="p">,</span> <span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="n">nProcs</span><span class="p">,</span> <span class="s1">&#39;ESMF_RegridWeightGen&#39;</span><span class="p">,</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">parallel_executable</span><span class="p">,</span> <span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="n">nProcs</span><span class="p">,</span> <span class="s1">&#39;ESMF_RegridWeightGen&#39;</span><span class="p">,</span>
             <span class="s1">&#39;--source&#39;</span><span class="p">,</span> <span class="n">source_scrip</span><span class="p">,</span>
             <span class="s1">&#39;--destination&#39;</span><span class="p">,</span> <span class="n">mali_scrip</span><span class="p">,</span>
             <span class="s1">&#39;--weight&#39;</span><span class="p">,</span> <span class="n">weights_filename</span><span class="p">,</span>
