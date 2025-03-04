@@ -476,6 +476,10 @@ The mesh has 12-km resolution around Antarctica and 30-km resolution elsewhere.
 The mesh includes the :ref:`global_ocean_ice_shelf_cavities` around Antarctica
 in the ocean domain.
 
+A version of the SOwISC12to30 mesh also exist with topography that comes
+from a 4-20 km MALI initial condition instead of from GEBCO and BedMachine
+Antarctica.
+
 .. image:: images/sowisc12to60.png
    :width: 500 px
    :align: center
@@ -537,7 +541,7 @@ As a user, your main way of altering forward runs is by changing namelist
 options directly in ``namelist.ocean`` or modifying streams in
 ``streams.ocean``.  However, there are a few parameters related to forward runs
 you can change in the config file for a test case.  Since some test cases like
-:ref:`global_ocean_restart_test` and :ref`global_ocean_dynamic_adjustment` have
+:ref:`global_ocean_restart_test` and :ref:`global_ocean_dynamic_adjustment` have
 more than one forward run, it is convenient to change options like
 ``forward_ntasks`` once in the config file, knowing that this will change the
 target number of cores of all forward model runs in the test case.  The same
