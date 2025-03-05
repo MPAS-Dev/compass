@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
@@ -6,7 +7,6 @@ import matplotlib.pyplot as plt
 import netCDF4
 import numpy as np
 from matplotlib import colormaps
-from mpas_tools.logging import check_call
 
 from compass.step import Step
 
@@ -42,7 +42,8 @@ class Analysis(Step):
 
         self.harmonic_analysis_file = 'harmonicAnalysis.nc'
         self.grid_file = 'initial_state.nc'
-        self.constituents = ['k1', 'k2', 'm2', 'n2', 'o1', 'p1', 'q1', 's2']
+        self.constituents_valid = ['k1', 'k2', 'm2', 'n2',
+                                   'o1', 'p1', 'q1', 's2']
 
         self.add_input_file(
             filename=self.harmonic_analysis_file,
@@ -59,6 +60,8 @@ class Analysis(Step):
 
         config = self.config
         self.tpxo_version = config.get('tides', 'tpxo_version')
+
+        self.constituents = config.getlist('tides', 'constituents')
 
         os.makedirs(f'{self.work_dir}/TPXO_data', exist_ok=True)
         if self.tpxo_version == 'TPXO9':
@@ -90,24 +93,28 @@ class Analysis(Step):
                 target='TPXO8/grid_tpxo8_atlas_30_v1',
                 database='tides')
 
-    def write_coordinate_file(self, idx):
+    def write_coordinate_file(self, nchunks):
         """
         Write mesh coordinates for TPXO extraction
         """
 
         # Read in mesh
         grid_nc = netCDF4.Dataset(self.grid_file, 'r')
-        lon_grid = np.degrees(grid_nc.variables['lonCell'][idx])
-        lat_grid = np.degrees(grid_nc.variables['latCell'][idx])
-        nCells = len(lon_grid)
+        lon_grid = np.degrees(grid_nc.variables['lonCell'][:])
+        lat_grid = np.degrees(grid_nc.variables['latCell'][:])
+
+        lon_grid_split = np.array_split(lon_grid, nchunks)
+        lat_grid_split = np.array_split(lat_grid, nchunks)
 
         # Write coordinate file for OTPS2
-        f = open('lat_lon', 'w')
-        for i in range(nCells):
-            f.write(f'{lat_grid[i]}  {lon_grid[i]} \n')
-        f.close()
+        for chunk in range(nchunks):
+            f = open(f'inputs/lat_lon_{chunk}', 'w')
+            for i in range(lon_grid_split[chunk].size):
+                f.write(f'{lat_grid_split[chunk][i]} '
+                        f'{lon_grid_split[chunk][i]} \n')
+            f.close()
 
-    def setup_otps2(self):
+    def setup_otps2(self, nchunks):
         """
         Write input files for TPXO extraction
         """
@@ -115,47 +122,50 @@ class Analysis(Step):
         for con in self.constituents:
             print(f'setup {con}')
 
-            # Lines for the setup_con files
-            lines = [{'inp': f'inputs/Model_atlas_{con}',
-                      'comment': '! 1. tidal model control file'},
-                     {'inp': 'lat_lon',
-                      'comment': '! 2. latitude/longitude/<time> file'},
-                     {'inp': 'z',
-                      'comment': '! 3. z/U/V/u/v'},
-                     {'inp': con,
-                      'comment': '! 4. tidal constituents to include'},
-                     {'inp': 'AP',
-                      'comment': '! 5. AP/RI'},
-                     {'inp': 'oce',
-                      'comment': '! 6. oce/geo'},
-                     {'inp': '1',
-                      'comment': '! 7. 1/0 correct for minor constituents'},
-                     {'inp': f'outputs/{con}.out',
-                      'comment': '! 8. output file (ASCII)'}]
+            for chunk in range(nchunks):
 
-            # Create directory for setup_con and Model_atlas_con files
-            if not os.path.exists('inputs'):
-                os.mkdir('inputs')
+                # Lines for the setup_con files
+                lines = [{'inp': f'inputs/Model_atlas_{con}',
+                          'comment': '! 1. tidal model control file'},
+                         {'inp': f'inputs/lat_lon_{chunk}',
+                          'comment': '! 2. latitude/longitude/<time> file'},
+                         {'inp': 'z',
+                          'comment': '! 3. z/U/V/u/v'},
+                         {'inp': con,
+                          'comment': '! 4. tidal constituents to include'},
+                         {'inp': 'AP',
+                          'comment': '! 5. AP/RI'},
+                         {'inp': 'oce',
+                          'comment': '! 6. oce/geo'},
+                         {'inp': '1',
+                          'comment':
+                          '! 7. 1/0 correct for minor constituents'},
+                         {'inp': f'outputs/{con}_{chunk}.out',
+                          'comment': '! 8. output file (ASCII)'}]
 
-            # Write the setup_con file
-            f = open(f'inputs/{con}_setup', 'w')
-            for line in lines:
-                spaces = 28 - len(line['inp'])
-                f.write(line['inp'] + spaces * ' ' + line['comment'] + '\n')
-            f.close()
+                # Create directory for setup_con and Model_atlas_con files
+                if not os.path.exists('inputs'):
+                    os.mkdir('inputs')
 
-            # Write the Model_atlas_con file
-            f = open(f'inputs/Model_atlas_{con}', 'w')
-            f.write(f'TPXO_data/h_{con}_tpxo\n')
-            f.write(f'TPXO_data/u_{con}_tpxo\n')
-            f.write('TPXO_data/grid_tpxo')
-            f.close()
+                # Write the setup_con file
+                f = open(f'inputs/{con}_setup_{chunk}', 'w')
+                for line in lines:
+                    spaces = (28 - len(line['inp'])) * ' '
+                    f.write(f"{line['inp']}{spaces}{line['comment']}\n")
+                f.close()
 
-            # Create directory for the con.out files
-            if not os.path.exists('outputs'):
-                os.mkdir('outputs')
+                # Write the Model_atlas_con file
+                f = open(f'inputs/Model_atlas_{con}', 'w')
+                f.write(f'TPXO_data/h_{con}_tpxo\n')
+                f.write(f'TPXO_data/u_{con}_tpxo\n')
+                f.write('TPXO_data/grid_tpxo')
+                f.close()
 
-    def run_otps2(self):
+                # Create directory for the con.out files
+                if not os.path.exists('outputs'):
+                    os.mkdir('outputs')
+
+    def run_otps2(self, nchunks):
         """
         Perform TPXO extraction
         """
@@ -164,35 +174,46 @@ class Analysis(Step):
         for con in self.constituents:
             print('')
             print(f'run {con}')
-            check_call(f'extract_HC < inputs/{con}_setup',
-                       logger=self.logger, shell=True)
 
-    def read_otps2_output(self, idx):
+            commands = []
+            for chunk in range(nchunks):
+                commands.append(f'extract_HC < inputs/{con}_setup_{chunk}')
+
+            processes = [subprocess.Popen(cmd, shell=True) for cmd in commands]
+
+            for p in processes:
+                p.wait()
+
+    def read_otps2_output(self, nchunks):
         """
         Read TPXO extraction output
         """
 
-        start = idx[0]
         for con in self.constituents:
 
-            f = open(f'outputs/{con}.out', 'r')
-            lines = f.read().splitlines()
-            for i, line in enumerate(lines[3:]):
-                line_sp = line.split()
-                if line_sp[2] != '*************':
-                    val = float(line_sp[2])
-                    self.mesh_AP[con]['amp'][start + i] = val
-                else:
-                    self.mesh_AP[con]['amp'][start + i] = -9999
+            i = 0
+            for chunk in range(nchunks):
 
-                if line_sp[3] != 'Site':
-                    val = float(line_sp[3])
-                    if val < 0:
-                        val = val + 360.0
-                    self.mesh_AP[con]['phase'][start + i] = val
+                f = open(f'outputs/{con}_{chunk}.out', 'r')
+                lines = f.read().splitlines()
+                for line in lines[3:]:
+                    line_sp = line.split()
+                    if line_sp[2] != '*************':
+                        val = float(line_sp[2])
+                        self.mesh_AP[con]['amp'][i] = val
+                    else:
+                        self.mesh_AP[con]['amp'][i] = -9999
 
-                else:
-                    self.mesh_AP[con]['phase'][start + i] = -9999
+                    if line_sp[3] != 'Site':
+                        val = float(line_sp[3])
+                        if val < 0:
+                            val = val + 360.0
+                        self.mesh_AP[con]['phase'][i] = val
+
+                    else:
+                        self.mesh_AP[con]['phase'][i] = -9999
+
+                    i = i + 1
 
     def append_tpxo_data(self):
         """
@@ -283,7 +304,7 @@ class Analysis(Step):
         depth[:] = data_nc.variables['bottomDepth'][:]
         area[:] = data_nc.variables['areaCell'][:]
 
-        constituent_list = ['K1', 'M2', 'N2', 'O1', 'S2']
+        constituent_list = [x.upper() for x in self.constituents]
 
         # Use these to fix up the plots
         subplot_ticks = [[np.linspace(0, 0.65, 10), np.linspace(0, 0.65, 10),
@@ -360,7 +381,7 @@ class Analysis(Step):
             # Plot data
             fig = plt.figure(figsize=(18, 12))
             subplot_title = [f'{con} Amplitude (simulation) [m]',
-                             f'{con} Amplitude (TPXO8) [m]',
+                             f'{con} Amplitude ({self.tpxo_version}) [m]',
                              f'{con} RMSE (Amplitude) [m]',
                              f'{con} RMSE (Complex) [m]']
 
@@ -429,16 +450,16 @@ class Analysis(Step):
         Run this step of the test case
         """
 
+        self.constituents = self.config.getlist('tides', 'constituents')
+
         # Check if TPXO values aleady exist in harmonic_analysis.nc
         self.check_tpxo_data()
 
-        # Setup input files for TPXO extraction
-        self.setup_otps2()
-
         # Setup chunking for TPXO extraction with large meshes
-        indices = np.arange(self.nCells)
-        nchunks = np.ceil(self.nCells / 200000)
-        index_chunks = np.array_split(indices, nchunks)
+        nchunks = 128
+
+        # Setup input files for TPXO extraction
+        self.setup_otps2(nchunks)
 
         # Initialize data structure for TPXO values
         self.mesh_AP = {}
@@ -447,10 +468,9 @@ class Analysis(Step):
                                  'phase': np.zeros((self.nCells))}
 
         # Extract TPXO values
-        for idx in index_chunks:
-            self.write_coordinate_file(idx)
-            self.run_otps2()
-            self.read_otps2_output(idx)
+        self.write_coordinate_file(nchunks)
+        self.run_otps2(nchunks)
+        self.read_otps2_output(nchunks)
 
         # Inject TPXO values
         self.append_tpxo_data()
