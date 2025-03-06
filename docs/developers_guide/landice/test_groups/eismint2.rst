@@ -30,7 +30,7 @@ defines a step for setting up the mesh for each test case.
 The horizontal mesh is constructed at runtime (using
 :py:func:`mpas_tools.planar_hex.make_planar_hex_mesh()`). A MALI grid is
 created with the MPAS-Tools script
-``create_landice_grid_from_generic_MPAS_grid.py`` and a graph file is created
+``create_landice_grid_from_generic_mpas_grid`` and a graph file is created
 to partition the mesh before the model run.
 
 run_experiment

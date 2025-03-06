@@ -1,10 +1,9 @@
 import numpy
-from netCDF4 import Dataset as NetCDFFile
-
-from mpas_tools.planar_hex import make_planar_hex_mesh
 from mpas_tools.io import write_netcdf
-from mpas_tools.mesh.conversion import convert, cull
 from mpas_tools.logging import check_call
+from mpas_tools.mesh.conversion import convert, cull
+from mpas_tools.planar_hex import make_planar_hex_mesh
+from netCDF4 import Dataset as NetCDFFile
 
 from compass.model import make_graph_file
 from compass.step import Step
@@ -71,7 +70,7 @@ class SetupMesh(Step):
             write_netcdf(dsMesh, 'mpas_grid.nc')
 
         levels = section.get('levels')
-        args = ['create_landice_grid_from_generic_MPAS_grid.py',
+        args = ['create_landice_grid_from_generic_mpas_grid',
                 '-i', 'mpas_grid.nc',
                 '-o', 'landice_grid.nc',
                 '-l', levels]
@@ -158,7 +157,7 @@ def _setup_dome_initial_conditions(config, logger, filename):
         thickness_field[r < r0] = h0 * (1.0 - (r[r < r0] / r0) ** 2) ** 0.5
     elif dome_type == 'halfar':
         thickness_field[r < r0] = h0 * (
-                    1.0 - (r[r < r0] / r0) ** (4.0 / 3.0)) ** (3.0 / 7.0)
+            1.0 - (r[r < r0] / r0) ** (4.0 / 3.0)) ** (3.0 / 7.0)
     else:
         raise ValueError('Unexpected dome_type: {}'.format(dome_type))
     thickness[0, :] = thickness_field
