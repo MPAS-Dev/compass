@@ -130,7 +130,6 @@ class InitialState(Step):
         ds['landIceMask'] = landIceMask
         ds['landIceFloatingMask'] = landIceFloatingMask
         ds['landIcePressure'] = landIcePressure
-        ds['landIceDraft'] = landIceDraft
 
         write_netcdf(ds, 'initial_state.nc')
 
