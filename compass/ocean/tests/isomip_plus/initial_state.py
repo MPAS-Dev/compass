@@ -154,6 +154,10 @@ class InitialState(Step):
         else:
             land_ice_pressure = land_ice_pressure_unscaled
 
+        # Previously, we didn't apply max draft at seafloor but we want this
+        # for W&D
+        # This assumes that for MALI forcing, landIceDraft = bottomDepth in
+        # grounded regions
         if thin_film_present:
             modify_mask = ds.bottomDepth > 0.
             land_ice_draft = compute_land_ice_draft_from_pressure(
@@ -163,12 +167,6 @@ class InitialState(Step):
                                         -ds.bottomDepth)
             ds['ssh'] = land_ice_draft
 
-        # Previously, we didn't apply max draft at seafloor but we want this
-        # for W&D
-        # This assumes that for MALI forcing, landIceDraft = bottomDepth in
-        # grounded regions
-        ds['landIceDraft'] = land_ice_draft
-        # We need to add the time dimension for plotting purposes
         ds['landIcePressure'] = land_ice_pressure.expand_dims(
             dim='Time', axis=0)
 
@@ -270,7 +268,6 @@ class InitialState(Step):
         # show progress only if we're not writing to a log file
         show_progress = self.log_filename is None
 
-        ds['landIceDraft'] = ds.landIceDraft.expand_dims(dim='Time', axis=0)
         plotter = MoviePlotter(inFolder=self.work_dir,
                                streamfunctionFolder=self.work_dir,
                                outFolder=plot_folder, expt=self.experiment,
@@ -433,13 +430,6 @@ class InitialState(Step):
         land_ice_fraction_forcing = ds_init.landIceFraction.copy()
         land_ice_floating_fraction_forcing = \
             ds_init.landIceFloatingFraction.copy()
-        land_ice_draft_unscaled = ds_init.landIceDraft.copy()
-        land_ice_draft_scaled = land_ice_draft_unscaled * scales[0]
-        land_ice_draft_limited = np.maximum(land_ice_draft_scaled,
-                                            -ds_init.bottomDepth)
-        land_ice_draft_forcing = land_ice_draft_limited
-        print(f'Grounded cells at {scales[0]}: '
-              f'{np.sum(land_ice_draft_limited == -ds_init.bottomDepth)}')
 
         # We add additional time slices for the remaining scale values
         for scale in scales[1:]:
@@ -457,29 +447,8 @@ class InitialState(Step):
                  ds_init.landIceFloatingFraction],
                 'Time')
 
-            if self.thin_film_present:
-                land_ice_draft_scaled = compute_land_ice_draft_from_pressure(
-                    land_ice_pressure=scale * land_ice_pressure_unscaled,
-                    modify_mask=ds_init.bottomDepth > 0.)
-            else:
-                # Just scale draft in the same manner as pressure
-                land_ice_draft_scaled = land_ice_draft_unscaled * scale
-            land_ice_draft_limited = np.maximum(land_ice_draft_scaled,
-                                                -ds_init.bottomDepth)
-            print(f'Grounded cells at {scale}: '
-                  f'{np.sum(land_ice_draft_limited == -ds_init.bottomDepth)}')
-            # Set the maximum land ice draft in grounded regions
-            land_ice_draft_forcing = xr.concat(
-                [land_ice_draft_forcing,
-                 land_ice_draft_limited],
-                'Time')
-
         ds_forcing['xtime'] = xr.DataArray(data=dates,
                                            dims=('Time')).astype('S')
-        ds_forcing['landIceDraftForcing'] = land_ice_draft_forcing
-        ds_forcing.landIceDraftForcing.attrs['units'] = 'm'
-        ds_forcing.landIceDraftForcing.attrs['long_name'] = \
-            'The approximate elevation of the land ice-ocean interface'
         ds_forcing['landIcePressureForcing'] = land_ice_pressure_forcing
         ds_forcing.landIcePressureForcing.attrs['units'] = 'm'
         ds_forcing.landIcePressureForcing.attrs['long_name'] = \
