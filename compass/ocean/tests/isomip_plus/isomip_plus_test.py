@@ -210,9 +210,9 @@ class IsomipPlusTest(TestCase):
             config.set('isomip_plus', 'min_column_thickness', '1e-3')
 
         if time_varying_load == 'increasing':
-            config.set('isomip_plus_forcing', 'scales', '1.0, 2.0, 2.0')
+            config.set('isomip_plus_forcing', 'scales', '1.0, 1.05, 1.1')
         if time_varying_load == 'decreasing':
-            config.set('isomip_plus_forcing', 'scales', '1.0, 0.0, 0.0')
+            config.set('isomip_plus_forcing', 'scales', '1.0, 0.95, 0.9')
 
         if experiment in ['Ocean0', 'Ocean2', 'Ocean3']:
             # warm initial conditions
@@ -270,7 +270,7 @@ class IsomipPlusTest(TestCase):
 
         if vertical_coordinate == 'sigma':
             if time_varying_load in ['increasing', 'decreasing']:
-                config.set('vertical_grid', 'vert_levels', '3')
+                config.set('vertical_grid', 'vert_levels', '10')
             else:
                 # default to 10 vertical levels instead of 36
                 config.set('vertical_grid', 'vert_levels', '10')
@@ -304,10 +304,10 @@ def _get_time_steps(config, resolution, thin_film_present, tidal_forcing):
 
     dt_per_km = 120.
     if tidal_forcing or thin_film_present:
-        dt_per_km = min(dt_per_km, 10.)
+        dt_per_km = min(dt_per_km, 6.)
     config.set('isomip_plus', 'dt_per_km', f'{dt_per_km}')
 
-    dt_btr_per_km = min(dt_per_km / 5., 5.)
+    dt_btr_per_km = min(dt_per_km / 3., 3.)
     config.set('isomip_plus', 'dt_btr_per_km', f'{dt_btr_per_km}')
 
     return
