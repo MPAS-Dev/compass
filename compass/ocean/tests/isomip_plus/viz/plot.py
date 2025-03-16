@@ -733,7 +733,7 @@ class MoviePlotter(object):
                 plt.plot(1e-3 * X[z_index, :], Z[z_index, :], 'k')
             plt.plot(1e-3 * X[0, :], Z[0, :], 'b')
             plt.plot(1e-3 * X[0, :], self.zBotSection, 'g')
-            plt.plot(1e-3 * X[0, :], self.landIceDraft, 'r')
+            plt.plot(1e-3 * X[0, :], self.ssh, 'r')
 
             ax.autoscale(tight=True)
             x1, x2, y1, y2 = 420, 470, -650, -520
@@ -745,7 +745,7 @@ class MoviePlotter(object):
                 axins.plot(1e-3 * X[z_index, :], Z[z_index, :], 'k')
             axins.plot(1e-3 * X[0, :], Z[0, :], 'b')
             axins.plot(1e-3 * X[0, :], self.zBotSection, 'g')
-            axins.plot(1e-3 * X[0, :], self.landIceDraft, 'r')
+            axins.plot(1e-3 * X[0, :], self.ssh, 'r')
             axins.set_xlim(x1, x2)
             axins.set_ylim(y1, y2)
             axins.set_xticklabels([])
@@ -956,21 +956,23 @@ class MoviePlotter(object):
                 Time=tIndex, nCells=self.sectionCellIndices)
             layerThickness = layerThickness.values * self.sectionMask.T
             layerThickness = numpy.nan_to_num(layerThickness)
+
+            if 'timeMonthly_avg_ssh' in self.ds:
+                var = 'timeMonthly_avg_ssh'
+            else:
+                var = 'ssh'
+            ssh = self.ds[var].isel(
+                Time=tIndex, nCells=self.sectionCellIndices)
+            ssh = ssh.values * self.sectionMask[0, :].T
+            ssh = numpy.nan_to_num(ssh)
+            self.ssh = _interp_extrap_corner(ssh)
+
             self.Z[tIndex, -1, :] = self.zBotSection
             for zIndex in range(nVertLevels - 1, -1, -1):
                 layerThicknessSection = _interp_extrap_corner(
                     layerThickness[:, zIndex])
                 self.Z[tIndex, zIndex, :] = self.Z[tIndex, zIndex + 1, :] + \
                     layerThicknessSection
-            if 'timeMonthly_avg_landIceDraft' in self.ds:
-                var = 'timeMonthly_avg_landIceDraft'
-            else:
-                var = 'landIceDraft'
-            landIceDraft = self.ds[var].isel(
-                Time=tIndex, nCells=self.sectionCellIndices)
-            landIceDraft = landIceDraft.values * self.sectionMask[0, :].T
-            landIceDraft = numpy.nan_to_num(landIceDraft)
-            self.landIceDraft = _interp_extrap_corner(landIceDraft)
 
 
 def _compute_cell_patches(dsMesh, mask):

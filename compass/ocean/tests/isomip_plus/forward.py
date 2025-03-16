@@ -168,8 +168,6 @@ class Forward(Step):
             dsMesh = xarray.open_dataset(os.path.join(self.work_dir,
                                                       'init.nc'))
             ds = xarray.open_dataset(os.path.join(self.work_dir, 'output.nc'))
-            ds['landIceDraft'] = \
-                dsMesh.landIceDraft.expand_dims('Time', axis=0)
             section_y = self.config.getfloat('isomip_plus_viz', 'section_y')
             # show progress only if we're not writing to a log file
             show_progress = self.log_filename is None
