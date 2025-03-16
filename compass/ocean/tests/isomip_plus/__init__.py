@@ -36,7 +36,7 @@ class IsomipPlus(TestGroup):
                             experiment=experiment,
                             vertical_coordinate=vertical_coordinate,
                             time_varying_forcing=True))
-                for vertical_coordinate in ['z-star', 'sigma', 'single_layer']:
+                for vertical_coordinate in ['z-star', 'sigma']:
                     self.add_test_case(
                         IsomipPlusTest(
                             test_group=self, resolution=resolution,
@@ -50,7 +50,7 @@ class IsomipPlus(TestGroup):
                             vertical_coordinate=vertical_coordinate,
                             time_varying_forcing=True,
                             thin_film_present=True))
-                for vertical_coordinate in ['z-star', 'sigma', 'single_layer']:
+                for vertical_coordinate in ['z-star', 'sigma']:
                     self.add_test_case(
                         IsomipPlusTest(
                             test_group=self, resolution=resolution,
@@ -68,21 +68,6 @@ class IsomipPlus(TestGroup):
                             time_varying_load='decreasing',
                             thin_film_present=True))
                 for vertical_coordinate in ['sigma', 'z-star']:
-                    self.add_test_case(
-                        IsomipPlusTest(
-                            test_group=self, resolution=resolution,
-                            experiment=experiment,
-                            vertical_coordinate=vertical_coordinate,
-                            tidal_forcing=True,
-                            thin_film_present=True))
-                for vertical_coordinate in ['single_layer']:
-                    self.add_test_case(
-                        IsomipPlusTest(
-                            test_group=self, resolution=resolution,
-                            experiment=experiment,
-                            vertical_coordinate=vertical_coordinate,
-                            tidal_forcing=True,
-                            thin_film_present=False))
                     self.add_test_case(
                         IsomipPlusTest(
                             test_group=self, resolution=resolution,
