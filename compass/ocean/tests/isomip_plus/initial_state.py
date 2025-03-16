@@ -202,19 +202,14 @@ class InitialState(Step):
         init_top_sal = section.getfloat('init_top_sal')
         init_bot_sal = section.getfloat('init_bot_sal')
 
-        if self.vertical_coordinate == 'single_layer':
-            # Initialize constant T,S
-            ds['temperature'] = init_bot_temp * xr.ones_like(ds.zmid)
-            ds['salinity'] = init_bot_sal * xr.ones_like(ds.zmid)
-        else:
-            # Initialize T,S as linear functions with max depth
-            max_bottom_depth = -config.getfloat('vertical_grid',
-                                                'bottom_depth')
-            frac = (0. - ds.zMid) / (0. - max_bottom_depth)
-            ds['temperature'] = \
-                (1.0 - frac) * init_top_temp + frac * init_bot_temp
-            ds['salinity'] = \
-                (1.0 - frac) * init_top_sal + frac * init_bot_sal
+        # Initialize T,S as linear functions with max depth
+        max_bottom_depth = -config.getfloat('vertical_grid',
+                                            'bottom_depth')
+        frac = (0. - ds.zMid) / (0. - max_bottom_depth)
+        ds['temperature'] = \
+            (1.0 - frac) * init_top_temp + frac * init_bot_temp
+        ds['salinity'] = \
+            (1.0 - frac) * init_top_sal + frac * init_bot_sal
 
         if thin_film_present:
             # for thin film cells, set temperature to freezing point
