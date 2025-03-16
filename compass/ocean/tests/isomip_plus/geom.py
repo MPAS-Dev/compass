@@ -111,11 +111,12 @@ def interpolate_geom(ds_mesh, ds_geom, min_ocean_fraction, thin_film_present):
                                   ds_geom.landIceGroundedFraction)
 
     # mask the topography to the ocean region before interpolation
-    for var in ['Z_bed', 'Z_ice_draft', 'landIceFraction',
+    for var in ['Z_bed', 'Z_ice_surface', 'Z_ice_draft', 'landIceFraction',
                 'landIceFloatingFraction', 'smoothedDraftMask']:
         ds_geom[var] = ds_geom[var] * ds_geom['oceanFraction']
 
     fields = {'bottomDepthObserved': 'Z_bed',
+              'landIceThickness': 'iceThickness',
               'ssh': 'Z_ice_draft',
               'oceanFracObserved': 'oceanFraction',
               'landIceFraction': 'landIceFraction',
@@ -156,7 +157,7 @@ def _get_geom_fields(ds_geom, ds_mesh, thin_film_present):
     y_cell = ds_mesh.yIsomipCell.values
 
     if thin_film_present:
-        ocean_fraction = - ds_geom['landFraction'] + 1.0
+        ocean_fraction = xarray.where(ds_geom['Z_bed'] > 0., 0., 1.)
     else:
         ocean_fraction = (ds_geom['landIceFloatingFraction'] +
                           ds_geom['openOceanFraction'])

@@ -5,7 +5,7 @@ from mpas_tools.io import write_netcdf
 from mpas_tools.mesh.conversion import convert, cull
 from mpas_tools.planar_hex import make_planar_hex_mesh
 
-from compass.ocean.iceshelf import compute_land_ice_pressure_and_draft
+from compass.ocean.iceshelf import compute_land_ice_pressure_from_draft
 from compass.ocean.vertical import init_vertical_coord
 from compass.step import Step
 
@@ -103,8 +103,10 @@ class InitialState(Step):
         landIceFloatingMask = landIceMask.copy()
 
         ref_density = constants['SHR_CONST_RHOSW']
-        landIcePressure, landIceDraft = compute_land_ice_pressure_and_draft(
-            ssh=ds.ssh, modify_mask=modify_mask, ref_density=ref_density)
+        landIceDraft = ds.ssh
+        landIcePressure = compute_land_ice_pressure_from_draft(
+            land_ice_draft=landIceDraft, modify_mask=modify_mask,
+            ref_density=ref_density)
 
         salinity = surface_salinity + ((bottom_salinity - surface_salinity) *
                                        (ds.zMid / (-bottom_depth)))
@@ -128,7 +130,6 @@ class InitialState(Step):
         ds['landIceMask'] = landIceMask
         ds['landIceFloatingMask'] = landIceFloatingMask
         ds['landIcePressure'] = landIcePressure
-        ds['landIceDraft'] = landIceDraft
 
         write_netcdf(ds, 'initial_state.nc')
 

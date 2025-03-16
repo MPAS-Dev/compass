@@ -162,11 +162,12 @@ class Forward(Step):
             plot_folder = f'{self.work_dir}/plots'
             if os.path.exists(plot_folder):
                 shutil.rmtree(plot_folder)
+            min_column_thickness = self.config.getfloat('isomip_plus',
+                                                        'min_column_thickness')
 
             dsMesh = xarray.open_dataset(os.path.join(self.work_dir,
                                                       'init.nc'))
             ds = xarray.open_dataset(os.path.join(self.work_dir, 'output.nc'))
-
             section_y = self.config.getfloat('isomip_plus_viz', 'section_y')
             # show progress only if we're not writing to a log file
             show_progress = self.log_filename is None
@@ -176,6 +177,11 @@ class Forward(Step):
                                    dsMesh=dsMesh, ds=ds, expt=self.experiment,
                                    showProgress=show_progress)
 
+            bottomDepth = ds.bottomDepth.expand_dims(dim='Time', axis=0)
+            plotter.plot_horiz_series(ds.ssh + bottomDepth,
+                                      'H', 'H', True,
+                                      vmin=min_column_thickness, vmax=700,
+                                      cmap_set_under='r', cmap_scale='log')
             plotter.plot_horiz_series(ds.ssh, 'ssh', 'ssh',
                                       True, vmin=-700, vmax=0)
             plotter.plot_3d_field_top_bot_section(
@@ -185,6 +191,7 @@ class Forward(Step):
             plotter.plot_3d_field_top_bot_section(
                 ds.salinity, nameInTitle='salinity', prefix='salin',
                 units='PSU', vmin=33.8, vmax=34.7, cmap='cmo.haline')
+
             tol = 1e-10
             dsIce = xarray.open_dataset(
                 os.path.join(self.work_dir,
