@@ -95,10 +95,11 @@ class Viz(Step):
                                               cmap='cmo.balance',
                                               vmin=-5e-1, vmax=5e-1)
 
-        # salinity = dsIce.landIceInterfaceSalinity
+        # Compute thermal forcing for whole water column
+        # landIceInterfaceSalinity and landIceInterfaceTemperature could be
+        # used for thermal forcing at the interface
         salinity = dsOut.salinity.isel(nVertLevels=0)
         pressure = dsIce.landIcePressure
-        # temperature = dsIce.landIceInterfaceTemperature
         temperature = dsOut.temperature.isel(nVertLevels=0)
         coeff_0 = 6.22e-2
         coeff_S = -5.63e-2
@@ -114,7 +115,6 @@ class Viz(Step):
 
         if dsIce.sizes['Time'] > 14:
             dsIce = dsIce.isel(Time=slice(-13, -12))
-        cavityMask = dsMesh.landIceFloatingMask == 1
         if 'xIsomipCell' in dsMesh.keys():
             xCell = dsMesh.xIsomipCell / 1.e3
         else:
@@ -133,8 +133,11 @@ class Viz(Step):
                                       'rmsVelocity', 'rmsVelocity',
                                       False, vmin=1.e-2, vmax=1.e0,
                                       cmap='cmo.speed', cmap_scale='log')
-            self._plot_transect(dsIce, rmsVelocity, xCell, cavityMask,
-                                outFolder=f'{out_dir}/plots')
+            cavityMask = np.where(dsMesh.landIceFloatingMask == 1)[0]
+            dsCavity = dsIce.isel(nCells=cavityMask)
+            rmsVelocityCavity = rmsVelocity.isel(nCells=cavityMask)
+            xMasked = xCell.isel(nCells=cavityMask)
+            _plot_transect(dsCavity, rmsVelocityCavity, xMasked)
 
         maxBottomDepth = dsMesh.bottomDepth.max().values
         plotter.plot_horiz_series(dsOut.ssh, 'ssh', 'ssh', True,
@@ -201,7 +204,7 @@ class Viz(Step):
                                     expt=expt, sectionY=section_y,
                                     dsMesh=dsMesh, ds=ds,
                                     showProgress=show_progress)
-            self._plot_land_ice_variables(ds, mPlotter, maxBottomDepth)
+            _plot_land_ice_variables(ds, mPlotter, maxBottomDepth)
 
         ds = xarray.open_mfdataset(
             '{}/timeSeriesStatsMonthly*.nc'.format(sim_dir),
@@ -278,114 +281,117 @@ class Viz(Step):
                 units='PSU', vmin=33.8, vmax=34.7, cmap='cmo.haline')
 
             dsIce = xarray.open_dataset('../performance/land_ice_fluxes.nc')
-            self._plot_land_ice_variables(dsIce, plotter, maxBottomDepth)
+            _plot_land_ice_variables(dsIce, plotter, maxBottomDepth)
 
-    def _plot_land_ice_variables(ds, mPlotter, maxBottomDepth):
-        tol = 1e-10
-        mPlotter.plot_horiz_series(ds.landIceFrictionVelocity,
-                                   'landIceFrictionVelocity',
-                                   'frictionVelocity',
-                                   True)
-        mPlotter.plot_horiz_series(ds.landIceFreshwaterFlux,
-                                   'landIceFreshwaterFlux', 'melt',
-                                   True)
-        mPlotter.plot_horiz_series(ds.landIceFloatingFraction,
-                                   'landIceFloatingFraction',
-                                   'landIceFloatingFraction',
-                                   True, vmin=1e-16, vmax=1,
-                                   cmap_set_under='k')
-        mPlotter.plot_horiz_series(ds.landIceDraft,
-                                   'landIceDraft', 'landIceDraft',
-                                   True, vmin=-maxBottomDepth, vmax=0.)
-        if 'topDragMagnitude' in ds.keys():
-            mPlotter.plot_horiz_series(
-                ds.topDragMagnitude,
-                'topDragMagnitude', 'topDragMagnitude', True,
-                vmin=0 + tol, vmax=np.max(ds.topDragMagnitude.values),
-                cmap_set_under='k')
-        if 'landIceHeatFlux' in ds.keys():
-            mPlotter.plot_horiz_series(
-                ds.landIceHeatFlux,
-                'landIceHeatFlux', 'landIceHeatFlux', True,
-                vmin=np.min(ds.landIceHeatFlux.values),
-                vmax=np.max(ds.landIceHeatFlux.values))
-        if 'landIceInterfaceTemperature' in ds.keys():
-            mPlotter.plot_horiz_series(
-                ds.landIceInterfaceTemperature,
-                'landIceInterfaceTemperature',
-                'landIceInterfaceTemperature',
-                True,
-                vmin=np.min(ds.landIceInterfaceTemperature.values),
-                vmax=np.max(ds.landIceInterfaceTemperature.values))
-        if 'landIceFreshwaterFlux' in ds.keys():
-            mPlotter.plot_horiz_series(
-                ds.landIceFreshwaterFlux,
-                'landIceFreshwaterFlux', 'landIceFreshwaterFlux', True,
-                vmin=0 + tol, vmax=1e-4,
-                cmap_set_under='k', cmap_scale='log')
-        if 'landIceFraction' in ds.keys():
-            mPlotter.plot_horiz_series(
-                ds.landIceFraction,
-                'landIceFraction', 'landIceFraction', True,
-                vmin=0 + tol, vmax=1 - tol,
-                cmap='cmo.balance',
-                cmap_set_under='k', cmap_set_over='r')
-        if 'landIceFloatingFraction' in ds.keys():
-            mPlotter.plot_horiz_series(
-                ds.landIceFloatingFraction,
-                'landIceFloatingFraction', 'landIceFloatingFraction',
-                True, vmin=0 + tol, vmax=1 - tol,
-                cmap='cmo.balance', cmap_set_under='k', cmap_set_over='r')
-        mPlotter.plot_melt_rates()
-        mPlotter.plot_ice_shelf_boundary_variables()
 
-    def _plot_transect(dsIce, rmsVelocity, xCell, cavityMask, outFolder='.'):
-        dx = 2.
-        xbins = np.arange(xCell.isel(nCells=cavityMask).min(),
-                          xCell.isel(nCells=cavityMask).max(), dx)
-        for time_slice in range(dsIce.sizes['Time']):
-            title = dsIce.xtime.isel(Time=time_slice).values
-            meltTransect = np.zeros_like(xbins)
-            landIceDraftTransect = np.zeros_like(xbins)
-            frictionVelocityTransect = np.zeros_like(xbins)
-            temperatureTransect = np.zeros_like(xbins)
-            thermalForcingTransect = np.zeros_like(xbins)
-            rmsVelocityTransect = np.zeros_like(xbins)
-            for i, xmin in enumerate(xbins):
-                binMask = np.logical_and(cavityMask,
-                                         np.logical_and(xCell >= xmin,
-                                                        xCell < xmin + dx))
-                if (np.sum(binMask) < 1):
-                    continue
-                dsTransect = dsIce.isel(nCells=binMask, Time=time_slice)
-                meltTransect[i] = dsTransect.landIceFreshwaterFlux.mean()
-                landIceDraftTransect[i] = dsTransect.landIceDraft.mean()
-                frictionVelocityTransect[i] = \
-                    dsTransect.landIceFrictionVelocity.mean()
-                temperatureTransect[i] = \
-                    dsTransect.landIceInterfaceTemperature.mean()
-                thermalForcingTransect[i] = dsTransect.thermalForcing.mean()
-                rmsVelocityTransect[i] = np.mean(rmsVelocity[binMask])
+def _plot_land_ice_variables(ds, mPlotter, maxBottomDepth):
+    tol = 1e-10
+    mPlotter.plot_horiz_series(ds.landIceFrictionVelocity,
+                               'landIceFrictionVelocity',
+                               'frictionVelocity',
+                               True)
+    mPlotter.plot_horiz_series(ds.landIceFreshwaterFlux,
+                               'landIceFreshwaterFlux', 'melt',
+                               True)
+    mPlotter.plot_horiz_series(ds.landIceFloatingFraction,
+                               'landIceFloatingFraction',
+                               'landIceFloatingFraction',
+                               True, vmin=1e-16, vmax=1,
+                               cmap_set_under='k')
+    mPlotter.plot_horiz_series(ds.landIceDraft,
+                               'landIceDraft', 'landIceDraft',
+                               True, vmin=-maxBottomDepth, vmax=0.)
+    if 'topDragMagnitude' in ds.keys():
+        mPlotter.plot_horiz_series(
+            ds.topDragMagnitude,
+            'topDragMagnitude', 'topDragMagnitude', True,
+            vmin=0 + tol, vmax=np.max(ds.topDragMagnitude.values),
+            cmap_set_under='k')
+    if 'landIceHeatFlux' in ds.keys():
+        mPlotter.plot_horiz_series(
+            ds.landIceHeatFlux,
+            'landIceHeatFlux', 'landIceHeatFlux', True,
+            vmin=np.min(ds.landIceHeatFlux.values),
+            vmax=np.max(ds.landIceHeatFlux.values))
+    if 'landIceInterfaceTemperature' in ds.keys():
+        mPlotter.plot_horiz_series(
+            ds.landIceInterfaceTemperature,
+            'landIceInterfaceTemperature',
+            'landIceInterfaceTemperature',
+            True,
+            vmin=np.min(ds.landIceInterfaceTemperature.values),
+            vmax=np.max(ds.landIceInterfaceTemperature.values))
+    if 'landIceFreshwaterFlux' in ds.keys():
+        mPlotter.plot_horiz_series(
+            ds.landIceFreshwaterFlux,
+            'landIceFreshwaterFlux', 'landIceFreshwaterFlux', True,
+            vmin=0 + tol, vmax=1e-4,
+            cmap_set_under='k', cmap_scale='log')
+    if 'landIceFraction' in ds.keys():
+        mPlotter.plot_horiz_series(
+            ds.landIceFraction,
+            'landIceFraction', 'landIceFraction', True,
+            vmin=0 + tol, vmax=1 - tol,
+            cmap='cmo.balance',
+            cmap_set_under='k', cmap_set_over='r')
+    if 'landIceFloatingFraction' in ds.keys():
+        mPlotter.plot_horiz_series(
+            ds.landIceFloatingFraction,
+            'landIceFloatingFraction', 'landIceFloatingFraction',
+            True, vmin=0 + tol, vmax=1 - tol,
+            cmap='cmo.balance', cmap_set_under='k', cmap_set_over='r')
+    mPlotter.plot_melt_rates()
+    mPlotter.plot_ice_shelf_boundary_variables()
 
-            fig, ax = plt.subplots(4, 1, sharex=True, figsize=(4, 8))
-            color = 'darkgreen'
-            x = xbins - xbins[0]
-            ax[0].set_title(title)
-            ax[0].plot(x, landIceDraftTransect, color=color)
-            ax[0].set_ylabel('Land ice draft (m)')
-            secPerYear = 365 * 24 * 60 * 60
-            density = 1026.
-            ax[1].plot(x, meltTransect * secPerYear / density, color=color)
-            ax[1].set_ylabel('Melt rate (m/yr)')
-            ax[2].plot(x, frictionVelocityTransect, color=color)
-            ax[2].set_ylabel('Friction velocity (m/s)')
-            ax[3].plot(x, thermalForcingTransect, color=color)
-            ax[3].set_ylabel(r'ThermalForcing ($^{\circ}$C)')
-            ax[3].set_xlabel('Distance along ice flow (km)')
-            plt.tight_layout()
-            plt.savefig(f'{outFolder}/meanTransect_tend{time_slice:03g}.png',
-                        dpi=600, bbox_inches='tight', transparent=True)
-            plt.close(fig)
+
+def _plot_transect(dsIce, rmsVelocity, xCell, outFolder='plots'):
+    dx = 2.
+    xmin = xCell.min()
+    xmax = xCell.max()
+    xbins = np.arange(xmin, xmax, dx)
+    for time_slice in range(dsIce.sizes['Time']):
+        title = dsIce.xtime.isel(Time=time_slice).values
+        meltTransect = np.zeros_like(xbins)
+        landIceDraftTransect = np.zeros_like(xbins)
+        frictionVelocityTransect = np.zeros_like(xbins)
+        temperatureTransect = np.zeros_like(xbins)
+        thermalForcingTransect = np.zeros_like(xbins)
+        rmsVelocityTransect = np.zeros_like(xbins)
+        for i, xmin in enumerate(xbins):
+            binMask = np.where(np.logical_and(xCell >= xmin,
+                                              xCell < xmin + dx))[0]
+            if (np.sum(binMask) < 1):
+                continue
+            dsTransect = dsIce.isel(nCells=binMask, Time=time_slice)
+            meltTransect[i] = dsTransect.landIceFreshwaterFlux.mean()
+            landIceDraftTransect[i] = dsTransect.landIceDraft.mean()
+            frictionVelocityTransect[i] = \
+                dsTransect.landIceFrictionVelocity.mean()
+            temperatureTransect[i] = \
+                dsTransect.landIceInterfaceTemperature.mean()
+            thermalForcingTransect[i] = dsTransect.thermalForcing.mean()
+            rmsVelocityTransect[i] = \
+                np.mean(rmsVelocity.isel(Time=time_slice, nCells=binMask))
+
+        fig, ax = plt.subplots(4, 1, sharex=True, figsize=(4, 8))
+        color = 'darkgreen'
+        x = xbins - xbins[0]
+        ax[0].set_title(title)
+        ax[0].plot(x, landIceDraftTransect, color=color)
+        ax[0].set_ylabel('Land ice draft (m)')
+        secPerYear = 365 * 24 * 60 * 60
+        density = 1026.
+        ax[1].plot(x, meltTransect * secPerYear / density, color=color)
+        ax[1].set_ylabel('Melt rate (m/yr)')
+        ax[2].plot(x, frictionVelocityTransect, color=color)
+        ax[2].set_ylabel('Friction velocity (m/s)')
+        ax[3].plot(x, thermalForcingTransect, color=color)
+        ax[3].set_ylabel(r'ThermalForcing ($^{\circ}$C)')
+        ax[3].set_xlabel('Distance along ice flow (km)')
+        plt.tight_layout()
+        plt.savefig(f'{outFolder}/meanTransect_tend{time_slice:03g}.png',
+                    dpi=600, bbox_inches='tight', transparent=True)
+        plt.close(fig)
 
 
 def file_complete(ds, fileName):

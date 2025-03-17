@@ -107,7 +107,6 @@ class TimeSeriesPlotter(object):
         meanMeltRate = totalMeltFlux / totalArea / rho_fw * secPerYear
         self.plot_time_series(meanMeltRate, 'mean melt rate', 'meanMeltRate',
                               'm/yr')
-        print(meanMeltRate.values)
 
         self.plot_time_series(1e-6 * totalMeltFlux, 'total melt flux',
                               f'totalMeltFlux{suffix}', 'kT/yr')
