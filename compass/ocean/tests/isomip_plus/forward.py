@@ -1,12 +1,5 @@
-import os
-import shutil
-
-import numpy as np
-import xarray
-
 from compass.model import run_model
 from compass.ocean.tests.isomip_plus.evap import update_evaporation_flux
-from compass.ocean.tests.isomip_plus.viz.plot import MoviePlotter
 from compass.ocean.time import get_time_interval_string
 from compass.step import Step
 
@@ -156,87 +149,6 @@ class Forward(Step):
         self.update_namelist_at_runtime(options)
 
         run_model(self)
-
-        if self.name == 'performance':
-            # plot a few fields
-            plot_folder = f'{self.work_dir}/plots'
-            if os.path.exists(plot_folder):
-                shutil.rmtree(plot_folder)
-            min_column_thickness = self.config.getfloat('isomip_plus',
-                                                        'min_column_thickness')
-
-            dsMesh = xarray.open_dataset(os.path.join(self.work_dir,
-                                                      'init.nc'))
-            ds = xarray.open_dataset(os.path.join(self.work_dir, 'output.nc'))
-            ds['landIceDraft'] = \
-                dsMesh.landIceDraft.expand_dims('Time', axis=0)
-            section_y = self.config.getfloat('isomip_plus_viz', 'section_y')
-            # show progress only if we're not writing to a log file
-            show_progress = self.log_filename is None
-            plotter = MoviePlotter(inFolder=self.work_dir,
-                                   streamfunctionFolder=self.work_dir,
-                                   outFolder=plot_folder, sectionY=section_y,
-                                   dsMesh=dsMesh, ds=ds, expt=self.experiment,
-                                   showProgress=show_progress)
-
-            bottomDepth = ds.bottomDepth.expand_dims(dim='Time', axis=0)
-            plotter.plot_horiz_series(ds.ssh + bottomDepth,
-                                      'H', 'H', True,
-                                      vmin=min_column_thickness, vmax=700,
-                                      cmap_set_under='r', cmap_scale='log')
-            plotter.plot_horiz_series(ds.ssh, 'ssh', 'ssh',
-                                      True, vmin=-700, vmax=0)
-            plotter.plot_3d_field_top_bot_section(
-                ds.temperature, nameInTitle='temperature', prefix='temp',
-                units='C', vmin=-2., vmax=1., cmap='cmo.thermal')
-
-            plotter.plot_3d_field_top_bot_section(
-                ds.salinity, nameInTitle='salinity', prefix='salin',
-                units='PSU', vmin=33.8, vmax=34.7, cmap='cmo.haline')
-
-            tol = 1e-10
-            dsIce = xarray.open_dataset(
-                os.path.join(self.work_dir,
-                             'land_ice_fluxes.nc'))
-            if 'topDragMagnitude' in dsIce.keys():
-                plotter.plot_horiz_series(
-                    dsIce.topDragMagnitude,
-                    'topDragMagnitude', 'topDragMagnitude', True,
-                    vmin=0 + tol, vmax=np.max(dsIce.topDragMagnitude.values),
-                    cmap_set_under='k')
-            if 'landIceHeatFlux' in dsIce.keys():
-                plotter.plot_horiz_series(
-                    dsIce.landIceHeatFlux,
-                    'landIceHeatFlux', 'landIceHeatFlux', True,
-                    vmin=np.min(dsIce.landIceHeatFlux.values),
-                    vmax=np.max(dsIce.landIceHeatFlux.values))
-            if 'landIceInterfaceTemperature' in dsIce.keys():
-                plotter.plot_horiz_series(
-                    dsIce.landIceInterfaceTemperature,
-                    'landIceInterfaceTemperature',
-                    'landIceInterfaceTemperature',
-                    True,
-                    vmin=np.min(dsIce.landIceInterfaceTemperature.values),
-                    vmax=np.max(dsIce.landIceInterfaceTemperature.values))
-            if 'landIceFreshwaterFlux' in dsIce.keys():
-                plotter.plot_horiz_series(
-                    dsIce.landIceFreshwaterFlux,
-                    'landIceFreshwaterFlux', 'landIceFreshwaterFlux', True,
-                    vmin=0 + tol, vmax=1e-4,
-                    cmap_set_under='k', cmap_scale='log')
-            if 'landIceFraction' in dsIce.keys():
-                plotter.plot_horiz_series(
-                    dsIce.landIceFraction,
-                    'landIceFraction', 'landIceFraction', True,
-                    vmin=0 + tol, vmax=1 - tol,
-                    cmap='cmo.balance',
-                    cmap_set_under='k', cmap_set_over='r')
-            if 'landIceFloatingFraction' in dsIce.keys():
-                plotter.plot_horiz_series(
-                    dsIce.landIceFloatingFraction,
-                    'landIceFloatingFraction', 'landIceFloatingFraction',
-                    True, vmin=0 + tol, vmax=1 - tol,
-                    cmap='cmo.balance', cmap_set_under='k', cmap_set_over='r')
 
         if self.name == 'simulation':
             update_evaporation_flux(

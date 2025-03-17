@@ -53,6 +53,7 @@ class Viz(Step):
         config = self.config
         section = config['isomip_plus_viz']
         plot_streamfunctions = section.getboolean('plot_streamfunctions')
+        plot_performance_fields = section.getboolean('plot_performance_fields')
         plot_haney = section.getboolean('plot_haney')
         frames_per_second = section.getint('frames_per_second')
         # output_slices = section.getint('output_slices')
@@ -247,7 +248,40 @@ class Viz(Step):
                                   framesPerSecond=frames_per_second,
                                   extension=movie_format)
 
+        if plot_performance_fields:
+            plot_folder = f'{out_dir}/performance_plots'
+            min_column_thickness = self.config.getfloat('isomip_plus',
+                                                        'min_column_thickness')
+
+            ds = xarray.open_dataset('../performance/output.nc')
+            # show progress only if we're not writing to a log file
+            show_progress = self.log_filename is None
+            plotter = MoviePlotter(inFolder=self.work_dir,
+                                   streamfunctionFolder=self.work_dir,
+                                   outFolder=plot_folder, sectionY=section_y,
+                                   dsMesh=dsMesh, ds=ds, expt=self.experiment,
+                                   showProgress=show_progress)
+
+            bottomDepth = ds.bottomDepth.expand_dims(dim='Time', axis=0)
+            plotter.plot_horiz_series(ds.ssh.isel(Time=-1) + bottomDepth,
+                                      'H', 'H', True,
+                                      vmin=min_column_thickness, vmax=700,
+                                      cmap_set_under='r', cmap_scale='log')
+            plotter.plot_horiz_series(ds.ssh, 'ssh', 'ssh',
+                                      True, vmin=-700, vmax=0)
+            plotter.plot_3d_field_top_bot_section(
+                ds.temperature, nameInTitle='temperature', prefix='temp',
+                units='C', vmin=-2., vmax=1., cmap='cmo.thermal')
+
+            plotter.plot_3d_field_top_bot_section(
+                ds.salinity, nameInTitle='salinity', prefix='salin',
+                units='PSU', vmin=33.8, vmax=34.7, cmap='cmo.haline')
+
+            dsIce = xarray.open_dataset('../performance/land_ice_fluxes.nc')
+            self._plot_land_ice_variables(dsIce, plotter, maxBottomDepth)
+
     def _plot_land_ice_variables(ds, mPlotter, maxBottomDepth):
+        tol = 1e-10
         mPlotter.plot_horiz_series(ds.landIceFrictionVelocity,
                                    'landIceFrictionVelocity',
                                    'frictionVelocity',
@@ -263,6 +297,45 @@ class Viz(Step):
         mPlotter.plot_horiz_series(ds.landIceDraft,
                                    'landIceDraft', 'landIceDraft',
                                    True, vmin=-maxBottomDepth, vmax=0.)
+        if 'topDragMagnitude' in ds.keys():
+            mPlotter.plot_horiz_series(
+                ds.topDragMagnitude,
+                'topDragMagnitude', 'topDragMagnitude', True,
+                vmin=0 + tol, vmax=np.max(ds.topDragMagnitude.values),
+                cmap_set_under='k')
+        if 'landIceHeatFlux' in ds.keys():
+            mPlotter.plot_horiz_series(
+                ds.landIceHeatFlux,
+                'landIceHeatFlux', 'landIceHeatFlux', True,
+                vmin=np.min(ds.landIceHeatFlux.values),
+                vmax=np.max(ds.landIceHeatFlux.values))
+        if 'landIceInterfaceTemperature' in ds.keys():
+            mPlotter.plot_horiz_series(
+                ds.landIceInterfaceTemperature,
+                'landIceInterfaceTemperature',
+                'landIceInterfaceTemperature',
+                True,
+                vmin=np.min(ds.landIceInterfaceTemperature.values),
+                vmax=np.max(ds.landIceInterfaceTemperature.values))
+        if 'landIceFreshwaterFlux' in ds.keys():
+            mPlotter.plot_horiz_series(
+                ds.landIceFreshwaterFlux,
+                'landIceFreshwaterFlux', 'landIceFreshwaterFlux', True,
+                vmin=0 + tol, vmax=1e-4,
+                cmap_set_under='k', cmap_scale='log')
+        if 'landIceFraction' in ds.keys():
+            mPlotter.plot_horiz_series(
+                ds.landIceFraction,
+                'landIceFraction', 'landIceFraction', True,
+                vmin=0 + tol, vmax=1 - tol,
+                cmap='cmo.balance',
+                cmap_set_under='k', cmap_set_over='r')
+        if 'landIceFloatingFraction' in ds.keys():
+            mPlotter.plot_horiz_series(
+                ds.landIceFloatingFraction,
+                'landIceFloatingFraction', 'landIceFloatingFraction',
+                True, vmin=0 + tol, vmax=1 - tol,
+                cmap='cmo.balance', cmap_set_under='k', cmap_set_over='r')
         mPlotter.plot_melt_rates()
         mPlotter.plot_ice_shelf_boundary_variables()
 
