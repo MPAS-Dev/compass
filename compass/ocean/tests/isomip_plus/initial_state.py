@@ -158,7 +158,8 @@ class InitialState(Step):
             modify_mask = ds.bottomDepth > 0.
             land_ice_draft = compute_land_ice_draft_from_pressure(
                 land_ice_pressure=land_ice_pressure,
-                modify_mask=modify_mask)
+                modify_mask=modify_mask,
+                ref_density=1028.)
             land_ice_draft = np.maximum(land_ice_draft,
                                         -ds.bottomDepth)
             ds['ssh'] = land_ice_draft
