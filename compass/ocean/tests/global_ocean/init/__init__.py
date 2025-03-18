@@ -44,9 +44,8 @@ class Init(TestCase):
             The initial condition dataset to use
         """
         name = 'init'
-        mesh_name = mesh.mesh_name
         ic_dir = initial_condition
-        self.init_subdir = os.path.join(mesh_name, ic_dir)
+        self.init_subdir = os.path.join(mesh.mesh_subdir, ic_dir)
         subdir = os.path.join(self.init_subdir, name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
