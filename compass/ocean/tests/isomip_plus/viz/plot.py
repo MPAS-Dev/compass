@@ -9,7 +9,7 @@ import numpy
 import progressbar
 import xarray
 from matplotlib.collections import PatchCollection
-from matplotlib.colors import LogNorm
+from matplotlib.colors import LogNorm, SymLogNorm
 from matplotlib.patches import Polygon
 
 
@@ -77,22 +77,30 @@ class TimeSeriesPlotter(object):
 
         plt.switch_backend('Agg')
 
-    def plot_melt_time_series(self, sshMax=None):
+    def plot_melt_time_series(self, sshMax=None, wctMax=None):
         """
         Plot a series of image for each of several variables related to melt
         at the ice shelf-ocean interface: mean melt rate, total melt flux,
         mean thermal driving, mean friction velocity
         """
 
+        if 'timeMonthly_avg_landIceFreshwaterFlux' not in self.ds.keys():
+            return
         rho_fw = 1000.
         secPerYear = 365 * 24 * 60 * 60
 
+        suffix = ''
         areaCell = self.dsMesh.areaCell
         iceMask = self.ds.timeMonthly_avg_landIceFraction
         meltFlux = self.ds.timeMonthly_avg_landIceFreshwaterFlux
         if sshMax is not None:
             ssh = self.ds.timeMonthly_avg_ssh
             iceMask = iceMask.where(ssh < sshMax)
+            suffix = f'_sshMax{sshMax}'
+        elif wctMax is not None:
+            H = self.ds.timeMonthly_avg_layerThickness.sum(dim='nVertLevels')
+            iceMask = iceMask.where(H < wctMax)
+            suffix = f'_wctMax{wctMax}'
 
         totalMeltFlux = (meltFlux * areaCell * iceMask).sum(dim='nCells')
         totalArea = (areaCell * iceMask).sum(dim='nCells')
@@ -101,7 +109,7 @@ class TimeSeriesPlotter(object):
                               'm/yr')
 
         self.plot_time_series(1e-6 * totalMeltFlux, 'total melt flux',
-                              'totalMeltFlux', 'kT/yr')
+                              f'totalMeltFlux{suffix}', 'kT/yr')
 
         prefix = 'timeMonthly_avg_landIceBoundaryLayerTracers_'
         boundary_layer_temperature = \
@@ -113,13 +121,13 @@ class TimeSeriesPlotter(object):
         da = (da * areaCell * iceMask).sum(dim='nCells') / totalArea
 
         self.plot_time_series(da, 'mean thermal driving',
-                              'meanThermalDriving', 'deg C')
+                              f'meanThermalDriving{suffix}', 'deg C')
 
         da = self.ds.timeMonthly_avg_landIceFrictionVelocity
         da = (da * areaCell * iceMask).sum(dim='nCells') / totalArea
 
         self.plot_time_series(da, 'mean friction velocity',
-                              'meanFrictionVelocity', 'm/s')
+                              f'meanFrictionVelocity{suffix}', 'm/s')
 
     def plot_time_series(self, da, nameInTitle, prefix, units=None,
                          figsize=(12, 6), color=None, overwrite=True):
@@ -239,10 +247,12 @@ class MoviePlotter(object):
         self.sectionY = sectionY
         self.showProgress = showProgress
 
+        if 'Time' in dsMesh.dims:
+            dsMesh = dsMesh.isel(Time=0)
         self.dsMesh = dsMesh
         self.ds = ds
 
-        landIceMask = self.dsMesh.landIceMask.isel(Time=0) > 0
+        landIceMask = self.dsMesh.landIceMask > 0
         self.oceanMask = self.dsMesh.maxLevelCell - 1 >= 0
         self.cavityMask = numpy.logical_and(self.oceanMask, landIceMask)
 
@@ -340,7 +350,7 @@ class MoviePlotter(object):
         if self.showProgress:
             bar.finish()
 
-    def plot_melt_rates(self, vmin=-100., vmax=100.):
+    def plot_melt_rates(self, vmin=0., vmax=50.):
         """
         Plot a series of image of the melt rate
 
@@ -349,6 +359,8 @@ class MoviePlotter(object):
         vmin, vmax : float, optional
             The minimum and maximum values for the colorbar
         """
+        if 'timeMonthly_avg_landIceFreshwaterFlux' not in self.ds.keys():
+            return
         rho_fw = 1000.
         secPerYear = 365 * 24 * 60 * 60
 
@@ -357,7 +369,7 @@ class MoviePlotter(object):
 
         self.plot_horiz_series(da, 'melt rate', prefix='meltRate',
                                oceanDomain=False, units='m/yr', vmin=vmin,
-                               vmax=vmax, cmap='cmo.curl')
+                               vmax=vmax, cmap='cmo.amp')
 
     def plot_ice_shelf_boundary_variables(self):
         """
@@ -367,6 +379,8 @@ class MoviePlotter(object):
         ice
         """
 
+        if 'timeMonthly_avg_landIceFreshwaterFlux' not in self.ds.keys():
+            return
         self.plot_horiz_series(self.ds.timeMonthly_avg_landIceHeatFlux,
                                'heat flux from ocean to ice-ocean interface',
                                prefix='oceanHeatFlux',
@@ -393,7 +407,7 @@ class MoviePlotter(object):
         self.plot_horiz_series(da, 'thermal driving',
                                prefix='thermalDriving',
                                oceanDomain=False, units='deg C',
-                               vmin=-2, vmax=2, cmap='cmo.thermal')
+                               vmin=-2, vmax=2, cmap='cmo.curl')
 
         da = boundary_layer_salinity - interface_salinity
         self.plot_horiz_series(da, 'haline driving',
@@ -404,8 +418,9 @@ class MoviePlotter(object):
         self.plot_horiz_series(self.ds.timeMonthly_avg_landIceFrictionVelocity,
                                'friction velocity',
                                prefix='frictionVelocity',
-                               oceanDomain=True, units='m/s',
-                               vmin=0, vmax=0.05, cmap='cmo.speed')
+                               oceanDomain=False, units='m/s',
+                               vmin=1.e-4, vmax=1.e-1, cmap='cmo.speed',
+                               cmap_scale='log')
 
     def plot_temperature(self):
         """
@@ -430,8 +445,8 @@ class MoviePlotter(object):
         self.plot_3d_field_top_bot_section(da,
                                            nameInTitle='salinity',
                                            prefix='Salinity', units='PSU',
-                                           vmin=33.8, vmax=34.7,
-                                           cmap='cmo.haline')
+                                           vmin=1., vmax=34.6,
+                                           cmap='cmo.haline', cmap_scale='log')
 
     def plot_potential_density(self):
         """
@@ -470,7 +485,7 @@ class MoviePlotter(object):
                           units=None, vmin=None, vmax=None, cmap=None,
                           cmap_set_under=None, cmap_set_over=None,
                           cmap_scale='linear', time_indices=None,
-                          figsize=(9, 3)):
+                          figsize=(9, 3), contour_field=None):
         """
         Plot a series of image of a given variable
 
@@ -508,7 +523,9 @@ class MoviePlotter(object):
             The time indices at which to plot. If not provided, set to all.
         """
 
-        nTime = self.ds.sizes['Time']
+        if 'Time' not in da.dims:
+            da = da.expand_dims(dim='Time', axis=0)
+        nTime = da.sizes['Time']
         if self.showProgress:
             widgets = ['plotting {}: '.format(nameInTitle),
                        progressbar.Percentage(), ' ',
@@ -523,6 +540,8 @@ class MoviePlotter(object):
         for tIndex in time_indices:
             self.update_date(tIndex)
             field = da.isel(Time=tIndex).values
+            if contour_field is not None:
+                contour_field = contour_field.isel(Time=tIndex).values
             outFileName = '{}/{}/{}_{:04d}.png'.format(
                 self.outFolder, prefix, prefix, tIndex + 1)
             if units is None:
@@ -534,7 +553,8 @@ class MoviePlotter(object):
                                    vmax=vmax, cmap=cmap,
                                    cmap_set_under=cmap_set_under,
                                    cmap_set_over=cmap_set_over,
-                                   cmap_scale=cmap_scale, figsize=figsize)
+                                   cmap_scale=cmap_scale, figsize=figsize,
+                                   contour_field=contour_field)
             if self.showProgress:
                 bar.update(tIndex + 1)
         if self.showProgress:
@@ -542,7 +562,8 @@ class MoviePlotter(object):
 
     def plot_3d_field_top_bot_section(self, da, nameInTitle, prefix,
                                       units=None, vmin=None, vmax=None,
-                                      cmap=None, cmap_set_under=None,
+                                      cmap=None, cmap_scale='linear',
+                                      cmap_set_under=None,
                                       cmap_set_over=None):
         """
         Plot a series of images of a given 3D variable showing the value
@@ -598,6 +619,7 @@ class MoviePlotter(object):
                                'top {}'.format(nameInTitle),
                                'top{}'.format(prefix), oceanDomain=True,
                                vmin=vmin, vmax=vmax, cmap=cmap,
+                               cmap_scale=cmap_scale,
                                cmap_set_under=cmap_set_under,
                                cmap_set_over=cmap_set_over)
 
@@ -620,7 +642,8 @@ class MoviePlotter(object):
         self.plot_horiz_series(daBot,
                                'bot {}'.format(nameInTitle),
                                'bot{}'.format(prefix), oceanDomain=True,
-                               vmin=vmin, vmax=vmax, cmap=cmap)
+                               vmin=vmin, vmax=vmax, cmap_scale=cmap_scale,
+                               cmap=cmap)
 
         daSection = da.isel(nCells=self.sectionCellIndices)
 
@@ -649,7 +672,8 @@ class MoviePlotter(object):
             self._plot_vert_field(self.X, self.Z[tIndex, :, :],
                                   field, title=title,
                                   outFileName=outFileName,
-                                  vmin=vmin, vmax=vmax, cmap=cmap)
+                                  vmin=vmin, vmax=vmax, cmap=cmap,
+                                  show_boundaries=False, cmap_scale=cmap_scale)
             if self.showProgress:
                 bar.update(tIndex + 1)
         if self.showProgress:
@@ -708,6 +732,7 @@ class MoviePlotter(object):
                 plt.plot(1e-3 * X[z_index, :], Z[z_index, :], 'k')
             plt.plot(1e-3 * X[0, :], Z[0, :], 'b')
             plt.plot(1e-3 * X[0, :], self.zBotSection, 'g')
+            plt.plot(1e-3 * X[0, :], self.landIceDraft, 'r')
 
             ax.autoscale(tight=True)
             x1, x2, y1, y2 = 420, 470, -650, -520
@@ -719,6 +744,7 @@ class MoviePlotter(object):
                 axins.plot(1e-3 * X[z_index, :], Z[z_index, :], 'k')
             axins.plot(1e-3 * X[0, :], Z[0, :], 'b')
             axins.plot(1e-3 * X[0, :], self.zBotSection, 'g')
+            axins.plot(1e-3 * X[0, :], self.landIceDraft, 'r')
             axins.set_xlim(x1, x2)
             axins.set_ylim(y1, y2)
             axins.set_xticklabels([])
@@ -783,7 +809,7 @@ class MoviePlotter(object):
     def _plot_horiz_field(self, field, title, outFileName, oceanDomain=True,
                           vmin=None, vmax=None, figsize=(9, 3), cmap=None,
                           cmap_set_under=None, cmap_set_over=None,
-                          cmap_scale='linear'):
+                          cmap_scale='linear', contour_field=None):
 
         try:
             os.makedirs(os.path.dirname(outFileName))
@@ -814,10 +840,21 @@ class MoviePlotter(object):
         if cmap_scale == 'log':
             localPatches.set_norm(LogNorm(vmin=max(1e-10, vmin),
                                   vmax=vmax, clip=False))
+        elif cmap_scale == 'symlog':
+            localPatches.set_norm(SymLogNorm(vmin=vmin, vmax=vmax, clip=False,
+                                             linthresh=vmax / 1e2))
 
         plt.figure(figsize=figsize)
         ax = plt.subplot(111)
         ax.add_collection(localPatches)
+        if contour_field is not None:
+            dsMesh = self.dsMesh
+            ax.tricontour(dsMesh.xCell / 1.e3, dsMesh.yCell / 1.e3,
+                          contour_field,
+                          colors='k', levels=[1.1e-2 + 1.e-8])
+            ax.tricontour(dsMesh.xCell / 1.e3, dsMesh.yCell / 1.e3,
+                          contour_field,
+                          colors='grey', levels=numpy.arange(50., 700., 50.))
         plt.colorbar(localPatches, extend='both')
         plt.axis([0, 500, 0, 1000])
         ax.set_aspect('equal')
@@ -829,7 +866,7 @@ class MoviePlotter(object):
 
     def _plot_vert_field(self, inX, inZ, field, title, outFileName,
                          vmin=None, vmax=None, figsize=(9, 5), cmap=None,
-                         show_boundaries=True):
+                         show_boundaries=True, cmap_scale='linear'):
         try:
             os.makedirs(os.path.dirname(outFileName))
         except OSError:
@@ -840,24 +877,40 @@ class MoviePlotter(object):
 
         plt.figure(figsize=figsize)
         ax = plt.subplot(111)
+        z_mask = numpy.ones(self.X.shape)
+        z_mask[0:-1, 0:-1] *= numpy.where(self.sectionMask, 1., numpy.nan)
+
+        tIndex = 0
+        Z = numpy.array(self.Z[tIndex, :, :])
+        Z *= z_mask
+        X = self.X
+
+        plt.fill_between(1e-3 * X[0, :], self.zBotSection, y2=0,
+                         facecolor='lightsteelblue', zorder=2)
+        plt.fill_between(1e-3 * X[0, :], self.zBotSection, y2=-750,
+                         facecolor='grey', zorder=1)
         if show_boundaries:
-            z_mask = numpy.ones(self.X.shape)
-            z_mask[0:-1, 0:-1] *= numpy.where(self.sectionMask, 1., numpy.nan)
-
-            tIndex = 0
-            Z = numpy.array(self.Z[tIndex, :, :])
-            Z *= z_mask
-            X = self.X
-
-            plt.fill_between(1e-3 * X[0, :], self.zBotSection, y2=0,
-                             facecolor='lightsteelblue', zorder=2)
-            plt.fill_between(1e-3 * X[0, :], self.zBotSection, y2=-750,
-                             facecolor='grey', zorder=1)
             for z_index in range(1, X.shape[0]):
                 plt.plot(1e-3 * X[z_index, :], Z[z_index, :], 'k', zorder=4)
         plt.pcolormesh(1e-3 * inX, inZ, field, vmin=vmin, vmax=vmax, cmap=cmap,
                        zorder=3)
         plt.colorbar()
+        x1, x2, y1, y2 = 455, 470, -640, -540
+        axins = ax.inset_axes([0.01, 0.6, 0.3, 0.39])
+        axins.fill_between(1e-3 * X[0, :], self.zBotSection, y2=0,
+                           facecolor='lightsteelblue', zorder=2)
+        axins.fill_between(1e-3 * X[0, :], self.zBotSection, y2=-750,
+                           facecolor='grey', zorder=1)
+        if show_boundaries:
+            for z_index in range(1, X.shape[0]):
+                axins.plot(1e-3 * X[z_index, :], Z[z_index, :], 'k', zorder=4)
+        axins.pcolormesh(1e-3 * inX, inZ, field, vmin=vmin, vmax=vmax,
+                         cmap=cmap, zorder=3)
+        axins.set_xlim(x1, x2)
+        axins.set_ylim(y1, y2)
+        axins.set_xticklabels([])
+        axins.set_yticklabels([])
+        ax.indicate_inset_zoom(axins, edgecolor="black")
         ax.autoscale(tight=True)
         plt.ylim([numpy.amin(inZ), 20])
         plt.xlim([400, 800])
@@ -908,6 +961,15 @@ class MoviePlotter(object):
                     layerThickness[:, zIndex])
                 self.Z[tIndex, zIndex, :] = self.Z[tIndex, zIndex + 1, :] + \
                     layerThicknessSection
+            if 'timeMonthly_avg_landIceDraft' in self.ds:
+                var = 'timeMonthly_avg_landIceDraft'
+            else:
+                var = 'landIceDraft'
+            landIceDraft = self.ds[var].isel(
+                Time=tIndex, nCells=self.sectionCellIndices)
+            landIceDraft = landIceDraft.values * self.sectionMask[0, :].T
+            landIceDraft = numpy.nan_to_num(landIceDraft)
+            self.landIceDraft = _interp_extrap_corner(landIceDraft)
 
 
 def _compute_cell_patches(dsMesh, mask):

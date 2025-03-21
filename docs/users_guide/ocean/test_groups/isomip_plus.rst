@@ -125,6 +125,9 @@ The ``isomip_plus`` test cases share the following config options:
     # considered a land-ice cell by MPAS-Ocean (landIceMask == 1).
     min_land_ice_fraction = 0.5
 
+    # the density of ice prescribed in ISOMIP+
+    ice_density = 918
+
     # the initial temperature at the sea surface
     init_top_temp = -1.9
     # the initial temperature at the sea floor
