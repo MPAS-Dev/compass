@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.ocean.iceshelf.compute_land_ice_pressure_and_draft &mdash; compass latest documentation</title>
+  <title>compass.ocean.iceshelf.compute_land_ice_pressure_from_thickness &mdash; compass latest documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="compass.ocean.iceshelf.adjust_ssh" href="compass.ocean.iceshelf.adjust_ssh.html" />
-    <link rel="prev" title="compass.ocean.haney.compute_haney_number" href="compass.ocean.haney.compute_haney_number.html" /> 
+    <link rel="prev" title="compass.ocean.iceshelf.compute_land_ice_pressure_from_draft" href="compass.ocean.iceshelf.compute_land_ice_pressure_from_draft.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -114,9 +114,9 @@
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../api.html">API reference</a></li>
           <li class="breadcrumb-item"><a href="../api.html">ocean</a></li>
-      <li class="breadcrumb-item active">compass.ocean.iceshelf.compute_land_ice_pressure_and_draft</li>
+      <li class="breadcrumb-item active">compass.ocean.iceshelf.compute_land_ice_pressure_from_thickness</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/developers_guide/ocean/generated/compass.ocean.iceshelf.compute_land_ice_pressure_and_draft.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/developers_guide/ocean/generated/compass.ocean.iceshelf.compute_land_ice_pressure_from_thickness.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -124,26 +124,22 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="compass-ocean-iceshelf-compute-land-ice-pressure-and-draft">
-<h1>compass.ocean.iceshelf.compute_land_ice_pressure_and_draft<a class="headerlink" href="#compass-ocean-iceshelf-compute-land-ice-pressure-and-draft" title="Link to this heading"></a></h1>
+  <section id="compass-ocean-iceshelf-compute-land-ice-pressure-from-thickness">
+<h1>compass.ocean.iceshelf.compute_land_ice_pressure_from_thickness<a class="headerlink" href="#compass-ocean-iceshelf-compute-land-ice-pressure-from-thickness" title="Link to this heading"></a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="compass.ocean.iceshelf.compute_land_ice_pressure_and_draft">
-<span class="sig-prename descclassname"><span class="pre">compass.ocean.iceshelf.</span></span><span class="sig-name descname"><span class="pre">compute_land_ice_pressure_and_draft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ssh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modify_mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_density</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/iceshelf.html#compute_land_ice_pressure_and_draft"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.iceshelf.compute_land_ice_pressure_and_draft" title="Link to this definition"></a></dt>
-<dd><p>Compute the pressure from and overlying ice shelf and the ice-shelf draft</p>
+<dt class="sig sig-object py" id="compass.ocean.iceshelf.compute_land_ice_pressure_from_thickness">
+<span class="sig-prename descclassname"><span class="pre">compass.ocean.iceshelf.</span></span><span class="sig-name descname"><span class="pre">compute_land_ice_pressure_from_thickness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">land_ice_thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modify_mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">land_ice_density</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/iceshelf.html#compute_land_ice_pressure_from_thickness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.iceshelf.compute_land_ice_pressure_from_thickness" title="Link to this definition"></a></dt>
+<dd><p>Compute the pressure from an overlying ice shelf from ice thickness</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ssh</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2025.1.3.dev0)"><em>xarray.DataArray</em></a>) – The sea surface height (the ice draft)</p></li>
-<li><p><strong>modify_mask</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2025.1.3.dev0)"><em>xarray.DataArray</em></a>) – A mask that is 1 where <code class="docutils literal notranslate"><span class="pre">landIcePressure</span></code> can be deviate from 0</p></li>
-<li><p><strong>ref_density</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – A reference density for seawater displaced by the ice shelf</p></li>
+<li><p><strong>land_ice_thickness</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2025.3.1.dev0)"><em>xarray.DataArray</em></a>) – The ice thickness</p></li>
+<li><p><strong>modify_mask</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2025.3.1.dev0)"><em>xarray.DataArray</em></a>) – A mask that is 1 where <code class="docutils literal notranslate"><span class="pre">landIcePressure</span></code> can be deviate from 0</p></li>
+<li><p><strong>land_ice_density</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – A reference density for land ice</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>landIcePressure</strong> (<em>xarray.DataArray</em>) – The pressure from the overlying land ice on the ocean</p></li>
-<li><p><strong>landIceDraft</strong> (<em>xarray.DataArray</em>) – The ice draft, equal to the initial <code class="docutils literal notranslate"><span class="pre">ssh</span></code></p></li>
-</ul>
-</p>
+<dd class="field-even"><p><strong>land_ice_pressure</strong> (<em>xarray.DataArray</em>) – The pressure from the overlying land ice on the ocean</p>
 </dd>
 </dl>
 </dd></dl>
@@ -154,7 +150,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="compass.ocean.haney.compute_haney_number.html" class="btn btn-neutral float-left" title="compass.ocean.haney.compute_haney_number" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.ocean.iceshelf.compute_land_ice_pressure_from_draft.html" class="btn btn-neutral float-left" title="compass.ocean.iceshelf.compute_land_ice_pressure_from_draft" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="compass.ocean.iceshelf.adjust_ssh.html" class="btn btn-neutral float-right" title="compass.ocean.iceshelf.adjust_ssh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

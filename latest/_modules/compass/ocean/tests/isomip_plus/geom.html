@@ -227,11 +227,12 @@
                                   <span class="n">ds_geom</span><span class="o">.</span><span class="n">landIceGroundedFraction</span><span class="p">)</span>
 
     <span class="c1"># mask the topography to the ocean region before interpolation</span>
-    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Z_bed&#39;</span><span class="p">,</span> <span class="s1">&#39;Z_ice_draft&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceFraction&#39;</span><span class="p">,</span>
+    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Z_bed&#39;</span><span class="p">,</span> <span class="s1">&#39;Z_ice_surface&#39;</span><span class="p">,</span> <span class="s1">&#39;Z_ice_draft&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceFraction&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;landIceFloatingFraction&#39;</span><span class="p">,</span> <span class="s1">&#39;smoothedDraftMask&#39;</span><span class="p">]:</span>
         <span class="n">ds_geom</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_geom</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">*</span> <span class="n">ds_geom</span><span class="p">[</span><span class="s1">&#39;oceanFraction&#39;</span><span class="p">]</span>
 
     <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;bottomDepthObserved&#39;</span><span class="p">:</span> <span class="s1">&#39;Z_bed&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;landIceThickness&#39;</span><span class="p">:</span> <span class="s1">&#39;iceThickness&#39;</span><span class="p">,</span>
               <span class="s1">&#39;ssh&#39;</span><span class="p">:</span> <span class="s1">&#39;Z_ice_draft&#39;</span><span class="p">,</span>
               <span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">:</span> <span class="s1">&#39;oceanFraction&#39;</span><span class="p">,</span>
               <span class="s1">&#39;landIceFraction&#39;</span><span class="p">:</span> <span class="s1">&#39;landIceFraction&#39;</span><span class="p">,</span>
@@ -273,7 +274,7 @@
     <span class="n">y_cell</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">yIsomipCell</span><span class="o">.</span><span class="n">values</span>
 
     <span class="k">if</span> <span class="n">thin_film_present</span><span class="p">:</span>
-        <span class="n">ocean_fraction</span> <span class="o">=</span> <span class="o">-</span> <span class="n">ds_geom</span><span class="p">[</span><span class="s1">&#39;landFraction&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1.0</span>
+        <span class="n">ocean_fraction</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ds_geom</span><span class="p">[</span><span class="s1">&#39;Z_bed&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">ocean_fraction</span> <span class="o">=</span> <span class="p">(</span><span class="n">ds_geom</span><span class="p">[</span><span class="s1">&#39;landIceFloatingFraction&#39;</span><span class="p">]</span> <span class="o">+</span>
                           <span class="n">ds_geom</span><span class="p">[</span><span class="s1">&#39;openOceanFraction&#39;</span><span class="p">])</span>

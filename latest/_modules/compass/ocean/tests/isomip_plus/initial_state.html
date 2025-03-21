@@ -118,7 +118,11 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.cime.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.iceshelf</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_land_ice_pressure_and_draft</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.iceshelf</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">compute_land_ice_draft_from_pressure</span><span class="p">,</span>
+    <span class="n">compute_land_ice_pressure_from_draft</span><span class="p">,</span>
+    <span class="n">compute_land_ice_pressure_from_thickness</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.isomip_plus.geom</span><span class="w"> </span><span class="kn">import</span> <span class="n">interpolate_geom</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.isomip_plus.viz.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">MoviePlotter</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.vertical</span><span class="w"> </span><span class="kn">import</span> <span class="n">init_vertical_coord</span>
@@ -151,7 +155,7 @@
 <div class="viewcode-block" id="InitialState.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.initial_state.InitialState.html#compass.ocean.tests.isomip_plus.initial_state.InitialState.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">experiment</span><span class="p">,</span> <span class="n">vertical_coordinate</span><span class="p">,</span>
-                 <span class="n">time_varying_forcing</span><span class="p">,</span> <span class="n">thin_film_present</span><span class="p">):</span>
+                 <span class="n">time_varying_forcing</span><span class="p">,</span> <span class="n">thin_film_present</span><span class="p">,</span> <span class="n">include_viz</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the step</span>
 
@@ -176,6 +180,7 @@
 <span class="sd">            Whether the run includes a thin film below grounded ice</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;initial_state&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">include_viz</span> <span class="o">=</span> <span class="n">include_viz</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">experiment</span> <span class="o">=</span> <span class="n">experiment</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vertical_coordinate</span> <span class="o">=</span> <span class="n">vertical_coordinate</span>
@@ -202,7 +207,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ds</span><span class="p">,</span> <span class="n">frac</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_initial_condition</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_compute_restoring</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">frac</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_plot</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_viz</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_plot</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_initial_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -216,12 +222,15 @@
         <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">]</span>
         <span class="n">min_land_ice_fraction</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;min_land_ice_fraction&#39;</span><span class="p">)</span>
         <span class="n">min_ocean_fraction</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;min_ocean_fraction&#39;</span><span class="p">)</span>
+        <span class="n">ice_density</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;ice_density&#39;</span><span class="p">)</span>
 
         <span class="n">ds_geom</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;input_geometry_processed.nc&#39;</span><span class="p">)</span>
         <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">)</span>
 
         <span class="n">ds</span> <span class="o">=</span> <span class="n">interpolate_geom</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds_geom</span><span class="p">,</span> <span class="n">min_ocean_fraction</span><span class="p">,</span>
                               <span class="n">thin_film_present</span><span class="p">)</span>
+
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">ds</span><span class="o">.</span><span class="n">bottomDepthObserved</span>
 
         <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceFraction&#39;</span><span class="p">]</span> <span class="o">=</span> \
             <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceFraction&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -244,22 +253,54 @@
 
         <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceFraction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">landIceFraction</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
 
-        <span class="n">ref_density</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_RHOSW&#39;</span><span class="p">]</span>
-        <span class="n">landIcePressure</span><span class="p">,</span> <span class="n">landIceDraft</span> <span class="o">=</span> <span class="n">compute_land_ice_pressure_and_draft</span><span class="p">(</span>
-            <span class="n">ssh</span><span class="o">=</span><span class="n">ds</span><span class="o">.</span><span class="n">ssh</span><span class="p">,</span> <span class="n">modify_mask</span><span class="o">=</span><span class="n">ds</span><span class="o">.</span><span class="n">ssh</span> <span class="o">&lt;</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">ref_density</span><span class="o">=</span><span class="n">ref_density</span><span class="p">)</span>
-
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIcePressure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIcePressure</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceDraft&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIceDraft</span>
+        <span class="k">if</span> <span class="n">thin_film_present</span><span class="p">:</span>  <span class="c1"># compute full pressure in grounded regions</span>
+            <span class="n">land_ice_thickness</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">landIceThickness</span>
+            <span class="n">land_ice_pressure_unscaled</span> <span class="o">=</span> \
+                <span class="n">compute_land_ice_pressure_from_thickness</span><span class="p">(</span>
+                    <span class="n">land_ice_thickness</span><span class="o">=</span><span class="n">land_ice_thickness</span><span class="p">,</span>
+                    <span class="n">modify_mask</span><span class="o">=</span><span class="n">ds</span><span class="o">.</span><span class="n">ssh</span> <span class="o">&lt;</span> <span class="mf">0.</span><span class="p">,</span>
+                    <span class="n">land_ice_density</span><span class="o">=</span><span class="n">ice_density</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># assume floatation pressure everywhere</span>
+            <span class="n">land_ice_draft</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">ssh</span>
+            <span class="n">land_ice_pressure_unscaled</span> <span class="o">=</span> <span class="n">compute_land_ice_pressure_from_draft</span><span class="p">(</span>
+                <span class="n">land_ice_draft</span><span class="o">=</span><span class="n">land_ice_draft</span><span class="p">,</span> <span class="n">modify_mask</span><span class="o">=</span><span class="n">land_ice_draft</span> <span class="o">&lt;</span> <span class="mf">0.</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_varying_forcing</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_write_time_varying_forcing</span><span class="p">(</span><span class="n">ds_init</span><span class="o">=</span><span class="n">ds</span><span class="p">)</span>
+            <span class="n">scales</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;isomip_plus_forcing&#39;</span><span class="p">,</span> <span class="s1">&#39;scales&#39;</span><span class="p">)</span>
+            <span class="n">scales</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span>
+                      <span class="k">for</span> <span class="n">scale</span> <span class="ow">in</span> <span class="n">scales</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
+            <span class="n">land_ice_pressure</span> <span class="o">=</span> <span class="n">land_ice_pressure_unscaled</span> <span class="o">*</span> <span class="n">scales</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">land_ice_pressure</span> <span class="o">=</span> <span class="n">land_ice_pressure_unscaled</span>
 
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">ds</span><span class="o">.</span><span class="n">bottomDepthObserved</span>
+        <span class="k">if</span> <span class="n">thin_film_present</span><span class="p">:</span>
+            <span class="n">modify_mask</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">bottomDepth</span> <span class="o">&gt;</span> <span class="mf">0.</span>
+            <span class="n">land_ice_draft</span> <span class="o">=</span> <span class="n">compute_land_ice_draft_from_pressure</span><span class="p">(</span>
+                <span class="n">land_ice_pressure</span><span class="o">=</span><span class="n">land_ice_pressure</span><span class="p">,</span>
+                <span class="n">modify_mask</span><span class="o">=</span><span class="n">modify_mask</span><span class="p">,</span>
+                <span class="n">ref_density</span><span class="o">=</span><span class="mf">1028.</span><span class="p">)</span>
+            <span class="n">land_ice_draft</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">land_ice_draft</span><span class="p">,</span>
+                                        <span class="o">-</span><span class="n">ds</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">)</span>
+            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">land_ice_draft</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">]</span>
+        <span class="c1"># Previously, we didn&#39;t apply max draft at seafloor but we want this</span>
+        <span class="c1"># for W&amp;D</span>
+        <span class="c1"># This assumes that for MALI forcing, landIceDraft = bottomDepth in</span>
+        <span class="c1"># grounded regions</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceDraft&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">land_ice_draft</span>
+        <span class="c1"># We need to add the time dimension for plotting purposes</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIcePressure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">land_ice_pressure</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span>
+            <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_varying_forcing</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_write_time_varying_forcing</span><span class="p">(</span>
+                <span class="n">ds_init</span><span class="o">=</span><span class="n">ds</span><span class="p">,</span>
+                <span class="n">ice_density</span><span class="o">=</span><span class="n">ice_density</span><span class="p">,</span>
+                <span class="n">land_ice_pressure_unscaled</span><span class="o">=</span><span class="n">land_ice_pressure_unscaled</span><span class="p">)</span>
 
         <span class="c1"># Deepen the bottom depth to maintain the minimum water-column</span>
         <span class="c1"># thickness</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">]</span>
         <span class="n">min_column_thickness</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;min_column_thickness&#39;</span><span class="p">)</span>
         <span class="n">min_layer_thickness</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;min_layer_thickness&#39;</span><span class="p">)</span>
         <span class="n">min_levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;minimum_levels&#39;</span><span class="p">)</span>
@@ -268,44 +309,47 @@
         <span class="n">min_depth</span> <span class="o">=</span> <span class="o">-</span><span class="n">ds</span><span class="o">.</span><span class="n">ssh</span> <span class="o">+</span> <span class="n">min_column_thickness</span>
         <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span> <span class="n">min_depth</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Adjusted bottomDepth for &#39;</span>
-              <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">bottomDepth</span><span class="o">.</span><span class="n">values</span><span class="o">&lt;</span><span class="n">min_depth</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="si">}</span><span class="s1"> cells &#39;</span>
+              <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">bottomDepth</span><span class="o">.</span><span class="n">values</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">min_depth</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="si">}</span><span class="s1"> cells &#39;</span>
               <span class="sa">f</span><span class="s1">&#39;to achieve minimum column thickness of </span><span class="si">{</span><span class="n">min_column_thickness</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
+        <span class="c1"># Initialize vertical coordinate without time dimension</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">init_vertical_coord</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
-
-        <span class="n">max_bottom_depth</span> <span class="o">=</span> <span class="o">-</span><span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom_depth&#39;</span><span class="p">)</span>
-        <span class="n">frac</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.</span> <span class="o">-</span> <span class="n">ds</span><span class="o">.</span><span class="n">zMid</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">0.</span> <span class="o">-</span> <span class="n">max_bottom_depth</span><span class="p">)</span>
 
         <span class="c1"># compute T, S</span>
         <span class="n">init_top_temp</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;init_top_temp&#39;</span><span class="p">)</span>
         <span class="n">init_bot_temp</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;init_bot_temp&#39;</span><span class="p">)</span>
         <span class="n">init_top_sal</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;init_top_sal&#39;</span><span class="p">)</span>
         <span class="n">init_bot_sal</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;init_bot_sal&#39;</span><span class="p">)</span>
-        <span class="n">thin_film_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">mask</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
-                                        <span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">floating_mask</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
-        <span class="c1"># These coefficients are hard-coded as the defaults in the namelist</span>
-        <span class="c1"># Note that using the land ice pressure rather than the pressure at</span>
-        <span class="c1"># floatation will mean that there is a small amount of cooling from</span>
-        <span class="c1"># grounding line retreat. However, the thin film should be thin enough</span>
-        <span class="c1"># that this effect isn&#39;t signicant.</span>
-        <span class="n">freezing_temp</span> <span class="o">=</span> <span class="p">(</span><span class="mf">6.22e-2</span> <span class="o">+</span>
-                         <span class="o">-</span><span class="mf">5.63e-2</span> <span class="o">*</span> <span class="n">init_bot_sal</span> <span class="o">+</span>
-                         <span class="o">-</span><span class="mf">7.43e-8</span> <span class="o">*</span> <span class="n">landIcePressure</span> <span class="o">+</span>
-                         <span class="o">-</span><span class="mf">1.74e-10</span> <span class="o">*</span> <span class="n">landIcePressure</span> <span class="o">*</span> <span class="n">init_bot_sal</span><span class="p">)</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">thin_film_temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">refZMid</span><span class="p">,</span> <span class="n">freezing_temp</span><span class="p">)</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">thin_film_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">refZMid</span><span class="p">,</span> <span class="n">thin_film_mask</span><span class="p">)</span>
-        <span class="n">thin_film_temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">thin_film_temp</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertical_coordinate</span> <span class="o">==</span> <span class="s1">&#39;single_layer&#39;</span><span class="p">:</span>
-            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_bot_temp</span> <span class="o">*</span> <span class="n">xr</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">frac</span><span class="p">)</span>
-            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;salinity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_bot_sal</span> <span class="o">*</span> <span class="n">xr</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">frac</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">frac</span><span class="p">)</span> <span class="o">*</span> <span class="n">init_top_temp</span> <span class="o">+</span> <span class="n">frac</span> <span class="o">*</span> <span class="n">init_bot_temp</span>
-            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;salinity&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">frac</span><span class="p">)</span> <span class="o">*</span> <span class="n">init_top_sal</span> <span class="o">+</span> <span class="n">frac</span> <span class="o">*</span> <span class="n">init_bot_sal</span>
-        <span class="c1"># for thin film cells, set temperature to freezing point</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">thin_film_mask</span><span class="p">,</span> <span class="n">thin_film_temp</span><span class="p">,</span>
-                                     <span class="n">ds</span><span class="o">.</span><span class="n">temperature</span><span class="p">)</span>
+
+        <span class="c1"># Initialize T,S as linear functions with max depth</span>
+        <span class="n">max_bottom_depth</span> <span class="o">=</span> <span class="o">-</span><span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span>
+                                            <span class="s1">&#39;bottom_depth&#39;</span><span class="p">)</span>
+        <span class="n">frac</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.</span> <span class="o">-</span> <span class="n">ds</span><span class="o">.</span><span class="n">zMid</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">0.</span> <span class="o">-</span> <span class="n">max_bottom_depth</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">frac</span><span class="p">)</span> <span class="o">*</span> <span class="n">init_top_temp</span> <span class="o">+</span> <span class="n">frac</span> <span class="o">*</span> <span class="n">init_bot_temp</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;salinity&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">frac</span><span class="p">)</span> <span class="o">*</span> <span class="n">init_top_sal</span> <span class="o">+</span> <span class="n">frac</span> <span class="o">*</span> <span class="n">init_bot_sal</span>
+
+        <span class="k">if</span> <span class="n">thin_film_present</span><span class="p">:</span>
+            <span class="c1"># for thin film cells, set temperature to freezing point</span>
+            <span class="c1"># TODO consider setting salinity to 0</span>
+            <span class="n">thin_film_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
+                <span class="n">mask</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">floating_mask</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+            <span class="c1"># These coefficients are hard-coded as the defaults in the namelist</span>
+            <span class="c1"># Note that using the land ice pressure rather than the pressure at</span>
+            <span class="c1"># floatation will mean that there is a small amount of cooling from</span>
+            <span class="c1"># grounding line retreat. However, the thin film should be thin</span>
+            <span class="c1"># enough that this effect isn&#39;t signicant.</span>
+            <span class="n">freezing_temp</span> <span class="o">=</span> <span class="p">(</span><span class="mf">6.22e-2</span> <span class="o">+</span>
+                             <span class="o">-</span><span class="mf">5.63e-2</span> <span class="o">*</span> <span class="n">init_bot_sal</span> <span class="o">+</span>
+                             <span class="o">-</span><span class="mf">7.43e-8</span> <span class="o">*</span> <span class="n">land_ice_pressure</span> <span class="o">+</span>
+                             <span class="o">-</span><span class="mf">1.74e-10</span> <span class="o">*</span> <span class="n">land_ice_pressure</span> <span class="o">*</span> <span class="n">init_bot_sal</span><span class="p">)</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">thin_film_temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">refZMid</span><span class="p">,</span> <span class="n">freezing_temp</span><span class="p">)</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">thin_film_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">refZMid</span><span class="p">,</span> <span class="n">thin_film_mask</span><span class="p">)</span>
+            <span class="n">thin_film_temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">thin_film_temp</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">thin_film_mask</span><span class="p">,</span> <span class="n">thin_film_temp</span><span class="p">,</span>
+                                         <span class="n">ds</span><span class="o">.</span><span class="n">temperature</span><span class="p">)</span>
 
         <span class="c1"># compute coriolis</span>
         <span class="n">coriolis_parameter</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;coriolis_parameter&#39;</span><span class="p">)</span>
@@ -320,6 +364,7 @@
         <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">normalVelocity</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;initial_state.nc&#39;</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">ds</span><span class="p">,</span> <span class="n">frac</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
@@ -340,64 +385,68 @@
         <span class="c1"># show progress only if we&#39;re not writing to a log file</span>
         <span class="n">show_progress</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_filename</span> <span class="ow">is</span> <span class="kc">None</span>
 
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceDraft&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">landIceDraft</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">plotter</span> <span class="o">=</span> <span class="n">MoviePlotter</span><span class="p">(</span><span class="n">inFolder</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
                                <span class="n">streamfunctionFolder</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
                                <span class="n">outFolder</span><span class="o">=</span><span class="n">plot_folder</span><span class="p">,</span> <span class="n">expt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment</span><span class="p">,</span>
                                <span class="n">sectionY</span><span class="o">=</span><span class="n">section_y</span><span class="p">,</span> <span class="n">dsMesh</span><span class="o">=</span><span class="n">ds</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="n">ds</span><span class="p">,</span>
                                <span class="n">showProgress</span><span class="o">=</span><span class="n">show_progress</span><span class="p">)</span>
 
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIcePressure&#39;</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIcePressure&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceGroundedFraction&#39;</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceGroundedFraction&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;totalColThickness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span>
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;totalColThickness&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> \
-            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;layerThickness&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+        <span class="n">totalColThickness</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">layerThickness</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
         <span class="n">tol</span> <span class="o">=</span> <span class="mf">1e-10</span>
-        <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">landIceMask</span><span class="p">,</span>
+        <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">landIceMask</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span>
+                                  <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
                                   <span class="s1">&#39;landIceMask&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceMask&#39;</span><span class="p">,</span>
                                   <span class="kc">True</span><span class="p">)</span>
-        <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">landIceFloatingMask</span><span class="p">,</span>
+        <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">landIceFloatingMask</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span>
+                                  <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
                                   <span class="s1">&#39;landIceFloatingMask&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceFloatingMask&#39;</span><span class="p">,</span>
                                   <span class="kc">True</span><span class="p">)</span>
-        <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">landIcePressure</span><span class="p">,</span>
+        <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">landIcePressure</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span>
+                                  <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
                                   <span class="s1">&#39;landIcePressure&#39;</span><span class="p">,</span> <span class="s1">&#39;landIcePressure&#39;</span><span class="p">,</span>
-                                  <span class="kc">True</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1e6</span><span class="p">,</span> <span class="n">cmap_scale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
-        <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">ssh</span><span class="p">,</span>
-                                  <span class="s1">&#39;ssh&#39;</span><span class="p">,</span> <span class="s1">&#39;ssh&#39;</span><span class="p">,</span>
+                                  <span class="kc">True</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">1e5</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1e7</span><span class="p">,</span> <span class="n">cmap_scale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+        <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">landIceThickness</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span>
+                                  <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+                                  <span class="s1">&#39;landIceThickness&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceThickness&#39;</span><span class="p">,</span>
+                                  <span class="kc">True</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1e3</span><span class="p">,</span>
+                                  <span class="n">contour_field</span><span class="o">=</span><span class="n">totalColThickness</span><span class="p">)</span>
+        <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">ssh</span><span class="p">,</span> <span class="s1">&#39;ssh&#39;</span><span class="p">,</span> <span class="s1">&#39;ssh&#39;</span><span class="p">,</span>
                                   <span class="kc">True</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">700</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span>
+        <span class="n">bottomDepth</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">bottomDepth</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">bottomDepth</span><span class="p">,</span>
                                   <span class="s1">&#39;bottomDepth&#39;</span><span class="p">,</span> <span class="s1">&#39;bottomDepth&#39;</span><span class="p">,</span>
                                   <span class="kc">True</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">700</span><span class="p">)</span>
-        <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">ssh</span> <span class="o">+</span> <span class="n">ds</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span>
+        <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">ssh</span> <span class="o">+</span> <span class="n">bottomDepth</span><span class="p">,</span>
                                   <span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span>
                                   <span class="n">vmin</span><span class="o">=</span><span class="n">min_column_thickness</span> <span class="o">+</span> <span class="n">tol</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">700</span><span class="p">,</span>
-                                  <span class="n">cmap_set_under</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">cmap_scale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
-        <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">totalColThickness</span><span class="p">,</span>
+                                  <span class="n">cmap_set_under</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">cmap_scale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+        <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">totalColThickness</span><span class="p">,</span>
                                   <span class="s1">&#39;totalColThickness&#39;</span><span class="p">,</span> <span class="s1">&#39;totalColThickness&#39;</span><span class="p">,</span>
                                   <span class="kc">True</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">min_column_thickness</span> <span class="o">+</span> <span class="mf">1e-10</span><span class="p">,</span>
                                   <span class="n">vmax</span><span class="o">=</span><span class="mi">700</span><span class="p">,</span> <span class="n">cmap_set_under</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
-        <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">landIceFraction</span><span class="p">,</span>
+        <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">landIceFraction</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span>
+                                  <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
                                   <span class="s1">&#39;landIceFraction&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceFraction&#39;</span><span class="p">,</span>
                                   <span class="kc">True</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span> <span class="o">+</span> <span class="n">tol</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span> <span class="n">tol</span><span class="p">,</span>
                                   <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.balance&#39;</span><span class="p">,</span>
                                   <span class="n">cmap_set_under</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">cmap_set_over</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
-        <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">landIceFloatingFraction</span><span class="p">,</span>
+        <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">landIceFloatingFraction</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span>
+                                  <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
                                   <span class="s1">&#39;landIceFloatingFraction&#39;</span><span class="p">,</span>
                                   <span class="s1">&#39;landIceFloatingFraction&#39;</span><span class="p">,</span>
                                   <span class="kc">True</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span> <span class="o">+</span> <span class="n">tol</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span> <span class="n">tol</span><span class="p">,</span>
                                   <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.balance&#39;</span><span class="p">,</span>
                                   <span class="n">cmap_set_under</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">cmap_set_over</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
-        <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">landIceGroundedFraction</span><span class="p">,</span>
+        <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">landIceGroundedFraction</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span>
+                                  <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
                                   <span class="s1">&#39;landIceGroundedFraction&#39;</span><span class="p">,</span>
                                   <span class="s1">&#39;landIceGroundedFraction&#39;</span><span class="p">,</span>
                                   <span class="kc">True</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span> <span class="o">+</span> <span class="n">tol</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span> <span class="n">tol</span><span class="p">,</span>
                                   <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.balance&#39;</span><span class="p">,</span>
                                   <span class="n">cmap_set_under</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">cmap_set_over</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
-        <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">oceanFracObserved</span><span class="p">,</span>
+        <span class="n">plotter</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">oceanFracObserved</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span>
+                                  <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
                                   <span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">,</span>
                                   <span class="kc">True</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span> <span class="o">+</span> <span class="n">tol</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span> <span class="n">tol</span><span class="p">,</span>
                                   <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.balance&#39;</span><span class="p">,</span>
@@ -472,64 +521,97 @@
         <span class="n">ds_forcing</span><span class="p">[</span><span class="s1">&#39;seaIceHeatFlux&#39;</span><span class="p">]</span> <span class="o">=</span> \
             <span class="n">mask</span> <span class="o">*</span> <span class="n">evap_rate</span> <span class="o">*</span> <span class="n">restore_top_temp</span> <span class="o">/</span> <span class="n">hflux_factor</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertical_coordinate</span> <span class="o">==</span> <span class="s1">&#39;single_layer&#39;</span><span class="p">:</span>
-            <span class="n">x_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xIsomipCell</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-            <span class="n">ds_forcing</span><span class="p">[</span><span class="s1">&#39;tidalInputMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
-                <span class="n">ds</span><span class="o">.</span><span class="n">xIsomipCell</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">x_max</span> <span class="o">-</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">*</span> <span class="mf">1e3</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">,</span>
-                <span class="mf">0.0</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">ds_forcing</span><span class="p">[</span><span class="s1">&#39;tidalInputMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">frac</span><span class="p">)</span>
+        <span class="n">x_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xIsomipCell</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">ds_forcing</span><span class="p">[</span><span class="s1">&#39;tidalInputMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+            <span class="n">ds</span><span class="o">.</span><span class="n">xIsomipCell</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">x_max</span> <span class="o">-</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">*</span> <span class="mf">1e3</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">,</span>
+            <span class="mf">0.0</span><span class="p">)</span>
 
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_forcing</span><span class="p">,</span> <span class="s1">&#39;init_mode_forcing_data.nc&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_write_time_varying_forcing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds_init</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_write_time_varying_forcing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds_init</span><span class="p">,</span> <span class="n">ice_density</span><span class="p">,</span>
+                                    <span class="n">land_ice_pressure_unscaled</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Write time-varying land-ice forcing and update the initial condition</span>
+<span class="sd">        Write time-varying land-ice forcing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">ds_forcing</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
         <span class="n">dates</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;isomip_plus_forcing&#39;</span><span class="p">,</span> <span class="s1">&#39;dates&#39;</span><span class="p">)</span>
-        <span class="n">dates</span> <span class="o">=</span> <span class="p">[</span><span class="n">date</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span> <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">dates</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
+        <span class="n">dates</span> <span class="o">=</span> <span class="p">[</span><span class="n">date</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
+                 <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">dates</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
         <span class="n">scales</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;isomip_plus_forcing&#39;</span><span class="p">,</span> <span class="s1">&#39;scales&#39;</span><span class="p">)</span>
-        <span class="n">scales</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span> <span class="k">for</span> <span class="n">scale</span> <span class="ow">in</span> <span class="n">scales</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
+        <span class="n">scales</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span>
+                  <span class="k">for</span> <span class="n">scale</span> <span class="ow">in</span> <span class="n">scales</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
 
-        <span class="n">ds_out</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
-        <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;xtime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">dates</span><span class="p">)</span>
-        <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;xtime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">xtime</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">)</span>
+        <span class="c1"># The initial condition already has the first scale value applied</span>
+        <span class="n">land_ice_pressure_forcing</span> <span class="o">=</span> <span class="n">ds_init</span><span class="o">.</span><span class="n">landIcePressure</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">land_ice_fraction_forcing</span> <span class="o">=</span> <span class="n">ds_init</span><span class="o">.</span><span class="n">landIceFraction</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">land_ice_floating_fraction_forcing</span> <span class="o">=</span> \
+            <span class="n">ds_init</span><span class="o">.</span><span class="n">landIceFloatingFraction</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">land_ice_draft_unscaled</span> <span class="o">=</span> <span class="n">ds_init</span><span class="o">.</span><span class="n">landIceDraft</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">land_ice_draft_scaled</span> <span class="o">=</span> <span class="n">land_ice_draft_unscaled</span> <span class="o">*</span> <span class="n">scales</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">land_ice_draft_limited</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">land_ice_draft_scaled</span><span class="p">,</span>
+                                            <span class="o">-</span><span class="n">ds_init</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">)</span>
+        <span class="n">land_ice_draft_forcing</span> <span class="o">=</span> <span class="n">land_ice_draft_limited</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Grounded cells at </span><span class="si">{</span><span class="n">scales</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">: &#39;</span>
+              <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">land_ice_draft_limited</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">-</span><span class="n">ds_init</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-        <span class="n">landIceDraft</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-        <span class="n">landIcePressure</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-        <span class="n">landIceFraction</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-        <span class="n">landIceFloatingFraction</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="c1"># We add additional time slices for the remaining scale values</span>
+        <span class="k">for</span> <span class="n">scale</span> <span class="ow">in</span> <span class="n">scales</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">land_ice_pressure_forcing</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">land_ice_pressure_forcing</span><span class="p">,</span>
+                 <span class="n">scale</span> <span class="o">*</span> <span class="n">land_ice_pressure_unscaled</span><span class="p">],</span>
+                <span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+            <span class="n">land_ice_fraction_forcing</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">land_ice_fraction_forcing</span><span class="p">,</span> <span class="n">ds_init</span><span class="o">.</span><span class="n">landIceFraction</span><span class="p">],</span>
+                <span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+            <span class="c1"># Since floating fraction does not change, none of the thin film</span>
+            <span class="c1"># cases allow for the area undergoing melting to change</span>
+            <span class="n">land_ice_floating_fraction_forcing</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">land_ice_floating_fraction_forcing</span><span class="p">,</span>
+                 <span class="n">ds_init</span><span class="o">.</span><span class="n">landIceFloatingFraction</span><span class="p">],</span>
+                <span class="s1">&#39;Time&#39;</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">scale</span> <span class="ow">in</span> <span class="n">scales</span><span class="p">:</span>
-            <span class="n">landIceDraft</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scale</span> <span class="o">*</span> <span class="n">ds_init</span><span class="o">.</span><span class="n">landIceDraft</span><span class="p">)</span>
-            <span class="n">landIcePressure</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scale</span> <span class="o">*</span> <span class="n">ds_init</span><span class="o">.</span><span class="n">landIcePressure</span><span class="p">)</span>
-            <span class="n">landIceFraction</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ds_init</span><span class="o">.</span><span class="n">landIceFraction</span><span class="p">)</span>
-            <span class="n">landIceFloatingFraction</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ds_init</span><span class="o">.</span><span class="n">landIceFloatingFraction</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">thin_film_present</span><span class="p">:</span>
+                <span class="n">land_ice_draft_scaled</span> <span class="o">=</span> <span class="n">compute_land_ice_draft_from_pressure</span><span class="p">(</span>
+                    <span class="n">land_ice_pressure</span><span class="o">=</span><span class="n">scale</span> <span class="o">*</span> <span class="n">land_ice_pressure_unscaled</span><span class="p">,</span>
+                    <span class="n">modify_mask</span><span class="o">=</span><span class="n">ds_init</span><span class="o">.</span><span class="n">bottomDepth</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Just scale draft in the same manner as pressure</span>
+                <span class="n">land_ice_draft_scaled</span> <span class="o">=</span> <span class="n">land_ice_draft_unscaled</span> <span class="o">*</span> <span class="n">scale</span>
+            <span class="n">land_ice_draft_limited</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">land_ice_draft_scaled</span><span class="p">,</span>
+                                                <span class="o">-</span><span class="n">ds_init</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Grounded cells at </span><span class="si">{</span><span class="n">scale</span><span class="si">}</span><span class="s1">: &#39;</span>
+                  <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">land_ice_draft_limited</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">-</span><span class="n">ds_init</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="c1"># Set the maximum land ice draft in grounded regions</span>
+            <span class="n">land_ice_draft_forcing</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">land_ice_draft_forcing</span><span class="p">,</span>
+                 <span class="n">land_ice_draft_limited</span><span class="p">],</span>
+                <span class="s1">&#39;Time&#39;</span><span class="p">)</span>
 
-        <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIceDraftForcing&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">landIceDraft</span><span class="p">,</span> <span class="s1">&#39;Time&#39;</span><span class="p">)</span>
-        <span class="n">ds_out</span><span class="o">.</span><span class="n">landIceDraftForcing</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;m&#39;</span>
-        <span class="n">ds_out</span><span class="o">.</span><span class="n">landIceDraftForcing</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;long_name&#39;</span><span class="p">]</span> <span class="o">=</span> \
+        <span class="n">ds_forcing</span><span class="p">[</span><span class="s1">&#39;xtime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">dates</span><span class="p">,</span>
+                                           <span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">)</span>
+        <span class="n">ds_forcing</span><span class="p">[</span><span class="s1">&#39;landIceDraftForcing&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">land_ice_draft_forcing</span>
+        <span class="n">ds_forcing</span><span class="o">.</span><span class="n">landIceDraftForcing</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;m&#39;</span>
+        <span class="n">ds_forcing</span><span class="o">.</span><span class="n">landIceDraftForcing</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;long_name&#39;</span><span class="p">]</span> <span class="o">=</span> \
             <span class="s1">&#39;The approximate elevation of the land ice-ocean interface&#39;</span>
-        <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIcePressureForcing&#39;</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">landIcePressure</span><span class="p">,</span> <span class="s1">&#39;Time&#39;</span><span class="p">)</span>
-        <span class="n">ds_out</span><span class="o">.</span><span class="n">landIcePressureForcing</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;m&#39;</span>
-        <span class="n">ds_out</span><span class="o">.</span><span class="n">landIcePressureForcing</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;long_name&#39;</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="s1">&#39;Pressure from the weight of land ice at the ice-ocean interface&#39;</span>
-        <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIceFractionForcing&#39;</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">landIceFraction</span><span class="p">,</span> <span class="s1">&#39;Time&#39;</span><span class="p">)</span>
-        <span class="n">ds_out</span><span class="o">.</span><span class="n">landIceFractionForcing</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;long_name&#39;</span><span class="p">]</span> <span class="o">=</span> \
+        <span class="n">ds_forcing</span><span class="p">[</span><span class="s1">&#39;landIcePressureForcing&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">land_ice_pressure_forcing</span>
+        <span class="n">ds_forcing</span><span class="o">.</span><span class="n">landIcePressureForcing</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;m&#39;</span>
+        <span class="n">ds_forcing</span><span class="o">.</span><span class="n">landIcePressureForcing</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;long_name&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="s1">&#39;Pressure from the weight of land ice at the ice-ocean &#39;</span> \
+            <span class="s1">&#39;interface&#39;</span>
+        <span class="n">ds_forcing</span><span class="p">[</span><span class="s1">&#39;landIceFractionForcing&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">land_ice_fraction_forcing</span>
+        <span class="n">ds_forcing</span><span class="o">.</span><span class="n">landIceFractionForcing</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;long_name&#39;</span><span class="p">]</span> <span class="o">=</span> \
             <span class="s1">&#39;The fraction of each cell covered by land ice&#39;</span>
-        <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIceFloatingFractionForcing&#39;</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">landIceFloatingFraction</span><span class="p">,</span> <span class="s1">&#39;Time&#39;</span><span class="p">)</span>
-        <span class="n">ds_out</span><span class="o">.</span><span class="n">landIceFloatingFractionForcing</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;long_name&#39;</span><span class="p">]</span> <span class="o">=</span> \
+        <span class="n">ds_forcing</span><span class="p">[</span><span class="s1">&#39;landIceFloatingFractionForcing&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">land_ice_floating_fraction_forcing</span>
+        <span class="n">ds_forcing</span><span class="o">.</span><span class="n">landIceFloatingFractionForcing</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;long_name&#39;</span><span class="p">]</span> <span class="o">=</span> \
             <span class="s1">&#39;The fraction of each cell covered by floating land ice&#39;</span>
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="s1">&#39;land_ice_forcing.nc&#39;</span><span class="p">)</span>
 
-        <span class="n">ds_init</span><span class="p">[</span><span class="s1">&#39;landIceDraft&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scales</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">ds_init</span><span class="o">.</span><span class="n">landIceDraft</span>
-        <span class="n">ds_init</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_init</span><span class="o">.</span><span class="n">landIceDraft</span>
-        <span class="n">ds_init</span><span class="p">[</span><span class="s1">&#39;landIcePressure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scales</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">ds_init</span><span class="o">.</span><span class="n">landIcePressure</span></div>
+        <span class="n">ds_forcing</span><span class="o">.</span><span class="n">encoding</span><span class="p">[</span><span class="s1">&#39;unlimited_dims&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Time&#39;</span><span class="p">}</span>
+        <span class="c1"># write_netcdf is not used here because it does not yet support</span>
+        <span class="c1"># multiple time levels</span>
+        <span class="n">ds_forcing</span><span class="o">.</span><span class="n">to_netcdf</span><span class="p">(</span><span class="s1">&#39;land_ice_forcing.nc&#39;</span><span class="p">)</span></div>
 
 </pre></div>
 

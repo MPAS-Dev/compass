@@ -255,7 +255,8 @@
                          <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
                          <span class="n">vertical_coordinate</span><span class="o">=</span><span class="n">vertical_coordinate</span><span class="p">,</span>
                          <span class="n">time_varying_forcing</span><span class="o">=</span><span class="n">time_varying_forcing</span><span class="p">,</span>
-                         <span class="n">thin_film_present</span><span class="o">=</span><span class="n">thin_film_present</span><span class="p">))</span>
+                         <span class="n">thin_film_present</span><span class="o">=</span><span class="n">thin_film_present</span><span class="p">,</span>
+                         <span class="n">include_viz</span><span class="o">=</span><span class="n">thin_film_present</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
             <span class="n">SshAdjustment</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
                           <span class="n">vertical_coordinate</span><span class="o">=</span><span class="n">vertical_coordinate</span><span class="p">,</span>
@@ -327,9 +328,9 @@
             <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;min_column_thickness&#39;</span><span class="p">,</span> <span class="s1">&#39;1e-3&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">time_varying_load</span> <span class="o">==</span> <span class="s1">&#39;increasing&#39;</span><span class="p">:</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;isomip_plus_forcing&#39;</span><span class="p">,</span> <span class="s1">&#39;scales&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0, 2.0, 2.0&#39;</span><span class="p">)</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;isomip_plus_forcing&#39;</span><span class="p">,</span> <span class="s1">&#39;scales&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0, 1.05, 1.1&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">time_varying_load</span> <span class="o">==</span> <span class="s1">&#39;decreasing&#39;</span><span class="p">:</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;isomip_plus_forcing&#39;</span><span class="p">,</span> <span class="s1">&#39;scales&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0, 0.0, 0.0&#39;</span><span class="p">)</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;isomip_plus_forcing&#39;</span><span class="p">,</span> <span class="s1">&#39;scales&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0, 0.95, 0.9&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">experiment</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Ocean0&#39;</span><span class="p">,</span> <span class="s1">&#39;Ocean2&#39;</span><span class="p">,</span> <span class="s1">&#39;Ocean3&#39;</span><span class="p">]:</span>
             <span class="c1"># warm initial conditions</span>
@@ -387,7 +388,7 @@
 
         <span class="k">if</span> <span class="n">vertical_coordinate</span> <span class="o">==</span> <span class="s1">&#39;sigma&#39;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">time_varying_load</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;increasing&#39;</span><span class="p">,</span> <span class="s1">&#39;decreasing&#39;</span><span class="p">]:</span>
-                <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;vert_levels&#39;</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">)</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;vert_levels&#39;</span><span class="p">,</span> <span class="s1">&#39;10&#39;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># default to 10 vertical levels instead of 36</span>
                 <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;vert_levels&#39;</span><span class="p">,</span> <span class="s1">&#39;10&#39;</span><span class="p">)</span>
@@ -423,10 +424,10 @@
 
     <span class="n">dt_per_km</span> <span class="o">=</span> <span class="mf">120.</span>
     <span class="k">if</span> <span class="n">tidal_forcing</span> <span class="ow">or</span> <span class="n">thin_film_present</span><span class="p">:</span>
-        <span class="n">dt_per_km</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dt_per_km</span><span class="p">,</span> <span class="mf">10.</span><span class="p">)</span>
+        <span class="n">dt_per_km</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dt_per_km</span><span class="p">,</span> <span class="mf">6.</span><span class="p">)</span>
     <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;dt_per_km&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dt_per_km</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-    <span class="n">dt_btr_per_km</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dt_per_km</span> <span class="o">/</span> <span class="mf">5.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">)</span>
+    <span class="n">dt_btr_per_km</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dt_per_km</span> <span class="o">/</span> <span class="mf">3.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">)</span>
     <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;dt_btr_per_km&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dt_btr_per_km</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="k">return</span>

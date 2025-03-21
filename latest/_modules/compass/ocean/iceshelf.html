@@ -121,36 +121,102 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">partition</span><span class="p">,</span> <span class="n">run_model</span>
 
 
-<div class="viewcode-block" id="compute_land_ice_pressure_and_draft">
-<a class="viewcode-back" href="../../../developers_guide/ocean/generated/compass.ocean.iceshelf.compute_land_ice_pressure_and_draft.html#compass.ocean.iceshelf.compute_land_ice_pressure_and_draft">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">compute_land_ice_pressure_and_draft</span><span class="p">(</span><span class="n">ssh</span><span class="p">,</span> <span class="n">modify_mask</span><span class="p">,</span> <span class="n">ref_density</span><span class="p">):</span>
+<div class="viewcode-block" id="compute_land_ice_pressure_from_thickness">
+<a class="viewcode-back" href="../../../developers_guide/ocean/generated/compass.ocean.iceshelf.compute_land_ice_pressure_from_thickness.html#compass.ocean.iceshelf.compute_land_ice_pressure_from_thickness">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_land_ice_pressure_from_thickness</span><span class="p">(</span><span class="n">land_ice_thickness</span><span class="p">,</span> <span class="n">modify_mask</span><span class="p">,</span>
+                                             <span class="n">land_ice_density</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute the pressure from and overlying ice shelf and the ice-shelf draft</span>
+<span class="sd">    Compute the pressure from an overlying ice shelf from ice thickness</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    ssh : xarray.DataArray</span>
-<span class="sd">        The sea surface height (the ice draft)</span>
+<span class="sd">    land_ice_thickness: xarray.DataArray</span>
+<span class="sd">        The ice thickness</span>
 
 <span class="sd">    modify_mask : xarray.DataArray</span>
 <span class="sd">        A mask that is 1 where ``landIcePressure`` can be deviate from 0</span>
 
-<span class="sd">    ref_density : float</span>
+<span class="sd">    land_ice_density : float, optional</span>
+<span class="sd">        A reference density for land ice</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    land_ice_pressure : xarray.DataArray</span>
+<span class="sd">        The pressure from the overlying land ice on the ocean</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">gravity</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_G&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">land_ice_density</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">land_ice_density</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_RHOICE&#39;</span><span class="p">]</span>
+    <span class="n">land_ice_pressure</span> <span class="o">=</span> <span class="n">modify_mask</span> <span class="o">*</span> \
+        <span class="n">numpy</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">land_ice_density</span> <span class="o">*</span> <span class="n">gravity</span> <span class="o">*</span> <span class="n">land_ice_thickness</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">land_ice_pressure</span></div>
+
+
+
+<div class="viewcode-block" id="compute_land_ice_pressure_from_draft">
+<a class="viewcode-back" href="../../../developers_guide/ocean/generated/compass.ocean.iceshelf.compute_land_ice_pressure_from_draft.html#compass.ocean.iceshelf.compute_land_ice_pressure_from_draft">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_land_ice_pressure_from_draft</span><span class="p">(</span><span class="n">land_ice_draft</span><span class="p">,</span> <span class="n">modify_mask</span><span class="p">,</span>
+                                         <span class="n">ref_density</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the pressure from an overlying ice shelf from ice draft</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    land_ice_draft : xarray.DataArray</span>
+<span class="sd">        The ice draft (sea surface height)</span>
+
+<span class="sd">    modify_mask : xarray.DataArray</span>
+<span class="sd">        A mask that is 1 where ``landIcePressure`` can be deviate from 0</span>
+
+<span class="sd">    ref_density : float, optional</span>
 <span class="sd">        A reference density for seawater displaced by the ice shelf</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    landIcePressure : xarray.DataArray</span>
+<span class="sd">    land_ice_pressure : xarray.DataArray</span>
 <span class="sd">        The pressure from the overlying land ice on the ocean</span>
-
-<span class="sd">    landIceDraft : xarray.DataArray</span>
-<span class="sd">        The ice draft, equal to the initial ``ssh``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">gravity</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_G&#39;</span><span class="p">]</span>
-    <span class="n">landIcePressure</span> <span class="o">=</span> \
-        <span class="n">modify_mask</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="o">-</span><span class="n">ref_density</span> <span class="o">*</span> <span class="n">gravity</span> <span class="o">*</span> <span class="n">ssh</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
-    <span class="n">landIceDraft</span> <span class="o">=</span> <span class="n">ssh</span>
-    <span class="k">return</span> <span class="n">landIcePressure</span><span class="p">,</span> <span class="n">landIceDraft</span></div>
+    <span class="k">if</span> <span class="n">ref_density</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ref_density</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_RHOSW&#39;</span><span class="p">]</span>
+    <span class="n">land_ice_pressure</span> <span class="o">=</span> \
+        <span class="n">modify_mask</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="o">-</span><span class="n">ref_density</span> <span class="o">*</span> <span class="n">gravity</span> <span class="o">*</span> <span class="n">land_ice_draft</span><span class="p">,</span>
+                                    <span class="mf">0.</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">land_ice_pressure</span></div>
+
+
+
+<div class="viewcode-block" id="compute_land_ice_draft_from_pressure">
+<a class="viewcode-back" href="../../../developers_guide/ocean/generated/compass.ocean.iceshelf.compute_land_ice_draft_from_pressure.html#compass.ocean.iceshelf.compute_land_ice_draft_from_pressure">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_land_ice_draft_from_pressure</span><span class="p">(</span><span class="n">land_ice_pressure</span><span class="p">,</span> <span class="n">modify_mask</span><span class="p">,</span>
+                                         <span class="n">ref_density</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the ice-shelf draft associated with the pressure from an overlying</span>
+<span class="sd">    ice shelf</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    land_ice_pressure : xarray.DataArray</span>
+<span class="sd">        The pressure from the overlying land ice on the ocean</span>
+
+<span class="sd">    modify_mask : xarray.DataArray</span>
+<span class="sd">        A mask that is 1 where ``landIcePressure`` can be deviate from 0</span>
+
+<span class="sd">    ref_density : float, optional</span>
+<span class="sd">        A reference density for seawater displaced by the ice shelf</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    land_ice_draft : xarray.DataArray</span>
+<span class="sd">        The ice draft</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">gravity</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_G&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">ref_density</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ref_density</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_RHOSW&#39;</span><span class="p">]</span>
+    <span class="n">land_ice_draft_array</span> <span class="o">=</span> \
+        <span class="n">modify_mask</span> <span class="o">*</span> <span class="o">-</span><span class="n">land_ice_pressure</span> <span class="o">/</span> <span class="p">(</span><span class="n">ref_density</span> <span class="o">*</span> <span class="n">gravity</span><span class="p">)</span>
+    <span class="n">land_ice_draft</span> <span class="o">=</span> <span class="n">land_ice_draft_array</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="o">*</span><span class="n">land_ice_pressure</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">land_ice_draft</span></div>
 
 
 

@@ -290,12 +290,20 @@
                                       <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
         <span class="n">bed</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">/=</span> <span class="n">smoothed_mask</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
 
+        <span class="c1"># We only use the ice surface where the ocean is present to compute</span>
+        <span class="c1"># land ice pressure</span>
+        <span class="n">ice_thickness</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">gaussian_filter</span><span class="p">(</span>
+            <span class="n">ds</span><span class="o">.</span><span class="n">iceThickness</span> <span class="o">*</span> <span class="n">ocean_fraction</span><span class="p">,</span> <span class="n">filter_sigma</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span>
+            <span class="n">cval</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+        <span class="n">ice_thickness</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">/=</span> <span class="n">smoothed_mask</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
         <span class="n">smoothed_draft_mask</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">gaussian_filter</span><span class="p">(</span>
             <span class="n">ds</span><span class="o">.</span><span class="n">landIceFloatingFraction</span><span class="p">,</span> <span class="n">filter_sigma</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
         <span class="n">smoothed_draft_mask</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">/=</span> <span class="n">smoothed_mask</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
 
         <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;Z_ice_draft&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">),</span> <span class="n">draft</span><span class="p">)</span>
         <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;Z_bed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">),</span> <span class="n">bed</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;iceThickness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">),</span> <span class="n">ice_thickness</span><span class="p">)</span>
         <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;smoothedDraftMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">),</span> <span class="n">smoothed_draft_mask</span><span class="p">)</span></div>
 
 </pre></div>
