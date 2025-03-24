@@ -121,8 +121,8 @@ class Mesh(Step):
         #       Also, it should be assessed if bilinear or
         #       barycentric used here is preferred for this application.
         #       Current thinking is they are both equally appropriate.
-        logger.info('calling interpolate_to_mpasli_grid.py')
-        args = ['interpolate_to_mpasli_grid.py', '-s',
+        logger.info('calling interpolate_to_mpasli_grid')
+        args = ['interpolate_to_mpasli_grid', '-s',
                 preprocessed_gridded_dataset,
                 '-d',
                 self.mesh_filename,

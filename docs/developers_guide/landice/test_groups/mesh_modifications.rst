@@ -42,7 +42,7 @@ steps:
 
 * interpolate fields from source mesh to subdomain mesh using
   nearest neighbor interpolation.
-  This can be done either with the ``interpolate_to_mpasli_grid.py`` script
+  This can be done either with the ``interpolate_to_mpasli_grid`` script
   or using ``ncremap``.  The ncremap method is slower and potentially more
   fragile (depends on more external tools), but if used allows the option
   to remap additional files (e.g. forcing files).
