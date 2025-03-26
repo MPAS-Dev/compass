@@ -13,6 +13,7 @@ from compass.ocean.tests.global_ocean.monthly_output_test import (
 from compass.ocean.tests.global_ocean.performance_test import PerformanceTest
 from compass.ocean.tests.global_ocean.restart_test import RestartTest
 from compass.ocean.tests.global_ocean.threads_test import ThreadsTest
+from compass.ocean.tests.global_ocean.wave_mesh import WaveMesh
 from compass.testgroup import TestGroup
 
 
@@ -62,10 +63,15 @@ class GlobalOcean(TestGroup):
         # A test case for making E3SM support files from an existing mesh
         self.add_test_case(FilesForE3SM(test_group=self))
 
+        # Test cases for creating waves mesh
+        self.add_test_case(WaveMesh(test_group=self))
+        self._add_tests(mesh_names=['Icos'], include_wave_mesh=True)
+
     def _add_tests(self, mesh_names, high_res_topography=True,
                    include_rk4=False,
                    include_regression=False, include_phc=False,
-                   include_en4_1900=False):
+                   include_en4_1900=False,
+                   include_wave_mesh=False):
         """ Add test cases for the given mesh(es) """
 
         default_ic = 'WOA23'
@@ -116,10 +122,10 @@ class GlobalOcean(TestGroup):
                 time_integrator=time_integrator)
             self.add_test_case(dynamic_adjustment_test)
 
-            self.add_test_case(
-                FilesForE3SM(
-                    test_group=self, mesh=mesh_test, init=init_test,
-                    dynamic_adjustment=dynamic_adjustment_test))
+            e3sm_files_test = FilesForE3SM(
+                test_group=self, mesh=mesh_test, init=init_test,
+                dynamic_adjustment=dynamic_adjustment_test)
+            self.add_test_case(e3sm_files_test)
 
             if include_rk4:
                 time_integrator = 'RK4'
@@ -167,3 +173,8 @@ class GlobalOcean(TestGroup):
                     FilesForE3SM(
                         test_group=self, mesh=mesh_test, init=init_test,
                         dynamic_adjustment=dynamic_adjustment_test))
+
+            if include_wave_mesh:
+                self.add_test_case(
+                    WaveMesh(test_group=self, ocean_mesh=mesh_test,
+                             ocean_init=init_test))
