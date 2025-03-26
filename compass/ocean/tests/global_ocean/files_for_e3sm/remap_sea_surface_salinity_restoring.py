@@ -3,7 +3,6 @@ import pathlib
 
 import numpy as np
 import xarray as xr
-from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 from pyremap import MpasCellMeshDescriptor
 
@@ -109,7 +108,7 @@ class RemapSeaSurfaceSalinityRestoring(FilesForE3SMStep):
 
         ds_out = xr.Dataset()
         ds_out['expandDist'] = expand_dist
-        write_netcdf(ds_out, 'expandDist.nc')
+        self.write_netcdf(ds_out, 'expandDist.nc')
 
         descriptor = MpasCellMeshDescriptor(
             fileName=target_mesh_filename,
@@ -210,4 +209,4 @@ class RemapSeaSurfaceSalinityRestoring(FilesForE3SMStep):
         rename = dict(ncol='nCells',
                       SALT='surfaceSalinityMonthlyClimatologyValue')
         ds = ds.rename(rename)
-        write_netcdf(ds, out_filename)
+        self.write_netcdf(ds, out_filename)

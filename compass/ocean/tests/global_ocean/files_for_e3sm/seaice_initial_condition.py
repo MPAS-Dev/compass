@@ -1,7 +1,6 @@
 import os
 
 import xarray
-from mpas_tools.io import write_netcdf
 
 from compass.io import symlink
 from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step import (  # noqa: E501
@@ -47,7 +46,7 @@ class SeaiceInitialCondition(FilesForE3SMStep):
         with xarray.open_dataset('restart.nc') as ds:
             ds.load()
             ds = ds[keep_vars]
-            write_netcdf(ds, dest_filename)
+            self.write_netcdf(ds, dest_filename)
 
         symlink(os.path.abspath(dest_filename),
                 f'{self.seaice_inputdata_dir}/{dest_filename}')
