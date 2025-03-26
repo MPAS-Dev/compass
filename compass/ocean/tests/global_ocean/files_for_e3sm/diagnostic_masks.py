@@ -68,17 +68,9 @@ class DiagnosticMasks(FilesForE3SMStep):
         """
 
         mask_dir = '../assembled_files/diagnostics/mpas_analysis/region_masks'
-        try:
-            os.makedirs(mask_dir)
-        except FileExistsError:
-            pass
+        os.makedirs(mask_dir, exist_ok=True)
 
-        ocean_inputdata_dir = \
-            f'../assembled_files/inputdata/ocn/mpas-o/{mesh_short_name}'
-        moc_mask_dirs = [mask_dir, ocean_inputdata_dir]
-
-        self._make_moc_masks(mesh_short_name, logger, cpus_per_task,
-                             moc_mask_dirs)
+        self._make_moc_masks(mesh_short_name, logger, cpus_per_task, mask_dir)
 
         gf = GeometricFeatures()
         region_groups = [
@@ -166,8 +158,12 @@ class DiagnosticMasks(FilesForE3SMStep):
                 f'{output_dir}/{mask_filename}')
 
     def _make_moc_masks(
-            self, mesh_short_name, logger, cpus_per_task, moc_mask_dirs):
+            self, mesh_short_name, logger, cpus_per_task, mask_dir):
         gf = GeometricFeatures()
+
+        ocean_inputdata_dir = \
+            f'../assembled_files/inputdata/ocn/mpas-o/{mesh_short_name}'
+        os.makedirs(ocean_inputdata_dir, exist_ok=True)
 
         mesh_filename = 'restart.nc'
 
@@ -196,8 +192,14 @@ class DiagnosticMasks(FilesForE3SMStep):
                 '--engine', netcdf_engine]
         check_call(args, logger=logger)
 
-        mask_and_transect_filename = \
-            f'{mesh_short_name}_mocBasinsAndTransects{date}.nc'
+        prefix = f'{mesh_short_name}_mocBasinsAndTransects{date}'
+        mask_and_transect_filename = f'{prefix}.nc'
+
+        diagnostics_filename = os.path.join(
+            mask_dir, mask_and_transect_filename)
+
+        inputdata_filename = os.path.join(
+            ocean_inputdata_dir, f'{prefix}mg.{self.creation_date}.nc')
 
         ds_mesh = xr.open_dataset(mesh_filename)
         ds_mask = xr.open_dataset(mask_filename)
@@ -210,6 +212,5 @@ class DiagnosticMasks(FilesForE3SMStep):
             char_dim_name='StrLen')
 
         # make links in output directories (both inputdata and diagnostics)
-        for output_dir in moc_mask_dirs:
-            symlink(os.path.abspath(mask_and_transect_filename),
-                    f'{output_dir}/{mask_and_transect_filename}')
+        for link_name in [diagnostics_filename, inputdata_filename]:
+            symlink(os.path.abspath(mask_and_transect_filename), link_name)
