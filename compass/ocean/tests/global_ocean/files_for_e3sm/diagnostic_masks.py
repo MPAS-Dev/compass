@@ -207,6 +207,12 @@ class DiagnosticMasks(FilesForE3SMStep):
         ds_masks_and_transects = add_moc_southern_boundary_transects(
             ds_mask, ds_mesh, logger=logger)
 
+        # these are string variables that cause problems if we convert to
+        # CDF5 format
+        ds_masks_and_transects = ds_masks_and_transects.drop_vars(
+            ['history', 'constituents']
+        )
+
         self.write_netcdf(
             ds_masks_and_transects, mask_and_transect_filename,
             char_dim_name='StrLen')
