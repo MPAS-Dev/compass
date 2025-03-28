@@ -2,7 +2,6 @@ import os
 
 import numpy as np
 import xarray as xr
-from mpas_tools.io import write_netcdf
 
 from compass.io import symlink
 from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step import (  # noqa: E501
@@ -100,10 +99,10 @@ class AddTotalIcebergIceShelfMelt(FilesForE3SMStep):
             ds[field].attrs['units'] = 'kg s-1'
 
         dib_filename = 'Iceberg_Climatology_Merino_MPAS_with_totals.nc'
-        write_netcdf(ds_dib, dib_filename)
+        self.write_netcdf(ds_dib, dib_filename)
 
         dismf_filename = 'prescribed_ismf_paolo2023_with_totals.nc'
-        write_netcdf(ds_dismf, dismf_filename)
+        self.write_netcdf(ds_dismf, dismf_filename)
 
         norm_total_dib_flux = (ds_dib.bergFreshwaterFluxData * weights *
                                area_cell / total_flux).sum()

@@ -2,7 +2,6 @@ import os
 
 import numpy as np
 import xarray as xr
-from mpas_tools.io import write_netcdf
 
 from compass.io import symlink
 from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step import (  # noqa: E501
@@ -116,7 +115,7 @@ class OceanMesh(FilesForE3SMStep):
             ds.zMid.attrs['long_name'] = \
                 'z-coordinate of the mid-depth of the layer'
 
-            write_netcdf(ds, dest_filename)
+            self.write_netcdf(ds, dest_filename)
 
         symlink(os.path.abspath(dest_filename),
                 f'{self.ocean_mesh_dir}/{dest_filename}')

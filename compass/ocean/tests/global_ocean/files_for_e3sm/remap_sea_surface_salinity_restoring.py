@@ -3,7 +3,6 @@ import pathlib
 
 import numpy as np
 import xarray as xr
-from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 from pyremap import MpasCellMeshDescriptor
 
@@ -29,8 +28,7 @@ class RemapSeaSurfaceSalinityRestoring(FilesForE3SMStep):
             The test case this step belongs to
         """
         super().__init__(test_case,
-                         name='remap_sea_surface_salinity_restoring',
-                         ntasks=512, min_tasks=128)
+                         name='remap_sea_surface_salinity_restoring')
 
         self.add_input_file(
             target='woa23_decav_ne300_sss_monthly_extrap.20250114.nc',
@@ -41,6 +39,30 @@ class RemapSeaSurfaceSalinityRestoring(FilesForE3SMStep):
             database='initial_condition_database')
 
         self.add_output_file(filename='sss.WOA23_monthlyClimatology.nc')
+
+    def setup(self):
+        """
+        Set resources from config options
+        """
+        super().setup()
+        section = self.config['files_for_e3sm']
+        self.ntasks = section.getint('remap_sss_ntasks')
+        self.min_tasks = section.getint('remap_sss_min_tasks')
+
+    def constrain_resources(self, available_resources):
+        """
+        Constrain ``cpus_per_task`` and ``ntasks`` based on the number of
+        cores available to this step
+
+        Parameters
+        ----------
+        available_resources : dict
+            The total number of cores available to the step
+        """
+        section = self.config['files_for_e3sm']
+        self.ntasks = section.getint('remap_sss_ntasks')
+        self.min_tasks = section.getint('remap_sss_min_tasks')
+        super().constrain_resources(available_resources)
 
     def run(self):
         """
@@ -109,7 +131,7 @@ class RemapSeaSurfaceSalinityRestoring(FilesForE3SMStep):
 
         ds_out = xr.Dataset()
         ds_out['expandDist'] = expand_dist
-        write_netcdf(ds_out, 'expandDist.nc')
+        self.write_netcdf(ds_out, 'expandDist.nc')
 
         descriptor = MpasCellMeshDescriptor(
             fileName=target_mesh_filename,
@@ -210,4 +232,4 @@ class RemapSeaSurfaceSalinityRestoring(FilesForE3SMStep):
         rename = dict(ncol='nCells',
                       SALT='surfaceSalinityMonthlyClimatologyValue')
         ds = ds.rename(rename)
-        write_netcdf(ds, out_filename)
+        self.write_netcdf(ds, out_filename)

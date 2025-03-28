@@ -1,7 +1,9 @@
 import os
+import subprocess
 from datetime import datetime
 
 import xarray as xr
+from mpas_tools.io import write_netcdf as mpas_tools_write_netcdf
 
 from compass.io import symlink
 from compass.step import Step
@@ -208,3 +210,35 @@ class FilesForE3SMStep(Step):
                 pass
 
         super().run()
+
+    def write_netcdf(self, ds, filename, **kwargs):
+        """
+        Write an xarray dataset to a NetCDF file, possibly converting to CDF5
+        format
+
+        Parameters
+        ----------
+        ds : xarray.Dataset
+            the dataset to write
+
+        filename : str
+            the name of the file to write
+
+        kwargs : dict
+            additional keyword arguments to pass to mpas_tools.io.write_netcdf
+        """
+
+        config = self.config
+        convert_to_cdf5 = config.getboolean(
+            'files_for_e3sm', 'convert_to_cdf5')
+        if convert_to_cdf5:
+            name, ext = os.path.splitext(filename)
+            write_filename = f'{name}_before_cdf5{ext}'
+        else:
+            write_filename = filename
+
+        mpas_tools_write_netcdf(ds, write_filename, **kwargs)
+
+        if convert_to_cdf5:
+            args = ['ncks', '-O', '-5', write_filename, filename]
+            subprocess.check_call(args)

@@ -3,7 +3,6 @@ from glob import glob
 
 import numpy as np
 import xarray as xr
-from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 from pyremap import MpasCellMeshDescriptor, Remapper
 
@@ -73,7 +72,7 @@ class SeaiceGraphPartition(FilesForE3SMStep):
             # to add it again
             if 'cullCell' in ds:
                 ds = ds.drop_vars(['cullCell'])
-                write_netcdf(ds, 'mesh.nc')
+                self.write_netcdf(ds, 'mesh.nc')
                 mesh_filename = 'mesh.nc'
 
         max_cells_per_core = config.getint('files_for_e3sm',

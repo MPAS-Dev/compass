@@ -75,14 +75,16 @@ class RemapIceShelfMelt(FilesForE3SMStep):
         remapped_filename = 'prescribed_ismf_paolo2023.nc'
 
         parallel_executable = config.get('parallel', 'parallel_executable')
+        convert_to_cdf5 = config.getboolean(
+            'files_for_e3sm', 'convert_to_cdf5')
 
         base_mesh_filename = 'base_mesh.nc'
         culled_mesh_filename = 'initial_state.nc'
         mesh_name = self.mesh_short_name
         land_ice_mask_filename = 'initial_state.nc'
 
-        remap_paolo(in_filename, base_mesh_filename,
-                    culled_mesh_filename, mesh_name,
-                    land_ice_mask_filename, remapped_filename,
-                    logger=logger, mpi_tasks=ntasks,
-                    parallel_executable=parallel_executable)
+        remap_paolo(
+            in_filename, base_mesh_filename, culled_mesh_filename, mesh_name,
+            land_ice_mask_filename, remapped_filename, logger=logger,
+            mpi_tasks=ntasks, parallel_executable=parallel_executable,
+            convert_to_cdf5=convert_to_cdf5)
