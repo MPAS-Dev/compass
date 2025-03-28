@@ -154,8 +154,11 @@ class InitialState(Step):
             run_model(self, namelist='namelist.ocean_subgrid2',
                       streams='streams.ocean_subgrid2')
 
-        init = nc.Dataset("ocean_subgrid2.nc", "r+")
         mesh = nc.Dataset("mesh.nc", "r")
+        if self.wetdry == 'subgrid':
+            init = nc.Dataset("ocean_subgrid2.nc", "r+")
+        else:
+            init = nc.Dataset("ocean.nc", "r+")
 
         # -- Estimate vert. grid for ice-shelves, min.-thicknesses, etc
         # -- Darren Engwirda
