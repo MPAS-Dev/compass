@@ -77,6 +77,11 @@ class RemapMaliTopography(RemapTopography):
             target=mali_filename,
             database='mali_topo')
 
+        if not self.config.has_option('remap_topography', 'ocean_density'):
+            raise ValueError(
+                'You must be using a mesh that defines [remap_topography]/'
+                'ocean_density in the config file')
+
     def run(self):
         """
         Run this step of the test case
