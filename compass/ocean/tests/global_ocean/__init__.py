@@ -45,6 +45,8 @@ class GlobalOcean(TestGroup):
         self._add_tests(mesh_names=['ARRM10to60', 'ARRMwISC10to60'])
 
         self._add_tests(mesh_names=['SO12to30', 'SOwISC12to30'])
+        self._add_tests(mesh_names=['SOwISC12to30'],
+                        mali_ais_topo='AIS_4to20km')
 
         self._add_tests(mesh_names=['WC14', 'WCwISC14'])
 
@@ -65,7 +67,7 @@ class GlobalOcean(TestGroup):
     def _add_tests(self, mesh_names, high_res_topography=True,
                    include_rk4=False,
                    include_regression=False, include_phc=False,
-                   include_en4_1900=False):
+                   include_en4_1900=False, mali_ais_topo=None):
         """ Add test cases for the given mesh(es) """
 
         default_ic = 'WOA23'
@@ -73,7 +75,8 @@ class GlobalOcean(TestGroup):
 
         for mesh_name in mesh_names:
             mesh_test = Mesh(test_group=self, mesh_name=mesh_name,
-                             high_res_topography=high_res_topography)
+                             high_res_topography=high_res_topography,
+                             mali_ais_topo=mali_ais_topo)
             self.add_test_case(mesh_test)
 
             init_test = Init(test_group=self, mesh=mesh_test,

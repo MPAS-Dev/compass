@@ -284,6 +284,10 @@ test cases and steps
    mesh.Mesh.configure
    mesh.Mesh.run
 
+   mesh.remap_mali_topography.RemapMaliTopography
+   mesh.remap_mali_topography.RemapMaliTopography.setup
+   mesh.remap_mali_topography.RemapMaliTopography.run
+
    mesh.ec30to60.EC30to60BaseMesh
    mesh.ec30to60.EC30to60BaseMesh.build_cell_width_lat_lon
 
