@@ -911,6 +911,34 @@ step and default run duration for short runs with these meshes.</p>
 <a class="reference internal" href="../framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a>) with 64 vertical levels ranging in
 thickness from 10 to 250 m.</p>
 </section>
+<section id="sowisc12to30-with-mali-topography">
+<span id="dev-ocean-global-ocean-sowisc12to30-mali-topo"></span><h5>SOwISC12to30 with MALI topography<a class="headerlink" href="#sowisc12to30-with-mali-topography" title="Link to this heading"></a></h5>
+<p>Versions of the <code class="docutils literal notranslate"><span class="pre">SOwISC12to30</span></code> test cases exist with topography that comes
+from the MALI model instead of from GEBCO and BedMachine Antarctica.</p>
+<p>For now, the only supported MALI initial condition is a 4-20 km resoution
+mesh with the following config options:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options related to remapping topography to an MPAS-Ocean mesh</span>
+<span class="k">[remap_topography]</span>
+
+<span class="c1"># the density of ocean water (kg/m^3), equivalent to config_ocean_density in MALI</span>
+<span class="na">ocean_density</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1028.0</span>
+
+<span class="c1"># the elevation of sea level, equivalent to config_sea_level in MALI</span>
+<span class="na">sea_level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.0</span>
+
+
+<span class="c1"># config options related to remapping MALI topography to an MPAS-Ocean mesh</span>
+<span class="k">[remap_mali_topography]</span>
+
+<span class="c1"># The name of the MALI topogrpahy file</span>
+<span class="na">mali_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ais_4to20km.20240708.nc</span>
+</pre></div>
+</div>
+<p>The topography is remapped in a step defined in the
+<a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.remap_mali_topography.RemapMaliTopography.html#compass.ocean.tests.global_ocean.mesh.remap_mali_topography.RemapMaliTopography" title="compass.ocean.tests.global_ocean.mesh.remap_mali_topography.RemapMaliTopography"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.remap_mali_topography.RemapMaliTopography</span></code></a>
+class, which descends from
+<a class="reference internal" href="../generated/compass.ocean.mesh.remap_topography.RemapTopography.html#compass.ocean.mesh.remap_topography.RemapTopography" title="compass.ocean.mesh.remap_topography.RemapTopography"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.mesh.remap_topography.RemapTopography</span></code></a>.</p>
+</section>
 <section id="wc14-and-wcwisc14">
 <span id="dev-ocean-global-ocean-wc14"></span><h5>WC14 and WCwISC14<a class="headerlink" href="#wc14-and-wcwisc14" title="Link to this heading"></a></h5>
 <p>The <code class="docutils literal notranslate"><span class="pre">WC14</span></code> and <code class="docutils literal notranslate"><span class="pre">WCwISC14</span></code> meshes are the Water Cycle regionally refined
@@ -1430,7 +1458,7 @@ present but can be set if needed:</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

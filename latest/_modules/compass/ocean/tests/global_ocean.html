@@ -159,6 +159,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ARRM10to60&#39;</span><span class="p">,</span> <span class="s1">&#39;ARRMwISC10to60&#39;</span><span class="p">])</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;SO12to30&#39;</span><span class="p">,</span> <span class="s1">&#39;SOwISC12to30&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;SOwISC12to30&#39;</span><span class="p">],</span>
+                        <span class="n">mali_ais_topo</span><span class="o">=</span><span class="s1">&#39;AIS_4to20km&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_add_tests</span><span class="p">(</span><span class="n">mesh_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;WC14&#39;</span><span class="p">,</span> <span class="s1">&#39;WCwISC14&#39;</span><span class="p">])</span>
 
@@ -180,7 +182,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_add_tests</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_names</span><span class="p">,</span> <span class="n">high_res_topography</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                    <span class="n">include_rk4</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                    <span class="n">include_regression</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_phc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                   <span class="n">include_en4_1900</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                   <span class="n">include_en4_1900</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mali_ais_topo</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Add test cases for the given mesh(es) &quot;&quot;&quot;</span>
 
         <span class="n">default_ic</span> <span class="o">=</span> <span class="s1">&#39;WOA23&#39;</span>
@@ -188,7 +190,8 @@
 
         <span class="k">for</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="n">mesh_names</span><span class="p">:</span>
             <span class="n">mesh_test</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">,</span>
-                             <span class="n">high_res_topography</span><span class="o">=</span><span class="n">high_res_topography</span><span class="p">)</span>
+                             <span class="n">high_res_topography</span><span class="o">=</span><span class="n">high_res_topography</span><span class="p">,</span>
+                             <span class="n">mali_ais_topo</span><span class="o">=</span><span class="n">mali_ais_topo</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">mesh_test</span><span class="p">)</span>
 
             <span class="n">init_test</span> <span class="o">=</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_test</span><span class="p">,</span>
@@ -292,7 +295,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

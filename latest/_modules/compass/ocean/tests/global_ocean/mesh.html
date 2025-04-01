@@ -109,7 +109,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.global_ocean.mesh</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.mesh.spherical</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.mesh.spherical</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">IcosahedralMeshStep</span><span class="p">,</span>
     <span class="n">QuasiUniformSphericalMeshStep</span><span class="p">,</span>
 <span class="p">)</span>
@@ -125,6 +127,9 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.mesh.qu</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">IcosMeshFromConfigStep</span><span class="p">,</span>
     <span class="n">QUMeshFromConfigStep</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.mesh.remap_mali_topography</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">RemapMaliTopography</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.mesh.rrs6to18</span><span class="w"> </span><span class="kn">import</span> <span class="n">RRS6to18BaseMesh</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.mesh.so12to30</span><span class="w"> </span><span class="kn">import</span> <span class="n">SO12to30BaseMesh</span>
@@ -144,6 +149,13 @@
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
+<span class="sd">    mesh_name : str</span>
+<span class="sd">        The name of the mesh</span>
+
+<span class="sd">    mesh_subdir : str</span>
+<span class="sd">        The subdirectory within the test group for all test cases with this</span>
+<span class="sd">        mesh and topography</span>
+
 <span class="sd">    package : str</span>
 <span class="sd">        The python package for the mesh</span>
 
@@ -156,10 +168,16 @@
 <span class="sd">    high_res_topography : bool</span>
 <span class="sd">        Whether to remap a high resolution topography data set.  A lower</span>
 <span class="sd">        res data set is used for low resolution meshes.</span>
+
+<span class="sd">    mali_ais_topo : str</span>
+<span class="sd">        Short name for the MALI dataset to use for Antarctic Ice Sheet</span>
+<span class="sd">        topography</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="Mesh.__init__">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.mesh.Mesh.html#compass.ocean.tests.global_ocean.mesh.Mesh.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">high_res_topography</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span>  <span class="c1"># noqa: C901</span>
+                 <span class="n">high_res_topography</span><span class="p">,</span> <span class="n">mali_ais_topo</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create test case for creating a global MPAS-Ocean mesh</span>
 
@@ -174,9 +192,20 @@
 <span class="sd">        high_res_topography : bool</span>
 <span class="sd">            Whether to remap a high resolution topography data set.  A lower</span>
 <span class="sd">            res data set is used for low resolution meshes.</span>
+
+<span class="sd">        mali_ais_topo : str, optional</span>
+<span class="sd">            Short name for the MALI dataset to use for Antarctic Ice Sheet</span>
+<span class="sd">            topography</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;mesh&#39;</span>
-        <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">if</span> <span class="n">mali_ais_topo</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mesh_subdir</span> <span class="o">=</span> <span class="n">mesh_name</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mesh_subdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span>
+                                            <span class="sa">f</span><span class="s1">&#39;MALI_topo_</span><span class="si">{</span><span class="n">mali_ais_topo</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">subdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_subdir</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
         <span class="n">with_ice_shelf_cavities</span> <span class="o">=</span> <span class="s1">&#39;wISC&#39;</span> <span class="ow">in</span> <span class="n">mesh_name</span>
@@ -190,6 +219,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh_config_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_lower</span><span class="si">}</span><span class="s1">.cfg&#39;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh_name</span> <span class="o">=</span> <span class="n">mesh_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mali_ais_topo</span> <span class="o">=</span> <span class="n">mali_ais_topo</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span> <span class="o">=</span> <span class="n">with_ice_shelf_cavities</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">high_res_topography</span> <span class="o">=</span> <span class="n">high_res_topography</span>
 
@@ -232,9 +262,16 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">base_mesh_step</span><span class="p">)</span>
 
-        <span class="n">remap_step</span> <span class="o">=</span> <span class="n">RemapTopography</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                                     <span class="n">base_mesh_step</span><span class="o">=</span><span class="n">base_mesh_step</span><span class="p">,</span>
-                                     <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mali_ais_topo</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">remap_step</span> <span class="o">=</span> <span class="n">RemapTopography</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                                         <span class="n">base_mesh_step</span><span class="o">=</span><span class="n">base_mesh_step</span><span class="p">,</span>
+                                         <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">remap_step</span> <span class="o">=</span> <span class="n">RemapMaliTopography</span><span class="p">(</span>
+                <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_mesh_step</span><span class="o">=</span><span class="n">base_mesh_step</span><span class="p">,</span>
+                <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">mali_ais_topo</span><span class="o">=</span><span class="n">mali_ais_topo</span><span class="p">,</span>
+                <span class="n">ocean_includes_grounded</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">remap_step</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">CullMeshStep</span><span class="p">(</span>
@@ -263,6 +300,13 @@
                 <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;compass.ocean.mesh&#39;</span><span class="p">,</span>
                                         <span class="s1">&#39;low_res_topography.cfg&#39;</span><span class="p">,</span>
                                         <span class="n">exception</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mali_ais_topo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">package</span> <span class="o">=</span> <span class="s1">&#39;compass.ocean.tests.global_ocean.mesh.&#39;</span> \
+                      <span class="s1">&#39;remap_mali_topography&#39;</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="n">package</span><span class="p">,</span>
+                                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mali_ais_topo</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">,</span>
+                                    <span class="n">exception</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Kuroshio&#39;</span><span class="p">):</span>
             <span class="c1"># add the config options for all kuroshio meshes</span>
@@ -333,7 +377,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

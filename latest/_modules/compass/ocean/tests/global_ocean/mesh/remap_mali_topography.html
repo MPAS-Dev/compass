@@ -1,0 +1,422 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.ocean.tests.global_ocean.mesh.remap_mali_topography &mdash; compass latest documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=c6e86fd7"></script>
+      <script src="../../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../../ocean.html">compass.ocean</a></li>
+          <li class="breadcrumb-item"><a href="../../global_ocean.html">compass.ocean.tests.global_ocean</a></li>
+          <li class="breadcrumb-item"><a href="../mesh.html">compass.ocean.tests.global_ocean.mesh</a></li>
+      <li class="breadcrumb-item active">compass.ocean.tests.global_ocean.mesh.remap_mali_topography</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.ocean.tests.global_ocean.mesh.remap_mali_topography</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.cime.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_call</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyremap</span><span class="w"> </span><span class="kn">import</span> <span class="n">MpasCellMeshDescriptor</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.mesh.remap_topography</span><span class="w"> </span><span class="kn">import</span> <span class="n">RemapTopography</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.parallel</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_command</span>
+
+
+<div class="viewcode-block" id="RemapMaliTopography">
+<a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.mesh.remap_mali_topography.RemapMaliTopography.html#compass.ocean.tests.global_ocean.mesh.remap_mali_topography.RemapMaliTopography">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RemapMaliTopography</span><span class="p">(</span><span class="n">RemapTopography</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A step for remapping bathymetry and ice-shelf topography from a MALI</span>
+<span class="sd">    datase to a global MPAS-Ocean mesh and combining it with a global</span>
+<span class="sd">    topography dataset</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mali_ais_topo : str</span>
+<span class="sd">        Short name for the MALI dataset to use for Antarctic Ice Sheet</span>
+<span class="sd">        topography</span>
+
+<span class="sd">    ocean_includes_grounded : bool, optional</span>
+<span class="sd">        Whether to include grounded cells that are below sea level in the</span>
+<span class="sd">        ocean domain</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="RemapMaliTopography.__init__">
+<a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.mesh.remap_mali_topography.RemapMaliTopography.html#compass.ocean.tests.global_ocean.mesh.remap_mali_topography.RemapMaliTopography.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">base_mesh_step</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">mali_ais_topo</span><span class="p">,</span>
+                 <span class="n">ocean_includes_grounded</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new step</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.ocean.tests.global_ocean.mesh.Mesh</span>
+<span class="sd">            The test case this step belongs to</span>
+
+<span class="sd">        base_mesh_step : compass.mesh.spherical.SphericalBaseStep</span>
+<span class="sd">            The base mesh step containing input files to this step</span>
+
+<span class="sd">        remap_topography : compass.ocean.mesh.remap_topography.RemapTopography</span>
+<span class="sd">            A step for remapping topography. If provided, the remapped</span>
+<span class="sd">            topography is used to determine the land mask</span>
+
+<span class="sd">        mesh_name : str</span>
+<span class="sd">            The name of the MPAS mesh to include in the mapping file</span>
+
+<span class="sd">        mali_ais_topo : str, optional</span>
+<span class="sd">            Short name for the MALI dataset to use for Antarctic Ice Sheet</span>
+<span class="sd">            topography</span>
+
+<span class="sd">        ocean_includes_grounded : bool</span>
+<span class="sd">            Whether to include grounded cells that are below sea level in the</span>
+<span class="sd">            ocean domain</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">base_mesh_step</span><span class="o">=</span><span class="n">base_mesh_step</span><span class="p">,</span>
+                         <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mali_ais_topo</span> <span class="o">=</span> <span class="n">mali_ais_topo</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ocean_includes_grounded</span> <span class="o">=</span> <span class="n">ocean_includes_grounded</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mali_topography_remapped.nc&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemapMaliTopography.setup">
+<a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.mesh.remap_mali_topography.RemapMaliTopography.setup.html#compass.ocean.tests.global_ocean.mesh.remap_mali_topography.RemapMaliTopography.setup">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set up the step in the work directory, including downloading any</span>
+<span class="sd">        dependencies.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+
+        <span class="n">mali_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;remap_mali_topography&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;mali_filename&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mali_topography_orig.nc&#39;</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="n">mali_filename</span><span class="p">,</span>
+            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;mali_topo&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;ocean_density&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;You must be using a mesh that defines [remap_topography]/&#39;</span>
+                <span class="s1">&#39;ocean_density in the config file&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemapMaliTopography.run">
+<a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.mesh.remap_mali_topography.RemapMaliTopography.run.html#compass.ocean.tests.global_ocean.mesh.remap_mali_topography.RemapMaliTopography.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run this step of the test case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_remap_mali_topo</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_combine_topo</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_remap_mali_topo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">in_mesh_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mali_ais_topo</span>
+        <span class="n">in_descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span>
+            <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;mali_topography_orig.nc&#39;</span><span class="p">,</span>
+            <span class="n">meshName</span><span class="o">=</span><span class="n">in_mesh_name</span><span class="p">)</span>
+        <span class="n">in_descriptor</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;NETCDF3_64BIT&#39;</span>
+        <span class="n">in_descriptor</span><span class="o">.</span><span class="n">to_scrip</span><span class="p">(</span><span class="s1">&#39;mali.scrip.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_partition_scrip_file</span><span class="p">(</span><span class="s1">&#39;mali.scrip.nc&#39;</span><span class="p">)</span>
+
+        <span class="n">out_mesh_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_name</span>
+        <span class="n">out_descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span>
+            <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span>
+            <span class="n">meshName</span><span class="o">=</span><span class="n">out_mesh_name</span><span class="p">)</span>
+        <span class="n">out_descriptor</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;NETCDF3_64BIT&#39;</span>
+        <span class="n">out_descriptor</span><span class="o">.</span><span class="n">to_scrip</span><span class="p">(</span><span class="s1">&#39;mpaso.scrip.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_partition_scrip_file</span><span class="p">(</span><span class="s1">&#39;mpaso.scrip.nc&#39;</span><span class="p">)</span>
+
+        <span class="n">map_filename</span> <span class="o">=</span> \
+            <span class="sa">f</span><span class="s1">&#39;map_</span><span class="si">{</span><span class="n">in_mesh_name</span><span class="si">}</span><span class="s1">_to_</span><span class="si">{</span><span class="n">out_mesh_name</span><span class="si">}</span><span class="s1">_mbtraave.nc&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_mali_to_mpaso_weights</span><span class="p">(</span><span class="n">map_filename</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_modify_mali_topo</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_remap_mali_to_mpaso</span><span class="p">(</span><span class="n">map_filename</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_modify_mali_topo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Modify MALI topography to have desired fields and names</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Modifying MALI topography fields and names&#39;</span><span class="p">)</span>
+
+        <span class="n">ds_mali</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;mali_topography_orig.nc&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;Time&#39;</span> <span class="ow">in</span> <span class="n">ds_mali</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="n">ds_mali</span> <span class="o">=</span> <span class="n">ds_mali</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">bed</span> <span class="o">=</span> <span class="n">ds_mali</span><span class="o">.</span><span class="n">bedTopography</span>
+        <span class="n">thickness</span> <span class="o">=</span> <span class="n">ds_mali</span><span class="o">.</span><span class="n">thickness</span>
+
+        <span class="n">ice_density</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;ice_density&#39;</span><span class="p">)</span>
+        <span class="n">ocean_density</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;ocean_density&#39;</span><span class="p">)</span>
+        <span class="n">sea_level</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;sea_level&#39;</span><span class="p">)</span>
+
+        <span class="n">g</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_G&#39;</span><span class="p">]</span>
+
+        <span class="n">draft</span> <span class="o">=</span> <span class="o">-</span> <span class="p">(</span><span class="n">ice_density</span> <span class="o">/</span> <span class="n">ocean_density</span><span class="p">)</span> <span class="o">*</span> <span class="n">thickness</span>
+
+        <span class="n">ice_mask</span> <span class="o">=</span> <span class="n">ds_mali</span><span class="o">.</span><span class="n">thickness</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="n">floating_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
+            <span class="n">ice_mask</span><span class="p">,</span>
+            <span class="n">ice_density</span> <span class="o">/</span> <span class="n">ocean_density</span> <span class="o">*</span> <span class="n">thickness</span> <span class="o">&lt;=</span> <span class="n">sea_level</span> <span class="o">-</span> <span class="n">bed</span><span class="p">)</span>
+        <span class="n">grounded_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">ice_mask</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">floating_mask</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ocean_includes_grounded</span><span class="p">:</span>
+            <span class="n">ocean_mask</span> <span class="o">=</span> <span class="n">bed</span> <span class="o">&lt;</span> <span class="n">sea_level</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ocean_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">grounded_mask</span><span class="p">),</span>
+                                        <span class="n">bed</span> <span class="o">&lt;</span> <span class="n">sea_level</span><span class="p">)</span>
+
+        <span class="n">lithop</span> <span class="o">=</span> <span class="n">ice_density</span> <span class="o">*</span> <span class="n">g</span> <span class="o">*</span> <span class="n">thickness</span>
+        <span class="n">ice_frac</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ice_mask</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+        <span class="n">grounded_frac</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">grounded_mask</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+        <span class="n">ocean_frac</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ocean_mask</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+        <span class="n">mali_frac</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">ds_mali</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]),</span>
+                                 <span class="n">dims</span><span class="o">=</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span>
+
+        <span class="c1"># we will remap conservatively</span>
+        <span class="n">ds_in</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+        <span class="n">ds_in</span><span class="p">[</span><span class="s1">&#39;bed_elevation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bed</span>
+        <span class="n">ds_in</span><span class="p">[</span><span class="s1">&#39;landIceThkObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">thickness</span>
+        <span class="n">ds_in</span><span class="p">[</span><span class="s1">&#39;landIcePressureObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lithop</span>
+        <span class="n">ds_in</span><span class="p">[</span><span class="s1">&#39;landIceDraftObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">draft</span>
+        <span class="n">ds_in</span><span class="p">[</span><span class="s1">&#39;landIceFrac&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ice_frac</span>
+        <span class="n">ds_in</span><span class="p">[</span><span class="s1">&#39;landIceGroundedFrac&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grounded_frac</span>
+        <span class="n">ds_in</span><span class="p">[</span><span class="s1">&#39;oceanFrac&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ocean_frac</span>
+        <span class="n">ds_in</span><span class="p">[</span><span class="s1">&#39;maliFrac&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mali_frac</span>
+
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_in</span><span class="p">,</span> <span class="s1">&#39;mali_topography_mod.nc&#39;</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Done.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_mali_to_mpaso_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_filename</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create mapping weights file using TempestRemap</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Create weights file&#39;</span><span class="p">)</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;mbtempest&#39;</span><span class="p">,</span> <span class="s1">&#39;--type&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--load&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;mali.scrip.p</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="si">}</span><span class="s1">.h5m&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--load&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;mpaso.scrip.p</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="si">}</span><span class="s1">.h5m&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--file&#39;</span><span class="p">,</span> <span class="n">map_filename</span><span class="p">,</span>
+            <span class="s1">&#39;--weights&#39;</span><span class="p">,</span> <span class="s1">&#39;--gnomonic&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--boxeps&#39;</span><span class="p">,</span> <span class="s1">&#39;1e-9&#39;</span><span class="p">,</span>
+        <span class="p">]</span>
+
+        <span class="n">run_command</span><span class="p">(</span>
+            <span class="n">args</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">openmp_threads</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Done.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_remap_mali_to_mpaso</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_filename</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remap combined bathymetry onto MPAS target mesh</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Remap to target&#39;</span><span class="p">)</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;ncremap&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">map_filename</span><span class="p">,</span>
+            <span class="s1">&#39;--vrb=1&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;mali_topography_mod.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;mali_topography_ncremap.nc&#39;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+
+        <span class="n">ds_remapped</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;mali_topography_ncremap.nc&#39;</span><span class="p">)</span>
+        <span class="n">ds_out</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="n">ds_remapped</span><span class="p">:</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="n">ds_remapped</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s1">&#39;Frac&#39;</span> <span class="ow">in</span> <span class="n">var</span><span class="p">:</span>
+                <span class="c1"># copy the fractional variable, making sure it doesn&#39;t</span>
+                <span class="c1"># exceed 1</span>
+                <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span>
+            <span class="n">ds_out</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">var</span>
+
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="s1">&#39;mali_topography_remapped.nc&#39;</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Done.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_combine_topo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;topography_remapped.nc&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;bedmachine_topography_remapped.nc&#39;</span><span class="p">)</span>
+        <span class="n">ds_mali</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;mali_topography_remapped.nc&#39;</span><span class="p">)</span>
+        <span class="n">ds_mali</span> <span class="o">=</span> <span class="n">ds_mali</span><span class="o">.</span><span class="n">reset_coords</span><span class="p">([</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">],</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">ds_bedmachine</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;bedmachine_topography_remapped.nc&#39;</span><span class="p">)</span>
+        <span class="n">ds_bedmachine</span> <span class="o">=</span> <span class="n">ds_bedmachine</span><span class="o">.</span><span class="n">reset_coords</span><span class="p">([</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">],</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">ds_out</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">ds_bedmachine</span><span class="p">)</span>
+        <span class="c1"># for now, just use the land-ice pressure, draft and thickness from</span>
+        <span class="c1"># MALI</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;landIcePressureObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceDraftObserved&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;landIceThkObserved&#39;</span><span class="p">]:</span>
+            <span class="n">ds_out</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_mali</span><span class="p">[</span><span class="n">var</span><span class="p">]</span>
+
+        <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIceFracObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_mali</span><span class="p">[</span><span class="s1">&#39;landIceFrac&#39;</span><span class="p">]</span>
+
+        <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIceFloatingFracObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">ds_mali</span><span class="p">[</span><span class="s1">&#39;landIceFrac&#39;</span><span class="p">]</span> <span class="o">-</span>
+            <span class="n">ds_mali</span><span class="p">[</span><span class="s1">&#39;landIceGroundedFrac&#39;</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;maliFrac&#39;</span><span class="p">]:</span>
+            <span class="n">mali_field</span> <span class="o">=</span> <span class="n">ds_mali</span><span class="p">[</span><span class="n">var</span><span class="p">]</span>
+            <span class="n">mali_field</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mali_field</span><span class="o">.</span><span class="n">notnull</span><span class="p">(),</span> <span class="n">mali_field</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+            <span class="n">ds_out</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">mali_field</span>
+
+        <span class="c1"># for now, blend topography at calving fronts, but we may want a</span>
+        <span class="c1"># smoother blend in the future</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">ds_mali</span><span class="o">.</span><span class="n">landIceFrac</span>
+        <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;bed_elevation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">alpha</span> <span class="o">*</span> <span class="n">ds_mali</span><span class="o">.</span><span class="n">bed_elevation</span> <span class="o">+</span>
+            <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">ds_bedmachine</span><span class="o">.</span><span class="n">bed_elevation</span><span class="p">)</span>
+
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">maliFrac</span>
+        <span class="c1"># NOTE: MALI&#39;s ocean fraction is already scaled by the MALI fraction</span>
+        <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">ds_mali</span><span class="o">.</span><span class="n">oceanFrac</span> <span class="o">+</span>
+            <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">ds_bedmachine</span><span class="o">.</span><span class="n">oceanFracObserved</span><span class="p">)</span>
+
+        <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">landIceDraftObserved</span>
+
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="s1">&#39;topography_remapped.nc&#39;</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
