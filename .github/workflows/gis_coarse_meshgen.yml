@@ -11,23 +11,16 @@ jobs:
     name: setup_and_run_job
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          path: compass
       - name: setup_and_run_step
         run: |
           # create top level working directory
-          mkdir compassDev
-          cd $_
           root=$PWD
-          
-          # clone the modified compass repo
-          git clone https://github.com/MPAS-Dev/compass.git
           pushd compass
 
-          # use https for submodules - runner cannot use git protocol
-          sed -i 's!git@github.com:!https://github.com/!g' .gitmodules
-
-          # clone submodules
-          git submodule update --init
-          
           # create the compass environment
           ./conda/configure_compass_env.py --conda $root/mambaForge --mpi mpich
           
