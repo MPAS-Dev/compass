@@ -23,16 +23,16 @@ jobs:
 
           # create the compass environment
           ./conda/configure_compass_env.py --conda $root/mambaForge --mpi mpich
-          
+
           # enable the compass environment
           source load_dev_compass_1.7.0-alpha.1_mpich.sh
-          
+
           popd
 
           # download the input GIS coarse mesh
           wget https://rpi.app.box.com/public/static/qytr3c49h1xbucxz594df327qatiu8ds.tgz
           tar xf qytr3c49h1xbucxz594df327qatiu8ds.tgz
-          
+
           # create the config file describing the system
           cat << EOF > system.cfg
           # This file contains some common config options you might want to set
@@ -56,11 +56,11 @@ jobs:
           measures_filename = greenland_vel_mosaic500_extrap_stride8.nc
           bedmachine_filename = BedMachineGreenland-v5_edits_floodFill_extrap_stride25.nc
           EOF
-          
+
           # setup the greenland mesh generation test case
           testDir=$root/gis_mesh_gen
           compass setup -w $testDir -t landice/greenland/mesh_gen -f system.cfg
-          
+
           # run the test case
           cd $testDir
           compass run
