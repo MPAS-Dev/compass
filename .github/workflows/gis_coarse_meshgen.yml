@@ -1,10 +1,11 @@
 name: CI/CD Build Workflow
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
+    paths:
+    - compass/landice/mesh.py
+    - compass/landice/tests/greenland/mesh.py
 
 jobs:
   setup_and_run_job:
