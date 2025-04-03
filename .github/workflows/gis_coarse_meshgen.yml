@@ -1,0 +1,68 @@
+name: CI/CD Build Workflow
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+    - compass/landice/mesh.py
+    - compass/landice/tests/greenland/mesh.py
+
+jobs:
+  setup_and_run_job:
+    name: setup_and_run_job
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          path: compass
+      - name: setup_and_run_step
+        run: |
+          # create top level working directory
+          root=$PWD
+          pushd compass
+
+          # create the compass environment
+          ./conda/configure_compass_env.py --conda $root/mambaForge --mpi mpich
+
+          # enable the compass environment
+          source load_dev_compass_1.7.0-alpha.1_mpich.sh
+
+          popd
+
+          # download the input GIS coarse mesh
+          wget https://rpi.app.box.com/public/static/qytr3c49h1xbucxz594df327qatiu8ds.tgz
+          tar xf qytr3c49h1xbucxz594df327qatiu8ds.tgz
+
+          # create the config file describing the system
+          cat << EOF > system.cfg
+          # This file contains some common config options you might want to set
+          # The paths section describes paths to databases and shared compass environments
+          [paths]
+          database_root =
+          # The parallel section describes options related to running tests in parallel
+          [parallel]
+          # parallel system of execution: slurm or single_node
+          system = single_node
+          # whether to use mpirun or srun to run the model
+          parallel_executable = mpirun
+          # cores per node on the machine, detected automatically by default
+          cores_per_node = 4
+          [mesh]
+          #run quicker - gis takes 20mins on 128 perlmutter cores
+          min_spac = 10.e3
+          [greenland]
+          nprocs = 4
+          data_path = $root/gis4kmSubSampled_01302025
+          measures_filename = greenland_vel_mosaic500_extrap_stride8.nc
+          bedmachine_filename = BedMachineGreenland-v5_edits_floodFill_extrap_stride25.nc
+          EOF
+
+          # setup the greenland mesh generation test case
+          testDir=$root/gis_mesh_gen
+          compass setup -w $testDir -t landice/greenland/mesh_gen -f system.cfg
+
+          # run the test case
+          cd $testDir
+          compass run
+
