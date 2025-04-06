@@ -1,15 +1,12 @@
 import os
 import shutil
 
-import netCDF4
+import numpy as np
 import xarray as xr
 from mpas_tools.logging import check_call
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
-from pyremap.descriptor.utility import (
-    create_scrip,
-    interp_extrap_corners_2d,
-    unwrap_corners,
-)
+from pyremap.descriptor.utility import interp_extrap_corners_2d, unwrap_corners
+from pyremap.utility import write_netcdf
 
 
 def build_mapping_file(config, cores, logger, ismip6_grid_file, mapping_file,
@@ -106,9 +103,9 @@ def build_mapping_file(config, cores, logger, ismip6_grid_file, mapping_file,
                          "--method. Available options are 'bilinear',"
                          "'neareststod', 'conserve'.")
 
-    parallel_executable = config.get('parallel', 'parallel_executable')
+    parallel_executable = config.get("parallel", "parallel_executable")
     # split the parallel executable into constituents in case it includes flags
-    args = parallel_executable.split(' ')
+    args = parallel_executable.split(" ")
     args.extend(["-n", f"{cores}",
                  "ESMF_RegridWeightGen",
                  "-s", source_grid_scripfile,
@@ -148,7 +145,7 @@ def create_scrip_from_latlon(source_grid_file, source_grid_scripfile):
     """
 
     ds = xr.open_dataset(source_grid_file)
-    out_file = netCDF4.Dataset(source_grid_scripfile, 'w')
+    ds_out = xr.Dataset()
 
     # RACMO datasets, which use a rotated-pole grid, do not contain `x`/`y`
     # dimensions, instead use `rlat`/`rlon` dimensions to find `nx`/`ny`
@@ -161,15 +158,13 @@ def create_scrip_from_latlon(source_grid_file, source_grid_scripfile):
 
     grid_size = nx * ny
 
-    # generate common variables used in scrip files
-    create_scrip(out_file, grid_size, grid_corners=4, grid_rank=2,
-                 units="degrees", meshName=source_grid_file)
-
     # place the information from our source dataset into the scrip dataset
-    out_file.variables["grid_center_lat"][:] = ds.lat.values.flat
-    out_file.variables["grid_center_lon"][:] = ds.lon.values.flat
-    out_file.variables["grid_dims"][:] = [nx, ny]
-    out_file.variables["grid_imask"][:] = 1
+    ds_out["grid_center_lat"] = (("grid_size",), ds.lat.values.flat)
+    ds_out["grid_center_lon"] = (("grid_size",), ds.lon.values.flat)
+    ds_out["grid_dims"] = (("grid_rank",), [nx, ny])
+    ds_out["grid_imask"] = xr.DataArray(
+        np.ones(ds.sizes["grid_size"], dtype="int32"), dims=("grid_size",)
+    )
 
     # determine the corners of gricells
     if "lat_bnds" in ds and "lon_bnds" in ds:
@@ -193,7 +188,18 @@ def create_scrip_from_latlon(source_grid_file, source_grid_scripfile):
     grid_corner_lat = lat_corner.reshape((grid_size, 4))
     grid_corner_lon = lon_corner.reshape((grid_size, 4))
 
-    out_file.variables["grid_corner_lat"][:] = grid_corner_lat
-    out_file.variables["grid_corner_lon"][:] = grid_corner_lon
+    ds_out["grid_corner_lat"] = (
+        ("grid_size", "grid_corners"), grid_corner_lat
+    )
+    ds_out["grid_corner_lon"] = (
+        ("grid_size", "grid_corners"), grid_corner_lon
+    )
 
-    out_file.close()
+    ds.grid_center_lat.attrs["units"] = "degrees"
+    ds.grid_center_lon.attrs["units"] = "degrees"
+    ds.grid_corner_lat.attrs["units"] = "degrees"
+    ds.grid_corner_lon.attrs["units"] = "degrees"
+    ds.grid_imask.attrs["units"] = "unitless"
+
+    ds.attrs["mesh_name"] = source_grid_file
+    write_netcdf(ds, source_grid_scripfile, format="NETCDF3_64BIT")
