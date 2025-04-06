@@ -8,8 +8,8 @@ on:
     - compass/landice/tests/greenland/mesh.py
 
 jobs:
-  setup_and_run_job:
-    name: setup_and_run_job
+  gis-coarse-meshgen:
+    name: GIS Coarse Mesh Generation
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,10 +23,10 @@ jobs:
           pushd compass
 
           # create the compass environment
-          ./conda/configure_compass_env.py --conda $root/mambaForge --mpi mpich
+          ./conda/configure_compass_env.py --conda $root/mambaForge --env_name compass_test --mpi mpich
 
           # enable the compass environment
-          source load_dev_compass_1.7.0-alpha.1_mpich.sh
+          source load_compass_test_mpich.sh
 
           popd
 
