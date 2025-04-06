@@ -386,7 +386,7 @@ class Combine(Step):
         # Build lat-lon SCRIP file using pyremap
         elif self.target_grid == 'lat_lon':
             descriptor = get_lat_lon_descriptor(
-                dLon=self.resolution, dLat=self.resolution,
+                dlon=self.resolution, dlat=self.resolution,
             )
             descriptor.to_scrip(netcdf4_filename)
 

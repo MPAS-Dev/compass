@@ -132,9 +132,12 @@ class RemapTidalMixing(FilesForE3SMStep):
         in_grid_name = 'S71W70_CATS_ustar'
 
         src_descriptor = ProjectionGridDescriptor.read(
-            projection=projection_in, fileName=in_filename,
-            meshName=in_grid_name, xVarName='x', yVarName='y')
-        src_mesh_name = src_descriptor.meshName
+            projection=projection_in,
+            filename=in_filename,
+            mesh_name=in_grid_name,
+            x_var_name='x',
+            y_var_name='y')
+        src_mesh_name = src_descriptor.mesh_name
 
         dst_descriptor = MpasCellMeshDescriptor(mesh_filename, mesh_name)
 
@@ -142,11 +145,17 @@ class RemapTidalMixing(FilesForE3SMStep):
             f'{mapping_directory}/map_{src_mesh_name}_to_{mesh_name}_{method}.nc'  # noqa: E501
 
         logger.info(f'Creating the mapping file {mapping_filename}...')
-        remapper = Remapper(src_descriptor, dst_descriptor, mapping_filename)
 
-        remapper.build_mapping_file(method=method, mpiTasks=mpi_tasks,
-                                    tempdir=mapping_directory, logger=logger,
-                                    esmf_parallel_exec=parallel_executable)
+        remapper = Remapper(
+            ntasks=mpi_tasks,
+            map_filename=mapping_filename,
+            method=method,
+            src_descriptor=src_descriptor,
+            dst_descriptor=dst_descriptor,
+            parallel_exec=parallel_executable,
+        )
+
+        remapper.build_map(logger=logger)
         logger.info('done.')
 
         field = 'velocityTidalRMS'

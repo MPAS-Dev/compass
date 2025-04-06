@@ -133,17 +133,17 @@ class RemapTopography(Step):
 
         config = self.config
         section = config['remap_topography']
-        expandDist = section.getfloat('expandDist')
-        expandFactor = section.getfloat('expandFactor')
+        expand_dist = section.getfloat('expand_dist')
+        expand_factor = section.getfloat('expand_factor')
 
         descriptor = MpasCellMeshDescriptor(
-            fileName='base_mesh.nc',
-            meshName=self.mesh_name,
+            filename='base_mesh.nc',
+            mesh_name=self.mesh_name,
         )
         descriptor.to_scrip(
             'target.scrip.nc',
-            expandDist=expandDist,
-            expandFactor=expandFactor,
+            expand_dist=expand_dist,
+            expand_factor=expand_factor,
         )
 
         logger.info('  Done.')

@@ -174,15 +174,17 @@ class ExtractRegion(Step):
             mapping_filename = os.path.join(tmpdir, 'map_src_to_dst_nstd.nc')
 
             logger.info(f'Creating the mapping file {mapping_filename}...')
-            remapper = Remapper(in_descriptor, out_descriptor,
-                                mapping_filename)
-
             parallel_executable = config.get('parallel',
                                              'parallel_executable')
-            remapper.build_mapping_file(method='neareststod',
-                                        mpiTasks=self.ntasks,
-                                        tempdir=self.work_dir, logger=logger,
-                                        esmf_parallel_exec=parallel_executable)  # noqa
+            remapper = Remapper(
+                ntasks=self.ntasks,
+                map_filename=mapping_filename,
+                method='neareststod',
+                src_descriptor=in_descriptor,
+                dst_descriptor=out_descriptor,
+                parallel_exec=parallel_executable,
+            )
+            remapper.build_map(logger=logger)
             logger.info('done.')
 
             logger.info('Remapping mesh file...')

@@ -135,8 +135,8 @@ class RemapIcebergClimatology(FilesForE3SMStep):
 
         ds.to_netcdf(monotonic_filename)
         logger.info('Creating the source grid descriptor...')
-        src_descriptor = LatLonGridDescriptor.read(fileName=monotonic_filename)
-        src_mesh_name = src_descriptor.meshName
+        src_descriptor = LatLonGridDescriptor.read(filename=monotonic_filename)
+        src_mesh_name = src_descriptor.mesh_name
 
         logger.info('Creating the destination MPAS mesh descriptor...')
         dst_descriptor = MpasCellMeshDescriptor(mesh_filename, mesh_name)
@@ -145,18 +145,25 @@ class RemapIcebergClimatology(FilesForE3SMStep):
             f'{mapping_directory}/map_{src_mesh_name}_to_{mesh_name}_{method}.nc'  # noqa: E501
 
         logger.info(f'Creating the mapping file {mapping_filename}...')
-        remapper = Remapper(src_descriptor, dst_descriptor, mapping_filename)
 
-        remapper.build_mapping_file(method=method, mpiTasks=mpi_tasks,
-                                    tempdir=mapping_directory, logger=logger,
-                                    esmf_parallel_exec=parallel_executable)
+        remapper = Remapper(
+            ntasks=mpi_tasks,
+            map_filename=mapping_filename,
+            method=method,
+            src_descriptor=src_descriptor,
+            dst_descriptor=dst_descriptor,
+            parallel_exec=parallel_executable,
+        )
+
+        remapper.build_map(logger=logger)
 
         logger.info('Remapping...')
         name, ext = os.path.splitext(out_filename)
         remap_filename = f'{name}_after_remap{ext}'
-        remapper.remap_file(inFileName=monotonic_filename,
-                            outFileName=remap_filename,
-                            logger=logger)
+        remapper.ncremap(
+            in_filename=monotonic_filename,
+            out_filename=remap_filename,
+            logger=logger)
 
         ds = xr.open_dataset(remap_filename)
         logger.info('Removing lat/lon vertex variables...')
@@ -164,7 +171,6 @@ class RemapIcebergClimatology(FilesForE3SMStep):
         ds = ds.drop_vars(drop)
         logger.info('Renaming dimensions and variables...')
         rename = dict(
-            ncol='nCells',
             month='Time',
             Icb_flux='bergFreshwaterFluxData')
         ds = ds.rename(rename)
