@@ -1,7 +1,6 @@
 import os
 
 import xarray
-from mpas_tools.io import write_netcdf
 
 from compass.io import symlink
 from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step import (  # noqa: E501
@@ -54,7 +53,7 @@ class OceanInitialCondition(FilesForE3SMStep):
             ds.load()
             if 'xtime' in ds.data_vars:
                 ds = ds.drop_vars('xtime')
-            write_netcdf(ds, dest_filename)
+            self.write_netcdf(ds, dest_filename)
 
         if self.add_metadata:
             add_mesh_and_init_metadata([dest_filename], self.config,

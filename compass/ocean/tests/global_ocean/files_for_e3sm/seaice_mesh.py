@@ -1,7 +1,6 @@
 import os
 
 import xarray as xr
-from mpas_tools.io import write_netcdf
 
 from compass.io import symlink
 from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step import (  # noqa: E501
@@ -43,7 +42,7 @@ class SeaiceMesh(FilesForE3SMStep):
             keep_vars = self.mesh_vars
             ds = ds[keep_vars]
             ds.load()
-            write_netcdf(ds, dest_filename)
+            self.write_netcdf(ds, dest_filename)
 
         symlink(os.path.abspath(dest_filename),
                 f'{self.seaice_mesh_dir}/{dest_filename}')
