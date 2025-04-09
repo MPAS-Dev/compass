@@ -97,9 +97,9 @@ def _make_analysis_lat_lon_map(config, mesh_name, ntasks, logger):
     lon_res = config.getfloat('files_for_e3sm', 'comparisonLonResolution')
 
     # modify the resolution of the global lat-lon grid as desired
-    out_descriptor = get_lat_lon_descriptor(dLon=lat_res,
-                                            dLat=lon_res)
-    out_grid_name = out_descriptor.meshName
+    out_descriptor = get_lat_lon_descriptor(dlon=lat_res,
+                                            dlat=lon_res)
+    out_grid_name = out_descriptor.mesh_name
 
     _make_mapping_file(mesh_name, out_grid_name, mesh_filename, out_descriptor,
                        ntasks, config, logger)
@@ -210,19 +210,27 @@ def _make_mapping_file(mesh_name, out_grid_name, mesh_filename, out_descriptor,
 
     mapping_file_name = f'map_{mesh_name}_to_{out_grid_name}_bilinear.nc'
 
-    remapper = Remapper(in_descriptor, out_descriptor, mapping_file_name)
-
-    remapper.build_mapping_file(method='bilinear', mpiTasks=ntasks,
-                                tempdir='.', logger=logger,
-                                esmf_parallel_exec=parallel_executable)
+    remapper = Remapper(
+        ntasks=ntasks,
+        map_filename=mapping_file_name,
+        method='bilinear',
+        src_descriptor=in_descriptor,
+        dst_descriptor=out_descriptor,
+        parallel_exec=parallel_executable,
+    )
+    remapper.build_map(logger=logger)
 
     # now the same on vertices (e.g. for streamfunctions)
     in_descriptor = MpasVertexMeshDescriptor(mesh_filename, mesh_name)
     mapping_file_name = \
         f'map_{mesh_name}_vertices_to_{out_grid_name}_bilinear.nc'
 
-    remapper = Remapper(in_descriptor, out_descriptor, mapping_file_name)
-
-    remapper.build_mapping_file(method='bilinear', mpiTasks=ntasks,
-                                tempdir='.', logger=logger,
-                                esmf_parallel_exec=parallel_executable)
+    remapper = Remapper(
+        ntasks=ntasks,
+        map_filename=mapping_file_name,
+        method='bilinear',
+        src_descriptor=in_descriptor,
+        dst_descriptor=out_descriptor,
+        parallel_exec=parallel_executable,
+    )
+    remapper.build_map(logger=logger)

@@ -88,7 +88,7 @@ the test case.
     # nstd weight file and then uses ncremap to perform remapping.
     # This method supports interpolating ancillary files (below)
     # but likely needs to be run on a compute node and is more fragile.
-    # 'mali_interp' uses the MALI interpolation script interpolate_to_mpasli_grid.py
+    # 'mali_interp' uses the MALI interpolation script interpolate_to_mpasli_grid
     # This method does not support ancillary files but may be more robust
     # and can likely be run quickly on a login node.
     interp_method = ncremap

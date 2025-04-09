@@ -134,13 +134,10 @@ class RemapSeaSurfaceSalinityRestoring(FilesForE3SMStep):
         self.write_netcdf(ds_out, 'expandDist.nc')
 
         descriptor = MpasCellMeshDescriptor(
-            fileName=target_mesh_filename,
-            meshName=mesh_name,
+            filename=target_mesh_filename,
+            mesh_name=mesh_name,
         )
-        descriptor.to_scrip(
-            scrip_filename,
-            expandDist=expand_dist
-        )
+        descriptor.to_scrip(scrip_filename, expand_dist=expand_dist)
 
         logger.info('  Done.')
         return scrip_filename
@@ -229,7 +226,6 @@ class RemapSeaSurfaceSalinityRestoring(FilesForE3SMStep):
         drop = [var for var in ds if 'nv' in ds[var].dims]
         ds = ds.drop_vars(drop)
         logger.info('Renaming dimensions and variables...')
-        rename = dict(ncol='nCells',
-                      SALT='surfaceSalinityMonthlyClimatologyValue')
+        rename = dict(SALT='surfaceSalinityMonthlyClimatologyValue')
         ds = ds.rename(rename)
         self.write_netcdf(ds, out_filename)

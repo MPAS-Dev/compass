@@ -181,7 +181,7 @@ def remap_paolo(in_filename, base_mesh_filename, culled_mesh_filename,
 
     logger.info('Creating the source grid descriptor...')
     in_descriptor = ProjectionGridDescriptor.create(
-        projection=projection, x=x.values, y=y.values, meshName=in_grid_name)
+        projection=projection, x=x.values, y=y.values, mesh_name=in_grid_name)
     logger.info('done.')
 
     out_descriptor = MpasCellMeshDescriptor(base_mesh_filename, mesh_name)
@@ -190,16 +190,22 @@ def remap_paolo(in_filename, base_mesh_filename, culled_mesh_filename,
         f'{mapping_directory}/map_{in_grid_name}_to_{mesh_name}_base.nc'
 
     logger.info(f'Creating the mapping file {mapping_filename}...')
-    remapper = Remapper(in_descriptor, out_descriptor, mapping_filename)
 
-    remapper.build_mapping_file(method=method, mpiTasks=mpi_tasks,
-                                tempdir=mapping_directory, logger=logger,
-                                esmf_parallel_exec=parallel_executable,
-                                include_logs=True)
+    remapper = Remapper(
+        ntasks=mpi_tasks,
+        map_filename=mapping_filename,
+        method=method,
+        src_descriptor=in_descriptor,
+        dst_descriptor=out_descriptor,
+        parallel_exec=parallel_executable,
+    )
+
+    remapper.build_map(logger=logger)
+
     logger.info('done.')
 
-    dx = np.abs(in_descriptor.xCorner[1:] - in_descriptor.xCorner[:-1])
-    dy = np.abs(in_descriptor.yCorner[1:] - in_descriptor.yCorner[:-1])
+    dx = np.abs(in_descriptor.x_corner[1:] - in_descriptor.x_corner[:-1])
+    dy = np.abs(in_descriptor.y_corner[1:] - in_descriptor.y_corner[:-1])
     dx, dy = np.meshgrid(dx, dy)
     planar_area = xr.DataArray(dims=('y', 'x'), data=dx * dy)
 
@@ -251,8 +257,8 @@ def remap_paolo(in_filename, base_mesh_filename, culled_mesh_filename,
     logger.info('')
 
     logger.info('Remapping...')
-    ds_remap = remapper.remap(
-        ds, renormalizationThreshold=renormalization_threshold)
+    ds_remap = remapper.remap_numpy(
+        ds, renormalization_threshold=renormalization_threshold)
     logger.info('done.')
     logger.info('')
 
@@ -388,7 +394,7 @@ def remap_adusumilli(in_filename, base_mesh_filename, culled_mesh_filename,
 
     logger.info('Creating the source grid descriptor...')
     in_descriptor = ProjectionGridDescriptor.create(
-        projection=projection, x=x, y=y, meshName=in_grid_name)
+        projection=projection, x=x, y=y, mesh_name=in_grid_name)
     logger.info('done.')
 
     logger.info('Creating the source xarray dataset...')
@@ -419,16 +425,23 @@ def remap_adusumilli(in_filename, base_mesh_filename, culled_mesh_filename,
         f'{mapping_directory}/map_{in_grid_name}_to_{mesh_name}_base.nc'
 
     logger.info(f'Creating the mapping file {mapping_filename}...')
-    remapper = Remapper(in_descriptor, out_descriptor, mapping_filename)
 
-    remapper.build_mapping_file(method=method, mpiTasks=mpi_tasks,
-                                tempdir=mapping_directory, logger=logger,
-                                esmf_parallel_exec=parallel_executable)
+    remapper = Remapper(
+        ntasks=mpi_tasks,
+        map_filename=mapping_filename,
+        method=method,
+        src_descriptor=in_descriptor,
+        dst_descriptor=out_descriptor,
+        parallel_exec=parallel_executable,
+    )
+
+    remapper.build_map(logger=logger)
+
     logger.info('done.')
 
     logger.info('Remapping...')
-    ds_remap = remapper.remap(
-        ds, renormalizationThreshold=renormalization_threshold)
+    ds_remap = remapper.remap_numpy(
+        ds, renormalization_threshold=renormalization_threshold)
     logger.info('done.')
 
     if map_culled_to_base_filename is None:

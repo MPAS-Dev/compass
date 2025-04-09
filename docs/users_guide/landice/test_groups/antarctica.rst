@@ -73,19 +73,19 @@ the mesh generation options are adjusted through the config file.
     # path to directory containing BedMachine and Measures datasets
     # (default value is for Perlmutter)
     data_path = /global/cfs/cdirs/fanssie/standard_datasets/AIS_datasets
-    
+
     # filename of the BedMachine thickness and bedTopography dataset
     # (default value is for Perlmutter)
     bedmachine_filename = BedMachineAntarctica_2020-07-15_v02_edits_floodFill_extrap_fillVostok.nc
-    
+
     # filename of the MEASURES ice velocity dataset
     # (default value is for Perlmutter)
     measures_filename = antarctica_ice_velocity_450m_v2_edits_extrap.nc
-    
+
     # projection of the source datasets, according to the dictionary keys
-    # create_SCRIP_file_from_planar_rectangular_grid.py from MPAS_Tools
+    # create_scrip_file_from_planar_rectangular_grid from MPAS_Tools
     src_proj = ais-bedmap2
-    
+
     # number of processors to use for ESMF_RegridWeightGen
     nProcs = 128
 

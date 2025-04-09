@@ -156,10 +156,15 @@ def _make_mapping_file(in_mesh_filename, in_mesh_name, out_mesh_filename,
     in_descriptor = MpasCellMeshDescriptor(in_mesh_filename, in_mesh_name)
     out_descriptor = MpasCellMeshDescriptor(out_mesh_filename, out_mesh_name)
 
-    remapper = Remapper(in_descriptor, out_descriptor, mapping_file_name)
+    remapper = Remapper(
+        ntasks=ntasks,
+        map_filename=mapping_file_name,
+        method=method,
+        src_descriptor=in_descriptor,
+        dst_descriptor=out_descriptor,
+        parallel_exec=parallel_executable,
+    )
 
-    remapper.build_mapping_file(method=method, mpiTasks=ntasks,
-                                tempdir='.', logger=logger,
-                                esmf_parallel_exec=parallel_executable)
+    remapper.build_map(logger=logger)
 
     return mapping_file_name

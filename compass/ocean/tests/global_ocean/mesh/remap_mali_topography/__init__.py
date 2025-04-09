@@ -93,16 +93,16 @@ class RemapMaliTopography(RemapTopography):
     def _remap_mali_topo(self):
         in_mesh_name = self.mali_ais_topo
         in_descriptor = MpasCellMeshDescriptor(
-            fileName='mali_topography_orig.nc',
-            meshName=in_mesh_name)
+            filename='mali_topography_orig.nc',
+            mesh_name=in_mesh_name)
         in_descriptor.format = 'NETCDF3_64BIT'
         in_descriptor.to_scrip('mali.scrip.nc')
         self._partition_scrip_file('mali.scrip.nc')
 
         out_mesh_name = self.mesh_name
         out_descriptor = MpasCellMeshDescriptor(
-            fileName='base_mesh.nc',
-            meshName=out_mesh_name)
+            filename='base_mesh.nc',
+            mesh_name=out_mesh_name)
         out_descriptor.format = 'NETCDF3_64BIT'
         out_descriptor.to_scrip('mpaso.scrip.nc')
         self._partition_scrip_file('mpaso.scrip.nc')

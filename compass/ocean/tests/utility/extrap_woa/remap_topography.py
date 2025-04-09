@@ -66,26 +66,34 @@ class RemapTopography(Step):
 
         method = config.get('extrap_woa', 'remap_method')
 
-        in_descriptor = LatLonGridDescriptor.read(fileName='topography.nc',
+        in_descriptor = LatLonGridDescriptor.read(filename='topography.nc',
                                                   lonVarName='lon',
                                                   latVarName='lat')
 
-        in_mesh_name = in_descriptor.meshName
+        in_mesh_name = in_descriptor.mesh_name
 
-        out_descriptor = LatLonGridDescriptor.read(fileName='woa.nc',
+        out_descriptor = LatLonGridDescriptor.read(filename='woa.nc',
                                                    lonVarName='lon',
                                                    latVarName='lat')
 
-        out_mesh_name = out_descriptor.meshName
+        out_mesh_name = out_descriptor.mesh_name
 
         mapping_file_name = \
             f'map_{in_mesh_name}_to_{out_mesh_name}_{method}.nc'
-        remapper = Remapper(in_descriptor, out_descriptor, mapping_file_name)
 
-        remapper.build_mapping_file(method=method, mpiTasks=self.ntasks,
-                                    tempdir='.', logger=logger,
-                                    esmf_parallel_exec=parallel_executable)
+        remapper = Remapper(
+            ntasks=self.ntasks,
+            map_filename=mapping_file_name,
+            method=method,
+            src_descriptor=in_descriptor,
+            dst_descriptor=out_descriptor,
+            parallel_exec=parallel_executable,
+        )
 
-        remapper.remap_file(inFileName='topography.nc',
-                            outFileName='topography_remapped.nc',
-                            logger=logger)
+        remapper.build_map(logger=logger)
+
+        remapper.ncremap(
+            in_filename='topography.nc',
+            out_filename='topography_remapped.nc',
+            logger=logger
+        )
