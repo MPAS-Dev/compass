@@ -277,11 +277,16 @@
     <span class="n">in_descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span><span class="n">in_mesh_filename</span><span class="p">,</span> <span class="n">in_mesh_name</span><span class="p">)</span>
     <span class="n">out_descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span><span class="n">out_mesh_filename</span><span class="p">,</span> <span class="n">out_mesh_name</span><span class="p">)</span>
 
-    <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span><span class="n">in_descriptor</span><span class="p">,</span> <span class="n">out_descriptor</span><span class="p">,</span> <span class="n">mapping_file_name</span><span class="p">)</span>
+    <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span>
+        <span class="n">ntasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span>
+        <span class="n">map_filename</span><span class="o">=</span><span class="n">mapping_file_name</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+        <span class="n">src_descriptor</span><span class="o">=</span><span class="n">in_descriptor</span><span class="p">,</span>
+        <span class="n">dst_descriptor</span><span class="o">=</span><span class="n">out_descriptor</span><span class="p">,</span>
+        <span class="n">parallel_exec</span><span class="o">=</span><span class="n">parallel_executable</span><span class="p">,</span>
+    <span class="p">)</span>
 
-    <span class="n">remapper</span><span class="o">.</span><span class="n">build_mapping_file</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">mpiTasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span>
-                                <span class="n">tempdir</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
-                                <span class="n">esmf_parallel_exec</span><span class="o">=</span><span class="n">parallel_executable</span><span class="p">)</span>
+    <span class="n">remapper</span><span class="o">.</span><span class="n">build_map</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">mapping_file_name</span>
 </pre></div>

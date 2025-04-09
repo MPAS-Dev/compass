@@ -109,12 +109,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice.tests.enthalpy_benchmark.setup_mesh</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">netCDF4</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dataset</span> <span class="k">as</span> <span class="n">NetCDFFile</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.planar_hex</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_planar_hex_mesh</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.mesh.conversion</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">cull</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_call</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.mesh.conversion</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">cull</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.planar_hex</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_planar_hex_mesh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">netCDF4</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dataset</span> <span class="k">as</span> <span class="n">NetCDFFile</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_graph_file</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
@@ -167,7 +166,7 @@
         <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;mpas_grid.nc&#39;</span><span class="p">)</span>
 
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;create_landice_grid_from_generic_MPAS_grid.py&#39;</span><span class="p">,</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;create_landice_grid_from_generic_mpas_grid&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas_grid.nc&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span>

@@ -191,29 +191,37 @@
 
         <span class="n">method</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;extrap_woa&#39;</span><span class="p">,</span> <span class="s1">&#39;remap_method&#39;</span><span class="p">)</span>
 
-        <span class="n">in_descriptor</span> <span class="o">=</span> <span class="n">LatLonGridDescriptor</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">,</span>
+        <span class="n">in_descriptor</span> <span class="o">=</span> <span class="n">LatLonGridDescriptor</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">,</span>
                                                   <span class="n">lonVarName</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span>
                                                   <span class="n">latVarName</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">)</span>
 
-        <span class="n">in_mesh_name</span> <span class="o">=</span> <span class="n">in_descriptor</span><span class="o">.</span><span class="n">meshName</span>
+        <span class="n">in_mesh_name</span> <span class="o">=</span> <span class="n">in_descriptor</span><span class="o">.</span><span class="n">mesh_name</span>
 
-        <span class="n">out_descriptor</span> <span class="o">=</span> <span class="n">LatLonGridDescriptor</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;woa.nc&#39;</span><span class="p">,</span>
+        <span class="n">out_descriptor</span> <span class="o">=</span> <span class="n">LatLonGridDescriptor</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;woa.nc&#39;</span><span class="p">,</span>
                                                    <span class="n">lonVarName</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span>
                                                    <span class="n">latVarName</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">)</span>
 
-        <span class="n">out_mesh_name</span> <span class="o">=</span> <span class="n">out_descriptor</span><span class="o">.</span><span class="n">meshName</span>
+        <span class="n">out_mesh_name</span> <span class="o">=</span> <span class="n">out_descriptor</span><span class="o">.</span><span class="n">mesh_name</span>
 
         <span class="n">mapping_file_name</span> <span class="o">=</span> \
             <span class="sa">f</span><span class="s1">&#39;map_</span><span class="si">{</span><span class="n">in_mesh_name</span><span class="si">}</span><span class="s1">_to_</span><span class="si">{</span><span class="n">out_mesh_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">.nc&#39;</span>
-        <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span><span class="n">in_descriptor</span><span class="p">,</span> <span class="n">out_descriptor</span><span class="p">,</span> <span class="n">mapping_file_name</span><span class="p">)</span>
 
-        <span class="n">remapper</span><span class="o">.</span><span class="n">build_mapping_file</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">mpiTasks</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="p">,</span>
-                                    <span class="n">tempdir</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
-                                    <span class="n">esmf_parallel_exec</span><span class="o">=</span><span class="n">parallel_executable</span><span class="p">)</span>
+        <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span>
+            <span class="n">ntasks</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="p">,</span>
+            <span class="n">map_filename</span><span class="o">=</span><span class="n">mapping_file_name</span><span class="p">,</span>
+            <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+            <span class="n">src_descriptor</span><span class="o">=</span><span class="n">in_descriptor</span><span class="p">,</span>
+            <span class="n">dst_descriptor</span><span class="o">=</span><span class="n">out_descriptor</span><span class="p">,</span>
+            <span class="n">parallel_exec</span><span class="o">=</span><span class="n">parallel_executable</span><span class="p">,</span>
+        <span class="p">)</span>
 
-        <span class="n">remapper</span><span class="o">.</span><span class="n">remap_file</span><span class="p">(</span><span class="n">inFileName</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">,</span>
-                            <span class="n">outFileName</span><span class="o">=</span><span class="s1">&#39;topography_remapped.nc&#39;</span><span class="p">,</span>
-                            <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
+        <span class="n">remapper</span><span class="o">.</span><span class="n">build_map</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+        <span class="n">remapper</span><span class="o">.</span><span class="n">ncremap</span><span class="p">(</span>
+            <span class="n">in_filename</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">,</span>
+            <span class="n">out_filename</span><span class="o">=</span><span class="s1">&#39;topography_remapped.nc&#39;</span><span class="p">,</span>
+            <span class="n">logger</span><span class="o">=</span><span class="n">logger</span>
+        <span class="p">)</span></div>
 </div>
 
 </pre></div>

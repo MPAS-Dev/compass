@@ -218,9 +218,9 @@
     <span class="n">lon_res</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span> <span class="s1">&#39;comparisonLonResolution&#39;</span><span class="p">)</span>
 
     <span class="c1"># modify the resolution of the global lat-lon grid as desired</span>
-    <span class="n">out_descriptor</span> <span class="o">=</span> <span class="n">get_lat_lon_descriptor</span><span class="p">(</span><span class="n">dLon</span><span class="o">=</span><span class="n">lat_res</span><span class="p">,</span>
-                                            <span class="n">dLat</span><span class="o">=</span><span class="n">lon_res</span><span class="p">)</span>
-    <span class="n">out_grid_name</span> <span class="o">=</span> <span class="n">out_descriptor</span><span class="o">.</span><span class="n">meshName</span>
+    <span class="n">out_descriptor</span> <span class="o">=</span> <span class="n">get_lat_lon_descriptor</span><span class="p">(</span><span class="n">dlon</span><span class="o">=</span><span class="n">lat_res</span><span class="p">,</span>
+                                            <span class="n">dlat</span><span class="o">=</span><span class="n">lon_res</span><span class="p">)</span>
+    <span class="n">out_grid_name</span> <span class="o">=</span> <span class="n">out_descriptor</span><span class="o">.</span><span class="n">mesh_name</span>
 
     <span class="n">_make_mapping_file</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">out_grid_name</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span> <span class="n">out_descriptor</span><span class="p">,</span>
                        <span class="n">ntasks</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
@@ -331,22 +331,30 @@
 
     <span class="n">mapping_file_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;map_</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">_to_</span><span class="si">{</span><span class="n">out_grid_name</span><span class="si">}</span><span class="s1">_bilinear.nc&#39;</span>
 
-    <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span><span class="n">in_descriptor</span><span class="p">,</span> <span class="n">out_descriptor</span><span class="p">,</span> <span class="n">mapping_file_name</span><span class="p">)</span>
-
-    <span class="n">remapper</span><span class="o">.</span><span class="n">build_mapping_file</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;bilinear&#39;</span><span class="p">,</span> <span class="n">mpiTasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span>
-                                <span class="n">tempdir</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
-                                <span class="n">esmf_parallel_exec</span><span class="o">=</span><span class="n">parallel_executable</span><span class="p">)</span>
+    <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span>
+        <span class="n">ntasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span>
+        <span class="n">map_filename</span><span class="o">=</span><span class="n">mapping_file_name</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bilinear&#39;</span><span class="p">,</span>
+        <span class="n">src_descriptor</span><span class="o">=</span><span class="n">in_descriptor</span><span class="p">,</span>
+        <span class="n">dst_descriptor</span><span class="o">=</span><span class="n">out_descriptor</span><span class="p">,</span>
+        <span class="n">parallel_exec</span><span class="o">=</span><span class="n">parallel_executable</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">remapper</span><span class="o">.</span><span class="n">build_map</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
     <span class="c1"># now the same on vertices (e.g. for streamfunctions)</span>
     <span class="n">in_descriptor</span> <span class="o">=</span> <span class="n">MpasVertexMeshDescriptor</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">)</span>
     <span class="n">mapping_file_name</span> <span class="o">=</span> \
         <span class="sa">f</span><span class="s1">&#39;map_</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">_vertices_to_</span><span class="si">{</span><span class="n">out_grid_name</span><span class="si">}</span><span class="s1">_bilinear.nc&#39;</span>
 
-    <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span><span class="n">in_descriptor</span><span class="p">,</span> <span class="n">out_descriptor</span><span class="p">,</span> <span class="n">mapping_file_name</span><span class="p">)</span>
-
-    <span class="n">remapper</span><span class="o">.</span><span class="n">build_mapping_file</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;bilinear&#39;</span><span class="p">,</span> <span class="n">mpiTasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span>
-                                <span class="n">tempdir</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
-                                <span class="n">esmf_parallel_exec</span><span class="o">=</span><span class="n">parallel_executable</span><span class="p">)</span>
+    <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span>
+        <span class="n">ntasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span>
+        <span class="n">map_filename</span><span class="o">=</span><span class="n">mapping_file_name</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bilinear&#39;</span><span class="p">,</span>
+        <span class="n">src_descriptor</span><span class="o">=</span><span class="n">in_descriptor</span><span class="p">,</span>
+        <span class="n">dst_descriptor</span><span class="o">=</span><span class="n">out_descriptor</span><span class="p">,</span>
+        <span class="n">parallel_exec</span><span class="o">=</span><span class="n">parallel_executable</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">remapper</span><span class="o">.</span><span class="n">build_map</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 </pre></div>
 
            </div>

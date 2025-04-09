@@ -216,16 +216,16 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_remap_mali_topo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">in_mesh_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mali_ais_topo</span>
         <span class="n">in_descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span>
-            <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;mali_topography_orig.nc&#39;</span><span class="p">,</span>
-            <span class="n">meshName</span><span class="o">=</span><span class="n">in_mesh_name</span><span class="p">)</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mali_topography_orig.nc&#39;</span><span class="p">,</span>
+            <span class="n">mesh_name</span><span class="o">=</span><span class="n">in_mesh_name</span><span class="p">)</span>
         <span class="n">in_descriptor</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;NETCDF3_64BIT&#39;</span>
         <span class="n">in_descriptor</span><span class="o">.</span><span class="n">to_scrip</span><span class="p">(</span><span class="s1">&#39;mali.scrip.nc&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_partition_scrip_file</span><span class="p">(</span><span class="s1">&#39;mali.scrip.nc&#39;</span><span class="p">)</span>
 
         <span class="n">out_mesh_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_name</span>
         <span class="n">out_descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span>
-            <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span>
-            <span class="n">meshName</span><span class="o">=</span><span class="n">out_mesh_name</span><span class="p">)</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span>
+            <span class="n">mesh_name</span><span class="o">=</span><span class="n">out_mesh_name</span><span class="p">)</span>
         <span class="n">out_descriptor</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;NETCDF3_64BIT&#39;</span>
         <span class="n">out_descriptor</span><span class="o">.</span><span class="n">to_scrip</span><span class="p">(</span><span class="s1">&#39;mpaso.scrip.nc&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_partition_scrip_file</span><span class="p">(</span><span class="s1">&#39;mpaso.scrip.nc&#39;</span><span class="p">)</span>

@@ -50,12 +50,10 @@ controlled by the following config options:
     # the density of land ice from MALI (kg/m^3)
     ice_density = 910.0
 
-    # smoothing parameters
-    # no smoothing (required for esmf):
-    #     expandDist = 0   [m]
-    #     expandFactor = 1 [cell fraction]
-    expandDist = 0
-    expandFactor = 1
+    # smoothing parameters (no smoothing by default)
+    expand_dist = 0
+    expand_factor = 1
+
 
 The topography and source SCRIP filenames should be something from the ocean
 `bathymetry database <https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-ocean/bathymetry_database/>`_.

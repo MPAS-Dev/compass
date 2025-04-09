@@ -252,9 +252,12 @@
         <span class="n">in_grid_name</span> <span class="o">=</span> <span class="s1">&#39;S71W70_CATS_ustar&#39;</span>
 
         <span class="n">src_descriptor</span> <span class="o">=</span> <span class="n">ProjectionGridDescriptor</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
-            <span class="n">projection</span><span class="o">=</span><span class="n">projection_in</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="n">in_filename</span><span class="p">,</span>
-            <span class="n">meshName</span><span class="o">=</span><span class="n">in_grid_name</span><span class="p">,</span> <span class="n">xVarName</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">yVarName</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
-        <span class="n">src_mesh_name</span> <span class="o">=</span> <span class="n">src_descriptor</span><span class="o">.</span><span class="n">meshName</span>
+            <span class="n">projection</span><span class="o">=</span><span class="n">projection_in</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="n">in_filename</span><span class="p">,</span>
+            <span class="n">mesh_name</span><span class="o">=</span><span class="n">in_grid_name</span><span class="p">,</span>
+            <span class="n">x_var_name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span>
+            <span class="n">y_var_name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+        <span class="n">src_mesh_name</span> <span class="o">=</span> <span class="n">src_descriptor</span><span class="o">.</span><span class="n">mesh_name</span>
 
         <span class="n">dst_descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">)</span>
 
@@ -262,11 +265,17 @@
             <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mapping_directory</span><span class="si">}</span><span class="s1">/map_</span><span class="si">{</span><span class="n">src_mesh_name</span><span class="si">}</span><span class="s1">_to_</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">.nc&#39;</span>  <span class="c1"># noqa: E501</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Creating the mapping file </span><span class="si">{</span><span class="n">mapping_filename</span><span class="si">}</span><span class="s1">...&#39;</span><span class="p">)</span>
-        <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span><span class="n">src_descriptor</span><span class="p">,</span> <span class="n">dst_descriptor</span><span class="p">,</span> <span class="n">mapping_filename</span><span class="p">)</span>
 
-        <span class="n">remapper</span><span class="o">.</span><span class="n">build_mapping_file</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">mpiTasks</span><span class="o">=</span><span class="n">mpi_tasks</span><span class="p">,</span>
-                                    <span class="n">tempdir</span><span class="o">=</span><span class="n">mapping_directory</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
-                                    <span class="n">esmf_parallel_exec</span><span class="o">=</span><span class="n">parallel_executable</span><span class="p">)</span>
+        <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span>
+            <span class="n">ntasks</span><span class="o">=</span><span class="n">mpi_tasks</span><span class="p">,</span>
+            <span class="n">map_filename</span><span class="o">=</span><span class="n">mapping_filename</span><span class="p">,</span>
+            <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+            <span class="n">src_descriptor</span><span class="o">=</span><span class="n">src_descriptor</span><span class="p">,</span>
+            <span class="n">dst_descriptor</span><span class="o">=</span><span class="n">dst_descriptor</span><span class="p">,</span>
+            <span class="n">parallel_exec</span><span class="o">=</span><span class="n">parallel_executable</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">remapper</span><span class="o">.</span><span class="n">build_map</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;done.&#39;</span><span class="p">)</span>
 
         <span class="n">field</span> <span class="o">=</span> <span class="s1">&#39;velocityTidalRMS&#39;</span>

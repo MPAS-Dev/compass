@@ -254,13 +254,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="s1">&#39;expandDist.nc&#39;</span><span class="p">)</span>
 
         <span class="n">descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span>
-            <span class="n">fileName</span><span class="o">=</span><span class="n">target_mesh_filename</span><span class="p">,</span>
-            <span class="n">meshName</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="n">target_mesh_filename</span><span class="p">,</span>
+            <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">descriptor</span><span class="o">.</span><span class="n">to_scrip</span><span class="p">(</span>
-            <span class="n">scrip_filename</span><span class="p">,</span>
-            <span class="n">expandDist</span><span class="o">=</span><span class="n">expand_dist</span>
-        <span class="p">)</span>
+        <span class="n">descriptor</span><span class="o">.</span><span class="n">to_scrip</span><span class="p">(</span><span class="n">scrip_filename</span><span class="p">,</span> <span class="n">expand_dist</span><span class="o">=</span><span class="n">expand_dist</span><span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Done.&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">scrip_filename</span>
@@ -349,8 +346,7 @@
         <span class="n">drop</span> <span class="o">=</span> <span class="p">[</span><span class="n">var</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">ds</span> <span class="k">if</span> <span class="s1">&#39;nv&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">[</span><span class="n">var</span><span class="p">]</span><span class="o">.</span><span class="n">dims</span><span class="p">]</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="n">drop</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Renaming dimensions and variables...&#39;</span><span class="p">)</span>
-        <span class="n">rename</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span>
-                      <span class="n">SALT</span><span class="o">=</span><span class="s1">&#39;surfaceSalinityMonthlyClimatologyValue&#39;</span><span class="p">)</span>
+        <span class="n">rename</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">SALT</span><span class="o">=</span><span class="s1">&#39;surfaceSalinityMonthlyClimatologyValue&#39;</span><span class="p">)</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">rename</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">)</span></div>
 

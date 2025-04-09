@@ -257,17 +257,17 @@
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">]</span>
-        <span class="n">expandDist</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;expandDist&#39;</span><span class="p">)</span>
-        <span class="n">expandFactor</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;expandFactor&#39;</span><span class="p">)</span>
+        <span class="n">expand_dist</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;expand_dist&#39;</span><span class="p">)</span>
+        <span class="n">expand_factor</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;expand_factor&#39;</span><span class="p">)</span>
 
         <span class="n">descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span>
-            <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span>
-            <span class="n">meshName</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_name</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span>
+            <span class="n">mesh_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_name</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">descriptor</span><span class="o">.</span><span class="n">to_scrip</span><span class="p">(</span>
             <span class="s1">&#39;target.scrip.nc&#39;</span><span class="p">,</span>
-            <span class="n">expandDist</span><span class="o">=</span><span class="n">expandDist</span><span class="p">,</span>
-            <span class="n">expandFactor</span><span class="o">=</span><span class="n">expandFactor</span><span class="p">,</span>
+            <span class="n">expand_dist</span><span class="o">=</span><span class="n">expand_dist</span><span class="p">,</span>
+            <span class="n">expand_factor</span><span class="o">=</span><span class="n">expand_factor</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Done.&#39;</span><span class="p">)</span>

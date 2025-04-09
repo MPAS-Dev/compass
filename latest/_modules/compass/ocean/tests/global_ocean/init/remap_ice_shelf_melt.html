@@ -304,7 +304,7 @@
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Creating the source grid descriptor...&#39;</span><span class="p">)</span>
     <span class="n">in_descriptor</span> <span class="o">=</span> <span class="n">ProjectionGridDescriptor</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-        <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">meshName</span><span class="o">=</span><span class="n">in_grid_name</span><span class="p">)</span>
+        <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="n">in_grid_name</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;done.&#39;</span><span class="p">)</span>
 
     <span class="n">out_descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span><span class="n">base_mesh_filename</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">)</span>
@@ -313,16 +313,22 @@
         <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mapping_directory</span><span class="si">}</span><span class="s1">/map_</span><span class="si">{</span><span class="n">in_grid_name</span><span class="si">}</span><span class="s1">_to_</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">_base.nc&#39;</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Creating the mapping file </span><span class="si">{</span><span class="n">mapping_filename</span><span class="si">}</span><span class="s1">...&#39;</span><span class="p">)</span>
-    <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span><span class="n">in_descriptor</span><span class="p">,</span> <span class="n">out_descriptor</span><span class="p">,</span> <span class="n">mapping_filename</span><span class="p">)</span>
 
-    <span class="n">remapper</span><span class="o">.</span><span class="n">build_mapping_file</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">mpiTasks</span><span class="o">=</span><span class="n">mpi_tasks</span><span class="p">,</span>
-                                <span class="n">tempdir</span><span class="o">=</span><span class="n">mapping_directory</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
-                                <span class="n">esmf_parallel_exec</span><span class="o">=</span><span class="n">parallel_executable</span><span class="p">,</span>
-                                <span class="n">include_logs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span>
+        <span class="n">ntasks</span><span class="o">=</span><span class="n">mpi_tasks</span><span class="p">,</span>
+        <span class="n">map_filename</span><span class="o">=</span><span class="n">mapping_filename</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+        <span class="n">src_descriptor</span><span class="o">=</span><span class="n">in_descriptor</span><span class="p">,</span>
+        <span class="n">dst_descriptor</span><span class="o">=</span><span class="n">out_descriptor</span><span class="p">,</span>
+        <span class="n">parallel_exec</span><span class="o">=</span><span class="n">parallel_executable</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">remapper</span><span class="o">.</span><span class="n">build_map</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;done.&#39;</span><span class="p">)</span>
 
-    <span class="n">dx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">in_descriptor</span><span class="o">.</span><span class="n">xCorner</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">in_descriptor</span><span class="o">.</span><span class="n">xCorner</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-    <span class="n">dy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">in_descriptor</span><span class="o">.</span><span class="n">yCorner</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">in_descriptor</span><span class="o">.</span><span class="n">yCorner</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">in_descriptor</span><span class="o">.</span><span class="n">x_corner</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">in_descriptor</span><span class="o">.</span><span class="n">x_corner</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">dy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">in_descriptor</span><span class="o">.</span><span class="n">y_corner</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">in_descriptor</span><span class="o">.</span><span class="n">y_corner</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
     <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">)</span>
     <span class="n">planar_area</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="n">dx</span> <span class="o">*</span> <span class="n">dy</span><span class="p">)</span>
 
@@ -374,8 +380,8 @@
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Remapping...&#39;</span><span class="p">)</span>
-    <span class="n">ds_remap</span> <span class="o">=</span> <span class="n">remapper</span><span class="o">.</span><span class="n">remap</span><span class="p">(</span>
-        <span class="n">ds</span><span class="p">,</span> <span class="n">renormalizationThreshold</span><span class="o">=</span><span class="n">renormalization_threshold</span><span class="p">)</span>
+    <span class="n">ds_remap</span> <span class="o">=</span> <span class="n">remapper</span><span class="o">.</span><span class="n">remap_numpy</span><span class="p">(</span>
+        <span class="n">ds</span><span class="p">,</span> <span class="n">renormalization_threshold</span><span class="o">=</span><span class="n">renormalization_threshold</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;done.&#39;</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 
@@ -514,7 +520,7 @@
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Creating the source grid descriptor...&#39;</span><span class="p">)</span>
     <span class="n">in_descriptor</span> <span class="o">=</span> <span class="n">ProjectionGridDescriptor</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-        <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">meshName</span><span class="o">=</span><span class="n">in_grid_name</span><span class="p">)</span>
+        <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="n">in_grid_name</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;done.&#39;</span><span class="p">)</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Creating the source xarray dataset...&#39;</span><span class="p">)</span>
@@ -545,16 +551,23 @@
         <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mapping_directory</span><span class="si">}</span><span class="s1">/map_</span><span class="si">{</span><span class="n">in_grid_name</span><span class="si">}</span><span class="s1">_to_</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">_base.nc&#39;</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Creating the mapping file </span><span class="si">{</span><span class="n">mapping_filename</span><span class="si">}</span><span class="s1">...&#39;</span><span class="p">)</span>
-    <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span><span class="n">in_descriptor</span><span class="p">,</span> <span class="n">out_descriptor</span><span class="p">,</span> <span class="n">mapping_filename</span><span class="p">)</span>
 
-    <span class="n">remapper</span><span class="o">.</span><span class="n">build_mapping_file</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">mpiTasks</span><span class="o">=</span><span class="n">mpi_tasks</span><span class="p">,</span>
-                                <span class="n">tempdir</span><span class="o">=</span><span class="n">mapping_directory</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
-                                <span class="n">esmf_parallel_exec</span><span class="o">=</span><span class="n">parallel_executable</span><span class="p">)</span>
+    <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span>
+        <span class="n">ntasks</span><span class="o">=</span><span class="n">mpi_tasks</span><span class="p">,</span>
+        <span class="n">map_filename</span><span class="o">=</span><span class="n">mapping_filename</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+        <span class="n">src_descriptor</span><span class="o">=</span><span class="n">in_descriptor</span><span class="p">,</span>
+        <span class="n">dst_descriptor</span><span class="o">=</span><span class="n">out_descriptor</span><span class="p">,</span>
+        <span class="n">parallel_exec</span><span class="o">=</span><span class="n">parallel_executable</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">remapper</span><span class="o">.</span><span class="n">build_map</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;done.&#39;</span><span class="p">)</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Remapping...&#39;</span><span class="p">)</span>
-    <span class="n">ds_remap</span> <span class="o">=</span> <span class="n">remapper</span><span class="o">.</span><span class="n">remap</span><span class="p">(</span>
-        <span class="n">ds</span><span class="p">,</span> <span class="n">renormalizationThreshold</span><span class="o">=</span><span class="n">renormalization_threshold</span><span class="p">)</span>
+    <span class="n">ds_remap</span> <span class="o">=</span> <span class="n">remapper</span><span class="o">.</span><span class="n">remap_numpy</span><span class="p">(</span>
+        <span class="n">ds</span><span class="p">,</span> <span class="n">renormalization_threshold</span><span class="o">=</span><span class="n">renormalization_threshold</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;done.&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">map_culled_to_base_filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
