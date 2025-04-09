@@ -116,7 +116,6 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">geometric_features</span><span class="w"> </span><span class="kn">import</span> <span class="n">GeometricFeatures</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">geometric_features.aggregation</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_aggregator_by_name</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_call</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.ocean.moc</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_moc_southern_boundary_transects</span>
 
@@ -162,176 +161,186 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 
-        <span class="n">make_diagnostics_files</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_short_name</span><span class="p">,</span>
-                               <span class="bp">self</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">,</span>
-                               <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span><span class="p">)</span></div>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">make_diagnostics_files</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_short_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span><span class="p">)</span></div>
 
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_diagnostics_files</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">with_ice_shelf_cavities</span><span class="p">,</span>
+            <span class="n">cpus_per_task</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run this step of the testcase</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">make_diagnostics_files</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">with_ice_shelf_cavities</span><span class="p">,</span>
-                           <span class="n">cpus_per_task</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Run this step of the testcase</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        logger : logging.Logger</span>
+<span class="sd">            A logger for output from the step</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    logger : logging.Logger</span>
-<span class="sd">        A logger for output from the step</span>
+<span class="sd">        mesh_short_name : str</span>
+<span class="sd">            The E3SM short name of the mesh</span>
 
-<span class="sd">    mesh_short_name : str</span>
-<span class="sd">        The E3SM short name of the mesh</span>
+<span class="sd">        with_ice_shelf_cavities : bool</span>
+<span class="sd">            Whether the mesh has ice-shelf cavities</span>
 
-<span class="sd">    with_ice_shelf_cavities : bool</span>
-<span class="sd">        Whether the mesh has ice-shelf cavities</span>
+<span class="sd">        cpus_per_task : int</span>
+<span class="sd">            The number of cores to use to build masks</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-<span class="sd">    cpus_per_task : int</span>
-<span class="sd">        The number of cores to use to build masks</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+        <span class="n">mask_dir</span> <span class="o">=</span> <span class="s1">&#39;../assembled_files/diagnostics/mpas_analysis/region_masks&#39;</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">mask_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="n">mask_dir</span> <span class="o">=</span> <span class="s1">&#39;../assembled_files/diagnostics/mpas_analysis/region_masks&#39;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">mask_dir</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">FileExistsError</span><span class="p">:</span>
-        <span class="k">pass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_make_moc_masks</span><span class="p">(</span><span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">cpus_per_task</span><span class="p">,</span> <span class="n">mask_dir</span><span class="p">)</span>
 
-    <span class="n">ocean_inputdata_dir</span> <span class="o">=</span> \
-        <span class="sa">f</span><span class="s1">&#39;../assembled_files/inputdata/ocn/mpas-o/</span><span class="si">{</span><span class="n">mesh_short_name</span><span class="si">}</span><span class="s1">&#39;</span>
-    <span class="n">moc_mask_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">mask_dir</span><span class="p">,</span> <span class="n">ocean_inputdata_dir</span><span class="p">]</span>
+        <span class="n">gf</span> <span class="o">=</span> <span class="n">GeometricFeatures</span><span class="p">()</span>
+        <span class="n">region_groups</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;Antarctic Regions&#39;</span><span class="p">,</span> <span class="s1">&#39;Arctic Ocean Regions&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;Arctic Sea Ice Regions&#39;</span><span class="p">,</span> <span class="s1">&#39;ISMIP6 Greenland Regions&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;Ocean Basins&#39;</span><span class="p">,</span> <span class="s1">&#39;Ocean Subbasins&#39;</span><span class="p">,</span> <span class="s1">&#39;ISMIP6 Regions&#39;</span><span class="p">]</span>
 
-    <span class="n">_make_moc_masks</span><span class="p">(</span><span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">cpus_per_task</span><span class="p">,</span> <span class="n">moc_mask_dirs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
+            <span class="n">region_groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Ice Shelves&#39;</span><span class="p">)</span>
 
-    <span class="n">gf</span> <span class="o">=</span> <span class="n">GeometricFeatures</span><span class="p">()</span>
-    <span class="n">region_groups</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Antarctic Regions&#39;</span><span class="p">,</span> <span class="s1">&#39;Arctic Ocean Regions&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;Arctic Sea Ice Regions&#39;</span><span class="p">,</span> <span class="s1">&#39;ISMIP6 Greenland Regions&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;Ocean Basins&#39;</span><span class="p">,</span> <span class="s1">&#39;Ocean Subbasins&#39;</span><span class="p">,</span> <span class="s1">&#39;ISMIP6 Regions&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">region_group</span> <span class="ow">in</span> <span class="n">region_groups</span><span class="p">:</span>
+            <span class="n">function</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> <span class="n">get_aggregator_by_name</span><span class="p">(</span><span class="n">region_group</span><span class="p">)</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}{</span><span class="n">date</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">fc_mask</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">gf</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_make_region_masks</span><span class="p">(</span>
+                <span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">fc_mask</span><span class="o">=</span><span class="n">fc_mask</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
+                <span class="n">cpus_per_task</span><span class="o">=</span><span class="n">cpus_per_task</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="n">mask_dir</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
-        <span class="n">region_groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Ice Shelves&#39;</span><span class="p">)</span>
+        <span class="n">transect_groups</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Transport Transects&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">transect_group</span> <span class="ow">in</span> <span class="n">transect_groups</span><span class="p">:</span>
+            <span class="n">function</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> <span class="n">get_aggregator_by_name</span><span class="p">(</span><span class="n">transect_group</span><span class="p">)</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}{</span><span class="n">date</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">fc_mask</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">gf</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_make_transect_masks</span><span class="p">(</span>
+                <span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">fc_mask</span><span class="o">=</span><span class="n">fc_mask</span><span class="p">,</span>
+                <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="n">cpus_per_task</span><span class="o">=</span><span class="n">cpus_per_task</span><span class="p">,</span>
+                <span class="n">output_dir</span><span class="o">=</span><span class="n">mask_dir</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">region_group</span> <span class="ow">in</span> <span class="n">region_groups</span><span class="p">:</span>
-        <span class="n">function</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> <span class="n">get_aggregator_by_name</span><span class="p">(</span><span class="n">region_group</span><span class="p">)</span>
-        <span class="n">suffix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}{</span><span class="n">date</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_make_region_masks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">suffix</span><span class="p">,</span> <span class="n">fc_mask</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
+                           <span class="n">cpus_per_task</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">):</span>
+        <span class="n">mesh_filename</span> <span class="o">=</span> <span class="s1">&#39;restart.nc&#39;</span>
+
+        <span class="n">geojson_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.geojson&#39;</span>
+        <span class="n">mask_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+
+        <span class="n">fc_mask</span><span class="o">.</span><span class="n">to_geojson</span><span class="p">(</span><span class="n">geojson_filename</span><span class="p">)</span>
+
+        <span class="c1"># these defaults may have been updated from config options -- pass them</span>
+        <span class="c1"># along to the subprocess</span>
+        <span class="n">netcdf_format</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_format</span>
+        <span class="n">netcdf_engine</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_engine</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;compute_mpas_region_masks&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span>
+                <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="n">geojson_filename</span><span class="p">,</span>
+                <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">,</span>
+                <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;cell&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cpus_per_task</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
+                <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
+        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+        <span class="c1"># make links in output directory</span>
+        <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">mask_filename</span><span class="p">),</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">mask_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_make_transect_masks</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">suffix</span><span class="p">,</span> <span class="n">fc_mask</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">cpus_per_task</span><span class="p">,</span>
+            <span class="n">output_dir</span><span class="p">,</span> <span class="n">subdivision_threshold</span><span class="o">=</span><span class="mf">10e3</span><span class="p">):</span>
+        <span class="n">mesh_filename</span> <span class="o">=</span> <span class="s1">&#39;restart.nc&#39;</span>
+
+        <span class="n">geojson_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.geojson&#39;</span>
+        <span class="n">mask_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+
+        <span class="n">fc_mask</span><span class="o">.</span><span class="n">to_geojson</span><span class="p">(</span><span class="n">geojson_filename</span><span class="p">)</span>
+
+        <span class="c1"># these defaults may have been updated from config options -- pass them</span>
+        <span class="c1"># along to the subprocess</span>
+        <span class="n">netcdf_format</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_format</span>
+        <span class="n">netcdf_engine</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_engine</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;compute_mpas_transect_masks&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span>
+                <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="n">geojson_filename</span><span class="p">,</span>
+                <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">,</span>
+                <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;edge&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">subdivision_threshold</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cpus_per_task</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;--add_edge_sign&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
+                <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
+        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+        <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">mask_filename</span><span class="p">),</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">mask_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_make_moc_masks</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">cpus_per_task</span><span class="p">,</span> <span class="n">mask_dir</span><span class="p">):</span>
+        <span class="n">gf</span> <span class="o">=</span> <span class="n">GeometricFeatures</span><span class="p">()</span>
+
+        <span class="n">ocean_inputdata_dir</span> <span class="o">=</span> \
+            <span class="sa">f</span><span class="s1">&#39;../assembled_files/inputdata/ocn/mpas-o/</span><span class="si">{</span><span class="n">mesh_short_name</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">ocean_inputdata_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">mesh_filename</span> <span class="o">=</span> <span class="s1">&#39;restart.nc&#39;</span>
+
+        <span class="n">function</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> <span class="n">get_aggregator_by_name</span><span class="p">(</span><span class="s1">&#39;MOC Basins&#39;</span><span class="p">)</span>
         <span class="n">fc_mask</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">gf</span><span class="p">)</span>
-        <span class="n">_make_region_masks</span><span class="p">(</span><span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">fc_mask</span><span class="o">=</span><span class="n">fc_mask</span><span class="p">,</span>
-                           <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="n">cpus_per_task</span><span class="o">=</span><span class="n">cpus_per_task</span><span class="p">,</span>
-                           <span class="n">output_dir</span><span class="o">=</span><span class="n">mask_dir</span><span class="p">)</span>
 
-    <span class="n">transect_groups</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Transport Transects&#39;</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">transect_group</span> <span class="ow">in</span> <span class="n">transect_groups</span><span class="p">:</span>
-        <span class="n">function</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> <span class="n">get_aggregator_by_name</span><span class="p">(</span><span class="n">transect_group</span><span class="p">)</span>
         <span class="n">suffix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}{</span><span class="n">date</span><span class="si">}</span><span class="s1">&#39;</span>
-        <span class="n">fc_mask</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">gf</span><span class="p">)</span>
-        <span class="n">_make_transect_masks</span><span class="p">(</span><span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">fc_mask</span><span class="o">=</span><span class="n">fc_mask</span><span class="p">,</span>
-                             <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="n">cpus_per_task</span><span class="o">=</span><span class="n">cpus_per_task</span><span class="p">,</span>
-                             <span class="n">output_dir</span><span class="o">=</span><span class="n">mask_dir</span><span class="p">)</span>
 
+        <span class="n">geojson_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.geojson&#39;</span>
+        <span class="n">mask_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_short_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.nc&#39;</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_make_region_masks</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">suffix</span><span class="p">,</span> <span class="n">fc_mask</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">cpus_per_task</span><span class="p">,</span>
-                       <span class="n">output_dir</span><span class="p">):</span>
-    <span class="n">mesh_filename</span> <span class="o">=</span> <span class="s1">&#39;restart.nc&#39;</span>
+        <span class="n">fc_mask</span><span class="o">.</span><span class="n">to_geojson</span><span class="p">(</span><span class="n">geojson_filename</span><span class="p">)</span>
 
-    <span class="n">geojson_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.geojson&#39;</span>
-    <span class="n">mask_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+        <span class="c1"># these defaults may have been updated from config options -- pass them</span>
+        <span class="c1"># along to the subprocess</span>
+        <span class="n">netcdf_format</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_format</span>
+        <span class="n">netcdf_engine</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_engine</span>
 
-    <span class="n">fc_mask</span><span class="o">.</span><span class="n">to_geojson</span><span class="p">(</span><span class="n">geojson_filename</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;compute_mpas_region_masks&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span>
+                <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="n">geojson_filename</span><span class="p">,</span>
+                <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">,</span>
+                <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;cell&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cpus_per_task</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
+                <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
+        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
-    <span class="c1"># these defaults may have been updated from config options -- pass them</span>
-    <span class="c1"># along to the subprocess</span>
-    <span class="n">netcdf_format</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_format</span>
-    <span class="n">netcdf_engine</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_engine</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_short_name</span><span class="si">}</span><span class="s1">_mocBasinsAndTransects</span><span class="si">{</span><span class="n">date</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">mask_and_transect_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">.nc&#39;</span>
 
-    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;compute_mpas_region_masks&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span>
-            <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="n">geojson_filename</span><span class="p">,</span>
-            <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">,</span>
-            <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;cell&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cpus_per_task</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
-            <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
-    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">diagnostics_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">mask_dir</span><span class="p">,</span> <span class="n">mask_and_transect_filename</span><span class="p">)</span>
 
-    <span class="c1"># make links in output directory</span>
-    <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">mask_filename</span><span class="p">),</span>
-            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">mask_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">inputdata_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">ocean_inputdata_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">mg.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">creation_date</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">)</span>
 
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">)</span>
+        <span class="n">ds_mask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">mask_filename</span><span class="p">)</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_make_transect_masks</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">suffix</span><span class="p">,</span> <span class="n">fc_mask</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">cpus_per_task</span><span class="p">,</span>
-                         <span class="n">output_dir</span><span class="p">,</span> <span class="n">subdivision_threshold</span><span class="o">=</span><span class="mf">10e3</span><span class="p">):</span>
-    <span class="n">mesh_filename</span> <span class="o">=</span> <span class="s1">&#39;restart.nc&#39;</span>
+        <span class="n">ds_masks_and_transects</span> <span class="o">=</span> <span class="n">add_moc_southern_boundary_transects</span><span class="p">(</span>
+            <span class="n">ds_mask</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
-    <span class="n">geojson_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.geojson&#39;</span>
-    <span class="n">mask_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+        <span class="c1"># these are string variables that cause problems if we convert to</span>
+        <span class="c1"># CDF5 format</span>
+        <span class="n">ds_masks_and_transects</span> <span class="o">=</span> <span class="n">ds_masks_and_transects</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span>
+            <span class="p">[</span><span class="s1">&#39;history&#39;</span><span class="p">,</span> <span class="s1">&#39;constituents&#39;</span><span class="p">]</span>
+        <span class="p">)</span>
 
-    <span class="n">fc_mask</span><span class="o">.</span><span class="n">to_geojson</span><span class="p">(</span><span class="n">geojson_filename</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_netcdf</span><span class="p">(</span>
+            <span class="n">ds_masks_and_transects</span><span class="p">,</span> <span class="n">mask_and_transect_filename</span><span class="p">,</span>
+            <span class="n">char_dim_name</span><span class="o">=</span><span class="s1">&#39;StrLen&#39;</span><span class="p">)</span>
 
-    <span class="c1"># these defaults may have been updated from config options -- pass them</span>
-    <span class="c1"># along to the subprocess</span>
-    <span class="n">netcdf_format</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_format</span>
-    <span class="n">netcdf_engine</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_engine</span>
+        <span class="c1"># make links in output directories (both inputdata and diagnostics)</span>
+        <span class="k">for</span> <span class="n">link_name</span> <span class="ow">in</span> <span class="p">[</span><span class="n">diagnostics_filename</span><span class="p">,</span> <span class="n">inputdata_filename</span><span class="p">]:</span>
+            <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">mask_and_transect_filename</span><span class="p">),</span> <span class="n">link_name</span><span class="p">)</span></div>
 
-    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;compute_mpas_transect_masks&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span>
-            <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="n">geojson_filename</span><span class="p">,</span>
-            <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">,</span>
-            <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;edge&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">subdivision_threshold</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cpus_per_task</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;--add_edge_sign&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
-            <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
-    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-
-    <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">mask_filename</span><span class="p">),</span>
-            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">mask_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_make_moc_masks</span><span class="p">(</span><span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">cpus_per_task</span><span class="p">,</span> <span class="n">moc_mask_dirs</span><span class="p">):</span>
-    <span class="n">gf</span> <span class="o">=</span> <span class="n">GeometricFeatures</span><span class="p">()</span>
-
-    <span class="n">mesh_filename</span> <span class="o">=</span> <span class="s1">&#39;restart.nc&#39;</span>
-
-    <span class="n">function</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> <span class="n">get_aggregator_by_name</span><span class="p">(</span><span class="s1">&#39;MOC Basins&#39;</span><span class="p">)</span>
-    <span class="n">fc_mask</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">gf</span><span class="p">)</span>
-
-    <span class="n">suffix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}{</span><span class="n">date</span><span class="si">}</span><span class="s1">&#39;</span>
-
-    <span class="n">geojson_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.geojson&#39;</span>
-    <span class="n">mask_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_short_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.nc&#39;</span>
-
-    <span class="n">fc_mask</span><span class="o">.</span><span class="n">to_geojson</span><span class="p">(</span><span class="n">geojson_filename</span><span class="p">)</span>
-
-    <span class="c1"># these defaults may have been updated from config options -- pass them</span>
-    <span class="c1"># along to the subprocess</span>
-    <span class="n">netcdf_format</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_format</span>
-    <span class="n">netcdf_engine</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_engine</span>
-
-    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;compute_mpas_region_masks&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span>
-            <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="n">geojson_filename</span><span class="p">,</span>
-            <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">,</span>
-            <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;cell&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cpus_per_task</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
-            <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
-    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-
-    <span class="n">mask_and_transect_filename</span> <span class="o">=</span> \
-        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_short_name</span><span class="si">}</span><span class="s1">_mocBasinsAndTransects</span><span class="si">{</span><span class="n">date</span><span class="si">}</span><span class="s1">.nc&#39;</span>
-
-    <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">)</span>
-    <span class="n">ds_mask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">mask_filename</span><span class="p">)</span>
-
-    <span class="n">ds_masks_and_transects</span> <span class="o">=</span> <span class="n">add_moc_southern_boundary_transects</span><span class="p">(</span>
-        <span class="n">ds_mask</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-
-    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_masks_and_transects</span><span class="p">,</span> <span class="n">mask_and_transect_filename</span><span class="p">,</span>
-                 <span class="n">char_dim_name</span><span class="o">=</span><span class="s1">&#39;StrLen&#39;</span><span class="p">)</span>
-
-    <span class="c1"># make links in output directories (both inputdata and diagnostics)</span>
-    <span class="k">for</span> <span class="n">output_dir</span> <span class="ow">in</span> <span class="n">moc_mask_dirs</span><span class="p">:</span>
-        <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">mask_and_transect_filename</span><span class="p">),</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">mask_and_transect_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 
            </div>

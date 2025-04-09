@@ -113,7 +113,6 @@
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">symlink</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
@@ -166,7 +165,7 @@
         <span class="k">with</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;restart.nc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
             <span class="n">ds</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
             <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">keep_vars</span><span class="p">]</span>
-            <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">dest_filename</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">dest_filename</span><span class="p">)</span>
 
         <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">dest_filename</span><span class="p">),</span>
                 <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">seaice_inputdata_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">dest_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>

@@ -115,7 +115,6 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_call</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyremap</span><span class="w"> </span><span class="kn">import</span> <span class="n">MpasCellMeshDescriptor</span>
 
@@ -145,8 +144,7 @@
 <span class="sd">            The test case this step belongs to</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span>
-                         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;remap_sea_surface_salinity_restoring&#39;</span><span class="p">,</span>
-                         <span class="n">ntasks</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
+                         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;remap_sea_surface_salinity_restoring&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">target</span><span class="o">=</span><span class="s1">&#39;woa23_decav_ne300_sss_monthly_extrap.20250114.nc&#39;</span><span class="p">,</span>
@@ -158,6 +156,30 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;sss.WOA23_monthlyClimatology.nc&#39;</span><span class="p">)</span></div>
 
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set resources from config options</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;remap_sss_ntasks&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;remap_sss_min_tasks&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_resources</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constrain ``cpus_per_task`` and ``ntasks`` based on the number of</span>
+<span class="sd">        cores available to this step</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        available_resources : dict</span>
+<span class="sd">            The total number of cores available to the step</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;remap_sss_ntasks&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;remap_sss_min_tasks&#39;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">constrain_resources</span><span class="p">(</span><span class="n">available_resources</span><span class="p">)</span>
 
 <div class="viewcode-block" id="RemapSeaSurfaceSalinityRestoring.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.remap_sea_surface_salinity_restoring.RemapSeaSurfaceSalinityRestoring.run.html#compass.ocean.tests.global_ocean.files_for_e3sm.remap_sea_surface_salinity_restoring.RemapSeaSurfaceSalinityRestoring.run">[docs]</a>
@@ -229,7 +251,7 @@
 
         <span class="n">ds_out</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
         <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;expandDist&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">expand_dist</span>
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="s1">&#39;expandDist.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="s1">&#39;expandDist.nc&#39;</span><span class="p">)</span>
 
         <span class="n">descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span>
             <span class="n">fileName</span><span class="o">=</span><span class="n">target_mesh_filename</span><span class="p">,</span>
@@ -330,7 +352,7 @@
         <span class="n">rename</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span>
                       <span class="n">SALT</span><span class="o">=</span><span class="s1">&#39;surfaceSalinityMonthlyClimatologyValue&#39;</span><span class="p">)</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">rename</span><span class="p">)</span>
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">)</span></div>
 
 </pre></div>
 

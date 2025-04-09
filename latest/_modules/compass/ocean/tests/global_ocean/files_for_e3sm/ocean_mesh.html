@@ -114,7 +114,6 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">symlink</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
@@ -235,7 +234,7 @@
             <span class="n">ds</span><span class="o">.</span><span class="n">zMid</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;long_name&#39;</span><span class="p">]</span> <span class="o">=</span> \
                 <span class="s1">&#39;z-coordinate of the mid-depth of the layer&#39;</span>
 
-            <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">dest_filename</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">dest_filename</span><span class="p">)</span>
 
         <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">dest_filename</span><span class="p">),</span>
                 <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ocean_mesh_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">dest_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>

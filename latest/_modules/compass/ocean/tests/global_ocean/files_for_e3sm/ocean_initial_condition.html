@@ -113,7 +113,6 @@
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">symlink</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
@@ -173,7 +172,7 @@
             <span class="n">ds</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
             <span class="k">if</span> <span class="s1">&#39;xtime&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="p">:</span>
                 <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s1">&#39;xtime&#39;</span><span class="p">)</span>
-            <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">dest_filename</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">dest_filename</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_metadata</span><span class="p">:</span>
             <span class="n">add_mesh_and_init_metadata</span><span class="p">([</span><span class="n">dest_filename</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
