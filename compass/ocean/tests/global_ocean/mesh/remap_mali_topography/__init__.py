@@ -28,8 +28,16 @@ class RemapMaliTopography(RemapTopography):
         ocean domain
     """
 
-    def __init__(self, test_case, base_mesh_step, mesh_name, mali_ais_topo,
-                 ocean_includes_grounded):
+    def __init__(
+            self,
+            test_case,
+            base_mesh_step,
+            mesh_name,
+            mali_ais_topo,
+            ocean_includes_grounded,
+            name,
+            smoothing,
+            unsmoothed_topo=None):
         """
         Create a new step
 
@@ -48,16 +56,31 @@ class RemapMaliTopography(RemapTopography):
         mesh_name : str
             The name of the MPAS mesh to include in the mapping file
 
-        mali_ais_topo : str, optional
+        mali_ais_topo : str
             Short name for the MALI dataset to use for Antarctic Ice Sheet
             topography
 
         ocean_includes_grounded : bool
             Whether to include grounded cells that are below sea level in the
             ocean domain
-        """
-        super().__init__(test_case=test_case, base_mesh_step=base_mesh_step,
-                         mesh_name=mesh_name)
+
+        name : str, optional
+            the name of the step
+
+        smoothing : bool, optional
+            Whether smoothing will be applied as part of the remapping
+
+        unsmoothed_topo : compass.ocean.mesh.remap_topography.RemapTopography, optional
+            A step with unsmoothed topography
+        """  # noqa: E501
+        super().__init__(
+            test_case=test_case,
+            base_mesh_step=base_mesh_step,
+            mesh_name=mesh_name,
+            name=name,
+            smoothing=smoothing,
+            unsmoothed_topo=unsmoothed_topo,
+        )
         self.mali_ais_topo = mali_ais_topo
         self.ocean_includes_grounded = ocean_includes_grounded
 

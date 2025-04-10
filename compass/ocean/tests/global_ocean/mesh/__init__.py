@@ -148,21 +148,53 @@ class Mesh(TestCase):
         self.add_step(base_mesh_step)
 
         if mali_ais_topo is None:
-            remap_step = RemapTopography(test_case=self,
-                                         base_mesh_step=base_mesh_step,
-                                         mesh_name=mesh_name)
+            unsmoothed_topo = RemapTopography(
+                test_case=self,
+                base_mesh_step=base_mesh_step,
+                name='remap_topo_unsmoothed',
+                mesh_name=mesh_name,
+                smoothing=False)
+
+            self.add_step(unsmoothed_topo)
+
+            smoothed_topo = RemapTopography(
+                test_case=self,
+                base_mesh_step=base_mesh_step,
+                name='remap_topo_smoothed',
+                mesh_name=mesh_name,
+                smoothing=True,
+                unsmoothed_topo=unsmoothed_topo)
+
+            self.add_step(smoothed_topo)
+
         else:
-            remap_step = RemapMaliTopography(
-                test_case=self, base_mesh_step=base_mesh_step,
-                mesh_name=mesh_name, mali_ais_topo=mali_ais_topo,
+            unsmoothed_topo = RemapMaliTopography(
+                test_case=self,
+                base_mesh_step=base_mesh_step,
+                name='remap_topo_unsmoothed',
+                mesh_name=mesh_name,
+                smoothing=False,
+                mali_ais_topo=mali_ais_topo,
                 ocean_includes_grounded=False)
 
-        self.add_step(remap_step)
+            self.add_step(unsmoothed_topo)
+
+            smoothed_topo = RemapMaliTopography(
+                test_case=self,
+                base_mesh_step=base_mesh_step,
+                name='remap_topo_unsmoothed',
+                mesh_name=mesh_name,
+                smoothing=False,
+                unsmoothed_topo=unsmoothed_topo,
+                mali_ais_topo=mali_ais_topo,
+                ocean_includes_grounded=False)
+
+            self.add_step(smoothed_topo)
 
         self.add_step(CullMeshStep(
             test_case=self, base_mesh_step=base_mesh_step,
             with_ice_shelf_cavities=self.with_ice_shelf_cavities,
-            remap_topography=remap_step))
+            unsmoothed_topo=unsmoothed_topo, smoothed_topo=smoothed_topo))
 
     def configure(self, config=None):
         """
@@ -174,14 +206,13 @@ class Mesh(TestCase):
         if config is None:
             config = self.config
         config.add_from_package('compass.mesh', 'mesh.cfg', exception=True)
-        if 'remap_topography' in self.steps:
-            config.add_from_package('compass.ocean.mesh',
-                                    'remap_topography.cfg', exception=True)
+        config.add_from_package('compass.ocean.mesh',
+                                'remap_topography.cfg', exception=True)
 
-            if not self.high_res_topography:
-                config.add_from_package('compass.ocean.mesh',
-                                        'low_res_topography.cfg',
-                                        exception=True)
+        if not self.high_res_topography:
+            config.add_from_package('compass.ocean.mesh',
+                                    'low_res_topography.cfg',
+                                    exception=True)
 
         if self.mali_ais_topo is not None:
             package = 'compass.ocean.tests.global_ocean.mesh.' \
@@ -220,11 +251,7 @@ class Mesh(TestCase):
                        'Antarctica')
 
         # a description of the bathymetry
-        if 'remap_topography' in self.steps:
-            description = config.get('remap_topography', 'description')
-        else:
-            description = 'Bathymetry is from GEBCO 2023, combined with ' \
-                          'BedMachine Antarctica v3 around Antarctica.'
+        description = config.get('remap_topography', 'description')
 
         config.set('global_ocean', 'bathy_description', description)
 
