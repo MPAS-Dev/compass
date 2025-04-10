@@ -153,7 +153,7 @@ controlled by the following config options:</p>
 <span class="w">              </span><span class="na">Antarctica v3 around Antarctica.</span>
 
 <span class="c1"># the target and minimum number of MPI tasks to use in remapping</span>
-<span class="na">ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1280</span>
+<span class="na">ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">640</span>
 <span class="na">min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">256</span>
 
 <span class="c1"># remapping method {&#39;bilinear&#39;, &#39;neareststod&#39;, &#39;conserve&#39;}</span>
@@ -168,7 +168,7 @@ controlled by the following config options:</p>
 <span class="na">ice_density</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">910.0</span>
 
 <span class="c1"># smoothing parameters (no smoothing by default)</span>
-<span class="na">expand_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+<span class="na">expand_distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
 <span class="na">expand_factor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
 </pre></div>
 </div>
@@ -207,6 +207,14 @@ are the following:</p>
 </div>
 <p>The ne120 topography dataset has a resolution of ~25 km (sufficient for MPAS
 meshes with 240 km resolution) and requires far fewer processers to remap.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">expand_distance</span></code> and <code class="docutils literal notranslate"><span class="pre">expand_factor</span></code> options are used to smooth the
+topography.  The <code class="docutils literal notranslate"><span class="pre">expand_distance</span></code> is the distance (in meters) over which
+the smoothing is applied, while the <code class="docutils literal notranslate"><span class="pre">expand_factor</span></code> specifies a factor
+by which each MPAS cell is expanded for smoothing.  The default is no
+smoothing (<code class="docutils literal notranslate"><span class="pre">expand_distance</span> <span class="pre">=</span> <span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">expand_factor</span> <span class="pre">=</span> <span class="pre">1</span></code>).  In this case,
+there will still be a step called <code class="docutils literal notranslate"><span class="pre">remap_topo_smoothed</span></code> in addition to
+<code class="docutils literal notranslate"><span class="pre">remap_topo_unsmoothed</span></code> but the smoothed step will just make a symlink to the
+unsmoothed topography.</p>
 </section>
 <section id="culling-land-cells">
 <h2>Culling land cells<a class="headerlink" href="#culling-land-cells" title="Link to this heading"></a></h2>

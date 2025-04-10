@@ -118,6 +118,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_call</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyremap</span><span class="w"> </span><span class="kn">import</span> <span class="n">MpasCellMeshDescriptor</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">symlink</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.parallel</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_command</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
@@ -136,13 +137,19 @@
 
 <span class="sd">    mesh_name : str</span>
 <span class="sd">        The name of the MPAS mesh to include in the mapping file</span>
+
+<span class="sd">    smoothing : bool, optional</span>
+<span class="sd">        Whether smoothing will be applied as part of the remapping</span>
+
+<span class="sd">    unsmoothed_topo : compass.ocean.mesh.remap_topography.RemapTopography</span>
+<span class="sd">        A step with unsmoothed topography</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="RemapTopography.__init__">
 <a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.mesh.remap_topography.RemapTopography.html#compass.ocean.mesh.remap_topography.RemapTopography.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">base_mesh_step</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">mesh_name</span><span class="o">=</span><span class="s1">&#39;MPAS_mesh&#39;</span><span class="p">,</span>
+        <span class="n">mesh_name</span><span class="o">=</span><span class="s1">&#39;MPAS_mesh&#39;</span><span class="p">,</span> <span class="n">smoothing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">unsmoothed_topo</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new step</span>
@@ -163,11 +170,19 @@
 
 <span class="sd">        mesh_name : str, optional</span>
 <span class="sd">            The name of the MPAS mesh to include in the mapping file</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+
+<span class="sd">        smoothing : bool, optional</span>
+<span class="sd">            Whether smoothing will be applied as part of the remapping</span>
+
+<span class="sd">        unsmoothed_topo : compass.ocean.mesh.remap_topography.RemapTopography, optional</span>
+<span class="sd">            A step with unsmoothed topography</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">,</span>
                          <span class="n">ntasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">base_mesh_step</span> <span class="o">=</span> <span class="n">base_mesh_step</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh_name</span> <span class="o">=</span> <span class="n">mesh_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span> <span class="o">=</span> <span class="n">smoothing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unsmoothed_topo</span> <span class="o">=</span> <span class="n">unsmoothed_topo</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;topography_remapped.nc&#39;</span><span class="p">)</span></div>
 
@@ -231,6 +246,11 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_symlink_unsmoothed</span><span class="p">():</span>
+            <span class="c1"># we symlinked to the unsmoothed topography and we&#39;re done!</span>
+            <span class="k">return</span>
+
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">weight_generator</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">,</span> <span class="s1">&#39;weight_generator&#39;</span><span class="p">)</span>
 
@@ -248,6 +268,33 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_modify_remapped_bathymetry</span><span class="p">()</span></div>
 
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">_symlink_unsmoothed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If we are smoothing but no smoothing was actually requested, symlink</span>
+<span class="sd">        to the unsmoothed topography</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">unsmoothed_topo</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># there&#39;s no unsmoothed topogrpahy yet</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">]</span>
+        <span class="n">expand_distance</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;expand_distance&#39;</span><span class="p">)</span>
+        <span class="n">expand_factor</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;expand_factor&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">expand_distance</span> <span class="o">!=</span> <span class="mf">0.</span> <span class="ow">or</span> <span class="n">expand_factor</span> <span class="o">!=</span> <span class="mf">1.</span><span class="p">:</span>
+            <span class="c1"># we&#39;re doing some smoothing!</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># we already have unsmoothed topography and we&#39;re not doing</span>
+        <span class="c1"># smoothing so we can just symlink the unsmoothed results</span>
+        <span class="n">out_filename</span> <span class="o">=</span> <span class="s1">&#39;topography_remapped.nc&#39;</span>
+        <span class="n">unsmoothed_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unsmoothed_topo</span><span class="o">.</span><span class="n">work_dir</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">unsmoothed_path</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">)</span>
+        <span class="n">symlink</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_target_scrip_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create target SCRIP file from MPAS mesh file.</span>
@@ -255,10 +302,14 @@
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Create source SCRIP file&#39;</span><span class="p">)</span>
 
-        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">]</span>
-        <span class="n">expand_dist</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;expand_dist&#39;</span><span class="p">)</span>
-        <span class="n">expand_factor</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;expand_factor&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+            <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">]</span>
+            <span class="n">expand_distance</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;expand_distance&#39;</span><span class="p">)</span>
+            <span class="n">expand_factor</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;expand_factor&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">expand_distance</span> <span class="o">=</span> <span class="mf">0.</span>
+            <span class="n">expand_factor</span> <span class="o">=</span> <span class="mf">1.</span>
 
         <span class="n">descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span>
@@ -266,7 +317,7 @@
         <span class="p">)</span>
         <span class="n">descriptor</span><span class="o">.</span><span class="n">to_scrip</span><span class="p">(</span>
             <span class="s1">&#39;target.scrip.nc&#39;</span><span class="p">,</span>
-            <span class="n">expand_dist</span><span class="o">=</span><span class="n">expand_dist</span><span class="p">,</span>
+            <span class="n">expand_dist</span><span class="o">=</span><span class="n">expand_distance</span><span class="p">,</span>
             <span class="n">expand_factor</span><span class="o">=</span><span class="n">expand_factor</span><span class="p">,</span>
         <span class="p">)</span>
 

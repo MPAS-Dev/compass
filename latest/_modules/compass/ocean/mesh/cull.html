@@ -158,9 +158,13 @@
 <span class="sd">        Whether to leave land cells in the mesh based on bathymetry</span>
 <span class="sd">        specified by do_inject_bathymetry</span>
 
-<span class="sd">    remap_topography : compass.ocean.mesh.remap_topography.RemapTopography</span>
+<span class="sd">    unsmoothed_topo : compass.ocean.mesh.remap_topography.RemapTopography</span>
 <span class="sd">        A step for remapping topography. If provided, the remapped</span>
 <span class="sd">        topography is used to determine the land mask</span>
+
+<span class="sd">    smoothed_topo : compass.ocean.mesh.remap_topography.RemapTopography</span>
+<span class="sd">        A step for remapping topography. If provided, the remapped</span>
+<span class="sd">        topography is culled for subsequent use in ocean initial conditions</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -168,7 +172,8 @@
 <a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.mesh.cull.CullMeshStep.html#compass.ocean.mesh.cull.CullMeshStep.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">base_mesh_step</span><span class="p">,</span> <span class="n">with_ice_shelf_cavities</span><span class="p">,</span>
                  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;cull_mesh&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">do_inject_bathymetry</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                 <span class="n">preserve_floodplain</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">remap_topography</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">preserve_floodplain</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">unsmoothed_topo</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">smoothed_topo</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new step</span>
 
@@ -197,14 +202,19 @@
 <span class="sd">            Whether to leave land cells in the mesh based on bathymetry</span>
 <span class="sd">            specified by do_inject_bathymetry</span>
 
-<span class="sd">        remap_topography : compass.ocean.mesh.remap_topography.RemapTopography, optional</span>
+<span class="sd">        unsmoothed_topo : compass.ocean.mesh.remap_topography.RemapTopography, optional</span>
 <span class="sd">            A step for remapping topography. If provided, the remapped</span>
 <span class="sd">            topography is used to determine the land mask</span>
+
+<span class="sd">        smoothed_topo : compass.ocean.mesh.remap_topography.RemapTopography, optional</span>
+<span class="sd">            A step for remapping topography. If provided, the remapped</span>
+<span class="sd">            topography is culled for subsequent use in ocean initial conditions</span>
 <span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">,</span>
                          <span class="n">cpus_per_task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_cpus_per_task</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">base_mesh_step</span> <span class="o">=</span> <span class="n">base_mesh_step</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">remap_topography</span> <span class="o">=</span> <span class="n">remap_topography</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unsmoothed_topo</span> <span class="o">=</span> <span class="n">unsmoothed_topo</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smoothed_topo</span> <span class="o">=</span> <span class="n">smoothed_topo</span>
 
         <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
                      <span class="s1">&#39;critical_passages_mask_final.nc&#39;</span><span class="p">]:</span>
@@ -238,10 +248,16 @@
         <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="n">base_filename</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span> <span class="n">work_dir_target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">remap_topography</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">topo_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remap_topography</span><span class="o">.</span><span class="n">path</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">unsmoothed_topo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">smoothed_topo</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">smoothed_topo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unsmoothed_topo</span>
+            <span class="n">topo_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unsmoothed_topo</span><span class="o">.</span><span class="n">path</span>
             <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">topo_path</span><span class="p">,</span> <span class="s1">&#39;topography_remapped.nc&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;unsmoothed_topography.nc&#39;</span><span class="p">,</span>
+                                <span class="n">work_dir_target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
+            <span class="n">topo_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smoothed_topo</span><span class="o">.</span><span class="n">path</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">topo_path</span><span class="p">,</span> <span class="s1">&#39;topography_remapped.nc&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;smoothed_topography.nc&#39;</span><span class="p">,</span>
                                 <span class="n">work_dir_target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="s1">&#39;topography_culled.nc&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="s1">&#39;map_culled_to_base.nc&#39;</span><span class="p">)</span>
@@ -415,14 +431,14 @@
     <span class="n">netcdf_format</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_format</span>
     <span class="n">netcdf_engine</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_engine</span>
 
-    <span class="n">has_remapped_topo</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">)</span>
+    <span class="n">has_remapped_topo</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;unsmoothed_topography.nc&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">with_cavities</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">has_remapped_topo</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Mesh culling with caviites must be from &#39;</span>
                          <span class="s1">&#39;remapped topography.&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">has_remapped_topo</span><span class="p">:</span>
         <span class="n">_land_mask_from_topo</span><span class="p">(</span><span class="n">with_cavities</span><span class="p">,</span>
-                             <span class="n">topo_filename</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">,</span>
+                             <span class="n">topo_filename</span><span class="o">=</span><span class="s1">&#39;unsmoothed_topography.nc&#39;</span><span class="p">,</span>
                              <span class="n">mask_filename</span><span class="o">=</span><span class="s1">&#39;land_mask.nc&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">_land_mask_from_geojson</span><span class="p">(</span><span class="n">with_cavities</span><span class="o">=</span><span class="n">with_cavities</span><span class="p">,</span>
@@ -603,7 +619,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">_cull_topo</span><span class="p">(</span><span class="n">with_cavities</span><span class="p">,</span> <span class="n">process_count</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">latitude_threshold</span><span class="p">,</span>
                <span class="n">sweep_count</span><span class="p">,</span> <span class="n">ds_preserve</span><span class="p">):</span>
 
-    <span class="n">ds_topo</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">)</span>
+    <span class="n">ds_topo</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;smoothed_topography.nc&#39;</span><span class="p">)</span>
     <span class="n">ds_base</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
 
     <span class="n">ds_culled</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">)</span>
@@ -613,6 +629,15 @@
     <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_map_culled_to_base</span><span class="p">,</span> <span class="s1">&#39;map_culled_to_base.nc&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">with_cavities</span><span class="p">:</span>
+        <span class="n">ds_unsmoothed_topo</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;unsmoothed_topography.nc&#39;</span><span class="p">)</span>
+
+        <span class="c1"># use fractions from unsmoothed topography so we don&#39;t have</span>
+        <span class="c1"># different masks for different amounts of smoothing.  This</span>
+        <span class="c1"># allows us to use the same E3SM mapping files for different smoothing</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;landIceFracObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceGroundedFracObserved&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;landIceFloatingFracObserved&#39;</span><span class="p">]:</span>
+            <span class="n">ds_topo</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_unsmoothed_topo</span><span class="p">[</span><span class="n">var</span><span class="p">]</span>
+
         <span class="n">_flood_fill_and_add_land_ice_mask</span><span class="p">(</span><span class="n">ds_topo</span><span class="p">,</span> <span class="n">ds_base</span><span class="p">,</span>
                                           <span class="n">ds_map_culled_to_base</span><span class="p">,</span> <span class="n">ds_preserve</span><span class="p">,</span>
                                           <span class="n">logger</span><span class="p">,</span> <span class="n">latitude_threshold</span><span class="p">,</span>

@@ -144,8 +144,16 @@
 
 <div class="viewcode-block" id="RemapMaliTopography.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.mesh.remap_mali_topography.RemapMaliTopography.html#compass.ocean.tests.global_ocean.mesh.remap_mali_topography.RemapMaliTopography.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">base_mesh_step</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">mali_ais_topo</span><span class="p">,</span>
-                 <span class="n">ocean_includes_grounded</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">test_case</span><span class="p">,</span>
+            <span class="n">base_mesh_step</span><span class="p">,</span>
+            <span class="n">mesh_name</span><span class="p">,</span>
+            <span class="n">mali_ais_topo</span><span class="p">,</span>
+            <span class="n">ocean_includes_grounded</span><span class="p">,</span>
+            <span class="n">name</span><span class="p">,</span>
+            <span class="n">smoothing</span><span class="p">,</span>
+            <span class="n">unsmoothed_topo</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new step</span>
 
@@ -164,16 +172,31 @@
 <span class="sd">        mesh_name : str</span>
 <span class="sd">            The name of the MPAS mesh to include in the mapping file</span>
 
-<span class="sd">        mali_ais_topo : str, optional</span>
+<span class="sd">        mali_ais_topo : str</span>
 <span class="sd">            Short name for the MALI dataset to use for Antarctic Ice Sheet</span>
 <span class="sd">            topography</span>
 
 <span class="sd">        ocean_includes_grounded : bool</span>
 <span class="sd">            Whether to include grounded cells that are below sea level in the</span>
 <span class="sd">            ocean domain</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">base_mesh_step</span><span class="o">=</span><span class="n">base_mesh_step</span><span class="p">,</span>
-                         <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">)</span>
+
+<span class="sd">        name : str, optional</span>
+<span class="sd">            the name of the step</span>
+
+<span class="sd">        smoothing : bool, optional</span>
+<span class="sd">            Whether smoothing will be applied as part of the remapping</span>
+
+<span class="sd">        unsmoothed_topo : compass.ocean.mesh.remap_topography.RemapTopography, optional</span>
+<span class="sd">            A step with unsmoothed topography</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span>
+            <span class="n">base_mesh_step</span><span class="o">=</span><span class="n">base_mesh_step</span><span class="p">,</span>
+            <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">smoothing</span><span class="o">=</span><span class="n">smoothing</span><span class="p">,</span>
+            <span class="n">unsmoothed_topo</span><span class="o">=</span><span class="n">unsmoothed_topo</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mali_ais_topo</span> <span class="o">=</span> <span class="n">mali_ais_topo</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ocean_includes_grounded</span> <span class="o">=</span> <span class="n">ocean_includes_grounded</span>
 
