@@ -80,11 +80,11 @@ class SetupMesh(Step):
         make_graph_file(mesh_filename='landice_grid.nc',
                         graph_filename='graph.info')
 
-        _setup_dome_initial_conditions(config, logger,
-                                       filename='landice_grid.nc')
+        setup_dome_initial_conditions(config, logger,
+                                      filename='landice_grid.nc')
 
 
-def _setup_dome_initial_conditions(config, logger, filename):
+def setup_dome_initial_conditions(config, logger, filename):
     """
     Add the initial condition to the given MPAS mesh file
 
