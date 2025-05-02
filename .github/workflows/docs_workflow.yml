@@ -27,15 +27,17 @@ jobs:
 
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
         name: Set up Conda Environment
-        uses: conda-incubator/setup-miniconda@v3
+        uses: mamba-org/setup-micromamba@v2
         with:
-          activate-environment: "compass_ci"
-          miniforge-version: latest
-          channels: conda-forge,e3sm/label/compass
-          channel-priority: strict
-          use-mamba: false
-          auto-update-conda: true
-          python-version: ${{ env.PYTHON_VERSION }}
+          environment-name: compass_test
+          init-shell: bash
+          condarc: |
+            channel_priority: strict
+            channels:
+                - conda-forge
+                - e3sm/label/compass
+          create-args: >-
+            python=${{ env.PYTHON_VERSION }}
 
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
         name: Install compass
