@@ -95,19 +95,19 @@ def get_conda_base(conda_base, config, shared=False, warn=False):
     if shared:
         conda_base = config.get('paths', 'compass_envs')
     elif conda_base is None:
-        if 'CONDA_EXE' in os.environ:
-            # if this is a test, assume we're the same base as the
-            # environment currently active
-            conda_exe = os.environ['CONDA_EXE']
-            conda_base = os.path.abspath(
-                os.path.join(conda_exe, '..', '..'))
+        try:
+            conda_base = subprocess.check_output(
+                ['conda', 'info', '--base'], text=True
+            ).strip()
             if warn:
                 print(f'\nWarning: --conda path not supplied.  Using conda '
                       f'installed at:\n'
                       f'   {conda_base}\n')
-        else:
-            raise ValueError('No conda base provided with --conda and '
-                             'none could be inferred.')
+        except subprocess.CalledProcessError as e:
+            raise ValueError(
+                'No conda base provided with --conda and '
+                'none could be inferred.'
+            ) from e
     # handle "~" in the path
     conda_base = os.path.abspath(os.path.expanduser(conda_base))
     return conda_base
