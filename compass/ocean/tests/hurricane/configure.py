@@ -19,6 +19,8 @@ def configure_hurricane(test_case, mesh):
 
     config.add_from_package('compass.mesh', 'mesh.cfg')
     config.add_from_package('compass.ocean.tests.hurricane', 'hurricane.cfg')
+    config.add_from_package('compass.ocean.tests.hurricane.analysis',
+                            'analysis.cfg')
     config.add_from_package(mesh.package, mesh.mesh_config_filename,
                             exception=True)
 
