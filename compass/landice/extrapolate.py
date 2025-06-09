@@ -41,7 +41,7 @@ def extrapolate_variable(nc_file, var_name, extrap_method, set_value=None):
     if var_name in ["effectivePressure", "beta", "muFriction"]:
         groundedMask = (thickness > (-1028.0 / 910.0 * bed))
         keepCellMask = np.copy(groundedMask)
-        extrap_method == "min"
+        extrap_method = "min"
 
         # grow mask by one cell oceanward of GL
         for iCell in range(nCells):
@@ -51,13 +51,17 @@ def extrapolate_variable(nc_file, var_name, extrap_method, set_value=None):
                     keepCellMask[iCell] = 1
                     continue
         # ensure zero muFriction does not get extrapolated
-        keepCellMask *= (varValue > 0)
+        keepCellMask *= (varValue > 0.0)
     elif var_name in ["floatingBasalMassBal"]:
         floatingMask = (thickness <= (-1028.0 / 910.0 * bed))
         keepCellMask = floatingMask * (varValue != 0.0)
         extrap_method == "idw"
     else:
         keepCellMask = (thickness > 0.0)
+
+    if keepCellMask.sum() == 0:
+        sys.exit("In landice/extrapolate.py, initial keepCellMask has "
+                 "no valid cells")
 
     # make a copy to edit that will be used later
     keepCellMaskNew = np.copy(keepCellMask)
