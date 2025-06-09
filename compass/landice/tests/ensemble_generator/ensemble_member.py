@@ -190,8 +190,8 @@ class EnsembleMember(Step):
         # rename and copy base file
         input_file_path = spinup_section.get('input_file_path')
         input_file_name = input_file_path.split('/')[-1]
-        base_fname = input_file_name.split('.')[:-1][0]
-        new_input_fname = f'{base_fname}_MODIFIED.nc'
+        base_fname = ".".join(input_file_name.split('.')[:-1])
+        new_input_fname = f'{base_fname}_MODIFIED_run{self.run_num:03}.nc'
         self.input_file_name = new_input_fname  # store for run method
         shutil.copy(input_file_path, os.path.join(self.work_dir,
                                                   new_input_fname))
@@ -246,8 +246,8 @@ class EnsembleMember(Step):
                 'basal_melt_param_file_path')
             basal_melt_param_file_name = \
                 basal_melt_param_file_path.split('/')[-1]
-            base_fname = basal_melt_param_file_name.split('.')[:-1][0]
-            new_fname = f'{base_fname}_MODIFIED.nc'
+            base_fname = ".".join(basal_melt_param_file_name.split('.')[:-1])
+            new_fname = f'{base_fname}_MODIFIED_run{self.run_num:03}.nc'
             shutil.copy(basal_melt_param_file_path,
                         os.path.join(self.work_dir, new_fname))
             _adjust_basal_melt_params(os.path.join(self.work_dir, new_fname),
