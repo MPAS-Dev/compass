@@ -10,6 +10,7 @@ from compass.landice.tests.greenland import Greenland
 from compass.landice.tests.humboldt import Humboldt
 from compass.landice.tests.hydro_radial import HydroRadial
 from compass.landice.tests.ismip6_forcing import Ismip6Forcing
+from compass.landice.tests.ismip6_GrIS_forcing import Ismip6GrISForcing
 from compass.landice.tests.ismip6_run import Ismip6Run
 from compass.landice.tests.isunnguata_sermia import IsunnguataSermia
 from compass.landice.tests.kangerlussuaq import Kangerlussuaq
@@ -43,6 +44,7 @@ class Landice(MpasCore):
         self.add_test_group(Humboldt(mpas_core=self))
         self.add_test_group(HydroRadial(mpas_core=self))
         self.add_test_group(Ismip6Forcing(mpas_core=self))
+        self.add_test_group(Ismip6GrISForcing(mpas_core=self))
         self.add_test_group(Ismip6Run(mpas_core=self))
         self.add_test_group(IsunnguataSermia(mpas_core=self))
         self.add_test_group(Kangerlussuaq(mpas_core=self))
