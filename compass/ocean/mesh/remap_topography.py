@@ -31,6 +31,10 @@ class RemapTopography(Step):
 
     unsmoothed_topo : compass.ocean.mesh.remap_topography.RemapTopography
         A step with unsmoothed topography
+
+    symlinked_to_unsmoothed : bool
+        Whether we have symlinked to the unsmoothed topography because this
+        is a smoothing step but no smoothing is actually needed
     """
 
     def __init__(
@@ -69,6 +73,7 @@ class RemapTopography(Step):
         self.mesh_name = mesh_name
         self.smoothing = smoothing
         self.unsmoothed_topo = unsmoothed_topo
+        self.symlinked_to_unsmoothed = False
 
         self.add_output_file(filename='topography_remapped.nc')
 
@@ -124,7 +129,8 @@ class RemapTopography(Step):
         Run this step of the test case
         """
         super().run()
-        if self._symlink_unsmoothed():
+        self._symlink_unsmoothed()
+        if self.symlinked_to_unsmoothed:
             # we symlinked to the unsmoothed topography and we're done!
             return
 
@@ -149,9 +155,10 @@ class RemapTopography(Step):
         If we are smoothing but no smoothing was actually requested, symlink
         to the unsmoothed topography
         """
+        self.symlinked_to_unsmoothed = False
         if not self.smoothing or self.unsmoothed_topo is None:
             # there's no unsmoothed topogrpahy yet
-            return False
+            return
 
         config = self.config
         section = config['remap_topography']
@@ -160,16 +167,15 @@ class RemapTopography(Step):
 
         if expand_distance != 0. or expand_factor != 1.:
             # we're doing some smoothing!
-            return False
+            return
 
+        self.symlinked_to_unsmoothed = True
         # we already have unsmoothed topography and we're not doing
         # smoothing so we can just symlink the unsmoothed results
         out_filename = 'topography_remapped.nc'
         unsmoothed_path = self.unsmoothed_topo.work_dir
         target = os.path.join(unsmoothed_path, out_filename)
         symlink(target, out_filename)
-
-        return True
 
     def _create_target_scrip_file(self):
         """

@@ -7,6 +7,7 @@ from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 from pyremap import MpasCellMeshDescriptor
 
+from compass.io import symlink
 from compass.ocean.mesh.remap_topography import RemapTopography
 from compass.parallel import run_command
 
@@ -110,8 +111,16 @@ class RemapMaliTopography(RemapTopography):
         Run this step of the test case
         """
         super().run()
-        self._remap_mali_topo()
-        self._combine_topo()
+        if self.symlinked_to_unsmoothed:
+            # we already have unsmoothed topography and we're not doing
+            # smoothing so we can just symlink the unsmoothed results
+            out_filename = 'mali_topography_remapped.nc'
+            unsmoothed_path = self.unsmoothed_topo.work_dir
+            target = os.path.join(unsmoothed_path, out_filename)
+            symlink(target, out_filename)
+        else:
+            self._remap_mali_topo()
+            self._combine_topo()
 
     def _remap_mali_topo(self):
         in_mesh_name = self.mali_ais_topo

@@ -182,9 +182,9 @@ class Mesh(TestCase):
             smoothed_topo = RemapMaliTopography(
                 test_case=self,
                 base_mesh_step=base_mesh_step,
-                name='remap_topo_unsmoothed',
+                name='remap_topo_smoothed',
                 mesh_name=mesh_name,
-                smoothing=False,
+                smoothing=True,
                 unsmoothed_topo=unsmoothed_topo,
                 mali_ais_topo=mali_ais_topo,
                 ocean_includes_grounded=False)
