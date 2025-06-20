@@ -24,6 +24,13 @@ test suite:
     compass_envs = /lcrc/soft/climate/compass/chrysalis/base
 
 
+    # The parallel section describes options related to running jobs in parallel
+    [parallel]
+
+    # whether to use mpirun or srun to run a task
+    parallel_executable = srun --mpi=pmi2
+
+
     # Options related to deploying a compass conda environment on supported
     # machines
     [deploy]
