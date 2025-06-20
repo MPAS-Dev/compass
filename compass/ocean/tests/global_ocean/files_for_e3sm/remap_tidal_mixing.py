@@ -163,8 +163,11 @@ class RemapTidalMixing(FilesForE3SMStep):
         logger.info('Remapping...')
         name, ext = os.path.splitext(out_filename)
         remap_filename = f'{name}_after_remap{ext}'
-        remapper.remap_file(inFileName=in_filename, outFileName=remap_filename,
-                            logger=logger)
+        remapper.ncremap(
+            in_filename=in_filename,
+            out_filename=remap_filename,
+            logger=logger
+        )
 
         ds_mask = xr.open_dataset(land_ice_mask_filename)
         land_ice_mask = ds_mask.landIceMask
@@ -177,8 +180,6 @@ class RemapTidalMixing(FilesForE3SMStep):
 
         with xr.open_dataset(remap_filename) as ds_remap:
             logger.info('Renaming dimensions and variables...')
-            rename = dict(ncol='nCells')
-            ds_remap = ds_remap.rename(rename)
             ds_remap = ds_remap.drop_vars(['x', 'y'])
 
             # renormalize
