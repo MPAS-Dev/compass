@@ -143,6 +143,10 @@
 
 <span class="sd">    unsmoothed_topo : compass.ocean.mesh.remap_topography.RemapTopography</span>
 <span class="sd">        A step with unsmoothed topography</span>
+
+<span class="sd">    symlinked_to_unsmoothed : bool</span>
+<span class="sd">        Whether we have symlinked to the unsmoothed topography because this</span>
+<span class="sd">        is a smoothing step but no smoothing is actually needed</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="RemapTopography.__init__">
@@ -183,6 +187,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh_name</span> <span class="o">=</span> <span class="n">mesh_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span> <span class="o">=</span> <span class="n">smoothing</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">unsmoothed_topo</span> <span class="o">=</span> <span class="n">unsmoothed_topo</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">symlinked_to_unsmoothed</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;topography_remapped.nc&#39;</span><span class="p">)</span></div>
 
@@ -247,7 +252,8 @@
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_symlink_unsmoothed</span><span class="p">():</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_symlink_unsmoothed</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">symlinked_to_unsmoothed</span><span class="p">:</span>
             <span class="c1"># we symlinked to the unsmoothed topography and we&#39;re done!</span>
             <span class="k">return</span>
 
@@ -273,9 +279,10 @@
 <span class="sd">        If we are smoothing but no smoothing was actually requested, symlink</span>
 <span class="sd">        to the unsmoothed topography</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">symlinked_to_unsmoothed</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">unsmoothed_topo</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># there&#39;s no unsmoothed topogrpahy yet</span>
-            <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">return</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">]</span>
@@ -284,16 +291,15 @@
 
         <span class="k">if</span> <span class="n">expand_distance</span> <span class="o">!=</span> <span class="mf">0.</span> <span class="ow">or</span> <span class="n">expand_factor</span> <span class="o">!=</span> <span class="mf">1.</span><span class="p">:</span>
             <span class="c1"># we&#39;re doing some smoothing!</span>
-            <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">return</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">symlinked_to_unsmoothed</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="c1"># we already have unsmoothed topography and we&#39;re not doing</span>
         <span class="c1"># smoothing so we can just symlink the unsmoothed results</span>
         <span class="n">out_filename</span> <span class="o">=</span> <span class="s1">&#39;topography_remapped.nc&#39;</span>
         <span class="n">unsmoothed_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unsmoothed_topo</span><span class="o">.</span><span class="n">work_dir</span>
         <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">unsmoothed_path</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">)</span>
         <span class="n">symlink</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="kc">True</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_target_scrip_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
