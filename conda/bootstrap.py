@@ -528,8 +528,8 @@ def build_spack_env(config, update_spack, machine, compiler, mpi,  # noqa: C901
     custom_spack = ''
     if scorpio != 'None':
         specs.append(
-            f'"scorpio'
-            f'@{scorpio}+pnetcdf~timing+internal-timing~tools+malloc"')
+            f'"e3sm-scorpio'
+            f'@{scorpio}+mpi~timing~internal-timing~tools+malloc"')
         # make sure scorpio, not esmf, libraries are linked
         lib_path = \
             f'{spack_branch_base}/var/spack/environments/' \
