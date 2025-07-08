@@ -1,3 +1,7 @@
+import json
+import os
+from importlib import resources
+
 import netCDF4 as nc
 import numpy as np
 
@@ -52,38 +56,6 @@ class InitialState(Step):
                                    mode='init')
             self.add_streams_file(package, 'streams.ocean_subgrid0',
                                   mode='init')
-            options = dict(
-                config_Buttermilk_bay_topography_file="'crm_vol1_2023_nc3.nc'")
-            self.add_namelist_options(options=options, mode='init',
-                                      out_name='namelist.ocean')
-
-            self.add_streams_file(package, 'streams.ocean_subgrid1',
-                                  mode='init',
-                                  out_name='streams.ocean_subgrid1')
-            self.add_namelist_file(package, 'namelist.init', mode='init',
-                                   out_name='namelist.ocean_subgrid1')
-            self.add_namelist_file(package, 'namelist.init.wd', mode='init',
-                                   out_name='namelist.ocean_subgrid1')
-            self.add_namelist_file(package, 'namelist.init_subgrid',
-                                   mode='init',
-                                   out_name='namelist.ocean_subgrid1')
-            self.add_namelist_options(options=options, mode='init',
-                                      out_name='namelist.ocean_subgrid1')
-
-            self.add_streams_file(package, 'streams.ocean_subgrid2',
-                                  mode='init',
-                                  out_name='streams.ocean_subgrid2')
-            self.add_namelist_file(package, 'namelist.init', mode='init',
-                                   out_name='namelist.ocean_subgrid2')
-            self.add_namelist_file(package, 'namelist.init.wd', mode='init',
-                                   out_name='namelist.ocean_subgrid2')
-            self.add_namelist_file(package, 'namelist.init_subgrid',
-                                   mode='init',
-                                   out_name='namelist.ocean_subgrid2')
-            options = dict(
-                config_Buttermilk_bay_topography_file="'crm_vol2_2023_nc3.nc'")
-            self.add_namelist_options(options=options, mode='init',
-                                      out_name='namelist.ocean_subgrid2')
         else:
             self.add_streams_file(package, 'streams.init', mode='init')
 
@@ -119,7 +91,6 @@ class InitialState(Step):
             self.add_input_file(filename='crm_vol2_2023_nc3.nc',
                                 target='crm_vol2_2023_nc3.nc',
                                 database='bathymetry_database')
-
         self.add_model_as_input()
 
         if self.wetdry == 'subgrid':
@@ -133,6 +104,49 @@ class InitialState(Step):
         Set up the test case in the work directory, including downloading any
         dependencies
         """
+
+        package = 'compass.ocean.tests.hurricane.init'
+        if self.wetdry == 'subgrid':
+            self.add_namelist_file(package, 'namelist.init_subgrid',
+                                   mode='init')
+            self.add_streams_file(package, 'streams.ocean_subgrid0',
+                                  mode='init')
+
+            filename = 'bathy_data.json'
+            with resources.open_text(package, filename) as bathy_file:
+                self.bathy_files = json.load(bathy_file)
+
+            os.makedirs(f'{self.work_dir}/NCEI_data', exist_ok=True)
+            for i, dem in enumerate(self.bathy_files["NCEI"]):
+                self.add_input_file(
+                    filename=f'NCEI_data/{dem}',
+                    target=f'ncei/{dem}',
+                    database='bathymetry_database')
+
+                options = dict(
+                    config_Buttermilk_bay_topography_file=f"'NCEI_data/{dem}'")
+                self.add_namelist_file(package, 'namelist.init', mode='init',
+                                       out_name=f'namelist.ocean_subgrid{i}')
+                self.add_namelist_file(package, 'namelist.init.wd',
+                                       mode='init',
+                                       out_name=f'namelist.ocean_subgrid{i}')
+                self.add_namelist_file(package, 'namelist.init_subgrid',
+                                       mode='init',
+                                       out_name=f'namelist.ocean_subgrid{i}')
+                self.add_namelist_options(
+                    options=options, mode='init',
+                    out_name=f'namelist.ocean_subgrid{i}')
+
+                stream_replacements = {
+                    'output_file': f'ocean_subgrid{i + 1}.nc',
+                    'input_file': f'ocean_subgrid{i}.nc'}
+                if i == 0:
+                    stream_replacements['input_file'] = 'ocean_init.nc'
+                self.add_streams_file(
+                    package, 'streams.template',
+                    template_replacements=stream_replacements,
+                    out_name=f'streams.ocean_subgrid{i}')
+
         self._get_resources()
 
     def constrain_resources(self, available_resources):
@@ -149,10 +163,9 @@ class InitialState(Step):
         run_model(self)
 
         if self.wetdry == 'subgrid':
-            run_model(self, namelist='namelist.ocean_subgrid1',
-                      streams='streams.ocean_subgrid1')
-            run_model(self, namelist='namelist.ocean_subgrid2',
-                      streams='streams.ocean_subgrid2')
+            for i, dem in enumerate(self.bathy_files["NCEI"]):
+                run_model(self, namelist=f'namelist.ocean_subgrid{i}',
+                          streams=f'streams.ocean_subgrid{i}')
 
         mesh = nc.Dataset("mesh.nc", "r")
         if self.wetdry == 'subgrid':
