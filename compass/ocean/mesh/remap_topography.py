@@ -222,7 +222,8 @@ class RemapTopography(Step):
             in_filename,
             h5m_filename,
         ]
-        check_call(args, logger)
+        # run in "parallel" with one task and one thread for Intel-MPI support
+        run_command(args, 1, 1, 1, self.config, logger)
 
         # Partition source SCRIP
         args = [
@@ -231,7 +232,8 @@ class RemapTopography(Step):
             h5m_filename,
             part_filename,
         ]
-        check_call(args, logger)
+        # run in "parallel" with one task and one thread for Intel-MPI support
+        run_command(args, 1, 1, 1, self.config, logger)
 
         logger.info('  Done.')
 
