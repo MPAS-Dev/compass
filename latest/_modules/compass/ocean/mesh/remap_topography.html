@@ -346,7 +346,8 @@
             <span class="n">in_filename</span><span class="p">,</span>
             <span class="n">h5m_filename</span><span class="p">,</span>
         <span class="p">]</span>
-        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+        <span class="c1"># run in &quot;parallel&quot; with one task and one thread for Intel-MPI support</span>
+        <span class="n">run_command</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
         <span class="c1"># Partition source SCRIP</span>
         <span class="n">args</span> <span class="o">=</span> <span class="p">[</span>
@@ -355,7 +356,8 @@
             <span class="n">h5m_filename</span><span class="p">,</span>
             <span class="n">part_filename</span><span class="p">,</span>
         <span class="p">]</span>
-        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+        <span class="c1"># run in &quot;parallel&quot; with one task and one thread for Intel-MPI support</span>
+        <span class="n">run_command</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Done.&#39;</span><span class="p">)</span>
 
