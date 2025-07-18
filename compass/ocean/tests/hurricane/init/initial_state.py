@@ -66,10 +66,11 @@ class InitialState(Step):
             self.add_input_file(
                 filename='mesh.nc',
                 work_dir_target=f'{mesh_path}/culled_mesh.nc')
-
-            self.add_input_file(
-                filename='graph.info',
-                work_dir_target=f'{mesh_path}/culled_graph.info')
+            if self.wetdry != 'subgrid':
+                # subgrid uses a specialized weighted graph file
+                self.add_input_file(
+                    filename='graph.info',
+                    work_dir_target=f'{mesh_path}/culled_graph.info')
 
         else:
 
@@ -84,6 +85,10 @@ class InitialState(Step):
                 work_dir_target=f'{mesh_path}/lts_graph.info')
 
         if self.wetdry == 'subgrid':
+            self.add_input_file(
+                filename='graph.info.noweights',
+                work_dir_target=f'{mesh_path}/culled_graph.info')
+
             self.add_input_file(filename='crm_vol1_2023_nc3.nc',
                                 target='crm_vol1_2023_nc3.nc',
                                 database='bathymetry_database')
@@ -160,10 +165,24 @@ class InitialState(Step):
         """
         Run this step of the testcase
         """
+
+        self.load_balance_graphfile(min_lon=-190, max_lon=190,
+                                    min_lat=-100, max_lat=100,
+                                    inside_weight=1)
         run_model(self)
 
         if self.wetdry == 'subgrid':
             for i, dem in enumerate(self.bathy_files["NCEI"]):
+
+                ds = nc.Dataset(f"NCEI_data/{dem}")
+                lon = ds.variables["lon"][:]
+                lat = ds.variables["lat"][:]
+                min_lon = np.min(lon)
+                max_lon = np.max(lon)
+                min_lat = np.min(lat)
+                max_lat = np.max(lat)
+
+                self.load_balance_graphfile(min_lon, max_lon, min_lat, max_lat)
                 run_model(self, namelist=f'namelist.ocean_subgrid{i}',
                           streams=f'streams.ocean_subgrid{i}')
 
@@ -266,3 +285,51 @@ class InitialState(Step):
         self.ntasks = config.getint('hurricane', 'init_ntasks')
         self.min_tasks = config.getint('hurricane', 'init_min_tasks')
         self.openmp_threads = config.getint('hurricane', 'init_threads')
+
+    def load_balance_graphfile(self, min_lon, max_lon,
+                               min_lat, max_lat, inside_weight=1000):
+        weights = []
+
+        outside_weight = 1
+
+        mesh_filename = 'mesh.nc'
+        graph_filename = "graph.info.noweights"
+        output_filename = "graph.info"
+
+        # Read the cell centers from the CSV file.
+        grid_nc = nc.Dataset(mesh_filename, 'r')
+        lon_grid = grid_nc.variables['lonCell'][:] * 180.0 / np.pi
+        lat_grid = grid_nc.variables['latCell'][:] * 180.0 / np.pi
+        lon_grid = np.mod(lon_grid + 180.0, 360.0) - 180.0
+        nCells = lon_grid.size
+
+        inside_count = 0
+        for iCell in range(nCells):
+            lon = lon_grid[iCell]
+            lat = lat_grid[iCell]
+            if self.is_inside(lon, lat, min_lon, max_lon, min_lat, max_lat):
+                weights.append(inside_weight)
+                inside_count = inside_count + 1
+            else:
+                weights.append(outside_weight)
+        print(f'cells inside: {inside_count}/{nCells}')
+
+        f = open(graph_filename, 'r')
+        lines = f.read().splitlines()
+        weight_lines = []
+        for i, line in enumerate(lines):
+            if i != 0:
+                weight_lines.append(f'{weights[i - 1]} {line}')
+            else:
+                weight_lines.append(f'{line} 010')
+
+        # Write the weights to the output file, one weight per line.
+        with open(output_filename, "w") as outfile:
+            for line in weight_lines:
+                outfile.write(f"{line}\n")
+
+    def is_inside(self, lon, lat, min_lon, max_lon, min_lat, max_lat):
+        """
+        Determine if a given coordinate (lon, lat) is within the bounding box.
+        """
+        return (min_lon <= lon <= max_lon) and (min_lat <= lat <= max_lat)
