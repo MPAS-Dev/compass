@@ -188,7 +188,7 @@ class InitialState(Step):
 
         mesh = nc.Dataset("mesh.nc", "r")
         if self.wetdry == 'subgrid':
-            init = nc.Dataset("ocean_subgrid2.nc", "r+")
+            init = nc.Dataset(f"ocean_subgrid{i + 1}.nc", "r+")
         else:
             init = nc.Dataset("ocean.nc", "r+")
 
