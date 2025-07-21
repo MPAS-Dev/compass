@@ -112,14 +112,22 @@ class InitialState(Step):
 
         package = 'compass.ocean.tests.hurricane.init'
         if self.wetdry == 'subgrid':
-            self.add_namelist_file(package, 'namelist.init_subgrid',
-                                   mode='init')
-            self.add_streams_file(package, 'streams.ocean_subgrid0',
-                                  mode='init')
 
             filename = 'bathy_data.json'
             with resources.open_text(package, filename) as bathy_file:
                 self.bathy_files = json.load(bathy_file)
+
+            self.add_namelist_file(package, 'namelist.init_subgrid',
+                                   mode='init')
+            dem = self.bathy_files["NCEI"][0]
+            options = dict(
+                config_Buttermilk_bay_topography_file=f"'NCEI_data/{dem}'")
+            self.add_namelist_options(
+                options=options, mode='init',
+                out_name='namelist.ocean')
+
+            self.add_streams_file(package, 'streams.ocean_subgrid0',
+                                  mode='init')
 
             os.makedirs(f'{self.work_dir}/NCEI_data', exist_ok=True)
             for i, dem in enumerate(self.bathy_files["NCEI"]):
