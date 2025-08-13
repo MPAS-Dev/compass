@@ -9,6 +9,8 @@ on:
     # 4. Entry: Month of the year when the process will be started [1-12]
     # 5. Entry: Weekday when the process will be started [0-6] [0 is Sunday]
     - cron: '0 8 * * 3'
+  # Allow manual triggering of the workflow
+  workflow_dispatch:
 
 env:
   UP_TO_DATE: false
@@ -39,10 +41,12 @@ jobs:
           git checkout -b update-pre-commit-deps
           pre-commit autoupdate
           git add .
-          # The second command will fail if no changes were present, so we ignore it
-          git commit -m "Update pre-commit dependencies" || ( echo "UP_TO_DATE=true" >> "$GITHUB_ENV")
+          # Either there are changes, in which case we commit them, or there are no changes,
+          # in which case we can skip the push & pr-create jobs
+          git commit -m "Update pre-commit dependencies" \
+          || ( echo "UP_TO_DATE=true" >> "$GITHUB_ENV")
 
-      - name: Push Changes
+      - name: Push Changes with github-actions bot
         if: ${{ env.UP_TO_DATE == 'false' }}
         uses: ad-m/github-push-action@master
         with:
@@ -53,16 +57,30 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
 
-      - name: Make PR and add reviewers and labels
+      - name: Create PR with github-actions bot
         if: ${{ env.UP_TO_DATE == 'false' }}
         run: |
           cd update-pre-commit-deps
           gh pr create \
-          --title "Update pre-commit and its dependencies" \
-          --body "This PR was auto-generated to update pre-commit and its dependencies." \
-          --head update-pre-commit-deps \
-          --reviewer ${{ env.REVIEWERS }} \
-          --label ci
+            --title "Update pre-commit and its dependencies" \
+            --body "This PR was auto-generated to update pre-commit and its dependencies." \
+            --head update-pre-commit-deps
         env:
           GH_TOKEN: ${{ github.token }}
 
+      - name: Add reviewers and labels with PAT
+        if: ${{ env.UP_TO_DATE == 'false' }}
+        run: |
+          cd update-pre-commit-deps
+
+          gh pr edit --add-label ci
+
+          IFS=',' read -ra reviewers <<< "${REVIEWERS}"
+          for reviewer in "${reviewers[@]}"; do
+            echo "Adding reviewer: $reviewer"
+            gh pr edit --add-reviewer "$reviewer"
+          done
+
+        env:
+          REVIEWERS: ${{ env.REVIEWERS }}
+          GH_TOKEN: ${{ secrets.GH_CLI_TOKEN }}
