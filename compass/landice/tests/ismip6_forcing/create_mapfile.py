@@ -163,7 +163,7 @@ def create_scrip_from_latlon(source_grid_file, source_grid_scripfile):
     ds_out["grid_center_lon"] = (("grid_size",), ds.lon.values.flat)
     ds_out["grid_dims"] = (("grid_rank",), [nx, ny])
     ds_out["grid_imask"] = xr.DataArray(
-        np.ones(ds.sizes["grid_size"], dtype="int32"), dims=("grid_size",)
+        np.ones(ds_out.sizes["grid_size"], dtype="int32"), dims=("grid_size",)
     )
 
     # determine the corners of gricells
@@ -195,11 +195,11 @@ def create_scrip_from_latlon(source_grid_file, source_grid_scripfile):
         ("grid_size", "grid_corners"), grid_corner_lon
     )
 
-    ds.grid_center_lat.attrs["units"] = "degrees"
-    ds.grid_center_lon.attrs["units"] = "degrees"
-    ds.grid_corner_lat.attrs["units"] = "degrees"
-    ds.grid_corner_lon.attrs["units"] = "degrees"
-    ds.grid_imask.attrs["units"] = "unitless"
+    ds_out.grid_center_lat.attrs["units"] = "degrees"
+    ds_out.grid_center_lon.attrs["units"] = "degrees"
+    ds_out.grid_corner_lat.attrs["units"] = "degrees"
+    ds_out.grid_corner_lon.attrs["units"] = "degrees"
+    ds_out.grid_imask.attrs["units"] = "unitless"
 
-    ds.attrs["mesh_name"] = source_grid_file
-    write_netcdf(ds, source_grid_scripfile, format="NETCDF3_64BIT")
+    ds_out.attrs["mesh_name"] = source_grid_file
+    write_netcdf(ds_out, source_grid_scripfile, format="NETCDF3_64BIT")
