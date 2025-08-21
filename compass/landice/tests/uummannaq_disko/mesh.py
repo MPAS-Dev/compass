@@ -9,6 +9,7 @@ from compass.landice.mesh import (
     build_mali_mesh,
     clean_up_after_interp,
     interp_gridded2mali,
+    make_region_masks,
 )
 from compass.model import make_graph_file
 from compass.step import Step
@@ -41,6 +42,8 @@ class Mesh(Step):
         self.mesh_filename = 'UummannaqDisko.nc'
         self.add_output_file(filename=self.mesh_filename)
         self.add_output_file(filename='graph.info')
+        self.add_output_file(
+            filename=f'{self.mesh_filename[:-3]}_regionMasks.nc')
         self.add_input_file(
             filename='greenland_1km_2024_01_29.epsg3413.icesheetonly.nc',
             target='greenland_1km_2024_01_29.epsg3413.icesheetonly.nc',
@@ -120,6 +123,13 @@ class Mesh(Step):
         logger.info('creating graph.info')
         make_graph_file(mesh_filename=self.mesh_filename,
                         graph_filename='graph.info')
+
+        mask_filename = f'{self.mesh_filename[:-3]}_regionMasks.nc'
+        make_region_masks(self, self.mesh_filename, mask_filename,
+                          self.cpus_per_task,
+                          tags=['UummannaqDisko'],
+                          component='landice',
+                          all_tags=False)
 
         # Do some final validation of the mesh
         ds = xr.open_dataset(self.mesh_filename)
