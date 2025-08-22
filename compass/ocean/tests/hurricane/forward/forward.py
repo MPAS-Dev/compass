@@ -85,7 +85,7 @@ class ForwardStep(Step):
 
         if wetdry == 'subgrid':
             initial_state_target = \
-                f'{init.path}/initial_state/ocean_subgrid2.nc'
+                f'{init.path}/initial_state/ocean_subgrid_final.nc'
         else:
             initial_state_target = \
                 f'{init.path}/initial_state/ocean.nc'

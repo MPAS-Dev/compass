@@ -89,17 +89,10 @@ class InitialState(Step):
                 filename='graph.info.noweights',
                 work_dir_target=f'{mesh_path}/culled_graph.info')
 
-            self.add_input_file(filename='crm_vol1_2023_nc3.nc',
-                                target='crm_vol1_2023_nc3.nc',
-                                database='bathymetry_database')
-
-            self.add_input_file(filename='crm_vol2_2023_nc3.nc',
-                                target='crm_vol2_2023_nc3.nc',
-                                database='bathymetry_database')
         self.add_model_as_input()
 
         if self.wetdry == 'subgrid':
-            self.add_output_file(filename='ocean_subgrid2.nc')
+            self.add_output_file(filename='ocean_subgrid_final.nc')
         else:
             self.add_output_file(filename='ocean.nc')
         self.add_output_file(filename='graph.info')
@@ -130,6 +123,7 @@ class InitialState(Step):
                                   mode='init')
 
             os.makedirs(f'{self.work_dir}/NCEI_data', exist_ok=True)
+            nfiles = len(self.bathy_files["NCEI"])
             for i, dem in enumerate(self.bathy_files["NCEI"]):
                 self.add_input_file(
                     filename=f'NCEI_data/{dem}',
@@ -150,9 +144,14 @@ class InitialState(Step):
                     options=options, mode='init',
                     out_name=f'namelist.ocean_subgrid{i}')
 
-                stream_replacements = {
-                    'output_file': f'ocean_subgrid{i + 1}.nc',
-                    'input_file': f'ocean_subgrid{i}.nc'}
+                if i == nfiles - 1:
+                    stream_replacements = {
+                        'output_file': 'ocean_subgrid_final.nc',
+                        'input_file': f'ocean_subgrid{i}.nc'}
+                else:
+                    stream_replacements = {
+                        'output_file': f'ocean_subgrid{i + 1}.nc',
+                        'input_file': f'ocean_subgrid{i}.nc'}
                 if i == 0:
                     stream_replacements['input_file'] = 'ocean_init.nc'
                 self.add_streams_file(
@@ -168,6 +167,41 @@ class InitialState(Step):
         """
         self._get_resources()
         super().constrain_resources(available_resources)
+
+    def update_namelist_pio(self, out_name=None):
+        """
+        Modify the namelist so the number of PIO tasks and the stride between
+        them consistent with the number of nodes and cores (one PIO task per
+        node).
+
+        Parameters
+        ----------
+        out_name : str, optional
+            The name of the namelist file to write out, ``namelist.<core>`` by
+            default
+        """
+        config = self.config
+        cores = self.ntasks * self.cpus_per_task
+
+        if out_name is None:
+            out_name = f'namelist.{self.mpas_core.name}'
+
+        cores_per_node = config.getint('parallel', 'cores_per_node')
+
+        # update PIO tasks based on the machine settings and the available
+        # number or cores
+        pio_num_iotasks = 2 * int(np.ceil(cores / cores_per_node))
+        pio_stride = self.ntasks // pio_num_iotasks
+        if pio_stride > cores_per_node:
+            raise ValueError(f'Not enough nodes for the number of cores.  '
+                             f'cores: {cores}, cores per node: '
+                             f'{cores_per_node}')
+
+        replacements = {'config_pio_num_iotasks': f'{pio_num_iotasks}',
+                        'config_pio_stride': f'{pio_stride}'}
+
+        self.update_namelist_at_runtime(options=replacements,
+                                        out_name=out_name)
 
     def run(self):
         """
@@ -193,6 +227,9 @@ class InitialState(Step):
                 self.load_balance_graphfile(min_lon, max_lon, min_lat, max_lat)
                 run_model(self, namelist=f'namelist.ocean_subgrid{i}',
                           streams=f'streams.ocean_subgrid{i}')
+
+                if os.path.isfile(f'ocean_subgrid{i - 2}.nc'):
+                    os.remove(f'ocean_subgrid{i - 2}.nc')
 
         mesh = nc.Dataset("mesh.nc", "r")
         if self.wetdry == 'subgrid':
