@@ -9,7 +9,8 @@
         type="output"
         filename_template="ocean_init.nc"
         clobber_mode="truncate"
-        output_interval="0000_00:00:01">
+        output_interval="0000_00:00:01"
+        io_type="pnetcdf,cdf5">
 
     <stream name="input_init"/>
     <var_struct name="tracers"/>
@@ -47,7 +48,8 @@
 <stream name="bathymetry"
         filename_template="mesh.nc"
         type="input"
-        input_interval="initial_only">
+        input_interval="initial_only"
+        io_type="pnetcdf,cdf5">
 
     <var name="bottomDepthObserved"/>
 </stream>
