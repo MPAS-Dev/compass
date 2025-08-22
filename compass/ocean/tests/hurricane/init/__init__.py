@@ -8,6 +8,9 @@ from compass.ocean.tests.hurricane.init.initial_state import InitialState
 from compass.ocean.tests.hurricane.init.interpolate_atm_forcing import (
     InterpolateAtmForcing,
 )
+from compass.ocean.tests.hurricane.init.interpolate_mannings_n import (
+    InterpolateManningsN,
+)
 from compass.ocean.tests.tides.init.calculate_wave_drag import (
     CalculateWaveDrag,
 )
@@ -61,12 +64,14 @@ class Init(TestCase):
         self.add_step(CalculateWaveDrag(test_case=self, mesh=mesh))
         self.add_step(RemapBathymetry(test_case=self, mesh=mesh,
                                       limit_bathy_outside_refinement=True))
-        self.add_step(InitialState(test_case=self, mesh=mesh,
-                                   use_lts=use_lts, wetdry=wetdry))
+        init = InitialState(test_case=self, mesh=mesh,
+                            use_lts=use_lts, wetdry=wetdry)
+        self.add_step(init)
         self.add_step(InterpolateAtmForcing(test_case=self, mesh=mesh,
                                             storm=storm))
         self.add_step(CreatePointstatsFile(test_case=self, mesh=mesh,
                                            storm=storm))
+        self.add_step(InterpolateManningsN(test_case=self, init=init))
 
     def configure(self):
         """
