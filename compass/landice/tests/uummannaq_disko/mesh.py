@@ -66,10 +66,14 @@ class Mesh(Step):
         Run this step of the test case
         """
         logger = self.logger
+        config = self.config
+
         section_name = 'mesh'
 
-        section_gis = self.config['greenland']
+        section_gis = config['greenland']
 
+        parallel_executable = config.get('parallel',
+                                         'parallel_executable')
         nProcs = section_gis.get('nProcs')
         src_proj = section_gis.get("src_proj")
         data_path = section_gis.get('data_path')
@@ -105,14 +109,16 @@ class Mesh(Step):
 
         # Now perform bespoke interpolation of geometry and velocity data
         # from their respective sources
-        interp_gridded2mali(self, bedmachine_dataset, dst_scrip_file, nProcs,
+        interp_gridded2mali(self, bedmachine_dataset, dst_scrip_file,
+                            parallel_executable, nProcs,
                             self.mesh_filename, src_proj, variables="all")
 
         # only interpolate a subset of MEaSUREs variables onto the MALI mesh
         measures_vars = ['observedSurfaceVelocityX',
                          'observedSurfaceVelocityY',
                          'observedSurfaceVelocityUncertainty']
-        interp_gridded2mali(self, measures_dataset, dst_scrip_file, nProcs,
+        interp_gridded2mali(self, measures_dataset, dst_scrip_file,
+                            parallel_executable, nProcs,
                             self.mesh_filename, src_proj,
                             variables=measures_vars)
 
