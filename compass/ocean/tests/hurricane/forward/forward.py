@@ -1,3 +1,5 @@
+import numpy as np
+
 from compass.model import run_model
 from compass.step import Step
 
@@ -122,6 +124,41 @@ class ForwardStep(Step):
         """
         self._get_resources()
         super().constrain_resources(available_resources)
+
+    def update_namelist_pio(self, out_name=None):
+        """
+        Modify the namelist so the number of PIO tasks and the stride between
+        them consistent with the number of nodes and cores (one PIO task per
+        node).
+
+        Parameters
+        ----------
+        out_name : str, optional
+            The name of the namelist file to write out, ``namelist.<core>`` by
+            default
+        """
+        config = self.config
+        cores = self.ntasks * self.cpus_per_task
+
+        if out_name is None:
+            out_name = f'namelist.{self.mpas_core.name}'
+
+        cores_per_node = config.getint('parallel', 'cores_per_node')
+
+        # update PIO tasks based on the machine settings and the available
+        # number or cores
+        pio_num_iotasks = 2 * int(np.ceil(cores / cores_per_node))
+        pio_stride = self.ntasks // pio_num_iotasks
+        if pio_stride > cores_per_node:
+            raise ValueError(f'Not enough nodes for the number of cores.  '
+                             f'cores: {cores}, cores per node: '
+                             f'{cores_per_node}')
+
+        replacements = {'config_pio_num_iotasks': f'{pio_num_iotasks}',
+                        'config_pio_stride': f'{pio_stride}'}
+
+        self.update_namelist_at_runtime(options=replacements,
+                                        out_name=out_name)
 
     def run(self):
         """

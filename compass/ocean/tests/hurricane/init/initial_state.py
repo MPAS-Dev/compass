@@ -114,7 +114,7 @@ class InitialState(Step):
                                    mode='init')
             dem = self.bathy_files["NCEI"][0]
             options = dict(
-                config_Buttermilk_bay_topography_file=f"'NCEI_data/{dem}'")
+                config_subgrid_topography_file=f"'NCEI_data/{dem}'")
             self.add_namelist_options(
                 options=options, mode='init',
                 out_name='namelist.ocean')
@@ -123,6 +123,7 @@ class InitialState(Step):
                                   mode='init')
 
             os.makedirs(f'{self.work_dir}/NCEI_data', exist_ok=True)
+            os.makedirs(f'{self.work_dir}/LULC_data', exist_ok=True)
             nfiles = len(self.bathy_files["NCEI"])
             for i, dem in enumerate(self.bathy_files["NCEI"]):
                 self.add_input_file(
@@ -130,8 +131,14 @@ class InitialState(Step):
                     target=f'ncei/{dem}',
                     database='bathymetry_database')
 
+                self.add_input_file(
+                    filename=f'LULC_data/landuse_from_{dem}',
+                    target=f'LULC/landuse_from_{dem}',
+                    database='hurricane')
+
                 options = dict(
-                    config_Buttermilk_bay_topography_file=f"'NCEI_data/{dem}'")
+                    config_subgrid_topography_file=f"'NCEI_data/{dem}'",
+                    config_subgrid_lulc_file=f"'LULC_data/landuse_from_{dem}'")
                 self.add_namelist_file(package, 'namelist.init', mode='init',
                                        out_name=f'namelist.ocean_subgrid{i}')
                 self.add_namelist_file(package, 'namelist.init.wd',
@@ -190,7 +197,7 @@ class InitialState(Step):
 
         # update PIO tasks based on the machine settings and the available
         # number or cores
-        pio_num_iotasks = 2 * int(np.ceil(cores / cores_per_node))
+        pio_num_iotasks = 4 * int(np.ceil(cores / cores_per_node))
         pio_stride = self.ntasks // pio_num_iotasks
         if pio_stride > cores_per_node:
             raise ValueError(f'Not enough nodes for the number of cores.  '
