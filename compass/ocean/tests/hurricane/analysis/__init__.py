@@ -64,7 +64,7 @@ class Analysis(Step):
             self.run_min_date = '2012 10 10 00 00'
             self.run_max_date = '2012 11 04 00 00'
             self.adjust_min_date = '2012 10 01 00 00'
-            self.adjust_max_date = '2012 10 10 00 00'
+            self.adjust_max_date = '2012 10 25 00 00'
 
             filename = 'sandy_stations.json'
             with resources.open_text(package, filename)as stations_file:
