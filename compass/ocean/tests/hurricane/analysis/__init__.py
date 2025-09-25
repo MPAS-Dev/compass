@@ -5,11 +5,16 @@ from importlib import resources
 
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
+import cmocean
+import matplotlib.colors as mcolors
 import matplotlib.dates as mdates
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import netCDF4
 import numpy as np
+import xarray as xr
+from matplotlib.collections import PatchCollection
+from matplotlib.patches import Polygon
 from scipy import spatial
 
 from compass.step import Step
@@ -50,6 +55,8 @@ class Analysis(Step):
 
         self.add_input_file(filename='pointwiseStats.nc',
                             target='../forward/pointwiseStats.nc')
+        self.add_input_file(filename='mesh.nc',
+                            target='../forward/input.nc')
 
         self.frmt = '%Y %m %d %H %M'
         self.storm = storm
@@ -82,6 +89,24 @@ class Analysis(Step):
                         target=f'sandy_validation/'
                                f'{obs}_stations/{sta}.txt',
                         database='hurricane')
+
+            package = 'compass.ocean.tests.hurricane.init'
+            filename = 'bathy_data.json'
+            with resources.open_text(package, filename) as bathy_file:
+                self.bathy_files = json.load(bathy_file)
+
+            os.makedirs(f'{self.work_dir}/NCEI_data', exist_ok=True)
+            os.makedirs(f'{self.work_dir}/LULC_data', exist_ok=True)
+            for i, dem in enumerate(self.bathy_files["NCEI"]):
+                self.add_input_file(
+                    filename=f'NCEI_data/{dem}',
+                    target=f'ncei/{dem}',
+                    database='bathymetry_database')
+
+                self.add_input_file(
+                    filename=f'LULC_data/landuse_from_{dem}',
+                    target=f'LULC/landuse_from_{dem}',
+                    database='hurricane')
 
     def read_pointstats(self, pointstats_file):
         """
@@ -204,6 +229,9 @@ class Analysis(Step):
         """
         plt.switch_backend('agg')
 
+        plot_station_dems = self.config.getboolean('hurricane_analysis',
+                                                   'plot_station_dems')
+
         # Get paths to run data to plot
         pointstats_file = {}
         comparison_runs = self.config.get('hurricane_analysis',
@@ -237,6 +265,18 @@ class Analysis(Step):
         for i, run in enumerate(data):
             hwm_mod[run] = []
 
+        # Create new colormap for LULC
+        tab20_colors = plt.cm.get_cmap('tab20').colors
+        tab20 = []
+        for c in tab20_colors:
+            tab20.append(mcolors.to_hex(c))
+        new_colors = [
+            '#91a9b1',  # Seafoam green
+            '#b46617',  # Burnt orange
+        ]
+        tab20.extend(new_colors)
+        self.tab25 = mcolors.ListedColormap(tab20, name='tab25')
+
         # Plot time series
         for obs in self.observations:
             os.makedirs(f'{self.work_dir}/{obs}_plots', exist_ok=True)
@@ -246,6 +286,7 @@ class Analysis(Step):
 
             for sta in self.observations[obs]:
 
+                print(sta)
                 i = stations['name'].index(sta)
 
                 # Read in observed data and get coordinates
@@ -332,6 +373,10 @@ class Analysis(Step):
                             bbox_extra_artists=(lgd, st,))
                 plt.close()
 
+                # Plot DEM and LULC around station
+                if plot_station_dems:
+                    self.plot_dem(sta, sta_lon, sta_lat)
+
         # Convert to numpy arrays
         hwm_obs = np.asarray(hwm_obs)
         for i, run in enumerate(data):
@@ -384,3 +429,165 @@ class Analysis(Step):
             fig.tight_layout()
             fig.savefig(f'hwm_spatial_{run}.png', bbox_inches='tight')
             plt.close()
+
+    def plot_dem(self, sta, sta_lon, sta_lat):
+
+        dsMesh = xr.open_dataset('mesh.nc')
+
+        # Find DEM tile containing station
+        lat_name = 'lat'
+        lon_name = 'lon'
+        for dem in self.bathy_files['NCEI']:
+            ds_topo = xr.open_dataset(f'NCEI_data/{dem}')
+            lon = ds_topo.lon.values
+            lat = ds_topo.lat.values
+            da_topo = ds_topo.Band1
+            if sta_lon > np.min(lon) and sta_lon < np.max(lon) and \
+               sta_lat > np.min(lat) and sta_lat < np.max(lat):
+
+                if lat_name in da_topo.dims:
+                    lat = da_topo[lat_name]
+                    if lat.ndim == 1 and (lat.diff(lat_name) < 0).any():
+                        da_topo = da_topo.sortby(lat_name)
+
+                if lon_name in da_topo.dims:
+                    lon = da_topo[lon_name]
+                    if lon.ndim == 1 and (lon.diff(lon_name) < 0).any():
+                        da_topo = da_topo.sortby(lon_name)
+
+                break
+
+        ds_lulc = xr.open_dataset(f'LULC_data/landuse_from_{dem}')
+        da_lulc = ds_lulc.Band1
+
+        fig = plt.figure(figsize=[18, 12])
+        ax = []
+        ax.append(fig.add_subplot(2, 2, 1))
+        ax.append(fig.add_subplot(2, 2, 2))
+        ax.append(fig.add_subplot(2, 2, 3))
+        ax.append(fig.add_subplot(2, 2, 4))
+
+        # Plot DEM topo and LULC around station
+        for i, eps in enumerate([0.1, 0.01]):
+            bbox = np.array([sta_lon - eps, sta_lon + eps,
+                             sta_lat - eps, sta_lat + eps])
+
+            patches = self.compute_cell_patches(dsMesh, bbox)
+
+            skip_topo = False
+            try:
+                da = da_topo.sel(lon=slice(bbox[0], bbox[1]),
+                                 lat=slice(bbox[2], bbox[3]))
+            except KeyError:
+                print('topo slicing failed')
+                skip_topo = True
+
+            if not skip_topo:
+                axi = 2 * i
+                da.plot(ax=ax[axi],
+                        cmap=cmocean.cm.topo,
+                        cbar_kwargs={'label': 'topo'})
+                ax[axi].plot(sta_lon, sta_lat,
+                             marker='o',
+                             markerfacecolor='k',
+                             markeredgecolor='r',
+                             zorder=102)
+                ax[axi].axis('equal')
+                ax[axi].autoscale(enable=False)
+                ax[axi].add_collection(patches)
+                ax[axi].set_xlabel('longitude')
+                ax[axi].set_ylabel('latitude')
+
+                tick_locations = range(2, 24)
+                tick_labels = ['h.i. dev',
+                               'm.i. dev',
+                               'l.i. dev',
+                               'open dev',
+                               'cul land',
+                               'pasture',
+                               'grassland',
+                               'dec forest',
+                               'eve forest',
+                               'mix forest',
+                               'scrub',
+                               'p.f. wetland',
+                               'p.s. wetland',
+                               'p.e. wetland',
+                               'e.f. wetland',
+                               'e.s. wetland',
+                               'e.e. wetland',
+                               'u.c. shore',
+                               'bare land',
+                               'open water',
+                               'p.a. bed',
+                               'e.a. bed']
+
+                da = da_lulc.sel(lon=slice(bbox[0], bbox[1]),
+                                 lat=slice(bbox[2], bbox[3]))
+                formt = plt.FuncFormatter(
+                    lambda x, p: tick_labels[tick_locations.index(x)])
+
+                axi = 2 * i + 1
+                da.plot(ax=ax[axi],
+                        cmap=self.tab25,
+                        vmin=2,
+                        vmax=23,
+                        cbar_kwargs={'label': 'LULC',
+                                     'ticks': tick_locations,
+                                     'format': formt})
+                ax[axi].plot(sta_lon, sta_lat,
+                             marker='o',
+                             markerfacecolor='k',
+                             markeredgecolor='r',
+                             zorder=102)
+                ax[axi].axis('equal')
+                ax[axi].set_xlabel('longitude')
+                ax[axi].set_ylabel('latitude')
+
+        fig.tight_layout()
+        fig.savefig(f'{sta}_dem.png', bbox_inches='tight')
+
+        plt.close()
+
+    def compute_cell_patches(self, dsMesh, bbox):
+        patches = []
+        nVerticesOnCell = dsMesh.nEdgesOnCell.values
+        verticesOnCell = dsMesh.verticesOnCell.values - 1
+        lonVertex = np.degrees(dsMesh.lonVertex.values)
+        latVertex = np.degrees(dsMesh.latVertex.values)
+        lonVertex = np.mod(lonVertex + 180.0, 360.0) - 180.0
+        lonCell = np.degrees(dsMesh.lonCell.values)
+        latCell = np.degrees(dsMesh.latCell.values)
+        lonCell = np.mod(lonCell + 180.0, 360.0) - 180.0
+        for iCell in range(dsMesh.sizes['nCells']):
+            if lonCell[iCell] < bbox[0] - 1:
+                continue
+            if lonCell[iCell] > bbox[1] + 1:
+                continue
+            if latCell[iCell] < bbox[2] - 1:
+                continue
+            if latCell[iCell] > bbox[3] + 1:
+                continue
+
+            nVert = nVerticesOnCell[iCell]
+            vertexIndices = verticesOnCell[iCell, :nVert]
+            vertices = np.zeros((nVert, 2))
+            vertices[:, 0] = lonVertex[vertexIndices]
+            vertices[:, 1] = latVertex[vertexIndices]
+
+            in_box = False
+            if np.any(vertices[:, 0] > bbox[0]) and \
+               np.any(vertices[:, 0] < bbox[1]) and \
+               np.any(vertices[:, 1] > bbox[2]) and \
+               np.any(vertices[:, 1] < bbox[3]):
+                in_box = True
+            if not in_box:
+                continue
+
+            polygon = Polygon(vertices, closed=True)
+            patches.append(polygon)
+
+        p = PatchCollection(patches, alpha=0.5,
+                            facecolor='none', edgecolor='k')
+
+        return p
