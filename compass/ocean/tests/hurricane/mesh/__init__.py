@@ -80,7 +80,7 @@ class Mesh(TestCase):
         cull_mesh_step = CullMeshStep(
             test_case=self, base_mesh_step=base_mesh_step,
             with_ice_shelf_cavities=True,
-            preserve_floodplain=True, remap_topography=remap_step)
+            preserve_floodplain=True, unsmoothed_topo=remap_step)
 
         self.add_step(cull_mesh_step)
 
