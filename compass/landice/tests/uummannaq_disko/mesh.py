@@ -4,6 +4,7 @@ import os
 import jigsawpy
 import numpy as np
 import xarray as xr
+from mpas_tools.logging import check_call
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
 
 from compass.landice.mesh import (
@@ -81,9 +82,13 @@ class Mesh(Step):
         data_path = section_gis.get('data_path')
         measures_filename = section_gis.get("measures_filename")
         bedmachine_filename = section_gis.get("bedmachine_filename")
+        smb_filename = section_gis.get("smb_filename")
+        bmb_filename = section_gis.get("bmb_filename")
 
         measures_dataset = os.path.join(data_path, measures_filename)
         bedmachine_dataset = os.path.join(data_path, bedmachine_filename)
+        smb_dataset = os.path.join(data_path, smb_filename)
+        bmb_dataset = os.path.join(data_path, bmb_filename)
 
         section_name = 'mesh'
 
@@ -133,6 +138,127 @@ class Mesh(Step):
                             self.mesh_filename, src_proj,
                             variables=measures_vars)
 
+        # Insert SMB fields for dh/dt constraint
+        # Create copy of smb file with mean and stdev smb
+        # for 2002 – 2012, named to be consistent with MALI
+        start_yr = 52  # 2002
+        end_yr = 63  # 2012
+
+        file, ext = os.path.splitext(smb_dataset)
+        smb_altered = file + '.tmp.copy' + ext
+
+        ds = xr.open_dataset(smb_dataset)
+        smb_rec = ds['smb_rec'][start_yr:end_yr, :, :].values
+        smb_mean = np.nanmean(smb_rec, axis=0).astype('float64')
+        smb_stdev = np.nanstd(smb_rec, axis=0).astype('float64')
+        x = ds['x'].values
+        y = ds['y'].values
+        ds['x'] = xr.DataArray(x.astype('int32'), dims=("x"),
+                               attrs={'units': 'm'})
+        ds['y'] = xr.DataArray(y.astype('int32'), dims=("y"),
+                               attrs={'units': 'm'})
+        ds['x1'] = ds['x']
+        ds['y1'] = ds['y']
+        ds['sfcMassBal'] = xr.DataArray(smb_mean, dims=("y", "x"))
+        ds['sfcMassBalUncertainty'] = xr.DataArray(smb_stdev, dims=("y", "x"))
+        ds.to_netcdf(smb_altered)
+        ds.close()
+
+        args = (["ncatted", "-a", "_FillValue,,d,,", smb_altered])
+        check_call(args)
+
+        # interpolate
+        smb_scrip = ['smb_rec.1950-2014.BN_RACMO2.'
+                     '3p2-CESM2-Historical.1km.YY.scrip.nc']
+        args = ['create_scrip_file_from_planar_rectangular_grid',
+                '-i', smb_altered,
+                '-s', smb_scrip,
+                '-p', 'gis-gimp', '-r', '2']
+        check_call(args)
+
+        args = [parallel_executable, '-n', nProcs, 'ESMF_RegridWeightGen',
+                '--source', smb_scrip, '--destination', dst_scrip_file,
+                '--weight', 'SMB_to_UD_weights.nc',
+                '--method', 'conserve', '--netcdf4',
+                '--dst_regional', '--src_regional', '--ignore_unmapped']
+        check_call(args)
+
+        args = ['ncremap', '-i', smb_altered,
+                '-o', 'smb_remapped.nc',
+                '-m', 'SMB_to_UD_weights.nc',
+                '-v', 'sfcMassBal,sfcMassBalUncertainty']
+        check_call(args)
+
+        # Repeat with BMB fields for dh/dt constraint
+        # rename variables to be compatible
+        # with MALI and interpolator
+
+        # interpolate
+        bmb_scrip = 'basalmelt_Karlssonetal2021_updated2022.scrip.nc'
+        args = ['create_scrip_file_from_planar_rectangular_grid',
+                '-i', bmb_dataset,
+                '-s', bmb_scrip,
+                '-p', 'gis-gimp', '-r', '2']
+        check_call(args)
+
+        args = [parallel_executable, '-n', nProcs, 'ESMF_RegridWeightGen',
+                '--source', bmb_scrip, '--destination', dst_scrip_file,
+                '--weight', 'BMB_to_UD_weights.nc',
+                '--method', 'conserve', '--netcdf4',
+                '--dst_regional', '--src_regional', '--ignore_unmapped']
+        check_call(args)
+
+        args = ['ncremap', '-i', bmb_dataset,
+                '-o', 'bmb_remapped.nc',
+                '-m', 'BMB_to_UD_weights.nc',
+                '-v', 'bmb,bmbErr']
+        check_call(args)
+
+        # transfer remapped SMB and BMB to final mesh
+        ds_bmb = xr.open_dataset('bmb_remapped.nc')
+        ds_smb = xr.open_dataset('smb_remapped.nc')
+        ds = xr.open_dataset(self.mesh_filename)
+
+        bmb = ds_bmb['bmb'].values
+        bmbErr = ds_bmb['bmbErr'].values
+        smb = ds_smb['sfcMassBal'].values
+        smbU = ds_smb['sfcMassBalUncertainty'].values
+
+        # unit conversions to MALI standards
+        # mm w.e./yr to kg/(m2 s)
+        smb = smb / 3.15e7
+        smbU = smbU / 3.15e7
+        # m/yr to kg/(m2 s)
+        bmb = (bmb * 910) / 3.15e7
+        bmbErr = (bmbErr * 910) / 3.15e7
+
+        bmb = bmb.reshape(1, len(bmb))
+        bmbErr = bmbErr.reshape(1, len(bmbErr))
+        smb = smb.reshape(1, len(smb))
+        smbU = smbU.reshape(1, len(smbU))
+
+        ds['floatingBasalMassBal'] = \
+            xr.DataArray(bmb,
+                         dims=("Time", "nCells"),
+                         attrs={'units': 'kg m^-2 s^-1'})
+        ds['floatingBasalMassBalUncertainty'] = \
+            xr.DataArray(bmbErr, dims=("Time", "nCells"),
+                         attrs={'units': 'kg m^-2 s^-1'})
+        ds['sfcMassBal'] = xr.DataArray(smb, dims=("Time", "nCells"),
+                                        attrs={'units': 'kg m^-2 s^-1'})
+        ds['sfcMassBalUncertainty'] = \
+            xr.DataArray(smbU,
+                         dims=("Time", "nCells"),
+                         attrs={'units': 'kg m^-2 s^-1'})
+
+        ds.to_netcdf(self.mesh_filename, 'a')
+        ds.close()
+        ds_smb.close()
+        ds_bmb.close()
+
+        args = (["ncatted", "-a", "_FillValue,,d,,", self.mesh_filename])
+        check_call(args)
+
         # perform some final cleanup details
         clean_up_after_interp(self.mesh_filename)
 
@@ -152,19 +278,28 @@ class Mesh(Step):
         ds = xr.open_dataset(self.mesh_filename)
         # Ensure basalHeatFlux is positive
         ds["basalHeatFlux"] = np.abs(ds.basalHeatFlux)
-        # Ensure reasonable dHdt values
+
+        # Ensure reasonable dHdt and dHdtErr values
         dHdt = ds["observedThicknessTendency"]
-        # Arbitrary 5% uncertainty; improve this later
-        dHdtErr = np.abs(dHdt) * 0.05
+        # Calculate dHdt err using Csatho et al 2014 estimates
+        # Error is approximated based on surface velocity
+        baselineUncertainty = 0.01  # m/yr
+        ux = ds['observedSurfaceVelocityX'].values
+        uy = ds['observedSurfaceVelocityY'].values
+        spd = np.sqrt(ux**2 + uy**2)
+        mask = spd > (50.0 / 3.15E7)  # cutoff at 50 m/yr
+        dHdtErr = baselineUncertainty * np.ones(dHdt.values.shape) / 3.15E7
+        dHdtErr[mask] = 2.0 / 3.15E7  # From Csatho 2014
         # Use threshold of |dHdt| > 1.0 to determine invalid data
         mask = np.abs(dHdt) > 1.0
-        # Assign very large uncertainty where data is missing
-        dHdtErr = dHdtErr.where(~mask, 1.0)
         # Remove ridiculous values
         dHdt = dHdt.where(~mask, 0.0)
+
         # Put the updated fields back in the dataset
         ds["observedThicknessTendency"] = dHdt
-        ds["observedThicknessTendencyUncertainty"] = dHdtErr
+        dhdterr = xr.DataArray(dHdtErr.astype('float64'),
+                               dims=("Time", "nCells"))
+        ds["observedThicknessTendencyUncertainty"] = dhdterr
         # Write the data to disk
         ds.to_netcdf(self.mesh_filename, 'a')
 
