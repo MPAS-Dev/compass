@@ -74,7 +74,7 @@ class atmosphereFileFinder:
         # should do some checking here that all the fps work...
         self.dir2GCMs = dir2GCMs
 
-    def get_filename(self, GCM, scenario, variable, start=2015, end=2100):
+    def get_filename(self, GCM, scenario, variable, start=1950, end=2100):
         """
         """
         if GCM == "NorESM1-M":
