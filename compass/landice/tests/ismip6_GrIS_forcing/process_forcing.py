@@ -107,8 +107,9 @@ class ProcessForcing(Step):
                                       drop_variables=vars_2_drop,
                                       use_cftime=True)
 
-        # mask of desired time indices
-        mask = remapped_ds.time.dt.year.isin(range(start, end))
+        # create mask of desired time indices. Include forcing from year prior
+        # to requested start date since forcing in July but sims start in Jan
+        mask = remapped_ds.time.dt.year.isin(range(start - 1, end))
         # drop the non-desired time indices from remapped dataset
         remapped_ds = remapped_ds.where(mask, drop=True)
         # add xtime variable based on `time`
