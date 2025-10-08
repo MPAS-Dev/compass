@@ -2,6 +2,7 @@ import glob
 import os
 
 import xarray as xr
+from xarray.coders import CFDatetimeCoder
 
 # create mapping dictionary of ISMIP6 variables to MALI variable names
 {"thermal_forcing": "ismip6_2dThermalForcing",
@@ -82,6 +83,7 @@ class atmosphereFileFinder:
         # get a list of all the yearly files within the period of intrest
         yearly_files = self.__find_yearly_files(GCM, scenario, variable,
                                                 start, end)
+
         # still need to make the output filename to write combined files to
         out_fn = f"MAR3.9_{GCM}_{scenario}_{variable}_{start}--{end}.nc"
         # relative to the workdir, which we've already checked if if existed
@@ -129,9 +131,12 @@ class atmosphereFileFinder:
     def __combine_files(self, files, out_fn):
         """
         """
-        ds = xr.open_mfdataset(files, concat_dim="time", combine="nested",
+        decoder = CFDatetimeCoder(use_cftime=True)
+
+        ds = xr.open_mfdataset(files, decode_times=decoder,
+                               concat_dim="time", combine="nested",
                                data_vars='minimal', coords='minimal',
                                compat="broadcast_equals",
-                               combine_attrs="override")
+                               combine_attrs="override", engine='netcdf4')
 
-        ds.to_netcdf(out_fn)
+        ds.to_netcdf(out_fn, engine='netcdf4')
