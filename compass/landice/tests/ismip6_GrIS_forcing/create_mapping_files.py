@@ -143,7 +143,7 @@ class CreateMappingFiles(Step):
 
         # create pyremap `MeshDescriptor` obj for the forcing grid
         forcingDescriptor = ProjectionGridDescriptor.create(
-            projection=forcing_proj, x=x, y=y, meshName=forcing_file_fp)
+            projection=forcing_proj, x=x, y=y, mesh_name=forcing_file_fp)
 
         # write scrip file describing forcing grid
         forcingDescriptor.to_scrip(forcing_scrip_fp)
@@ -153,7 +153,7 @@ class CreateMappingFiles(Step):
                 '-s', forcing_scrip_fp,
                 '-d', mali_mesh_scrip_fp,
                 '-w', weights_file_fp,
-                '--method', 'conserve',
+                '--method', 'bilinear',
                 "--netcdf4",
                 # "--no_log",
                 "--dst_regional", "--src_regional", '--ignore_unmapped']
