@@ -6,6 +6,7 @@ from importlib import resources
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 import cmocean
+import matplotlib as mpl
 import matplotlib.colors as mcolors
 import matplotlib.dates as mdates
 import matplotlib.gridspec as gridspec
@@ -229,6 +230,9 @@ class Analysis(Step):
         """
         plt.switch_backend('agg')
 
+        mpl.rcParams['mathtext.fontset'] = 'stix'
+        mpl.rcParams['font.family'] = 'STIXGeneral'
+
         plot_station_dems = self.config.getboolean('hurricane_analysis',
                                                    'plot_station_dems')
 
@@ -328,7 +332,7 @@ class Analysis(Step):
                 # Plot observed data
                 ax3 = fig.add_subplot(gs[1, :])
                 l1, = ax3.plot(obs_data['datetime'], obs_data['ssh'], 'C0-')
-                labels = ['Observed']
+                labels = ['observed']
                 lines = [l1]
                 hwm_obs.append(np.max(obs_data['ssh']))
 
@@ -369,7 +373,7 @@ class Analysis(Step):
                                  ncol=3, fancybox=False, edgecolor='k')
                 st = plt.suptitle('Station ' + sta, y=1.025, fontsize=16)
                 fig.tight_layout()
-                fig.savefig(f'{obs}_plots/{sta}.png', bbox_inches='tight',
+                fig.savefig(f'{obs}_plots/{sta}_sta.png', bbox_inches='tight',
                             bbox_extra_artists=(lgd, st,))
                 plt.close()
 
@@ -430,37 +434,72 @@ class Analysis(Step):
             fig.savefig(f'hwm_spatial_{run}.png', bbox_inches='tight')
             plt.close()
 
-    def plot_dem(self, sta, sta_lon, sta_lat):
+    def find_data_in_bbox(self, sta_lon, sta_lat, eps):
 
         dsMesh = xr.open_dataset('mesh.nc')
 
         # Find DEM tile containing station
         lat_name = 'lat'
         lon_name = 'lon'
+        locs = [[sta_lon - eps, sta_lat + eps],
+                [sta_lon, sta_lat + eps],
+                [sta_lon + eps, sta_lat + eps],
+                [sta_lon - eps, sta_lat],
+                [sta_lon, sta_lat],
+                [sta_lon + eps, sta_lat],
+                [sta_lon - eps, sta_lat - eps],
+                [sta_lon, sta_lat - eps],
+                [sta_lon + eps, sta_lat - eps]]
+
+        bbox = np.array([sta_lon - eps, sta_lon + eps,
+                         sta_lat - eps, sta_lat + eps])
+        patches1, patches2 = self.compute_cell_patches(dsMesh, bbox)
+
+        dems = {}
         for dem in self.bathy_files['NCEI']:
             ds_topo = xr.open_dataset(f'NCEI_data/{dem}')
             lon = ds_topo.lon.values
             lat = ds_topo.lat.values
             da_topo = ds_topo.Band1
-            if sta_lon > np.min(lon) and sta_lon < np.max(lon) and \
-               sta_lat > np.min(lat) and sta_lat < np.max(lat):
+            lon_min = np.min(lon)
+            lon_max = np.max(lon)
+            lat_min = np.min(lat)
+            lat_max = np.max(lat)
+            for loc in locs:
+                lon_pt = loc[0]
+                lat_pt = loc[1]
+                if lon_pt > lon_min and lon_pt < lon_max and \
+                   lat_pt > lat_min and lat_pt < lat_max:
 
-                if lat_name in da_topo.dims:
-                    lat = da_topo[lat_name]
-                    if lat.ndim == 1 and (lat.diff(lat_name) < 0).any():
-                        da_topo = da_topo.sortby(lat_name)
+                    if lat_name in da_topo.dims:
+                        lat = da_topo[lat_name]
+                        if lat.ndim == 1 and (lat.diff(lat_name) < 0).any():
+                            da_topo = da_topo.sortby(lat_name)
 
-                if lon_name in da_topo.dims:
-                    lon = da_topo[lon_name]
-                    if lon.ndim == 1 and (lon.diff(lon_name) < 0).any():
-                        da_topo = da_topo.sortby(lon_name)
+                    if lon_name in da_topo.dims:
+                        lon = da_topo[lon_name]
+                        if lon.ndim == 1 and (lon.diff(lon_name) < 0).any():
+                            da_topo = da_topo.sortby(lon_name)
 
-                break
+                    dems[dem] = da_topo
 
-        ds_lulc = xr.open_dataset(f'LULC_data/landuse_from_{dem}')
-        da_lulc = ds_lulc.Band1
+        lulcs = {}
+        for dem in dems:
+            ds_lulc = xr.open_dataset(f'LULC_data/landuse_from_{dem}')
+            da_lulc = ds_lulc.Band1
 
-        fig = plt.figure(figsize=[18, 12])
+            lulcs[dem] = da_lulc
+
+        return dems, lulcs, patches1, patches2
+
+    def plot_dem(self, sta, sta_lon, sta_lat):
+
+        eps = 0.25
+        dems, lulcs, patches1, patches2 = self.find_data_in_bbox(sta_lon,
+                                                                 sta_lat,
+                                                                 eps)
+
+        fig = plt.figure(figsize=[12, 8])
         ax = []
         ax.append(fig.add_subplot(2, 2, 1))
         ax.append(fig.add_subplot(2, 2, 2))
@@ -472,33 +511,67 @@ class Analysis(Step):
             bbox = np.array([sta_lon - eps, sta_lon + eps,
                              sta_lat - eps, sta_lat + eps])
 
-            patches = self.compute_cell_patches(dsMesh, bbox)
+            j = 0
+            for dem in dems:
+                da_topo = dems[dem]
+                da_lulc = lulcs[dem]
+                skip_topo = False
+                try:
+                    da = da_topo.sel(lon=slice(bbox[0] - .25 * eps,
+                                               bbox[1] + .25 * eps),
+                                     lat=slice(bbox[2] - .25 * eps,
+                                               bbox[3] + .25 * eps))
+                except:  # noqa: E722
+                    print('topo slicing failed')
+                    skip_topo = True
 
-            skip_topo = False
-            try:
-                da = da_topo.sel(lon=slice(bbox[0], bbox[1]),
-                                 lat=slice(bbox[2], bbox[3]))
-            except KeyError:
-                print('topo slicing failed')
-                skip_topo = True
+                if da.sizes['lon'] == 0 or da.sizes['lat'] == 0:
+                    skip_topo = True
 
-            if not skip_topo:
+                if skip_topo:
+                    continue
+
+                j = j + 1
+
+                # Plot DEM topo
+                if i == 0:
+                    vmin = -40.0
+                    vmax = 40.0
+                elif i == 1:
+                    vmin = -20.0
+                    vmax = 20.0
+
                 axi = 2 * i
-                da.plot(ax=ax[axi],
-                        cmap=cmocean.cm.topo,
-                        cbar_kwargs={'label': 'topo'})
-                ax[axi].plot(sta_lon, sta_lat,
-                             marker='o',
-                             markerfacecolor='k',
-                             markeredgecolor='r',
-                             zorder=102)
-                ax[axi].axis('equal')
+                if j == 1:
+                    da.plot(ax=ax[axi],
+                            cmap=cmocean.cm.topo,
+                            vmin=vmin,
+                            vmax=vmax,
+                            cbar_kwargs={'label': 'bathymetry/topography'})
+                    ax[axi].plot(sta_lon, sta_lat,
+                                 marker='o',
+                                 markerfacecolor='k',
+                                 markeredgecolor='r',
+                                 zorder=102)
+                    if i == 0:
+                        ax[axi].add_collection(patches1)
+                    elif i == 1:
+                        ax[axi].add_collection(patches2)
+                else:
+                    da.plot(ax=ax[axi],
+                            cmap=cmocean.cm.topo,
+                            vmin=vmin,
+                            vmax=vmax,
+                            add_colorbar=False)
                 ax[axi].autoscale(enable=False)
-                ax[axi].add_collection(patches)
+                ax[axi].axis('equal')
                 ax[axi].set_xlabel('longitude')
                 ax[axi].set_ylabel('latitude')
+                ax[axi].set_xlim(bbox[0], bbox[1])
+                ax[axi].set_ylim(bbox[2], bbox[3])
 
-                tick_locations = range(2, 24)
+                # Plot LULC
+                tick_locations = np.linspace(2.5, 23.5, 22).tolist()
                 tick_labels = ['h.i. dev',
                                'm.i. dev',
                                'l.i. dev',
@@ -522,27 +595,35 @@ class Analysis(Step):
                                'p.a. bed',
                                'e.a. bed']
 
-                da = da_lulc.sel(lon=slice(bbox[0], bbox[1]),
-                                 lat=slice(bbox[2], bbox[3]))
+                da = da_lulc
                 formt = plt.FuncFormatter(
                     lambda x, p: tick_labels[tick_locations.index(x)])
 
                 axi = 2 * i + 1
-                da.plot(ax=ax[axi],
-                        cmap=self.tab25,
-                        vmin=2,
-                        vmax=23,
-                        cbar_kwargs={'label': 'LULC',
-                                     'ticks': tick_locations,
-                                     'format': formt})
-                ax[axi].plot(sta_lon, sta_lat,
-                             marker='o',
-                             markerfacecolor='k',
-                             markeredgecolor='r',
-                             zorder=102)
+                if j == 1:
+                    da.plot(ax=ax[axi],
+                            cmap=self.tab25,
+                            vmin=2,
+                            vmax=24,
+                            cbar_kwargs={'label': 'LULC',
+                                         'ticks': tick_locations,
+                                         'format': formt})
+                    ax[axi].plot(sta_lon, sta_lat,
+                                 marker='o',
+                                 markerfacecolor='k',
+                                 markeredgecolor='r',
+                                 zorder=102)
+                else:
+                    da.plot(ax=ax[axi],
+                            cmap=self.tab25,
+                            add_colorbar=False,
+                            vmin=2,
+                            vmax=23)
                 ax[axi].axis('equal')
                 ax[axi].set_xlabel('longitude')
                 ax[axi].set_ylabel('latitude')
+                ax[axi].set_xlim(bbox[0], bbox[1])
+                ax[axi].set_ylim(bbox[2], bbox[3])
 
         fig.tight_layout()
         fig.savefig(f'{sta}_dem.png', bbox_inches='tight')
@@ -587,7 +668,11 @@ class Analysis(Step):
             polygon = Polygon(vertices, closed=True)
             patches.append(polygon)
 
-        p = PatchCollection(patches, alpha=0.5,
-                            facecolor='none', edgecolor='k')
+        # need two copies becuase same collection
+        # cannot be added to separate axes
+        p1 = PatchCollection(patches, alpha=0.5,
+                             facecolor='none', edgecolor='k', zorder=10)
+        p2 = PatchCollection(patches, alpha=0.5,
+                             facecolor='none', edgecolor='k', zorder=10)
 
-        return p
+        return p1, p2
