@@ -40,7 +40,7 @@ class InitialState(Step):
         self.add_input_file(
             filename='buttermilk_bathy.nc',
             target='buttermilk_bathy.nc',
-            database='bathymetry_database')
+            database='buttermilk_bay')
 
         for file in ['base_mesh.nc', 'culled_mesh.nc', 'culled_graph.info',
                      'ocean.nc', 'init_mode_forcing_data.nc']:
