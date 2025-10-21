@@ -2,6 +2,7 @@ import datetime as dt
 import os
 import subprocess
 
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
@@ -43,6 +44,9 @@ class Viz(Step):
         Run this step of the test case
         """
 
+        mpl.rcParams['mathtext.fontset'] = 'stix'
+        mpl.rcParams['font.family'] = 'STIXGeneral'
+
         points = self.get_points()
         self.timeseries_plots(points)
         self.inject_exact_solution()
@@ -82,16 +86,16 @@ class Viz(Step):
             for i, pt in enumerate(points):
 
                 ssh = interp(pt).T
-                ax[i].plot(t / 86400, ssh, label=f'{res}km')
+                ax[i].plot(t / 86400, ssh, label=f'{res} km')
 
         for i, pt in enumerate(points):
             ssh_exact = self.exact_solution('zeta', pt[0], pt[1], t)
-            ax[i].plot(t / 86400, ssh_exact, label='exact')
+            ax[i].plot(t / 86400, ssh_exact, label='exact', color='k')
 
         for i, pt in enumerate(points):
             ax[i].set_xlabel('t (days)')
             ax[i].set_ylabel('ssh (m)')
-            ax[i].set_title(f'Point ({pt[0]/1000}, {pt[1]/1000})')
+            ax[i].set_title(f'Point ({pt[0] / 1000}, {pt[1] / 1000})')
             if i == len(points) - 1:
                 lines, labels = ax[i].get_legend_handles_labels()
 
@@ -127,7 +131,7 @@ class Viz(Step):
                 ds.ssh_exact.encoding['_FillValue'] = None
                 ds.layerThickness_exact.encoding['_FillValue'] = None
                 ds.to_netcdf(f'output_{res}km.nc',
-                             format="NETCDF3_64BIT_OFFSET", mode='a')
+                             format="NETCDF3_64BIT", mode='a')
             ds.close()
 
     def contour_plots(self, points):
@@ -155,7 +159,7 @@ class Viz(Step):
 
             ncols = len(self.resolutions) + 1
             fig, ax = plt.subplots(nrows=1, ncols=ncols,
-                                   figsize=(5 * ncols, 5),
+                                   figsize=(3 * ncols, 3),
                                    constrained_layout=True)
 
             for j, res in enumerate(self.resolutions):
@@ -165,7 +169,7 @@ class Viz(Step):
                                   levels=clevels, cmap=cmap,
                                   vmin=sol_min, vmax=sol_max, extend='both')
                 ax[j].set_aspect('equal', 'box')
-                ax[j].set_title(f'{res}km resolution')
+                ax[j].set_title(f'{res} km resolution')
                 ax[j].set_xlabel('x (km)')
                 ax[j].set_ylabel('y (km)')
                 ds.close()
@@ -185,7 +189,9 @@ class Viz(Step):
             ax[ncols - 1].set_ylabel('y (km)')
             ds.close()
 
-            cb = fig.colorbar(cm, ax=ax[-1], shrink=0.6)
+            tick_step = 0.5
+            ticks = np.arange(sol_min, sol_max + tick_step, tick_step)
+            cb = fig.colorbar(cm, ax=ax[-1], shrink=0.7, ticks=ticks)
             cb.set_label('ssh (m)')
             t = round((time[i] - time[0]).total_seconds() / 86400., 2)
             fig.suptitle((f'{self.wetdry} ({self.ramp_type}) '
@@ -205,10 +211,10 @@ class Viz(Step):
             noramp_name = 'noramp_lts'
 
         comparisons = []
-        cases = {'standard_ramp': f'../../../standard/{ramp_name}/viz',
-                 'standard_noramp': f'../../../standard/{noramp_name}/viz',
-                 'subgrid_ramp': f'../../../subgrid/{ramp_name}/viz',
-                 'subgrid_noramp': f'../../../subgrid/{noramp_name}/viz'}
+        cases = {'standard (ramp)': f'../../../standard/{ramp_name}/viz',
+                 'standard (no ramp)': f'../../../standard/{noramp_name}/viz',
+                 'subgrid (ramp)': f'../../../subgrid/{ramp_name}/viz',
+                 'subgrid (no ramp)': f'../../../subgrid/{noramp_name}/viz'}
         for case in cases:
             include = True
             for res in self.resolutions:
@@ -217,7 +223,8 @@ class Viz(Step):
             if include:
                 comparisons.append(case)
 
-        fig, ax = plt.subplots(nrows=1, ncols=1)
+        fig, ax = plt.subplots(figsize=(5, 4),
+                               nrows=1, ncols=1, layout='constrained')
 
         max_rmse = 0
         resolutions = self.resolutions
@@ -245,11 +252,9 @@ class Viz(Step):
 
         ax.set_xlabel('Cell size (km)')
         ax.set_ylabel('RMSE (m)')
-        ax.invert_xaxis()
 
-        ax.legend(loc='lower right')
+        fig.legend(loc='outside lower center', ncol=3)
         ax.set_title('Layer thickness convergence')
-        fig.tight_layout()
         fig.savefig('error.png')
 
     def compute_rmse(self, varname, filename):
