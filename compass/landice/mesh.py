@@ -376,6 +376,31 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
     for width in [spacing_bed, spacing_speed, spacing_edge, spacing_gl]:
         cell_width = np.minimum(cell_width, width)
 
+    if section.get('define_bnds_by_geojson') == 'False':
+        # Set large cell_width in areas we are going to cull anyway (speeds
+        # up whole process). If max_res_in_ocn is True, then use a larger
+        # multiplier to ensure ocean cells are not accidentally coarsened
+        # within the final domain. Otherwise, we can get away with
+        # something smaller, like 3x the cull_distance, to avoid this
+        # affecting the cell size in the final mesh. There may eventually
+        # be a more rigorous way to set this distance. Skip this step if
+        # using geojson to pre-cull domain
+
+        # convert km to m
+        cull_distance = section.getfloat('cull_distance') * 1.e3
+
+        if dist_to_edge is not None:
+            if section.get('max_res_in_ocn') == 'True':
+                mask = np.logical_and(
+                    # Try 20x cull_distance for now
+                    thk == 0.0, dist_to_edge > (20. * cull_distance))
+            else:
+                mask = np.logical_and(
+                    thk == 0.0, dist_to_edge > (3. * cull_distance))
+            logger.info('Setting cell_width in outer regions to max_spac '
+                        f'for {mask.sum()} cells')
+            cell_width[mask] = max_spac
+
     return cell_width
 
 
