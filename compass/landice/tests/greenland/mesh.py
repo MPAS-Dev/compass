@@ -33,7 +33,7 @@ class Mesh(Step):
         Parameters
         ----------
         test_case : compass.TestCase
-            The test case this step belongs to/
+            The test case this step belongs to
 
         """
         super().__init__(test_case=test_case, name='mesh', cpus_per_task=128,
