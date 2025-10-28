@@ -19,12 +19,12 @@ from compass.step import Step
 
 class Mesh(Step):
     """
-    A step for creating a mesh and initial condition for greenland test cases
+    A step for creating a mesh and initial condition for humboldt test cases
 
     Attributes
     ----------
-    mesh_filename : str
-        File name of the MALI mesh
+    mesh_type : str
+        The resolution or mesh type of the test case
     """
     def __init__(self, test_case):
         """
@@ -33,32 +33,33 @@ class Mesh(Step):
         Parameters
         ----------
         test_case : compass.TestCase
-            The test case this step belongs to/
+            The test case this step belongs to
 
+        mesh_type : str
+            The resolution or mesh type of the test case
         """
         super().__init__(test_case=test_case, name='mesh', cpus_per_task=128,
                          min_cpus_per_task=1)
 
-        # output files
-        self.mesh_filename = 'GIS.nc'
-        self.add_output_file(filename='graph.info')
+        self.mesh_filename = 'UummannaqDisko.nc'
         self.add_output_file(filename=self.mesh_filename)
+        self.add_output_file(filename='graph.info')
         self.add_output_file(
-            filename=f'{self.mesh_filename[:-3]}_ismip6_regionMasks.nc')
-        self.add_output_file(
-            filename=f'{self.mesh_filename[:-3]}_zwally_regionMasks.nc')
-        # input files
+            filename=f'{self.mesh_filename[:-3]}_regionMasks.nc')
         self.add_input_file(
             filename='greenland_1km_2024_01_29.epsg3413.icesheetonly.nc',
             target='greenland_1km_2024_01_29.epsg3413.icesheetonly.nc',
             database='')
-        self.add_input_file(filename='greenland_2km_2024_01_29.epsg3413.nc',
-                            target='greenland_2km_2024_01_29.epsg3413.nc',
-                            database='')
-        self.add_input_file(filename='greenland_only_outline_45km_buffer_latlon_singlepart.geojson',  # noqa: E501
-                            package='compass.landice.tests.greenland',
-                            target='greenland_only_outline_45km_buffer_latlon_singlepart.geojson',  # noqa: E501
-                            database=None)
+        self.add_input_file(
+            filename='UummannaqDisko.geojson',
+            package='compass.landice.tests.uummannaq_disko',
+            target='UummannaqDisko.geojson',
+            database=None)
+
+        self.add_input_file(
+            filename='greenland_2km_2024_01_29.epsg3413.nc',
+            target='greenland_2km_2024_01_29.epsg3413.nc',
+            database='')
 
     # no setup() method is needed
 
@@ -69,9 +70,12 @@ class Mesh(Step):
         logger = self.logger
         config = self.config
 
+        section_name = 'mesh'
+
         section_gis = config['greenland']
 
-        parallel_executable = config.get('parallel', 'parallel_executable')
+        parallel_executable = config.get('parallel',
+                                         'parallel_executable')
         nProcs = section_gis.get('nProcs')
         src_proj = section_gis.get("src_proj")
         data_path = section_gis.get('data_path')
@@ -87,6 +91,7 @@ class Mesh(Step):
         source_gridded_dataset_2km = 'greenland_2km_2024_01_29.epsg3413.nc'
 
         logger.info('calling build_cell_width')
+
         if section_gis.get("define_bnds_by_geojson") == 'True':
             geom_points, geom_edges = set_geojson_geom_points_and_edges(self)
 
@@ -94,22 +99,19 @@ class Mesh(Step):
                 build_cell_width(self,
                                  section_name=section_name,
                                  gridded_dataset=source_gridded_dataset_2km,
-                                 flood_fill_start=[100, 700],
                                  calc_geom_bnds=False)
         else:
             cell_width, x1, y1, geom_points, geom_edges, floodMask = \
                 build_cell_width(
                     self, section_name=section_name,
-                    gridded_dataset=source_gridded_dataset_2km,
-                    flood_fill_start=[100, 700])
+                    gridded_dataset=source_gridded_dataset_2km)
 
-        # Now build the base mesh and perform the standard interpolation
         build_mali_mesh(
             self, cell_width, x1, y1, geom_points, geom_edges,
             mesh_name=self.mesh_filename, section_name=section_name,
-            gridded_dataset=source_gridded_dataset_1km, projection=src_proj,
-            geojson_file="greenland_only_outline_45km_buffer_latlon_singlepart.geojson",  # noqa: E501
-        )
+            gridded_dataset=source_gridded_dataset_1km,
+            projection='gis-gimp', geojson_file='UummannaqDisko.geojson',
+            cores=self.cpus_per_task)
 
         # Create scrip file for the newly generated mesh
         logger.info('creating scrip file for destination mesh')
@@ -139,24 +141,11 @@ class Mesh(Step):
         make_graph_file(mesh_filename=self.mesh_filename,
                         graph_filename='graph.info')
 
-        # create region masks
-        mask_filename = f'{self.mesh_filename[:-3]}_ismip6_regionMasks.nc'
+        mask_filename = f'{self.mesh_filename[:-3]}_regionMasks.nc'
         make_region_masks(self, self.mesh_filename, mask_filename,
                           self.cpus_per_task,
-                          tags=["Greenland", "ISMIP6", "Shelf"],
-                          component='ocean')
-
-        mask_filename = f'{self.mesh_filename[:-3]}_zwally_regionMasks.nc'
-        make_region_masks(self, self.mesh_filename, mask_filename,
-                          self.cpus_per_task,
-                          tags=['eastCentralGreenland',
-                                'northEastGreenland',
-                                'northGreenland',
-                                'northWestGreenland',
-                                'southEastGreenland',
-                                'southGreenland',
-                                'southWestGreenland',
-                                'westCentralGreenland'],
+                          tags=['UummannaqDisko'],
+                          component='landice',
                           all_tags=False)
 
         # Do some final validation of the mesh
@@ -181,12 +170,12 @@ class Mesh(Step):
 
 
 def set_geojson_geom_points_and_edges(self):
-    self.add_input_file(filename='gis_contShelfExtent.geojson',
-                        package='compass.landice.tests.greenland',
-                        target='gis_contShelfExtent.geojson',
+    self.add_input_file(filename='UummannaqDisko.geojson',
+                        package='compass.landice.tests.uummannaq_disko',
+                        target='UummannaqDisko.geojson',
                         database=None)
 
-    with open('gis_contShelfExtent.geojson', 'r') as meshMarginFile:
+    with open('UummannaqDisko.geojson', 'r') as meshMarginFile:
         geojson_data = json.load(meshMarginFile)
 
     x = []
