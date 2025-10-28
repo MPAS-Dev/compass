@@ -31,8 +31,9 @@ jobs:
           popd
 
           # download the input GIS coarse mesh
-          wget https://rpi.app.box.com/public/static/qytr3c49h1xbucxz594df327qatiu8ds.tgz
-          tar xf qytr3c49h1xbucxz594df327qatiu8ds.tgz
+          tarball=7rhrks110k80tuwrn2t9puzmgy39o3en.tgz
+          wget https://rpi.box.com/shared/static/${tarball}
+          tar xf ${tarball}
 
           # create the config file describing the system
           cat << EOF > system.cfg
