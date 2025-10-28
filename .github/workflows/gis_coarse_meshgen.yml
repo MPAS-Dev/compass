@@ -1,4 +1,4 @@
-name: CI/CD Build Workflow
+name: GIS Coarse Mesh Generation
 
 on:
   pull_request:
@@ -6,6 +6,10 @@ on:
     paths:
     - compass/landice/mesh.py
     - compass/landice/tests/greenland/mesh.py
+    - .github/workflows/gis_coarse_meshgen.yml
+
+  # Allow manual triggering of the workflow
+  workflow_dispatch:
 
 jobs:
   gis-coarse-meshgen:
