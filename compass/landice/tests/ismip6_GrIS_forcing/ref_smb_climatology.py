@@ -2,8 +2,8 @@ import os
 
 import xarray as xr
 from mpas_tools.io import write_netcdf
-from mpas_tools.logging import check_call
 
+from compass.landice.tests.ismip6_GrIS_forcing.utilities import remap_variables
 from compass.step import Step
 
 
@@ -33,7 +33,6 @@ class SMBRefClimatology(Step):
         config = self.config
         smb_ref_section = config["smb_ref_climatology"]
 
-        #
         racmo_directory = smb_ref_section.get("racmo_directory")
         # this filename should probably just be hardcoded.....
         racmo_smb_fn = smb_ref_section.get("racmo_smb_fn")
@@ -70,6 +69,9 @@ class SMBRefClimatology(Step):
     def run(self):
         """
         """
+        racmo_smb = self.racmo_smb
+        smb_ref_climatology = self.test_case.smb_ref_climatology
+        racmo_2_mali_weights = self.test_case.racmo_2_mali_weights
 
         # parse user specified parameters from the config
         config = self.config
@@ -79,12 +81,11 @@ class SMBRefClimatology(Step):
         clima_end = smb_ref_section.getint("climatology_end")
 
         # remap the gridded racmo data onto the mpas grid
-        self.remap_variable(self.racmo_smb,
-                            self.test_case.smb_ref_climatology,
-                            self.test_case.racmo_2_mali_weights)
+        remap_variables(
+            racmo_smb, smb_ref_climatology, racmo_2_mali_weights, ["SMB_rec"]
+        )
 
-        ds = xr.open_dataset(self.test_case.smb_ref_climatology,
-                             decode_times=False)
+        ds = xr.open_dataset(smb_ref_climatology, decode_times=False)
 
         # find indices of climatology start/end (TO DO: make more robust)
         s_idx = ((clima_start - 1958) * 12) - 1
@@ -105,17 +106,4 @@ class SMBRefClimatology(Step):
         # expand sfcMassBal dimension to match what MALI expects
         ds["sfcMassBal"] = ds.sfcMassBal.expand_dims("Time")
         # write the file
-        write_netcdf(ds, self.test_case.smb_ref_climatology)
-
-    def remap_variable(self, input_file, output_file, weights_file):
-        """
-        """
-
-        # remap the forcing file onto the MALI mesh
-        args = ["ncremap",
-                "-i", input_file,
-                "-o", output_file,
-                "-m", weights_file,
-                "-v", "SMB_rec"]
-
-        check_call(args, logger=self.logger)
+        write_netcdf(ds, smb_ref_climatology)
