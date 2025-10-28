@@ -289,6 +289,20 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
         spacing_bed = min_spac + (max_spac - min_spac) / (1.0 + np.exp(
             -k * (bed - np.mean([high_bed, low_bed]))))
 
+        # We only want bed topography to influence spacing within
+        # high_dist_bed from the ice margin. In the region
+        # between high_dist_bed and low_dist_bed, use a linear
+        # ramp to damp influence of bed topo.
+        spacing_bed[dist_to_grounding_line >= low_dist_bed] = (
+            (1.0 - (dist_to_grounding_line[
+                dist_to_grounding_line >= low_dist_bed] -
+                low_dist_bed) / (high_dist_bed - low_dist_bed)) *
+            spacing_bed[dist_to_grounding_line >= low_dist_bed] +
+            (dist_to_grounding_line[dist_to_grounding_line >=
+                                    low_dist_bed] - low_dist_bed) /
+            (high_dist_bed - low_dist_bed) * max_spac)
+        spacing_bed[dist_to_grounding_line >= high_dist_bed] = max_spac
+
         # If max_res_in_ocn is true, use the minimum cell spacing for
         # all ocean cells. Important for ocean-coupled runs where
         # resolving fjords and ocean bathymetry is necessary for
@@ -298,20 +312,7 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
             spacing_bed[np.logical_and(bed < 0, thk == 0)] = min_spac
             print("Maximizing resolution in ocean. {} ocean cells \
                   ".format(np.sum(np.logical_and(bed < 0, thk == 0))))
-        else:
-            # We only want bed topography to influence spacing within
-            # high_dist_bed from the ice margin. In the region
-            # between high_dist_bed and low_dist_bed, use a linear
-            # ramp to damp influence of bed topo.
-            spacing_bed[dist_to_grounding_line >= low_dist_bed] = (
-                (1.0 - (dist_to_grounding_line[
-                    dist_to_grounding_line >= low_dist_bed] -
-                    low_dist_bed) / (high_dist_bed - low_dist_bed)) *
-                spacing_bed[dist_to_grounding_line >= low_dist_bed] +
-                (dist_to_grounding_line[dist_to_grounding_line >=
-                                        low_dist_bed] - low_dist_bed) /
-                (high_dist_bed - low_dist_bed) * max_spac)
-            spacing_bed[dist_to_grounding_line >= high_dist_bed] = max_spac
+
         if flood_fill_iStart is not None and flood_fill_jStart is not None:
             spacing_bed[low_bed_mask == 0] = max_spac
             # Do one more flood fill to eliminate isolated pockets
