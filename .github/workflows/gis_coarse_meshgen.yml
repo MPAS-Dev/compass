@@ -35,8 +35,9 @@ jobs:
           popd
 
           # download the input GIS coarse mesh
-          tarball=7rhrks110k80tuwrn2t9puzmgy39o3en.tgz
-          wget https://rpi.box.com/shared/static/${tarball}
+          tarball=gis4kmSubSampled_01302025.tgz
+          url=https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/
+          wget ${url}/${tarball}
           tar xf ${tarball}
 
           # create the config file describing the system
