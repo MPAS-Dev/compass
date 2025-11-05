@@ -1,4 +1,4 @@
-name: CI/CD Build Workflow
+name: GIS Coarse Mesh Generation
 
 on:
   pull_request:
@@ -6,6 +6,10 @@ on:
     paths:
     - compass/landice/mesh.py
     - compass/landice/tests/greenland/mesh.py
+    - .github/workflows/gis_coarse_meshgen.yml
+
+  # Allow manual triggering of the workflow
+  workflow_dispatch:
 
 jobs:
   gis-coarse-meshgen:
@@ -31,8 +35,10 @@ jobs:
           popd
 
           # download the input GIS coarse mesh
-          wget https://rpi.app.box.com/public/static/qytr3c49h1xbucxz594df327qatiu8ds.tgz
-          tar xf qytr3c49h1xbucxz594df327qatiu8ds.tgz
+          tarball=gis4kmSubSampled_01302025.tgz
+          url=https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/
+          wget ${url}/${tarball}
+          tar xf ${tarball}
 
           # create the config file describing the system
           cat << EOF > system.cfg
