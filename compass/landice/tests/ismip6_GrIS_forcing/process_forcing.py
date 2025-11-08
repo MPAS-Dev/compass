@@ -19,22 +19,28 @@ renaming_dict = {"thermal_forcing": "ismip6_2dThermalForcing",
 
 class ProcessForcing(Step):
     """
-
+    A step for remapping ISMIP6 GrIS forcing onto a MALI mesh.
     """
 
     def __init__(self, test_case):
         """
+        Create the step
+
+        Parameters
+        ----------
+        test_case : compass.TestCase
+            The test case this step belongs to
         """
 
         name = "process_forcing"
 
         super().__init__(test_case=test_case, name=name, subdir=None,
                          cpus_per_task=1, min_cpus_per_task=1)
-        # read and store the experiment dictionary
-
-        # initalize the FileFinders are store them as dict?
 
     def run(self):
+        """
+        Run this step of the test case
+        """
 
         # list of variables to process
         atmosphere_vars = ["aSMB", "aST", "dSMBdz", "dSTdz"]
@@ -42,7 +48,6 @@ class ProcessForcing(Step):
 
         # loop over experiments passed via config file
         for expr_name, expr_dict in self.test_case.experiments.items():
-            # print to logger which expriment we are on (i/n)
 
             GCM = expr_dict["GCM"]
             scenario = expr_dict["Scenario"]
@@ -54,20 +59,46 @@ class ProcessForcing(Step):
                 continue
 
             atm_fn = f"gis_atm_forcing_{GCM}_{scenario}_{start}--{end}.nc"
-            self.process_variables(GCM, scenario, start, end, atmosphere_vars,
-                                   atm_fn)
+            self.process_variables(
+                GCM, scenario, start, end, atmosphere_vars, atm_fn
+            )
 
             ocn_fn = f"gis_ocn_forcing_{GCM}_{scenario}_{start}--{end}.nc"
-            self.process_variables(GCM, scenario, start, end, ocean_vars,
-                                   ocn_fn)
+            self.process_variables(
+                GCM, scenario, start, end, ocean_vars, ocn_fn
+            )
 
-    def process_variables(self, GCM, scenario, start, end,
-                          variables, output_fn):
+    def process_variables(
+        self, GCM, scenario, start, end, variables, output_fn
+    ):
+        """
+        Parameters
+        ----------
+        GCM: str
+            General Circulation Model the forcing is derived from
+
+        scenario: str
+            Emissions scenario
+
+        start: int
+            First year to process forcing for
+
+        end: int
+            Final year to process forcing for
+
+        variables: list[str]
+            Variable names to process
+
+        output_fn: str
+            File path where the processed forcing will be written
+        """
 
         forcing_datastes = []
 
         for var in variables:
-            var_fp = self.test_case.findForcingFiles(GCM, scenario, var)
+            var_fp = self.test_case.find_forcing_files(
+                GCM, scenario, var, start, end
+            )
 
             ds = self.process_variable(GCM, scenario, var, var_fp, start, end)
 
@@ -78,10 +109,29 @@ class ProcessForcing(Step):
         write_netcdf(forcing_ds, output_fn)
 
     def process_variable(self, GCM, scenario, var, forcing_fp, start, end):
+        """
+        Parameters
+        ----------
+        GCM: str
+            General Circulation Model the forcing is derived from
 
-        #
+        scenario: str
+            Emissions scenario
+
+        var: str
+            Name of the variable to process
+
+        forcing_fp: str
+            file path to read the forcing data from
+
+        start: int
+            First year to process forcing for
+
+        end: int
+            Final year to process forcing for
+        """
+
         config = self.config
-        #
         renamed_var = renaming_dict[var]
 
         # create the remapped file name, using original variable name
@@ -103,9 +153,9 @@ class ProcessForcing(Step):
                        "mapping", "lat", "lon", "polar_stereographic"]
 
         # open the remapped file for post processing
-        remapped_ds = xr.open_dataset(remapped_fp,
-                                      drop_variables=vars_2_drop,
-                                      use_cftime=True)
+        remapped_ds = xr.open_dataset(
+            remapped_fp, drop_variables=vars_2_drop, use_cftime=True
+        )
 
         # create mask of desired time indices. Include forcing from year prior
         # to requested start date since forcing in July but sims start in Jan
@@ -116,17 +166,17 @@ class ProcessForcing(Step):
         remapped_ds["xtime"] = add_xtime(remapped_ds, var="time")
 
         # rename the variable/dimensions to match MPAS/MALI conventions
-        remapped_ds = remapped_ds.rename({"ncol": "nCells",
-                                          "time": "Time",
-                                          var: renamed_var})
+        remapped_ds = remapped_ds.rename(
+            {"ncol": "nCells", "time": "Time", var: renamed_var}
+        )
 
         # drop the unneeded attributes from the dataset
         for _var in remapped_ds:
             remapped_ds[_var].attrs.pop("grid_mapping", None)
             remapped_ds[_var].attrs.pop("cell_measures", None)
 
-        # SMB is not a var in ISMIP6 forcing files, need to use `SMB_ref`
-        # and the processed `aSMB` to produce a `SMB` forcing
+        # surface mass balance and surface air temp. are provided as anomolies
+        # by ISMIP6. So remapped ISMIP6 fields must be added to a climatology
         if renamed_var == "sfcMassBal":
             # open the reference climatology file
             smb_ref = xr.open_dataset(self.test_case.smb_ref_climatology)

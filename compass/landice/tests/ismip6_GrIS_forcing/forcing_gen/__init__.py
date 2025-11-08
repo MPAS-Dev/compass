@@ -34,14 +34,14 @@ class ForcingGen(TestCase):
         filepath to the `ESMF_RegirdWeightGen` generated mapping file
 
     experiments : dict
-
+        Dictionary of ISMIP6 GrIS experiments to process data for
     """
 
     def __init__(self, test_group):
         """
         Parameters
         ----------
-        test_group : compass.landice.tests...
+        test_group : compass.landice.tests.ismip6_GrIS_forcing
             The test group that this test case belongs to
         """
         name = "forcing_gen"
@@ -60,8 +60,8 @@ class ForcingGen(TestCase):
         # filename of the reference climatology
         self.smb_ref_climatology = None
         # place holder for file finders that will be initialized in `configure`
-        self.__atmFF = None
-        self.__ocnFF = None
+        self._atm_file_finder = None
+        self._ocn_file_finder = None
 
         # precusssory step that builds scrip file for mali mesh,
         # and generates a common weights file to be used in remapping
@@ -75,10 +75,11 @@ class ForcingGen(TestCase):
         self.add_step(ProcessForcing(test_case=self))
 
     def configure(self):
-
+        """
+        Set up the expriment dictionary, based on the requested experiments.
+        And initialize file finders based on archive filepath from config file.
+        """
         config = self.config
-        # add ouputdir path to the remapping files
-
         # get the list of requested experiments
         expr2run = config.getlist("ISMIP6_GrIS_Forcing", "experiments")
         # get the dictionary of experiments, as defined in the yaml file
@@ -89,17 +90,41 @@ class ForcingGen(TestCase):
         archive_fp = config.get("ISMIP6_GrIS_Forcing", "archive_fp")
 
         # initalize the oceanFileFinder
-        self.__ocnFF = oceanFileFinder(archive_fp)
-        self.__atmFF = atmosphereFileFinder(archive_fp)  # , workdir=workdir)
+        self._atm_file_finder = oceanFileFinder(archive_fp)
+        self._ocn_file_finder = atmosphereFileFinder(archive_fp)
 
-    def findForcingFiles(self, GCM, scenario, variable):
+    def find_forcing_files(
+        self, GCM, scenario, variable, start=2015, end=2100
+    ):
         """
+        Parameters
+        ----------
+        GCM: str
+            General Circulation Model the forcing is derived from
+
+        scenario: str
+            Emissions scenario
+
+        variable: str
+            Name of the variable to process
+
+        forcing_fp: str
+            file path to read the forcing data from
+
+        start: int
+            First year to process forcing for
+
+        end: int
+            Final year to process forcing for
         """
 
         if variable in ["basin_runoff", "thermal_forcing"]:
-            forcing_fp = self.__ocnFF.get_filename(GCM, scenario, variable)
+            file_finder = self._ocn_file_finder
+            # start and end have no effect for reading ocn forcing
+            kwargs = {}
 
         if variable in ["aSMB", "aST", "dSMBdz", "dSTdz"]:
-            forcing_fp = self.__atmFF.get_filename(GCM, scenario, variable)
+            file_finder = self._atm_file_finder
+            kwargs = {"start": start, "end": end}
 
-        return forcing_fp
+        return file_finder.get_filename(GCM, scenario, variable, **kwargs)

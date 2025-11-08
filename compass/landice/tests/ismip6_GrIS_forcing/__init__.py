@@ -12,6 +12,8 @@ class Ismip6GrISForcing(TestGroup):
     """
     def __init__(self, mpas_core):
         """
+        Parameters
+        ----------
         mpas_core : compass.landice.Landice
             the MPAS core that this test group belongs to
         """
@@ -30,7 +32,6 @@ class Ismip6GrISForcing(TestGroup):
         with open(f"{module_path}/experiments.yml", "r") as f:
             experiments = yaml.safe_load(f)
 
-        # should I filter through the experiments dictionary to make sure
-        # everything is valid....
-
+        # experiments dictionary is unverified...
+        # But the yaml file packages with compass shouldn't really be altered
         self.experiments = experiments

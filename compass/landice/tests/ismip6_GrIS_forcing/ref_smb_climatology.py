@@ -9,24 +9,38 @@ from compass.step import Step
 
 class SMBRefClimatology(Step):
     """
+    A step to produce a surface mass balance climatology from RACMO data
+
+    Attributes
+    ----------
+    racmo_smb_fp: str
+        File path to RACMO SMB data proccessed by this step
     """
 
     def __init__(self, test_case):
         """
+        Create the step
+
+        Parameters
+        ----------
+        test_case : compass.TestCase
+            The test case this step belongs to
         """
         name = "smb_ref_climatology"
         subdir = None
 
         super().__init__(test_case=test_case, name=name, subdir=subdir)
 
-        # initalize the attributes with empty values for now, attributes will
-        # be propely in `setup` method so user specified config options can
-        # be parsed
+        # attrs will set by the `setup` method, so user specified
+        # config options can be parsed
         self.racmo_smb_fp = None
-        self.smb_ref_climatology = None
 
     def setup(self):
         """
+        Parse config file for path to RACMO data
+
+        Then add path to the climatology produced by this step as an attribute
+        to the test case. Allowing climatology to be reused by other steps
         """
 
         # parse user specified parameters from the config
@@ -49,7 +63,7 @@ class SMBRefClimatology(Step):
                 raise FileNotFoundError(f"{racmo_smb_fp} does not exist")
 
         # add the racmo smb as an attribute and as an input file
-        self.racmo_smb = racmo_smb_fp
+        self.racmo_smb_fp = racmo_smb_fp
         self.add_input_file(filename=racmo_smb_fp)
 
         # get the start and end dates for the climatological mean
@@ -68,8 +82,9 @@ class SMBRefClimatology(Step):
 
     def run(self):
         """
+        Run this step of the test case
         """
-        racmo_smb = self.racmo_smb
+        racmo_smb = self.racmo_smb_fp
         smb_ref_climatology = self.test_case.smb_ref_climatology
         racmo_2_mali_weights = self.test_case.racmo_2_mali_weights
 
