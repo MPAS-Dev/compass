@@ -1,0 +1,130 @@
+from compass.landice.tests.ismip6_GrIS_forcing.create_mapping_files import (
+    CreateMappingFiles,
+)
+from compass.landice.tests.ismip6_GrIS_forcing.file_finders import (
+    atmosphereFileFinder,
+    oceanFileFinder,
+)
+from compass.landice.tests.ismip6_GrIS_forcing.process_forcing import (
+    ProcessForcing,
+)
+from compass.landice.tests.ismip6_GrIS_forcing.ref_smb_climatology import (
+    SMBRefClimatology,
+)
+from compass.testcase import TestCase
+
+
+class ForcingGen(TestCase):
+    """
+    A TestCase for remapping (i.e. interpolating) ISMIP6 GrIS forcing files
+    onto a MALI mesh
+
+    Attributes
+    ----------
+
+    mali_mesh_scrip : str
+        filepath to the scrip file describing the MALI mesh
+
+    ismip6_GrIS_scrip : str
+        filepath to the scrip file describing the grid the ISMIP6 GrIS
+        forcing data is on. (Note: All forcing files are on the same grid,
+        so only need one scrip file for all forcing files)
+
+    remapping_weights : str
+        filepath to the `ESMF_RegirdWeightGen` generated mapping file
+
+    experiments : dict
+        Dictionary of ISMIP6 GrIS experiments to process data for
+    """
+
+    def __init__(self, test_group):
+        """
+        Parameters
+        ----------
+        test_group : compass.landice.tests.ismip6_GrIS_forcing
+            The test group that this test case belongs to
+        """
+        name = "forcing_gen"
+        super().__init__(test_group=test_group, name=name)
+
+        # NOTE: scrip and weight filenames are stored at the testcase level
+        # so they will be accesible to all steps in the testcase
+
+        # filenames for scrip files (i.e. grid descriptors)
+        self.mali_mesh_scrip = "mali_mesh.scrip.nc"
+        self.racmo_gis_scrip = "racmo_gis.scrip.nc"
+        self.ismip6_gis_scrip = "ismip6_GrIS.scrip.nc"
+        # filenames of remapping files
+        self.racmo_2_mali_weights = "racmo_2_mali.weights.nc"
+        self.ismip6_2_mali_weights = "ismip6_2_mali.weights.nc"
+        # filename of the reference climatology
+        self.smb_ref_climatology = None
+        # place holder for file finders that will be initialized in `configure`
+        self._atm_file_finder = None
+        self._ocn_file_finder = None
+
+        # precusssory step that builds scrip file for mali mesh,
+        # and generates a common weights file to be used in remapping
+        self.add_step(CreateMappingFiles(test_case=self))
+
+        # step that deals with racmo, do all I need to do is remap and average?
+        self.add_step(SMBRefClimatology(test_case=self))
+
+        # add steps that re-maps and processes downscaled GCM data for each
+        # experiment.
+        self.add_step(ProcessForcing(test_case=self))
+
+    def configure(self):
+        """
+        Set up the expriment dictionary, based on the requested experiments.
+        And initialize file finders based on archive filepath from config file.
+        """
+        config = self.config
+        # get the list of requested experiments
+        expr2run = config.getlist("ISMIP6_GrIS_Forcing", "experiments")
+        # get the dictionary of experiments, as defined in the yaml file
+        all_exprs = self.test_group.experiments
+        # get subset of dictionaries, based on requested expriments
+        self.experiments = {e: all_exprs[e] for e in expr2run}
+
+        archive_fp = config.get("ISMIP6_GrIS_Forcing", "archive_fp")
+
+        # initalize the oceanFileFinder
+        self._atm_file_finder = oceanFileFinder(archive_fp)
+        self._ocn_file_finder = atmosphereFileFinder(archive_fp)
+
+    def find_forcing_files(
+        self, GCM, scenario, variable, start=2015, end=2100
+    ):
+        """
+        Parameters
+        ----------
+        GCM: str
+            General Circulation Model the forcing is derived from
+
+        scenario: str
+            Emissions scenario
+
+        variable: str
+            Name of the variable to process
+
+        forcing_fp: str
+            file path to read the forcing data from
+
+        start: int
+            First year to process forcing for
+
+        end: int
+            Final year to process forcing for
+        """
+
+        if variable in ["basin_runoff", "thermal_forcing"]:
+            file_finder = self._ocn_file_finder
+            # start and end have no effect for reading ocn forcing
+            kwargs = {}
+
+        if variable in ["aSMB", "aST", "dSMBdz", "dSTdz"]:
+            file_finder = self._atm_file_finder
+            kwargs = {"start": start, "end": end}
+
+        return file_finder.get_filename(GCM, scenario, variable, **kwargs)
