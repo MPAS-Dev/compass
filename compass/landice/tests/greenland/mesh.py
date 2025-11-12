@@ -1,5 +1,7 @@
+import json
 import os
 
+import jigsawpy
 import numpy as np
 import xarray as xr
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
@@ -53,6 +55,10 @@ class Mesh(Step):
         self.add_input_file(filename='greenland_2km_2024_01_29.epsg3413.nc',
                             target='greenland_2km_2024_01_29.epsg3413.nc',
                             database='')
+        self.add_input_file(filename='greenland_only_outline_45km_buffer_latlon_singlepart.geojson',  # noqa: E501
+                            package='compass.landice.tests.greenland',
+                            target='greenland_only_outline_45km_buffer_latlon_singlepart.geojson',  # noqa: E501
+                            database=None)
 
     # no setup() method is needed
 
@@ -81,18 +87,29 @@ class Mesh(Step):
         source_gridded_dataset_2km = 'greenland_2km_2024_01_29.epsg3413.nc'
 
         logger.info('calling build_cell_width')
-        cell_width, x1, y1, geom_points, geom_edges, floodMask = \
-            build_cell_width(
-                self, section_name=section_name,
-                gridded_dataset=source_gridded_dataset_2km,
-                flood_fill_start=[100, 700])
+        if section_gis.get("define_bnds_by_geojson") == 'True':
+            geom_points, geom_edges = set_geojson_geom_points_and_edges(self)
+
+            cell_width, x1, y1, floodMask = \
+                build_cell_width(self,
+                                 section_name=section_name,
+                                 gridded_dataset=source_gridded_dataset_2km,
+                                 flood_fill_start=[100, 700],
+                                 calc_geom_bnds=False)
+        else:
+            cell_width, x1, y1, geom_points, geom_edges, floodMask = \
+                build_cell_width(
+                    self, section_name=section_name,
+                    gridded_dataset=source_gridded_dataset_2km,
+                    flood_fill_start=[100, 700])
 
         # Now build the base mesh and perform the standard interpolation
         build_mali_mesh(
             self, cell_width, x1, y1, geom_points, geom_edges,
             mesh_name=self.mesh_filename, section_name=section_name,
-            gridded_dataset=source_gridded_dataset_1km,
-            projection=src_proj, geojson_file=None)
+            gridded_dataset=source_gridded_dataset_1km, projection=src_proj,
+            geojson_file="greenland_only_outline_45km_buffer_latlon_singlepart.geojson",  # noqa: E501
+        )
 
         # Create scrip file for the newly generated mesh
         logger.info('creating scrip file for destination mesh')
@@ -161,3 +178,47 @@ class Mesh(Step):
         ds["observedThicknessTendencyUncertainty"] = dHdtErr
         # Write the data to disk
         ds.to_netcdf(self.mesh_filename, 'a')
+
+
+def set_geojson_geom_points_and_edges(self):
+    self.add_input_file(filename='gis_contShelfExtent.geojson',
+                        package='compass.landice.tests.greenland',
+                        target='gis_contShelfExtent.geojson',
+                        database=None)
+
+    with open('gis_contShelfExtent.geojson', 'r') as meshMarginFile:
+        geojson_data = json.load(meshMarginFile)
+
+    x = []
+    y = []
+    start_edge = []
+    end_edge = []
+    ct = 0
+
+    for feature in geojson_data['features']:
+        geometry = feature['geometry']
+        for coord in geometry['coordinates']:
+            for sub_coord in coord:
+                x.append(sub_coord[0])
+                y.append(sub_coord[1])
+
+                start_edge.append(ct)
+                end_edge.append(ct + 1)
+                ct = ct + 1
+    x = np.array(x)
+    y = np.array(y)
+    start_edge = np.array(start_edge)
+    end_edge = np.array(end_edge)
+
+    start_edge[-1] = ct - 1
+    end_edge[-1] = 0
+
+    geom_points = np.array([((x[i], y[i]), 0)
+                            for i in range(len(y))],
+                           dtype=jigsawpy.jigsaw_msh_t.VERT2_t)
+
+    geom_edges = np.array([((start_edge[i], end_edge[i]), 0)
+                           for i in range(len(start_edge))],
+                          dtype=jigsawpy.jigsaw_msh_t.EDGE2_t)
+
+    return (geom_points, geom_edges)
