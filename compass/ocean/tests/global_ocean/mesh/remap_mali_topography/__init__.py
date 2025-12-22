@@ -244,9 +244,9 @@ class RemapMaliTopography(RemapTopography):
 
         ds_remapped = xr.open_dataset('mali_topography_ncremap.nc')
         ds_out = xr.Dataset()
-        for var_name in ds_remapped:
+        for var_name in ds_remapped.keys():
             var = ds_remapped[var_name]
-            if 'Frac' in var:
+            if 'Frac' in var_name:
                 # copy the fractional variable, making sure it doesn't
                 # exceed 1
                 var = np.minimum(var, 1.)
