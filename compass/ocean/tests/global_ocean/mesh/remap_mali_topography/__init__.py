@@ -315,7 +315,9 @@ class RemapMaliTopography(RemapTopography):
 
         alpha = ds_out.maliFrac
         # NOTE: MALI's ocean fraction is already scaled by the MALI fraction
-        ds_out['oceanFracObserved'] = (
+        ds_out['oceanFracObserved'] = xr.where(
+            ds_mali.bed_elevation > 0.,
+            0.,
             ds_mali.oceanFrac +
             (1.0 - alpha) * ds_bedmachine.oceanFracObserved)
 
