@@ -168,13 +168,15 @@ class RemapMaliTopography(RemapTopography):
 
         g = constants['SHR_CONST_G']
 
-        draft = - (ice_density / ocean_density) * thickness
+        draft = - (ice_density / ocean_density) * thickness + sea_level
 
         ice_mask = ds_mali.thickness > 0
-        floating_mask = np.logical_and(
-            ice_mask,
-            ice_density / ocean_density * thickness <= sea_level - bed)
+        floating_mask = np.logical_and(ice_mask, draft > bed)
         grounded_mask = np.logical_and(ice_mask, np.logical_not(floating_mask))
+
+        # draft is determined by the bed where the ice is grounded and by
+        # flotation where the ice is not grounded (floating or no ice)
+        draft = xr.where(grounded_mask, bed, draft)
 
         if self.ocean_includes_grounded:
             ocean_mask = bed < sea_level
