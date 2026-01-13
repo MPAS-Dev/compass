@@ -193,10 +193,10 @@ class RemapMaliTopography(RemapTopography):
 
         # we will remap conservatively
         ds_in = xr.Dataset()
-        ds_in['bed_elevation'] = bed
-        ds_in['landIceThkObserved'] = thickness
-        ds_in['landIcePressureObserved'] = lithop
-        ds_in['landIceDraftObserved'] = draft
+        ds_in['bed_elevation'] = ocean_frac * bed
+        ds_in['landIceThkObserved'] = ocean_frac * thickness
+        ds_in['landIcePressureObserved'] = ocean_frac * lithop
+        ds_in['landIceDraftObserved'] = ocean_frac * draft
         ds_in['landIceFrac'] = ice_frac
         ds_in['landIceGroundedFrac'] = grounded_frac
         ds_in['oceanFrac'] = ocean_frac
@@ -235,6 +235,9 @@ class RemapMaliTopography(RemapTopography):
         """
         logger = self.logger
         logger.info('Remap to target')
+        config = self.config
+        section = config['remap_topography']
+        renorm_threshold = section.getfloat('renorm_threshold')
 
         args = [
             'ncremap',
@@ -253,6 +256,20 @@ class RemapMaliTopography(RemapTopography):
                 # exceed 1
                 var = np.minimum(var, 1.)
             ds_out[var_name] = var
+
+        # renormalize topography variables based on ocean fraction
+        ocean_frac = ds_out['oceanFrac']
+        ocean_mask = ocean_frac > renorm_threshold
+        norm = xr.where(ocean_mask, 1.0 / ocean_frac, 0.0)
+        for var_name in [
+            'bed_elevation',
+            'landIceThkObserved',
+            'landIcePressureObserved',
+            'landIceDraftObserved'
+        ]:
+            attrs = ds_out[var_name].attrs
+            ds_out[var_name] = ds_out[var_name] * norm
+            ds_out[var_name].attrs = attrs
 
         write_netcdf(ds_out, 'mali_topography_remapped.nc')
 
