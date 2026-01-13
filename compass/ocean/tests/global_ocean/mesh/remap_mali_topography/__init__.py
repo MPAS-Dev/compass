@@ -132,12 +132,6 @@ class RemapMaliTopography(RemapTopography):
         self._partition_scrip_file('mali.scrip.nc')
 
         out_mesh_name = self.mesh_name
-        out_descriptor = MpasCellMeshDescriptor(
-            filename='base_mesh.nc',
-            mesh_name=out_mesh_name)
-        out_descriptor.format = 'NETCDF3_64BIT'
-        out_descriptor.to_scrip('mpaso.scrip.nc')
-        self._partition_scrip_file('mpaso.scrip.nc')
 
         map_filename = \
             f'map_{in_mesh_name}_to_{out_mesh_name}_mbtraave.nc'
@@ -213,10 +207,11 @@ class RemapMaliTopography(RemapTopography):
         logger = self.logger
         logger.info('Create weights file')
 
+        # target h5m file was created in parent class
         args = [
             'mbtempest', '--type', '5',
             '--load', f'mali.scrip.p{self.ntasks}.h5m',
-            '--load', f'mpaso.scrip.p{self.ntasks}.h5m',
+            '--load', f'target.scrip.p{self.ntasks}.h5m',
             '--file', map_filename,
             '--weights', '--gnomonic',
             '--boxeps', '1e-9',
