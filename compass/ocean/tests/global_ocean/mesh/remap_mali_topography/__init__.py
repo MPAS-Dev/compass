@@ -303,6 +303,13 @@ class RemapMaliTopography(RemapTopography):
             alpha * ds_mali.bed_elevation +
             (1.0 - alpha) * ds_bedmachine.bed_elevation)
 
+        # our topography blending technique can lead to locations where the
+        # ice draft is slightly below the bed elevation; we correct that here
+        ds_out['landIceDraftObserved'] = xr.where(
+            ds_out['landIceDraftObserved'] < ds_out['bed_elevation'],
+            ds_out['bed_elevation'],
+            ds_out['landIceDraftObserved'])
+
         alpha = ds_out.maliFrac
         # NOTE: MALI's ocean fraction is already scaled by the MALI fraction
         ds_out['oceanFracObserved'] = (
