@@ -319,6 +319,14 @@ class RemapMaliTopography(RemapTopography):
             ds_mali.oceanFrac +
             (1.0 - alpha) * ds_bedmachine.oceanFracObserved)
 
+        # limit land ice floatation fraction to ocean fraction -- because of
+        # machine-precision noise in the combined ocean fraciton,
+        # land ice floating fraction can exceed ocean fraction by ~1e-15
+        ds_out['landIceFloatingFracObserved'] = np.minimum(
+            ds_out['landIceFloatingFracObserved'],
+            ds_out['oceanFracObserved']
+        )
+
         ds_out['ssh'] = ds_out.landIceDraftObserved
 
         write_netcdf(ds_out, 'topography_remapped.nc')
