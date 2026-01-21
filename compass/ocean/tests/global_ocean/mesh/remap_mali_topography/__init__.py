@@ -289,7 +289,10 @@ class RemapMaliTopography(RemapTopography):
 
         ds_out['landIceFloatingFracObserved'] = (
             ds_mali['landIceFrac'] -
-            ds_mali['landIceGroundedFrac'])
+            ds_mali['landIceGroundedFrac']
+        )
+
+        ds_out['landIceGroundedFracObserved'] = ds_mali['landIceGroundedFrac']
 
         for var in ['maliFrac']:
             mali_field = ds_mali[var]
