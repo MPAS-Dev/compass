@@ -255,12 +255,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_partition_scrip_file</span><span class="p">(</span><span class="s1">&#39;mali.scrip.nc&#39;</span><span class="p">)</span>
 
         <span class="n">out_mesh_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_name</span>
-        <span class="n">out_descriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span>
-            <span class="n">mesh_name</span><span class="o">=</span><span class="n">out_mesh_name</span><span class="p">)</span>
-        <span class="n">out_descriptor</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;NETCDF3_64BIT&#39;</span>
-        <span class="n">out_descriptor</span><span class="o">.</span><span class="n">to_scrip</span><span class="p">(</span><span class="s1">&#39;mpaso.scrip.nc&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_partition_scrip_file</span><span class="p">(</span><span class="s1">&#39;mpaso.scrip.nc&#39;</span><span class="p">)</span>
 
         <span class="n">map_filename</span> <span class="o">=</span> \
             <span class="sa">f</span><span class="s1">&#39;map_</span><span class="si">{</span><span class="n">in_mesh_name</span><span class="si">}</span><span class="s1">_to_</span><span class="si">{</span><span class="n">out_mesh_name</span><span class="si">}</span><span class="s1">_mbtraave.nc&#39;</span>
@@ -291,13 +285,15 @@
 
         <span class="n">g</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_G&#39;</span><span class="p">]</span>
 
-        <span class="n">draft</span> <span class="o">=</span> <span class="o">-</span> <span class="p">(</span><span class="n">ice_density</span> <span class="o">/</span> <span class="n">ocean_density</span><span class="p">)</span> <span class="o">*</span> <span class="n">thickness</span>
+        <span class="n">draft</span> <span class="o">=</span> <span class="o">-</span> <span class="p">(</span><span class="n">ice_density</span> <span class="o">/</span> <span class="n">ocean_density</span><span class="p">)</span> <span class="o">*</span> <span class="n">thickness</span> <span class="o">+</span> <span class="n">sea_level</span>
 
         <span class="n">ice_mask</span> <span class="o">=</span> <span class="n">ds_mali</span><span class="o">.</span><span class="n">thickness</span> <span class="o">&gt;</span> <span class="mi">0</span>
-        <span class="n">floating_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
-            <span class="n">ice_mask</span><span class="p">,</span>
-            <span class="n">ice_density</span> <span class="o">/</span> <span class="n">ocean_density</span> <span class="o">*</span> <span class="n">thickness</span> <span class="o">&lt;=</span> <span class="n">sea_level</span> <span class="o">-</span> <span class="n">bed</span><span class="p">)</span>
+        <span class="n">floating_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">ice_mask</span><span class="p">,</span> <span class="n">draft</span> <span class="o">&gt;</span> <span class="n">bed</span><span class="p">)</span>
         <span class="n">grounded_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">ice_mask</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">floating_mask</span><span class="p">))</span>
+
+        <span class="c1"># draft is determined by the bed where the ice is grounded and by</span>
+        <span class="c1"># flotation where the ice is not grounded (floating or no ice)</span>
+        <span class="n">draft</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">grounded_mask</span><span class="p">,</span> <span class="n">bed</span><span class="p">,</span> <span class="n">draft</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ocean_includes_grounded</span><span class="p">:</span>
             <span class="n">ocean_mask</span> <span class="o">=</span> <span class="n">bed</span> <span class="o">&lt;</span> <span class="n">sea_level</span>
@@ -314,10 +310,10 @@
 
         <span class="c1"># we will remap conservatively</span>
         <span class="n">ds_in</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
-        <span class="n">ds_in</span><span class="p">[</span><span class="s1">&#39;bed_elevation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bed</span>
-        <span class="n">ds_in</span><span class="p">[</span><span class="s1">&#39;landIceThkObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">thickness</span>
-        <span class="n">ds_in</span><span class="p">[</span><span class="s1">&#39;landIcePressureObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lithop</span>
-        <span class="n">ds_in</span><span class="p">[</span><span class="s1">&#39;landIceDraftObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">draft</span>
+        <span class="n">ds_in</span><span class="p">[</span><span class="s1">&#39;bed_elevation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ocean_frac</span> <span class="o">*</span> <span class="n">bed</span>
+        <span class="n">ds_in</span><span class="p">[</span><span class="s1">&#39;landIceThkObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ocean_frac</span> <span class="o">*</span> <span class="n">thickness</span>
+        <span class="n">ds_in</span><span class="p">[</span><span class="s1">&#39;landIcePressureObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ocean_frac</span> <span class="o">*</span> <span class="n">lithop</span>
+        <span class="n">ds_in</span><span class="p">[</span><span class="s1">&#39;landIceDraftObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ocean_frac</span> <span class="o">*</span> <span class="n">draft</span>
         <span class="n">ds_in</span><span class="p">[</span><span class="s1">&#39;landIceFrac&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ice_frac</span>
         <span class="n">ds_in</span><span class="p">[</span><span class="s1">&#39;landIceGroundedFrac&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grounded_frac</span>
         <span class="n">ds_in</span><span class="p">[</span><span class="s1">&#39;oceanFrac&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ocean_frac</span>
@@ -334,10 +330,11 @@
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Create weights file&#39;</span><span class="p">)</span>
 
+        <span class="c1"># target h5m file was created in parent class</span>
         <span class="n">args</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s1">&#39;mbtempest&#39;</span><span class="p">,</span> <span class="s1">&#39;--type&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">,</span>
             <span class="s1">&#39;--load&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;mali.scrip.p</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="si">}</span><span class="s1">.h5m&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;--load&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;mpaso.scrip.p</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="si">}</span><span class="s1">.h5m&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--load&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;target.scrip.p</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="si">}</span><span class="s1">.h5m&#39;</span><span class="p">,</span>
             <span class="s1">&#39;--file&#39;</span><span class="p">,</span> <span class="n">map_filename</span><span class="p">,</span>
             <span class="s1">&#39;--weights&#39;</span><span class="p">,</span> <span class="s1">&#39;--gnomonic&#39;</span><span class="p">,</span>
             <span class="s1">&#39;--boxeps&#39;</span><span class="p">,</span> <span class="s1">&#39;1e-9&#39;</span><span class="p">,</span>
@@ -356,6 +353,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Remap to target&#39;</span><span class="p">)</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;remap_topography&#39;</span><span class="p">]</span>
+        <span class="n">renorm_threshold</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;renorm_threshold&#39;</span><span class="p">)</span>
 
         <span class="n">args</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s1">&#39;ncremap&#39;</span><span class="p">,</span>
@@ -374,6 +374,20 @@
                 <span class="c1"># exceed 1</span>
                 <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span>
             <span class="n">ds_out</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">var</span>
+
+        <span class="c1"># renormalize topography variables based on ocean fraction</span>
+        <span class="n">ocean_frac</span> <span class="o">=</span> <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;oceanFrac&#39;</span><span class="p">]</span>
+        <span class="n">ocean_mask</span> <span class="o">=</span> <span class="n">ocean_frac</span> <span class="o">&gt;</span> <span class="n">renorm_threshold</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ocean_mask</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">ocean_frac</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="s1">&#39;bed_elevation&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;landIceThkObserved&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;landIcePressureObserved&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;landIceDraftObserved&#39;</span>
+        <span class="p">]:</span>
+            <span class="n">attrs</span> <span class="o">=</span> <span class="n">ds_out</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span>
+            <span class="n">ds_out</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_out</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span> <span class="o">*</span> <span class="n">norm</span>
+            <span class="n">ds_out</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">attrs</span>
 
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="s1">&#39;mali_topography_remapped.nc&#39;</span><span class="p">)</span>
 
@@ -398,7 +412,10 @@
 
         <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIceFloatingFracObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">ds_mali</span><span class="p">[</span><span class="s1">&#39;landIceFrac&#39;</span><span class="p">]</span> <span class="o">-</span>
-            <span class="n">ds_mali</span><span class="p">[</span><span class="s1">&#39;landIceGroundedFrac&#39;</span><span class="p">])</span>
+            <span class="n">ds_mali</span><span class="p">[</span><span class="s1">&#39;landIceGroundedFrac&#39;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIceGroundedFracObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_mali</span><span class="p">[</span><span class="s1">&#39;landIceGroundedFrac&#39;</span><span class="p">]</span>
 
         <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;maliFrac&#39;</span><span class="p">]:</span>
             <span class="n">mali_field</span> <span class="o">=</span> <span class="n">ds_mali</span><span class="p">[</span><span class="n">var</span><span class="p">]</span>
@@ -412,11 +429,26 @@
             <span class="n">alpha</span> <span class="o">*</span> <span class="n">ds_mali</span><span class="o">.</span><span class="n">bed_elevation</span> <span class="o">+</span>
             <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">ds_bedmachine</span><span class="o">.</span><span class="n">bed_elevation</span><span class="p">)</span>
 
+        <span class="c1"># our topography blending technique can lead to locations where the</span>
+        <span class="c1"># ice draft is slightly below the bed elevation; we correct that here</span>
+        <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIceDraftObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+            <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIceDraftObserved&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;bed_elevation&#39;</span><span class="p">],</span>
+            <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;bed_elevation&#39;</span><span class="p">],</span>
+            <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIceDraftObserved&#39;</span><span class="p">])</span>
+
         <span class="n">alpha</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">maliFrac</span>
         <span class="c1"># NOTE: MALI&#39;s ocean fraction is already scaled by the MALI fraction</span>
         <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">ds_mali</span><span class="o">.</span><span class="n">oceanFrac</span> <span class="o">+</span>
             <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">ds_bedmachine</span><span class="o">.</span><span class="n">oceanFracObserved</span><span class="p">)</span>
+
+        <span class="c1"># limit land ice floatation fraction to ocean fraction -- because of</span>
+        <span class="c1"># machine-precision noise in the combined ocean fraciton,</span>
+        <span class="c1"># land ice floating fraction can exceed ocean fraction by ~1e-15</span>
+        <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIceFloatingFracObserved&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span>
+            <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIceFloatingFracObserved&#39;</span><span class="p">],</span>
+            <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">]</span>
+        <span class="p">)</span>
 
         <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">landIceDraftObserved</span>
 
