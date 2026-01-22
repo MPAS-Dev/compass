@@ -132,12 +132,6 @@ class RemapMaliTopography(RemapTopography):
         self._partition_scrip_file('mali.scrip.nc')
 
         out_mesh_name = self.mesh_name
-        out_descriptor = MpasCellMeshDescriptor(
-            filename='base_mesh.nc',
-            mesh_name=out_mesh_name)
-        out_descriptor.format = 'NETCDF3_64BIT'
-        out_descriptor.to_scrip('mpaso.scrip.nc')
-        self._partition_scrip_file('mpaso.scrip.nc')
 
         map_filename = \
             f'map_{in_mesh_name}_to_{out_mesh_name}_mbtraave.nc'
@@ -168,13 +162,15 @@ class RemapMaliTopography(RemapTopography):
 
         g = constants['SHR_CONST_G']
 
-        draft = - (ice_density / ocean_density) * thickness
+        draft = - (ice_density / ocean_density) * thickness + sea_level
 
         ice_mask = ds_mali.thickness > 0
-        floating_mask = np.logical_and(
-            ice_mask,
-            ice_density / ocean_density * thickness <= sea_level - bed)
+        floating_mask = np.logical_and(ice_mask, draft > bed)
         grounded_mask = np.logical_and(ice_mask, np.logical_not(floating_mask))
+
+        # draft is determined by the bed where the ice is grounded and by
+        # flotation where the ice is not grounded (floating or no ice)
+        draft = xr.where(grounded_mask, bed, draft)
 
         if self.ocean_includes_grounded:
             ocean_mask = bed < sea_level
@@ -191,10 +187,10 @@ class RemapMaliTopography(RemapTopography):
 
         # we will remap conservatively
         ds_in = xr.Dataset()
-        ds_in['bed_elevation'] = bed
-        ds_in['landIceThkObserved'] = thickness
-        ds_in['landIcePressureObserved'] = lithop
-        ds_in['landIceDraftObserved'] = draft
+        ds_in['bed_elevation'] = ocean_frac * bed
+        ds_in['landIceThkObserved'] = ocean_frac * thickness
+        ds_in['landIcePressureObserved'] = ocean_frac * lithop
+        ds_in['landIceDraftObserved'] = ocean_frac * draft
         ds_in['landIceFrac'] = ice_frac
         ds_in['landIceGroundedFrac'] = grounded_frac
         ds_in['oceanFrac'] = ocean_frac
@@ -211,10 +207,11 @@ class RemapMaliTopography(RemapTopography):
         logger = self.logger
         logger.info('Create weights file')
 
+        # target h5m file was created in parent class
         args = [
             'mbtempest', '--type', '5',
             '--load', f'mali.scrip.p{self.ntasks}.h5m',
-            '--load', f'mpaso.scrip.p{self.ntasks}.h5m',
+            '--load', f'target.scrip.p{self.ntasks}.h5m',
             '--file', map_filename,
             '--weights', '--gnomonic',
             '--boxeps', '1e-9',
@@ -233,6 +230,9 @@ class RemapMaliTopography(RemapTopography):
         """
         logger = self.logger
         logger.info('Remap to target')
+        config = self.config
+        section = config['remap_topography']
+        renorm_threshold = section.getfloat('renorm_threshold')
 
         args = [
             'ncremap',
@@ -251,6 +251,20 @@ class RemapMaliTopography(RemapTopography):
                 # exceed 1
                 var = np.minimum(var, 1.)
             ds_out[var_name] = var
+
+        # renormalize topography variables based on ocean fraction
+        ocean_frac = ds_out['oceanFrac']
+        ocean_mask = ocean_frac > renorm_threshold
+        norm = xr.where(ocean_mask, 1.0 / ocean_frac, 0.0)
+        for var_name in [
+            'bed_elevation',
+            'landIceThkObserved',
+            'landIcePressureObserved',
+            'landIceDraftObserved'
+        ]:
+            attrs = ds_out[var_name].attrs
+            ds_out[var_name] = ds_out[var_name] * norm
+            ds_out[var_name].attrs = attrs
 
         write_netcdf(ds_out, 'mali_topography_remapped.nc')
 
@@ -275,7 +289,10 @@ class RemapMaliTopography(RemapTopography):
 
         ds_out['landIceFloatingFracObserved'] = (
             ds_mali['landIceFrac'] -
-            ds_mali['landIceGroundedFrac'])
+            ds_mali['landIceGroundedFrac']
+        )
+
+        ds_out['landIceGroundedFracObserved'] = ds_mali['landIceGroundedFrac']
 
         for var in ['maliFrac']:
             mali_field = ds_mali[var]
@@ -289,11 +306,26 @@ class RemapMaliTopography(RemapTopography):
             alpha * ds_mali.bed_elevation +
             (1.0 - alpha) * ds_bedmachine.bed_elevation)
 
+        # our topography blending technique can lead to locations where the
+        # ice draft is slightly below the bed elevation; we correct that here
+        ds_out['landIceDraftObserved'] = xr.where(
+            ds_out['landIceDraftObserved'] < ds_out['bed_elevation'],
+            ds_out['bed_elevation'],
+            ds_out['landIceDraftObserved'])
+
         alpha = ds_out.maliFrac
         # NOTE: MALI's ocean fraction is already scaled by the MALI fraction
         ds_out['oceanFracObserved'] = (
             ds_mali.oceanFrac +
             (1.0 - alpha) * ds_bedmachine.oceanFracObserved)
+
+        # limit land ice floatation fraction to ocean fraction -- because of
+        # machine-precision noise in the combined ocean fraciton,
+        # land ice floating fraction can exceed ocean fraction by ~1e-15
+        ds_out['landIceFloatingFracObserved'] = np.minimum(
+            ds_out['landIceFloatingFracObserved'],
+            ds_out['oceanFracObserved']
+        )
 
         ds_out['ssh'] = ds_out.landIceDraftObserved
 
