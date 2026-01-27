@@ -469,7 +469,9 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
         landIceMask = dsMask.regionCellMasks.isel(nRegions=0)
         dsLandIceMask = xr.Dataset()
         dsLandIceMask['landIceMask'] = landIceMask
-        dsLandIceMask['landIceFloatingMask'] = landIceMask
+        dsLandIceMask['landIceFloatingMask'] = xr.logical_and(
+            landIceMask, dsMask.landIceFloatingFraction > 0.
+        )
 
         write_netcdf(dsLandIceMask, 'land_ice_mask.nc')
 
