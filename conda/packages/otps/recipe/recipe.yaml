@@ -1,0 +1,37 @@
+context:
+  version: "2021.10"
+
+package:
+  name: otps
+  version: ${{ version }}
+
+build:
+  number: 1
+  skip:
+    - win
+
+requirements:
+  build:
+    - make
+    - ${{ compiler('fortran') }}
+    - ${{ stdlib('c') }}
+  host:
+    - gdown
+    - tar
+
+tests:
+  - script:
+      - test -f ${PREFIX}/bin/extract_HC
+      - test -f ${PREFIX}/bin/extract_local_model
+      - test -f ${PREFIX}/bin/predict_tide
+
+about:
+  homepage: https://www.tpxo.net/otps
+  license: LicenseRef-custom
+  license_file: OTPS/COPYRIGHT
+  summary: OSU TIDAL PREDICTION Software (OTPS)
+
+extra:
+  recipe-maintainers:
+    - xylar
+    - sbrus89
