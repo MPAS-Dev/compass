@@ -1,6 +1,6 @@
 context:
   name: compass
-  version: "1.9.0a2"
+  version: "1.8.0"
   build: 0
   mpi_prefix: ${{ "nompi" if mpi == "nompi" else "mpi_" ~ mpi }}
   build_number: ${{ 100 + build if mpi == "nompi" else build }}
@@ -33,7 +33,7 @@ requirements:
     - cartopy
     - cartopy_offlinedata
     - cmocean
-    - esmf ==8.9.0 ${{ mpi_prefix }}_*
+    - esmf ==8.8.1 ${{ mpi_prefix }}_*
     - ffmpeg
     - geometric_features ==1.6.1
     - git
@@ -42,12 +42,12 @@ requirements:
     - ipython
     - jupyter
     - lxml
-    - mache ==1.32.0
+    - mache ==1.31.0
     - matplotlib-base >=3.9.1
     - metis
     - moab >=5.5.1
     - moab * ${{ mpi_prefix }}_tempest_*
-    - mpas_tools ==1.3.2
+    - mpas_tools ==1.3.1
     - nco
     - netcdf4 * nompi_*
     - numpy >=2.0,<3.0
