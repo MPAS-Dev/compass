@@ -11,56 +11,12 @@ compass conda environment
 E3SM supported machines
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-For each ``compass`` release, we maintain a
-`conda environment <https://docs.conda.io/en/latest/>`_. that includes the
-``compass`` package as well as all of its dependencies and some libraries
-(currently `ESMF <https://earthsystemmodeling.org/>`_ and
-`SCORPIO <https://e3sm.org/scorpio-parallel-io-library/>`_) built with system
-MPI on our standard machines (Anvil, Chicoma, Chrysalis, Compy, and Perlmutter).
-Here are the commands to load the the environment for the latest
-``compass`` release with the default compiler and MPI library on each machine:
+E3SM Compass users are basically all developers so we recommend using the
+:ref:`dev_quick_start` guide.  We used to maintain shared Compass environments
+build for each release but this proved to be a maintenance burden with little
+benefit.
 
-* Anvil (Blues):
-
-.. code-block:: bash
-
-    source /lcrc/soft/climate/compass/anvil/load_latest_compass.sh
-
-* Chicoma-CPU (coming soon):
-
-.. code-block:: bash
-
-    source /usr/projects/climate/SHARED_CLIMATE/compass/chicoma-cpu/load_latest_compass.sh
-
-* Chrysalis:
-
-.. code-block:: bash
-
-    source /lcrc/soft/climate/compass/chrysalis/load_latest_compass.sh
-
-* Compy:
-
-.. code-block:: bash
-
-    source /share/apps/E3SM/conda_envs/compass/load_latest_compass.sh
-
-* Perlmutter-CPU (coming soon):
-
-.. code-block:: bash
-
-    source /global/cfs/cdirs/e3sm/software/compass/pm-cpu/load_latest_compass.sh
-
-
-These same paths (minus ``load_latest_compass.sh``) also have load scripts for
-the latest version of compass with all the supported compiler and MPI
-combinations.  For example, on Anvil, you can get an environment appropriate
-for build MPAS components with Gnu compilers and OpenMPI using:
-
-.. code-block:: bash
-
-    source /lcrc/soft/climate/compass/anvil/load_latest_compass_gnu_openmpi.sh
-
-other machines
+Other machines
 ~~~~~~~~~~~~~~
 
 To install your own ``compass`` conda environment on other machines, first,
@@ -70,7 +26,7 @@ install `Miniforge3 <https://github.com/conda-forge/miniforge?tab=readme-ov-file
 
 .. code-block:: bash
 
-    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.10 \
+    conda create -n compass -c e3sm/label/compass -c conda-forge python=3.13 \
         "compass=*=mpi_mpich*"
 
 This will install the version of the package with MPI from conda-forge's MPICH
@@ -82,18 +38,27 @@ To get a specific version of ``compass``, you can instead run:
 
 .. code-block:: bash
 
-    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.9 \
-        "compass=1.0.0=mpi_mpich*"
+    conda create -n compass -c e3sm/label/compass -c conda-forge python=3.13 \
+        "compass=1.8.0=mpi_mpich*"
 
-That is, you will replace ``compass=*`` with ``compass=1.0.0``.
+That is, you will replace ``compass=*`` with ``compass=1.8.0``.
 
 Then, you will need to create a load script to activate the conda environment
-and set some environment variables. In a directory where you want to store the
-script, run:
+and set some environment variables.  On unsupported machines, you should first
+clone and build `Jigsaw <https://github.com/dengwirda/jigsaw>`_ and installs
+both Jigsaw and `Jigsaw-Python <https://github.com/dengwirda/jigsaw-python>`_.
+These tools are used to build MPAS grids and the latest versions are not
+available as conda packages.
 
 .. code-block:: bash
 
     conda activate compass
+    build_jigsaw --clone --subdir jigsaw-python
+
+Then, in a directory where you want to store the load script, run:
+
+.. code-block:: bash
+
     create_compass_load_script
 
 From then on, each time you want to set up test cases or suites with compass
@@ -102,7 +67,7 @@ example:
 
 .. code-block:: bash
 
-    source load_compass_1.0.0_mpich.sh
+    source load_compass_1.8.0_mpich.sh
 
 When you set up tests, a link called ``load_compass_env.sh`` will be added to
 each test case or suite work directory.  To run the tests, you may find it
@@ -113,6 +78,14 @@ load script.
 
 Building MPAS components
 ------------------------
+
+The compass package no longer installs the packages needed to build MPAS
+components.  This is because most Compass users even on non-E3SM machines
+have wanted to use their own compilers, MPI libraries, NetCDF installations,
+etc.  You will need to load the appropriate modules and/or install the
+required software to make that possible.  This guide is not a comprehensive
+tutorial on building MPAS components, but we provide some basic instructions
+here.
 
 You will need to check out a branch of E3SM to build an MPAS component.
 

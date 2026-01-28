@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Quick Start for Users &mdash; compass latest documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
@@ -47,7 +47,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start for Users</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#compass-conda-environment">compass conda environment</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#e3sm-supported-machines">E3SM supported machines</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#other-machines">other machines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#other-machines">Other machines</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#building-mpas-components">Building MPAS components</a></li>
@@ -127,59 +127,18 @@
 <span id="conda-env"></span><h2>compass conda environment<a class="headerlink" href="#compass-conda-environment" title="Link to this heading"></a></h2>
 <section id="e3sm-supported-machines">
 <h3>E3SM supported machines<a class="headerlink" href="#e3sm-supported-machines" title="Link to this heading"></a></h3>
-<p>For each <code class="docutils literal notranslate"><span class="pre">compass</span></code> release, we maintain a
-<a class="reference external" href="https://docs.conda.io/en/latest/">conda environment</a>. that includes the
-<code class="docutils literal notranslate"><span class="pre">compass</span></code> package as well as all of its dependencies and some libraries
-(currently <a class="reference external" href="https://earthsystemmodeling.org/">ESMF</a> and
-<a class="reference external" href="https://e3sm.org/scorpio-parallel-io-library/">SCORPIO</a>) built with system
-MPI on our standard machines (Anvil, Chicoma, Chrysalis, Compy, and Perlmutter).
-Here are the commands to load the the environment for the latest
-<code class="docutils literal notranslate"><span class="pre">compass</span></code> release with the default compiler and MPI library on each machine:</p>
-<ul class="simple">
-<li><p>Anvil (Blues):</p></li>
-</ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>/lcrc/soft/climate/compass/anvil/load_latest_compass.sh
-</pre></div>
-</div>
-<ul class="simple">
-<li><p>Chicoma-CPU (coming soon):</p></li>
-</ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>/usr/projects/climate/SHARED_CLIMATE/compass/chicoma-cpu/load_latest_compass.sh
-</pre></div>
-</div>
-<ul class="simple">
-<li><p>Chrysalis:</p></li>
-</ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>/lcrc/soft/climate/compass/chrysalis/load_latest_compass.sh
-</pre></div>
-</div>
-<ul class="simple">
-<li><p>Compy:</p></li>
-</ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>/share/apps/E3SM/conda_envs/compass/load_latest_compass.sh
-</pre></div>
-</div>
-<ul class="simple">
-<li><p>Perlmutter-CPU (coming soon):</p></li>
-</ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>/global/cfs/cdirs/e3sm/software/compass/pm-cpu/load_latest_compass.sh
-</pre></div>
-</div>
-<p>These same paths (minus <code class="docutils literal notranslate"><span class="pre">load_latest_compass.sh</span></code>) also have load scripts for
-the latest version of compass with all the supported compiler and MPI
-combinations.  For example, on Anvil, you can get an environment appropriate
-for build MPAS components with Gnu compilers and OpenMPI using:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>/lcrc/soft/climate/compass/anvil/load_latest_compass_gnu_openmpi.sh
-</pre></div>
-</div>
+<p>E3SM Compass users are basically all developers so we recommend using the
+<a class="reference internal" href="../developers_guide/quick_start.html#dev-quick-start"><span class="std std-ref">Quick Start for Developers</span></a> guide.  We used to maintain shared Compass environments
+build for each release but this proved to be a maintenance burden with little
+benefit.</p>
 </section>
 <section id="other-machines">
-<h3>other machines<a class="headerlink" href="#other-machines" title="Link to this heading"></a></h3>
+<h3>Other machines<a class="headerlink" href="#other-machines" title="Link to this heading"></a></h3>
 <p>To install your own <code class="docutils literal notranslate"><span class="pre">compass</span></code> conda environment on other machines, first,
 install <a class="reference external" href="https://github.com/conda-forge/miniforge?tab=readme-ov-file#miniforge3">Miniforge3</a>
 (if it is not already installed), then create a new conda environment (called
 <code class="docutils literal notranslate"><span class="pre">compass</span></code> in this example) as follows:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>compass<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>-c<span class="w"> </span>e3sm/label/compass<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.10<span class="w"> </span><span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>compass<span class="w"> </span>-c<span class="w"> </span>e3sm/label/compass<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.13<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span><span class="s2">&quot;compass=*=mpi_mpich*&quot;</span>
 </pre></div>
 </div>
@@ -188,22 +147,29 @@ package.  If you want OpenMPI, use <code class="docutils literal notranslate"><s
 you do not want MPI from conda-forge (e.g. because you are working with a
 system with its own MPI), use <code class="docutils literal notranslate"><span class="pre">&quot;compass=*=nompi*&quot;</span></code></p>
 <p>To get a specific version of <code class="docutils literal notranslate"><span class="pre">compass</span></code>, you can instead run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>compass<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>-c<span class="w"> </span>e3sm/label/compass<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span><span class="s2">&quot;compass=1.0.0=mpi_mpich*&quot;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>compass<span class="w"> </span>-c<span class="w"> </span>e3sm/label/compass<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.13<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="s2">&quot;compass=1.8.0=mpi_mpich*&quot;</span>
 </pre></div>
 </div>
-<p>That is, you will replace <code class="docutils literal notranslate"><span class="pre">compass=*</span></code> with <code class="docutils literal notranslate"><span class="pre">compass=1.0.0</span></code>.</p>
+<p>That is, you will replace <code class="docutils literal notranslate"><span class="pre">compass=*</span></code> with <code class="docutils literal notranslate"><span class="pre">compass=1.8.0</span></code>.</p>
 <p>Then, you will need to create a load script to activate the conda environment
-and set some environment variables. In a directory where you want to store the
-script, run:</p>
+and set some environment variables.  On unsupported machines, you should first
+clone and build <a class="reference external" href="https://github.com/dengwirda/jigsaw">Jigsaw</a> and installs
+both Jigsaw and <a class="reference external" href="https://github.com/dengwirda/jigsaw-python">Jigsaw-Python</a>.
+These tools are used to build MPAS grids and the latest versions are not
+available as conda packages.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>compass
-create_compass_load_script
+build_jigsaw<span class="w"> </span>--clone<span class="w"> </span>--subdir<span class="w"> </span>jigsaw-python
+</pre></div>
+</div>
+<p>Then, in a directory where you want to store the load script, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>create_compass_load_script
 </pre></div>
 </div>
 <p>From then on, each time you want to set up test cases or suites with compass
 or build MPAS components, you will need to source that load script, for
 example:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>load_compass_1.0.0_mpich.sh
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>load_compass_1.8.0_mpich.sh
 </pre></div>
 </div>
 <p>When you set up tests, a link called <code class="docutils literal notranslate"><span class="pre">load_compass_env.sh</span></code> will be added to
@@ -214,6 +180,13 @@ load script.</p>
 </section>
 <section id="building-mpas-components">
 <span id="build-mpas"></span><h2>Building MPAS components<a class="headerlink" href="#building-mpas-components" title="Link to this heading"></a></h2>
+<p>The compass package no longer installs the packages needed to build MPAS
+components.  This is because most Compass users even on non-E3SM machines
+have wanted to use their own compilers, MPI libraries, NetCDF installations,
+etc.  You will need to load the appropriate modules and/or install the
+required software to make that possible.  This guide is not a comprehensive
+tutorial on building MPAS components, but we provide some basic instructions
+here.</p>
 <p>You will need to check out a branch of E3SM to build an MPAS component.</p>
 <p>Typically, for MPAS-Ocean, you will clone
 <a class="reference external" href="https://github.com/E3SM-Project/E3SM">E3SM</a> and for MALI, you will clone
