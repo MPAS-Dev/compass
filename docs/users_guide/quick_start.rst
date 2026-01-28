@@ -16,7 +16,8 @@ For each ``compass`` release, we maintain a
 ``compass`` package as well as all of its dependencies and some libraries
 (currently `ESMF <https://earthsystemmodeling.org/>`_ and
 `SCORPIO <https://e3sm.org/scorpio-parallel-io-library/>`_) built with system
-MPI on our standard machines (Anvil, Chicoma, Chrysalis, Compy, and Perlmutter).
+MPI on our standard machines (Anvil, Chicoma-CPU, Chrysalis, Compy, and
+Perlmutter-CPU/Perlmutter-GPU).
 Here are the commands to load the the environment for the latest
 ``compass`` release with the default compiler and MPI library on each machine:
 
@@ -26,7 +27,7 @@ Here are the commands to load the the environment for the latest
 
     source /lcrc/soft/climate/compass/anvil/load_latest_compass.sh
 
-* Chicoma-CPU (coming soon):
+* Chicoma-CPU:
 
 .. code-block:: bash
 
@@ -44,11 +45,17 @@ Here are the commands to load the the environment for the latest
 
     source /share/apps/E3SM/conda_envs/compass/load_latest_compass.sh
 
-* Perlmutter-CPU (coming soon):
+* Perlmutter-CPU:
 
 .. code-block:: bash
 
     source /global/cfs/cdirs/e3sm/software/compass/pm-cpu/load_latest_compass.sh
+
+* Perlmutter-GPU:
+
+.. code-block:: bash
+
+    source /global/cfs/cdirs/e3sm/software/compass/pm-gpu/load_latest_compass.sh
 
 
 These same paths (minus ``load_latest_compass.sh``) also have load scripts for
@@ -70,7 +77,7 @@ install `Miniforge3 <https://github.com/conda-forge/miniforge?tab=readme-ov-file
 
 .. code-block:: bash
 
-    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.10 \
+    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.13 \
         "compass=*=mpi_mpich*"
 
 This will install the version of the package with MPI from conda-forge's MPICH
@@ -82,18 +89,24 @@ To get a specific version of ``compass``, you can instead run:
 
 .. code-block:: bash
 
-    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.9 \
-        "compass=1.0.0=mpi_mpich*"
+    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.13 \
+        "compass=1.8.0=mpi_mpich*"
 
-That is, you will replace ``compass=*`` with ``compass=1.0.0``.
+That is, you will replace ``compass=*`` with ``compass=1.8.0``.
 
 Then, you will need to create a load script to activate the conda environment
-and set some environment variables. In a directory where you want to store the
-script, run:
+and set some environment variables.  On unsupported machines, you should first
+clone and build ``jigsaw-python`` to avoid issues when setting up test cases:
 
 .. code-block:: bash
 
     conda activate compass
+    build_jigsaw --clone --subdir jigsaw-python
+
+Then, in a directory where you want to store the load script, run:
+
+.. code-block:: bash
+
     create_compass_load_script
 
 From then on, each time you want to set up test cases or suites with compass
@@ -102,7 +115,7 @@ example:
 
 .. code-block:: bash
 
-    source load_compass_1.0.0_mpich.sh
+    source load_compass_1.8.0_mpich.sh
 
 When you set up tests, a link called ``load_compass_env.sh`` will be added to
 each test case or suite work directory.  To run the tests, you may find it
