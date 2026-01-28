@@ -1,0 +1,115 @@
+context:
+  name: compass
+  version: "1.9.0a2"
+  build: 0
+  mpi_prefix: ${{ "nompi" if mpi == "nompi" else "mpi_" ~ mpi }}
+  build_number: ${{ 100 + build if mpi == "nompi" else build }}
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  path: ../../../..
+
+build:
+  number: ${{ build_number }}
+  noarch: python
+  # add build string so packages can depend on mpi or nompi variants
+  string: ${{ mpi_prefix }}_h${{ hash }}_${{ build_number }}
+  script: python -m pip install . --no-deps -vv
+  python:
+    entry_points:
+      - compass = compass.__main__:main
+      - create_compass_load_script = compass.load:main
+
+requirements:
+  host:
+    - python ${{ python_min }}.*
+    - pip
+    - setuptools
+  run:
+    - python >=${{ python_min }},<3.14
+    - cartopy
+    - cartopy_offlinedata
+    - cmocean
+    - esmf ==8.9.0 ${{ mpi_prefix }}_*
+    - ffmpeg
+    - geometric_features ==1.6.1
+    - git
+    - gsw
+    - h5py
+    - ipython
+    - jupyter
+    - lxml
+    - mache ==1.32.0
+    - matplotlib-base >=3.9.1
+    - metis
+    - moab >=5.5.1
+    - moab * ${{ mpi_prefix }}_tempest_*
+    - mpas_tools ==1.3.2
+    - nco
+    - netcdf4 * nompi_*
+    - numpy >=2.0,<3.0
+    - if: linux
+      then:
+        - otps ==2021.10
+    - progressbar2
+    - pyamg >=4.2.2
+    - pyproj
+    - pyremap >=2.0.0,<3.0.0
+    - requests
+    - ruamel.yaml
+    - scikit-image !=0.20.0
+    - scipy >=1.8.0
+    - shapely >=2.0,<3.0
+    - xarray
+    # Keep the package noarch while constraining platform
+    - if: linux
+      then: __linux
+    - if: osx
+      then: __osx
+    - if: win
+      then: __win
+
+tests:
+  - python:
+      imports:
+        - compass
+      pip_check: true
+      python_version: ${{ python_min }}.*
+  - script:
+      - export CONDA_PREFIX="${PREFIX}"
+      - export CONDA_EXE="$(command -v conda)"
+      - build_jigsaw --clone --subdir jigsaw-python
+      - compass list
+      - compass list --machines
+      - compass list --suites
+      - compass list --help
+      - compass setup --help
+      - compass suite --help
+      - compass clean --help
+      - create_compass_load_script --help
+    requirements:
+      run:
+        - conda
+        - git
+        - pip
+
+about:
+  homepage: https://github.com/MPAS-Dev/compass
+  license: BSD-3-Clause
+  license_file: LICENSE
+  summary: Test cases for the Model for Prediction Across Scales (MPAS)
+  description: |
+    Configuration Of Model for Prediction Across Scales Setups (COMPASS) is an
+    automated system to set up test cases that match the MPAS-Model repository.
+    All namelists and streams files begin with the default generated from the
+    Registry.xml file, and only the changes relevant to the particular test
+    case are altered in those files.
+  documentation: https://mpas-dev.github.io/compass/latest/
+  repository: https://github.com/MPAS-Dev/compass
+
+extra:
+  recipe-maintainers:
+    - xylar
