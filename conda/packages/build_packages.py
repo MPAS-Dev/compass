@@ -32,7 +32,9 @@ def apply_channel_overrides(variant_config_path, channel_sources, outputs_dir,
 
     override_dir = outputs_dir / "variant_overrides"
     override_dir.mkdir(parents=True, exist_ok=True)
-    override_path = override_dir / f"{Path(variant_config_path).stem}_labels.yaml"
+    override_path = (
+        override_dir / f"{Path(variant_config_path).stem}_labels.yaml"
+    )
     with open(override_path, "w") as handle:
         yaml.safe_dump(variant_config, handle, sort_keys=False)
     return str(override_path)
@@ -227,7 +229,9 @@ def main():
             "Unsupported platform for automatic variant selection."
         )
 
-    default_cache_dir = Path(os.environ.get("TMPDIR", tempfile.gettempdir())) / "rattler_cache"
+    default_cache_dir = Path(
+        os.environ.get("TMPDIR", tempfile.gettempdir())
+    ) / "rattler_cache"
 
     if build_otps:
         otps_dir = recipe_root / "otps"
@@ -284,7 +288,8 @@ def main():
         )
         if not compass_variants:
             raise ValueError(
-                "No COMPASS variant config files matched the requested filters."
+                "No COMPASS variant config files matched the requested "
+                "filters."
             )
         channel_sources = [
             "https://conda.anaconda.org/conda-forge",
