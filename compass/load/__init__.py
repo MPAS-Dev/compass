@@ -2,10 +2,11 @@ import argparse
 import os
 import subprocess
 import sys
+from importlib import resources
+
+from jinja2 import Template
 
 from compass.version import __version__ as compass_version
-from jinja2 import Template
-from importlib import resources
 
 
 def get_conda_base_and_env():
@@ -27,8 +28,13 @@ def get_conda_base_and_env():
 def get_mpi():
 
     for mpi in ['mpich', 'openmpi']:
-        check = subprocess.check_output(
-            ['conda', 'list', 'mpich']).decode('utf-8')
+        try:
+            check = subprocess.check_output(
+                ['conda', 'list', mpi], stderr=subprocess.DEVNULL
+            ).decode('utf-8')
+        except subprocess.CalledProcessError:
+            continue
+
         if mpi in check:
             return mpi
 
