@@ -76,6 +76,14 @@ load script.
 Building MPAS components
 ------------------------
 
+The compass package no longer installs the packages needed to build MPAS
+components.  This is because most Compass users even on non-E3SM machines
+have wanted to use their own compilers, MPI libraries, NetCDF installations,
+etc.  You will need to load the appropriate modules and/or install the
+required software to make that possible.  This guide is not a comprehensive
+tutorial on building MPAS components, but we provide some basic instructions
+here.
+
 You will need to check out a branch of E3SM to build an MPAS component.
 
 Typically, for MPAS-Ocean, you will clone
