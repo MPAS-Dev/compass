@@ -26,7 +26,7 @@ install `Miniforge3 <https://github.com/conda-forge/miniforge?tab=readme-ov-file
 
 .. code-block:: bash
 
-    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.13 \
+    conda create -n compass -c e3sm/label/compass -c conda-forge python=3.13 \
         "compass=*=mpi_mpich*"
 
 This will install the version of the package with MPI from conda-forge's MPICH
@@ -38,14 +38,17 @@ To get a specific version of ``compass``, you can instead run:
 
 .. code-block:: bash
 
-    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.13 \
+    conda create -n compass -c e3sm/label/compass -c conda-forge python=3.13 \
         "compass=1.8.0=mpi_mpich*"
 
 That is, you will replace ``compass=*`` with ``compass=1.8.0``.
 
 Then, you will need to create a load script to activate the conda environment
 and set some environment variables.  On unsupported machines, you should first
-clone and build ``jigsaw-python`` to avoid issues when setting up test cases:
+clone and build `Jigsaw <https://github.com/dengwirda/jigsaw>`_ and installs
+both Jigsaw and `Jigsaw-Python <https://github.com/dengwirda/jigsaw-python>`_.
+These tools are used to build MPAS grids and the latest versions are not
+available as conda packages.
 
 .. code-block:: bash
 
