@@ -11,63 +11,12 @@ compass conda environment
 E3SM supported machines
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-For each ``compass`` release, we maintain a
-`conda environment <https://docs.conda.io/en/latest/>`_. that includes the
-``compass`` package as well as all of its dependencies and some libraries
-(currently `ESMF <https://earthsystemmodeling.org/>`_ and
-`SCORPIO <https://e3sm.org/scorpio-parallel-io-library/>`_) built with system
-MPI on our standard machines (Anvil, Chicoma-CPU, Chrysalis, Compy, and
-Perlmutter-CPU/Perlmutter-GPU).
-Here are the commands to load the the environment for the latest
-``compass`` release with the default compiler and MPI library on each machine:
+E3SM Compass users are basically all developers so we recommend using the
+:ref:`dev_quick_start` guide.  We used to maintain shared Compass environments
+build for each release but this proved to be a maintenance burden with little
+benefit.
 
-* Anvil (Blues):
-
-.. code-block:: bash
-
-    source /lcrc/soft/climate/compass/anvil/load_latest_compass.sh
-
-* Chicoma-CPU:
-
-.. code-block:: bash
-
-    source /usr/projects/climate/SHARED_CLIMATE/compass/chicoma-cpu/load_latest_compass.sh
-
-* Chrysalis:
-
-.. code-block:: bash
-
-    source /lcrc/soft/climate/compass/chrysalis/load_latest_compass.sh
-
-* Compy:
-
-.. code-block:: bash
-
-    source /share/apps/E3SM/conda_envs/compass/load_latest_compass.sh
-
-* Perlmutter-CPU:
-
-.. code-block:: bash
-
-    source /global/cfs/cdirs/e3sm/software/compass/pm-cpu/load_latest_compass.sh
-
-* Perlmutter-GPU:
-
-.. code-block:: bash
-
-    source /global/cfs/cdirs/e3sm/software/compass/pm-gpu/load_latest_compass.sh
-
-
-These same paths (minus ``load_latest_compass.sh``) also have load scripts for
-the latest version of compass with all the supported compiler and MPI
-combinations.  For example, on Anvil, you can get an environment appropriate
-for build MPAS components with Gnu compilers and OpenMPI using:
-
-.. code-block:: bash
-
-    source /lcrc/soft/climate/compass/anvil/load_latest_compass_gnu_openmpi.sh
-
-other machines
+Other machines
 ~~~~~~~~~~~~~~
 
 To install your own ``compass`` conda environment on other machines, first,
