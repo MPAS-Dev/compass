@@ -27,8 +27,12 @@ def get_conda_base_and_env():
 def get_mpi():
 
     for mpi in ['mpich', 'openmpi']:
-        check = subprocess.check_output(
-            ['conda', 'list', 'mpich']).decode('utf-8')
+        try:
+            check = subprocess.check_output(
+                ['conda', 'list', mpi]).decode('utf-8')
+        except subprocess.CalledProcessError:
+            continue
+
         if mpi in check:
             return mpi
 
