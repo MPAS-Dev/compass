@@ -39,6 +39,8 @@ class GlobalOcean(TestGroup):
 
         # for other meshes, we do fewer tests
         self._add_tests(mesh_names=['QU', 'Icos', 'QUwISC', 'IcoswISC'])
+        self._add_tests(mesh_names=['IcoswISC'],
+                        mali_ais_topo='AIS_4to20km')
 
         self._add_tests(mesh_names=['EC30to60', 'ECwISC30to60'])
 
