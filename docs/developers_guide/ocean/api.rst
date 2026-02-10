@@ -927,6 +927,14 @@ test cases and steps
    mesh.Mesh.configure
    mesh.Mesh.run
 
+   mesh.vr45to5.VRTidesMesh
+   mesh.vr45to5.VRTidesMesh.make_jigsaw_mesh
+   mesh.vr45to5.VRTidesMesh.build_cell_width_lat_lon
+   mesh.vr45to5.VRTidesMesh.limit_spacing_gradient
+   mesh.vr45to5.VRTidesMesh.swe_wavelength_spacing
+   mesh.vr45to5.VRTidesMesh.elev_sharpness_spacing
+   mesh.vr45to5.VRTidesMesh.coarsen_spacing_pixels
+
    init.Init
    init.Init.configure
    init.Init.run
@@ -935,12 +943,41 @@ test cases and steps
    init.initial_state.InitialState
    init.initial_state.InitialState.setup
    init.initial_state.InitialState.run
-   init.interpolate_wave_drag.InterpolateWaveDrag
-   init.interpolate_wave_drag.InterpolateWaveDrag.interpolate_data_to_grid
-   init.interpolate_wave_drag.InterpolateWaveDrag.plot_interp_data
-   init.interpolate_wave_drag.InterpolateWaveDrag.write_to_file
-   init.interpolate_wave_drag.InterpolateWaveDrag.run
+   init.calculate_wave_drag.CalculateWaveDrag
+   init.calculate_wave_drag.CalculateWaveDrag.interpolate_data_to_grid
+   init.calculate_wave_drag.CalculateWaveDrag.fix_nans
+   init.calculate_wave_drag.CalculateWaveDrag.make_nn_lists
+   init.calculate_wave_drag.CalculateWaveDrag.calc_stats
+   init.calculate_wave_drag.CalculateWaveDrag.polyfit2d
+   init.calculate_wave_drag.CalculateWaveDrag.map_to_r3
+   init.calculate_wave_drag.CalculateWaveDrag.run
 
+   dem.CreatePixelFile
+
+   dem.dem_pixel.circ_dist
+   dem.dem_pixel.cell_dzdx
+   dem.dem_pixel.blend_front
+   dem.dem_pixel.rtopo_60sec
+   dem.dem_pixel.rtopo_30sec
+   dem.dem_pixel.rtopo_15sec
+   dem.dem_pixel.gebco_60sec
+   dem.dem_pixel.gebco_30sec
+   dem.dem_pixel.gebco_15sec
+   dem.dem_pixel.rtopo_gebco_60sec
+   dem.dem_pixel.rtopo_gebco_30sec
+   dem.dem_pixel.rtopo_gebco_15sec
+
+   dem.dem_remap.map_to_r3
+   dem.dem_remap.tria_area
+   dem.dem_remap.circ_dist
+   dem.dem_remap.sample_1d
+   dem.dem_remap.linear_2d
+   dem.dem_remap.sample_2d
+   dem.dem_remap.cell_quad
+   dem.dem_remap.cell_prfl
+   dem.dem_remap.dem_remap
+
+   dem.dem_trnsf.dem_trnsf
 
    forward.Forward
    forward.Forward.configure
