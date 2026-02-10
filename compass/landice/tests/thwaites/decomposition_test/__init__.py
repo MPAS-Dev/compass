@@ -10,7 +10,7 @@ class DecompositionTest(TestCase):
     results of the two runs are identical.
     """
 
-    def __init__(self, test_group, depth_integrated=False):
+    def __init__(self, test_group, advection_type, depth_integrated=False):
         """
         Create the test case
 
@@ -24,21 +24,26 @@ class DecompositionTest(TestCase):
 
         """
         if depth_integrated is True:
-            name = 'fo-depthInt_decomposition_test'
+            name_tmp = 'fo-depthInt_decomposition_test'
         else:
-            name = 'fo_decomposition_test'
+            name_tmp = 'fo_decomposition_test'
 
+        name = f'{advection_type}_{name_tmp}'
         super().__init__(test_group=test_group, name=name)
 
         self.cores_set = [16, 32]
 
         for procs in self.cores_set:
             name = '{}proc_run'.format(procs)
-            self.add_step(
-                RunModel(test_case=self, name=name,
-                         depth_integrated=depth_integrated,
-                         ntasks=procs, min_tasks=procs, openmp_threads=1))
-
+            step = RunModel(test_case=self, name=name, 
+                            depth_integrated=depth_integrated,
+                            ntasks=procs, min_tasks=procs, openmp_threads=1)
+            if advection_type == 'fct':
+                step.add_namelist_options(
+                    {'config_thickness_advection': "'fct'",
+                     'config_tracer_advection': "'fct'"},
+                    out_name='namelist.landice')
+            self.add_step(step)
     # no configure() method is needed
 
     # no run() method is needed
