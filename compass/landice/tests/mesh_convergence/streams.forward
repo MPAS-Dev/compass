@@ -1,0 +1,20 @@
+<streams>
+
+<immutable_stream name="input"
+                  filename_template="init.nc"/>
+
+<immutable_stream name="restart"
+                  output_interval="0030-00-00_00:00:00"/>
+
+<stream name="output"
+        type="output"
+		filename_template="output.nc"
+		clobber_mode="overwrite"
+		reference_time="0001-01-01_00:00:00">
+
+    <stream name="basicmesh"/>
+    <var name="xtime"/>
+    <var name="daysSinceStart"/>
+</stream>
+
+</streams>
