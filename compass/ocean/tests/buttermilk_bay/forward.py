@@ -1,5 +1,3 @@
-import time
-
 from compass.model import run_model
 from compass.step import Step
 
@@ -107,10 +105,26 @@ class Forward(Step):
         dt_per_m = config.getfloat('buttermilk_bay', 'dt_per_m')
 
         dt = dt_per_m * self.resolution
-        # https://stackoverflow.com/a/1384565/7728169
-        dt = time.strftime('%H:%M:%S', time.gmtime(dt))
+        dt = self.format_seconds(dt, 1)
 
         return dt
+
+    def format_seconds(self, seconds, decimal_places=2):
+        # Handle negative values
+        is_negative = seconds < 0
+        seconds = abs(seconds)
+
+        # Extract hours, minutes, and seconds
+        hours = int(seconds // 3600)
+        remaining = seconds % 3600
+        minutes = int(remaining // 60)
+        secs = remaining % 60
+
+        # Format the string with specified decimal places
+        sign = '-' if is_negative else ''
+        time = (f"{sign}{hours:02d}:{minutes:02d}:"
+                f"{secs:0{3 + decimal_places}.{decimal_places}f}")
+        return time
 
     def _get_resources(self):
         """ get the these properties from the config options """
