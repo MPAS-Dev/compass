@@ -3,6 +3,7 @@ import os
 import subprocess
 
 import matplotlib as mpl
+import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
@@ -71,7 +72,7 @@ class Viz(Step):
         for each resolution
         """
 
-        fig, ax = plt.subplots(nrows=len(points), ncols=1)
+        fig, ax = plt.subplots(figsize=(5, 4), nrows=len(points), ncols=1)
 
         for res in self.resolutions:
             ds = xr.open_dataset(f'output_{res}km.nc')
@@ -99,12 +100,28 @@ class Viz(Step):
             if i == len(points) - 1:
                 lines, labels = ax[i].get_legend_handles_labels()
 
-        fig.suptitle(f'{self.wetdry} ({self.ramp_type})')
+        plot_mode = 'paper'
+        if plot_mode == 'paper':
+            ha = 'left'
+            x = 0.0
+            y = 0.98
+            titles = {'subgrid (ramp)': 'a)',
+                      'subgrid (noramp)': 'c)',
+                      'standard (ramp)': 'b)',
+                      'standard (npramp)': 'd)'}
+            title = titles[f'{self.wetdry} ({self.ramp_type})']
+        else:
+            ha = 'center'
+            x = 0.5
+            y = 0.98
+            title = f'{self.wetdry} ({self.ramp_type}) '
+
+        fig.suptitle(title, x=x, y=y, ha=ha, fontsize='x-large')
         fig.tight_layout()
         fig.subplots_adjust(bottom=0.2)
         fig.legend(lines, labels,
                    loc='lower center', ncol=4)
-        fig.savefig('points.png')
+        fig.savefig('points.png', dpi=400)
 
     def inject_exact_solution(self):
         """
@@ -144,6 +161,12 @@ class Viz(Step):
         sol_max = 2
         clevels = np.linspace(sol_min, sol_max, 50)
         cmap = plt.get_cmap('RdBu')
+
+        minval = 0.2
+        maxval = 0.8
+        cmap = mcolors.LinearSegmentedColormap.from_list(
+            'truncated RdBu',
+            cmap(np.linspace(minval, maxval, 256)))
 
         ds = xr.open_dataset(f'output_{self.resolutions[0]}km.nc')
         time = [dt.datetime.strptime(x.decode(), '%Y-%m-%d_%H:%M:%S')
@@ -189,14 +212,30 @@ class Viz(Step):
             ax[ncols - 1].set_ylabel('y (km)')
             ds.close()
 
+            plot_mode = 'paper'
+            if plot_mode == 'paper':
+                ha = 'left'
+                x = 0.0
+                y = 0.98
+                titles = {'subgrid (ramp)': 'a)',
+                          'subgrid (noramp)': 'c)',
+                          'standard (ramp)': 'b)',
+                          'standard (npramp)': 'd)'}
+                title = titles[f'{self.wetdry} ({self.ramp_type})']
+            else:
+                ha = 'center'
+                x = 0.5
+                y = 0.98
+                t = round((time[i] - time[0]).total_seconds() / 86400., 2)
+                title = f'{self.wetdry} ({self.ramp_type}) ' \
+                        f'ssh solution at t={t} days'
+
             tick_step = 0.5
             ticks = np.arange(sol_min, sol_max + tick_step, tick_step)
             cb = fig.colorbar(cm, ax=ax[-1], shrink=0.7, ticks=ticks)
             cb.set_label('ssh (m)')
-            t = round((time[i] - time[0]).total_seconds() / 86400., 2)
-            fig.suptitle((f'{self.wetdry} ({self.ramp_type}) '
-                          f'ssh solution at t={t} days'))
-            fig.savefig(f'solution_{i:03d}.png')
+            fig.suptitle(title, x=x, y=y, ha=ha, fontsize='x-large')
+            fig.savefig(f'solution_{i:03d}.png', dpi=400)
             plt.close()
 
     def rmse_plots(self):
@@ -215,6 +254,10 @@ class Viz(Step):
                  'standard (no ramp)': f'../../../standard/{noramp_name}/viz',
                  'subgrid (ramp)': f'../../../subgrid/{ramp_name}/viz',
                  'subgrid (no ramp)': f'../../../subgrid/{noramp_name}/viz'}
+        colors = {'standard (ramp)': '#e66101',
+                  'standard (no ramp)': '#fdb863',
+                  'subgrid (ramp)': '#5e3c99',
+                  'subgrid (no ramp)': '#b2abd2'}
         for case in cases:
             include = True
             for res in self.resolutions:
@@ -240,7 +283,8 @@ class Viz(Step):
                     max_rmse = rmse[i]
 
             ax.loglog(resolutions, rmse,
-                      linestyle='-', marker='o', label=comp)
+                      linestyle='-', marker='o',
+                      label=comp, color=colors[comp])
 
         rmse_1st_order = np.zeros(len(resolutions))
         rmse_1st_order[0] = max_rmse
@@ -254,8 +298,10 @@ class Viz(Step):
         ax.set_ylabel('RMSE (m)')
 
         fig.legend(loc='outside lower center', ncol=3)
-        ax.set_title('Layer thickness convergence')
-        fig.savefig('error.png')
+        plot_mode = 'plot'
+        if plot_mode != 'plot':
+            ax.set_title('Layer thickness convergence')
+        fig.savefig('error.png', dpi=400)
 
     def compute_rmse(self, varname, filename):
         """
