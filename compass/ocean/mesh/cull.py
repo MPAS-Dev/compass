@@ -381,6 +381,7 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
         dsPreserve.append(dsCritPassMask)
 
     if preserve_floodplain:
+        # base mesh contains regionCellMasks field to indicate floodplain
         dsPreserve.append(dsBaseMesh)
 
     # fix land locked cells after adding critical land blockages, as these
