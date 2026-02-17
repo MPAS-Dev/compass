@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 import netCDF4
 import numpy as np
 import xarray as xr
+from cartopy.mpl.ticker import LatitudeFormatter, LongitudeFormatter
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 from scipy import spatial
@@ -264,10 +265,12 @@ class Analysis(Step):
         # Initialize for plotting high water marks after time series plots
         hwm_obs = []
         hwm_mod = {}
+        never_wet = {}
         station_lon = []
         station_lat = []
         for i, run in enumerate(data):
             hwm_mod[run] = []
+            never_wet[run] = []
 
         # Create new colormap for LULC
         tab20_colors = plt.cm.get_cmap('tab20').colors
@@ -293,131 +296,136 @@ class Analysis(Step):
                 print(sta)
                 i = stations['name'].index(sta)
 
-                # Read in observed data and get coordinates
-                obs_data = self.read_station_data(f'{obs}_data/{sta}.txt', obs,
-                                                  self.adjust_min_date,
-                                                  self.run_max_date)
-
-                self.adjust_station_data(obs_data)
-
                 sta_lon = stations['lon'][i]
                 sta_lat = stations['lat'][i]
                 station_lon.append(sta_lon)
                 station_lat.append(sta_lat)
 
-                # Create figure
-                fig = plt.figure(figsize=[6, 4])
-                gs = gridspec.GridSpec(nrows=2, ncols=2, figure=fig)
+                # Read in observed data and get coordinates
+                obs_data = self.read_station_data(f'{obs}_data/{sta}.txt', obs,
+                                                  self.adjust_min_date,
+                                                  self.run_max_date)
+                self.adjust_station_data(obs_data)
+                hwm_obs.append(np.max(obs_data['ssh'][obs_data['ssh'] < 99.0]))
 
-                # Plot observation station location
-                ax1 = fig.add_subplot(gs[0, 0], projection=ccrs.PlateCarree())
-                ax1.set_extent([sta_lon - 10.0, sta_lon + 10.00,
-                               sta_lat - 7.0, sta_lat + 7.0],
-                               crs=ccrs.PlateCarree())
-                ax1.add_feature(cfeature.LAND, zorder=100)
-                ax1.add_feature(cfeature.LAKES, alpha=0.5, zorder=101)
-                ax1.coastlines('50m', zorder=101)
-                ax1.plot(sta_lon, sta_lat, 'C0o', zorder=102)
-
-                # Plot local observation station location
-                ax2 = fig.add_subplot(gs[0, 1], projection=ccrs.PlateCarree())
-                ax2.set_extent([sta_lon - 2.5, sta_lon + 2.5,
-                               sta_lat - 1.75, sta_lat + 1.75],
-                               crs=ccrs.PlateCarree())
-                ax2.add_feature(cfeature.LAND, zorder=100)
-                ax2.add_feature(cfeature.LAKES, alpha=0.5, zorder=101)
-                ax2.coastlines('50m', zorder=101)
-                ax2.plot(sta_lon, sta_lat, 'C0o', zorder=102)
-
-                # Plot observed data
-                ax3 = fig.add_subplot(gs[1, :])
-                l1, = ax3.plot(obs_data['datetime'], obs_data['ssh'], 'C0-')
-                labels = ['observed']
-                lines = [l1]
-                hwm_obs.append(np.max(obs_data['ssh']))
-
-                for i, run in enumerate(data):
+                for run in data:
 
                     # Find closest output point to station location
                     d, idx = tree[run].query(np.asarray([sta_lon, sta_lat]))
 
-                    # Plot output point location
-                    ax1.plot(data[run]['lon'][idx],
-                             data[run]['lat'][idx],
-                             'C' + str(i + 1) + 'o')
-                    ax2.plot(data[run]['lon'][idx],
-                             data[run]['lat'][idx],
-                             'C' + str(i + 1) + 'o')
-
-                    # Plot modelled data
-                    l2, = ax3.plot(data[run]['datetime'],
-                                   data[run]['ssh'][:, idx],
-                                   'C' + str(i + 1) + '-')
-                    labels.append(run)
-                    lines.append(l2)
                     hwm_mod[run].append(np.max(data[run]['ssh'][:, idx]))
+                    diff = np.abs(np.max(data[run]['ssh'][1000:, idx]) -
+                                  np.min(data[run]['ssh'][1000:, idx]))
+                    never_wet[run].append(diff)
 
-                # Set figure labels and axis properties and save
-                ax3.set_xlabel('time')
-                ax3.set_ylabel('ssh (m)')
-                plot_min_date = self.config.get('hurricane_analysis',
-                                                'plot_min_date')
-                plot_max_date = self.config.get('hurricane_analysis',
-                                                'plot_max_date')
-                min_date = datetime.datetime.strptime(plot_min_date, self.frmt)
-                max_date = datetime.datetime.strptime(plot_max_date, self.frmt)
-                ax3.set_xlim([min_date, max_date])
-                ax3.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
-                lgd = plt.legend(lines, labels, loc=9,
-                                 bbox_to_anchor=(0.5, -0.5),
-                                 ncol=3, fancybox=False, edgecolor='k')
-                st = plt.suptitle('Station ' + sta, y=1.025, fontsize=16)
-                fig.tight_layout()
-                fig.savefig(f'{obs}_plots/{sta}_sta.png', bbox_inches='tight',
-                            bbox_extra_artists=(lgd, st,))
-                plt.close()
+                self.plot_timeseries(obs, sta, sta_lon, sta_lat,
+                                     obs_data, tree, data)
 
                 # Plot DEM and LULC around station
                 if plot_station_dems:
                     self.plot_dem(sta, sta_lon, sta_lat)
 
         # Convert to numpy arrays
+        station_lon = np.asarray(station_lon)
+        station_lat = np.asarray(station_lat)
         hwm_obs = np.asarray(hwm_obs)
         for i, run in enumerate(data):
             hwm_mod[run] = np.asarray(hwm_mod[run])
+            never_wet[run] = np.asarray(never_wet[run])
+
+        print(station_lon)
+        print(station_lon.shape)
+        idx_lon, = np.where(station_lon < -71.67)
+        print(idx_lon)
+        print(idx_lon.shape)
+        print(never_wet['standard'])
+        idx_nw, = np.where((station_lon < -71.67) &
+                           (never_wet['standard'] > 0.05))
+        print(idx_nw)
+        print(idx_nw.shape)
+        idx_sg_only, = np.where((station_lon < -71.67) &
+                                (never_wet['standard'] < 0.05) &
+                                (never_wet['subgrid'] > 0.05))
+        print(idx_sg_only)
+        print(idx_sg_only.shape)
 
         # Plot modeled vs. observed hwm scatter
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
+        fig = plt.figure(figsize=(10, 3.33))
+        ax = fig.add_subplot(131)
         labels = []
         scatters = []
+        text = []
         for i, run in enumerate(data):
-            sc = ax.scatter(hwm_obs, hwm_mod[run], alpha=0.5)
+            diff = hwm_mod[run] - hwm_obs
+            rmse = np.sqrt(np.mean(np.square(diff[idx_lon])))
+            mae = np.mean(np.abs(diff[idx_lon]))
+            sc = ax.scatter(hwm_obs[idx_lon], hwm_mod[run][idx_lon], alpha=0.5)
+            text.append(f'{run} RMSE: {round(rmse, 2)} m')
+            text.append(f'{run} MAE: {round(mae, 2)} m')
             scatters.append(sc)
             labels.append(run)
         ln, = ax.plot(hwm_obs, hwm_obs, 'k')
         scatters.append(ln)
         labels.append('perfect agreement')
-        lgd = plt.legend(scatters, labels, loc=9,
-                         bbox_to_anchor=(0.5, -0.1),
-                         ncol=3, fancybox=False, edgecolor='k')
-        ax.set_xlabel('observed')
-        ax.set_ylabel('modeled')
+        ax.text(0.4, 20, '\n'.join(text), verticalalignment='top')
+        ax.set_xlabel('observed HWM (m)')
+        ax.set_ylabel('modeled HWM (m)')
+        ax.set_title('a)', loc='left', fontsize='x-large')
+
+        ax = fig.add_subplot(132)
+        diff = hwm_mod['subgrid'] - hwm_obs
+        rmse = np.sqrt(np.mean(np.square(diff[idx_sg_only])))
+        mae = np.mean(np.abs(diff[idx_sg_only]))
+        sc = ax.scatter(hwm_obs[idx_sg_only],
+                        hwm_mod['subgrid'][idx_sg_only], alpha=0.5)
+        text = '\n'.join([f'subgrid RMSE: {round(rmse, 2)} m',
+                          f'subgrid MAE: {round(mae, 2)} m'])
+        ax.text(0.4, 5.0, text, verticalalignment='top')
+        ln, = ax.plot(hwm_obs, hwm_obs, 'k')
+        scatters.append(ln)
+        labels.append('perfect agreement')
+        ax.set_xlabel('observed HWM (m)')
+        ax.set_ylabel('modeled HWM (m)')
+        ax.set_title('b)', loc='left', fontsize='x-large')
+
+        ax = fig.add_subplot(133)
+        labels = []
+        scatters = []
+        text = []
+        for i, run in enumerate(data):
+            diff = hwm_mod[run] - hwm_obs
+            rmse = np.sqrt(np.mean(np.square(diff[idx_nw])))
+            mae = np.mean(np.abs(diff[idx_nw]))
+            sc = ax.scatter(hwm_obs[idx_nw], hwm_mod[run][idx_nw], alpha=0.5)
+            text.append(f'{run} RMSE: {round(rmse, 2)} m')
+            text.append(f'{run} MAE: {round(mae, 2)} m')
+            scatters.append(sc)
+            labels.append(run)
+        ln, = ax.plot(hwm_obs, hwm_obs, 'k')
+        ax.text(2.8, 1.6, '\n'.join(text), verticalalignment='top')
+        scatters.append(ln)
+        labels.append('perfect agreement')
+        fig.legend(scatters, labels, loc='outside lower center',
+                   bbox_to_anchor=(0.5, -0.1),
+                   ncol=3, fancybox=False, edgecolor='k')
+        ax.set_xlabel('observed HWM (m)')
+        ax.set_ylabel('modeled HWM (m)')
+        ax.set_title('c)', loc='left', fontsize='x-large')
+
         fig.tight_layout()
-        fig.savefig('hwm_mod_obs.png', bbox_inches='tight',
-                    bbox_extra_artists=(lgd,))
+        fig.savefig('hwm_mod_obs.png', dpi=400, bbox_inches='tight')
         plt.close()
 
         # Plot geographic hwm error
-        station_lon = np.asarray(station_lon)
-        station_lat = np.asarray(station_lat)
+        station_lon = station_lon[idx_lon]
+        station_lat = station_lat[idx_lon]
         for run in data:
-            fig = plt.figure()
+            fig = plt.figure(figsize=(5, 4))
             ax = fig.add_subplot(111, projection=ccrs.PlateCarree())
 
-            diff = hwm_mod[run] - hwm_obs
-            cm = ax.scatter(station_lon, station_lat, c=diff, cmap='PuOr',
-                            zorder=102, vmax=3.0, vmin=-3.0, edgecolor='k')
+            cm = ax.scatter(station_lon, station_lat, c=diff[idx_lon],
+                            cmap='PuOr', zorder=102, vmax=3.0, vmin=-3.0,
+                            edgecolor='k')
 
             ax.set_extent([np.min(station_lon) - 0.1,
                            np.max(station_lon) + 0.1,
@@ -428,10 +436,35 @@ class Analysis(Step):
             ax.add_feature(cfeature.OCEAN, zorder=100)
             ax.add_feature(cfeature.LAKES, alpha=0.5, zorder=101)
             ax.coastlines('50m', zorder=101)
-            cb = fig.colorbar(cm, extend='both')
+
+            xticks = np.linspace(np.min(station_lon) - 0.1,
+                                 np.max(station_lon) + 0.1, 5)
+            yticks = np.linspace(np.min(station_lat) - 0.1,
+                                 np.max(station_lat) + 0.1, 5)
+            ax.set_xticks(xticks, crs=ccrs.PlateCarree())
+            ax.set_yticks(yticks, crs=ccrs.PlateCarree())
+            lon_formatter = LongitudeFormatter(number_format='.2f',
+                                               zero_direction_label=True)
+            lat_formatter = LatitudeFormatter(number_format='.2f')
+            ax.xaxis.set_major_formatter(lon_formatter)
+            ax.yaxis.set_major_formatter(lat_formatter)
+
+            plot_mode = 'paper'
+            title = run
+            if plot_mode == 'paper':
+                if 'subgrid' in run:
+                    title = 'a)'
+                elif 'standard' in run:
+                    title = 'b)'
+                loc = 'left'
+            else:
+                loc = 'center'
+            ax.set_title(title, loc=loc, fontsize='x-large')
+            cb = fig.colorbar(cm, extend='both', pad=0.1)
             cb.set_label('max high water error (m)')
             fig.tight_layout()
-            fig.savefig(f'hwm_spatial_{run}.png', bbox_inches='tight')
+
+            fig.savefig(f'hwm_spatial_{run}.png', dpi=400, bbox_inches='tight')
             plt.close()
 
     def find_data_in_bbox(self, sta_lon, sta_lat, eps):
@@ -466,10 +499,12 @@ class Analysis(Step):
             lat_min = np.min(lat)
             lat_max = np.max(lat)
             for loc in locs:
-                lon_pt = loc[0]
-                lat_pt = loc[1]
-                if lon_pt > lon_min and lon_pt < lon_max and \
-                   lat_pt > lat_min and lat_pt < lat_max:
+                # lon_pt = loc[0]
+                # lat_pt = loc[1]
+                # if lon_pt > lon_min and lon_pt < lon_max and \
+                #    lat_pt > lat_min and lat_pt < lat_max:
+                if lon_max > bbox[0] and lon_min < bbox[1] and \
+                   lat_max > bbox[2] and lat_min < bbox[3]:
 
                     if lat_name in da_topo.dims:
                         lat = da_topo[lat_name]
@@ -492,9 +527,83 @@ class Analysis(Step):
 
         return dems, lulcs, patches1, patches2
 
+    def plot_timeseries(self, obs, sta, sta_lon, sta_lat,
+                        obs_data, tree, data):
+
+        # Create figure
+        fig = plt.figure(figsize=[6, 4])
+        gs = gridspec.GridSpec(nrows=2, ncols=2, figure=fig)
+
+        # Plot observation station location
+        ax1 = fig.add_subplot(gs[0, 0], projection=ccrs.PlateCarree())
+        ax1.set_extent([sta_lon - 10.0, sta_lon + 10.00,
+                       sta_lat - 7.0, sta_lat + 7.0],
+                       crs=ccrs.PlateCarree())
+        ax1.add_feature(cfeature.LAND, zorder=100)
+        ax1.add_feature(cfeature.LAKES, alpha=0.5, zorder=101)
+        ax1.coastlines('50m', zorder=101)
+        ax1.plot(sta_lon, sta_lat, 'C0o', zorder=102)
+
+        # Plot local observation station location
+        ax2 = fig.add_subplot(gs[0, 1], projection=ccrs.PlateCarree())
+        ax2.set_extent([sta_lon - 2.5, sta_lon + 2.5,
+                       sta_lat - 1.75, sta_lat + 1.75],
+                       crs=ccrs.PlateCarree())
+        ax2.add_feature(cfeature.LAND, zorder=100)
+        ax2.add_feature(cfeature.LAKES, alpha=0.5, zorder=101)
+        ax2.coastlines('50m', zorder=101)
+        ax2.plot(sta_lon, sta_lat, 'C0o', zorder=102)
+
+        # Plot observed data
+        ax3 = fig.add_subplot(gs[1, :])
+        l1, = ax3.plot(obs_data['datetime'], obs_data['ssh'], 'C0-')
+        labels = ['observed']
+        lines = [l1]
+
+        for i, run in enumerate(data):
+
+            # Find closest output point to station location
+            d, idx = tree[run].query(np.asarray([sta_lon, sta_lat]))
+
+            # Plot output point location
+            ax1.plot(data[run]['lon'][idx],
+                     data[run]['lat'][idx],
+                     'C' + str(i + 1) + 'o')
+            ax2.plot(data[run]['lon'][idx],
+                     data[run]['lat'][idx],
+                     'C' + str(i + 1) + 'o')
+
+            # Plot modelled data
+            l2, = ax3.plot(data[run]['datetime'],
+                           data[run]['ssh'][:, idx],
+                           'C' + str(i + 1) + '-')
+            labels.append(run)
+            lines.append(l2)
+
+        # Set figure labels and axis properties and save
+        ax3.set_xlabel('time')
+        ax3.set_ylabel('ssh (m)')
+        plot_min_date = self.config.get('hurricane_analysis',
+                                        'plot_min_date')
+        plot_max_date = self.config.get('hurricane_analysis',
+                                        'plot_max_date')
+        min_date = datetime.datetime.strptime(plot_min_date, self.frmt)
+        max_date = datetime.datetime.strptime(plot_max_date, self.frmt)
+        ax3.set_xlim([min_date, max_date])
+        ax3.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+        lgd = plt.legend(lines, labels, loc=9,
+                         bbox_to_anchor=(0.5, -0.5),
+                         ncol=3, fancybox=False, edgecolor='k')
+        st = plt.suptitle('Station ' + sta, y=1.025, fontsize=16)
+        fig.tight_layout()
+        fig.savefig(f'{obs}_plots/{sta}_sta.png', dpi=400, bbox_inches='tight',
+                    bbox_extra_artists=(lgd, st,))
+        plt.close()
+
     def plot_dem(self, sta, sta_lon, sta_lat):
 
-        eps = 0.25
+        # eps = 0.25
+        eps = 0.76
         dems, lulcs, patches1, patches2 = self.find_data_in_bbox(sta_lon,
                                                                  sta_lat,
                                                                  eps)
@@ -507,11 +616,13 @@ class Analysis(Step):
         ax.append(fig.add_subplot(2, 2, 4))
 
         # Plot DEM topo and LULC around station
+        # for i, eps in enumerate([0.75]):
         for i, eps in enumerate([0.1, 0.01]):
             bbox = np.array([sta_lon - eps, sta_lon + eps,
                              sta_lat - eps, sta_lat + eps])
 
             j = 0
+            # bbox_dems = np.array([1e10, -1e10, 1e10, -1e10])
             for dem in dems:
                 da_topo = dems[dem]
                 da_lulc = lulcs[dem]
@@ -532,6 +643,14 @@ class Analysis(Step):
                     continue
 
                 j = j + 1
+                # if da["lon"].min() < bbox_dems[0]:
+                #     bbox_dems[0] = da["lon"].min()
+                # if da["lon"].max() > bbox_dems[1]:
+                #     bbox_dems[1] = da["lon"].max()
+                # if da["lat"].min() < bbox_dems[2]:
+                #     bbox_dems[2] = da["lat"].min()
+                # if da["lat"].max() > bbox_dems[3]:
+                #     bbox_dems[3] = da["lat"].max()
 
                 # Plot DEM topo
                 if i == 0:
@@ -550,8 +669,8 @@ class Analysis(Step):
                             cbar_kwargs={'label': 'bathymetry/topography'})
                     ax[axi].plot(sta_lon, sta_lat,
                                  marker='o',
-                                 markerfacecolor='k',
-                                 markeredgecolor='r',
+                                 markerfacecolor='tab:orange',
+                                 markeredgecolor='k',
                                  zorder=102)
                     if i == 0:
                         ax[axi].add_collection(patches1)
@@ -567,6 +686,17 @@ class Analysis(Step):
                 ax[axi].axis('equal')
                 ax[axi].set_xlabel('longitude')
                 ax[axi].set_ylabel('latitude')
+                # if j == len(dems):
+                #     if bbox_dems[0] > bbox[0]:
+                #         bbox[0] = bbox_dems[0]
+                #     if bbox_dems[1] < bbox[1]:
+                #         bbox[1] = bbox_dems[1]
+                #     if bbox_dems[2] > bbox[2]:
+                #         bbox[2] = bbox_dems[2]
+                #     if bbox_dems[3] < bbox[3]:
+                #         bbox[3] = bbox_dems[3]
+                #     ax[axi].set_xlim(bbox[0], bbox[1])
+                #     ax[axi].set_ylim(bbox[2], bbox[3])
                 ax[axi].set_xlim(bbox[0], bbox[1])
                 ax[axi].set_ylim(bbox[2], bbox[3])
 
@@ -610,8 +740,8 @@ class Analysis(Step):
                                          'format': formt})
                     ax[axi].plot(sta_lon, sta_lat,
                                  marker='o',
-                                 markerfacecolor='k',
-                                 markeredgecolor='r',
+                                 markerfacecolor='tab:orange',
+                                 markeredgecolor='k',
                                  zorder=102)
                 else:
                     da.plot(ax=ax[axi],
@@ -626,7 +756,7 @@ class Analysis(Step):
                 ax[axi].set_ylim(bbox[2], bbox[3])
 
         fig.tight_layout()
-        fig.savefig(f'{sta}_dem.png', bbox_inches='tight')
+        fig.savefig(f'{sta}_dem.png', dpi=400, bbox_inches='tight')
 
         plt.close()
 
