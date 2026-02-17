@@ -8,6 +8,7 @@ from compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2 import (
 from compass.ocean.tests.hurricane.mesh.devr45to5rr1 import (
     DEVR45to5rr1BaseMesh,
 )
+from compass.ocean.tests.hurricane.mesh.rrs6to18 import RRS6to18BaseMesh
 from compass.ocean.tests.tides.dem import CreatePixelFile
 from compass.testcase import TestCase
 
@@ -64,6 +65,9 @@ class Mesh(TestCase):
                 ncell_nwav=80, ncell_nslp=4,
                 filt_sdev=0.5, filt_halo=50, filt_plev=0.325)
             mesh_lower = 'devr45to5rr1'
+        elif mesh_name == 'RRS6to18':
+            base_mesh_step = RRS6to18BaseMesh(self, pixel_step, name=name)
+            mesh_lower = 'rrs6to18'
         else:
             raise ValueError(f'Unexpected mesh name {mesh_name}')
 

@@ -17,7 +17,7 @@ class Hurricane(TestGroup):
                          name='hurricane')
 
         storm = 'sandy'
-        mesh_names = ['DEQU120at30cr10rr2', 'DEVR45to5rr1']
+        mesh_names = ['DEQU120at30cr10rr2', 'DEVR45to5rr1', 'RRS6to18']
         wetdry_options = ['off', 'standard', 'subgrid']
 
         for mesh_name in mesh_names:
