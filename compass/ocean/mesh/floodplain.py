@@ -1,5 +1,8 @@
 import netCDF4 as nc4
 import numpy as np
+from geometric_features import read_feature_collection
+from inpoly import inpoly2
+from mpas_tools.mesh.creation.signed_distance import _add_poly
 
 import compass.ocean.tests.tides.dem.dem_remap as dem_remap
 from compass.mesh.spherical import QuasiUniformSphericalMeshStep
@@ -89,15 +92,24 @@ class FloodplainMeshStep(QuasiUniformSphericalMeshStep):
                     'floodplain_resolution')
             else:
                 floodplain_resolution = 1e10
+            if config.has_option('spherical_mesh', 'floodplain_geojson'):
+                floodplain_geojson = config.get(
+                    'spherical_mesh',
+                    'floodplain_geojson')
+                floodplain_region = read_feature_collection(floodplain_geojson)
+            else:
+                floodplain_region = None
 
             self.inject_preserve_floodplain(
                 mesh_file=mesh_filename,
                 floodplain_elevation=floodplain_elevation,
                 floodplain_resolution=floodplain_resolution,
+                floodplain_region=floodplain_region,
                 min_depth_outside_floodplain=min_depth_outside_floodplain)
 
     def inject_preserve_floodplain(self, mesh_file, floodplain_elevation,
                                    floodplain_resolution=1e10,
+                                   floodplain_region=None,
                                    min_depth_outside_floodplain=5.0):
 
         nc_mesh = nc4.Dataset(mesh_file, 'r+')
@@ -116,14 +128,16 @@ class FloodplainMeshStep(QuasiUniformSphericalMeshStep):
         nc_mesh.variables['transectCellMasks'][:] = 0.0
 
         floodplain = self.find_floodplain(mesh_file, floodplain_elevation,
-                                          floodplain_resolution)
+                                          floodplain_resolution,
+                                          floodplain_region)
 
         nc_mesh.variables['regionCellMasks'][:] = floodplain
 
         nc_mesh.close()
 
     def find_floodplain(self, mesh_file, floodplain_elevation,
-                        floodplain_resolution):
+                        floodplain_resolution,
+                        floodplain_region):
 
         nc_mesh = nc4.Dataset(mesh_file, 'r+')
 
@@ -132,6 +146,39 @@ class FloodplainMeshStep(QuasiUniformSphericalMeshStep):
         floodplain = np.logical_and(
             h < floodplain_resolution,
             nc_mesh.variables[bottomDepth][:] < floodplain_elevation)
+        if floodplain_region:
+            print("adding floodplain region")
+            nodes = list()
+            edges = list()
+            for feature in floodplain_region.features:
+                if feature['geometry']['type'] == 'Polygon':
+                    for poly in feature['geometry']['coordinates']:
+                        _add_poly(poly, edges, nodes)
+
+                elif feature['geometry']['type'] == 'MultiPolygon':
+                    for mpoly in feature['geometry']['coordinates']:
+                        for poly in mpoly:
+                            _add_poly(poly, edges, nodes)
+
+            nodes = np.array(nodes)
+            edges = np.array(edges)
+            print(nodes)
+            print(edges)
+
+            lon = np.degrees(nc_mesh.variables['lonCell'][:])
+            lon = np.mod(lon + 180.0, 360.0) - 180.0
+            lat = np.degrees(nc_mesh.variables['latCell'][:])
+
+            points = np.vstack([lon, lat]).T
+
+            floodplain_mask, _ = inpoly2(points, nodes, edges)
+            floodplain_mask = 1 * floodplain_mask
+            print(np.max(floodplain_mask))
+            print(np.min(floodplain_mask))
+
+        else:
+            floodplain_mask = 1
+        floodplain = floodplain_mask * floodplain
 
         nc_mesh.close()
 
