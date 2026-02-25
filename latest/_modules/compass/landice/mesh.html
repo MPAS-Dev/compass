@@ -493,7 +493,7 @@
     <span class="c1"># that distance.</span>
     <span class="k">if</span> <span class="n">dist_to_edge</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
-            <span class="n">thk</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">dist_to_edge</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">cull_distance</span><span class="p">))</span>
+            <span class="n">thk</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">dist_to_edge</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">cull_distance</span><span class="p">))</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Setting cell_width in outer regions to max_spac &#39;</span>
                     <span class="sa">f</span><span class="s1">&#39;for </span><span class="si">{</span><span class="n">mask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s1"> cells&#39;</span><span class="p">)</span>
         <span class="n">cell_width</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_spac</span>
