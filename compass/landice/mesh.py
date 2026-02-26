@@ -5,6 +5,7 @@ import time
 from shutil import copyfile
 
 import jigsawpy
+import matplotlib.pyplot as plt
 import mpas_tools.io
 import numpy as np
 import xarray
@@ -491,8 +492,11 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y,
                           [1, 1], [-1, 1], [1, -1], [-1, -1]])
 
     ice_mask = thk > 0.0
-    grounded_mask = thk > (-1028.0 / 910.0 * topg)
-    ocean_mask = np.logical_and(~ice_mask, topg < 0)
+    ocean_mask = np.logical_and(thk == 0., topg < 0.)
+    grounded_mask = np.logical_and(thk > (-1028.0 / 910.0 * topg),
+                                   ice_mask)
+    float_mask = np.logical_and(thk < (-1028.0 / 910.0 * topg),
+                                ice_mask)
     margin_mask = np.zeros(sz, dtype='i')
     grounding_line_mask = np.zeros(sz, dtype='i')
     coast_mask = np.zeros(sz, dtype='i')
@@ -501,8 +505,10 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y,
         not_ice_mask = np.logical_not(np.roll(ice_mask, n, axis=[0, 1]))
         margin_mask = np.logical_or(margin_mask, not_ice_mask)
 
-        not_grounded_mask = np.logical_not(np.roll(grounded_mask,
-                                                   n, axis=[0, 1]))
+        not_grounded_mask = np.logical_and(
+            np.logical_not(np.roll(grounded_mask,
+                                   n, axis=[0, 1])),
+            np.roll(float_mask, n, axis=[0, 1]))
         grounding_line_mask = np.logical_or(grounding_line_mask,
                                             not_grounded_mask)
 
@@ -511,12 +517,21 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y,
 
     # where ice exists and neighbors non-ice locations
     margin_mask = np.logical_and(margin_mask, ice_mask)
-    grounding_line_mask = np.logical_and(grounding_line_mask, ice_mask)
+    # where grounded ice exists and neighbors floating ice
+    grounding_line_mask = np.logical_and(grounding_line_mask, grounded_mask)
     coast_mask = np.logical_and(
         coast_mask,
         np.logical_or(ice_mask, ~ocean_mask))
-    # optional - plot mask
-    # plt.pcolor(coast_mask); plt.show()
+    fig, ax = plt.subplots(1, 3, sharex=True, sharey=True, figsize=(9, 3))
+    margin_plot = ax[0].pcolor(margin_mask)
+    gl_plot = ax[1].pcolor(grounding_line_mask)  # noqa F841
+    coast_plot = ax[2].pcolor(coast_mask)  # noqa F841
+    ax[0].set_title("margin mask")
+    ax[1].set_title("grounding line mask")
+    ax[2].set_title("coast mask")
+    plt.colorbar(margin_plot, ax=[ax[0], ax[1], ax[2]], shrink=0.7)
+    [ax.set_aspect('equal') for ax in ax]
+    fig.savefig("masks.png", dpi=400)
 
     # Calculate dist to margin and grounding line
     [XPOS, YPOS] = np.meshgrid(x, y)
