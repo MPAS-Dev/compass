@@ -93,7 +93,7 @@ The other test cases do not use config options.
 
    # filename of the BedMachine thickness and bedTopography dataset
    # (default value is for Perlmutter)
-   bedmachine_filename = BedMachineGreenland-v5_edits_floodFill_extrap.nc
+   bedmachine_filename = BedMachineGreenland-v6_edits_floodFill_extrap.nc
 
    # filename of the MEASURES ice velocity dataset
    # (default value is for Perlmutter)
