@@ -384,7 +384,6 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
                     f'dataset with missing velocity values. Setting '
                     f'velocity-based spacing to maximum value.')
 
-        spacing_speed[land_mask] = min_spac
     else:
         spacing_speed = max_spac * np.ones_like(thk)
 
@@ -394,7 +393,6 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
         spacing_edge = np.interp(dist_to_edge, [low_dist, high_dist],
                                  [min_spac, max_spac], left=min_spac,
                                  right=max_spac)
-        spacing_edge[land_mask] = min_spac
     else:
         spacing_edge = max_spac * np.ones_like(thk)
 
@@ -404,7 +402,6 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
         spacing_gl = np.interp(dist_to_grounding_line, [low_dist, high_dist],
                                [min_spac, max_spac], left=min_spac,
                                right=max_spac)
-        spacing_gl[land_mask] = min_spac
     else:
         spacing_gl = max_spac * np.ones_like(thk)
 
