@@ -519,9 +519,8 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y,
     margin_mask = np.logical_and(margin_mask, ice_mask)
     # where grounded ice exists and neighbors floating ice
     grounding_line_mask = np.logical_and(grounding_line_mask, grounded_mask)
-    coast_mask = np.logical_and(
-        coast_mask,
-        np.logical_or(ice_mask, ~ocean_mask))
+    coast_mask = np.logical_and(coast_mask, ocean_mask)
+
     fig, ax = plt.subplots(1, 3, sharex=True, sharey=True, figsize=(9, 3))
     margin_plot = ax[0].pcolor(margin_mask)
     gl_plot = ax[1].pcolor(grounding_line_mask)  # noqa F841
