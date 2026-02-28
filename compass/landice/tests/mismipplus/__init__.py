@@ -19,3 +19,6 @@ class MISMIPplus(TestGroup):
         for resolution in [2000]:
             self.add_test_case(SmokeTest(test_group=self,
                                          resolution=resolution))
+            self.add_test_case(SmokeTest(test_group=self,
+                                         resolution=resolution,
+                                         debris_friction=True))
