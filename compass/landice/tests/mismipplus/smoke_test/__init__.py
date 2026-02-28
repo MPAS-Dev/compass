@@ -13,7 +13,7 @@ class SmokeTest(TestCase):
     spin-up that has previously been run to steady state
     """
 
-    def __init__(self, test_group, resolution):
+    def __init__(self, test_group, resolution, debris_friction=False):
         """
         Create the test case
 
@@ -25,14 +25,28 @@ class SmokeTest(TestCase):
         resolution : float
             The resolution of the test case. Valid options are defined in the
             test group constructor.
+
+        debris_friction : bool, optional
+            Whether to configure a variant that uses debris-friction fields
+            and Albany input options.
         """
         name = 'smoke_test'
-        subdir = f"{name}/{resolution:4.0f}m"
+        if debris_friction:
+            subdir = f"{name}/debris_friction/{resolution:4.0f}m"
+        else:
+            subdir = f"{name}/{resolution:4.0f}m"
 
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
         step_name = 'run_model'
-        step = RunModel(test_case=self, name=step_name, resolution=resolution)
+        if debris_friction:
+            albany_input_yaml = 'albany_input_debrisfriction.yaml'
+        else:
+            albany_input_yaml = 'albany_input.yaml'
+
+        step = RunModel(test_case=self, name=step_name, resolution=resolution,
+                        albany_input_yaml=albany_input_yaml,
+                        debris_friction=debris_friction)
 
         # download and link the mesh, eventually this will need to be
         # resolution aware. ``configure`` method is probably a better place
@@ -40,7 +54,8 @@ class SmokeTest(TestCase):
         step.mesh_file = 'landice_grid.nc'
         step.add_input_file(filename=step.mesh_file,
                             target='MISMIP_2km_20220502.nc',
-                            database='')
+                            database='',
+                            copy=debris_friction)
 
         self.add_step(step)
 

@@ -1,5 +1,7 @@
 import os
 
+import xarray as xr
+
 from compass.landice.tests.mismipplus.tasks import (
     approx_cell_count,
     exact_cell_count,
@@ -27,7 +29,9 @@ class RunModel(Step):
         The nominal distance [m] between horizontal grid points (dcEdge).
     """
     def __init__(self, test_case, name, subdir=None, resolution=None,
-                 ntasks=1, min_tasks=None, openmp_threads=1, suffixes=None):
+                 ntasks=1, min_tasks=None, openmp_threads=1, suffixes=None,
+                 albany_input_yaml='albany_input.yaml',
+                 debris_friction=False):
         """
         Create a new test case
 
@@ -67,11 +71,20 @@ class RunModel(Step):
             the ``restart_run`` step of the ``restart_test`` runs the model
             twice, the second time with ``namelist.landice.rst`` and
             ``streams.landice.rst``
+
+        albany_input_yaml : str, optional
+            The name of the Albany input yaml file in the package to use for
+            this run.
+
+        debris_friction : bool, optional
+            Whether to apply mesh field updates for the debris-friction
+            variant.
         """
 
         if suffixes is None:
             suffixes = ['landice']
         self.suffixes = suffixes
+        self.debris_friction = debris_friction
 
         # The condition below will only be true for the `SpinUp` testcase
         # where resolution is not know at the time of object construction
@@ -105,8 +118,9 @@ class RunModel(Step):
                 out_name='streams.{}'.format(suffix))
 
         self.add_input_file(filename='albany_input.yaml',
-                            package='compass.landice.tests.mismipplus',
-                            copy=True)
+                    target=albany_input_yaml,
+                    package='compass.landice.tests.mismipplus',
+                    copy=True)
 
         self.add_model_as_input()
 
@@ -178,9 +192,21 @@ class RunModel(Step):
             self.update_namelist_at_runtime(
                 {'config_ice_density': f'{ice_density}'})
 
+        if self.debris_friction:
+            self._update_mesh_for_debris_friction()
+
         make_graph_file(mesh_filename=self.mesh_file,
                         graph_filename='graph.info')
 
         for suffix in self.suffixes:
             run_model(step=self, namelist='namelist.{}'.format(suffix),
                       streams='streams.{}'.format(suffix))
+
+    def _update_mesh_for_debris_friction(self):
+        with xr.open_dataset(self.mesh_file) as ds_mesh:
+            ds_mesh['muFriction'].loc[:] = 0.4
+            ds_mesh['bedRoughnessBC'] = xr.full_like(ds_mesh['muFriction'],
+                                                     6000.0)
+            ds_mesh['basalDebrisFactor'] = xr.where(
+                ds_mesh['xCell'] < 200000.0, 3.2e-2, 0.0)
+            ds_mesh.to_netcdf(self.mesh_file, mode='a')
