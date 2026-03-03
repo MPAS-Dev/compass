@@ -55,8 +55,8 @@ class SmokeTest(TestCase):
         step_name = 'run_model'
         step = RunModel(test_case=self, name=step_name,
                 resolution=resolution,
-            basal_friction=basal_friction,
-            update_mesh_for_basal_friction=True)
+                basal_friction=basal_friction,
+                update_mesh_for_basal_friction=True)
 
         # download and link the mesh, eventually this will need to be
         # resolution aware. ``configure`` method is probably a better place

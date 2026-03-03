@@ -240,16 +240,21 @@ class RunModel(Step):
                       streams='streams.{}'.format(suffix))
 
     def _update_mesh_for_debris_friction(self):
-        with xr.open_dataset(self.mesh_file) as ds_mesh:
+        mesh_filename = os.path.join(self.work_dir, self.mesh_file)
+
+        with xr.open_dataset(mesh_filename) as ds_mesh:
             ds_mesh['muFriction'].loc[:] = 0.4
             ds_mesh['bedRoughnessBC'] = xr.full_like(ds_mesh['muFriction'],
                                                      6000.0)
             ds_mesh['basalDebrisFactor'] = xr.where(
                 ds_mesh['xCell'] < 200000.0, 3.2e-2, 0.0)
-            ds_mesh.to_netcdf(self.mesh_file, mode='a')
+            ds_mesh.to_netcdf(mesh_filename, mode='a')
 
     def _update_mesh_for_regularized_coulomb(self):
-        with xr.open_dataset(self.mesh_file) as ds_mesh:
+        mesh_filename = os.path.join(self.work_dir, self.mesh_file)
+
+        with xr.open_dataset(mesh_filename) as ds_mesh:
             ds_mesh['muFriction'].loc[:] = 0.4
-            ds_mesh['bedRoughnessBC'].loc[:] = 1.25e-4
-            ds_mesh.to_netcdf(self.mesh_file, mode='a')
+            ds_mesh['bedRoughnessBC'] = xr.full_like(ds_mesh['muFriction'],
+                                                     1.25e-4)
+            ds_mesh.to_netcdf(mesh_filename, mode='a')
