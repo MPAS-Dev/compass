@@ -17,8 +17,9 @@ class MISMIPplus(TestGroup):
         self.add_test_case(SpinUp(test_group=self))
 
         for resolution in [2000]:
-            self.add_test_case(SmokeTest(test_group=self,
-                                         resolution=resolution))
-            self.add_test_case(SmokeTest(test_group=self,
-                                         resolution=resolution,
-                                         debris_friction=True))
+            for basal_friction in ['weertman',
+                                   'regularized_coulomb',
+                                   'debris_friction']:
+                self.add_test_case(SmokeTest(test_group=self,
+                                             resolution=resolution,
+                                             basal_friction=basal_friction))

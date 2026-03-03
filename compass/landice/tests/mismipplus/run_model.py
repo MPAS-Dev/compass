@@ -27,11 +27,13 @@ class RunModel(Step):
 
     resolution : float
         The nominal distance [m] between horizontal grid points (dcEdge).
+
+    basal_friction : {'weertman', 'regularized_coulomb', 'debris_friction'}
+        The basal-friction variant for this run.
     """
     def __init__(self, test_case, name, subdir=None, resolution=None,
                  ntasks=1, min_tasks=None, openmp_threads=1, suffixes=None,
-                 albany_input_yaml='albany_input.yaml',
-                 debris_friction=False):
+                 basal_friction='weertman'):
         """
         Create a new test case
 
@@ -72,19 +74,29 @@ class RunModel(Step):
             twice, the second time with ``namelist.landice.rst`` and
             ``streams.landice.rst``
 
-        albany_input_yaml : str, optional
-            The name of the Albany input yaml file in the package to use for
-            this run.
-
-        debris_friction : bool, optional
-            Whether to apply mesh field updates for the debris-friction
-            variant.
+        basal_friction : {'weertman', 'regularized_coulomb',
+                          'debris_friction'}, optional
+            The basal-friction variant for this run.
         """
 
         if suffixes is None:
             suffixes = ['landice']
         self.suffixes = suffixes
-        self.debris_friction = debris_friction
+        valid_basal_friction = {
+            'weertman',
+            'regularized_coulomb',
+            'debris_friction'
+        }
+        if basal_friction not in valid_basal_friction:
+            raise ValueError(
+                f'Unsupported basal_friction "{basal_friction}". '
+                f'Valid options are: {sorted(valid_basal_friction)}')
+        self.basal_friction = basal_friction
+        albany_input_yaml = {
+            'weertman': 'albany_input_weertman.yaml',
+            'regularized_coulomb': 'albany_input_regularized_coulomb.yaml',
+            'debris_friction': 'albany_input_debrisfriction.yaml'
+        }[self.basal_friction]
 
         # The condition below will only be true for the `SpinUp` testcase
         # where resolution is not know at the time of object construction
@@ -192,7 +204,9 @@ class RunModel(Step):
             self.update_namelist_at_runtime(
                 {'config_ice_density': f'{ice_density}'})
 
-        if self.debris_friction:
+        if self.basal_friction == 'regularized_coulomb':
+            self._update_mesh_for_regularized_coulomb()
+        elif self.basal_friction == 'debris_friction':
             self._update_mesh_for_debris_friction()
 
         make_graph_file(mesh_filename=self.mesh_file,
@@ -209,4 +223,10 @@ class RunModel(Step):
                                                      6000.0)
             ds_mesh['basalDebrisFactor'] = xr.where(
                 ds_mesh['xCell'] < 200000.0, 3.2e-2, 0.0)
+            ds_mesh.to_netcdf(self.mesh_file, mode='a')
+
+    def _update_mesh_for_regularized_coulomb(self):
+        with xr.open_dataset(self.mesh_file) as ds_mesh:
+            ds_mesh['muFriction'].loc[:] = 0.4
+            ds_mesh['bedRoughnessBC'].loc[:] = 1.25e-4
             ds_mesh.to_netcdf(self.mesh_file, mode='a')

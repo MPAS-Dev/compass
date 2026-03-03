@@ -13,7 +13,7 @@ class SmokeTest(TestCase):
     spin-up that has previously been run to steady state
     """
 
-    def __init__(self, test_group, resolution, debris_friction=False):
+    def __init__(self, test_group, resolution, basal_friction='weertman'):
         """
         Create the test case
 
@@ -26,27 +26,35 @@ class SmokeTest(TestCase):
             The resolution of the test case. Valid options are defined in the
             test group constructor.
 
-        debris_friction : bool, optional
-            Whether to configure a variant that uses debris-friction fields
-            and Albany input options.
+        basal_friction : {'weertman', 'regularized_coulomb',
+                          'debris_friction'}, optional
+            The basal-friction variant to configure.
         """
-        name = 'smoke_test'
-        if debris_friction:
-            subdir = f"{name}/debris_friction/{resolution:4.0f}m"
-        else:
-            subdir = f"{name}/{resolution:4.0f}m"
+        base_name = 'smoke_test'
+        valid_basal_friction = {
+            'weertman',
+            'regularized_coulomb',
+            'debris_friction'
+        }
+        if basal_friction not in valid_basal_friction:
+            raise ValueError(
+                f'Unsupported basal_friction "{basal_friction}". '
+                f'Valid options are: {sorted(valid_basal_friction)}')
+
+        if resolution != 2000:
+            raise ValueError(
+                f'Unsupported resolution "{resolution}". '
+                'The only valid resolution is 2000m.')
+
+        resolution_name = f'{resolution:0.0f}m'
+        name = f'{base_name}_{resolution_name}_{basal_friction}'
+        subdir = f"{base_name}/{resolution_name}/{basal_friction}"
 
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
         step_name = 'run_model'
-        if debris_friction:
-            albany_input_yaml = 'albany_input_debrisfriction.yaml'
-        else:
-            albany_input_yaml = 'albany_input.yaml'
-
         step = RunModel(test_case=self, name=step_name, resolution=resolution,
-                        albany_input_yaml=albany_input_yaml,
-                        debris_friction=debris_friction)
+                        basal_friction=basal_friction)
 
         # download and link the mesh, eventually this will need to be
         # resolution aware. ``configure`` method is probably a better place
@@ -55,7 +63,7 @@ class SmokeTest(TestCase):
         step.add_input_file(filename=step.mesh_file,
                             target='MISMIP_2km_20220502.nc',
                             database='',
-                            copy=debris_friction)
+                            copy=True)
 
         self.add_step(step)
 
