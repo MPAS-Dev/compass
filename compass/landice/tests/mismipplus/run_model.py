@@ -33,7 +33,8 @@ class RunModel(Step):
     """
     def __init__(self, test_case, name, subdir=None, resolution=None,
                  ntasks=1, min_tasks=None, openmp_threads=1, suffixes=None,
-                 basal_friction='weertman'):
+                 basal_friction='weertman',
+                 update_mesh_for_basal_friction=False):
         """
         Create a new test case
 
@@ -77,6 +78,10 @@ class RunModel(Step):
         basal_friction : {'weertman', 'regularized_coulomb',
                           'debris_friction'}, optional
             The basal-friction variant for this run.
+
+        update_mesh_for_basal_friction : bool, optional
+            Whether to apply basal-friction-specific updates to mesh fields
+            before the run.
         """
 
         if suffixes is None:
@@ -92,6 +97,7 @@ class RunModel(Step):
                 f'Unsupported basal_friction "{basal_friction}". '
                 f'Valid options are: {sorted(valid_basal_friction)}')
         self.basal_friction = basal_friction
+        self.update_mesh_for_basal_friction = update_mesh_for_basal_friction
         albany_input_yaml = {
             'weertman': 'albany_input_weertman.yaml',
             'regularized_coulomb': 'albany_input_regularized_coulomb.yaml',
@@ -190,6 +196,28 @@ class RunModel(Step):
 
         super().constrain_resources(available_resources)
 
+    def process_inputs_and_outputs(self):
+        """
+        Process inputs/outputs and apply optional mesh updates during setup.
+
+        Notes
+        -----
+        Overriding ``process_inputs_and_outputs()`` is uncommon in COMPASS
+        steps, where most customization happens in ``setup()`` or
+        ``runtime_setup()``.  We override it here so friction-specific mesh
+        updates are applied only after all input files have been staged,
+        ensuring ``landice_grid.nc`` exists and that users can inspect the
+        updated mesh directly after ``compass setup`` and prior to
+        ``compass run``.
+        """
+        super().process_inputs_and_outputs()
+
+        if self.update_mesh_for_basal_friction:
+            if self.basal_friction == 'regularized_coulomb':
+                self._update_mesh_for_regularized_coulomb()
+            elif self.basal_friction == 'debris_friction':
+                self._update_mesh_for_debris_friction()
+
     def run(self):
         """
         Run this step of the test case
@@ -203,11 +231,6 @@ class RunModel(Step):
             ice_density = config['mesh'].getfloat('ice_density')
             self.update_namelist_at_runtime(
                 {'config_ice_density': f'{ice_density}'})
-
-        if self.basal_friction == 'regularized_coulomb':
-            self._update_mesh_for_regularized_coulomb()
-        elif self.basal_friction == 'debris_friction':
-            self._update_mesh_for_debris_friction()
 
         make_graph_file(mesh_filename=self.mesh_file,
                         graph_filename='graph.info')
