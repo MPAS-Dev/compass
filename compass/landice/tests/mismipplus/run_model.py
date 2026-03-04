@@ -244,10 +244,12 @@ class RunModel(Step):
 
         with xr.open_dataset(mesh_filename) as ds_mesh:
             ds_mesh['muFriction'].loc[:] = 0.4
-            ds_mesh['bedRoughnessBC'] = xr.full_like(ds_mesh['muFriction'],
+            ds_mesh['bedRoughnessRC'] = xr.full_like(ds_mesh['muFriction'],
                                                      6000.0)
             ds_mesh['basalDebrisFactor'] = xr.where(
                 ds_mesh['xCell'] < 200000.0, 3.2e-2, 0.0)
+            ds_mesh['bulkFriction'] = xr.where(
+                ds_mesh['xCell'] < 400000.0, 0.005, 0.0)
             ds_mesh.to_netcdf(mesh_filename, mode='a')
 
     def _update_mesh_for_regularized_coulomb(self):
@@ -255,6 +257,6 @@ class RunModel(Step):
 
         with xr.open_dataset(mesh_filename) as ds_mesh:
             ds_mesh['muFriction'].loc[:] = 0.4
-            ds_mesh['bedRoughnessBC'] = xr.full_like(ds_mesh['muFriction'],
-                                                     1.25e-4)
+            ds_mesh['bedRoughnessRC'] = xr.full_like(ds_mesh['muFriction'],
+                                                     6250.0)
             ds_mesh.to_netcdf(mesh_filename, mode='a')
