@@ -79,6 +79,8 @@ class Mesh(Step):
         measures_dataset = os.path.join(data_path, measures_filename)
         bedmachine_dataset = os.path.join(data_path, bedmachine_filename)
 
+        bounding_box = self._get_bedmachine_bounding_box(bedmachine_dataset)
+
         section_name = 'mesh'
 
         source_gridded_dataset_1km = 'greenland_1km_2024_01_29.epsg3413.icesheetonly.nc'  # noqa: E501
@@ -97,6 +99,7 @@ class Mesh(Step):
             mesh_name=self.mesh_filename, section_name=section_name,
             gridded_dataset=source_gridded_dataset_1km, projection=src_proj,
             geojson_file="greenland_only_outline_45km_buffer_latlon_singlepart.geojson",  # noqa: E501
+            bounding_box=bounding_box,
         )
 
         # Create scrip file for the newly generated mesh
@@ -166,3 +169,14 @@ class Mesh(Step):
         ds["observedThicknessTendencyUncertainty"] = dHdtErr
         # Write the data to disk
         ds.to_netcdf(self.mesh_filename, 'a')
+
+    def _get_bedmachine_bounding_box(self, bedmachine_filepath):
+
+        ds = xr.open_dataset(bedmachine_filepath)
+
+        x_min = ds.x1.min()
+        x_max = ds.x1.max()
+        y_min = ds.y1.min()
+        y_max = ds.y1.max()
+
+        return [x_min, x_max, y_min, y_max]
