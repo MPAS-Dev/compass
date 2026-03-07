@@ -72,9 +72,8 @@ Future improvements may include:
 * safety checks or warnings before submitting ensembles that will use large
   amounts of computing resources
 
-* a method for maintaining namelist, streams, and albany_input.yaml files for
-  different ensembles.  Currently, these input files are specific to the Amery
-  Ice Shelf ensemble run in 2023.
+* improvements to automatically validate user-provided template names and
+  report available choices
 
 The test group includes two test cases:
 
@@ -95,7 +94,35 @@ will typically be run with a customized cfg file.  Note the default run
 numbers create a small ensemble, but uncertainty quantification applications
 will typically need dozens or more simulations.
 
-The test-case-specific config options are:
+The shared config option for this test group is:
+
+.. code-block:: cfg
+
+   [ensemble_generator]
+
+   # name of the ensemble template to use
+   # resources are loaded from:
+   # compass.landice.tests.ensemble_generator.ensemble_templates.<name>
+   ensemble_template = default
+
+The selected template controls which config files and model resource files are
+used for the spinup and branch cases.  The package layout is:
+
+.. code-block:: none
+
+   compass/landice/tests/ensemble_generator/ensemble_templates/<name>/
+     spinup/
+       ensemble_generator.cfg
+       namelist.landice
+       streams.landice
+       albany_input.yaml
+     branch/
+       branch_ensemble.cfg
+       namelist.landice
+       streams.landice
+
+The template-specific spinup config options (from
+``ensemble_templates/<name>/spinup/ensemble_generator.cfg``) are:
 
 .. code-block:: cfg
 
@@ -280,8 +307,10 @@ The default model configuration uses:
 * ISMIP6 surface mass balance and sub-ice-shelf melting using climatological
   mean forcing
 
-The initial condition and forcing files are specified in the
-``ensemble_generator.cfg`` file or a user modification of it.
+The initial condition and forcing files are specified in the selected
+template file
+``compass/landice/tests/ensemble_generator/ensemble_templates/<name>/spinup/ensemble_generator.cfg``
+or in a user override.
 
 branch_ensemble
 ---------------
@@ -291,7 +320,9 @@ an ensemble of simulations that are branched from corresponding runs of the
 ``spinup_ensemble`` at a specified year with a different forcing.  In general,
 any namelist or streams modifications can be applied to the branch runs.
 
-The branch_ensemble test-case-specific config options are:
+The branch_ensemble config options are read from the selected template file
+``compass/landice/tests/ensemble_generator/ensemble_templates/<name>/branch/branch_ensemble.cfg``.
+The default template options are:
 
 .. code-block:: cfg
 

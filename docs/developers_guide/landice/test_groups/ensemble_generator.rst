@@ -18,6 +18,17 @@ framework
 The shared config options for the ``ensemble_generator`` test group are described
 in :ref:`landice_ensemble_generator` in the User's Guide.
 
+Model-specific inputs for this test group now live under:
+
+.. code-block:: none
+
+  compass.landice.tests.ensemble_generator.ensemble_templates.<name>
+
+with ``spinup`` and ``branch`` subpackages that each contain their own cfg,
+namelist, and streams resources (plus ``albany_input.yaml`` for spinup).
+The selected template name comes from
+``[ensemble_generator] ensemble_template``.
+
 ensemble_member
 ~~~~~~~~~~~~~~~
 The class :py:class:`compass.landice.tests.ensemble_generator.EnsembleMember`
@@ -105,8 +116,12 @@ is possible to have the start and end run numbers set in the config,
 because the config is not parsed by the constructor.
 
 The ``configure`` method is where most of the work happens.  Here, the start
-and end run numbers are read from the config, a parameter array is generated,
-and the parameters to be varied and over what range are defined.
+and end run numbers are read from the template-selected config, a parameter
+array is generated, and the parameters to be varied and over what range are
+defined.
+The method first loads
+``ensemble_templates/<name>/spinup/ensemble_generator.cfg`` based on
+``[ensemble_generator] ensemble_template``.
 The values for each parameter are
 passed to the ``EnsembleMember`` constructor to define each run.
 Finally, each run is now added to the test case as a step to run,
@@ -134,13 +149,17 @@ The constructor adds the ensemble_manager as a step, as with the spinup_ensemble
 
 The ``configure`` method searches over the range of runs requested and assesses if
 the corresponding spinup_ensemble member reached the requested branch time.
-If so, and if the branch_ensemble memebr directory does not already exist, that
+If so, and if the branch_ensemble member directory does not already exist, that
 run is added as a step.  Within each run (step), the restart file from the branch
 year is copied to the branch run directory.  The time stamp is reassigned to
 2015 (this could be made a cfg option in the future).  Also copied over are
-the namelist and albany_input.yamlm files.  The namelist is updated with
+the namelist and albany_input.yaml files.  The namelist is updated with
 settings specific to the branch ensemble, and a streams file specific to the
 branch run is added.  Finally, details for managing runs are set up, including
 a job script.
+
+As in spinup, the branch configure method first loads
+``ensemble_templates/<name>/branch/branch_ensemble.cfg`` based on
+``[ensemble_generator] ensemble_template``.
 
 As in the spinup_ensemble, the ``run`` step just runs the model.
