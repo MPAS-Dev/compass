@@ -129,9 +129,10 @@ class RemapTopography(Step):
         Run this step of the test case
         """
         super().run()
-        self._symlink_unsmoothed()
+        if not self.smoothing:
+            self._symlink_unsmoothed()
         if self.symlinked_to_unsmoothed:
-            # we symlinked to the unsmoothed topography and we're done!
+            print('we symlinked to the unsmoothed topography and we\'re done!')
             return
 
         config = self.config
@@ -362,6 +363,8 @@ class RemapTopography(Step):
         for var in ['bed_elevation', 'landIceThkObserved']:
             ds_out[var] = xr.where(valid, ds_out[var] / norm, 0.)
 
+        # Note: the following variables are not used when MALI topography is
+        # used, they derive from the MALI topography file
         thickness = ds_out.landIceThkObserved
         bed = ds_out.bed_elevation
         flotation_thickness = - (ocean_density / ice_density) * bed

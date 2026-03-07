@@ -308,7 +308,7 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
 
     has_remapped_topo = os.path.exists('unsmoothed_topography.nc')
     if with_cavities and not has_remapped_topo:
-        raise ValueError('Mesh culling with caviites must be from '
+        raise ValueError('Mesh culling with cavities must be from '
                          'remapped topography.')
 
     if has_remapped_topo:
@@ -469,7 +469,9 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
         landIceMask = dsMask.regionCellMasks.isel(nRegions=0)
         dsLandIceMask = xr.Dataset()
         dsLandIceMask['landIceMask'] = landIceMask
-        dsLandIceMask['landIceFloatingMask'] = landIceMask
+        dsLandIceMask['landIceFloatingMask'] = xr.logical_and(
+            landIceMask, dsMask.landIceFloatingFraction > 0.
+        )
 
         write_netcdf(dsLandIceMask, 'land_ice_mask.nc')
 
