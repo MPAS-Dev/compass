@@ -5,6 +5,10 @@
 
     config_thickness_advection = 'fo'
     config_tracer_advection = 'fo'
+    config_horiz_tracer_adv_order = 3
+    config_advection_coef_3rd_order = 0.25
+    config_restore_thickness_after_advection = .false.
+    config_zero_sfcMassBalApplied_over_bare_land = .true.
 
     config_uplift_method = 'none'
     config_slm_coupling_interval = 5
@@ -43,12 +47,16 @@
 
     config_dt = '0000-01-00_00:00:00'
     config_time_integration = 'forward_euler'
+    config_rk_order = 2
+    config_rk3_stages = 3
     config_adaptive_timestep = .true.
     config_adaptive_timestep_calvingCFL_fraction = 0.8
     config_adaptive_timestep_include_calving = .true.
+    config_adaptive_timestep_include_face_melting = .true.
     config_min_adaptive_timestep = 60
     config_max_adaptive_timestep = 3.154e7
     config_adaptive_timestep_CFL_fraction = 0.8
+    config_adaptive_timestep_faceMeltingCFL_fraction = 1.0
     config_adaptive_timestep_include_DCFL = .false.
     config_adaptive_timestep_force_interval = '0001-00-00_00:00:00'
 
