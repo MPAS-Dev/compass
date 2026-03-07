@@ -50,7 +50,7 @@ class BranchRun(Step):
         value of deltaT to use in ISMIP6 ice-shelf basal melt param.
     """
 
-    def __init__(self, test_case, run_num,
+    def __init__(self, test_case, run_num, resource_module,
                  basal_fric_exp=None,
                  mu_scale=None,
                  stiff_scale=None,
@@ -68,8 +68,13 @@ class BranchRun(Step):
 
         run_num : integer
             the run number for this ensemble member
+
+        resource_module : str
+            Package containing configuration-specific branch namelist and
+            streams templates
         """
         self.run_num = run_num
+        self.resource_module = resource_module
 
         # define step (run) name
         self.name = f'run{run_num:03}'
@@ -120,8 +125,7 @@ class BranchRun(Step):
                                                         'namelist.landice'))
         # use the namelist in this module to update the spinup namelist
         options = compass.namelist.parse_replacements(
-            'compass.landice.tests.ensemble_generator.branch_ensemble',
-            'namelist.landice')
+            self.resource_module, 'namelist.landice')
         namelist = compass.namelist.replace(namelist, options)
         compass.namelist.write(namelist, os.path.join(self.work_dir,
                                                       'namelist.landice'))
@@ -132,7 +136,7 @@ class BranchRun(Step):
         stream_replacements['TF_file_path'] = TF_file_path
         SMB_file_path = section.get('SMB_file_path')
         stream_replacements['SMB_file_path'] = SMB_file_path
-        strm_src = 'compass.landice.tests.ensemble_generator.branch_ensemble'
+        strm_src = self.resource_module
         self.add_streams_file(strm_src,
                               'streams.landice',
                               out_name='streams.landice',

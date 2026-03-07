@@ -54,6 +54,7 @@ class EnsembleMember(Step):
     """
 
     def __init__(self, test_case, run_num,
+                 resource_module,
                  basal_fric_exp=None,
                  mu_scale=None,
                  stiff_scale=None,
@@ -72,6 +73,10 @@ class EnsembleMember(Step):
 
         run_num : integer
             the run number for this ensemble member
+
+        resource_module : str
+            Package containing configuration-specific namelist, streams,
+            and albany input files
 
         basal_fric_exp : float
             value of basal friction exponent to use
@@ -96,6 +101,7 @@ class EnsembleMember(Step):
             value of deltaT to use in ISMIP6 ice-shelf basal melt param.
         """
         self.run_num = run_num
+        self.resource_module = resource_module
 
         # store assigned param values for this run
         self.basal_fric_exp = basal_fric_exp
@@ -127,7 +133,7 @@ class EnsembleMember(Step):
                   "'compass setup' again to set this experiment up.")
             return
 
-        resource_module = 'compass.landice.tests.ensemble_generator'
+        resource_module = self.resource_module
 
         # Get config for info needed for setting up simulation
         config = self.config

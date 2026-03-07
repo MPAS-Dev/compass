@@ -4,6 +4,10 @@ import numpy as np
 from scipy.stats import qmc
 
 from compass.landice.iceshelf_melt import calc_mean_TF
+from compass.landice.tests.ensemble_generator.configurations import (
+    add_configuration_file,
+    get_spinup_configuration_package,
+)
 from compass.landice.tests.ensemble_generator.ensemble_manager import (
     EnsembleManager,
 )
@@ -67,7 +71,12 @@ class SpinupEnsemble(TestCase):
         sec_in_yr = 3600.0 * 24.0 * 365.0
         c_melt = (rhosw * cp_seawater / (rhoi * latent_heat_ice))**2
 
-        section = self.config['ensemble']
+        config = self.config
+        resource_module = get_spinup_configuration_package(config)
+        add_configuration_file(config, resource_module,
+                               'ensemble_generator.cfg')
+
+        section = config['ensemble']
 
         # Determine start and end run numbers being requested
         self.start_run = section.getint('start_run')
@@ -182,7 +191,8 @@ class SpinupEnsemble(TestCase):
                 calv_spd_lim=param_dict['calv_limit']['vec'][run_num],
                 gamma0=param_dict['gamma0']['vec'][run_num],
                 meltflux=param_dict['meltflux']['vec'][run_num],
-                deltaT=deltaT_vec[run_num]))
+                deltaT=deltaT_vec[run_num],
+                resource_module=resource_module))
             # Note: do not add to steps_to_run, because ensemble_manager
             # will handle submitting and running the runs
 
