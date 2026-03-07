@@ -1,9 +1,9 @@
 from importlib.util import find_spec
 
 
-def get_model_configuration_name(config):
+def get_ensemble_template_name(config):
     """
-    Get the configured model configuration name.
+    Get the configured ensemble template name.
 
     Parameters
     ----------
@@ -13,10 +13,10 @@ def get_model_configuration_name(config):
     Returns
     -------
     str
-        The selected model configuration name
+        The selected ensemble template name
     """
     section = 'ensemble_generator'
-    option = 'model_configuration'
+    option = 'ensemble_template'
 
     if not config.has_section(section):
         raise ValueError(
@@ -28,16 +28,16 @@ def get_model_configuration_name(config):
             f"Missing required config option '{option}' in section "
             f"'{section}'.")
 
-    configuration = config.get(section, option).strip()
-    if configuration == '':
-        raise ValueError('model_configuration cannot be empty.')
+    template = config.get(section, option).strip()
+    if template == '':
+        raise ValueError('ensemble_template cannot be empty.')
 
-    return configuration
+    return template
 
 
-def get_spinup_configuration_package(config):
+def get_spinup_template_package(config):
     """
-    Get the package containing spinup ensemble resources.
+    Get the package containing spinup ensemble template resources.
 
     Parameters
     ----------
@@ -49,14 +49,14 @@ def get_spinup_configuration_package(config):
     str
         Package path for spinup resources
     """
-    configuration = get_model_configuration_name(config)
-    return ('compass.landice.tests.ensemble_generator.configurations.'
-            f'{configuration}.spinup')
+    template = get_ensemble_template_name(config)
+    return ('compass.landice.tests.ensemble_generator.ensemble_templates.'
+            f'{template}.spinup')
 
 
-def get_branch_configuration_package(config):
+def get_branch_template_package(config):
     """
-    Get the package containing branch ensemble resources.
+    Get the package containing branch ensemble template resources.
 
     Parameters
     ----------
@@ -68,14 +68,14 @@ def get_branch_configuration_package(config):
     str
         Package path for branch resources
     """
-    configuration = get_model_configuration_name(config)
-    return ('compass.landice.tests.ensemble_generator.configurations.'
-            f'{configuration}.branch')
+    template = get_ensemble_template_name(config)
+    return ('compass.landice.tests.ensemble_generator.ensemble_templates.'
+            f'{template}.branch')
 
 
-def add_configuration_file(config, package, filename):
+def add_template_file(config, package, filename):
     """
-    Add a configuration file from a selected configuration package.
+    Add a config file from the selected ensemble template package.
 
     Parameters
     ----------
@@ -90,6 +90,6 @@ def add_configuration_file(config, package, filename):
     """
     if find_spec(package) is None:
         raise ValueError(
-            f"Model configuration package '{package}' was not found.")
+            f"Ensemble template package '{package}' was not found.")
 
     config.add_from_package(package, filename, exception=True)

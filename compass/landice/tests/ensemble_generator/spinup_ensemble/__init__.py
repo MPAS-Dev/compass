@@ -4,9 +4,9 @@ import numpy as np
 from scipy.stats import qmc
 
 from compass.landice.iceshelf_melt import calc_mean_TF
-from compass.landice.tests.ensemble_generator.configurations import (
-    add_configuration_file,
-    get_spinup_configuration_package,
+from compass.landice.tests.ensemble_generator.ensemble_template import (
+    add_template_file,
+    get_spinup_template_package,
 )
 from compass.landice.tests.ensemble_generator.ensemble_manager import (
     EnsembleManager,
@@ -72,9 +72,8 @@ class SpinupEnsemble(TestCase):
         c_melt = (rhosw * cp_seawater / (rhoi * latent_heat_ice))**2
 
         config = self.config
-        resource_module = get_spinup_configuration_package(config)
-        add_configuration_file(config, resource_module,
-                               'ensemble_generator.cfg')
+        resource_module = get_spinup_template_package(config)
+        add_template_file(config, resource_module, 'ensemble_generator.cfg')
 
         section = config['ensemble']
 

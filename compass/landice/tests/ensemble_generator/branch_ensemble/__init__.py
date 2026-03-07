@@ -4,9 +4,9 @@ import sys
 
 import numpy as np
 
-from compass.landice.tests.ensemble_generator.configurations import (
-    add_configuration_file,
-    get_branch_configuration_package,
+from compass.landice.tests.ensemble_generator.ensemble_template import (
+    add_template_file,
+    get_branch_template_package,
 )
 from compass.landice.tests.ensemble_generator.branch_ensemble.branch_run import (  # noqa
     BranchRun,
@@ -63,8 +63,8 @@ class BranchEnsemble(TestCase):
         """
 
         config = self.config
-        resource_module = get_branch_configuration_package(config)
-        add_configuration_file(config, resource_module, 'branch_ensemble.cfg')
+        resource_module = get_branch_template_package(config)
+        add_template_file(config, resource_module, 'branch_ensemble.cfg')
 
         section = config['branch_ensemble']
 
