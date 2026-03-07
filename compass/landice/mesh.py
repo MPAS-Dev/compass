@@ -5,6 +5,7 @@ import time
 from shutil import copyfile
 
 import jigsawpy
+import matplotlib.pyplot as plt
 import mpas_tools.io
 import numpy as np
 import xarray
@@ -457,7 +458,10 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y,
                           [1, 1], [-1, 1], [1, -1], [-1, -1]])
 
     ice_mask = thk > 0.0
-    grounded_mask = thk > (-1028.0 / 910.0 * topg)
+    grounded_mask = np.logical_and(thk > (-1028.0 / 910.0 * topg),
+                                   ice_mask)
+    float_mask = np.logical_and(thk < (-1028.0 / 910.0 * topg),
+                                ice_mask)
     margin_mask = np.zeros(sz, dtype='i')
     grounding_line_mask = np.zeros(sz, dtype='i')
 
@@ -465,15 +469,26 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y,
         not_ice_mask = np.logical_not(np.roll(ice_mask, n, axis=[0, 1]))
         margin_mask = np.logical_or(margin_mask, not_ice_mask)
 
-        not_grounded_mask = np.logical_not(np.roll(grounded_mask,
-                                                   n, axis=[0, 1]))
+        not_grounded_mask = np.logical_and(
+            np.logical_not(np.roll(grounded_mask,
+                                   n, axis=[0, 1])),
+            np.roll(float_mask, n, axis=[0, 1]))
         grounding_line_mask = np.logical_or(grounding_line_mask,
                                             not_grounded_mask)
 
     # where ice exists and neighbors non-ice locations
     margin_mask = np.logical_and(margin_mask, ice_mask)
-    # optional - plot mask
-    # plt.pcolor(margin_mask); plt.show()
+    # where grounded ice exists and neighbors floating ice
+    grounding_line_mask = np.logical_and(grounding_line_mask, grounded_mask)
+
+    fig, ax = plt.subplots(1, 2, sharex=True, sharey=True, figsize=(6, 3))
+    margin_plot = ax[0].pcolor(margin_mask)
+    gl_plot = ax[1].pcolor(grounding_line_mask)  # noqa F841
+    ax[0].set_title("margin mask")
+    ax[1].set_title("grounding line mask")
+    plt.colorbar(margin_plot, ax=[ax[0], ax[1]], shrink=0.7)
+    [ax.set_aspect('equal') for ax in ax]
+    fig.savefig("masks.png", dpi=400)
 
     # Calculate dist to margin and grounding line
     [XPOS, YPOS] = np.meshgrid(x, y)
