@@ -40,12 +40,6 @@ class EnsembleMember(Step):
     stiff_scale : float
         value to scale stiffnessFactor by
 
-    von_mises_threshold : float
-        value of von Mises stress threshold to use
-
-    calv_spd_lim : float
-        value of calving speed limit to use
-
     gamma0 : float
         value of gamma0 to use in ISMIP6 ice-shelf basal melt param.
 
@@ -55,11 +49,11 @@ class EnsembleMember(Step):
 
     def __init__(self, test_case, run_num,
                  resource_module,
+                 namelist_option_values=None,
+                 namelist_parameter_values=None,
                  basal_fric_exp=None,
                  mu_scale=None,
                  stiff_scale=None,
-                 von_mises_threshold=None,
-                 calv_spd_lim=None,
                  gamma0=None,
                  meltflux=None,
                  deltaT=None):
@@ -78,6 +72,14 @@ class EnsembleMember(Step):
             Package containing configuration-specific namelist, streams,
             and albany input files
 
+        namelist_option_values : dict, optional
+            A dictionary of namelist option names and values to be
+            overridden for this ensemble member
+
+        namelist_parameter_values : dict, optional
+            A dictionary of run-info parameter names and values that
+            correspond to entries in ``namelist_option_values``
+
         basal_fric_exp : float
             value of basal friction exponent to use
 
@@ -87,13 +89,6 @@ class EnsembleMember(Step):
         stiff_scale : float
             value to scale stiffnessFactor by
 
-        von_mises_threshold : float
-            value of von Mises stress threshold to use
-            assumes same value for grounded and floating ice
-
-        calv_spd_lim : float
-            value of calving speed limit to use
-
         gamma0 : float
             value of gamma0 to use in ISMIP6 ice-shelf basal melt param.
 
@@ -102,13 +97,17 @@ class EnsembleMember(Step):
         """
         self.run_num = run_num
         self.resource_module = resource_module
+        if namelist_option_values is None:
+            namelist_option_values = {}
+        if namelist_parameter_values is None:
+            namelist_parameter_values = {}
+        self.namelist_option_values = dict(namelist_option_values)
+        self.namelist_parameter_values = dict(namelist_parameter_values)
 
         # store assigned param values for this run
         self.basal_fric_exp = basal_fric_exp
         self.mu_scale = mu_scale
         self.stiff_scale = stiff_scale
-        self.von_mises_threshold = von_mises_threshold
-        self.calv_spd_lim = calv_spd_lim
         self.gamma0 = gamma0
         self.meltflux = meltflux
         self.deltaT = deltaT
@@ -177,21 +176,11 @@ class EnsembleMember(Step):
         options['config_adaptive_timestep_CFL_fraction'] = \
             f'{self.cfl_fraction}'
 
-        # von Mises stress threshold
-        if self.von_mises_threshold is not None:
-            options['config_grounded_von_Mises_threshold_stress'] = \
-                f'{self.von_mises_threshold}'
-            options['config_floating_von_Mises_threshold_stress'] = \
-                f'{self.von_mises_threshold}'
-            run_info_cfg.set('run_info', 'von_mises_threshold',
-                             f'{self.von_mises_threshold}')
-
-        # calving speed limit
-        if self.calv_spd_lim is not None:
-            options['config_calving_speed_limit'] = \
-                f'{self.calv_spd_lim}'
-            run_info_cfg.set('run_info', 'calv_spd_limit',
-                             f'{self.calv_spd_lim}')
+        # apply generic namelist float parameter perturbations
+        for option_name, value in self.namelist_option_values.items():
+            options[option_name] = f'{value}'
+        for parameter_name, value in self.namelist_parameter_values.items():
+            run_info_cfg.set('run_info', parameter_name, f'{value}')
 
         # adjust basal friction exponent
         # rename and copy base file

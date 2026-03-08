@@ -28,36 +28,9 @@ class BranchRun(Step):
     input_file_name : str
         name of the input file that was read from the config
 
-    basal_fric_exp : float
-        value of basal friction exponent to use
-
-    mu_scale : float
-        value to scale muFriction by
-
-    stiff_scale : float
-        value to scale stiffnessFactor by
-
-    von_mises_threshold : float
-        value of von Mises stress threshold to use
-
-    calv_spd_lim : float
-        value of calving speed limit to use
-
-    gamma0 : float
-        value of gamma0 to use in ISMIP6 ice-shelf basal melt param.
-
-    deltaT : float
-        value of deltaT to use in ISMIP6 ice-shelf basal melt param.
     """
 
-    def __init__(self, test_case, run_num, resource_module,
-                 basal_fric_exp=None,
-                 mu_scale=None,
-                 stiff_scale=None,
-                 von_mises_threshold=None,
-                 calv_spd_lim=None,
-                 gamma0=None,
-                 deltaT=None):
+    def __init__(self, test_case, run_num, resource_module):
         """
         Creates a new run within an ensemble
 

@@ -124,6 +124,15 @@ The method first loads
 ``[ensemble_generator] ensemble_template``.
 The values for each parameter are
 passed to the ``EnsembleMember`` constructor to define each run.
+
+Parameter definitions now come from ``[ensemble.parameters]`` where each
+parameter uses ``<name> = min, max`` and ordering follows the order in
+that section.  Parameters with names prefixed by ``nl.`` are interpreted as
+generic float-valued namelist perturbations and must define
+``<name>.option_name`` with one or more namelist options.  Parameters without
+the ``nl.`` prefix are reserved for special perturbations that use custom
+logic (currently ``fric_exp``, ``mu_scale``, ``stiff_scale``, ``gamma0``,
+and ``meltflux``).
 Finally, each run is now added to the test case as a step to run,
 because they were not automatically added by compass during the test
 case constructor phase.
