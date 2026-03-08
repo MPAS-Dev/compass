@@ -86,9 +86,10 @@ class BranchRun(Step):
         with open(os.path.join(self.work_dir, 'restart_timestamp'), 'w') as f:
             f.write('2015-01-01_00:00:00')
 
-        # yaml file
-        shutil.copy(os.path.join(spinup_dir, 'albany_input.yaml'),
-                    self.work_dir)
+        # albany_input.yaml may be absent in templates that do not use Albany.
+        albany_input = os.path.join(spinup_dir, 'albany_input.yaml')
+        if os.path.isfile(albany_input):
+            shutil.copy(albany_input, self.work_dir)
 
         # set up namelist
         # start with the namelist from the spinup

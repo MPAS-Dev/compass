@@ -157,14 +157,14 @@ class EnsembleMember(Step):
         # Set up base run configuration
         self.add_namelist_file(resource_module, 'namelist.landice')
 
-        # copy over albany yaml file
-        # cannot use add_input functionality because need to modify the file
-        # in this function, and inputs don't get processed until after this
-        # function
-        with resources.path(resource_module,
-                            'albany_input.yaml') as package_path:
-            target = str(package_path)
-            shutil.copy(target, self.work_dir)
+        # albany_input.yaml is optional unless fric_exp perturbations are used.
+        albany_input_name = 'albany_input.yaml'
+        albany_input_path = os.path.join(self.work_dir, albany_input_name)
+        albany_source = resources.files(resource_module).joinpath(
+            albany_input_name)
+        has_albany_input = albany_source.is_file()
+        if has_albany_input:
+            shutil.copy(str(albany_source), self.work_dir)
 
         self.add_model_as_input()
 
@@ -195,13 +195,16 @@ class EnsembleMember(Step):
         # set input filename in streams and create streams file
         stream_replacements = {'input_file_init_cond': new_input_fname}
         if self.basal_fric_exp is not None:
+            if not has_albany_input:
+                raise ValueError(
+                    "Parameter 'fric_exp' requires 'albany_input.yaml' "
+                    f"in template package '{resource_module}'.")
             # adjust mu and exponent
             orig_fric_exp = spinup_section.getfloat('orig_fric_exp')
             _adjust_friction_exponent(orig_fric_exp, self.basal_fric_exp,
                                       os.path.join(self.work_dir,
                                                    new_input_fname),
-                                      os.path.join(self.work_dir,
-                                                   'albany_input.yaml'))
+                                      albany_input_path)
             run_info_cfg.set('run_info', 'basal_fric_exp',
                              f'{self.basal_fric_exp}')
 
