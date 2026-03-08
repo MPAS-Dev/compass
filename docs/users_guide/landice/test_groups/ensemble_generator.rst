@@ -23,28 +23,55 @@ look as expected before spending time on a larger ensemble. This also allows
 one to add more ensemble members from the Sobol sequence later if UQ analysis
 indicates the original sample size was insufficient.
 
-A number of possible parameters are supported and whether they are active and
-what parameter value ranges should be used are specified in a user-supplied
-config file.  Currently these parameters are supported:
+Parameter types
+---------------
 
-* basal friction power law exponent
+Parameters are defined in ``[ensemble.parameters]`` and fall into two
+categories:
 
-* scaling factor on muFriction
+* ``special`` parameters: parameters without the ``nl.`` prefix that use
+  custom setup logic beyond namelist replacement
 
-* scaling factor on stiffnessFactor
+* ``namelist`` parameters: parameters prefixed with ``nl.`` that map directly
+  to one or more float namelist options through ``<name>.option_name``.
+  Note that only float namelist options are currently supported, but the framework
+  does not validate that the options defined in the config file are actually float
+  namelist options.  Typically, ``<name>.option_name`` will indicate a single 
+  namelist option, but it can indicate multiple options if the same parameter
+  should be applied to multiple namelist options (e.g., for grounded and
+  floating von Mises threshold stresses).
 
-* von Mises threshold stress for calving
+The currently supported special parameters are:
 
-* calving rate speed limit
+* ``fric_exp``: basal friction power-law exponent (requires modifying
+  ``muFriction`` and ``albany_input.yaml``)
 
-* gamma0 melt sensitivity parameter in ISMIP6-AIS ice-shelf basal melting
-  parameterization
+* ``mu_scale``: multiplicative scale factor for ``muFriction`` in the
+  modified input file
 
-* target ice-shelf basal melt rate for ISMIP6-AIS ice-shelf basal melting
-  parameterization.  In the model setup, the deltaT thermal forcing bias
-  adjustment is adjusted to obtain the target melt rate for a given gamma0
+* ``stiff_scale``: multiplicative scale factor for ``stiffnessFactor`` in the
+  modified input file
 
-Additional parameters can be easily added in the future.
+* ``gamma0``: ISMIP6-AIS basal-melt sensitivity coefficient
+
+* ``meltflux``: target ice-shelf basal melt flux, converted to ``deltaT``
+  using ``gamma0`` and domain-mean thermal forcing
+
+Test cases
+----------
+
+The test group includes two test cases:
+
+* ``spinup_ensemble``: a set of simulations from the same initial condition
+  but with different parameter values.  This could either be fixed climate
+  relaxation spinup or forced by time-evolving historical conditions.
+
+* ``branch_ensemble``: a set of simulations branched from each member of the
+  spinup_ensemble in a specified year with a different forcing.  Multiple
+  branch ensembles can be branched from one spinup_ensemble
+
+Test case operations
+--------------------
 
 ``compass setup`` will set up the simulations and the ensemble manager.
 ``compass run`` from the test case work directory will submit each run as a
@@ -72,38 +99,21 @@ Future improvements may include:
 * safety checks or warnings before submitting ensembles that will use large
   amounts of computing resources
 
-* improvements to automatically validate user-provided template names and
-  report available choices
+Ensemble templates
+------------------
 
-The test group includes two test cases:
-
-* ``spinup_ensemble``: a set of simulations from the same initial condition
-  but with different parameter values.  This could either be fixed climate
-  relaxation spinup or forced by time-evolving historical conditions.
-
-* ``branch_ensemble``: a set of simulations branched from each member of the
-  spinup_ensemble in a specified year with a different forcing.  Multiple
-  branch ensembles can be branched from one spinup_ensemble
-
-config options
---------------
-Test cases in this test group have the following common config options.
-
-This test group is intended for expert users, and it is expected that it
-will typically be run with a customized cfg file.  Note the default run
-numbers create a small ensemble, but uncertainty quantification applications
-will typically need dozens or more simulations.
-
-The shared config option for this test group is:
-
-.. code-block:: cfg
-
-   [ensemble_generator]
-
-   # name of the ensemble template to use
-   # resources are loaded from:
-   # compass.landice.tests.ensemble_generator.ensemble_templates.<name>
-   ensemble_template = default
+This test group uses an ``ensemble_template``-based configuration workflow.
+Instead of maintaining one set of test-group resource files, each model
+configuration lives in its own subdirectory under
+``ensemble_templates/<name>`` with separate spinup and branch
+cfg/namelist/streams resources.  Users typically select a template via the
+``[ensemble_generator] ensemble_template`` option or create a new template.
+The user may also provide custom overrides in a user cfg file.
+A new ensemble template should be added for each new study by creating
+a new subdirectory under ``ensemble_templates/`` with the same structure as
+the default template and following a naming convention like:
+``<domain.topic.year>``, e.g., ``amery4km.probproj.2024`` or
+``ais4km.hydro.2026``.
 
 The selected template controls which config files and model resource files are
 used for the spinup and branch cases.  The package layout is:
@@ -120,6 +130,20 @@ used for the spinup and branch cases.  The package layout is:
        branch_ensemble.cfg
        namelist.landice
        streams.landice
+
+config options
+--------------
+
+The shared config option for this test group is:
+
+.. code-block:: cfg
+
+   [ensemble_generator]
+
+   # name of the ensemble template to use
+   # resources are loaded from:
+   # compass.landice.tests.ensemble_generator.ensemble_templates.<name>
+   ensemble_template = default
 
 The template-specific spinup config options (from
 ``ensemble_templates/<name>/spinup/ensemble_generator.cfg``) are:
@@ -199,16 +223,21 @@ The template-specific spinup config options (from
    # Path to SMB forcing file for the mesh to be used
    SMB_file_path = /global/cfs/cdirs/fanssie/MALI_projects/Amery_UQ/Amery_4to20km_from_whole_AIS/forcing/atmosphere_forcing/RACMO_climatology_1995-2017/Amery_4to20km_RACMO2.3p2_ANT27_smb_climatology_1995-2017_no_xtime_noBareLandAdvance.nc
 
-  # For meltflux perturbations, this observed ice-shelf area is used when
-  # converting target melt flux to deltaT.
-  iceshelf_area_obs = 60654.e6
+    # For meltflux perturbations, this observed ice-shelf area is used when
+    # converting target melt flux to deltaT.
+    iceshelf_area_obs = 60654.e6
 
    # number of tasks that each ensemble member should be run with
    # Eventually, compass could determine this, but we want explicit control for now
    ntasks = 128
 
-   # Parameter definitions are listed in this section in sampling order.
-   # Use the prefix "nl." for float parameters that map to namelist options.
+The parameter sampling definitions live in a separate section,
+``[ensemble.parameters]``.  The order listed sets the sampling
+dimension ordering, special parameters are unprefixed, and namelist
+parameters use the ``nl.`` prefix with a companion ``.option_name``.
+
+.. code-block:: cfg
+
    [ensemble.parameters]
 
    # special parameters (handled by custom code)
@@ -224,9 +253,9 @@ The template-specific spinup config options (from
      config_grounded_von_Mises_threshold_stress, \
      config_floating_von_Mises_threshold_stress
 
+   nl.calv_spd_limit = 0.0001585, 0.001585
+   nl.calv_spd_limit.option_name = config_calving_speed_limit
 
-A user should copy the default config file to a user-defined config file
-before setting up the test case and any necessary adjustments made.
 Importantly, the user-defined config should be modified
 to also include the following options that will be used for submitting the
 jobs for each ensemble member.
@@ -253,27 +282,12 @@ spinup_ensemble
 
 ``landice/ensemble_generator/spinup_ensemble`` uses the ensemble framework to create
 an ensemble of simulations integrated over a specified time range.  The test case
-can be applied to any domain and set of input files.  If the default namelist
-and streams settings are not appropriate, they can be adjusted or a new test
-case can be set up mirroring the existing one.
-
-The default model configuration uses:
-
-* first-order velocity solver
-
-* power law basal friction
-
-* evolving temperature
-
-* von Mises calving
-
-* ISMIP6 surface mass balance and sub-ice-shelf melting using climatological
-  mean forcing
+can be applied to any domain and set of input files using the ensemble templates
+discussed above.
 
 The initial condition and forcing files are specified in the selected
 template file
 ``compass/landice/tests/ensemble_generator/ensemble_templates/<name>/spinup/ensemble_generator.cfg``
-or in a user override.
 
 branch_ensemble
 ---------------
@@ -319,8 +333,8 @@ The default template options are:
    # path to pickle file containing filtering information generated by plot_ensemble.py
    ensemble_pickle_file = None
 
-Steps for setting up and running an ensmble
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Steps for setting up and running an ensemble
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. With a compass conda environment set up, run, e.g.,
    ``compass setup -t landice/ensemble_generator/spinup_ensemble -w WORK_DIR_PATH -f USER.cfg``
