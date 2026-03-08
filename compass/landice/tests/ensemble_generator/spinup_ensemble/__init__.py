@@ -76,12 +76,12 @@ class SpinupEnsemble(TestCase):
 
         section = config['ensemble_generator']
         spinup_section_name = 'spinup_ensemble'
-        if spinup_section_name not in config:
+        if not config.has_section(spinup_section_name):
             raise ValueError(
                 f"Missing required config section '{spinup_section_name}'.")
         spinup_section = config[spinup_section_name]
         parameter_section_name = 'ensemble.parameters'
-        if parameter_section_name not in config:
+        if not config.has_section(parameter_section_name):
             raise ValueError(
                 f"Missing required config section '{parameter_section_name}'.")
         param_section = config[parameter_section_name]
@@ -125,7 +125,7 @@ class SpinupEnsemble(TestCase):
         if 'meltflux' in spec_by_name:
             if 'gamma0' not in spec_by_name:
                 sys.exit("ERROR: parameter 'meltflux' requires 'gamma0'.")
-            if not spinup_section.has_option('iceshelf_area_obs'):
+            if not config.has_option('spinup_ensemble', 'iceshelf_area_obs'):
                 sys.exit(
                     "ERROR: parameter 'meltflux' requires "
                     "'iceshelf_area_obs' in [spinup_ensemble].")
