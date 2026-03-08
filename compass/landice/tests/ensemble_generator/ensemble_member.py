@@ -162,6 +162,7 @@ class EnsembleMember(Step):
         albany_input_path = os.path.join(self.work_dir, albany_input_name)
         albany_source = resources.files(resource_module).joinpath(
             albany_input_name)
+        
         # Materialize a real filesystem path in case the package is not
         # directly on the filesystem (e.g., zip/loader-backed).
         with resources.as_file(albany_source) as albany_source_path:
@@ -231,25 +232,28 @@ class EnsembleMember(Step):
         # (only need to check one of these params)
         basal_melt_param_file_path = spinup_section.get(
             'basal_melt_param_file_path')
-        basal_melt_param_file_name = basal_melt_param_file_path.split('/')[-1]
-        base_fname = basal_melt_param_file_name.split('.')[:-1][0]
-        new_fname = f'{base_fname}_MODIFIED.nc'
-        shutil.copy(basal_melt_param_file_path,
-                    os.path.join(self.work_dir, new_fname))
-        _adjust_basal_melt_params(os.path.join(self.work_dir, new_fname),
-                                  self.gamma0, self.deltaT)
-        stream_replacements['basal_melt_param_file_name'] = new_fname
-        if self.gamma0 is not None:
-            run_info_cfg.set('run_info', 'gamma0', f'{self.gamma0}')
-        if self.deltaT is not None:
-            run_info_cfg.set('run_info', 'meltflux', f'{self.meltflux}')
-            run_info_cfg.set('run_info', 'deltaT', f'{self.deltaT}')
+        if os.path.exists(str(basal_melt_param_file_path)):
+            basal_melt_param_file_name = \
+                basal_melt_param_file_path.split('/')[-1]
+            base_fname = basal_melt_param_file_name.split('.')[:-1][0]
+            new_fname = f'{base_fname}_MODIFIED.nc'
+            shutil.copy(basal_melt_param_file_path,
+                        os.path.join(self.work_dir, new_fname))
+            _adjust_basal_melt_params(os.path.join(self.work_dir, new_fname),
+                                      self.gamma0, self.deltaT)
+            stream_replacements['basal_melt_param_file_name'] = new_fname
+            if self.gamma0 is not None:
+                run_info_cfg.set('run_info', 'gamma0', f'{self.gamma0}')
+            if self.deltaT is not None:
+                run_info_cfg.set('run_info', 'meltflux', f'{self.meltflux}')
+                run_info_cfg.set('run_info', 'deltaT', f'{self.deltaT}')
 
         # set up forcing files (unmodified)
         TF_file_path = spinup_section.get('TF_file_path')
-        stream_replacements['TF_file_path'] = TF_file_path
-        SMB_file_path = spinup_section.get('SMB_file_path')
-        stream_replacements['SMB_file_path'] = SMB_file_path
+        if os.path.exists(str(TF_file_path)):
+            stream_replacements['TF_file_path'] = TF_file_path
+            SMB_file_path = spinup_section.get('SMB_file_path')
+            stream_replacements['SMB_file_path'] = SMB_file_path
 
         # store accumulated namelist and streams options
         self.add_namelist_options(options=options,
