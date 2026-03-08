@@ -74,7 +74,12 @@ class SpinupEnsemble(TestCase):
         resource_module = get_spinup_template_package(config)
         add_template_file(config, resource_module, 'ensemble_generator.cfg')
 
-        section = config['ensemble']
+        section = config['ensemble_generator']
+        spinup_section_name = 'spinup_ensemble'
+        if spinup_section_name not in config:
+            raise ValueError(
+                f"Missing required config section '{spinup_section_name}'.")
+        spinup_section = config[spinup_section_name]
         parameter_section_name = 'ensemble.parameters'
         if parameter_section_name not in config:
             raise ValueError(
@@ -120,15 +125,15 @@ class SpinupEnsemble(TestCase):
         if 'meltflux' in spec_by_name:
             if 'gamma0' not in spec_by_name:
                 sys.exit("ERROR: parameter 'meltflux' requires 'gamma0'.")
-            if not section.has_option('iceshelf_area_obs'):
+            if not spinup_section.has_option('iceshelf_area_obs'):
                 sys.exit(
                     "ERROR: parameter 'meltflux' requires "
-                    "'iceshelf_area_obs' in [ensemble].")
+                    "'iceshelf_area_obs' in [spinup_ensemble].")
 
             # First calculate mean TF for this domain
-            iceshelf_area_obs = section.getfloat('iceshelf_area_obs')
-            input_file_path = section.get('input_file_path')
-            TF_file_path = section.get('TF_file_path')
+            iceshelf_area_obs = spinup_section.getfloat('iceshelf_area_obs')
+            input_file_path = spinup_section.get('input_file_path')
+            TF_file_path = spinup_section.get('TF_file_path')
             mean_TF, iceshelf_area = calc_mean_TF(input_file_path,
                                                   TF_file_path)
 

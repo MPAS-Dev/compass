@@ -136,7 +136,8 @@ class EnsembleMember(Step):
 
         # Get config for info needed for setting up simulation
         config = self.config
-        section = config['ensemble']
+        section = config['ensemble_generator']
+        spinup_section = config['spinup_ensemble']
 
         # Create a python config (not compass config) file
         # for run-specific info useful for analysis/viz
@@ -184,7 +185,7 @@ class EnsembleMember(Step):
 
         # adjust basal friction exponent
         # rename and copy base file
-        input_file_path = section.get('input_file_path')
+        input_file_path = spinup_section.get('input_file_path')
         input_file_name = input_file_path.split('/')[-1]
         base_fname = input_file_name.split('.')[:-1][0]
         new_input_fname = f'{base_fname}_MODIFIED.nc'
@@ -195,7 +196,7 @@ class EnsembleMember(Step):
         stream_replacements = {'input_file_init_cond': new_input_fname}
         if self.basal_fric_exp is not None:
             # adjust mu and exponent
-            orig_fric_exp = section.getfloat('orig_fric_exp')
+            orig_fric_exp = spinup_section.getfloat('orig_fric_exp')
             _adjust_friction_exponent(orig_fric_exp, self.basal_fric_exp,
                                       os.path.join(self.work_dir,
                                                    new_input_fname),
@@ -222,7 +223,8 @@ class EnsembleMember(Step):
 
         # adjust gamma0 and deltaT
         # (only need to check one of these params)
-        basal_melt_param_file_path = section.get('basal_melt_param_file_path')
+        basal_melt_param_file_path = spinup_section.get(
+            'basal_melt_param_file_path')
         basal_melt_param_file_name = basal_melt_param_file_path.split('/')[-1]
         base_fname = basal_melt_param_file_name.split('.')[:-1][0]
         new_fname = f'{base_fname}_MODIFIED.nc'
@@ -238,9 +240,9 @@ class EnsembleMember(Step):
             run_info_cfg.set('run_info', 'deltaT', f'{self.deltaT}')
 
         # set up forcing files (unmodified)
-        TF_file_path = section.get('TF_file_path')
+        TF_file_path = spinup_section.get('TF_file_path')
         stream_replacements['TF_file_path'] = TF_file_path
-        SMB_file_path = section.get('SMB_file_path')
+        SMB_file_path = spinup_section.get('SMB_file_path')
         stream_replacements['SMB_file_path'] = SMB_file_path
 
         # store accumulated namelist and streams options

@@ -115,13 +115,16 @@ phase.  Also, by waiting until configure to define the ensemble members, it
 is possible to have the start and end run numbers set in the config,
 because the config is not parsed by the constructor.
 
-The ``configure`` method is where most of the work happens.  Here, the start
-and end run numbers are read from the template-selected config, a parameter
-array is generated, and the parameters to be varied and over what range are
-defined.
-The method first loads
-``ensemble_templates/<name>/spinup/ensemble_generator.cfg`` based on
-``[ensemble_generator] ensemble_template``.
+The ``configure`` method is where most of the work happens.
+There is no default configuration for this test case, so the user must
+provide a cfg file with the necessary options.  This will typically be the
+cfg located in the desired template directory or a user-modified copy of it.
+With the cfg provided, the individual ensemble members will be set up.
+Spinup run-control options (for example, ``start_run``, ``end_run``,
+``sampling_method``, ``max_samples``, ``cfl_fraction``, and ``ntasks``)
+are read from ``[ensemble_generator]``, while spinup resource paths and
+related values (for example ``input_file_path`` and ``iceshelf_area_obs``)
+are read from ``[spinup_ensemble]``.
 The values for each parameter are
 passed to the ``EnsembleMember`` constructor to define each run.
 

@@ -102,7 +102,7 @@ Future improvements may include:
 Ensemble templates
 ------------------
 
-This test group uses an ``ensemble_template``-based configuration workflow.
+This test group uses a template-based configuration workflow.
 Instead of maintaining one set of test-group resource files, each model
 configuration lives in its own subdirectory under
 ``ensemble_templates/<name>`` with separate spinup and branch
@@ -143,14 +143,14 @@ The shared config option for this test group is:
    # name of the ensemble template to use
    # resources are loaded from:
    # compass.landice.tests.ensemble_generator.ensemble_templates.<name>
-   ensemble_template = default
+    ensemble_template = default
 
 The template-specific spinup config options (from
 ``ensemble_templates/<name>/spinup/ensemble_generator.cfg``) are:
 
 .. code-block:: cfg
 
-   [ensemble]
+  [ensemble_generator]
 
    # start and end numbers for runs to set up and run
    # Run numbers should be zero-based.
@@ -204,32 +204,34 @@ The template-specific spinup config options (from
    # to inform the choice for a large production ensemble.
    cfl_fraction = 0.7
 
-   # Path to the initial condition input file.
-   # Eventually this could be hard-coded to use files on the input data
-   # server, but initially we want flexibility to experiment with different
-   # inputs and forcings
-   input_file_path = /global/cfs/cdirs/fanssie/MALI_projects/Amery_UQ/Amery_4to20km_from_whole_AIS/Amery.nc
+   # number of tasks that each ensemble member should be run with
+   # Eventually, compass could determine this, but we want explicit control for now
+   ntasks = 128
 
-   # the value of the friction exponent used for the calculation of muFriction
-   # in the input file
-   orig_fric_exp = 0.2
+    [spinup_ensemble]
 
-   # Path to ISMIP6 ice-shelf basal melt parameter input file.
-   basal_melt_param_file_path = /global/cfs/cdirs/fanssie/MALI_projects/Amery_UQ/Amery_4to20km_from_whole_AIS/forcing/basal_melt/parameterizations/Amery_4to20km_basin_and_coeff_gamma0_DeltaT_quadratic_non_local_median_allBasin2.nc
+    # Path to the initial condition input file.
+    # Eventually this could be hard-coded to use files on the input data
+    # server, but initially we want flexibility to experiment with different
+    # inputs and forcings
+    input_file_path = /global/cfs/cdirs/fanssie/MALI_projects/Amery_UQ/Amery_4to20km_from_whole_AIS/Amery.nc
 
-   # Path to thermal forcing file for the mesh to be used
-   TF_file_path = /global/cfs/cdirs/fanssie/MALI_projects/Amery_UQ/Amery_4to20km_from_whole_AIS/forcing/ocean_thermal_forcing/obs/Amery_4to20km_obs_TF_1995-2017_8km_x_60m.nc
+    # the value of the friction exponent used for the calculation of muFriction
+    # in the input file
+    orig_fric_exp = 0.2
 
-   # Path to SMB forcing file for the mesh to be used
-   SMB_file_path = /global/cfs/cdirs/fanssie/MALI_projects/Amery_UQ/Amery_4to20km_from_whole_AIS/forcing/atmosphere_forcing/RACMO_climatology_1995-2017/Amery_4to20km_RACMO2.3p2_ANT27_smb_climatology_1995-2017_no_xtime_noBareLandAdvance.nc
+    # Path to ISMIP6 ice-shelf basal melt parameter input file.
+    basal_melt_param_file_path = /global/cfs/cdirs/fanssie/MALI_projects/Amery_UQ/Amery_4to20km_from_whole_AIS/forcing/basal_melt/parameterizations/Amery_4to20km_basin_and_coeff_gamma0_DeltaT_quadratic_non_local_median_allBasin2.nc
+
+    # Path to thermal forcing file for the mesh to be used
+    TF_file_path = /global/cfs/cdirs/fanssie/MALI_projects/Amery_UQ/Amery_4to20km_from_whole_AIS/forcing/ocean_thermal_forcing/obs/Amery_4to20km_obs_TF_1995-2017_8km_x_60m.nc
+
+    # Path to SMB forcing file for the mesh to be used
+    SMB_file_path = /global/cfs/cdirs/fanssie/MALI_projects/Amery_UQ/Amery_4to20km_from_whole_AIS/forcing/atmosphere_forcing/RACMO_climatology_1995-2017/Amery_4to20km_RACMO2.3p2_ANT27_smb_climatology_1995-2017_no_xtime_noBareLandAdvance.nc
 
     # For meltflux perturbations, this observed ice-shelf area is used when
     # converting target melt flux to deltaT.
     iceshelf_area_obs = 60654.e6
-
-   # number of tasks that each ensemble member should be run with
-   # Eventually, compass could determine this, but we want explicit control for now
-   ntasks = 128
 
 The parameter sampling definitions live in a separate section,
 ``[ensemble.parameters]``.  The order listed sets the sampling
@@ -303,7 +305,11 @@ The default template options are:
 
 .. code-block:: cfg
 
-   # config options for setting up an ensemble
+  # selector for ensemble template resources
+  [ensemble_generator]
+
+  # subdirectory within ensemble_templates/ where branch_ensemble options are located
+  ensemble_template = default
 
    # config options for branching an ensemble
    [branch_ensemble]
@@ -342,9 +348,9 @@ Steps for setting up and running an ensemble
    ensemble (typically a scratch drive) and ``USER.cfg`` is the
    user-defined config described in the previous section that includes
    options for ``[parallel]`` and ``[job]``, as well as any required
-   modifications to the ``[ensemble]`` section.  Likely, most or all
-   attributes in the ``[ensemble]`` section need to be customized for a
-   given application.
+  modifications to the ``[ensemble_generator]`` and ``[spinup_ensemble]``
+  sections.  Likely, most or all attributes in these sections need to be
+  customized for a given application.
 
 2. After ``compass setup`` completes and all runs are set up, go to the
    ``WORK_DIR_PATH`` and change to the
