@@ -209,6 +209,7 @@ greenland
    Greenland
 
    decomposition_test.DecompositionTest
+   decomposition_test.DecompositionTest.configure
    decomposition_test.DecompositionTest.run
 
    restart_test.RestartTest
@@ -247,9 +248,11 @@ humboldt
    run_model.RunModel.run
 
    decomposition_test.DecompositionTest
+   decomposition_test.DecompositionTest.configure
    decomposition_test.DecompositionTest.validate
 
    restart_test.RestartTest
+   restart_test.RestartTest.configure
    restart_test.RestartTest.validate
 
 hydro_radial
@@ -460,6 +463,7 @@ thwaites
    Thwaites
 
    decomposition_test.DecompositionTest
+   decomposition_test.DecompositionTest.configure
    decomposition_test.DecompositionTest.run
 
    restart_test.RestartTest

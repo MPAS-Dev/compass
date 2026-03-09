@@ -116,9 +116,10 @@ decomposition_test
 ------------------
 
 ``landice/greenland/decomposition_test`` runs short (5-day) integrations of the
-model forward in time on 1 (``1proc_run`` step) and then on 4 cores
-(``4proc_run`` step) to make sure the resulting prognostic variables are
-bit-for-bit identical between the two runs.
+model forward in time with two different decompositions. The larger run
+targets 32 tasks (or fewer if fewer are available), and the smaller run uses
+roughly half as many tasks. The resulting prognostic variables are compared
+between the two runs to make sure they are bit-for-bit identical.
 
 restart_test
 ------------
