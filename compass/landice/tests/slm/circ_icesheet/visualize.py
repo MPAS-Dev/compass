@@ -63,8 +63,7 @@ class Visualize(Step):
         section = config['circ_icesheet']
         mali_res = section.get('mali_res').split(',')
 
-        section = config['slm']
-        coupling = section.getboolean('coupling')
+        coupling = True
         slm_nglv = section.get('slm_nglv').split(',')
 
         section = config['circ_icesheet_viz']
@@ -213,8 +212,7 @@ def visualize_slm_circsheet(config, logger, res, nglv):
     save_images = section.getboolean('save_images')
     hide_figs = section.getboolean('hide_figs')
 
-    section = config['slm']
-    coupling = section.getboolean('coupling')
+    coupling = True
 
     # get an instance of output analysis class
     run_path = f'../mali{res}km_slm{nglv}/run_model/'
@@ -370,8 +368,7 @@ class output_analysis:
         self.nglv = nglv
         self.run_path = run_path
 
-        section = config['slm']
-        coupling = section.getboolean('coupling')
+        coupling = True
 
         if coupling:
             section = config['circ_icesheet_viz']
