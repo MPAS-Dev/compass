@@ -368,12 +368,9 @@ class output_analysis:
         self.nglv = nglv
         self.run_path = run_path
 
-        coupling = True
-
-        if coupling:
-            section = config['circ_icesheet_viz']
-            Aocn_const = section.getfloat('Aocn_const')
-            AocnBeta_const = section.getfloat('AocnBeta_const')
+        section = config['circ_icesheet_viz']
+        Aocn_const = section.getfloat('Aocn_const')
+        AocnBeta_const = section.getfloat('AocnBeta_const')
 
         # mali output file name
         fname_mali = f'output_mali{res}km_slm{nglv}.nc'
@@ -387,8 +384,6 @@ class output_analysis:
         rhoi = 910.0   # ice density in kg/m^3
         rhoo = 1000.0  # ocean density used by the SLM (MALI uses 1028.0)
         rhow = 1000.0  # fresh water density
-        Aocn_const = 4.5007E+14  # area of global ocean in m2
-        AocnBeta_const = 4.5007E+14  # ocean area including marine-based area
 
         self.ncells = DS.dims['nCells']
         cellMask = DS['cellMask']
@@ -417,63 +412,48 @@ class output_analysis:
 
         # default MALI time steps from the MALI outputs
         self.yrs_mali = DS['daysSinceStart'].load() / 365.0 + 2015.0
-        if coupling:
-            # path to the SLM output data
-            fpath_slm = os.path.join(run_path, 'OUTPUT_SLM/')
-            config = self.config
-            section = config['slm']
-            time_stride = int(section.get('time_stride'))
-            # reset the time indices to match the # of SLM timesteps
-            nt = np.arange(0, DS.dims['Time'], time_stride, dtype='i')
-            self.yrs = self.yrs_mali[nt]
-            nyrs = len(self.yrs)
-            z0 = np.zeros((nyrs, ))
-            Aocn = np.zeros((nyrs, ))
-            AocnBeta = np.zeros((nyrs, ))
-            # get ice mass on the SLM interpolated from the MALI mesh
-            fname = os.path.join(fpath_slm, 'ice_volume')
-            self.ice_vol_slm = slm_outputs(fname, nyrs).data * rhoi / 1.0e12
-            self.dice_vol_slm = slm_outputs(fname, nyrs).change_total * \
-                rhoi / 1.0e12  # in Gt
-            # get slc correction and ocean area from the SLM
-            fname = os.path.join(fpath_slm, 'gmslc_ocnArea')
-            if os.path.exists(fname):
-                logger.info(f'reading in file {fname}')
-                z0 = slm_outputs(fname, nyrs).change_total
-                self.SLC_slm_Aocn = slm_outputs(fname, nyrs).data
+        # path to the SLM output data
+        fpath_slm = os.path.join(run_path, 'OUTPUT_SLM/')
+        section = self.config['slm']
+        time_stride = int(section.get('time_stride'))
+        # reset the time indices to match the # of SLM timesteps
+        nt = np.arange(0, DS.dims['Time'], time_stride, dtype='i')
+        self.yrs = self.yrs_mali[nt]
+        nyrs = len(self.yrs)
+        z0 = np.zeros((nyrs, ))
+        Aocn = np.full((nyrs, ), Aocn_const)
+        AocnBeta = np.full((nyrs, ), AocnBeta_const)
 
-            fname = os.path.join(fpath_slm, 'gmslc_ocnBetaArea')
-            if os.path.exists(fname):
-                logger.info(f'reading in file {fname}')
-                self.SLC_slm_AocnBeta = slm_outputs(fname, nyrs).data
+        # get ice mass on the SLM interpolated from the MALI mesh
+        fname = os.path.join(fpath_slm, 'ice_volume')
+        self.ice_vol_slm = slm_outputs(fname, nyrs).data * rhoi / 1.0e12
+        self.dice_vol_slm = slm_outputs(fname, nyrs).change_total * \
+            rhoi / 1.0e12  # in Gt
+        # get slc correction and ocean area from the SLM
+        fname = os.path.join(fpath_slm, 'gmslc_ocnArea')
+        if os.path.exists(fname):
+            logger.info(f'reading in file {fname}')
+            z0 = slm_outputs(fname, nyrs).change_total
+            self.SLC_slm_Aocn = slm_outputs(fname, nyrs).data
 
-            fname = os.path.join(fpath_slm, 'ocean_area')
-            if os.path.exists(fname):
-                logger.info(f'reading in file {fname}')
-                Aocn = slm_outputs(fname, nyrs).data
-                # logger.info(f'area of the ocean is: {Aocn}')
-            fname = os.path.join(fpath_slm, 'oceanBeta_area')
-            if os.path.exists(fname):
-                logger.info(f'reading in file {fname}')
-                AocnBeta = slm_outputs(fname, nyrs).data
-                # logger.info(f'area of the ocean Beta is: {AocnBeta}')
+        fname = os.path.join(fpath_slm, 'gmslc_ocnBetaArea')
+        if os.path.exists(fname):
+            logger.info(f'reading in file {fname}')
+            self.SLC_slm_AocnBeta = slm_outputs(fname, nyrs).data
+
+        fname = os.path.join(fpath_slm, 'ocean_area')
+        if os.path.exists(fname):
+            logger.info(f'reading in file {fname}')
+            Aocn = slm_outputs(fname, nyrs).data
         else:
-            # if not coupled, use default values for MALI outputs
-            # assuming MALI output interval is 1 year
-            nt = np.arange(0, DS.dims['Time'], 1, dtype='i')
-            self.yrs = self.yrs_mali
-            z0 = np.zeros(nyrs, )
-            Aocn = np.zeros(nyrs, )
-            AocnBeta = np.zeros(nyrs, )
-
-            z0[:] = 0.0
-            logger.info("'gmsle_change' file doesn't exist. "
-                        "Setting z0 to zeros")
-            Aocn[:] = Aocn_const
             logger.info("'ocean_area' file doesn't exist. Using "
                         f"constant ocean area defined: {Aocn_const}m2")
-            AocnBeta[:] = AocnBeta_const
-            logger.info("'ocean_areaBeta' file doesn't exist. Using"
+        fname = os.path.join(fpath_slm, 'oceanBeta_area')
+        if os.path.exists(fname):
+            logger.info(f'reading in file {fname}')
+            AocnBeta = slm_outputs(fname, nyrs).data
+        else:
+            logger.info("'oceanBeta_area' file doesn't exist. Using "
                         f"constant oceanBeta area defined: {AocnBeta_const}m2")
 
         # calculate ice-sheet contribution to sea-level change
@@ -505,10 +485,7 @@ class output_analysis:
 
         for t in np.arange(0, len(nt)):
             # get appropriate time index for the MALI output data
-            if coupling:
-                indx = nt[t]
-            else:
-                indx = t
+            indx = nt[t]
 
             bedt = bed[indx, :].load()
             cellMaskt = cellMask[indx, :].load()
@@ -580,26 +557,22 @@ class output_analysis:
             DS.close()
 
         # calculate RMSE between MALI and SLM calculation of SLC
-        if coupling:
-            self.diff_slc = self.SLC_slm_AocnBeta - self.SLCcorr_AocnBeta
-            self.diff_slc_z0 = self.SLC_slm_AocnBeta - \
-                self.SLCcorr_z0_AocnBeta
-            self.rmse_slc = np.sqrt((self.diff_slc**2).mean())
-            self.pct_err_slc = ((abs(self.diff_slc[1:]) /
-                                 abs(self.SLCcorr_AocnBeta[1:])) *
-                                100).mean()
-            self.pct_err_slc_z0 = ((abs(self.diff_slc_z0[1:]) /
-                                    abs(self.SLCcorr_z0_AocnBeta[1:])) *
-                                   100).mean()
-            self.pct_err_slm = ((abs(self.diff_slc[1:]) /
-                                 abs(self.SLC_slm_AocnBeta[1:])) *
-                                100).mean()
-            self.pct_err_slm_z0 = ((abs(self.diff_slc_z0[1:]) /
-                                    abs(self.SLC_slm_AocnBeta[1:])) *
-                                   100).mean()
-
-        else:
-            logger.info('MALI is not coupled to the SLM. No MPE to compute.')
+        self.diff_slc = self.SLC_slm_AocnBeta - self.SLCcorr_AocnBeta
+        self.diff_slc_z0 = self.SLC_slm_AocnBeta - \
+            self.SLCcorr_z0_AocnBeta
+        self.rmse_slc = np.sqrt((self.diff_slc**2).mean())
+        self.pct_err_slc = ((abs(self.diff_slc[1:]) /
+                             abs(self.SLCcorr_AocnBeta[1:])) *
+                            100).mean()
+        self.pct_err_slc_z0 = ((abs(self.diff_slc_z0[1:]) /
+                                abs(self.SLCcorr_z0_AocnBeta[1:])) *
+                               100).mean()
+        self.pct_err_slm = ((abs(self.diff_slc[1:]) /
+                             abs(self.SLC_slm_AocnBeta[1:])) *
+                            100).mean()
+        self.pct_err_slm_z0 = ((abs(self.diff_slc_z0[1:]) /
+                                abs(self.SLC_slm_AocnBeta[1:])) *
+                               100).mean()
 
 
 def grounded(cellMask):
