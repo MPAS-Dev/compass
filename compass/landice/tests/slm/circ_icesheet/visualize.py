@@ -141,7 +141,7 @@ def plot_heatmap(data, mali_res, slm_nglv, save_images):
         Boolean on whether to save the plot or not
     """
 
-    fig1 = plt.figure(1, facecolot='w')
+    fig1 = plt.figure(1, facecolor='w')
     ax1 = fig1.add_subplot(1, 1, 1)
     im = ax1.imshow(data, cmap='Blues')
     ax1.figure.colorbar(im, ax=ax1)
@@ -554,7 +554,7 @@ class output_analysis:
             self.dgrnd_vol_unscaled[t] = (self.grnd_vol_unscaled[t] -
                                           self.grnd_vol_unscaled[0])
 
-            DS.close()
+        DS.close()
 
         # calculate RMSE between MALI and SLM calculation of SLC
         self.diff_slc = self.SLC_slm_AocnBeta - self.SLCcorr_AocnBeta
