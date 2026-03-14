@@ -125,6 +125,7 @@ Spinup run-control options (for example, ``start_run``, ``end_run``,
 are read from ``[ensemble_generator]``, while spinup resource paths and
 related values (for example ``input_file_path`` and ``iceshelf_area_obs``)
 are read from ``[spinup_ensemble]``.
+Supported sampling methods are ``sobol``, ``uniform``, and ``log-uniform``.
 The values for each parameter are
 passed to the ``EnsembleMember`` constructor to define each run.
 

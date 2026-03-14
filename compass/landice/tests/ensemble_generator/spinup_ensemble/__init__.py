@@ -93,12 +93,10 @@ class SpinupEnsemble(TestCase):
         if max_samples < self.end_run:
             sys.exit("ERROR: max_samples is exceeded by end_run")
         sampling_method = section.get('sampling_method')
-        param_unit_values = _sample_parameter_unit_values(
-            sampling_method=sampling_method, n_params=n_params,
-            max_samples=max_samples)
-
         parameter_specs = _populate_parameter_vectors(
-            parameter_specs, param_unit_values)
+            parameter_specs=parameter_specs,
+            sampling_method=sampling_method,
+            max_samples=max_samples)
 
         spec_by_name = {spec['name']: spec for spec in parameter_specs}
 
@@ -181,45 +179,51 @@ def _get_parameter_specs(section):
     return specs
 
 
-def _sample_parameter_unit_values(sampling_method, n_params, max_samples):
-    """Create an ``(max_samples, n_params)`` array in unit space.
-
-    The returned values are in the range ``[0, 1]`` and are later scaled to
-    each parameter's configured min/max bounds.
-
-    Returns
-    -------
-    numpy.ndarray
-        Unit-space samples with shape ``(max_samples, n_params)``.
-    """
-    if sampling_method == 'sobol':
-        print(f"Generating Sobol sequence for {n_params} parameter(s)")
-        sampler = qmc.Sobol(d=n_params, scramble=True, seed=4)
-        return sampler.random(n=max_samples)
-
-    if sampling_method == 'uniform':
-        print(f"Generating uniform sampling for {n_params} parameter(s)")
-        samples = np.linspace(0.0, 1.0, max_samples).reshape(-1, 1)
-        return np.tile(samples, (1, n_params))
-
-    sys.exit("ERROR: Unsupported sampling method specified.")
-
-
-def _populate_parameter_vectors(parameter_specs, param_unit_values):
-    """Scale unit samples to configured parameter ranges.
+def _populate_parameter_vectors(parameter_specs, sampling_method,
+                                max_samples):
+    """Generate and scale samples to each parameter range.
 
     This function updates each ``spec['vec']`` in ``parameter_specs`` and
     returns the same list for explicit readability at call site.
+    ``sobol`` creates a space-filling sequence in unit space,
+    ``uniform`` creates linearly spaced samples, and ``log-uniform`` samples
+    linearly in log10 space (requiring strictly positive bounds).
 
     Returns
     -------
     list of dict
         The same ``parameter_specs`` list with each ``spec['vec']`` populated.
     """
+    n_params = len(parameter_specs)
+    if sampling_method == 'sobol':
+        print(f"Generating Sobol sequence for {n_params} parameter(s)")
+        sampler = qmc.Sobol(d=n_params, scramble=True, seed=4)
+        param_unit_values = sampler.random(n=max_samples)
+    elif sampling_method in {'uniform', 'log-uniform'}:
+        print(f"Generating {sampling_method} sampling for "
+              f"{n_params} parameter(s)")
+        samples = np.linspace(0.0, 1.0, max_samples).reshape(-1, 1)
+        param_unit_values = np.tile(samples, (1, n_params))
+    else:
+        sys.exit("ERROR: Unsupported sampling method specified.")
+
+    if sampling_method == 'log-uniform':
+        for spec in parameter_specs:
+            if spec['min'] <= 0.0 or spec['max'] <= 0.0:
+                sys.exit(
+                    "ERROR: log-uniform sampling requires positive min/max "
+                    f"for parameter '{spec['name']}'.")
+
     for idx, spec in enumerate(parameter_specs):
         print('Including parameter ' + spec['name'])
-        spec['vec'] = param_unit_values[:, idx] * \
-            (spec['max'] - spec['min']) + spec['min']
+        if sampling_method == 'log-uniform':
+            log_min = np.log10(spec['min'])
+            log_max = np.log10(spec['max'])
+            spec['vec'] = 10.0 ** (param_unit_values[:, idx] *
+                                   (log_max - log_min) + log_min)
+        else:
+            spec['vec'] = param_unit_values[:, idx] * \
+                (spec['max'] - spec['min']) + spec['min']
     return parameter_specs
 
 

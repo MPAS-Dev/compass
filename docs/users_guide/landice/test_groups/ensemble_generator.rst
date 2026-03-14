@@ -6,7 +6,8 @@ ensemble_generator
 The ``landice/ensemble_generator`` test group creates ensembles of MALI
 simulations with different parameter values.  The ensemble framework
 sets up a user-defined number of simulations with parameter values selected
-from either uniform sampling or a space-filling Sobol sequence.
+from uniform sampling, log-uniform sampling, or a space-filling Sobol
+sequence.
 
 A test case in this test group consists of a number of ensemble members,
 and one ensemble manager.
@@ -157,23 +158,27 @@ The template-specific spinup config options (from
    # Additional runs can be added and run to an existing ensemble
    # without affecting existing runs, but trying to set up a run
    # that already exists will generate a warning and skip that run.
-   # If using uniform sampling, start_run should be 0 and end_run should be
-   # equal to (max_samples - 1), otherwise unexpected behavior may result.
+  # If using uniform or log-uniform sampling, start_run should be 0 and
+  # end_run should be equal to (max_samples - 1), otherwise unexpected
+  # behavior may result.
    # These values do not affect viz/analysis, which will include any
    # runs it finds.
    start_run = 0
    end_run = 3
 
-   # sampling_method can be either 'sobol' for a space-filling Sobol sequence
-   # or 'uniform' for uniform sampling.  Uniform sampling is most appropriate
-   # for a single parameter sensitivity study.  It will sample uniformly across
-   # all dimensions simultaneously, thus sampling only a small fraction of
-   # parameter space
+  # sampling_method can be 'sobol' for a space-filling Sobol sequence,
+  # 'uniform' for linear sampling, or 'log-uniform' for logarithmic
+  # sampling between min and max parameter bounds.
+  # Uniform and log-uniform are most appropriate for a single-parameter
+  # sensitivity study because they sample each active parameter using the
+  # same rank ordering, thus sampling only a small fraction of parameter
+  # space in higher dimensions.
    sampling_method = sobol
 
    # maximum number of samples to be considered.
    # max_samples needs to be greater or equal to (end_run + 1)
-   # When using uniform sampling, max_samples should equal (end_run + 1).
+  # When using uniform or log-uniform sampling, max_samples should equal
+  # (end_run + 1).
    # When using Sobol sequence, max_samples ought to be a power of 2.
    # max_samples should not be changed after the first set of ensemble.
    # So, when using Sobol sequence, max_samples might be set larger than
@@ -237,6 +242,9 @@ The parameter sampling definitions live in a separate section,
 ``[ensemble.parameters]``.  The order listed sets the sampling
 dimension ordering, special parameters are unprefixed, and namelist
 parameters use the ``nl.`` prefix with a companion ``.option_name``.
+
+For ``log-uniform`` sampling, each parameter bound must be strictly
+positive because sampling is performed in log space.
 
 .. code-block:: cfg
 
