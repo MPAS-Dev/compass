@@ -425,7 +425,6 @@ class output_analysis:
             time_stride = int(section.get('time_stride'))
             # reset the time indices to match the # of SLM timesteps
             nt = np.arange(0, DS.dims['Time'], time_stride, dtype='i')
-            nt = np.arange(0, 50, time_stride, dtype='i')
             self.yrs = self.yrs_mali[nt]
             nyrs = len(self.yrs)
             z0 = np.zeros((nyrs, ))
@@ -507,7 +506,7 @@ class output_analysis:
         for t in np.arange(0, len(nt)):
             # get appropriate time index for the MALI output data
             if coupling:
-                indx = t * time_stride
+                indx = nt[t]
             else:
                 indx = t
 
