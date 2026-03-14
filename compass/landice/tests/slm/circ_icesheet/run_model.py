@@ -85,11 +85,16 @@ class RunModel(Step):
         os.makedirs(os.path.join(self.work_dir, 'ICELOAD_SLM/'),
                     exist_ok='True')
 
+        section = self.config['slm']
+        slm_input_root = section.get('slm_input_root').rstrip('/')
+
         # change the sealevel namelist
         template = Template(resources.read_text
                             ('compass.landice.tests.slm',
                              'namelist.sealevel.template'))
-        text = template.render(nglv=self.nglv)
+        text = template.render(
+            nglv=self.nglv,
+            slm_input_root=slm_input_root)
 
         # write out the namelist.sealevel file
         file_slm_nl = os.path.join(self.work_dir, 'namelist.sealevel')
