@@ -144,41 +144,41 @@ The shared config option for this test group is:
    # name of the ensemble template to use
    # resources are loaded from:
    # compass.landice.tests.ensemble_generator.ensemble_templates.<name>
-    ensemble_template = default
+   ensemble_template = default
 
 The template-specific spinup config options (from
 ``ensemble_templates/<name>/spinup/ensemble_generator.cfg``) are:
 
 .. code-block:: cfg
 
-  [ensemble_generator]
+   [ensemble_generator]
 
    # start and end numbers for runs to set up and run
    # Run numbers should be zero-based.
    # Additional runs can be added and run to an existing ensemble
    # without affecting existing runs, but trying to set up a run
    # that already exists will generate a warning and skip that run.
-  # If using uniform or log-uniform sampling, start_run should be 0 and
-  # end_run should be equal to (max_samples - 1), otherwise unexpected
-  # behavior may result.
+   # If using uniform or log-uniform sampling, start_run should be 0 and
+   # end_run should be equal to (max_samples - 1), otherwise unexpected
+   # behavior may result.
    # These values do not affect viz/analysis, which will include any
    # runs it finds.
    start_run = 0
    end_run = 3
 
-  # sampling_method can be 'sobol' for a space-filling Sobol sequence,
-  # 'uniform' for linear sampling, or 'log-uniform' for logarithmic
-  # sampling between min and max parameter bounds.
-  # Uniform and log-uniform are most appropriate for a single-parameter
-  # sensitivity study because they sample each active parameter using the
-  # same rank ordering, thus sampling only a small fraction of parameter
-  # space in higher dimensions.
+   # sampling_method can be 'sobol' for a space-filling Sobol sequence,
+   # 'uniform' for linear sampling, or 'log-uniform' for logarithmic
+   # sampling between min and max parameter bounds.
+   # Uniform and log-uniform are most appropriate for a single-parameter
+   # sensitivity study because they sample each active parameter using the
+   # same rank ordering, thus sampling only a small fraction of parameter
+   # space in higher dimensions.
    sampling_method = sobol
 
    # maximum number of samples to be considered.
    # max_samples needs to be greater or equal to (end_run + 1)
-  # When using uniform or log-uniform sampling, max_samples should equal
-  # (end_run + 1).
+   # When using uniform or log-uniform sampling, max_samples should equal
+   # (end_run + 1).
    # When using Sobol sequence, max_samples ought to be a power of 2.
    # max_samples should not be changed after the first set of ensemble.
    # So, when using Sobol sequence, max_samples might be set larger than
@@ -259,8 +259,8 @@ positive because sampling is performed in log space.
 
    # namelist float parameters (generic handling)
    nl.von_mises_threshold = 80.0e3, 180.0e3
-   nl.von_mises_threshold.option_name = \
-     config_grounded_von_Mises_threshold_stress, \
+   nl.von_mises_threshold.option_name =
+     config_grounded_von_Mises_threshold_stress,
      config_floating_von_Mises_threshold_stress
 
    nl.calv_spd_limit = 0.0001585, 0.001585

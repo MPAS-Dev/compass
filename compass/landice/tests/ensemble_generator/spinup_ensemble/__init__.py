@@ -353,12 +353,18 @@ def _add_member_steps(test_case, parameter_specs, spec_by_name, deltaT_vec,
 def _split_entries(raw):
     """Split comma- or whitespace-delimited config lists.
 
+    Backslash-newline sequences used for line continuation are stripped so
+    that multi-line values are treated as a single logical line. Remaining
+    backslashes are also removed to avoid spurious option tokens.
+
     Returns
     -------
     list of str
         Non-empty parsed entries.
     """
-    return [entry for entry in raw.replace(',', ' ').split() if entry]
+    cleaned = raw.replace('\\\r\n', ' ').replace('\\\n', ' ')
+    cleaned = cleaned.replace('\\', ' ')
+    return [entry for entry in cleaned.replace(',', ' ').split() if entry]
 
 
 def _parse_range(raw, parameter_name):

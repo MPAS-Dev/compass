@@ -162,9 +162,12 @@ class EnsembleMember(Step):
         albany_input_path = os.path.join(self.work_dir, albany_input_name)
         albany_source = resources.files(resource_module).joinpath(
             albany_input_name)
-        has_albany_input = albany_source.is_file()
-        if has_albany_input:
-            shutil.copy(str(albany_source), self.work_dir)
+        # Materialize a real filesystem path in case the package is not
+        # directly on the filesystem (e.g., zip/loader-backed).
+        with resources.as_file(albany_source) as albany_source_path:
+            has_albany_input = albany_source_path.is_file()
+            if has_albany_input:
+                shutil.copy(str(albany_source_path), self.work_dir)
 
         self.add_model_as_input()
 

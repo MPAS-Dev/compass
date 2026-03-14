@@ -166,10 +166,10 @@ If so, and if the branch_ensemble member directory does not already exist, that
 run is added as a step.  Within each run (step), the restart file from the branch
 year is copied to the branch run directory.  The time stamp is reassigned to
 2015 (this could be made a cfg option in the future).  Also copied over are
-the namelist and albany_input.yaml files.  The namelist is updated with
-settings specific to the branch ensemble, and a streams file specific to the
-branch run is added.  Finally, details for managing runs are set up, including
-a job script.
+the namelist and, when present (for Albany-based configurations), the
+``albany_input.yaml`` file.  The namelist is updated with settings specific to
+the branch ensemble, and a streams file specific to the branch run is added.
+Finally, details for managing runs are set up, including a job script.
 
 As in spinup, the branch configure method first loads
 ``ensemble_templates/<name>/branch/branch_ensemble.cfg`` based on
