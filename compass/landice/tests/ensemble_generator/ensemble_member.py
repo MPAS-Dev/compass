@@ -40,12 +40,6 @@ class EnsembleMember(Step):
     stiff_scale : float
         value to scale stiffnessFactor by
 
-    von_mises_threshold : float
-        value of von Mises stress threshold to use
-
-    calv_spd_lim : float
-        value of calving speed limit to use
-
     gamma0 : float
         value of gamma0 to use in ISMIP6 ice-shelf basal melt param.
 
@@ -54,11 +48,12 @@ class EnsembleMember(Step):
     """
 
     def __init__(self, test_case, run_num,
+                 resource_module,
+                 namelist_option_values=None,
+                 namelist_parameter_values=None,
                  basal_fric_exp=None,
                  mu_scale=None,
                  stiff_scale=None,
-                 von_mises_threshold=None,
-                 calv_spd_lim=None,
                  gamma0=None,
                  meltflux=None,
                  deltaT=None):
@@ -73,6 +68,18 @@ class EnsembleMember(Step):
         run_num : integer
             the run number for this ensemble member
 
+        resource_module : str
+            Package containing configuration-specific namelist, streams,
+            and albany input files
+
+        namelist_option_values : dict, optional
+            A dictionary of namelist option names and values to be
+            overridden for this ensemble member
+
+        namelist_parameter_values : dict, optional
+            A dictionary of run-info parameter names and values that
+            correspond to entries in ``namelist_option_values``
+
         basal_fric_exp : float
             value of basal friction exponent to use
 
@@ -82,13 +89,6 @@ class EnsembleMember(Step):
         stiff_scale : float
             value to scale stiffnessFactor by
 
-        von_mises_threshold : float
-            value of von Mises stress threshold to use
-            assumes same value for grounded and floating ice
-
-        calv_spd_lim : float
-            value of calving speed limit to use
-
         gamma0 : float
             value of gamma0 to use in ISMIP6 ice-shelf basal melt param.
 
@@ -96,13 +96,18 @@ class EnsembleMember(Step):
             value of deltaT to use in ISMIP6 ice-shelf basal melt param.
         """
         self.run_num = run_num
+        self.resource_module = resource_module
+        if namelist_option_values is None:
+            namelist_option_values = {}
+        if namelist_parameter_values is None:
+            namelist_parameter_values = {}
+        self.namelist_option_values = dict(namelist_option_values)
+        self.namelist_parameter_values = dict(namelist_parameter_values)
 
         # store assigned param values for this run
         self.basal_fric_exp = basal_fric_exp
         self.mu_scale = mu_scale
         self.stiff_scale = stiff_scale
-        self.von_mises_threshold = von_mises_threshold
-        self.calv_spd_lim = calv_spd_lim
         self.gamma0 = gamma0
         self.meltflux = meltflux
         self.deltaT = deltaT
@@ -127,11 +132,12 @@ class EnsembleMember(Step):
                   "'compass setup' again to set this experiment up.")
             return
 
-        resource_module = 'compass.landice.tests.ensemble_generator'
+        resource_module = self.resource_module
 
         # Get config for info needed for setting up simulation
         config = self.config
-        section = config['ensemble']
+        section = config['ensemble_generator']
+        spinup_section = config['spinup_ensemble']
 
         # Create a python config (not compass config) file
         # for run-specific info useful for analysis/viz
@@ -151,14 +157,17 @@ class EnsembleMember(Step):
         # Set up base run configuration
         self.add_namelist_file(resource_module, 'namelist.landice')
 
-        # copy over albany yaml file
-        # cannot use add_input functionality because need to modify the file
-        # in this function, and inputs don't get processed until after this
-        # function
-        with resources.path(resource_module,
-                            'albany_input.yaml') as package_path:
-            target = str(package_path)
-            shutil.copy(target, self.work_dir)
+        # albany_input.yaml is optional unless fric_exp perturbations are used.
+        albany_input_name = 'albany_input.yaml'
+        albany_input_path = os.path.join(self.work_dir, albany_input_name)
+        albany_source = resources.files(resource_module).joinpath(
+            albany_input_name)
+        # Materialize a real filesystem path in case the package is not
+        # directly on the filesystem (e.g., zip/loader-backed).
+        with resources.as_file(albany_source) as albany_source_path:
+            has_albany_input = albany_source_path.is_file()
+            if has_albany_input:
+                shutil.copy(str(albany_source_path), self.work_dir)
 
         self.add_model_as_input()
 
@@ -171,25 +180,15 @@ class EnsembleMember(Step):
         options['config_adaptive_timestep_CFL_fraction'] = \
             f'{self.cfl_fraction}'
 
-        # von Mises stress threshold
-        if self.von_mises_threshold is not None:
-            options['config_grounded_von_Mises_threshold_stress'] = \
-                f'{self.von_mises_threshold}'
-            options['config_floating_von_Mises_threshold_stress'] = \
-                f'{self.von_mises_threshold}'
-            run_info_cfg.set('run_info', 'von_mises_threshold',
-                             f'{self.von_mises_threshold}')
-
-        # calving speed limit
-        if self.calv_spd_lim is not None:
-            options['config_calving_speed_limit'] = \
-                f'{self.calv_spd_lim}'
-            run_info_cfg.set('run_info', 'calv_spd_limit',
-                             f'{self.calv_spd_lim}')
+        # apply generic namelist float parameter perturbations
+        for option_name, value in self.namelist_option_values.items():
+            options[option_name] = f'{value}'
+        for parameter_name, value in self.namelist_parameter_values.items():
+            run_info_cfg.set('run_info', parameter_name, f'{value}')
 
         # adjust basal friction exponent
         # rename and copy base file
-        input_file_path = section.get('input_file_path')
+        input_file_path = spinup_section.get('input_file_path')
         input_file_name = input_file_path.split('/')[-1]
         base_fname = input_file_name.split('.')[:-1][0]
         new_input_fname = f'{base_fname}_MODIFIED.nc'
@@ -199,13 +198,16 @@ class EnsembleMember(Step):
         # set input filename in streams and create streams file
         stream_replacements = {'input_file_init_cond': new_input_fname}
         if self.basal_fric_exp is not None:
+            if not has_albany_input:
+                raise ValueError(
+                    "Parameter 'fric_exp' requires 'albany_input.yaml' "
+                    f"in template package '{resource_module}'.")
             # adjust mu and exponent
-            orig_fric_exp = section.getfloat('orig_fric_exp')
+            orig_fric_exp = spinup_section.getfloat('orig_fric_exp')
             _adjust_friction_exponent(orig_fric_exp, self.basal_fric_exp,
                                       os.path.join(self.work_dir,
                                                    new_input_fname),
-                                      os.path.join(self.work_dir,
-                                                   'albany_input.yaml'))
+                                      albany_input_path)
             run_info_cfg.set('run_info', 'basal_fric_exp',
                              f'{self.basal_fric_exp}')
 
@@ -227,7 +229,8 @@ class EnsembleMember(Step):
 
         # adjust gamma0 and deltaT
         # (only need to check one of these params)
-        basal_melt_param_file_path = section.get('basal_melt_param_file_path')
+        basal_melt_param_file_path = spinup_section.get(
+            'basal_melt_param_file_path')
         basal_melt_param_file_name = basal_melt_param_file_path.split('/')[-1]
         base_fname = basal_melt_param_file_name.split('.')[:-1][0]
         new_fname = f'{base_fname}_MODIFIED.nc'
@@ -243,9 +246,9 @@ class EnsembleMember(Step):
             run_info_cfg.set('run_info', 'deltaT', f'{self.deltaT}')
 
         # set up forcing files (unmodified)
-        TF_file_path = section.get('TF_file_path')
+        TF_file_path = spinup_section.get('TF_file_path')
         stream_replacements['TF_file_path'] = TF_file_path
-        SMB_file_path = section.get('SMB_file_path')
+        SMB_file_path = spinup_section.get('SMB_file_path')
         stream_replacements['SMB_file_path'] = SMB_file_path
 
         # store accumulated namelist and streams options
