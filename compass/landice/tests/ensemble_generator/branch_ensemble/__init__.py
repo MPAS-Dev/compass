@@ -4,15 +4,15 @@ import sys
 
 import numpy as np
 
-from compass.landice.tests.ensemble_generator.ensemble_template import (
-    add_template_file,
-    get_branch_template_package,
-)
 from compass.landice.tests.ensemble_generator.branch_ensemble.branch_run import (  # noqa
     BranchRun,
 )
 from compass.landice.tests.ensemble_generator.ensemble_manager import (
     EnsembleManager,
+)
+from compass.landice.tests.ensemble_generator.ensemble_template import (
+    add_template_file,
+    get_branch_template_package,
 )
 from compass.testcase import TestCase
 
