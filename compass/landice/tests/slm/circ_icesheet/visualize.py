@@ -64,6 +64,7 @@ class Visualize(Step):
         mali_res = section.get('mali_res').split(',')
 
         coupling = True
+        section = config['slm']
         slm_nglv = section.get('slm_nglv').split(',')
 
         section = config['circ_icesheet_viz']

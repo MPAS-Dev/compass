@@ -77,7 +77,7 @@ class RunModel(Step):
                                    'mapping_file_slm_to_mali.nc')
         self.add_model_as_input()
 
-        self.add_output_file(filename='output.nc')
+        self.add_output_file(filename='output/output.nc')
 
     def setup(self):
         os.makedirs(os.path.join(self.work_dir, 'OUTPUT_SLM/'),

@@ -21,7 +21,7 @@ class CircIcesheetTest(TestCase):
             The test group that this test case belongs to
             The resolution or type of mesh of the test case
         """
-        name = 'circular_icesheet_test'
+        name = 'circ_icesheet'
         subdir = name
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
