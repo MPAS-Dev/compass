@@ -11,7 +11,6 @@ from compass.landice.tests.ensemble_generator.ensemble_manager import (
     EnsembleManager,
 )
 from compass.landice.tests.ensemble_generator.ensemble_template import (
-    add_template_file,
     get_branch_template_package,
 )
 from compass.testcase import TestCase
@@ -64,7 +63,6 @@ class BranchEnsemble(TestCase):
 
         config = self.config
         resource_module = get_branch_template_package(config)
-        add_template_file(config, resource_module, 'branch_ensemble.cfg')
 
         section = config['branch_ensemble']
 

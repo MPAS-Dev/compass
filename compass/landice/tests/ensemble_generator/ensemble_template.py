@@ -1,6 +1,3 @@
-from importlib.util import find_spec
-
-
 def get_ensemble_template_name(config):
     """
     Get the configured ensemble template name.
@@ -71,25 +68,3 @@ def get_branch_template_package(config):
     template = get_ensemble_template_name(config)
     return ('compass.landice.tests.ensemble_generator.ensemble_templates.'
             f'{template}.branch')
-
-
-def add_template_file(config, package, filename):
-    """
-    Add a config file from the selected ensemble template package.
-
-    Parameters
-    ----------
-    config : compass.config.CompassConfigParser
-        Configuration options for a test case
-
-    package : str
-        The package containing the requested configuration file
-
-    filename : str
-        The configuration filename to add from the package
-    """
-    if find_spec(package) is None:
-        raise ValueError(
-            f"Ensemble template package '{package}' was not found.")
-
-    config.add_from_package(package, filename, exception=True)

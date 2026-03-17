@@ -113,8 +113,8 @@ The user may also provide custom overrides in a user cfg file.
 A new ensemble template should be added for each new study by creating
 a new subdirectory under ``ensemble_templates/`` with the same structure as
 the default template and following a naming convention like:
-``<domain.topic.year>``, e.g., ``amery4km.probproj.2024`` or
-``ais4km.hydro.2026``.
+``<domain_topic_year>``, e.g., ``amery4km_probproj_2024`` or
+``ais4km_hydro_2026``.
 
 The selected template controls which config files and model resource files are
 used for the spinup and branch cases.  The package layout is:

@@ -198,7 +198,7 @@ class EnsembleMember(Step):
                                                   new_input_fname))
         # set input filename in streams and create streams file
         stream_replacements = {'input_file_init_cond': new_input_fname}
-        if spinup_section.has_option('fric_samples_file'):
+        if config.has_option('spinup_ensemble', 'fric_samples_file'):
             fric_samples_file = spinup_section.get('fric_samples_file')
             fric_map_file = spinup_section.get('fric_map_file')
             mpas_cellid_file = spinup_section.get('mpas_cellid_file')
@@ -242,7 +242,7 @@ class EnsembleMember(Step):
             run_info_cfg.set('run_info', 'stiff_scale', f'{self.stiff_scale}')
 
         # adjust gamma0 and deltaT (if a basal melt parameter file is used)
-        if spinup_section.has_option('basal_melt_param_file_path'):
+        if config.has_option('spinup_ensemble', 'basal_melt_param_file_path'):
             basal_melt_param_file_path = spinup_section.get(
                 'basal_melt_param_file_path')
             basal_melt_param_file_name = \
@@ -271,7 +271,7 @@ class EnsembleMember(Step):
         stream_replacements['TF_file_path'] = TF_file_path
         SMB_file_path = spinup_section.get('SMB_file_path')
         stream_replacements['SMB_file_path'] = SMB_file_path
-        if spinup_section.has_option('runoff_file_path'):
+        if config.has_option('spinup_ensemble', 'runoff_file_path'):
             stream_replacements['runoff_file_path'] = spinup_section.get(
                 'runoff_file_path')
 

@@ -11,7 +11,6 @@ from compass.landice.tests.ensemble_generator.ensemble_member import (
     EnsembleMember,
 )
 from compass.landice.tests.ensemble_generator.ensemble_template import (
-    add_template_file,
     get_spinup_template_package,
 )
 from compass.testcase import TestCase
@@ -64,7 +63,6 @@ class SpinupEnsemble(TestCase):
 
         config = self.config
         resource_module = get_spinup_template_package(config)
-        add_template_file(config, resource_module, 'ensemble_generator.cfg')
 
         section = config['ensemble_generator']
         spinup_section_name = 'spinup_ensemble'
