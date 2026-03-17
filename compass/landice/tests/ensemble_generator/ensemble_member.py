@@ -4,6 +4,7 @@ import shutil
 from importlib import resources
 
 import netCDF4
+import numpy as np
 import yaml
 
 from compass.io import symlink
@@ -197,6 +198,19 @@ class EnsembleMember(Step):
                                                   new_input_fname))
         # set input filename in streams and create streams file
         stream_replacements = {'input_file_init_cond': new_input_fname}
+        if spinup_section.has_option('fric_samples_file'):
+            fric_samples_file = spinup_section.get('fric_samples_file')
+            fric_map_file = spinup_section.get('fric_map_file')
+            mpas_cellid_file = spinup_section.get('mpas_cellid_file')
+            fric_sample_scale = spinup_section.getfloat('fric_sample_scale')
+            _apply_fric_sample(
+                sample_num=self.run_num,
+                sample_file=fric_samples_file,
+                mu_opt_file=fric_map_file,
+                mpas_cellid_file=mpas_cellid_file,
+                ic_file=os.path.join(self.work_dir, new_input_fname),
+                scaling=fric_sample_scale)
+            run_info_cfg.set('run_info', 'fric_sample_num', f'{self.run_num}')
         if self.basal_fric_exp is not None:
             if not has_albany_input:
                 raise ValueError(
@@ -343,4 +357,28 @@ def _adjust_basal_melt_params(filename, gamma0=None, deltaT=None):
         f.variables['ismip6shelfMelt_gamma0'][:] = gamma0
     if deltaT is not None:
         f.variables['ismip6shelfMelt_deltaT'][:] = deltaT
+    f.close()
+
+
+def _apply_fric_sample(sample_num, sample_file, mu_opt_file,
+                       mpas_cellid_file, ic_file, scaling=0.25):
+    """Apply a precomputed friction sample to ``muFriction`` in IC file."""
+    samples = np.load(sample_file)
+    sample = samples[sample_num, :]
+
+    log_mu_opt = np.loadtxt(mu_opt_file)
+    log_mu_opt = log_mu_opt[1:]  # skip first row containing array size
+
+    mpas_map = np.loadtxt(mpas_cellid_file, dtype='int')
+    mpas_map = mpas_map[1:]  # skip first row containing array size
+
+    f = netCDF4.Dataset(ic_file, 'r+')
+    f.set_auto_mask(False)
+    n_cells = len(f.dimensions['nCells'])
+
+    # Set baseline mu outside of the Albany inverse region.
+    mu = 0.2 * np.ones(n_cells)
+    mu[mpas_map[:] - 1] = np.exp(scaling * sample + log_mu_opt)
+
+    f.variables['muFriction'][0, :] = mu[:]
     f.close()
