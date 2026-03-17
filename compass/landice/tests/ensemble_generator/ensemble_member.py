@@ -241,18 +241,25 @@ class EnsembleMember(Step):
             f.close()
             run_info_cfg.set('run_info', 'stiff_scale', f'{self.stiff_scale}')
 
-        # adjust gamma0 and deltaT
-        # (only need to check one of these params)
-        basal_melt_param_file_path = spinup_section.get(
-            'basal_melt_param_file_path')
-        basal_melt_param_file_name = basal_melt_param_file_path.split('/')[-1]
-        base_fname = basal_melt_param_file_name.split('.')[:-1][0]
-        new_fname = f'{base_fname}_MODIFIED.nc'
-        shutil.copy(basal_melt_param_file_path,
-                    os.path.join(self.work_dir, new_fname))
-        _adjust_basal_melt_params(os.path.join(self.work_dir, new_fname),
-                                  self.gamma0, self.deltaT)
-        stream_replacements['basal_melt_param_file_name'] = new_fname
+        # adjust gamma0 and deltaT (if a basal melt parameter file is used)
+        if spinup_section.has_option('basal_melt_param_file_path'):
+            basal_melt_param_file_path = spinup_section.get(
+                'basal_melt_param_file_path')
+            basal_melt_param_file_name = \
+                basal_melt_param_file_path.split('/')[-1]
+            base_fname = basal_melt_param_file_name.split('.')[:-1][0]
+            new_fname = f'{base_fname}_MODIFIED.nc'
+            shutil.copy(basal_melt_param_file_path,
+                        os.path.join(self.work_dir, new_fname))
+            _adjust_basal_melt_params(os.path.join(self.work_dir, new_fname),
+                                      self.gamma0, self.deltaT)
+            stream_replacements['basal_melt_param_file_name'] = new_fname
+        elif any(value is not None for value in
+                 (self.gamma0, self.meltflux, self.deltaT)):
+            raise ValueError(
+                "Parameters 'gamma0' and/or 'meltflux' require "
+                "'basal_melt_param_file_path' in [spinup_ensemble].")
+
         if self.gamma0 is not None:
             run_info_cfg.set('run_info', 'gamma0', f'{self.gamma0}')
         if self.deltaT is not None:
@@ -264,6 +271,9 @@ class EnsembleMember(Step):
         stream_replacements['TF_file_path'] = TF_file_path
         SMB_file_path = spinup_section.get('SMB_file_path')
         stream_replacements['SMB_file_path'] = SMB_file_path
+        if spinup_section.has_option('runoff_file_path'):
+            stream_replacements['runoff_file_path'] = spinup_section.get(
+                'runoff_file_path')
 
         # store accumulated namelist and streams options
         self.add_namelist_options(options=options,
