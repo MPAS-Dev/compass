@@ -65,7 +65,7 @@ class Mesh(Step):
             cores=self.cpus_per_task)
 
         parallel_executable = config.get('parallel', 'parallel_executable')
-        nProcs = str(self.cpus_per_task)
+        nProcs = section.get('nProcs')
         run_optional_bespoke_interpolation(
             self, mesh_name, 'ais-bedmap2', parallel_executable, nProcs,
             subset_bounds=get_mesh_config_bounding_box(section),

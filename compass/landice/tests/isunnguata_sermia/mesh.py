@@ -74,7 +74,7 @@ class Mesh(Step):
             projection='gis-gimp', geojson_file='Isunnguata_Sermia.geojson')
 
         parallel_executable = config.get('parallel', 'parallel_executable')
-        nProcs = str(self.cpus_per_task)
+        nProcs = section.get('nProcs')
         run_optional_bespoke_interpolation(
             self, mesh_name, 'gis-gimp', parallel_executable, nProcs,
             subset_bounds=get_mesh_config_bounding_box(section),

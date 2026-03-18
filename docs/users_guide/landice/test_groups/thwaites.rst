@@ -46,6 +46,9 @@ The other test cases do not use config options.
     # Set to a value <= 0 if you do not want
     # to cull based on distance from margin.
     cull_distance = 10.0
+
+    # number of processors to use for ESMF_RegridWeightGen
+    nProcs = 128
     
     # mesh density parameters
     # minimum cell spacing (meters)

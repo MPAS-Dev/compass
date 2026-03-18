@@ -34,6 +34,9 @@ the mesh generation options are adjusted through the config file.
     # to cull based on distance from margin.
     cull_distance = 5.0
 
+    # number of processors to use for ESMF_RegridWeightGen
+    nProcs = 128
+
     # mesh density parameters
     # minimum cell spacing (meters)
     min_spac = 1.e3

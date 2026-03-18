@@ -30,7 +30,8 @@ calls the :py:class:`compass.landice.tests.crane.mesh.Mesh` to create
 the variable resolution Crane Glacier mesh.
 
 Optional BedMachine and MEaSUREs interpolation can be enabled through
-``[mesh]`` config options ``data_path``, ``bedmachine_filename``, and
-``measures_filename``. If enabled, source datasets are subset to the
+``[mesh]`` config options ``nProcs``, ``data_path``,
+``bedmachine_filename``, and ``measures_filename``. If enabled, source
+datasets are subset to the
 configured mesh bounding box before SCRIP generation and conservative
 remapping.
