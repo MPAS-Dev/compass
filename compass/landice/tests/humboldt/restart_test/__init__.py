@@ -1,18 +1,22 @@
 from compass.landice.tests.humboldt.run_model import RunModel
+from compass.parallel import get_available_parallel_resources
 from compass.testcase import TestCase
 from compass.validate import compare_variables
 
 
 class RestartTest(TestCase):
     """
-    A test case for performing two MALI runs of a humboldt setup, one full
-    run and one run broken into two segments with a restart.  The test case
+    A test case for performing two MALI runs of a Humboldt setup, one full
+    run and one run broken into two segments with a restart. The test case
     verifies that the results of the two runs are identical.
 
     Attributes
     ----------
     mesh_type : str
         The resolution or type of mesh of the test case
+
+    velo_solver : str
+        The velocity solver used for the test case
 
     calving_law : str
         The calving law used for the test case
@@ -22,6 +26,9 @@ class RestartTest(TestCase):
 
     face_melt : bool
         Whether to include face melting
+
+    target_ntasks : int
+        The preferred task count for restart runs before resource constraints
 
     depth_integrated  : bool
         Whether the (FO) velocity model is depth integrated
@@ -70,6 +77,7 @@ class RestartTest(TestCase):
         self.calving_law = calving_law
         self.damage = damage
         self.face_melt = face_melt
+        self.target_ntasks = 32
         if hydro is not None:
             self.hydro = hydro
         else:
@@ -92,7 +100,8 @@ class RestartTest(TestCase):
                          subdir=subdir)
 
         name = 'full_run'
-        step = RunModel(test_case=self, name=name, subdir=name, ntasks=32,
+        step = RunModel(test_case=self, name=name, subdir=name,
+                        ntasks=self.target_ntasks,
                         openmp_threads=1, velo_solver=velo_solver,
                         calving_law=self.calving_law,
                         damage=self.damage,
@@ -117,7 +126,8 @@ class RestartTest(TestCase):
         self.add_step(step)
 
         name = 'restart_run'
-        step = RunModel(test_case=self, name=name, subdir=name, ntasks=32,
+        step = RunModel(test_case=self, name=name, subdir=name,
+                        ntasks=self.target_ntasks,
                         openmp_threads=1, velo_solver=velo_solver,
                         calving_law=self.calving_law,
                         damage=self.damage,
@@ -152,7 +162,23 @@ class RestartTest(TestCase):
             'streams.restart.rst', out_name='streams.landice.rst')
         self.add_step(step)
 
-    # no configure() method is needed
+    def configure(self):
+        """
+        Set restart-test task counts from framework-detected resources.
+
+        The target task count is 32 when available. FO runs require at least
+        10 tasks; other runs allow any positive task count.
+        """
+        available_resources = get_available_parallel_resources(self.config)
+
+        min_tasks = 10 if self.velo_solver == 'FO' else 1
+        ntasks = max(min_tasks,
+                     min(self.target_ntasks,
+                         available_resources['cores']))
+
+        # Apply the same task count to both full and restart runs.
+        for step in self.steps.values():
+            step.set_resources(ntasks=ntasks, min_tasks=min_tasks)
 
     # no run() method is needed
 
