@@ -1388,6 +1388,10 @@ def run_optional_bespoke_interpolation(
     if not do_bespoke_interp:
         return
 
+    if nProcs is None:
+        raise ValueError("nProcs must be provided as an int or str")
+    nProcs = str(nProcs)
+
     if subset_bounds is not None:
         if bedmachine_dataset is not None:
             bedmachine_dataset = subset_gridded_dataset_to_bounds(
