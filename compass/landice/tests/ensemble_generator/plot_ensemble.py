@@ -380,7 +380,7 @@ for idx, run in enumerate(runs):
             valid_run = False
 
         # calculate qoi's requiring spatial output
-        DS = xr.open_mfdataset(run + '/output/' + 'output_*.nc',
+        DS = xr.open_mfdataset(run + '/output/' + 'output*.nc',
                                combine='nested', concat_dim='Time',
                                decode_timedelta=False,
                                chunks={"Time": 10})
