@@ -521,13 +521,12 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y,
     grounding_line_mask = np.zeros(sz, dtype='i')
 
     for n in neighbors:
-        not_ice_mask = np.logical_not(np.roll(ice_mask, n, axis=[0, 1]))
-        margin_mask = np.logical_or(margin_mask, not_ice_mask)
+        shifted_ice = np.roll(ice_mask, n, axis=[0, 1])
+        margin_mask = np.logical_or(margin_mask, ~shifted_ice)
 
-        not_grounded_mask = np.logical_and(
-            np.logical_not(np.roll(grounded_mask,
-                                   n, axis=[0, 1])),
-            np.roll(float_mask, n, axis=[0, 1]))
+        shifted_grounded = np.roll(grounded_mask, n, axis=[0, 1])
+        shifted_float = np.roll(float_mask, n, axis=[0, 1])
+        not_grounded_mask = (~shifted_grounded) & shifted_float
         grounding_line_mask = np.logical_or(grounding_line_mask,
                                             not_grounded_mask)
 
