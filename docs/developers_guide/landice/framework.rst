@@ -53,6 +53,13 @@ thickness to the final MALI mesh.
 :py:func:`compass.landice.mesh.clean_up_after_interp()` performs some final
 clean up steps after interpolation for the AIS mesh case.
 
+:py:func:`compass.landice.mesh.clip_mesh_to_bounding_box()` updates an
+existing MPAS region mask so cells, edges, and vertices outside a bounding
+box ``[x_min, x_max, y_min, y_max]`` are culled.  This is useful when a
+``geojson_file`` supplies the initial cull mask but the final culled mesh
+should also be limited to the valid extent of an input gridded dataset.
+The bounding box must be ordered as ``[x_min, x_max, y_min, y_max]``.
+
 :py:func:`compass.landice.mesh.gridded_flood_fill()` applies a flood-fill algorithm
 to the gridded dataset in order to separate the ice sheet from peripheral ice.
 
@@ -87,7 +94,12 @@ based on user-defined density functions and config options.
 cell widths determined by py:func:`compass.landice.mesh.build_cell_width()`, using Jigsaw
 and MPAS-Tools functions. Culls the mesh based on config options, interpolates
 all available fields from the gridded dataset to the MALI mesh using the bilinear
-method, and marks domain boundaries as Dirichlet cells.
+method, and marks domain boundaries as Dirichlet cells.  When a ``geojson_file``
+is supplied, :py:func:`compass.landice.mesh.build_mali_mesh()` can also take an
+optional ``bounding_box`` argument to clip the cull mask to
+``[x_min, x_max, y_min, y_max]`` before culling.  This additional clipping is
+applied to the mask, not to the rectangular geometry passed to
+:py:func:`compass.landice.mesh.set_rectangular_geom_points_and_edges()`.
 
 :py:func:`compass.landice.mesh.make_region_masks()` creates region masks using regions
 defined in Geometric Features repository. It is only used by the ``antarctica``

@@ -54,7 +54,17 @@ class Mesh(Step):
                             target='greenland_2km_2024_01_29.epsg3413.nc',
                             database='')
 
-    # no setup() method is needed
+    def setup(self):
+        """
+        Add the configured geojson cull-mask file as an input.
+        """
+        section = self.config['greenland']
+        geojson_filename = section.get('geojson_filename')
+
+        self.add_input_file(filename=geojson_filename,
+                            package='compass.landice.tests.greenland',
+                            target=geojson_filename,
+                            database=None)
 
     def run(self):
         """
@@ -71,9 +81,12 @@ class Mesh(Step):
         data_path = section_gis.get('data_path')
         measures_filename = section_gis.get("measures_filename")
         bedmachine_filename = section_gis.get("bedmachine_filename")
+        geojson_filename = section_gis.get('geojson_filename')
 
         measures_dataset = os.path.join(data_path, measures_filename)
         bedmachine_dataset = os.path.join(data_path, bedmachine_filename)
+
+        bounding_box = self._get_bedmachine_bounding_box(bedmachine_dataset)
 
         section_name = 'mesh'
 
@@ -91,8 +104,10 @@ class Mesh(Step):
         build_mali_mesh(
             self, cell_width, x1, y1, geom_points, geom_edges,
             mesh_name=self.mesh_filename, section_name=section_name,
-            gridded_dataset=source_gridded_dataset_1km,
-            projection=src_proj, geojson_file=None)
+            gridded_dataset=source_gridded_dataset_1km, projection=src_proj,
+            geojson_file=geojson_filename,
+            bounding_box=bounding_box,
+        )
 
         # Create scrip file for the newly generated mesh
         logger.info('creating scrip file for destination mesh')
@@ -161,3 +176,14 @@ class Mesh(Step):
         ds["observedThicknessTendencyUncertainty"] = dHdtErr
         # Write the data to disk
         ds.to_netcdf(self.mesh_filename, 'a')
+
+    def _get_bedmachine_bounding_box(self, bedmachine_filepath):
+
+        ds = xr.open_dataset(bedmachine_filepath)
+
+        x_min = ds.x1.min()
+        x_max = ds.x1.max()
+        y_min = ds.y1.min()
+        y_max = ds.y1.max()
+
+        return [x_min, x_max, y_min, y_max]
