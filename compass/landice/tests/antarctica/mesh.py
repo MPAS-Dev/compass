@@ -63,23 +63,52 @@ class Mesh(Step):
 
         section_ais = config['antarctica']
 
+        def _specified(value):
+            return value is not None and str(value).strip().lower() not in [
+                '', 'none']
+
         parallel_executable = config.get('parallel', 'parallel_executable')
         nProcs = section_ais.get('nProcs')
         src_proj = section_ais.get("src_proj")
-        data_path = section_ais.get('data_path')
-        measures_filename = section_ais.get("measures_filename")
-        bedmachine_filename = section_ais.get("bedmachine_filename")
+        data_path = section_ais.get('data_path', fallback=None)
+        measures_filename = section_ais.get("measures_filename", fallback=None)
+        bedmachine_filename = section_ais.get(
+            "bedmachine_filename", fallback=None)
 
-        measures_dataset = os.path.join(data_path, measures_filename)
-        bedmachine_dataset = os.path.join(data_path, bedmachine_filename)
+        use_bedmachine_interp = _specified(data_path) and \
+            _specified(bedmachine_filename)
+        use_measures_interp = _specified(data_path) and \
+            _specified(measures_filename)
+
+        if use_bedmachine_interp:
+            bedmachine_dataset = os.path.join(data_path, bedmachine_filename)
+        else:
+            bedmachine_dataset = None
+            logger.info('Skipping BedMachine interpolation because '
+                        '`data_path` and/or `bedmachine_filename` are '
+                        'not specified in config.')
+
+        if use_measures_interp:
+            measures_dataset = os.path.join(data_path, measures_filename)
+        else:
+            measures_dataset = None
+            logger.info('Skipping MEaSUREs interpolation because '
+                        '`data_path` and/or `measures_filename` are '
+                        'not specified in config.')
 
         section_name = 'mesh'
 
         # TODO: do we want to add this to the config file?
         source_gridded_dataset = 'antarctica_8km_2024_01_29.nc'
 
-        bm_updated_gridded_dataset = add_bedmachine_thk_to_ais_gridded_data(
-            self, source_gridded_dataset, bedmachine_dataset)
+        if use_bedmachine_interp:
+            bm_updated_gridded_dataset = (
+                add_bedmachine_thk_to_ais_gridded_data(
+                    self,
+                    source_gridded_dataset,
+                    bedmachine_dataset))
+        else:
+            bm_updated_gridded_dataset = source_gridded_dataset
 
         logger.info('calling build_cell_width')
         cell_width, x1, y1, geom_points, geom_edges, floodFillMask = \
@@ -133,27 +162,34 @@ class Mesh(Step):
         check_call(args, logger=logger)
 
         # Create scrip file for the newly generated mesh
-        logger.info('creating scrip file for destination mesh')
-        dst_scrip_file = f"{self.mesh_filename.split('.')[:-1][0]}_scrip.nc"
-        scrip_from_mpas(self.mesh_filename, dst_scrip_file)
+        do_bespoke_interp = use_bedmachine_interp or use_measures_interp
+        if do_bespoke_interp:
+            logger.info('creating scrip file for destination mesh')
+            dst_scrip_file = \
+                f"{self.mesh_filename.split('.')[:-1][0]}_scrip.nc"
+            scrip_from_mpas(self.mesh_filename, dst_scrip_file)
 
         # Now perform bespoke interpolation of geometry and velocity data
         # from their respective sources
-        interp_gridded2mali(self, bedmachine_dataset, dst_scrip_file,
-                            parallel_executable, nProcs,
-                            self.mesh_filename, src_proj, variables="all")
+        if use_bedmachine_interp:
+            interp_gridded2mali(self, bedmachine_dataset, dst_scrip_file,
+                                parallel_executable, nProcs,
+                                self.mesh_filename, src_proj,
+                                variables="all")
 
         # only interpolate a subset of MEaSUREs variables onto the MALI mesh
         measures_vars = ['observedSurfaceVelocityX',
                          'observedSurfaceVelocityY',
                          'observedSurfaceVelocityUncertainty']
-        interp_gridded2mali(self, measures_dataset, dst_scrip_file,
-                            parallel_executable, nProcs,
-                            self.mesh_filename, src_proj,
-                            variables=measures_vars)
+        if use_measures_interp:
+            interp_gridded2mali(self, measures_dataset, dst_scrip_file,
+                                parallel_executable, nProcs,
+                                self.mesh_filename, src_proj,
+                                variables=measures_vars)
 
         # perform some final cleanup details
-        clean_up_after_interp(self.mesh_filename)
+        if do_bespoke_interp:
+            clean_up_after_interp(self.mesh_filename)
 
         # create graph file
         logger.info('creating graph.info')

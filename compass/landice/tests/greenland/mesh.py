@@ -75,18 +75,42 @@ class Mesh(Step):
 
         section_gis = config['greenland']
 
+        def _specified(value):
+            return value is not None and str(value).strip().lower() not in [
+                '', 'none']
+
         parallel_executable = config.get('parallel', 'parallel_executable')
         nProcs = section_gis.get('nProcs')
         src_proj = section_gis.get("src_proj")
-        data_path = section_gis.get('data_path')
-        measures_filename = section_gis.get("measures_filename")
-        bedmachine_filename = section_gis.get("bedmachine_filename")
+        data_path = section_gis.get('data_path', fallback=None)
+        measures_filename = section_gis.get("measures_filename", fallback=None)
+        bedmachine_filename = section_gis.get(
+            "bedmachine_filename", fallback=None)
         geojson_filename = section_gis.get('geojson_filename')
 
-        measures_dataset = os.path.join(data_path, measures_filename)
-        bedmachine_dataset = os.path.join(data_path, bedmachine_filename)
+        use_bedmachine_interp = _specified(data_path) and \
+            _specified(bedmachine_filename)
+        use_measures_interp = _specified(data_path) and \
+            _specified(measures_filename)
 
-        bounding_box = self._get_bedmachine_bounding_box(bedmachine_dataset)
+        if use_bedmachine_interp:
+            bedmachine_dataset = os.path.join(data_path, bedmachine_filename)
+            bounding_box = self._get_bedmachine_bounding_box(
+                bedmachine_dataset)
+        else:
+            bedmachine_dataset = None
+            bounding_box = None
+            logger.info('Skipping BedMachine interpolation because '
+                        '`data_path` and/or `bedmachine_filename` are '
+                        'not specified in config.')
+
+        if use_measures_interp:
+            measures_dataset = os.path.join(data_path, measures_filename)
+        else:
+            measures_dataset = None
+            logger.info('Skipping MEaSUREs interpolation because '
+                        '`data_path` and/or `measures_filename` are '
+                        'not specified in config.')
 
         section_name = 'mesh'
 
@@ -110,27 +134,33 @@ class Mesh(Step):
         )
 
         # Create scrip file for the newly generated mesh
-        logger.info('creating scrip file for destination mesh')
-        dst_scrip_file = f"{self.mesh_filename.split('.')[:-1][0]}_scrip.nc"
-        scrip_from_mpas(self.mesh_filename, dst_scrip_file)
+        do_bespoke_interp = use_bedmachine_interp or use_measures_interp
+        if do_bespoke_interp:
+            logger.info('creating scrip file for destination mesh')
+            dst_scrip_file = \
+                f"{self.mesh_filename.split('.')[:-1][0]}_scrip.nc"
+            scrip_from_mpas(self.mesh_filename, dst_scrip_file)
 
         # Now perform bespoke interpolation of geometry and velocity data
         # from their respective sources
-        interp_gridded2mali(self, bedmachine_dataset, dst_scrip_file,
-                            parallel_executable, nProcs,
-                            self.mesh_filename, src_proj, variables="all")
+        if use_bedmachine_interp:
+            interp_gridded2mali(self, bedmachine_dataset, dst_scrip_file,
+                                parallel_executable, nProcs,
+                                self.mesh_filename, src_proj, variables="all")
 
         # only interpolate a subset of MEaSUREs variables onto the MALI mesh
         measures_vars = ['observedSurfaceVelocityX',
                          'observedSurfaceVelocityY',
                          'observedSurfaceVelocityUncertainty']
-        interp_gridded2mali(self, measures_dataset, dst_scrip_file,
-                            parallel_executable, nProcs,
-                            self.mesh_filename, src_proj,
-                            variables=measures_vars)
+        if use_measures_interp:
+            interp_gridded2mali(self, measures_dataset, dst_scrip_file,
+                                parallel_executable, nProcs,
+                                self.mesh_filename, src_proj,
+                                variables=measures_vars)
 
         # perform some final cleanup details
-        clean_up_after_interp(self.mesh_filename)
+        if do_bespoke_interp:
+            clean_up_after_interp(self.mesh_filename)
 
         # create graph file
         logger.info('creating graph.info')
