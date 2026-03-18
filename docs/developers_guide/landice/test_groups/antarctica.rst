@@ -50,3 +50,9 @@ From here, dataset interpolation happens, starting with the standard
 interpolation script applied to the standard dataset, followed by bespoke
 interpolation of the high resolution BedMachine and MEASURES datasets.
 The step completes with some clean up and creation of a graph file.
+
+The BedMachine and MEaSUREs remapping steps are optional and are controlled by
+``[antarctica]`` config options. If ``data_path`` or the corresponding
+filename is unset (empty or ``None``), that dataset interpolation is skipped.
+The default config includes both datasets, so interpolation is enabled by
+default.

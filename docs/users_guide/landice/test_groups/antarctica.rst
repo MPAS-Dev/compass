@@ -115,4 +115,9 @@ or the processed data files could be added to the server on Anvil and downloaded
 as needed. However, until then, this test case provides a reproducible workflow
 for setting up Antarctic meshes at varying resolutions
 
+The BedMachine and MEaSUREs interpolation is optional. If ``data_path`` or the
+corresponding filename in ``[antarctica]`` is unset (empty or ``None``), that
+dataset interpolation step is skipped. The default config values include both
+datasets, so interpolation is enabled by default.
+
 There is no model integration step.

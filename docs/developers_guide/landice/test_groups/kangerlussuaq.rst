@@ -28,3 +28,9 @@ mesh_gen
 The :py:class:`compass.landice.tests.kangerlussuaq.mesh_gen.MeshGen`
 calls the :py:class:`compass.landice.tests.kangerlussuaq.mesh.Mesh` to create
 the variable resolution Kangerlussuaq Glacier mesh.
+
+Optional BedMachine and MEaSUREs interpolation can be enabled through
+``[mesh]`` config options ``data_path``, ``bedmachine_filename``, and
+``measures_filename``. If enabled, source datasets are subset to the
+configured mesh bounding box before SCRIP generation and conservative
+remapping.

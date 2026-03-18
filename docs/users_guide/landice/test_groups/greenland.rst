@@ -156,3 +156,8 @@ that pre-processing could be integrated into a new step in COMPASS, or
 the processed data files could be added to the server on Anvil and downloaded
 as needed. However, until then, this test case provides a reproducible workflow
 for setting up Greenland meshes at varying resolutions.
+
+The BedMachine and MEaSUREs interpolation is optional. If ``data_path`` or the
+corresponding filename in ``[greenland]`` is unset (empty or ``None``), that
+dataset interpolation step is skipped. The default config values include both
+datasets, so interpolation is enabled by default.

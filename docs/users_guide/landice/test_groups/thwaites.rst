@@ -66,6 +66,12 @@ The other test cases do not use config options.
     use_dist_to_grounding_line = True
     use_dist_to_edge = True
 
+    # optional bespoke interpolation inputs
+    # set to None to skip optional BedMachine/MEaSUREs remapping
+    data_path = None
+    bedmachine_filename = None
+    measures_filename = None
+
 decomposition_test
 ------------------
 
@@ -92,3 +98,7 @@ on the the config options listed above. This will not be the same as the
 pre-generated 4-14km mesh used in ``decomposition_test`` and ``restart_test``
 because it uses a newer version of Jigsaw. Note that the basal friction
 optimization is performed separately and is not part of this test case.
+
+If optional BedMachine and/or MEaSUREs datasets are configured, they are
+subset to the mesh bounding box from ``[mesh]`` before SCRIP generation and
+conservative remapping to reduce memory and runtime.

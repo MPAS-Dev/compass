@@ -65,11 +65,21 @@ the mesh generation options are adjusted through the config file.
     use_dist_to_grounding_line = False
     use_dist_to_edge = True
 
+    # optional bespoke interpolation inputs
+    # set to None to skip optional BedMachine/MEaSUREs remapping
+    data_path = None
+    bedmachine_filename = None
+    measures_filename = None
+
 mesh_gen
 --------
 
 ``landice/humboldt/default`` creates a 1-10km variable resolution mesh. 
 There is no model integration step.
+
+If optional BedMachine and/or MEaSUREs datasets are configured, they are
+subset to the mesh bounding box from ``[mesh]`` before SCRIP generation and
+conservative remapping to reduce memory and runtime.
 
 decomposition_tests
 -------------------

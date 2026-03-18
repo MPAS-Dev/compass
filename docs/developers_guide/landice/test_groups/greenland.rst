@@ -101,3 +101,8 @@ velocity observations are conservatively remapped from BedMachine v5 and
 MEaSUREs 2006-2010 data sets. Finally, there is some cleanup to set large
 velocity uncertainties outside the ice mask, check the sign of the basal heat
 flux, and set reasonable values for dH/dt and its uncertainty.
+
+The BedMachine and MEaSUREs remapping steps are optional and are controlled by
+``[greenland]`` config options. If ``data_path`` or the corresponding filename
+is unset (empty or ``None``), that dataset interpolation is skipped. The
+default config includes both datasets, so interpolation is enabled by default.

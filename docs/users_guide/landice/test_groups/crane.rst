@@ -73,6 +73,12 @@ the mesh generation options are adjusted through the config file.
     use_dist_to_edge = False
     use_bed = False
 
+    # optional bespoke interpolation inputs
+    # set to None to skip optional BedMachine/MEaSUREs remapping
+    data_path = None
+    bedmachine_filename = None
+    measures_filename = None
+
 mesh_gen
 --------
 
@@ -80,3 +86,7 @@ mesh_gen
 The default is 500m-1km resolution with mesh density determined by
 observed ice speed and distance to grounding line. There is no model
 integration step.
+
+If optional BedMachine and/or MEaSUREs datasets are configured, they are
+subset to the mesh bounding box from ``[mesh]`` before SCRIP generation and
+conservative remapping to reduce memory and runtime.
