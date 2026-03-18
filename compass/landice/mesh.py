@@ -2,6 +2,7 @@ import os
 import re
 import sys
 import time
+import uuid
 from shutil import copyfile
 
 import jigsawpy
@@ -1337,7 +1338,8 @@ def subset_gridded_dataset_to_bounds(
             f'{source_dataset}.')
 
     base = os.path.splitext(os.path.basename(source_dataset))[0]
-    subset_dataset = f'{base}_{subset_tag}_subset.nc'
+    unique_id = uuid.uuid4().hex
+    subset_dataset = f'{base}_{subset_tag}_{unique_id}_subset.nc'
     logger.info(f'Writing subset dataset: {subset_dataset}')
     subset.to_netcdf(subset_dataset)
 
@@ -1392,36 +1394,51 @@ def run_optional_bespoke_interpolation(
         raise ValueError("nProcs must be provided as an int or str")
     nProcs = str(nProcs)
 
-    if subset_bounds is not None:
+    subset_files = []
+
+    try:
+        if subset_bounds is not None:
+            if bedmachine_dataset is not None:
+                bedmachine_dataset = subset_gridded_dataset_to_bounds(
+                    bedmachine_dataset,
+                    subset_bounds,
+                    'bedmachine',
+                    logger)
+                subset_files.append(bedmachine_dataset)
+            if measures_dataset is not None:
+                measures_dataset = subset_gridded_dataset_to_bounds(
+                    measures_dataset,
+                    subset_bounds,
+                    'measures',
+                    logger)
+                subset_files.append(measures_dataset)
+
+        logger.info('creating scrip file for destination mesh')
+        mesh_base = os.path.splitext(mesh_filename)[0]
+        dst_scrip_file = f'{mesh_base}_scrip.nc'
+        scrip_from_mpas(mesh_filename, dst_scrip_file)
+
         if bedmachine_dataset is not None:
-            bedmachine_dataset = subset_gridded_dataset_to_bounds(
-                bedmachine_dataset,
-                subset_bounds,
-                'bedmachine',
-                logger)
+            interp_gridded2mali(self, bedmachine_dataset, dst_scrip_file,
+                                parallel_executable, nProcs,
+                                mesh_filename, src_proj, variables='all')
+
         if measures_dataset is not None:
-            measures_dataset = subset_gridded_dataset_to_bounds(
-                measures_dataset,
-                subset_bounds,
-                'measures',
-                logger)
+            measures_vars = ['observedSurfaceVelocityX',
+                             'observedSurfaceVelocityY',
+                             'observedSurfaceVelocityUncertainty']
+            interp_gridded2mali(self, measures_dataset, dst_scrip_file,
+                                parallel_executable, nProcs,
+                                mesh_filename, src_proj,
+                                variables=measures_vars)
 
-    logger.info('creating scrip file for destination mesh')
-    dst_scrip_file = f"{mesh_filename.split('.')[:-1][0]}_scrip.nc"
-    scrip_from_mpas(mesh_filename, dst_scrip_file)
-
-    if bedmachine_dataset is not None:
-        interp_gridded2mali(self, bedmachine_dataset, dst_scrip_file,
-                            parallel_executable, nProcs,
-                            mesh_filename, src_proj, variables='all')
-
-    if measures_dataset is not None:
-        measures_vars = ['observedSurfaceVelocityX',
-                         'observedSurfaceVelocityY',
-                         'observedSurfaceVelocityUncertainty']
-        interp_gridded2mali(self, measures_dataset, dst_scrip_file,
-                            parallel_executable, nProcs,
-                            mesh_filename, src_proj,
-                            variables=measures_vars)
-
-    clean_up_after_interp(mesh_filename)
+        clean_up_after_interp(mesh_filename)
+    finally:
+        for subset_file in subset_files:
+            if os.path.exists(subset_file):
+                logger.info(f'Removing subset dataset: {subset_file}')
+                try:
+                    os.remove(subset_file)
+                except OSError as exc:
+                    logger.warning('Could not remove subset dataset '
+                                   f'{subset_file}: {exc}')
