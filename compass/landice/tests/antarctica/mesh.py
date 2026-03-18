@@ -1,17 +1,14 @@
-import os
-
 import netCDF4
 from mpas_tools.logging import check_call
-from mpas_tools.scrip.from_mpas import scrip_from_mpas
 
 from compass.landice.mesh import (
     add_bedmachine_thk_to_ais_gridded_data,
     build_cell_width,
     build_mali_mesh,
-    clean_up_after_interp,
-    interp_gridded2mali,
+    get_optional_interp_datasets,
     make_region_masks,
     preprocess_ais_data,
+    run_optional_bespoke_interpolation,
 )
 from compass.model import make_graph_file
 from compass.step import Step
@@ -63,45 +60,18 @@ class Mesh(Step):
 
         section_ais = config['antarctica']
 
-        def _specified(value):
-            return value is not None and str(value).strip().lower() not in [
-                '', 'none']
-
         parallel_executable = config.get('parallel', 'parallel_executable')
         nProcs = section_ais.get('nProcs')
         src_proj = section_ais.get("src_proj")
-        data_path = section_ais.get('data_path', fallback=None)
-        measures_filename = section_ais.get("measures_filename", fallback=None)
-        bedmachine_filename = section_ais.get(
-            "bedmachine_filename", fallback=None)
-
-        use_bedmachine_interp = _specified(data_path) and \
-            _specified(bedmachine_filename)
-        use_measures_interp = _specified(data_path) and \
-            _specified(measures_filename)
-
-        if use_bedmachine_interp:
-            bedmachine_dataset = os.path.join(data_path, bedmachine_filename)
-        else:
-            bedmachine_dataset = None
-            logger.info('Skipping BedMachine interpolation because '
-                        '`data_path` and/or `bedmachine_filename` are '
-                        'not specified in config.')
-
-        if use_measures_interp:
-            measures_dataset = os.path.join(data_path, measures_filename)
-        else:
-            measures_dataset = None
-            logger.info('Skipping MEaSUREs interpolation because '
-                        '`data_path` and/or `measures_filename` are '
-                        'not specified in config.')
+        bedmachine_dataset, measures_dataset = get_optional_interp_datasets(
+            section_ais, logger)
 
         section_name = 'mesh'
 
         # TODO: do we want to add this to the config file?
         source_gridded_dataset = 'antarctica_8km_2024_01_29.nc'
 
-        if use_bedmachine_interp:
+        if bedmachine_dataset is not None:
             bm_updated_gridded_dataset = (
                 add_bedmachine_thk_to_ais_gridded_data(
                     self,
@@ -161,35 +131,11 @@ class Mesh(Step):
                 'observedThicknessTendencyUncertainty', 'thickness']
         check_call(args, logger=logger)
 
-        # Create scrip file for the newly generated mesh
-        do_bespoke_interp = use_bedmachine_interp or use_measures_interp
-        if do_bespoke_interp:
-            logger.info('creating scrip file for destination mesh')
-            dst_scrip_file = \
-                f"{self.mesh_filename.split('.')[:-1][0]}_scrip.nc"
-            scrip_from_mpas(self.mesh_filename, dst_scrip_file)
-
-        # Now perform bespoke interpolation of geometry and velocity data
-        # from their respective sources
-        if use_bedmachine_interp:
-            interp_gridded2mali(self, bedmachine_dataset, dst_scrip_file,
-                                parallel_executable, nProcs,
-                                self.mesh_filename, src_proj,
-                                variables="all")
-
-        # only interpolate a subset of MEaSUREs variables onto the MALI mesh
-        measures_vars = ['observedSurfaceVelocityX',
-                         'observedSurfaceVelocityY',
-                         'observedSurfaceVelocityUncertainty']
-        if use_measures_interp:
-            interp_gridded2mali(self, measures_dataset, dst_scrip_file,
-                                parallel_executable, nProcs,
-                                self.mesh_filename, src_proj,
-                                variables=measures_vars)
-
-        # perform some final cleanup details
-        if do_bespoke_interp:
-            clean_up_after_interp(self.mesh_filename)
+        run_optional_bespoke_interpolation(
+            self, self.mesh_filename, src_proj,
+            parallel_executable, nProcs,
+            bedmachine_dataset=bedmachine_dataset,
+            measures_dataset=measures_dataset)
 
         # create graph file
         logger.info('creating graph.info')

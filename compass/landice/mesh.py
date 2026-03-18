@@ -14,6 +14,7 @@ from mpas_tools.logging import check_call
 from mpas_tools.mesh.conversion import convert, cull
 from mpas_tools.mesh.creation import build_planar_mesh
 from mpas_tools.mesh.creation.sort_mesh import sort_mesh
+from mpas_tools.scrip.from_mpas import scrip_from_mpas
 from netCDF4 import Dataset
 from scipy.interpolate import NearestNDInterpolator, interpn
 
@@ -1191,3 +1192,113 @@ def clean_up_after_interp(fname):
         data.variables['observedSurfaceVelocityUncertainty'][:] == 0.0)
     data.variables['observedSurfaceVelocityUncertainty'][0, mask[0, :]] = 1.0
     data.close()
+
+
+def get_optional_interp_datasets(section, logger):
+    """
+    Determine whether optional bespoke interpolation inputs are configured.
+
+    Parameters
+    ----------
+    section : configparser.SectionProxy
+        Config section containing optional interpolation options
+
+    logger : logging.Logger
+        Logger for status messages
+
+    Returns
+    -------
+    bedmachine_dataset : str or None
+        Path to BedMachine dataset if configured, otherwise ``None``
+
+    measures_dataset : str or None
+        Path to MEaSUREs dataset if configured, otherwise ``None``
+    """
+
+    def _specified(value):
+        return value is not None and str(value).strip().lower() not in [
+            '', 'none']
+
+    data_path = section.get('data_path', fallback=None)
+    bedmachine_filename = section.get('bedmachine_filename', fallback=None)
+    measures_filename = section.get('measures_filename', fallback=None)
+
+    use_bedmachine_interp = _specified(data_path) and \
+        _specified(bedmachine_filename)
+    use_measures_interp = _specified(data_path) and \
+        _specified(measures_filename)
+
+    if use_bedmachine_interp:
+        bedmachine_dataset = os.path.join(data_path, bedmachine_filename)
+    else:
+        bedmachine_dataset = None
+        logger.info('Skipping BedMachine interpolation because '
+                    '`data_path` and/or `bedmachine_filename` are '
+                    'not specified in config.')
+
+    if use_measures_interp:
+        measures_dataset = os.path.join(data_path, measures_filename)
+    else:
+        measures_dataset = None
+        logger.info('Skipping MEaSUREs interpolation because '
+                    '`data_path` and/or `measures_filename` are '
+                    'not specified in config.')
+
+    return bedmachine_dataset, measures_dataset
+
+
+def run_optional_bespoke_interpolation(
+        self, mesh_filename, src_proj, parallel_executable, nProcs,
+        bedmachine_dataset=None, measures_dataset=None):
+    """
+    Run optional bespoke interpolation and cleanup if datasets are configured.
+
+    Parameters
+    ----------
+    self : compass.step.Step
+        Step instance providing logger and context
+
+    mesh_filename : str
+        Destination MALI mesh file to interpolate to
+
+    src_proj : str
+        Source dataset projection for SCRIP generation
+
+    parallel_executable : str
+        Parallel launcher executable (e.g. ``srun``/``mpirun``)
+
+    nProcs : int or str
+        Number of processes for regridding weight generation
+
+    bedmachine_dataset : str, optional
+        BedMachine dataset path; if ``None`` this interpolation is skipped
+
+    measures_dataset : str, optional
+        MEaSUREs dataset path; if ``None`` this interpolation is skipped
+    """
+
+    logger = self.logger
+    do_bespoke_interp = bedmachine_dataset is not None or \
+        measures_dataset is not None
+    if not do_bespoke_interp:
+        return
+
+    logger.info('creating scrip file for destination mesh')
+    dst_scrip_file = f"{mesh_filename.split('.')[:-1][0]}_scrip.nc"
+    scrip_from_mpas(mesh_filename, dst_scrip_file)
+
+    if bedmachine_dataset is not None:
+        interp_gridded2mali(self, bedmachine_dataset, dst_scrip_file,
+                            parallel_executable, nProcs,
+                            mesh_filename, src_proj, variables='all')
+
+    if measures_dataset is not None:
+        measures_vars = ['observedSurfaceVelocityX',
+                         'observedSurfaceVelocityY',
+                         'observedSurfaceVelocityUncertainty']
+        interp_gridded2mali(self, measures_dataset, dst_scrip_file,
+                            parallel_executable, nProcs,
+                            mesh_filename, src_proj,
+                            variables=measures_vars)
+
+    clean_up_after_interp(mesh_filename)
