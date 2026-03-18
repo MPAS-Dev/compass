@@ -637,13 +637,10 @@ def build_cell_width(self, section_name, gridded_dataset,
 
     f.close()
 
-    # Get bounds defined by user, or use bound of gridded dataset
-    bnds = [np.min(x1), np.max(x1), np.min(y1), np.max(y1)]
-    bnds_options = ['x_min', 'x_max', 'y_min', 'y_max']
-    for index, option in enumerate(bnds_options):
-        bnd = section.get(option)
-        if bnd != 'None':
-            bnds[index] = float(bnd)
+    # Get bounds defined by user, or use bounds from the gridded dataset.
+    bnds = get_mesh_config_bounding_box(
+        section,
+        default_bounds=[np.min(x1), np.max(x1), np.min(y1), np.max(y1)])
 
     geom_points, geom_edges = set_rectangular_geom_points_and_edges(*bnds)
 
@@ -1247,9 +1244,111 @@ def get_optional_interp_datasets(section, logger):
     return bedmachine_dataset, measures_dataset
 
 
+def get_mesh_config_bounding_box(section, default_bounds=None):
+    """
+    Get bounding-box coordinates from a mesh config section.
+
+    Parameters
+    ----------
+    section : configparser.SectionProxy
+        Mesh config section containing ``x_min``, ``x_max``, ``y_min``,
+        and ``y_max``
+
+    default_bounds : list of float, optional
+        Default bounds in the form ``[x_min, x_max, y_min, y_max]`` to use
+        when config values are missing or set to ``None``
+
+    Returns
+    -------
+    bounding_box : list of float
+        Bounding box in the form ``[x_min, x_max, y_min, y_max]``
+    """
+
+    if default_bounds is None:
+        default_bounds = [None, None, None, None]
+
+    def _get_bound(option, default):
+        value = section.get(option, fallback=None)
+        if value is None or str(value).strip().lower() in ['', 'none']:
+            if default is None:
+                raise ValueError(
+                    f'Missing required config option `{option}` and no '
+                    'default was provided.')
+            return float(default)
+        return float(value)
+
+    return [
+        _get_bound('x_min', default_bounds[0]),
+        _get_bound('x_max', default_bounds[1]),
+        _get_bound('y_min', default_bounds[2]),
+        _get_bound('y_max', default_bounds[3])]
+
+
+def subset_gridded_dataset_to_bounds(
+        source_dataset, bounding_box, subset_tag, logger):
+    """
+    Subset a gridded source dataset to a bounding box.
+
+    Parameters
+    ----------
+    source_dataset : str
+        Path to source gridded dataset
+
+    bounding_box : list of float
+        Bounding box in the form ``[x_min, x_max, y_min, y_max]``
+
+    subset_tag : str
+        Tag to include in the subset filename
+
+    logger : logging.Logger
+        Logger for status messages
+
+    Returns
+    -------
+    subset_dataset : str
+        Path to subsetted gridded dataset written to the current directory
+    """
+
+    x_min, x_max, y_min, y_max = bounding_box
+    ds = xarray.open_dataset(source_dataset)
+
+    if 'x1' in ds and 'y1' in ds:
+        x_name = 'x1'
+        y_name = 'y1'
+    elif 'x' in ds and 'y' in ds:
+        x_name = 'x'
+        y_name = 'y'
+    else:
+        ds.close()
+        raise ValueError(
+            f'Could not find x/y coordinates in {source_dataset}. '
+            'Expected either x1/y1 or x/y.')
+
+    subset = ds.where(
+        (ds[x_name] >= x_min) & (ds[x_name] <= x_max) &
+        (ds[y_name] >= y_min) & (ds[y_name] <= y_max),
+        drop=True)
+
+    if subset.sizes[x_name] == 0 or subset.sizes[y_name] == 0:
+        subset.close()
+        ds.close()
+        raise ValueError(
+            f'Bounding box {bounding_box} produced an empty subset for '
+            f'{source_dataset}.')
+
+    base = os.path.splitext(os.path.basename(source_dataset))[0]
+    subset_dataset = f'{base}_{subset_tag}_subset.nc'
+    logger.info(f'Writing subset dataset: {subset_dataset}')
+    subset.to_netcdf(subset_dataset)
+
+    subset.close()
+    ds.close()
+    return subset_dataset
+
+
 def run_optional_bespoke_interpolation(
         self, mesh_filename, src_proj, parallel_executable, nProcs,
-        bedmachine_dataset=None, measures_dataset=None):
+        bedmachine_dataset=None, measures_dataset=None, subset_bounds=None):
     """
     Run optional bespoke interpolation and cleanup if datasets are configured.
 
@@ -1275,6 +1374,12 @@ def run_optional_bespoke_interpolation(
 
     measures_dataset : str, optional
         MEaSUREs dataset path; if ``None`` this interpolation is skipped
+
+    subset_bounds : list of float, optional
+        Optional source-dataset subset bounds in the form
+        ``[x_min, x_max, y_min, y_max]``. If provided, BedMachine and
+        MEaSUREs datasets are subsetted before SCRIP generation and
+        interpolation.
     """
 
     logger = self.logger
@@ -1282,6 +1387,20 @@ def run_optional_bespoke_interpolation(
         measures_dataset is not None
     if not do_bespoke_interp:
         return
+
+    if subset_bounds is not None:
+        if bedmachine_dataset is not None:
+            bedmachine_dataset = subset_gridded_dataset_to_bounds(
+                bedmachine_dataset,
+                subset_bounds,
+                'bedmachine',
+                logger)
+        if measures_dataset is not None:
+            measures_dataset = subset_gridded_dataset_to_bounds(
+                measures_dataset,
+                subset_bounds,
+                'measures',
+                logger)
 
     logger.info('creating scrip file for destination mesh')
     dst_scrip_file = f"{mesh_filename.split('.')[:-1][0]}_scrip.nc"

@@ -1,6 +1,7 @@
 from compass.landice.mesh import (
     build_cell_width,
     build_mali_mesh,
+    get_mesh_config_bounding_box,
     get_optional_interp_datasets,
     run_optional_bespoke_interpolation,
 )
@@ -77,6 +78,7 @@ class Mesh(Step):
         nProcs = str(self.cpus_per_task)
         run_optional_bespoke_interpolation(
             self, mesh_name, 'gis-gimp', parallel_executable, nProcs,
+            subset_bounds=get_mesh_config_bounding_box(section),
             bedmachine_dataset=bedmachine_dataset,
             measures_dataset=measures_dataset)
 
