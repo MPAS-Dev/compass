@@ -222,6 +222,7 @@ greenland
    run_model.RunModel.run
 
    mesh.Mesh
+   mesh.Mesh.setup
    mesh.Mesh.run
 
    mesh_gen.MeshGen
@@ -491,6 +492,7 @@ Landice Framework
 
    mesh.add_bedmachine_thk_to_ais_gridded_data
    mesh.clean_up_after_interp
+   mesh.clip_mesh_to_bounding_box
    mesh.gridded_flood_fill
    mesh.interp_gridded2mali
    mesh.mpas_flood_fill
