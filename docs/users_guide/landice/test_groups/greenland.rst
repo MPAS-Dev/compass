@@ -96,7 +96,8 @@ The other test cases do not use config options.
    # (default value is for Perlmutter)
    measures_filename = greenland_vel_mosaic500_extrap.nc
 
-   # projection of the source datasets, according to the dictionary keys
+   # projection of optional interpolation source datasets,
+   # according to the dictionary keys
    # create_scrip_file_from_planar_rectangular_grid from MPAS_Tools
    src_proj = gis-gimp
 
@@ -158,3 +159,5 @@ The BedMachine and MEaSUREs interpolation is optional. If ``data_path`` or the
 corresponding filename in ``[greenland]`` is unset (empty or ``None``), that
 dataset interpolation step is skipped. The default config values include both
 datasets, so interpolation is enabled by default.
+The base-mesh projection used in ``build_mali_mesh()`` is fixed for this test
+case.

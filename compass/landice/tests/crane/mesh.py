@@ -48,6 +48,7 @@ class Mesh(Step):
         mesh_name = 'Crane.nc'
         section_name = 'mesh'
         section = config[section_name]
+        src_proj = section.get('src_proj')
         bedmachine_dataset, measures_dataset = get_optional_interp_datasets(
             section, logger)
 
@@ -67,7 +68,7 @@ class Mesh(Step):
         parallel_executable = config.get('parallel', 'parallel_executable')
         nProcs = section.get('nProcs')
         run_optional_bespoke_interpolation(
-            self, mesh_name, 'ais-bedmap2', parallel_executable, nProcs,
+            self, mesh_name, src_proj, parallel_executable, nProcs,
             subset_bounds=get_mesh_config_bounding_box(section),
             bedmachine_dataset=bedmachine_dataset,
             measures_dataset=measures_dataset)

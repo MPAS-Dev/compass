@@ -82,7 +82,8 @@ the mesh generation options are adjusted through the config file.
     # (default value is for Perlmutter)
     measures_filename = antarctica_ice_velocity_450m_v2_edits_extrap.nc
 
-    # projection of the source datasets, according to the dictionary keys
+    # projection of optional interpolation source datasets,
+    # according to the dictionary keys
     # create_scrip_file_from_planar_rectangular_grid from MPAS_Tools
     src_proj = ais-bedmap2
 
@@ -119,5 +120,7 @@ The BedMachine and MEaSUREs interpolation is optional. If ``data_path`` or the
 corresponding filename in ``[antarctica]`` is unset (empty or ``None``), that
 dataset interpolation step is skipped. The default config values include both
 datasets, so interpolation is enabled by default.
+The base-mesh projection used in ``build_mali_mesh()`` is fixed for this test
+case.
 
 There is no model integration step.

@@ -106,3 +106,4 @@ The BedMachine and MEaSUREs remapping steps are optional and are controlled by
 ``[greenland]`` config options. If ``data_path`` or the corresponding filename
 is unset (empty or ``None``), that dataset interpolation is skipped. The
 default config includes both datasets, so interpolation is enabled by default.
+The base-mesh projection in ``build_mali_mesh()`` is fixed for this test case.

@@ -91,7 +91,7 @@ class Mesh(Step):
             self, cell_width, x1, y1, geom_points, geom_edges,
             mesh_name=self.mesh_filename, section_name=section_name,
             gridded_dataset=bm_updated_gridded_dataset,
-            projection=src_proj, geojson_file=None)
+            projection='ais-bedmap2', geojson_file=None)
 
         # Now that we have base mesh with standard interpolation
         # perform advanced interpolation for specific fields

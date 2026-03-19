@@ -102,7 +102,8 @@ class Mesh(Step):
         build_mali_mesh(
             self, cell_width, x1, y1, geom_points, geom_edges,
             mesh_name=self.mesh_filename, section_name=section_name,
-            gridded_dataset=source_gridded_dataset_1km, projection=src_proj,
+            gridded_dataset=source_gridded_dataset_1km,
+            projection='gis-gimp',
             geojson_file=geojson_filename,
             bounding_box=bounding_box,
         )

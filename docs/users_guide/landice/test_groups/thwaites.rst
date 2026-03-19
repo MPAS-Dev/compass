@@ -46,9 +46,6 @@ The other test cases do not use config options.
     # Set to a value <= 0 if you do not want
     # to cull based on distance from margin.
     cull_distance = 10.0
-
-    # number of processors to use for ESMF_RegridWeightGen
-    nProcs = 128
     
     # mesh density parameters
     # minimum cell spacing (meters)
@@ -74,6 +71,14 @@ The other test cases do not use config options.
     data_path = None
     bedmachine_filename = None
     measures_filename = None
+
+    # projection of optional interpolation source datasets,
+    # according to the dictionary keys
+    # create_scrip_file_from_planar_rectangular_grid from MPAS_Tools
+    src_proj = ais-bedmap2
+
+    # number of processors to use for ESMF_RegridWeightGen
+    nProcs = 128
 
 decomposition_test
 ------------------
@@ -105,3 +110,5 @@ optimization is performed separately and is not part of this test case.
 If optional BedMachine and/or MEaSUREs datasets are configured, they are
 subset to the mesh bounding box from ``[mesh]`` before SCRIP generation and
 conservative remapping to reduce memory and runtime.
+The base-mesh projection used in ``build_mali_mesh()`` is fixed for this test
+case.

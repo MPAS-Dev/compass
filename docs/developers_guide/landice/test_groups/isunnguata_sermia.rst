@@ -30,8 +30,10 @@ calls the :py:class:`compass.landice.tests.isunnguata_sermia.mesh.Mesh` to creat
 the variable resolution Isunnguata Sermia mesh.
 
 Optional BedMachine and MEaSUREs interpolation can be enabled through
-``[mesh]`` config options ``nProcs``, ``data_path``,
+``[mesh]`` config options ``nProcs``, ``src_proj``, ``data_path``,
 ``bedmachine_filename``, and ``measures_filename``. If enabled, source
 datasets are subset to the
 configured mesh bounding box before SCRIP generation and conservative
 remapping.
+The ``src_proj`` option is used for optional bespoke remapping only; the
+base-mesh projection in ``build_mali_mesh()`` is fixed for this test case.
