@@ -4,6 +4,7 @@ import xarray as xr
 from compass.landice.mesh import (
     build_cell_width,
     build_mali_mesh,
+    get_mesh_config_bounding_box,
     get_optional_interp_datasets,
     make_region_masks,
     run_optional_bespoke_interpolation,
@@ -81,8 +82,15 @@ class Mesh(Step):
             section_gis, logger)
 
         if bedmachine_dataset is not None:
-            bounding_box = self._get_bedmachine_bounding_box(
-                bedmachine_dataset)
+            ds_bm = xr.open_dataset(bedmachine_dataset)
+            default_bounds = [
+                float(ds_bm.x1.min()),
+                float(ds_bm.x1.max()),
+                float(ds_bm.y1.min()),
+                float(ds_bm.y1.max())]
+            ds_bm.close()
+            bounding_box = get_mesh_config_bounding_box(
+                section_gis, default_bounds=default_bounds)
         else:
             bounding_box = None
 
@@ -158,14 +166,3 @@ class Mesh(Step):
         ds["observedThicknessTendencyUncertainty"] = dHdtErr
         # Write the data to disk
         ds.to_netcdf(self.mesh_filename, 'a')
-
-    def _get_bedmachine_bounding_box(self, bedmachine_filepath):
-
-        ds = xr.open_dataset(bedmachine_filepath)
-
-        x_min = ds.x1.min()
-        x_max = ds.x1.max()
-        y_min = ds.y1.min()
-        y_max = ds.y1.max()
-
-        return [x_min, x_max, y_min, y_max]
