@@ -1,5 +1,17 @@
+"""
+Ensemble generator test group for MALI simulations.
+
+Provides test cases for generating ensembles for UQ and sensitivity studies.
+"""
+
 from compass.landice.tests.ensemble_generator.branch_ensemble import (
     BranchEnsemble,
+)
+from compass.landice.tests.ensemble_generator.sgh_analysis import (
+    AnalysisEnsemble,
+)
+from compass.landice.tests.ensemble_generator.sgh_restart import (
+    RestartEnsemble,
 )
 from compass.landice.tests.ensemble_generator.spinup_ensemble import (
     SpinupEnsemble,
@@ -14,6 +26,8 @@ class EnsembleGenerator(TestGroup):
     """
     def __init__(self, mpas_core):
         """
+        Parameters
+        ----------
         mpas_core : compass.landice.Landice
             the MPAS core that this test group belongs to
         """
@@ -22,3 +36,5 @@ class EnsembleGenerator(TestGroup):
 
         self.add_test_case(SpinupEnsemble(test_group=self))
         self.add_test_case(BranchEnsemble(test_group=self))
+        self.add_test_case(AnalysisEnsemble(test_group=self))
+        self.add_test_case(RestartEnsemble(test_group=self))
