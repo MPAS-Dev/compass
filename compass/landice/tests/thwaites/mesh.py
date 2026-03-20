@@ -67,11 +67,15 @@ class Mesh(Step):
 
         parallel_executable = config.get('parallel', 'parallel_executable')
         nProcs = section.get('nProcs')
-        run_optional_bespoke_interpolation(
-            self, mesh_name, src_proj, parallel_executable, nProcs,
-            subset_bounds=get_mesh_config_bounding_box(section),
-            bedmachine_dataset=bedmachine_dataset,
-            measures_dataset=measures_dataset)
+        # Only interpolate data if interpolate_data is True in mesh_gen.cfg
+        interpolate_data = section.getboolean(
+            'interpolate_data', fallback=False)
+        if interpolate_data:
+            run_optional_bespoke_interpolation(
+                self, mesh_name, src_proj, parallel_executable, nProcs,
+                subset_bounds=get_mesh_config_bounding_box(section),
+                bedmachine_dataset=bedmachine_dataset,
+                measures_dataset=measures_dataset)
 
         logger.info('creating graph.info')
         make_graph_file(mesh_filename=mesh_name,

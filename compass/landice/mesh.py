@@ -1330,12 +1330,19 @@ def subset_gridded_dataset_to_bounds(
         (ds[y_name] >= y_min) & (ds[y_name] <= y_max),
         drop=True)
 
-    if subset.sizes[x_name] == 0 or subset.sizes[y_name] == 0:
+    # Check for empty subset, handling possible mismatch
+    # between variable and dimension names
+    x_dim = x_name if x_name in subset.sizes else (
+        'x' if 'x' in subset.sizes else None)
+    y_dim = y_name if y_name in subset.sizes else (
+        'y' if 'y' in subset.sizes else None)
+    if x_dim is None or y_dim is None or subset.sizes[x_dim] == 0 or subset.sizes[y_dim] == 0:  # noqa
         subset.close()
         ds.close()
         raise ValueError(
             f'Bounding box {bounding_box} produced an empty subset for '
-            f'{source_dataset}.')
+            f'{source_dataset}. Dimension names in subset: '
+            f'{list(subset.sizes.keys())}')
 
     base = os.path.splitext(os.path.basename(source_dataset))[0]
     unique_id = uuid.uuid4().hex

@@ -70,6 +70,8 @@ the mesh generation options are adjusted through the config file.
     use_bed = False
 
     [antarctica]
+    # Whether to interpolate data (controls run_optional_bespoke_interpolation)
+    interpolate_data = True
     # path to directory containing BedMachine and Measures datasets
     # (default value is for Perlmutter)
     data_path = /global/cfs/cdirs/fanssie/standard_datasets/AIS_datasets
@@ -82,8 +84,7 @@ the mesh generation options are adjusted through the config file.
     # (default value is for Perlmutter)
     measures_filename = antarctica_ice_velocity_450m_v2_edits_extrap.nc
 
-    # projection of optional interpolation source datasets,
-    # according to the dictionary keys
+    # projection of the source datasets, according to the dictionary keys
     # create_scrip_file_from_planar_rectangular_grid from MPAS_Tools
     src_proj = ais-bedmap2
 

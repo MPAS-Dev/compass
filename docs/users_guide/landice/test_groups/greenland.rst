@@ -84,20 +84,24 @@ The other test cases do not use config options.
    use_bed = True
 
    [greenland]
+   # Whether to interpolate data (controls run_optional_bespoke_interpolation)
+   interpolate_data = True
    # path to directory containing BedMachine and Measures datasets
    # (default value is for Perlmutter)
    data_path = /global/cfs/cdirs/fanssie/standard_datasets/GIS_datasets/
+
+   # geojson used to create the cull mask in mesh generation
+   geojson_filename = greenland_only_outline_45km_buffer_latlon_singlepart.geojson
 
    # filename of the BedMachine thickness and bedTopography dataset
    # (default value is for Perlmutter)
    bedmachine_filename = BedMachineGreenland-v6_edits_floodFill_extrap.nc
 
-   # filename of the MEASURES ice velocity dataset
+   # filename of the MEaSUREs ice velocity dataset
    # (default value is for Perlmutter)
    measures_filename = greenland_vel_mosaic500_extrap.nc
 
-   # projection of optional interpolation source datasets,
-   # according to the dictionary keys
+   # projection of the source datasets, according to the dictionary keys
    # create_scrip_file_from_planar_rectangular_grid from MPAS_Tools
    src_proj = gis-gimp
 

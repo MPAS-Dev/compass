@@ -131,11 +131,15 @@ class Mesh(Step):
                 'observedThicknessTendencyUncertainty', 'thickness']
         check_call(args, logger=logger)
 
-        run_optional_bespoke_interpolation(
-            self, self.mesh_filename, src_proj,
-            parallel_executable, nProcs,
-            bedmachine_dataset=bedmachine_dataset,
-            measures_dataset=measures_dataset)
+        # Only interpolate data if interpolate_data is True in mesh_gen.cfg
+        interpolate_data = section_ais.getboolean(
+            'interpolate_data', fallback=False)
+        if interpolate_data:
+            run_optional_bespoke_interpolation(
+                self, self.mesh_filename, src_proj,
+                parallel_executable, nProcs,
+                bedmachine_dataset=bedmachine_dataset,
+                measures_dataset=measures_dataset)
 
         # create graph file
         logger.info('creating graph.info')
