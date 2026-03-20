@@ -1,4 +1,10 @@
-from compass.landice.mesh import build_cell_width, build_mali_mesh
+from compass.landice.mesh import (
+    build_cell_width,
+    build_mali_mesh,
+    get_mesh_config_bounding_box,
+    get_optional_interp_datasets,
+    run_optional_bespoke_interpolation,
+)
 from compass.model import make_graph_file
 from compass.step import Step
 
@@ -48,8 +54,13 @@ class Mesh(Step):
         Run this step of the test case
         """
         logger = self.logger
+        config = self.config
         section_name = 'mesh'
+        section = config[section_name]
         mesh_name = 'Isunnguata_Sermia.nc'
+        src_proj = section.get('src_proj')
+        bedmachine_dataset, measures_dataset = get_optional_interp_datasets(
+            section, logger)
 
         logger.info('calling build_cell_width')
         cell_width, x1, y1, geom_points, geom_edges, floodMask = \
@@ -62,6 +73,18 @@ class Mesh(Step):
             mesh_name=mesh_name, section_name=section_name,
             gridded_dataset='greenland_1km_2024_01_29.epsg3413.icesheetonly.nc',  # noqa
             projection='gis-gimp', geojson_file='Isunnguata_Sermia.geojson')
+
+        parallel_executable = config.get('parallel', 'parallel_executable')
+        nProcs = section.get('nProcs')
+        # Only interpolate data if interpolate_data is True in mesh_gen.cfg
+        interpolate_data = section.getboolean(
+            'interpolate_data', fallback=False)
+        if interpolate_data:
+            run_optional_bespoke_interpolation(
+                self, mesh_name, src_proj, parallel_executable, nProcs,
+                subset_bounds=get_mesh_config_bounding_box(section),
+                bedmachine_dataset=bedmachine_dataset,
+                measures_dataset=measures_dataset)
 
         logger.info('creating graph.info')
         make_graph_file(mesh_filename=mesh_name,

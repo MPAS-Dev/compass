@@ -55,9 +55,6 @@ The other test cases do not use config options.
    # to cull based on distance from margin.
    cull_distance = 10.0
 
-   # number of processors to use for ESMF_RegridWeightGen
-   nProcs = 128
-
    # mesh density parameters
    # minimum cell spacing (meters)
    min_spac = 3.e3
@@ -87,15 +84,20 @@ The other test cases do not use config options.
    use_bed = True
 
    [greenland]
+   # Whether to interpolate data (controls run_optional_bespoke_interpolation)
+   interpolate_data = True
    # path to directory containing BedMachine and Measures datasets
    # (default value is for Perlmutter)
    data_path = /global/cfs/cdirs/fanssie/standard_datasets/GIS_datasets/
+
+   # geojson used to create the cull mask in mesh generation
+   geojson_filename = greenland_only_outline_45km_buffer_latlon_singlepart.geojson
 
    # filename of the BedMachine thickness and bedTopography dataset
    # (default value is for Perlmutter)
    bedmachine_filename = BedMachineGreenland-v6_edits_floodFill_extrap.nc
 
-   # filename of the MEASURES ice velocity dataset
+   # filename of the MEaSUREs ice velocity dataset
    # (default value is for Perlmutter)
    measures_filename = greenland_vel_mosaic500_extrap.nc
 
@@ -156,3 +158,10 @@ that pre-processing could be integrated into a new step in COMPASS, or
 the processed data files could be added to the server on Anvil and downloaded
 as needed. However, until then, this test case provides a reproducible workflow
 for setting up Greenland meshes at varying resolutions.
+
+The BedMachine and MEaSUREs interpolation is optional. If ``data_path`` or the
+corresponding filename in ``[greenland]`` is unset (empty or ``None``), that
+dataset interpolation step is skipped. The default config values include both
+datasets, so interpolation is enabled by default.
+The base-mesh projection used in ``build_mali_mesh()`` is fixed for this test
+case.

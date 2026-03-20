@@ -493,12 +493,16 @@ Landice Framework
    mesh.add_bedmachine_thk_to_ais_gridded_data
    mesh.clean_up_after_interp
    mesh.clip_mesh_to_bounding_box
+   mesh.get_mesh_config_bounding_box
+   mesh.get_optional_interp_datasets
    mesh.gridded_flood_fill
    mesh.interp_gridded2mali
    mesh.mpas_flood_fill
    mesh.preprocess_ais_data
+   mesh.run_optional_bespoke_interpolation
    mesh.set_rectangular_geom_points_and_edges
    mesh.set_cell_width
+   mesh.subset_gridded_dataset_to_bounds
    mesh.get_dist_to_edge_and_gl
    mesh.build_cell_width
    mesh.build_mali_mesh

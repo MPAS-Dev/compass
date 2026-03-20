@@ -70,6 +70,8 @@ the mesh generation options are adjusted through the config file.
     use_bed = False
 
     [antarctica]
+    # Whether to interpolate data (controls run_optional_bespoke_interpolation)
+    interpolate_data = True
     # path to directory containing BedMachine and Measures datasets
     # (default value is for Perlmutter)
     data_path = /global/cfs/cdirs/fanssie/standard_datasets/AIS_datasets
@@ -114,5 +116,12 @@ Eventually that pre-processing could be integrated into a new step in COMPASS,
 or the processed data files could be added to the server on Anvil and downloaded
 as needed. However, until then, this test case provides a reproducible workflow
 for setting up Antarctic meshes at varying resolutions
+
+The BedMachine and MEaSUREs interpolation is optional. If ``data_path`` or the
+corresponding filename in ``[antarctica]`` is unset (empty or ``None``), that
+dataset interpolation step is skipped. The default config values include both
+datasets, so interpolation is enabled by default.
+The base-mesh projection used in ``build_mali_mesh()`` is fixed for this test
+case.
 
 There is no model integration step.
