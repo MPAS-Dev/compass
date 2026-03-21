@@ -71,6 +71,9 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,  # noq
     if machine is None:
         machine = discover_machine()
 
+    if not machine:
+        machine = None
+
     if config_file is None and machine is None:
         raise ValueError('At least one of config_file and machine is needed.')
 
@@ -423,6 +426,9 @@ def _get_basic_config(config_file, machine, mpas_model_path, mpas_core):
     test
     """
     config = CompassConfigParser()
+
+    if not machine:
+        machine = None
 
     if config_file is not None:
         config.add_user_config(config_file)
