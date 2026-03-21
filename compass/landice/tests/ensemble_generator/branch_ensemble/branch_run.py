@@ -4,8 +4,8 @@ import shutil
 import netCDF4
 
 import compass.namelist
-from compass.io import symlink
 from compass.job import write_job_script
+from compass.load_script import symlink_load_script
 from compass.model import run_model
 from compass.step import Step
 
@@ -166,14 +166,7 @@ class BranchRun(Step):
                          pre_run_commands=pre_run_cmd,
                          post_run_commands=post_run_cmd)
 
-        # COMPASS does not create symlinks for the load script in step dirs,
-        # so use the standard approach for creating that symlink in each
-        # step dir.
-        if 'LOAD_COMPASS_ENV' in os.environ:
-            script_filename = os.environ['LOAD_COMPASS_ENV']
-            # make a symlink to the script for loading the compass conda env.
-            symlink(script_filename, os.path.join(self.work_dir,
-                                                  'load_compass_env.sh'))
+        symlink_load_script(self.work_dir)
 
     def run(self):
         """
