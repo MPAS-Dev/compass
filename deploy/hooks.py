@@ -26,9 +26,16 @@ def pre_spack(ctx: DeployContext) -> dict[str, Any] | None:
     _check_unsupported(ctx.machine, toolchain_pairs)
 
     updates: dict[str, Any] = {}
+    exclude_packages = _get_spack_exclude_packages(ctx.config)
+    _maybe_exclude_e3sm_hdf5_netcdf(
+        exclude_packages=exclude_packages, machine_config=ctx.machine_config
+    )
+
     spack_path = _get_spack_path(ctx.config, ctx.machine, ctx.machine_config)
     if spack_path is not None:
         updates['spack'] = {'spack_path': spack_path}
+    if exclude_packages:
+        updates.setdefault('spack', {})['exclude_packages'] = exclude_packages
 
     if _with_albany(ctx):
         _check_albany_support(ctx.machine, toolchain_pairs)
@@ -103,6 +110,35 @@ def _get_toolchain_pairs(ctx: DeployContext) -> list[tuple[str, str]]:
         if compiler and mpi:
             toolchain_pairs.append((compiler, mpi))
     return toolchain_pairs
+
+
+def _get_spack_exclude_packages(config) -> list[str]:
+    spack_cfg = config.get('spack', {})
+    if not isinstance(spack_cfg, dict):
+        return []
+
+    exclude_packages = spack_cfg.get('exclude_packages', [])
+    if exclude_packages is None:
+        return []
+    if isinstance(exclude_packages, str):
+        return [exclude_packages]
+
+    return [str(package) for package in exclude_packages]
+
+
+def _maybe_exclude_e3sm_hdf5_netcdf(
+    exclude_packages: list[str], machine_config
+) -> None:
+    use_bundle = False
+    if machine_config.has_section('deploy') and machine_config.has_option(
+        'deploy', 'use_e3sm_hdf5_netcdf'
+    ):
+        use_bundle = machine_config.getboolean(
+            'deploy', 'use_e3sm_hdf5_netcdf'
+        )
+
+    if not use_bundle and 'hdf5_netcdf' not in exclude_packages:
+        exclude_packages.append('hdf5_netcdf')
 
 
 def _check_unsupported(
