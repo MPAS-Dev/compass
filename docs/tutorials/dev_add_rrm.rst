@@ -26,27 +26,24 @@ free to use the ``worktree`` approach instead if you are comfortable with it.
     cd add-yet-another-mesh
     git checkout -b add-yet-another-mesh
 
-Now, you will need to create a conda environment for developing compass, as
+Now, you will need to create a development environment for compass, as
 described in :ref:`dev_conda_env`.  We will assume a simple situation where
-you are working on a "supported" machine and using the default compilers and
-MPI libraries, but consult the documentation to make an environment to suit
-your needs.
+you are working on a supported machine and using the default compilers and MPI
+libraries, but consult the documentation to make an environment to suit your
+needs.
 
 .. code-block:: bash
 
   # this one will take a while the first time
-  ./conda/configure_compass_env.py --conda $HOME/miniforge --env_name compass_yam
+  ./deploy.py --prefix $HOME/compass_yam
 
-If you don't already have Miniforge3 installed in the directory pointed to by
-``--conda``, it will be installed automatically for you.  If all goes well, you
-will have a file named ``load_compass_yam*.sh``, where the details of the
-``*`` depend on your specific machine and compilers.  For example, on
-Chrysalis, you will have ``load_compass_yam_chrysalis_intel_openmpi.sh``,
-which will be the example used here:
+If all goes well, you will have one or more generated load scripts called
+``load_*.sh`` in the root of the repository.  For example, on Chrysalis, you
+could use ``load_compass_chrysalis_intel_openmpi.sh``:
 
 .. code-block:: bash
 
-  source load_compass_yam_chrysalis_intel_openmpi.sh
+  source load_compass_chrysalis_intel_openmpi.sh
 
 Now, we're ready to get the MPAS-Ocean source code from the E3SM repository:
 
