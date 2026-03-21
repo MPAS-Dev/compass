@@ -15,11 +15,10 @@ able to source:
 
 .. code-block:: bash
 
-    source load_dev_compass_1.0.0_compy_intel_impi.sh
+    source load_compass_compy_intel_impi.sh
 
 Then, you can build the MPAS model with
 
 .. code-block:: bash
 
     make [DEBUG=true] [OPENMP=true] intel-mpi
-

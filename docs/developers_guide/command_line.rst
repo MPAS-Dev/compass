@@ -8,13 +8,13 @@ scripts: ``compass list``, ``compass setup``, ``compass clean`` and
 ``compass suite``, and ``compass run``.  These are the primary user interface
 to the package, as described below.
 
-When the ``compass`` package is installed into your conda environment, you can
-run these commands as above.  If you are developing ``compass`` from a local
-branch off of https://github.com/MPAS-Dev/compass, you will need to create a
-conda environment appropriate for development (see :ref:`dev_conda_env`).
-If you do, ``compass`` will be installed in the environment in "development"
-mode, meaning you can make changes to the branch and they will be reflected
-when you call the ``compass`` command-line tool.
+When the ``compass`` package is installed into your deployment environment,
+you can run these commands as above.  If you are developing ``compass`` from a
+local branch off of https://github.com/MPAS-Dev/compass, you will need to
+create a development environment with ``./deploy.py`` (see
+:ref:`dev_conda_env`).  If you do, ``compass`` will be installed in the
+environment in editable mode, meaning you can make changes to the branch and
+they will be reflected when you call the ``compass`` command-line tool.
 
 .. _dev_compass_list:
 
