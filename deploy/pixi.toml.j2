@@ -1,0 +1,93 @@
+[workspace]
+name = "compass-dev"
+channels = [
+{%- for channel in pixi_channels %}
+  "{{ channel }}"{%- if not loop.last %},{% endif %}
+{%- endfor %}
+]
+platforms = ["{{ platform }}"]
+channel-priority = "strict"
+
+[dependencies]
+python = "{{ python }}.*"
+pip = "*"
+setuptools = "*"
+
+{%- if include_mache %}
+mache = "{{ mache }}.*"
+{%- endif %}
+
+{%- if include_jigsaw %}
+jigsawpy = "*"
+{%- endif %}
+
+cartopy = "*"
+cartopy_offlinedata = "*"
+cmocean = "*"
+esmf = {version = "{{ esmf }}.*", build = "{{ mpi_prefix }}_*"}
+ffmpeg = "*"
+geometric_features = "{{ geometric_features }}.*"
+git = "*"
+gsw = "*"
+h5py = "*"
+ipython = "*"
+jupyter = "*"
+lxml = "*"
+matplotlib-base = ">=3.9.1"
+metis = "*"
+moab = {version = "{{ moab }}.*", build = "*_tempest_*"}
+mpas_tools = "{{ mpas_tools }}.*"
+nco = "*"
+netcdf4 = {version = "*", build = "nompi_*"}
+numpy = ">=2.0,<3.0"
+{%- if platform == 'linux-64' %}
+otps = "{{ otps }}.*"
+{%- endif %}
+progressbar2 = "*"
+pyamg = ">=4.2.2"
+pyproj = "*"
+pyremap = ">=2.0.0,<3.0.0"
+requests = "*"
+"ruamel.yaml" = "*"
+scikit-image = "!=0.20.0"
+scipy = ">=1.8.0"
+shapely = ">=2.0,<3.0"
+xarray = "*"
+
+# Development
+pytest = "*"
+isort = "*"
+flake8 = "*"
+pre-commit = "*"
+
+# Documentation
+m2r = "*"
+mock = "*"
+sphinx = "*"
+sphinx_rtd_theme = "*"
+
+{%- if mpi != "nompi" %}
+c-compiler = "*"
+cmake = "*"
+cxx-compiler = "*"
+fortran-compiler = "*"
+libnetcdf = {version = "{{ netcdf_c }}.*", build = "{{ mpi_prefix }}_*"}
+netcdf-fortran = {version = "{{ netcdf_fortran }}.*", build = "{{ mpi_prefix }}_*"}
+libpnetcdf = {version = "{{ pnetcdf }}.*", build = "{{ mpi_prefix }}_*"}
+parallelio = {version = "{{ parallelio }}.*", build = "{{ mpi_prefix }}_*"}
+m4 = "*"
+make = "*"
+{{ mpi }} = "*"
+{%- if system == 'linux' %}
+libgomp = "*"
+{%- elif system == 'osx' %}
+llvm-openmp = "*"
+{%- endif %}
+{%- endif %}
+
+# CF-compliance
+cfchecker = "*"
+udunits2 = "*"
+
+# Visualization
+ncview = "*"

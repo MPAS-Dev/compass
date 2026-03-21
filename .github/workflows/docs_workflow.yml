@@ -8,7 +8,7 @@ on:
     types: [published]
 
 env:
-  PYTHON_VERSION: "3.13"
+  PYTHON_VERSION: "3.14"
 
 jobs:
   publish-docs:
@@ -16,8 +16,6 @@ jobs:
     defaults:
       run:
         shell: bash -l {0}
-    env:
-      docs_version: "latest"
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6
@@ -25,46 +23,46 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
-      - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
-        name: Set up Conda Environment
-        uses: mamba-org/setup-micromamba@v2
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v6
         with:
-          environment-name: compass_test
-          init-shell: bash
-          condarc: |
-            channel_priority: strict
-            channels:
-                - conda-forge
-                - e3sm/label/compass
-          create-args: >-
-            python=${{ env.PYTHON_VERSION }}
+          python-version: ${{ env.PYTHON_VERSION }}
 
-      - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
-        name: Install compass
+      - name: Cache pixi packages
+        uses: actions/cache@v5
+        env:
+          # Increase this value to reset cache if deploy inputs have not changed in the workflow
+          CACHE_NUMBER: 0
+        with:
+          path: |
+            ~/.cache/rattler/cache
+            ~/.pixi/bin
+          key: ${{ runner.os }}-${{ env.PYTHON_VERSION }}-pixi-${{ env.CACHE_NUMBER }}-${{ hashFiles('deploy.py', 'deploy/**', 'pyproject.toml') }}
+
+      - name: Install compass
         run: |
           git config --global url."https://github.com/".insteadOf "git@github.com:"
-          ./conda/configure_compass_env.py \
-            --env_only \
-            --env_name compass_test \
-            --python=${{ env.PYTHON_VERSION }} \
-            --verbose
-          source load_compass_test.sh
+          ./deploy.py \
+            --no-spack \
+            --python ${{ env.PYTHON_VERSION }} \
+            --recreate
+          load_script=$(find . -maxdepth 1 -type f -name 'load_compass*.sh' | sort | tail -n 1)
+          if [ -z "$load_script" ]; then
+            echo "ERROR: no generated Compass load script found" >&2
+            exit 1
+          fi
+          source "$load_script"
 
       - name: Build Sphinx Docs
         run: |
-          source load_compass_test.sh
+          load_script=$(find . -maxdepth 1 -type f -name 'load_compass*.sh' | sort | tail -n 1)
+          source "$load_script"
           cd docs
-          if [[ $GITHUB_REF_NAME == "main" ]]; then
-              export DOCS_VERSION="latest"
-          else
-              export DOCS_VERSION=${GITHUB_REF_NAME}
-          fi
-          echo "Docs version: $DOCS_VERSION"
-          echo "docs_version=$DOCS_VERSION" >> $GITHUB_ENV
           make html
       - name: Copy Docs and Commit
         run: |
-          source load_compass_test.sh
+          load_script=$(find . -maxdepth 1 -type f -name 'load_compass*.sh' | sort | tail -n 1)
+          source "$load_script"
           cd docs
           # gh-pages branch must already exist
           git clone https://github.com/MPAS-Dev/compass.git --branch gh-pages --single-branch gh-pages
@@ -74,8 +72,8 @@ jobs:
           touch .nojekyll
           # Add `index.html` to point to the `main` branch automatically.
           printf '<meta http-equiv="refresh" content="0; url=./main/index.html" />' > index.html
-          # Only replace `main` docs with latest changes. Docs for releases should be untouched.
-          export DOCS_VERSION="${{ env.docs_version }}"
+          # Replace the docs for the current branch or tag with the latest build.
+          export DOCS_VERSION="${GITHUB_REF_NAME}"
           rm -rf ${DOCS_VERSION}
           mkdir ${DOCS_VERSION}
           cp -r ../_build/html/* ${DOCS_VERSION}

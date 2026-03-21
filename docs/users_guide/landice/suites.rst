@@ -38,8 +38,8 @@ it is run on different numbers of cores (``decomposition_test``).
     landice/eismint2/enthalpy_decomposition_test
     landice/eismint2/restart_test
     landice/eismint2/enthalpy_restart_test
-    landice/greenland/restart_test
-    landice/greenland/decomposition_test
+    landice/greenland/sia_restart_test
+    landice/greenland/sia_decomposition_test
     landice/hydro_radial/restart_test
     landice/hydro_radial/decomposition_test
     landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-none_subglacialhydro
@@ -63,8 +63,8 @@ it is run on different numbers of cores (``decomposition_test``).
 humboldt_calving_tests
 ----------------------
 
-The ``humboldt_calving_tests`` test suite provide complete coverage of all
-calving laws currently support by MALI applied to a 3 km resolution
+The ``humboldt_calving_tests`` test suite provides complete coverage of all
+calving laws currently supported by MALI applied to a 3 km resolution
 Humboldt Glacier domain.
 For the tests in this suite, the velocity solver is disabled, and the velocity
 field comes from an input field, allowing for rapid testing and for testing
@@ -133,6 +133,8 @@ velocity fields, and collectively take about 15 minutes.  The tests with FO
 velocity solver each take about 100 minutes and one may prefer to run them in
 individual jobs (which is why they are listed last in the test suite).
 Each test generates a .png image summarizing the results.
+The broader ``landice/calving_dt_convergence`` test group also includes
+``eigencalving`` variants that are not part of this regression suite.
 The suite includes:
 
 .. code-block:: none

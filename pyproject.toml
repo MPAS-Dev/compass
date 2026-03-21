@@ -1,0 +1,102 @@
+[project]
+name = "compass"
+dynamic = ["version"]
+authors = [
+    { name = "COMPASS Developers", email = "mpas-developers@googlegroups.com" },
+]
+description = "Configuration Of Model for Prediction Across Scales Setups (COMPASS) is an automated system to set up test cases that match the MPAS-Model repository. All namelists and streams files begin with the default generated from the Registry.xml file, and only the changes relevant to the particular test case are altered in those files."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "BSD-3-Clause"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering",
+]
+dependencies = [
+    "cartopy",
+    "cmocean",
+    "gsw",
+    "h5py",
+    "ipython",
+    "jupyter",
+    "lxml",
+    "matplotlib",
+    "netcdf4",
+    "numpy",
+    "progressbar2",
+    "pyamg",
+    "pyproj",
+    "requests",
+    "ruamel.yaml",
+    "scipy>=1.8.0",
+    "shapely",
+    "xarray",
+]
+
+[project.scripts]
+compass = "compass.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/MPAS-Dev/MPAS-Tools"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["compass", "compass.*"]
+
+[tool.setuptools.package-data]
+compass = [
+    "*.cfg",
+    "*.csv",
+    "*.geojson",
+    "*.json",
+    "*.mat",
+    "*.nml",
+    "*.template",
+    "*.txt",
+    "*.yaml",
+    "*.README",
+    "README",
+    "namelist*",
+    "streams*",
+    "**/*.cfg",
+    "**/*.csv",
+    "**/*.geojson",
+    "**/*.json",
+    "**/*.mat",
+    "**/*.nml",
+    "**/*.template",
+    "**/*.txt",
+    "**/*.yaml",
+    "**/README",
+    "**/namelist*",
+    "**/streams*",
+]
+
+[tool.setuptools.dynamic]
+version = { attr = "compass.version.__version__" }
+
+[tool.mypy]
+python_version = "3.14"
+check_untyped_defs = true
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 79

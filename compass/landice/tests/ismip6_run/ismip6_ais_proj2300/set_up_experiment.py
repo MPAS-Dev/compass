@@ -6,8 +6,8 @@ from importlib import resources
 
 from jinja2 import Template
 
-from compass.io import symlink
 from compass.job import write_job_script
+from compass.load_script import symlink_load_script
 from compass.model import make_graph_file, run_model
 from compass.step import Step
 
@@ -290,14 +290,7 @@ class SetUpExperiment(Step):
                         graph_filename=os.path.join(self.work_dir,
                                                     'graph.info'))
 
-        # COMPASS does not create symlinks for the load script in step dirs,
-        # so use the standard approach for creating that symlink in each
-        # step dir.
-        if 'LOAD_COMPASS_ENV' in os.environ:
-            script_filename = os.environ['LOAD_COMPASS_ENV']
-            # make a symlink to the script for loading the compass conda env.
-            symlink(script_filename, os.path.join(self.work_dir,
-                                                  'load_compass_env.sh'))
+        symlink_load_script(self.work_dir)
 
         # customize job script
         self.config.set('job', 'job_name', self.exp)
