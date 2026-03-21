@@ -156,6 +156,18 @@ spack:
   mirror: null
   custom_spack: ""
 
+  # Optional list of machine-provided Spack packages to suppress so Spack can
+  # build them instead.
+  #
+  # We exclude the system `cmake` so Spack can build the newer version
+  # requested in `deploy/spack.yaml.j2`.
+  #
+  # The HDF5/NetCDF bundle is controlled dynamically in `pre_spack()` based on
+  # merged machine config, mapping [deploy] use_e3sm_hdf5_netcdf = false to
+  # excluding `hdf5_netcdf`.
+  exclude_packages:
+    - cmake
+
 jigsaw:
   # If true, build/install JIGSAW + JIGSAW-Python into the pixi env
   enabled: true
