@@ -12,14 +12,6 @@ else
     export PNETCDF="$(dirname "$(dirname "$(which pnetcdf-config)")")"
 fi
 
-if [ "${COMPASS_MACHINE:-}" = "anvil" ] && \
-   [[ "${COMPASS_COMPILER:-}" == *intel* ]]; then
-    export I_MPI_CC=icc
-    export I_MPI_CXX=icpc
-    export I_MPI_F77=ifort
-    export I_MPI_F90=ifort
-fi
-
 if [ "${COMPASS_MPI:-}" = "mvapich" ]; then
     export MV2_ENABLE_AFFINITY=0
     export MV2_SHOW_CPU_BINDING=1
