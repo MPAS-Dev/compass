@@ -1,0 +1,179 @@
+project:
+  software: "compass"
+
+  # A specific version string or "dynamic" if provided by the "pre_pixi" hook.
+  version: "dynamic"
+
+  # Machine name selection.
+  # Priority order in `mache deploy run`:
+  #   1. CLI --machine
+  #   2. this value (project.machine)
+  #   3. automatic detection (if this is "dynamic")
+  machine: "dynamic"
+
+  runtime_version_cmd: "python -c 'from compass.version import __version__; print(__version__)'"
+
+machines:
+  # Optional path containing machine config files in ini format.
+  #
+  # This MUST be a filesystem path (not a Python package) because we need to
+  # read machine configs before the target software (and its dependencies)
+  # have been installed into the pixi environment.
+  #
+  # Should be a relative path, relative to the target software repo root.
+  #
+  # Files should be named like "<machine>.cfg" (e.g. "chrysalis.cfg").
+  #
+  # Machine config is loaded in this order:
+  #   1. mache.machines/default.cfg
+  #   2. mache.machines/<machine>.cfg (if a known machine is selected)
+  #   3. <machines.path>/default.cfg (if machines.path is set)
+  #   4. <machines.path>/<machine>.cfg (if present)
+  path: compass/machines
+
+pixi:
+  # Whether to deploy the pixi environment
+  deploy: true
+
+  # Where to install the pixi project (and its .pixi directory).
+  # Absolute path is recommended for shared deployments.
+  # Environment variables will be expanded at runtime (e.g. $SCRATCH).
+  prefix: pixi-env
+
+  # Channels used by pixi for this environment.
+  channels:
+    - conda-forge
+    - e3sm/label/compass
+
+  # MPI provider for conda packages.
+  # Supported values in `mache deploy run`:
+  #   - nompi
+  #   - mpich
+  #   - openmpi
+  #   - hpc (E3SM-Unified only)
+  #   - dynamic (determine by the "pre_pixi" hook)
+  mpi: "dynamic"
+
+  # Whether to install the target software in editable/development mode.
+  install_dev_software: true
+
+# System toolchain selection (primarily for Spack-based dependencies).
+#
+# These values are resolved in `mache deploy run` with the following priority:
+#   1. CLI flags: --compiler / --mpi
+#   2. Values here
+#   3. Machine config defaults from [deploy] in merged machine config:
+#        compiler = <name>
+#        mpi_<compiler> = <mpilib>
+#
+# Use "dynamic" to request defaults from machine config.
+toolchain:
+  # One or more compiler names. Examples:
+  #   compiler: [gnu]
+  #   compiler: [gnu, intel]
+  #
+  # If empty (or "dynamic"), defaults come from merged machine config:
+  #   [deploy] compiler
+  compiler: []
+
+  # One or more MPI libraries. Examples:
+  #   mpi: [openmpi]
+  #   mpi: [mpich, openmpi]
+  #
+  # Pairing rules in `mache deploy run`:
+  #   - If both lists have the same length, they are zipped.
+  #   - If one list has length 1, it is broadcast across the other.
+  #   - If mpi is empty (or "dynamic"), defaults come from machine config:
+  #       [deploy] mpi_<compiler> (preferred)
+  #       [deploy] mpi (fallback)
+  mpi: []
+
+env_vars:
+  # Placeholder: env vars to export in the "load" script
+  set: {}
+
+spack:
+  # Whether to deploy Spack environments at all.
+  #
+  # Behavior:
+  #   - If true, deploy ALL supported Spack environments.
+  #   - If false, deploy none.
+  #
+  # This can be forced on at runtime with the `mache deploy run` CLI flag:
+  #   --deploy-spack
+  deploy: false
+
+  # Whether this target repository supports a Spack *library* environment.
+  #
+  # If true, mache will deploy one library env per toolchain pair.
+  supported: true
+
+  # Optional: deploy an additional "software" spack environment.
+  #
+  # This environment is built once (not per toolchain) with a single compiler
+  # and MPI from the merged machine config:
+  #   [deploy] software_compiler
+  #   [deploy] mpi_<software_compiler>
+  #
+  # Load scripts do NOT activate this environment; they add its view's `bin`
+  # directory to PATH.
+  software:
+    # Whether this target repository supports a Spack *software* environment.
+    supported: false
+
+    # Optional override for the environment name.
+    # Default: "<software>_software"
+    env_name: null
+
+  # Base path for the spack checkout used for deployment.
+  # If it does not exist, mache will clone the E3SM spack repo.
+  #
+  # In practice, most target repositories should set this dynamically in the
+  # `pre_spack()` hook (e.g., based on machine config) by writing:
+  #   ctx.runtime['spack']['spack_path'] = <path>
+  # This config value is a fallback.
+  #
+  # Required (either via hook/runtime or here) when spack.deploy (or
+  # --deploy-spack) is used and at least one supported spack environment is
+  # enabled.
+  # Can also be overridden temporarily via: --spack-path <path>
+  spack_path: null
+
+  # Prefix for spack environment names.
+  # Final env name is computed as: "<env_name_prefix>_<compiler>_<mpi>".
+  env_name_prefix: "compass"
+
+  # Jinja2-templated YAML file in the target repo containing a YAML list of
+  # spack specs. This is inserted into the appropriate mache spack env
+  # template for the selected machine/compiler/mpi.
+  #
+  # Expected format: a YAML mapping with keys "library" and/or "software",
+  # each containing a list of spec strings.
+  specs_template: "deploy/spack.yaml.j2"
+
+  # Optional spack build settings
+  tmpdir: null
+  mirror: null
+  custom_spack: ""
+
+jigsaw:
+  # If true, build/install JIGSAW + JIGSAW-Python into the pixi env
+  enabled: true
+
+  # Relative path in the target repo where JIGSAW-Python lives.
+  # If this is a submodule, `mache deploy run` will initialize it.
+  # If it is not, `mache deploy run` will clone it from the main JIGSAW-Python
+  # repo if missing.
+  jigsaw_python_path: jigsaw-python
+
+# Optional deployment hooks.
+#
+# Hooks run ONLY during `mache deploy run` and execute arbitrary Python code
+# from the target repository. Use only with trusted repositories.
+#
+# hooks:
+hooks:
+  file: "deploy/hooks.py"
+  entrypoints:
+    pre_pixi: "pre_pixi"
+    pre_spack: "pre_spack"
