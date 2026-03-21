@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import shlex
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -58,6 +59,11 @@ def post_spack(ctx: DeployContext) -> None:
     env_name_prefix = _get_spack_env_name_prefix(ctx)
     for compiler, mpi in _get_toolchain_pairs(ctx):
         env_name = f'{env_name_prefix}_{compiler}_{mpi}'
+        _set_ld_library_path_for_spack_env(
+            ctx=ctx,
+            spack_path=spack_path,
+            env_name=env_name,
+        )
         include_path = Path(
             spack_path,
             'var',
@@ -185,6 +191,38 @@ def _remove_esmf_include_files(include_path: Path) -> int:
                 filename.unlink()
                 removed += 1
     return removed
+
+
+def _set_ld_library_path_for_spack_env(
+    ctx: DeployContext, spack_path: str, env_name: str
+) -> None:
+    from mache.deploy.bootstrap import check_call
+
+    setup_env = Path(spack_path) / 'share' / 'spack' / 'setup-env.sh'
+    commands = ' && '.join(
+        [
+            f'source {shlex.quote(str(setup_env))}',
+            f'spack env activate {shlex.quote(env_name)}',
+            'spack config add '
+            'modules:prefix_inspections:lib:[LD_LIBRARY_PATH]',
+            'spack config add '
+            'modules:prefix_inspections:lib64:[LD_LIBRARY_PATH]',
+        ]
+    )
+    check_call(
+        commands,
+        log_filename=_get_log_filename(ctx),
+        quiet=bool(getattr(ctx.args, 'quiet', False)),
+    )
+
+
+def _get_log_filename(ctx: DeployContext) -> str:
+    for handler in ctx.logger.handlers:
+        base_filename = getattr(handler, 'baseFilename', None)
+        if base_filename:
+            return str(base_filename)
+
+    return str(Path(ctx.work_dir) / 'logs' / 'mache_deploy_run.log')
 
 
 def _get_spack_exclude_packages(config) -> list[str]:
