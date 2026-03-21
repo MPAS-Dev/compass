@@ -3,7 +3,8 @@
 Target software deployment entrypoint.
 
 - Reads pinned mache version from deploy/pins.cfg
-- Reads CLI spec from deploy/cli_spec.json and builds argparse CLI
+- Reads CLI spec from deploy/cli_spec.json plus optional
+  deploy/custom_cli_spec.json and builds argparse CLI
 - Downloads mache/deploy/bootstrap.py for either:
     * a given mache fork/branch, or
     * the pinned mache version
@@ -25,6 +26,7 @@ from urllib.request import Request, urlopen
 
 PINS_CFG = os.path.join('deploy', 'pins.cfg')
 CLI_SPEC_JSON = os.path.join('deploy', 'cli_spec.json')
+CUSTOM_CLI_SPEC_JSON = os.path.join('deploy', 'custom_cli_spec.json')
 DEPLOY_TMP_DIR = 'deploy_tmp'
 BOOTSTRAP_PATH = os.path.join(DEPLOY_TMP_DIR, 'bootstrap.py')
 
@@ -40,6 +42,10 @@ def main():
 
     pinned_mache_version, pinned_python_version = _read_pins(PINS_CFG)
     cli_spec = _read_cli_spec(CLI_SPEC_JSON)
+    cli_spec = _merge_optional_cli_spec(
+        cli_spec,
+        _read_optional_cli_spec(CUSTOM_CLI_SPEC_JSON),
+    )
 
     parser = _build_parser_from_cli_spec(cli_spec)
     args = parser.parse_args(sys.argv[1:])
@@ -223,6 +229,72 @@ def _read_cli_spec(spec_path):
         raise SystemExit(f"ERROR: {spec_path} 'arguments' must be a list")
 
     return spec
+
+
+def _read_optional_cli_spec(spec_path):
+    if not os.path.exists(spec_path):
+        return None
+
+    try:
+        with open(spec_path, 'r', encoding='utf-8') as f:
+            spec = json.load(f)
+    except (OSError, json.JSONDecodeError) as e:
+        raise SystemExit(f'ERROR: Failed to parse {spec_path}: {e!r}') from e
+
+    if not isinstance(spec, dict):
+        raise SystemExit(f'ERROR: {spec_path} must contain a JSON object')
+    if 'arguments' not in spec:
+        raise SystemExit(
+            f"ERROR: {spec_path} must contain top-level key 'arguments'"
+        )
+    if not isinstance(spec['arguments'], list):
+        raise SystemExit(f"ERROR: {spec_path} 'arguments' must be a list")
+    meta = spec.get('meta')
+    if meta is not None and not isinstance(meta, dict):
+        raise SystemExit(f"ERROR: {spec_path} 'meta' must be an object")
+
+    return spec
+
+
+def _merge_optional_cli_spec(cli_spec, custom_cli_spec):
+    if custom_cli_spec is None:
+        return cli_spec
+
+    merged = {
+        'meta': dict(cli_spec.get('meta', {})),
+        'arguments': list(cli_spec.get('arguments', [])),
+    }
+
+    seen_dests = set()
+    seen_flags = set()
+    for entry in merged['arguments']:
+        dest = entry.get('dest')
+        if dest:
+            seen_dests.add(dest)
+        for flag in entry.get('flags', []):
+            seen_flags.add(flag)
+
+    for entry in custom_cli_spec['arguments']:
+        dest = entry.get('dest')
+        if dest in seen_dests:
+            raise SystemExit(
+                'ERROR: deploy/custom_cli_spec.json duplicates generated '
+                f"dest '{dest}'"
+            )
+        flags = entry.get('flags', [])
+        duplicate_flags = [flag for flag in flags if flag in seen_flags]
+        if duplicate_flags:
+            dup_str = ', '.join(duplicate_flags)
+            raise SystemExit(
+                'ERROR: deploy/custom_cli_spec.json duplicates generated '
+                f'flags: {dup_str}'
+            )
+        merged['arguments'].append(entry)
+        if dest:
+            seen_dests.add(dest)
+        seen_flags.update(flags)
+
+    return merged
 
 
 def _build_parser_from_cli_spec(cli_spec):
