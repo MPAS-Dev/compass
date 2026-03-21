@@ -47,6 +47,36 @@ def pre_spack(ctx: DeployContext) -> dict[str, Any] | None:
     return updates
 
 
+def post_spack(ctx: DeployContext) -> None:
+    if getattr(ctx.args, 'no_spack', False):
+        return
+
+    spack_path = _resolve_spack_path(ctx)
+    if spack_path is None:
+        return
+
+    env_name_prefix = _get_spack_env_name_prefix(ctx)
+    for compiler, mpi in _get_toolchain_pairs(ctx):
+        env_name = f'{env_name_prefix}_{compiler}_{mpi}'
+        include_path = Path(
+            spack_path,
+            'var',
+            'spack',
+            'environments',
+            env_name,
+            '.spack-env',
+            'view',
+            'include',
+        )
+        removed = _remove_esmf_include_files(include_path)
+        if removed:
+            ctx.logger.info(
+                'Removed %s ESMF/ESMC include file(s) from %s',
+                removed,
+                include_path,
+            )
+
+
 def _get_version() -> str:
     here = Path(__file__).resolve().parent
     version_path = here.parent / 'compass' / 'version.py'
@@ -96,6 +126,38 @@ def _get_spack_path(config, machine: str | None, machine_config) -> str | None:
     return os.path.join(spack_base, f'dev_compass_{release_version}')
 
 
+def _resolve_spack_path(ctx: DeployContext) -> str | None:
+    spack_path = getattr(ctx.args, 'spack_path', None)
+    if spack_path not in (None, '', 'null', 'None'):
+        return os.path.abspath(os.path.expanduser(str(spack_path)))
+
+    runtime_spack = ctx.runtime.get('spack', {})
+    if isinstance(runtime_spack, dict):
+        spack_path = runtime_spack.get('spack_path')
+        if spack_path not in (None, '', 'null', 'None'):
+            return os.path.abspath(os.path.expanduser(str(spack_path)))
+
+    return _get_spack_path(ctx.config, ctx.machine, ctx.machine_config)
+
+
+def _get_spack_env_name_prefix(ctx: DeployContext) -> str:
+    env_name_prefix = 'spack_env'
+
+    spack_cfg = ctx.config.get('spack', {})
+    if isinstance(spack_cfg, dict):
+        env_name_prefix = str(
+            spack_cfg.get('env_name_prefix') or env_name_prefix
+        ).strip()
+
+    runtime_spack = ctx.runtime.get('spack', {})
+    if isinstance(runtime_spack, dict):
+        env_name_prefix = str(
+            runtime_spack.get('env_name_prefix') or env_name_prefix
+        ).strip()
+
+    return env_name_prefix
+
+
 def _get_toolchain_pairs(ctx: DeployContext) -> list[tuple[str, str]]:
     runtime_toolchain = ctx.runtime.get('toolchain', {})
     if not isinstance(runtime_toolchain, dict):
@@ -113,6 +175,16 @@ def _get_toolchain_pairs(ctx: DeployContext) -> list[tuple[str, str]]:
         if compiler and mpi:
             toolchain_pairs.append((compiler, mpi))
     return toolchain_pairs
+
+
+def _remove_esmf_include_files(include_path: Path) -> int:
+    removed = 0
+    for prefix in ('ESMC', 'esmf'):
+        for filename in include_path.glob(f'{prefix}*'):
+            if filename.is_file():
+                filename.unlink()
+                removed += 1
+    return removed
 
 
 def _get_spack_exclude_packages(config) -> list[str]:
