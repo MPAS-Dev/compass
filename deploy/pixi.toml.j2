@@ -35,7 +35,7 @@ jupyter = "*"
 lxml = "*"
 matplotlib-base = ">=3.9.1"
 metis = "*"
-moab = {version = ">=5.5.1", build = "{{ mpi_prefix }}_tempest_*"}
+moab = {version = "{{ moab }}.*", build = "*_tempest_*"}
 mpas_tools = "{{ mpas_tools }}.*"
 nco = "*"
 netcdf4 = {version = "*", build = "nompi_*"}
@@ -72,12 +72,12 @@ cmake = "*"
 cxx-compiler = "*"
 fortran-compiler = "*"
 libnetcdf = {version = "{{ netcdf_c }}.*", build = "{{ mpi_prefix }}_*"}
+netcdf-fortran = {version = "{{ netcdf_fortran }}.*", build = "{{ mpi_prefix }}_*"}
 libpnetcdf = {version = "{{ pnetcdf }}.*", build = "{{ mpi_prefix }}_*"}
 parallelio = {version = "{{ parallelio }}.*", build = "{{ mpi_prefix }}_*"}
 m4 = "*"
 make = "*"
 {{ mpi }} = "*"
-netcdf-fortran = {version = "{{ netcdf_fortran }}.*", build = "{{ mpi_prefix }}_*"}
 {%- if system == 'linux' %}
 libgomp = "*"
 {%- elif system == 'osx' %}
