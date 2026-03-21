@@ -1,0 +1,41 @@
+# Spack specs for deployment.
+#
+# This file is rendered with Jinja2 during `mache deploy run`.
+# Available template variables include:
+#   - software, machine, compiler, mpi
+#   - pins (dict of dicts from deploy/pins.cfg)
+#   - spack / pixi / all (shortcuts for pins sections)
+#
+# Expected format: a YAML mapping with one or both keys:
+#   - library:  specs for the per-toolchain "library" environment(s)
+#   - software: specs for the single "software" environment
+#
+# Backward compatibility: if this renders to a YAML list[str], it will be
+# interpreted as the "library" specs.
+#
+# Example:
+# library:
+#   - "hdf5@{{ spack.hdf5 }} +fortran +hl"
+#   - "netcdf-c@{{ spack.netcdf_c }} +mpi"
+#   - "netcdf-fortran@{{ spack.netcdf_fortran }}"
+# software:
+#   - "cmake@{{ spack.cmake }}"
+#
+library:
+  - "cmake@{{ spack.cmake }}"
+{%- if not e3sm_hdf5_netcdf %}
+  - "hdf5@{{ spack.hdf5 }}+cxx+fortran+hl+mpi+shared"
+  - "netcdf-c@{{ all.netcdf_c }}+mpi~parallel-netcdf"
+  - "netcdf-fortran@{{ all.netcdf_fortran }}"
+  - "parallel-netcdf@{{ all.pnetcdf }}+cxx+fortran"
+{%- endif %}
+  - "esmf@{{ pixi.esmf }}+mpi+netcdf~pnetcdf~external-parallelio"
+  - "metis@{{ spack.metis }}+int64+real64"
+  - "moab@{{ spack.moab }}+mpi+hdf5+netcdf+pnetcdf+metis+parmetis+tempest"
+  - "e3sm-scorpio@{{ spack.scorpio }}+mpi~timing~internal-timing~tools+malloc"
+{%- if spack.albany_enabled | default(false) %}
+  - "trilinos-for-albany@{{ spack.trilinos }}{{ spack.trilinos_variants }}"
+  - "albany@{{ spack.albany }}{{ spack.albany_variants }}"
+{%- endif %}
+
+software: []
