@@ -95,6 +95,7 @@ jobs:
         run: |
           git config --global url."https://github.com/".insteadOf "git@github.com:"
           ./deploy.py \
+            --mache-fork xylar/mache --mache-branch add-target-software-cli-flags \
             --no-spack \
             --python ${{ matrix.python-version }} \
             --recreate
