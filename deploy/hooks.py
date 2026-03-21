@@ -30,6 +30,9 @@ def pre_spack(ctx: DeployContext) -> dict[str, Any] | None:
     _maybe_exclude_e3sm_hdf5_netcdf(
         exclude_packages=exclude_packages, machine_config=ctx.machine_config
     )
+    _maybe_exclude_cmake(
+        exclude_packages=exclude_packages, machine_config=ctx.machine_config
+    )
 
     spack_path = _get_spack_path(ctx.config, ctx.machine, ctx.machine_config)
     if spack_path is not None:
@@ -139,6 +142,21 @@ def _maybe_exclude_e3sm_hdf5_netcdf(
 
     if not use_bundle and 'hdf5_netcdf' not in exclude_packages:
         exclude_packages.append('hdf5_netcdf')
+
+
+def _maybe_exclude_cmake(
+    exclude_packages: list[str], machine_config
+) -> None:
+    exclude_cmake = False
+    if machine_config.has_section('deploy') and machine_config.has_option(
+        'deploy', 'exclude_system_cmake'
+    ):
+        exclude_cmake = machine_config.getboolean(
+            'deploy', 'exclude_system_cmake'
+        )
+
+    if exclude_cmake and 'cmake' not in exclude_packages:
+        exclude_packages.append('cmake')
 
 
 def _check_unsupported(
