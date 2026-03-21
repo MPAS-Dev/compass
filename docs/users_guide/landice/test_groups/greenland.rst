@@ -13,11 +13,12 @@ and to create customized variable resolution meshes.
 
    FO velocity solution visualized in Paraview.
 
-The test group includes 3 test cases, each of which has one or more steps
-that are variants on ``run_model`` (given other names in the decomposition and
-restart test cases to distinguish multiple model runs), which performs time
-integration of the model. There is a fourth test case, ``mesh_gen``, that
-creates a variable resolution Greenland Ice Sheet mesh, with the step ``mesh``.
+The test group includes paired smoke, decomposition and restart test cases for
+the SIA and FO velocity solvers, each of which has one or more steps that are
+variants on ``run_model`` (given other names in the decomposition and restart
+test cases to distinguish multiple model runs), which performs time
+integration of the model.  There is also a ``mesh_gen`` test case that creates
+a variable resolution Greenland Ice Sheet mesh, with the step ``mesh``.
 
 The test cases in this test group can run with either the SIA or FO velocity
 solvers. Running with the FO solver requires a build of MALI that includes
@@ -109,33 +110,33 @@ The other test cases do not use config options.
 smoke_test
 ----------
 
-``landice/greenland/smoke_test`` is the default version of the greenland test
-case for a short (5-day) test run.
+The smoke-test variants are ``landice/greenland/sia_smoke_test`` and
+``landice/greenland/fo_smoke_test``.  They perform short (5-day) test runs.
 
 decomposition_test
 ------------------
 
-``landice/greenland/decomposition_test`` runs short (5-day) integrations of the
-model forward in time on 1 (``1proc_run`` step) and then on 4 cores
-(``4proc_run`` step) to make sure the resulting prognostic variables are
-bit-for-bit identical between the two runs.
+The decomposition-test variants are
+``landice/greenland/sia_decomposition_test`` and
+``landice/greenland/fo_decomposition_test``.  The SIA case compares 1-core
+and 8-core runs, whereas the FO case compares 16-core and 32-core runs.
 
 restart_test
 ------------
 
-``landice/greenland/2000m/restart_test`` first run a short (5-day) integration
-of the model forward in time (``full_run`` step).  Then, a second step
-(``restart_run``) performs a 3-day, then a 2-day run, where the second begins
-from a restart file saved by the first. Prognostic variables are compared
-between the "full" and "restart" runs at year 2 to make sure they are
-bit-for-bit identical.
+The restart-test variants are ``landice/greenland/sia_restart_test`` and
+``landice/greenland/fo_restart_test``.  Each first runs a short (5-day)
+integration of the model forward in time (``full_run`` step).  Then, a second
+step (``restart_run``) performs a 3-day run and then a 2-day run, where the
+second begins from a restart file saved by the first.  Prognostic variables
+are compared between the "full" and "restart" runs.
 
 mesh_gen
 -------------
 
 ``landice/greenland/mesh_gen`` creates a variable resolution mesh based
-on the the config options listed above. This will not be the same as the
-pre-generated 20 km mesh used in the other three test cases because it uses
+on the config options listed above. This will not be the same as the
+pre-generated 20 km mesh used in the smoke, decomposition and restart cases because it uses
 a newer version of Jigsaw. Note that the basal friction optimization is
 performed separately and is not part of this test case.
 
@@ -146,7 +147,7 @@ as well as using conservative remapping directly from the high-resolution
 BedMachine v5 and MeASUReS 2006-2010 velocity datasets. There is a fairly
 heavy degree of pre-processing done to get the BedMachine and MeASUReS
 datasets ready to be used here. The pre-processing includes renaming
-variables, setting reasonable _FillValue and missing_value attributes
+variables, setting reasonable ``_FillValue`` and ``missing_value`` attributes,
 extrapolating fields to avoid interpolation ramps at ice margins,
 updating mask values.
 

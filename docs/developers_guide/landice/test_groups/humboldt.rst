@@ -37,17 +37,17 @@ the process for setting up and running a MALI simulation for the humboldt
 configuration.  It is called by
 :py:class:`compass.landice.tests.humboldt.decomposition_test.DecompositionTest`
 and
-:py:class:`compass.landice.tests.humboldt.restartn_test.RestartTest`.
+:py:class:`compass.landice.tests.humboldt.restart_test.RestartTest`.
 
 decomposition_test
 ------------------
-The compass.landice.tests.humboldt.decomposition_test.DecompositionTest
+:py:class:`compass.landice.tests.humboldt.decomposition_test.DecompositionTest`
 performs the same simulation on different numbers of cores. It ensures
 relevant variables are identical or have expected differences.
 
 restart_test
 ------------
-The compass.landice.tests.humboldt.restart_test.RestartTest performs a
+:py:class:`compass.landice.tests.humboldt.restart_test.RestartTest` performs a
 run of a full specified duration followed by a short run plus a restart
 to equal the same total duration.  It checks that relevant variables
 are bit-for-bit when doing a restart.
@@ -55,7 +55,6 @@ are bit-for-bit when doing a restart.
 The restart step works by creating two different namelist and streams files,
 one each with landice as the suffix and one each with landice.rst as the
 suffix.
-
 
 
 

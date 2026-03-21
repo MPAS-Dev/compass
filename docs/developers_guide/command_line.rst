@@ -10,11 +10,10 @@ to the package, as described below.
 
 When the ``compass`` package is installed into your deployment environment,
 you can run these commands as above.  If you are developing ``compass`` from a
-local branch off of https://github.com/MPAS-Dev/compass, you will need to
-create a development environment with ``./deploy.py`` (see
-:ref:`dev_conda_env`).  If you do, ``compass`` will be installed in the
-environment in editable mode, meaning you can make changes to the branch and
-they will be reflected when you call the ``compass`` command-line tool.
+local branch off of https://github.com/MPAS-Dev/compass, create or update a
+development environment with ``./deploy.py`` (see :ref:`dev_conda_env`).  In
+that workflow, ``compass`` is installed in editable mode, meaning changes to
+the branch are reflected when you call the ``compass`` command-line tool.
 
 .. _dev_compass_list:
 
@@ -34,8 +33,9 @@ By default, all test cases are listed:
 
     $ compass list
     Testcases:
-       0: examples/example_compact/1km/test1
-       1: examples/example_compact/1km/test2
+       0: landice/antarctica/mesh_gen
+       1: landice/calving_dt_convergence/mismip+.specified_calving_velocity.none
+       2: landice/calving_dt_convergence/mismip+.von_Mises_stress.none
     ...
 
 The number of each test case is displayed, followed by the relative path that
@@ -46,7 +46,7 @@ command-line options.
 
 The ``-t`` or ``--test_expr`` flag can be used to supply a substring or regular
 expression that can be used to list a subset of the tests.  Think of this as
-as search expression within the default list of test-case relative paths.
+a search expression within the default list of test-case relative paths.
 
 The flags ``-n`` or ``--number`` are used to list the name (relative path) of
 a single test case with the given number.
@@ -60,21 +60,19 @@ by using the ``--suites`` flag.  The result are the flags that would be passed
 to ``compass suite`` as part of setting up this test suite.
 
 The ``-v`` or ``--verbose`` flag lists more detail about each test case,
-including its description, short name, core, configuration, subdirectory within
-the configuration and the names of its steps:
+including its short name, MPAS core, test group, subdirectory and the names of
+its steps:
 
 .. code-block:: none
 
-    $ compass list -n 0 -v
-    path:          examples/example_compact/1km/test1
-    description:   Tempate 1km test1
-    name:          test1
-    core:          examples
-    configuration: example_compact
-    subdir:        1km/test1
-    steps:
-     - step1
-     - step2
+    $ compass list -t '^landice/greenland/sia_smoke_test$' -v
+        39: path:          landice/greenland/sia_smoke_test
+             name:          smoke_test
+             MPAS core:     landice
+             test group:    greenland
+             subdir:        sia_smoke_test
+             steps:
+              - run_model
 
 See :ref:`dev_list` for more about the underlying framework.
 
@@ -96,13 +94,14 @@ The command-line options are:
 
     compass setup [-h] [-t PATH] [-n NUM [NUM ...]] [-f FILE] [-m MACH]
                   [-w PATH] [-b PATH] [-p PATH] [--suite_name SUITE]
+                  [--cached STEP [STEP ...]] [--copy_executable]
 
 The ``-h`` or ``--help`` options will display the help message describing the
 command-line options.
 
 The test cases to set up can be specified either by relative path or by number.
 The ``-t`` or ``--test`` flag is used to pass the relative path of the test
-case within the resulting work directory.  The is the path given by
+case within the resulting work directory.  This is the path given by
 :ref:`dev_compass_list`.  Only one test case at a time can be supplied to
 ``compass setup`` this way.
 
@@ -114,7 +113,7 @@ given by :ref:`dev_compass_list`.
 ``compass setup`` requires a few basic pieces of information to be able to set
 up a test case.  These include places to download and cache some data files
 used in the test cases and the location where you built the MPAS model.  There
-are a few ways to to supply these.  The ``-m`` -r ``--machine`` option is used
+are a few ways to supply these.  The ``-m`` or ``--machine`` option is used
 to tell ``compass setup`` which supported machine you're running on (leave this
 off if you're working on an "unknown" machine).  See :ref:`dev_compass_list`
 above for how to list the supported machines.
@@ -150,7 +149,7 @@ leave it with the default name ``custom``.  You can run this test suite with
 
 Test cases within the custom suite are run in the order they are supplied to
 ``compass setup``, so keep this in mind when providing the list.  Any test
-cases that depend on the output of other test cases must run afther their
+cases that depend on the output of other test cases must run after their
 dependencies.
 
 See :ref:`dev_setup` for more about the underlying framework.
@@ -172,7 +171,7 @@ options are:
 The ``-h`` or ``--help`` options will display the help message describing the
 command-line options.
 
-As with :ref:`dev_compass_setup`, the test cases to cleaned up can be specified
+As with :ref:`dev_compass_setup`, the test cases to be cleaned up can be specified
 either by relative path or by number. The meanings of the ``-t`` or ``--test``,
 ``-n`` or ``--case_number``, and ``-w`` or ``--work_dir`` flags are the same
 as in :ref:`dev_compass_setup`.
@@ -189,13 +188,14 @@ options are:
 
 .. code-block:: none
 
-    compass suite [-h] -c CORE -t SUITE [-f FILE] [-s] [--clean] [-v]
+    compass suite [-h] -c CORE -t SUITE [-f FILE] [-s] [--clean]
                   [-m MACH] [-b PATH] [-w PATH] [-p PATH]
+                  [--copy_executable]
 
 The ``-h`` or ``--help`` options will display the help message describing the
 command-line options.
 
-The required argument are ``-c`` or ``--core``, one of the :ref:`dev_cores`,
+The required arguments are ``-c`` or ``--core``, one of the :ref:`dev_cores`,
 where the test suite and its test cases reside; and ``-t`` or ``--test_suite``,
 the name of the test suite.  These are the options listed when you run
 ``compass list --suites``.
@@ -231,8 +231,8 @@ that has been set up in the current directory:
 .. code-block:: none
 
     compass run [-h] [--steps STEPS [STEPS ...]]
-                     [--no-steps NO_STEPS [NO_STEPS ...]]
-                     [suite]
+                     [--no-steps NO_STEPS [NO_STEPS ...]] [-q]
+                     [--step_is_subprocess] [suite]
 
 Whereas other ``compass`` commands are typically run in the local clone of the
 compass repo, ``compass run`` needs to be run in the appropriate work

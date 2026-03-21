@@ -3,7 +3,7 @@
 humboldt
 ========
 
-The ``landice/humboldt`` test group includes  test case for creating a
+The ``landice/humboldt`` test group includes a test case for creating a
 mesh for Humboldt Glacier, Greenland, and a series of tests for running
 simulations on a Humboldt Glacier mesh.  Note that the tests that run MALI do
 not use the output of the mesh generation step directly, but instead
@@ -68,7 +68,7 @@ the mesh generation options are adjusted through the config file.
 mesh_gen
 --------
 
-``landice/humboldt/default`` creates a 1-10km variable resolution mesh. 
+``landice/humboldt/mesh_gen`` creates a 1-10 km variable resolution mesh.
 There is no model integration step.
 
 decomposition_tests
@@ -76,7 +76,7 @@ decomposition_tests
 
 There are a number of variants of a decomposition test that runs a 5-year
 simulation on 16 (16proc_run step) and then on 32 cores (32proc_run step)
-to make sure key prognostic variables are either bit-fot-bit (without the
+to make sure key prognostic variables are either bit-for-bit (without the
 FO solver) or have only small differences within a specified tolerance (with
 the FO solver).  The FO solver is not BFB on different decompositions, but the
 differences are small.  There are variants of this test for each calving law
@@ -96,12 +96,12 @@ restart_tests
 
 There are a number of variants of a restart test that runs a 3-year simulation
 compared to a 2-year simulation followed by a restart for an additional
-1 year.  Results should be bit-for-bit identical.  
+1 year.  Results should be bit-for-bit identical.
 There are variants of this test for each calving law
 that MALI currently supports, paired with either the FO velocity solver or no
 velocity solver.
 The full set of combinations use the 3 km mesh.  There is additionally a
-decomposition test using the 1 km mesh that has calving disabled.
+restart test using the 1 km mesh that has calving disabled.
 Finally, there is a set of "full physics" tests that use von Mises calving,
 plus damage threshold calving and marine facemelting.  This configuration can
 be run with either the FO velocity solver or no velocity solver.  It is meant

@@ -18,20 +18,14 @@ default config options:
     # has been built
     mpas_model = E3SM-Project/components/mpas-ocean
 
-    # The namelists section defines paths to example_compact namelists that will be used
-    # to generate specific namelists. By default, these point to the forward and
-    # init namelists in the default_inputs directory after a successful build of
-    # the ocean model.  Change these in a custom config file if you need a different
-    # example_compact.
+    # The namelists section defines paths to default namelist templates used
+    # to generate case-specific namelists.
     [namelists]
     forward = ${paths:mpas_model}/default_inputs/namelist.ocean.forward
     init    = ${paths:mpas_model}/default_inputs/namelist.ocean.init
 
-    # The streams section defines paths to example_compact streams files that will be used
-    # to generate specific streams files. By default, these point to the forward and
-    # init streams files in the default_inputs directory after a successful build of
-    # the ocean model. Change these in a custom config file if you need a different
-    # example_compact.
+    # The streams section defines paths to default stream templates used to
+    # generate case-specific streams files.
     [streams]
     forward = ${paths:mpas_model}/default_inputs/streams.ocean.forward
     init    = ${paths:mpas_model}/default_inputs/streams.ocean.init
