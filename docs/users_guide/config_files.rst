@@ -32,7 +32,7 @@ Here is an example:
 
     # the relative or absolute path to the root of a branch where the MPAS
     # component has been built
-    mpas_mode = .
+    mpas_model = .
 
     # A root directory where MPAS standalone data can be found
     database_root = /home/xylar/data/mpas/mpas_standalonedata/mpas-ocean
@@ -231,11 +231,8 @@ looks like:
     landice_database_root = /home/xylar/data/mpas/mpas_standalonedata/mpas-albany-landice
 
 
-    # The namelists section defines paths to example_compact namelists that will be used
-    # to generate specific namelists. By default, these point to the forward and
-    # init namelists in the default_inputs directory after a successful build of
-    # the ocean model.  Change these in a custom config file if you need a different
-    # example_compact.
+    # The namelists section defines paths to default namelist templates that
+    # are used to generate case-specific namelists.
     [namelists]
 
     # source: /home/xylar/code/compass/customize_config_parser/compass/ocean/ocean.cfg
@@ -245,11 +242,8 @@ looks like:
     init = /home/xylar/code/compass/customize_config_parser/E3SM-Project/components/mpas-ocean/default_inputs/namelist.ocean.init
 
 
-    # The streams section defines paths to example_compact streams files that will be used
-    # to generate specific streams files. By default, these point to the forward and
-    # init streams files in the default_inputs directory after a successful build of
-    # the ocean model. Change these in a custom config file if you need a different
-    # example_compact.
+    # The streams section defines paths to default stream templates that are
+    # used to generate case-specific streams files.
     [streams]
 
     # source: /home/xylar/code/compass/customize_config_parser/compass/ocean/ocean.cfg
