@@ -217,7 +217,11 @@ def check_steady_state(
 
     # Determine steady state: when relative imbalance is below threshold
     # for the final portion of the simulation
-    if np.sum(np.isfinite(relative_imbalance)) > 0:
+    # No steady-state if run doesn't last 1.5x window length
+    if yr[-1] < 1.5 * window_years:
+        is_steady = False
+        final_imbalance = np.nan
+    elif np.sum(np.isfinite(relative_imbalance)) > 0:
         final_portion = \
             relative_imbalance[-max(10, len(relative_imbalance) // 10):]
         is_steady = np.nanmean(final_portion) < imbalance_threshold
@@ -482,6 +486,25 @@ results = {
     'metrics': steady_metrics,
     'file': args.filename,
 }
+
+
+def convert_to_serializable(obj):
+    """Convert numpy/non-serializable types to JSON-serializable types."""
+    if isinstance(obj, dict):
+        return {k: convert_to_serializable(v) for k, v in obj.items()}
+    elif isinstance(obj, (list, tuple)):
+        return [convert_to_serializable(item) for item in obj]
+    elif isinstance(obj, (np.bool_, bool)):
+        return bool(obj)
+    elif isinstance(obj, (np.integer, int)):
+        return int(obj)
+    elif isinstance(obj, (np.floating, float)):
+        return float(obj)
+    else:
+        return obj
+
+
+results = convert_to_serializable(results)
 
 with open(args.output_json, 'w') as f:
     json.dump(results, f, indent=2)

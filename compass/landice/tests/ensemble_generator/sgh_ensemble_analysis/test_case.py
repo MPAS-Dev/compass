@@ -44,17 +44,18 @@ class AnalysisEnsemble(TestCase):
         Configure analysis by reading ensemble directory to analyze.
         """
         config = self.config
-        section = config.get('analysis_ensemble', {})
 
-        ensemble_dir = section.get('ensemble_work_dir')
-
-        if not ensemble_dir:
+        try:
+            ensemble_dir = config.get('analysis_ensemble',
+                                      'ensemble_work_dir')
+        except Exception:
             raise ValueError(
-                "analysis_ensemble config must specify "
-                "ensemble_work_dir\n"
+                "analysis_ensemble config must specify:\n"
+                "  ensemble_work_dir\n"
                 "Add to config file:\n"
                 "[analysis_ensemble]\n"
-                "ensemble_work_dir = /path/to/completed/ensemble"
+                "ensemble_work_dir = /path/to/ensemble/work/dir\n"
+                "ensemble_config_file = /path/to/ensemble.cfg"
             )
 
         if not os.path.exists(ensemble_dir):
@@ -62,7 +63,7 @@ class AnalysisEnsemble(TestCase):
                 f"ensemble_work_dir not found: {ensemble_dir}"
             )
 
-        # Add single analysis step (config file will be auto-detected)
+        # Add single analysis step
         self.add_step(AnalysisStep(
             test_case=self,
             ensemble_dir=ensemble_dir

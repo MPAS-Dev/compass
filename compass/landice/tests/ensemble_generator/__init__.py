@@ -7,10 +7,10 @@ Provides test cases for generating ensembles for UQ and sensitivity studies.
 from compass.landice.tests.ensemble_generator.branch_ensemble import (
     BranchEnsemble,
 )
-from compass.landice.tests.ensemble_generator.sgh_analysis import (
+from compass.landice.tests.ensemble_generator.sgh_ensemble_analysis import (
     AnalysisEnsemble,
 )
-from compass.landice.tests.ensemble_generator.sgh_restart import (
+from compass.landice.tests.ensemble_generator.sgh_restart_ensemble import (
     RestartEnsemble,
 )
 from compass.landice.tests.ensemble_generator.spinup_ensemble import (
