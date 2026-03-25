@@ -19,6 +19,7 @@ from mpas_tools.mesh.creation.sort_mesh import sort_mesh
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
 from netCDF4 import Dataset
 from scipy.interpolate import NearestNDInterpolator, interpn
+from scipy.ndimage import distance_transform_edt
 
 
 def mpas_flood_fill(seed_mask, grow_mask, cellsOnCell, nEdgesOnCell,
@@ -438,8 +439,8 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
     return cell_width
 
 
-def get_dist_to_edge_and_gl(self, thk, topg, x, y,
-                            section_name, window_size=None):
+def get_dist_to_edge_and_gl(self, thk, topg, x, y, section_name,
+                            window_size=None):
     """
     Calculate distance from each point to ice edge and grounding line,
     to be used in mesh density functions in
@@ -489,8 +490,10 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y,
     dist_to_grounding_line : numpy.ndarray
         Distance from each cell to the grounding line
     """
+
     logger = self.logger
     section = self.config[section_name]
+
     tic = time.time()
 
     high_dist = float(section.get('high_dist'))
@@ -499,28 +502,29 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y,
     if window_size is None:
         window_size = max(high_dist, high_dist_bed)
     elif window_size < min(high_dist, high_dist_bed):
-        logger.info('WARNING: window_size was set to a value smaller'
-                    ' than high_dist and/or high_dist_bed. Resetting'
-                    f' window_size to {max(high_dist, high_dist_bed)},'
-                    ' which is max(high_dist, high_dist_bed)')
+        logger.info(
+            'WARNING: window_size was set smaller than high_dist and/or '
+            'high_dist_bed. Resetting window_size to '
+            f'{max(high_dist, high_dist_bed)}'
+        )
         window_size = max(high_dist, high_dist_bed)
 
-    dx = x[1] - x[0]  # assumed constant and equal in x and y
-    nx = len(x)
-    ny = len(y)
-    sz = thk.shape
+    dx = float(x[1] - x[0])
+    dy = float(y[1] - y[0])
 
-    # Create masks to define ice edge and grounding line
-    neighbors = np.array([[1, 0], [-1, 0], [0, 1], [0, -1],
-                          [1, 1], [-1, 1], [1, -1], [-1, -1]])
+    # Same masks as the current implementation
+    neighbors = np.array([
+        [1, 0], [-1, 0], [0, 1], [0, -1],
+        [1, 1], [-1, 1], [1, -1], [-1, -1]
+    ])
 
     ice_mask = thk > 0.0
     grounded_mask = np.logical_and(thk > (-1028.0 / 910.0 * topg),
                                    ice_mask)
     float_mask = np.logical_and(thk < (-1028.0 / 910.0 * topg),
                                 ice_mask)
-    margin_mask = np.zeros(sz, dtype='i')
-    grounding_line_mask = np.zeros(sz, dtype='i')
+    margin_mask = np.zeros(thk.shape, dtype=bool)
+    grounding_line_mask = np.zeros(thk.shape, dtype=bool)
 
     for n in neighbors:
         shifted_ice = np.roll(ice_mask, n, axis=[0, 1])
@@ -546,44 +550,26 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y,
     [ax.set_aspect('equal') for ax in ax]
     fig.savefig("masks.png", dpi=400)
 
-    # Calculate dist to margin and grounding line
-    [XPOS, YPOS] = np.meshgrid(x, y)
-    dist_to_edge = np.zeros(sz)
-    dist_to_grounding_line = np.zeros(sz)
+    # EDT computes distance to nearest zero.
+    # So invert the boundary masks: non-boundary=1, boundary=0.
+    dist_to_edge = distance_transform_edt(
+        ~margin_mask, sampling=(dy, dx)
+    )
+    dist_to_grounding_line = distance_transform_edt(
+        ~grounding_line_mask, sampling=(dy, dx)
+    )
 
-    d = int(np.ceil(window_size / dx))
-    rng = np.arange(-1 * d, d, dtype='i')
-    max_dist = float(d) * dx
-
-    # just look over areas with ice
-    # ind = np.where(np.ravel(thk, order='F') > 0)[0]
-    ind = np.where(np.ravel(thk, order='F') >= 0)[0]  # do it everywhere
-    for iii in range(len(ind)):
-        [i, j] = np.unravel_index(ind[iii], sz, order='F')
-
-        irng = i + rng
-        jrng = j + rng
-
-        # only keep indices in the grid
-        irng = irng[np.nonzero(np.logical_and(irng >= 0, irng < ny))]
-        jrng = jrng[np.nonzero(np.logical_and(jrng >= 0, jrng < nx))]
-
-        dist_to_here = ((XPOS[np.ix_(irng, jrng)] - x[j]) ** 2 +
-                        (YPOS[np.ix_(irng, jrng)] - y[i]) ** 2) ** 0.5
-
-        dist_to_here_edge = dist_to_here.copy()
-        dist_to_here_grounding_line = dist_to_here.copy()
-
-        dist_to_here_edge[margin_mask[np.ix_(irng, jrng)] == 0] = max_dist
-        dist_to_here_grounding_line[grounding_line_mask
-                                    [np.ix_(irng, jrng)] == 0] = max_dist
-
-        dist_to_edge[i, j] = dist_to_here_edge.min()
-        dist_to_grounding_line[i, j] = dist_to_here_grounding_line.min()
+    # Preserve the current "window_size" behavior by clipping large distances.
+    # The old code returned max_dist for anything outside the search window.
+    max_dist = float(np.ceil(window_size / max(dx, dy))) * max(dx, dy)
+    dist_to_edge = np.minimum(dist_to_edge, max_dist)
+    dist_to_grounding_line = np.minimum(dist_to_grounding_line, max_dist)
 
     toc = time.time()
-    logger.info('compass.landice.mesh.get_dist_to_edge_and_gl() took {:0.2f} '
-                'seconds'.format(toc - tic))
+    logger.info(
+        'compass.landice.mesh.get_dist_to_edge_and_gl() took '
+        f'{toc - tic:0.2f} seconds'
+    )
 
     return dist_to_edge, dist_to_grounding_line
 
