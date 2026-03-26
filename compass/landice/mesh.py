@@ -18,6 +18,7 @@ from mpas_tools.mesh.creation import build_planar_mesh
 from mpas_tools.mesh.creation.sort_mesh import sort_mesh
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
 from netCDF4 import Dataset
+from scipy import ndimage
 from scipy.interpolate import NearestNDInterpolator, interpn
 
 
@@ -78,73 +79,48 @@ def mpas_flood_fill(seed_mask, grow_mask, cellsOnCell, nEdgesOnCell,
 
 def gridded_flood_fill(field, iStart=None, jStart=None):
     """
-    Generic flood-fill routine to create mask of connected elements
-    in the desired input array (field) from a gridded dataset. This
-    is generally used to remove glaciers and ice-fields that are not
-    connected to the ice sheet. Note that there may be more efficient
-    algorithms.
+    Uses a flood fill to fill disconnected regions.
+    Any disconnected regions are set to 0.
+    This version uses scipy.ndimage.label() to identify connected
+    components of field > 0, then keeps only the component containing
+    the seed point.
 
     Parameters
     ----------
-    field : numpy.ndarray
-        Array from gridded dataset to use for flood-fill.
-        Usually ice thickness.
+    field : ndarray
+        Input 2D field. Cells with field > 0 are considered fillable.
 
-    iStart : int
-        x index from which to start flood fill for field.
-        Defaults to the center x coordinate.
-
-    jStart : int
-        y index from which to start flood fill.
-        Defaults to the center y coordinate.
+    iStart, jStart : int, optional
+        Seed location. If not provided, defaults to the center of the array.
 
     Returns
     -------
-    flood_mask : numpy.ndarray
-        mask calculated by the flood fill routine,
-        where cells connected to the ice sheet (or main feature)
-        are 1 and everything else is 0.
+    flood_mask : ndarray
+        Integer mask with 1 for the connected component containing the seed,
+        and 0 elsewhere.
     """
-
     sz = field.shape
-    searched_mask = np.zeros(sz)
-    flood_mask = np.zeros(sz)
+
     if iStart is None and jStart is None:
         iStart = sz[0] // 2
         jStart = sz[1] // 2
-    flood_mask[iStart, jStart] = 1
 
-    neighbors = np.array([[1, 0], [-1, 0], [0, 1], [0, -1]])
+    # cells eligible to be part of the connected region
+    valid = field > 0.0
 
-    lastSearchList = np.ravel_multi_index([[iStart], [jStart]],
-                                          sz, order='F')
+    # if the seed is not in a valid cell, nothing gets filled
+    if not valid[iStart, jStart]:
+        return np.zeros(sz, dtype=int)
 
-    cnt = 0
-    while len(lastSearchList) > 0:
-        cnt += 1
-        newSearchList = np.array([], dtype='i')
+    # 4-connectivity to match the original implementation
+    structure = np.array([[0, 1, 0],
+                          [1, 1, 1],
+                          [0, 1, 0]], dtype=int)
 
-        for iii in range(len(lastSearchList)):
-            [i, j] = np.unravel_index(lastSearchList[iii], sz, order='F')
-            # search neighbors
-            for n in neighbors:
-                ii = min(i + n[0], sz[0] - 1)  # don't go out of bounds
-                jj = min(j + n[1], sz[1] - 1)  # subscripts to neighbor
-                # only consider unsearched neighbors
-                if searched_mask[ii, jj] == 0:
-                    searched_mask[ii, jj] = 1  # mark as searched
+    labels, _ = ndimage.label(valid, structure=structure)
+    seed_label = labels[iStart, jStart]
 
-                    if field[ii, jj] > 0.0:
-                        flood_mask[ii, jj] = 1  # mark as ice
-                        # add to list of newly found  cells
-                        newSearchList = np.append(newSearchList,
-                                                  np.ravel_multi_index(
-                                                      [[ii], [jj]], sz,
-                                                      mode='clip',
-                                                      order='F')[0])
-        lastSearchList = newSearchList
-
-    return flood_mask
+    return (labels == seed_label).astype(int)
 
 
 def set_rectangular_geom_points_and_edges(xmin, xmax, ymin, ymax):
@@ -330,8 +306,8 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
     if section.get('use_bed') == 'True':
         logger.info('Using bed elevation for spacing.')
         if flood_fill_iStart is not None and flood_fill_jStart is not None:
-            logger.info('calling gridded_flood_fill to find \
-                        bedTopography <= low_bed connected to the ocean.')
+            logger.info('calling gridded_flood_fill to find ' +
+                        'bedTopography <= low_bed connected to the ocean.')
             tic = time.time()
             # initialize mask to low bed topography
             in_mask = (bed <= low_bed)
