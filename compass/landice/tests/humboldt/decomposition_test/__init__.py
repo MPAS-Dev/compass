@@ -1,5 +1,5 @@
 from compass.landice.tests.humboldt.run_model import RunModel
-from compass.parallel import get_available_parallel_resources
+from compass.landice.util import calculate_decomp_core_pair
 from compass.testcase import TestCase
 from compass.validate import compare_variables
 
@@ -114,7 +114,6 @@ class DecompositionTest(TestCase):
         The larger decomposition targets up to 32 tasks. FO runs require at
         least 10 tasks; all others require at least 2 tasks.
         """
-        available_resources = get_available_parallel_resources(self.config)
         # Target a max of 32 tasks, but use fewer if not available.
         target_max_tasks = 32
         # FO solver required more resources to be time-effective to run
@@ -123,14 +122,11 @@ class DecompositionTest(TestCase):
         else:
             # Need at least 2 tasks to test decomposition.
             smallest_acceptable_max_tasks = 2
-        max_tasks = max(
-            smallest_acceptable_max_tasks,
-            min(target_max_tasks, available_resources['cores']))
+
+        self.proc_list = calculate_decomp_core_pair(
+            self.config, target_max_tasks, smallest_acceptable_max_tasks)
         # Note: Failing when this many tasks are unavailable is
         # desired behavior for decomposition testing.
-
-        low_tasks = max(1, max_tasks // 2)
-        self.proc_list = [low_tasks, max_tasks]
 
         self.run_dirs = []
         for procs in self.proc_list:

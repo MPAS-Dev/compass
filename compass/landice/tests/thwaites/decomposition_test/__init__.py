@@ -1,5 +1,5 @@
 from compass.landice.tests.thwaites.run_model import RunModel
-from compass.parallel import get_available_parallel_resources
+from compass.landice.util import calculate_decomp_core_pair
 from compass.testcase import TestCase
 from compass.validate import compare_variables
 
@@ -55,14 +55,10 @@ class DecompositionTest(TestCase):
         The larger decomposition targets up to 32 tasks and requires at least
         10 tasks to run this decomposition test.
         """
-        available_resources = get_available_parallel_resources(self.config)
         target_max_tasks = 32
         smallest_acceptable_max_tasks = 10
-        max_tasks = max(
-            smallest_acceptable_max_tasks,
-            min(target_max_tasks, available_resources['cores']))
-        low_tasks = max(1, max_tasks // 2)
-        self.proc_list = [low_tasks, max_tasks]
+        self.proc_list = calculate_decomp_core_pair(
+            self.config, target_max_tasks, smallest_acceptable_max_tasks)
 
         self.run_dirs = []
         for procs in self.proc_list:

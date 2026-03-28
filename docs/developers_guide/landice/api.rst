@@ -8,6 +8,16 @@ landice
 
    Landice
 
+Utilities
+^^^^^^^^^
+
+.. currentmodule:: compass.landice.util
+
+.. autosummary::
+   :toctree: generated/
+
+   calculate_decomp_core_pair
+
 Test Groups
 ^^^^^^^^^^^
 

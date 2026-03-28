@@ -1,5 +1,5 @@
 from compass.landice.tests.greenland.run_model import RunModel
-from compass.parallel import get_available_parallel_resources
+from compass.landice.util import calculate_decomp_core_pair
 from compass.testcase import TestCase
 from compass.validate import compare_variables
 
@@ -50,7 +50,7 @@ class DecompositionTest(TestCase):
         The larger decomposition targets up to 32 tasks. FO runs require at
         least 10 tasks; SIA runs require at least 2 tasks.
         """
-        available_resources = get_available_parallel_resources(self.config)
+
         target_max_tasks = 32
         if self.velo_solver == 'FO':
             smallest_acceptable_max_tasks = 10
@@ -59,11 +59,8 @@ class DecompositionTest(TestCase):
         else:
             raise ValueError(f'Unexpected velo_solver {self.velo_solver}')
 
-        max_tasks = max(
-            smallest_acceptable_max_tasks,
-            min(target_max_tasks, available_resources['cores']))
-        low_tasks = max(1, max_tasks // 2)
-        self.proc_list = [low_tasks, max_tasks]
+        self.proc_list = calculate_decomp_core_pair(
+            self.config, target_max_tasks, smallest_acceptable_max_tasks)
 
         self.run_dirs = []
         for procs in self.proc_list:
