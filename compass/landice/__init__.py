@@ -16,6 +16,7 @@ from compass.landice.tests.kangerlussuaq import Kangerlussuaq
 from compass.landice.tests.koge_bugt_s import KogeBugtS
 from compass.landice.tests.mesh_modifications import MeshModifications
 from compass.landice.tests.mismipplus import MISMIPplus
+from compass.landice.tests.slm import Slm
 from compass.landice.tests.thwaites import Thwaites
 from compass.mpas_core import MpasCore
 
@@ -49,4 +50,5 @@ class Landice(MpasCore):
         self.add_test_group(KogeBugtS(mpas_core=self))
         self.add_test_group(MeshModifications(mpas_core=self))
         self.add_test_group(MISMIPplus(mpas_core=self))
+        self.add_test_group(Slm(mpas_core=self))
         self.add_test_group(Thwaites(mpas_core=self))
