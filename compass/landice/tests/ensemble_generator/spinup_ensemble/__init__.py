@@ -95,6 +95,9 @@ class SpinupEnsemble(TestCase):
             parameter_specs=parameter_specs,
             sampling_method=sampling_method,
             max_samples=max_samples)
+        if config.has_option('spinup_ensemble', 'fric_samples_file'):
+            print("Including friction samples from file. One friction "
+                  "sample will be mapped to each run in the ensemble.")
 
         spec_by_name = {spec['name']: spec for spec in parameter_specs}
 
@@ -322,6 +325,7 @@ def _add_member_steps(test_case, parameter_specs, spec_by_name, deltaT_vec,
         sys.exit("Error: end_run specified in config exceeds maximum "
                  "sample size available in param_vector_filename")
 
+    print("--- Identifying required parameters is complete ---")
     for run_num in range(test_case.start_run, test_case.end_run + 1):
         namelist_option_values, namelist_parameter_values = \
             _build_namelist_values(parameter_specs, run_num)
