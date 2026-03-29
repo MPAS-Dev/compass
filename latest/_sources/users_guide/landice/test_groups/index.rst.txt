@@ -30,4 +30,5 @@ physics but that are not run routinely.
    koge_bugt_s
    mesh_modifications
    mismipplus
+   slm
    thwaites
