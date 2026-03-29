@@ -33,9 +33,11 @@ def calculate_decomp_core_pair(config, target_max_tasks,
             raise ValueError('Expected parallel system slurm to have '
                              'option cores_per_node')
     elif parallel_system == 'single_node':
-        cores_per_node = multiprocessing.cpu_count()
-        cores_per_node = min(cores_per_node,
-                             config.getint('parallel', 'cores_per_node'))
+        if config.has_option('parallel', 'cores_per_node'):
+            cores_per_node = config.getint('parallel',
+                                           'cores_per_node')
+        else:
+            cores_per_node = multiprocessing.cpu_count()
     else:
         raise ValueError(f'Unexpected parallel system {parallel_system}')
 
