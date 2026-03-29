@@ -326,6 +326,8 @@ def _adjust_friction_exponent(orig_fric_exp, new_fric_exp, filename,
     uX = f.variables['uReconstructX'][0, :, -1]
     uY = f.variables['uReconstructY'][0, :, -1]
     spd = (uX**2 + uY**2)**0.5 * (60. * 60. * 24. * 365.)
+    if np.max(spd) == 0.0:
+        raise ValueError("uReconstructX/Y yielding max speed of 0")
     mu = mu * spd**(orig_fric_exp - new_fric_exp)
     # The previous step leads to infs or nans in ice-free areas.
     # Set them all to 0.0 for the extrapolation step
@@ -333,7 +335,9 @@ def _adjust_friction_exponent(orig_fric_exp, new_fric_exp, filename,
     f.variables['muFriction'][0, :] = mu[:]
     f.close()
 
-    extrapolate_variable(filename, 'muFriction', 'min')
+    extrapolate_variable(filename, 'muFriction',
+                         extrap_method='min',
+                         valid_region_method='positive_val')
 
     # now set exp in albany yaml file
     # using text replacement rather than yaml parser because yaml
@@ -384,8 +388,12 @@ def _apply_fric_sample(sample_num, sample_file, mu_opt_file,
     n_cells = len(f.dimensions['nCells'])
 
     # Set baseline mu outside of the Albany inverse region.
-    mu = 0.2 * np.ones(n_cells)
+    mu = -1.0 * np.ones(n_cells)
     mu[mpas_map[:] - 1] = np.exp(scaling * sample + log_mu_opt)
 
     f.variables['muFriction'][0, :] = mu[:]
     f.close()
+
+    extrapolate_variable(ic_file, 'muFriction',
+                         extrap_method='min',
+                         valid_region_method='positive_val')
