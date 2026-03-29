@@ -368,7 +368,7 @@ def _adjust_basal_melt_params(filename, gamma0=None, deltaT=None):
 
 
 def _apply_fric_sample(sample_num, sample_file, mu_opt_file,
-                       mpas_cellid_file, ic_file, scaling=0.25):
+                       mpas_cellid_file, ic_file, scaling):
     """Apply a precomputed friction sample to ``muFriction`` in IC file."""
     samples = np.load(sample_file)
     sample = samples[sample_num, :]
