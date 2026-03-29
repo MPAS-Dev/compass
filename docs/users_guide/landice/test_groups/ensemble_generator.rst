@@ -58,6 +58,13 @@ The currently supported special parameters are:
 * ``meltflux``: target ice-shelf basal melt flux, converted to ``deltaT``
   using ``gamma0`` and domain-mean thermal forcing
 
+In addition, spinup runs can optionally apply precomputed friction samples
+from Albany inversion products through ``[spinup_ensemble]`` config options
+(``fric_samples_file``, ``fric_map_file``, ``mpas_cellid_file``, and
+``fric_sample_scale``).  When these options are provided, run ``N`` uses
+sample index ``N`` from ``fric_samples_file`` and writes the resulting
+``muFriction`` field into that run's copied input file.
+
 Test cases
 ----------
 
@@ -233,6 +240,13 @@ The template-specific spinup config options (from
 
     # Path to SMB forcing file for the mesh to be used
     SMB_file_path = /global/cfs/cdirs/fanssie/MALI_projects/Amery_UQ/Amery_4to20km_from_whole_AIS/forcing/atmosphere_forcing/RACMO_climatology_1995-2017/Amery_4to20km_RACMO2.3p2_ANT27_smb_climatology_1995-2017_no_xtime_noBareLandAdvance.nc
+
+    # Optional friction-sample inputs from Albany optimization products.
+    # When these options are present, run N uses sample index N.
+    # fric_samples_file = /path/to/postVarSamples-5000.npy
+    # fric_map_file = /path/to/mu_log_opt.ascii
+    # mpas_cellid_file = /path/to/mpas_cellID.ascii
+    # fric_sample_scale = 0.25
 
     # For meltflux perturbations, this observed ice-shelf area is used when
     # converting target melt flux to deltaT.

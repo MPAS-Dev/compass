@@ -77,6 +77,13 @@ Similarly, because changing gamma0 and deltaT require modifying a basal melt
 parameter file, the baseline file path needs to be specified in the config
 and that file is copied, renamed, and modified in each run directory.
 
+Optionally, spinup runs can also apply precomputed friction samples from
+Albany inversion products.  If ``fric_samples_file``, ``fric_map_file``, and
+``mpas_cellid_file`` are provided in ``[spinup_ensemble]`` (with optional
+``fric_sample_scale``), run ``N`` reads sample ``N`` from
+``fric_samples_file`` and applies it to ``muFriction`` in the copied run
+input file.
+
 Additionally, a job script is written for the run so that the run can be
 submitted as a slurm job independent of other runs in the ensemble.  This also
 allows a user to easily run a single ensemble member by submitting the job
@@ -91,7 +98,9 @@ There is a function ``_adjust_friction_exponent`` that modifies the
 friction exponent in the ``albany_input.yaml`` file and adjusts muFriction
 in the input file to maintain an unchanged basal shear stress.  Similarly,
 there is a function ``_adjust_basal_melt_params`` that modifes gamma0 and
-deltaT in a basal melt parameter file.
+deltaT in a basal melt parameter file.  There is also an
+``_apply_fric_sample`` helper that maps an Albany friction sample onto MPAS
+cell IDs and writes the resulting ``muFriction`` field.
 
 ensemble_manager
 ~~~~~~~~~~~~~~~~
@@ -125,6 +134,10 @@ Spinup run-control options (for example, ``start_run``, ``end_run``,
 are read from ``[ensemble_generator]``, while spinup resource paths and
 related values (for example ``input_file_path`` and ``iceshelf_area_obs``)
 are read from ``[spinup_ensemble]``.
+Optional spinup friction-sample options
+(``fric_samples_file``, ``fric_map_file``, ``mpas_cellid_file``, and
+``fric_sample_scale``) are also read from ``[spinup_ensemble]`` and applied
+per run number when present.
 Supported sampling methods are ``sobol``, ``uniform``, and ``log-uniform``.
 The values for each parameter are
 passed to the ``EnsembleMember`` constructor to define each run.
