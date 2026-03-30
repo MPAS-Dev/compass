@@ -1,6 +1,7 @@
 from compass.landice.tests.slm_circ_icesheet.mesh_convergence import (
     MeshConvergenceTest,
 )
+from compass.landice.tests.slm_circ_icesheet.smoke_test import SmokeTest
 from compass.testgroup import TestGroup
 
 
@@ -19,3 +20,4 @@ class SlmCircIcesheet(TestGroup):
 
         self.add_test_case(
             MeshConvergenceTest(test_group=self))
+        self.add_test_case(SmokeTest(test_group=self))
