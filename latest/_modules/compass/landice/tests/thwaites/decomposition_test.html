@@ -110,6 +110,7 @@
              
   <h1>Source code for compass.landice.tests.thwaites.decomposition_test</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.thwaites.run_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">calculate_decomp_core_pair</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.testcase</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestCase</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.validate</span><span class="w"> </span><span class="kn">import</span> <span class="n">compare_variables</span>
 
@@ -118,9 +119,22 @@
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.thwaites.decomposition_test.DecompositionTest.html#compass.landice.tests.thwaites.decomposition_test.DecompositionTest">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DecompositionTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A test case for performing two MALI runs of the Thwaites setup,</span>
-<span class="sd">    with two different core counts.  The test case verifies that the</span>
-<span class="sd">    results of the two runs are identical.</span>
+<span class="sd">    A test case for performing two MALI runs of the Thwaites setup with</span>
+<span class="sd">    different decompositions. The larger decomposition targets up to 32</span>
+<span class="sd">    tasks, subject to available resources, and the smaller decomposition is</span>
+<span class="sd">    roughly half of the larger one. The test case verifies that the results</span>
+<span class="sd">    of the two runs are identical.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    depth_integrated : bool</span>
+<span class="sd">        Whether the FO velocity model is depth integrated</span>
+
+<span class="sd">    proc_list : list of int</span>
+<span class="sd">        The pair of processor counts used in the decomposition comparison</span>
+
+<span class="sd">    run_dirs : list of str</span>
+<span class="sd">        The names of the subdirectories for the two decomposition runs</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="DecompositionTest.__init__">
@@ -143,19 +157,38 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;fo_decomposition_test&#39;</span>
 
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">depth_integrated</span> <span class="o">=</span> <span class="n">depth_integrated</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proc_list</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_dirs</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span></div>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">cores_set</span> <span class="o">=</span> <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
 
-        <span class="k">for</span> <span class="n">procs</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cores_set</span><span class="p">:</span>
+<div class="viewcode-block" id="DecompositionTest.configure">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.thwaites.decomposition_test.DecompositionTest.configure.html#compass.landice.tests.thwaites.decomposition_test.DecompositionTest.configure">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Choose decomposition sizes from framework-detected resources and add</span>
+<span class="sd">        run steps.</span>
+
+<span class="sd">        The larger decomposition targets up to 32 tasks and requires at least</span>
+<span class="sd">        10 tasks to run this decomposition test.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">target_max_tasks</span> <span class="o">=</span> <span class="mi">32</span>
+        <span class="n">smallest_acceptable_max_tasks</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proc_list</span> <span class="o">=</span> <span class="n">calculate_decomp_core_pair</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">target_max_tasks</span><span class="p">,</span> <span class="n">smallest_acceptable_max_tasks</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_dirs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">procs</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">proc_list</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">proc_run&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">procs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_dirs</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">run_dirs</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run_dirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
                 <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-                         <span class="n">depth_integrated</span><span class="o">=</span><span class="n">depth_integrated</span><span class="p">,</span>
+                         <span class="n">depth_integrated</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">depth_integrated</span><span class="p">,</span>
                          <span class="n">ntasks</span><span class="o">=</span><span class="n">procs</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="n">procs</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span></div>
 
-
-    <span class="c1"># no configure() method is needed</span>
 
     <span class="c1"># no run() method is needed</span>
 
@@ -164,8 +197,8 @@
 <span class="sd">        Test cases can override this method to perform validation of variables</span>
 <span class="sd">        and timers</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name1</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">proc_run&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cores_set</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">name2</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">proc_run&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cores_set</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">name1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_dirs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">name2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_dirs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="c1"># validate thickness</span>
         <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                           <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">,</span> <span class="p">],</span>

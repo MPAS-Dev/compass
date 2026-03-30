@@ -19,7 +19,7 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="compass.landice.tests.humboldt.decomposition_test.DecompositionTest.validate" href="compass.landice.tests.humboldt.decomposition_test.DecompositionTest.validate.html" />
+    <link rel="next" title="compass.landice.tests.humboldt.decomposition_test.DecompositionTest.configure" href="compass.landice.tests.humboldt.decomposition_test.DecompositionTest.configure.html" />
     <link rel="prev" title="compass.landice.tests.humboldt.run_model.RunModel.run" href="compass.landice.tests.humboldt.run_model.RunModel.run.html" /> 
 </head>
 
@@ -70,6 +70,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../../api.html#mpas-cores">MPAS Cores</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html">landice</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="compass.landice.Landice.html">compass.landice.Landice</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api.html#utilities">Utilities</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="../api.html#test-groups">Test Groups</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api.html#landice-framework">Landice Framework</a></li>
 </ul>
@@ -129,11 +130,11 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="compass.landice.tests.humboldt.decomposition_test.DecompositionTest">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compass.landice.tests.humboldt.decomposition_test.</span></span><span class="sig-name descname"><span class="pre">DecompositionTest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velo_solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calving_law</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">damage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">face_melt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth_integrated</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hydro</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/tests/humboldt/decomposition_test.html#DecompositionTest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.tests.humboldt.decomposition_test.DecompositionTest" title="Link to this definition"></a></dt>
-<dd><p>A test case for performing two MALI runs of a humboldt setup, one with one
-core and one with four.  The test case verifies that the results of the
-two runs are identical or close to identical.  The FO velocity solver is
-not bit for bit across decompositions, so identical results are not
-expected when it is used.</p>
+<dd><p>A test case for performing two MALI runs of a Humboldt setup with
+different decompositions. The larger decomposition targets 32 tasks,
+subject to available resources, and the smaller decomposition is roughly
+half of the larger one. The test case verifies that results are identical
+or close to identical.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -144,8 +145,8 @@ expected when it is used.</p>
 <li><p><strong>face_melt</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to include face melting</p></li>
 <li><p><strong>depth_integrated</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether the (FO) velocity model is depth integrated</p></li>
 <li><p><strong>hydro</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to include subglacial hydrology</p></li>
-<li><p><strong>proc_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – The pair of processor count values to test over.
-Function of velocity solver.</p></li>
+<li><p><strong>proc_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The pair of processor counts used in the decomposition comparison</p></li>
+<li><p><strong>run_dirs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The names of the subdirectories for the two decomposition runs</p></li>
 </ul>
 </dd>
 </dl>
@@ -181,8 +182,8 @@ Function of velocity solver.</p></li>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_validation</span></code>()</p></td>
 <td><p>Check the test case's &quot;validation&quot; dictionary to see if validation failed.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure</span></code>()</p></td>
-<td><p>Modify the configuration options for this test case.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compass.landice.tests.humboldt.decomposition_test.DecompositionTest.configure.html#compass.landice.tests.humboldt.decomposition_test.DecompositionTest.configure" title="compass.landice.tests.humboldt.decomposition_test.DecompositionTest.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure</span></code></a>()</p></td>
+<td><p>Choose decomposition sizes from framework-detected resources and add run steps.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>()</p></td>
 <td><p>This method is deprecated.</p></td>
@@ -201,7 +202,7 @@ Function of velocity solver.</p></li>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="compass.landice.tests.humboldt.run_model.RunModel.run.html" class="btn btn-neutral float-left" title="compass.landice.tests.humboldt.run_model.RunModel.run" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="compass.landice.tests.humboldt.decomposition_test.DecompositionTest.validate.html" class="btn btn-neutral float-right" title="compass.landice.tests.humboldt.decomposition_test.DecompositionTest.validate" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.landice.tests.humboldt.decomposition_test.DecompositionTest.configure.html" class="btn btn-neutral float-right" title="compass.landice.tests.humboldt.decomposition_test.DecompositionTest.configure" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

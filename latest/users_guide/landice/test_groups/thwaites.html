@@ -208,9 +208,11 @@ The other test cases do not use config options.</p>
 <section id="decomposition-test">
 <h2>decomposition_test<a class="headerlink" href="#decomposition-test" title="Link to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">landice/thwaites/decomposition_test</span></code> runs short (2-day) integrations of the
-model forward in time on 16 (<code class="docutils literal notranslate"><span class="pre">16proc_run</span></code> step) and then on 32 cores
-(<code class="docutils literal notranslate"><span class="pre">32proc_run</span></code> step) to make sure the resulting prognostic variables are
-bit-for-bit identical between the two runs.</p>
+model forward in time with two different decompositions. The larger run
+targets 32 tasks (or fewer if fewer are available, with a minimum of 10), and
+the smaller run uses roughly half as many tasks. The resulting prognostic
+variables are compared between the two runs to make sure they are
+bit-for-bit identical.</p>
 </section>
 <section id="restart-test">
 <h2>restart_test<a class="headerlink" href="#restart-test" title="Link to this heading"></a></h2>

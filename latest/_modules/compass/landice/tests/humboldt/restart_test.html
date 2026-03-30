@@ -110,6 +110,7 @@
              
   <h1>Source code for compass.landice.tests.humboldt.restart_test</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.humboldt.run_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.parallel</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_available_parallel_resources</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.testcase</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestCase</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.validate</span><span class="w"> </span><span class="kn">import</span> <span class="n">compare_variables</span>
 
@@ -118,14 +119,17 @@
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.humboldt.restart_test.RestartTest.html#compass.landice.tests.humboldt.restart_test.RestartTest">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RestartTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A test case for performing two MALI runs of a humboldt setup, one full</span>
-<span class="sd">    run and one run broken into two segments with a restart.  The test case</span>
+<span class="sd">    A test case for performing two MALI runs of a Humboldt setup, one full</span>
+<span class="sd">    run and one run broken into two segments with a restart. The test case</span>
 <span class="sd">    verifies that the results of the two runs are identical.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    mesh_type : str</span>
 <span class="sd">        The resolution or type of mesh of the test case</span>
+
+<span class="sd">    velo_solver : str</span>
+<span class="sd">        The velocity solver used for the test case</span>
 
 <span class="sd">    calving_law : str</span>
 <span class="sd">        The calving law used for the test case</span>
@@ -135,6 +139,9 @@
 
 <span class="sd">    face_melt : bool</span>
 <span class="sd">        Whether to include face melting</span>
+
+<span class="sd">    target_ntasks : int</span>
+<span class="sd">        The preferred task count for restart runs before resource constraints</span>
 
 <span class="sd">    depth_integrated  : bool</span>
 <span class="sd">        Whether the (FO) velocity model is depth integrated</span>
@@ -185,6 +192,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">calving_law</span> <span class="o">=</span> <span class="n">calving_law</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">damage</span> <span class="o">=</span> <span class="n">damage</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">face_melt</span> <span class="o">=</span> <span class="n">face_melt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_ntasks</span> <span class="o">=</span> <span class="mi">32</span>
         <span class="k">if</span> <span class="n">hydro</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">hydro</span> <span class="o">=</span> <span class="n">hydro</span>
         <span class="k">else</span><span class="p">:</span>
@@ -207,7 +215,8 @@
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;full_run&#39;</span>
-        <span class="n">step</span> <span class="o">=</span> <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                        <span class="n">ntasks</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">target_ntasks</span><span class="p">,</span>
                         <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
                         <span class="n">calving_law</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calving_law</span><span class="p">,</span>
                         <span class="n">damage</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">damage</span><span class="p">,</span>
@@ -232,7 +241,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
 
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;restart_run&#39;</span>
-        <span class="n">step</span> <span class="o">=</span> <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                        <span class="n">ntasks</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">target_ntasks</span><span class="p">,</span>
                         <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
                         <span class="n">calving_law</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calving_law</span><span class="p">,</span>
                         <span class="n">damage</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">damage</span><span class="p">,</span>
@@ -268,7 +278,26 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span></div>
 
 
-    <span class="c1"># no configure() method is needed</span>
+<div class="viewcode-block" id="RestartTest.configure">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.humboldt.restart_test.RestartTest.configure.html#compass.landice.tests.humboldt.restart_test.RestartTest.configure">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set restart-test task counts from framework-detected resources.</span>
+
+<span class="sd">        The target task count is 32 when available. FO runs require at least</span>
+<span class="sd">        10 tasks; other runs allow any positive task count.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">available_resources</span> <span class="o">=</span> <span class="n">get_available_parallel_resources</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+
+        <span class="n">min_tasks</span> <span class="o">=</span> <span class="mi">10</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">&#39;FO&#39;</span> <span class="k">else</span> <span class="mi">1</span>
+        <span class="n">ntasks</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">min_tasks</span><span class="p">,</span>
+                     <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_ntasks</span><span class="p">,</span>
+                         <span class="n">available_resources</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]))</span>
+
+        <span class="c1"># Apply the same task count to both full and restart runs.</span>
+        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">step</span><span class="o">.</span><span class="n">set_resources</span><span class="p">(</span><span class="n">ntasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="n">min_tasks</span><span class="p">)</span></div>
+
 
     <span class="c1"># no run() method is needed</span>
 

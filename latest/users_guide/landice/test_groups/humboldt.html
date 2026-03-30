@@ -213,13 +213,14 @@ There is no model integration step.</p>
 <section id="decomposition-tests">
 <h2>decomposition_tests<a class="headerlink" href="#decomposition-tests" title="Link to this heading"></a></h2>
 <p>There are a number of variants of a decomposition test that runs a 5-year
-simulation on 16 (16proc_run step) and then on 32 cores (32proc_run step)
-to make sure key prognostic variables are either bit-fot-bit (without the
-FO solver) or have only small differences within a specified tolerance (with
-the FO solver).  The FO solver is not BFB on different decompositions, but the
-differences are small.  There are variants of this test for each calving law
-that MALI currently supports, paired with either the FO velocity solver or no
-velocity solver.
+simulation with two different decompositions. The larger run targets 32 tasks
+(or fewer if fewer are available), and the smaller run uses roughly half as
+many tasks. Key prognostic variables are expected to be either bit-for-bit
+(without the FO solver) or to have only small differences within specified
+tolerances (with the FO solver). The FO solver is not BFB on different
+decompositions, but the differences are small. There are variants of this test
+for each calving law that MALI currently supports, paired with either the FO
+velocity solver or no velocity solver.
 The full set of combinations use the 3 km mesh.  There is additionally a
 decomposition test using the 1 km mesh that has calving disabled.
 Finally, there is a set of “full physics” tests that use von Mises calving,

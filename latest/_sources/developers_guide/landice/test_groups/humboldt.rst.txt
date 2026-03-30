@@ -43,7 +43,10 @@ decomposition_test
 ------------------
 The compass.landice.tests.humboldt.decomposition_test.DecompositionTest
 performs the same simulation on different numbers of cores. It ensures
-relevant variables are identical or have expected differences.
+relevant variables are identical or have expected differences. Decomposition
+sizes are selected with
+:py:func:`compass.landice.util.calculate_decomp_core_pair`, which returns
+the processor list ``[low_tasks, max_tasks]`` used for the two runs.
 
 restart_test
 ------------

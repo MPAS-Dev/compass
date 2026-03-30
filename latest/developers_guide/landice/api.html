@@ -70,6 +70,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../api.html#mpas-cores">MPAS Cores</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">landice</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="generated/compass.landice.Landice.html">compass.landice.Landice</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utilities">Utilities</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#test-groups">Test Groups</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#landice-framework">Landice Framework</a></li>
 </ul>
@@ -132,6 +133,16 @@
 </tr>
 </tbody>
 </table>
+<section id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.util.calculate_decomp_core_pair.html#compass.landice.util.calculate_decomp_core_pair" title="compass.landice.util.calculate_decomp_core_pair"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_decomp_core_pair</span></code></a>(config, ...)</p></td>
+<td><p>Get a pair of decomposition task counts based on available cores.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="test-groups">
 <h2>Test Groups<a class="headerlink" href="#test-groups" title="Link to this heading"></a></h2>
 <section id="antarctica">
@@ -441,45 +452,48 @@
 <td><p>A test group for Greenland test cases</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.decomposition_test.DecompositionTest.html#compass.landice.tests.greenland.decomposition_test.DecompositionTest" title="compass.landice.tests.greenland.decomposition_test.DecompositionTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomposition_test.DecompositionTest</span></code></a>(...)</p></td>
-<td><p>A test case for performing two MALI runs of the Greenland Ice Sheet setup, one with one core and one with eight.</p></td>
+<td><p>A test case for performing two MALI runs of the Greenland Ice Sheet setup with different decompositions.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.decomposition_test.DecompositionTest.run.html#compass.landice.tests.greenland.decomposition_test.DecompositionTest.run" title="compass.landice.tests.greenland.decomposition_test.DecompositionTest.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomposition_test.DecompositionTest.run</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.decomposition_test.DecompositionTest.configure.html#compass.landice.tests.greenland.decomposition_test.DecompositionTest.configure" title="compass.landice.tests.greenland.decomposition_test.DecompositionTest.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomposition_test.DecompositionTest.configure</span></code></a>()</p></td>
+<td><p>Choose decomposition sizes from framework-detected resources and add run steps.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.decomposition_test.DecompositionTest.run.html#compass.landice.tests.greenland.decomposition_test.DecompositionTest.run" title="compass.landice.tests.greenland.decomposition_test.DecompositionTest.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomposition_test.DecompositionTest.run</span></code></a>()</p></td>
 <td><p>This method is deprecated.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.restart_test.RestartTest.html#compass.landice.tests.greenland.restart_test.RestartTest" title="compass.landice.tests.greenland.restart_test.RestartTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart_test.RestartTest</span></code></a>(test_group, velo_solver)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.restart_test.RestartTest.html#compass.landice.tests.greenland.restart_test.RestartTest" title="compass.landice.tests.greenland.restart_test.RestartTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart_test.RestartTest</span></code></a>(test_group, velo_solver)</p></td>
 <td><p>A test case for performing two MALI runs of the Greenland Ice Sheet setup, one full run and one run broken into two segments with a restart.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.restart_test.RestartTest.run.html#compass.landice.tests.greenland.restart_test.RestartTest.run" title="compass.landice.tests.greenland.restart_test.RestartTest.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart_test.RestartTest.run</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.restart_test.RestartTest.run.html#compass.landice.tests.greenland.restart_test.RestartTest.run" title="compass.landice.tests.greenland.restart_test.RestartTest.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart_test.RestartTest.run</span></code></a>()</p></td>
 <td><p>This method is deprecated.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.smoke_test.SmokeTest.html#compass.landice.tests.greenland.smoke_test.SmokeTest" title="compass.landice.tests.greenland.smoke_test.SmokeTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smoke_test.SmokeTest</span></code></a>(test_group, velo_solver)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.smoke_test.SmokeTest.html#compass.landice.tests.greenland.smoke_test.SmokeTest" title="compass.landice.tests.greenland.smoke_test.SmokeTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smoke_test.SmokeTest</span></code></a>(test_group, velo_solver)</p></td>
 <td><p>The default test case for the Greenland test group simply downloads the mesh and initial condition, then performs a short forward run on 36 cores.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.smoke_test.SmokeTest.run.html#compass.landice.tests.greenland.smoke_test.SmokeTest.run" title="compass.landice.tests.greenland.smoke_test.SmokeTest.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smoke_test.SmokeTest.run</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.smoke_test.SmokeTest.run.html#compass.landice.tests.greenland.smoke_test.SmokeTest.run" title="compass.landice.tests.greenland.smoke_test.SmokeTest.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smoke_test.SmokeTest.run</span></code></a>()</p></td>
 <td><p>This method is deprecated.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.run_model.RunModel.html#compass.landice.tests.greenland.run_model.RunModel" title="compass.landice.tests.greenland.run_model.RunModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_model.RunModel</span></code></a>(test_case, velo_solver[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.run_model.RunModel.html#compass.landice.tests.greenland.run_model.RunModel" title="compass.landice.tests.greenland.run_model.RunModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_model.RunModel</span></code></a>(test_case, velo_solver[, ...])</p></td>
 <td><p>A step for performing forward MALI runs as part of low-res 20km Greenland test cases.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.run_model.RunModel.setup.html#compass.landice.tests.greenland.run_model.RunModel.setup" title="compass.landice.tests.greenland.run_model.RunModel.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_model.RunModel.setup</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.run_model.RunModel.setup.html#compass.landice.tests.greenland.run_model.RunModel.setup" title="compass.landice.tests.greenland.run_model.RunModel.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_model.RunModel.setup</span></code></a>()</p></td>
 <td><p>Set up the test case in the work directory, including downloading any dependencies.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.run_model.RunModel.run.html#compass.landice.tests.greenland.run_model.RunModel.run" title="compass.landice.tests.greenland.run_model.RunModel.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_model.RunModel.run</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.run_model.RunModel.run.html#compass.landice.tests.greenland.run_model.RunModel.run" title="compass.landice.tests.greenland.run_model.RunModel.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_model.RunModel.run</span></code></a>()</p></td>
 <td><p>Run this step of the test case</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.mesh.Mesh.html#compass.landice.tests.greenland.mesh.Mesh" title="compass.landice.tests.greenland.mesh.Mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.Mesh</span></code></a>(test_case)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.mesh.Mesh.html#compass.landice.tests.greenland.mesh.Mesh" title="compass.landice.tests.greenland.mesh.Mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.Mesh</span></code></a>(test_case)</p></td>
 <td><p>A step for creating a mesh and initial condition for greenland test cases</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.mesh.Mesh.setup.html#compass.landice.tests.greenland.mesh.Mesh.setup" title="compass.landice.tests.greenland.mesh.Mesh.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.Mesh.setup</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.mesh.Mesh.setup.html#compass.landice.tests.greenland.mesh.Mesh.setup" title="compass.landice.tests.greenland.mesh.Mesh.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.Mesh.setup</span></code></a>()</p></td>
 <td><p>Add the configured geojson cull-mask file as an input.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.mesh.Mesh.run.html#compass.landice.tests.greenland.mesh.Mesh.run" title="compass.landice.tests.greenland.mesh.Mesh.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.Mesh.run</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.mesh.Mesh.run.html#compass.landice.tests.greenland.mesh.Mesh.run" title="compass.landice.tests.greenland.mesh.Mesh.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.Mesh.run</span></code></a>()</p></td>
 <td><p>Run this step of the test case</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.mesh_gen.MeshGen.html#compass.landice.tests.greenland.mesh_gen.MeshGen" title="compass.landice.tests.greenland.mesh_gen.MeshGen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh_gen.MeshGen</span></code></a>(test_group)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.mesh_gen.MeshGen.html#compass.landice.tests.greenland.mesh_gen.MeshGen" title="compass.landice.tests.greenland.mesh_gen.MeshGen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh_gen.MeshGen</span></code></a>(test_group)</p></td>
 <td><p>The high resolution test case for the greenland test group simply creates the mesh and initial condition.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.mesh_gen.MeshGen.run.html#compass.landice.tests.greenland.mesh_gen.MeshGen.run" title="compass.landice.tests.greenland.mesh_gen.MeshGen.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh_gen.MeshGen.run</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.greenland.mesh_gen.MeshGen.run.html#compass.landice.tests.greenland.mesh_gen.MeshGen.run" title="compass.landice.tests.greenland.mesh_gen.MeshGen.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh_gen.MeshGen.run</span></code></a>()</p></td>
 <td><p>This method is deprecated.</p></td>
 </tr>
 </tbody>
@@ -511,13 +525,19 @@
 <td><p>Run this step of the test case</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.humboldt.decomposition_test.DecompositionTest.html#compass.landice.tests.humboldt.decomposition_test.DecompositionTest" title="compass.landice.tests.humboldt.decomposition_test.DecompositionTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomposition_test.DecompositionTest</span></code></a>(...[, ...])</p></td>
-<td><p>A test case for performing two MALI runs of a humboldt setup, one with one core and one with four.</p></td>
+<td><p>A test case for performing two MALI runs of a Humboldt setup with different decompositions.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.humboldt.decomposition_test.DecompositionTest.validate.html#compass.landice.tests.humboldt.decomposition_test.DecompositionTest.validate" title="compass.landice.tests.humboldt.decomposition_test.DecompositionTest.validate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomposition_test.DecompositionTest.validate</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.humboldt.decomposition_test.DecompositionTest.configure.html#compass.landice.tests.humboldt.decomposition_test.DecompositionTest.configure" title="compass.landice.tests.humboldt.decomposition_test.DecompositionTest.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomposition_test.DecompositionTest.configure</span></code></a>()</p></td>
+<td><p>Choose decomposition sizes from framework-detected resources and add run steps.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.humboldt.decomposition_test.DecompositionTest.validate.html#compass.landice.tests.humboldt.decomposition_test.DecompositionTest.validate" title="compass.landice.tests.humboldt.decomposition_test.DecompositionTest.validate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomposition_test.DecompositionTest.validate</span></code></a>()</p></td>
 <td><p>Test cases can override this method to perform validation of variables and timers</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.humboldt.restart_test.RestartTest.html#compass.landice.tests.humboldt.restart_test.RestartTest" title="compass.landice.tests.humboldt.restart_test.RestartTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart_test.RestartTest</span></code></a>(test_group, ...[, ...])</p></td>
-<td><p>A test case for performing two MALI runs of a humboldt setup, one full run and one run broken into two segments with a restart.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.humboldt.restart_test.RestartTest.html#compass.landice.tests.humboldt.restart_test.RestartTest" title="compass.landice.tests.humboldt.restart_test.RestartTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart_test.RestartTest</span></code></a>(test_group, ...[, ...])</p></td>
+<td><p>A test case for performing two MALI runs of a Humboldt setup, one full run and one run broken into two segments with a restart.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.humboldt.restart_test.RestartTest.configure.html#compass.landice.tests.humboldt.restart_test.RestartTest.configure" title="compass.landice.tests.humboldt.restart_test.RestartTest.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart_test.RestartTest.configure</span></code></a>()</p></td>
+<td><p>Set restart-test task counts from framework-detected resources.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.humboldt.restart_test.RestartTest.validate.html#compass.landice.tests.humboldt.restart_test.RestartTest.validate" title="compass.landice.tests.humboldt.restart_test.RestartTest.validate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart_test.RestartTest.validate</span></code></a>()</p></td>
 <td><p>Test cases can override this method to perform validation of variables and timers</p></td>
@@ -926,36 +946,39 @@
 <td><p>A test group for low-res 4-14km Thwaites test cases.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.thwaites.decomposition_test.DecompositionTest.html#compass.landice.tests.thwaites.decomposition_test.DecompositionTest" title="compass.landice.tests.thwaites.decomposition_test.DecompositionTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomposition_test.DecompositionTest</span></code></a>(test_group)</p></td>
-<td><p>A test case for performing two MALI runs of the Thwaites setup, with two different core counts.</p></td>
+<td><p>A test case for performing two MALI runs of the Thwaites setup with different decompositions.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.thwaites.decomposition_test.DecompositionTest.run.html#compass.landice.tests.thwaites.decomposition_test.DecompositionTest.run" title="compass.landice.tests.thwaites.decomposition_test.DecompositionTest.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomposition_test.DecompositionTest.run</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.thwaites.decomposition_test.DecompositionTest.configure.html#compass.landice.tests.thwaites.decomposition_test.DecompositionTest.configure" title="compass.landice.tests.thwaites.decomposition_test.DecompositionTest.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomposition_test.DecompositionTest.configure</span></code></a>()</p></td>
+<td><p>Choose decomposition sizes from framework-detected resources and add run steps.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.thwaites.decomposition_test.DecompositionTest.run.html#compass.landice.tests.thwaites.decomposition_test.DecompositionTest.run" title="compass.landice.tests.thwaites.decomposition_test.DecompositionTest.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomposition_test.DecompositionTest.run</span></code></a>()</p></td>
 <td><p>This method is deprecated.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.thwaites.restart_test.RestartTest.html#compass.landice.tests.thwaites.restart_test.RestartTest" title="compass.landice.tests.thwaites.restart_test.RestartTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart_test.RestartTest</span></code></a>(test_group[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.thwaites.restart_test.RestartTest.html#compass.landice.tests.thwaites.restart_test.RestartTest" title="compass.landice.tests.thwaites.restart_test.RestartTest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart_test.RestartTest</span></code></a>(test_group[, ...])</p></td>
 <td><p>A test case for performing two MALI runs of the Thwaites setup, one full run and one run broken into two segments with a restart.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.thwaites.restart_test.RestartTest.run.html#compass.landice.tests.thwaites.restart_test.RestartTest.run" title="compass.landice.tests.thwaites.restart_test.RestartTest.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart_test.RestartTest.run</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.thwaites.restart_test.RestartTest.run.html#compass.landice.tests.thwaites.restart_test.RestartTest.run" title="compass.landice.tests.thwaites.restart_test.RestartTest.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart_test.RestartTest.run</span></code></a>()</p></td>
 <td><p>This method is deprecated.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.thwaites.run_model.RunModel.html#compass.landice.tests.thwaites.run_model.RunModel" title="compass.landice.tests.thwaites.run_model.RunModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_model.RunModel</span></code></a>(test_case[, name, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.thwaites.run_model.RunModel.html#compass.landice.tests.thwaites.run_model.RunModel" title="compass.landice.tests.thwaites.run_model.RunModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_model.RunModel</span></code></a>(test_case[, name, ...])</p></td>
 <td><p>A step for performing forward MALI runs as part of Thwaites test cases.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.thwaites.run_model.RunModel.setup.html#compass.landice.tests.thwaites.run_model.RunModel.setup" title="compass.landice.tests.thwaites.run_model.RunModel.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_model.RunModel.setup</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.thwaites.run_model.RunModel.setup.html#compass.landice.tests.thwaites.run_model.RunModel.setup" title="compass.landice.tests.thwaites.run_model.RunModel.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_model.RunModel.setup</span></code></a>()</p></td>
 <td><p>Set up the test case in the work directory, including downloading any dependencies.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.thwaites.run_model.RunModel.run.html#compass.landice.tests.thwaites.run_model.RunModel.run" title="compass.landice.tests.thwaites.run_model.RunModel.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_model.RunModel.run</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.thwaites.run_model.RunModel.run.html#compass.landice.tests.thwaites.run_model.RunModel.run" title="compass.landice.tests.thwaites.run_model.RunModel.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_model.RunModel.run</span></code></a>()</p></td>
 <td><p>Run this step of the test case</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.thwaites.mesh_gen.MeshGen.html#compass.landice.tests.thwaites.mesh_gen.MeshGen" title="compass.landice.tests.thwaites.mesh_gen.MeshGen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh_gen.MeshGen</span></code></a>(test_group)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.thwaites.mesh_gen.MeshGen.html#compass.landice.tests.thwaites.mesh_gen.MeshGen" title="compass.landice.tests.thwaites.mesh_gen.MeshGen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh_gen.MeshGen</span></code></a>(test_group)</p></td>
 <td><p>The high resolution test case for the thwaites test group simply creates the mesh and initial condition.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.thwaites.mesh_gen.MeshGen.run.html#compass.landice.tests.thwaites.mesh_gen.MeshGen.run" title="compass.landice.tests.thwaites.mesh_gen.MeshGen.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh_gen.MeshGen.run</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.thwaites.mesh_gen.MeshGen.run.html#compass.landice.tests.thwaites.mesh_gen.MeshGen.run" title="compass.landice.tests.thwaites.mesh_gen.MeshGen.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh_gen.MeshGen.run</span></code></a>()</p></td>
 <td><p>This method is deprecated.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.thwaites.mesh.Mesh.html#compass.landice.tests.thwaites.mesh.Mesh" title="compass.landice.tests.thwaites.mesh.Mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.Mesh</span></code></a>(test_case)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.thwaites.mesh.Mesh.html#compass.landice.tests.thwaites.mesh.Mesh" title="compass.landice.tests.thwaites.mesh.Mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.Mesh</span></code></a>(test_case)</p></td>
 <td><p>A step for creating a mesh and initial condition for thwaites test cases</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.thwaites.mesh.Mesh.run.html#compass.landice.tests.thwaites.mesh.Mesh.run" title="compass.landice.tests.thwaites.mesh.Mesh.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.Mesh.run</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.thwaites.mesh.Mesh.run.html#compass.landice.tests.thwaites.mesh.Mesh.run" title="compass.landice.tests.thwaites.mesh.Mesh.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.Mesh.run</span></code></a>()</p></td>
 <td><p>Run this step of the test case</p></td>
 </tr>
 </tbody>

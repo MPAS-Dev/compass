@@ -110,6 +110,7 @@
              
   <h1>Source code for compass.landice.tests.humboldt.decomposition_test</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.humboldt.run_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">calculate_decomp_core_pair</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.testcase</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestCase</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.validate</span><span class="w"> </span><span class="kn">import</span> <span class="n">compare_variables</span>
 
@@ -118,11 +119,11 @@
 <a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.humboldt.decomposition_test.DecompositionTest.html#compass.landice.tests.humboldt.decomposition_test.DecompositionTest">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DecompositionTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A test case for performing two MALI runs of a humboldt setup, one with one</span>
-<span class="sd">    core and one with four.  The test case verifies that the results of the</span>
-<span class="sd">    two runs are identical or close to identical.  The FO velocity solver is</span>
-<span class="sd">    not bit for bit across decompositions, so identical results are not</span>
-<span class="sd">    expected when it is used.</span>
+<span class="sd">    A test case for performing two MALI runs of a Humboldt setup with</span>
+<span class="sd">    different decompositions. The larger decomposition targets 32 tasks,</span>
+<span class="sd">    subject to available resources, and the smaller decomposition is roughly</span>
+<span class="sd">    half of the larger one. The test case verifies that results are identical</span>
+<span class="sd">    or close to identical.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -143,12 +144,15 @@
 
 <span class="sd">    depth_integrated  : bool</span>
 <span class="sd">        Whether the (FO) velocity model is depth integrated</span>
+
 <span class="sd">    hydro : bool</span>
 <span class="sd">        Whether to include subglacial hydrology</span>
 
-<span class="sd">    proc_list : list</span>
-<span class="sd">        The pair of processor count values to test over.</span>
-<span class="sd">        Function of velocity solver.</span>
+<span class="sd">    proc_list : list of int</span>
+<span class="sd">        The pair of processor counts used in the decomposition comparison</span>
+
+<span class="sd">    run_dirs : list of str</span>
+<span class="sd">        The names of the subdirectories for the two decomposition runs</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="DecompositionTest.__init__">
@@ -193,6 +197,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">calving_law</span> <span class="o">=</span> <span class="n">calving_law</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">damage</span> <span class="o">=</span> <span class="n">damage</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">face_melt</span> <span class="o">=</span> <span class="n">face_melt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">depth_integrated</span> <span class="o">=</span> <span class="n">depth_integrated</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proc_list</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_dirs</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">hydro</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">hydro</span> <span class="o">=</span> <span class="n">hydro</span>
         <span class="k">else</span><span class="p">:</span>
@@ -212,26 +219,50 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hydro</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="n">subdir</span> <span class="o">+=</span> <span class="s1">&#39;_subglacialhydro&#39;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-                         <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
+                         <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span></div>
 
+
+<div class="viewcode-block" id="DecompositionTest.configure">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.humboldt.decomposition_test.DecompositionTest.configure.html#compass.landice.tests.humboldt.decomposition_test.DecompositionTest.configure">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Choose decomposition sizes from framework-detected resources and add</span>
+<span class="sd">        run steps.</span>
+
+<span class="sd">        The larger decomposition targets up to 32 tasks. FO runs require at</span>
+<span class="sd">        least 10 tasks; all others require at least 2 tasks.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Target a max of 32 tasks, but use fewer if not available.</span>
+        <span class="n">target_max_tasks</span> <span class="o">=</span> <span class="mi">32</span>
+        <span class="c1"># FO solver required more resources to be time-effective to run</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">&#39;FO&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">proc_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
+            <span class="n">smallest_acceptable_max_tasks</span> <span class="o">=</span> <span class="mi">10</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">proc_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
+            <span class="c1"># Need at least 2 tasks to test decomposition.</span>
+            <span class="n">smallest_acceptable_max_tasks</span> <span class="o">=</span> <span class="mi">2</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">proc_list</span> <span class="o">=</span> <span class="n">calculate_decomp_core_pair</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">target_max_tasks</span><span class="p">,</span> <span class="n">smallest_acceptable_max_tasks</span><span class="p">)</span>
+        <span class="c1"># Note: Failing when this many tasks are unavailable is</span>
+        <span class="c1"># desired behavior for decomposition testing.</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_dirs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">procs</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">proc_list</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">proc_run&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">procs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_dirs</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">run_dirs</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run_dirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
                 <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="n">procs</span><span class="p">,</span>
+                         <span class="n">min_tasks</span><span class="o">=</span><span class="n">procs</span><span class="p">,</span>
                          <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span><span class="p">,</span>
                          <span class="n">calving_law</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calving_law</span><span class="p">,</span>
                          <span class="n">damage</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">damage</span><span class="p">,</span>
                          <span class="n">face_melt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">face_melt</span><span class="p">,</span>
-                         <span class="n">depth_integrated</span><span class="o">=</span><span class="n">depth_integrated</span><span class="p">,</span>
+                         <span class="n">depth_integrated</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">depth_integrated</span><span class="p">,</span>
                          <span class="n">hydro</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hydro</span><span class="p">,</span>
-                         <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">))</span></div>
+                         <span class="n">mesh_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span><span class="p">))</span></div>
 
-
-    <span class="c1"># no configure() method is needed</span>
 
     <span class="c1"># no run() method is needed</span>
 
@@ -242,8 +273,8 @@
 <span class="sd">        Test cases can override this method to perform validation of variables</span>
 <span class="sd">        and timers</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">run_dir1</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">proc_run&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">proc_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">run_dir2</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">proc_run&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">proc_list</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">run_dir1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_dirs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">run_dir2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_dirs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">&#39;sia&#39;</span><span class="p">:</span>

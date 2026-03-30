@@ -42,10 +42,14 @@ decomposition_test
 ------------------
 
 The :py:class:`compass.landice.tests.thwaites.decomposition_test.DecompositionTest`
-performs a 5-day run once on 1 core and once on 4 cores.  It ensures that
-``thickness`` and ``surfaceSpeed`` are identical at the end of the two runs
-(as well as with a baseline if one is provided when calling
-:ref:`dev_compass_setup`).
+performs a 5-day run with two different decompositions. The larger run targets
+32 tasks (or fewer if fewer are available, with a minimum of 10), and the
+smaller run uses roughly half as many tasks. It ensures that ``thickness`` and
+``surfaceSpeed`` are identical at the end of the two runs (as well as with a
+baseline if one is provided when calling :ref:`dev_compass_setup`).
+Decomposition sizes are selected with
+:py:func:`compass.landice.util.calculate_decomp_core_pair`, which returns
+the processor list ``[low_tasks, max_tasks]`` used for the two runs.
 
 .. _dev_landice_thwaites_restart_test:
 
