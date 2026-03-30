@@ -60,7 +60,7 @@ class Mesh(TestCase):
 
         self.add_step(CullMeshStep(
             test_case=self, base_mesh_step=base_mesh_step,
-            with_ice_shelf_cavities=True, remap_topography=remap_step))
+            with_ice_shelf_cavities=True, unsmoothed_topo=remap_step))
 
     def configure(self):
         """
