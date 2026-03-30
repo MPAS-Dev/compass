@@ -1,13 +1,27 @@
 from compass.landice.tests.thwaites.run_model import RunModel
+from compass.landice.util import calculate_decomp_core_pair
 from compass.testcase import TestCase
 from compass.validate import compare_variables
 
 
 class DecompositionTest(TestCase):
     """
-    A test case for performing two MALI runs of the Thwaites setup,
-    with two different core counts.  The test case verifies that the
-    results of the two runs are identical.
+    A test case for performing two MALI runs of the Thwaites setup with
+    different decompositions. The larger decomposition targets up to 32
+    tasks, subject to available resources, and the smaller decomposition is
+    roughly half of the larger one. The test case verifies that the results
+    of the two runs are identical.
+
+    Attributes
+    ----------
+    depth_integrated : bool
+        Whether the FO velocity model is depth integrated
+
+    proc_list : list of int
+        The pair of processor counts used in the decomposition comparison
+
+    run_dirs : list of str
+        The names of the subdirectories for the two decomposition runs
     """
 
     def __init__(self, test_group, depth_integrated=False):
@@ -28,18 +42,34 @@ class DecompositionTest(TestCase):
         else:
             name = 'fo_decomposition_test'
 
+        self.depth_integrated = depth_integrated
+        self.proc_list = None
+        self.run_dirs = None
         super().__init__(test_group=test_group, name=name)
 
-        self.cores_set = [16, 32]
+    def configure(self):
+        """
+        Choose decomposition sizes from framework-detected resources and add
+        run steps.
 
-        for procs in self.cores_set:
+        The larger decomposition targets up to 32 tasks and requires at least
+        10 tasks to run this decomposition test.
+        """
+        target_max_tasks = 32
+        smallest_acceptable_max_tasks = 10
+        self.proc_list = calculate_decomp_core_pair(
+            self.config, target_max_tasks, smallest_acceptable_max_tasks)
+
+        self.run_dirs = []
+        for procs in self.proc_list:
             name = '{}proc_run'.format(procs)
+            if name in self.run_dirs:
+                name = '{}_{}'.format(name, len(self.run_dirs) + 1)
+            self.run_dirs.append(name)
             self.add_step(
                 RunModel(test_case=self, name=name,
-                         depth_integrated=depth_integrated,
+                         depth_integrated=self.depth_integrated,
                          ntasks=procs, min_tasks=procs, openmp_threads=1))
-
-    # no configure() method is needed
 
     # no run() method is needed
 
@@ -48,8 +78,8 @@ class DecompositionTest(TestCase):
         Test cases can override this method to perform validation of variables
         and timers
         """
-        name1 = '{}proc_run'.format(self.cores_set[0])
-        name2 = '{}proc_run'.format(self.cores_set[1])
+        name1 = self.run_dirs[0]
+        name2 = self.run_dirs[1]
         # validate thickness
         compare_variables(test_case=self,
                           variables=['thickness', ],

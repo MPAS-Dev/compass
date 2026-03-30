@@ -1,15 +1,16 @@
 from compass.landice.tests.humboldt.run_model import RunModel
+from compass.landice.util import calculate_decomp_core_pair
 from compass.testcase import TestCase
 from compass.validate import compare_variables
 
 
 class DecompositionTest(TestCase):
     """
-    A test case for performing two MALI runs of a humboldt setup, one with one
-    core and one with four.  The test case verifies that the results of the
-    two runs are identical or close to identical.  The FO velocity solver is
-    not bit for bit across decompositions, so identical results are not
-    expected when it is used.
+    A test case for performing two MALI runs of a Humboldt setup with
+    different decompositions. The larger decomposition targets 32 tasks,
+    subject to available resources, and the smaller decomposition is roughly
+    half of the larger one. The test case verifies that results are identical
+    or close to identical.
 
     Attributes
     ----------
@@ -30,12 +31,15 @@ class DecompositionTest(TestCase):
 
     depth_integrated  : bool
         Whether the (FO) velocity model is depth integrated
+
     hydro : bool
         Whether to include subglacial hydrology
 
-    proc_list : list
-        The pair of processor count values to test over.
-        Function of velocity solver.
+    proc_list : list of int
+        The pair of processor counts used in the decomposition comparison
+
+    run_dirs : list of str
+        The names of the subdirectories for the two decomposition runs
     """
 
     def __init__(self, test_group, velo_solver, calving_law, mesh_type,
@@ -78,6 +82,9 @@ class DecompositionTest(TestCase):
         self.calving_law = calving_law
         self.damage = damage
         self.face_melt = face_melt
+        self.depth_integrated = depth_integrated
+        self.proc_list = None
+        self.run_dirs = None
         if hydro is not None:
             self.hydro = hydro
         else:
@@ -99,23 +106,44 @@ class DecompositionTest(TestCase):
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
+    def configure(self):
+        """
+        Choose decomposition sizes from framework-detected resources and add
+        run steps.
+
+        The larger decomposition targets up to 32 tasks. FO runs require at
+        least 10 tasks; all others require at least 2 tasks.
+        """
+        # Target a max of 32 tasks, but use fewer if not available.
+        target_max_tasks = 32
+        # FO solver required more resources to be time-effective to run
         if self.velo_solver == 'FO':
-            self.proc_list = [16, 32]
+            smallest_acceptable_max_tasks = 10
         else:
-            self.proc_list = [1, 32]
+            # Need at least 2 tasks to test decomposition.
+            smallest_acceptable_max_tasks = 2
+
+        self.proc_list = calculate_decomp_core_pair(
+            self.config, target_max_tasks, smallest_acceptable_max_tasks)
+        # Note: Failing when this many tasks are unavailable is
+        # desired behavior for decomposition testing.
+
+        self.run_dirs = []
         for procs in self.proc_list:
             name = '{}proc_run'.format(procs)
+            if name in self.run_dirs:
+                name = '{}_{}'.format(name, len(self.run_dirs) + 1)
+            self.run_dirs.append(name)
             self.add_step(
                 RunModel(test_case=self, name=name, subdir=name, ntasks=procs,
+                         min_tasks=procs,
                          openmp_threads=1, velo_solver=self.velo_solver,
                          calving_law=self.calving_law,
                          damage=self.damage,
                          face_melt=self.face_melt,
-                         depth_integrated=depth_integrated,
+                         depth_integrated=self.depth_integrated,
                          hydro=self.hydro,
-                         mesh_type=mesh_type))
-
-    # no configure() method is needed
+                         mesh_type=self.mesh_type))
 
     # no run() method is needed
 
@@ -124,8 +152,8 @@ class DecompositionTest(TestCase):
         Test cases can override this method to perform validation of variables
         and timers
         """
-        run_dir1 = '{}proc_run'.format(self.proc_list[0])
-        run_dir2 = '{}proc_run'.format(self.proc_list[1])
+        run_dir1 = self.run_dirs[0]
+        run_dir2 = self.run_dirs[1]
 
         var_list = ['thickness']
         if self.velo_solver == 'sia':
