@@ -1,14 +1,14 @@
-from compass.landice.tests.slm.circ_icesheet.run_model import RunModel
-from compass.landice.tests.slm.circ_icesheet.setup_mesh import SetupMesh
-from compass.landice.tests.slm.circ_icesheet.visualize import Visualize
+from compass.landice.tests.slm_circ_icesheet.run_model import RunModel
+from compass.landice.tests.slm_circ_icesheet.setup_mesh import SetupMesh
+from compass.landice.tests.slm_circ_icesheet.visualize import Visualize
 from compass.testcase import TestCase
 
 
-class CircIcesheetTest(TestCase):
+class MeshConvergenceTest(TestCase):
     """
-    This test generates an idealized, circular ice sheet that has a
-    prescribed thickness evolution for testing coupling between MALI
-    and the Sea-Level Model.
+    This test uses the circular ice sheet test case to test the convergence
+    of the coupled MALI-SLM system with respect to mesh resolution of both
+    MALI and the SLM.
     """
 
     def __init__(self, test_group):
@@ -17,11 +17,11 @@ class CircIcesheetTest(TestCase):
 
         Parameters
         ----------
-        test_group : compass.landice.tests.slm.Slm
+        test_group : compass.landice.tests.slm_circ_icesheet.SlmCircIcesheet
             The test group that this test case belongs to
             The resolution or type of mesh of the test case
         """
-        name = 'circ_icesheet'
+        name = 'mesh_convergence'
         subdir = name
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
@@ -60,6 +60,3 @@ class CircIcesheetTest(TestCase):
                                        '/run_model'))
         step = Visualize(test_case=self)
         self.add_step(step, run_by_default=True)
-
-    # no run() method is needed because we're doing the default: running all
-    # steps
