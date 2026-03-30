@@ -52,7 +52,7 @@ class MeshConvergenceTest(TestCase):
                     ntasks = 512
                 else:
                     ntasks = 128
-                min_tasks = ntasks
+                min_tasks = 10
                 self.add_step(RunModel(test_case=self, res=res, nglv=nglv,
                                        ntasks=ntasks, min_tasks=min_tasks,
                                        openmp_threads=1,
