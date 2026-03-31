@@ -20,7 +20,7 @@ from compass.landice.tests.ensemble_generator.ensemble_manager import (
 )
 from compass.testcase import TestCase
 
-from .restart_member import RestartMember
+from .restart_member import InPlaceRestartMember
 
 
 class RestartEnsemble(TestCase):
@@ -106,7 +106,7 @@ class RestartEnsemble(TestCase):
                 print(f"Scheduling restart for {run_name}")
 
                 # Add restart member step
-                self.add_step(RestartMember(
+                self.add_step(InPlaceRestartMember(
                     test_case=self,
                     run_num=run_num,
                     spinup_work_dir=spinup_work_dir
