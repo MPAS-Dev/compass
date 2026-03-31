@@ -1,7 +1,7 @@
 {
   "meta": {
     "software": "compass",
-    "mache_version": "3.2.0",
+    "mache_version": "3.3.0rc2",
     "description": "Deploy compass environment"
   },
   "arguments": [
@@ -18,9 +18,9 @@
       "route": ["deploy", "bootstrap", "run"]
     },
     {
-      "flags": ["--prefix"],
-      "dest": "prefix",
-      "help": "Install the environment into this prefix (directory). Overrides deploy/config.yaml.j2.",
+      "flags": ["--pixi-path", "--prefix"],
+      "dest": "pixi_path",
+      "help": "Install the pixi environment at this path (directory). Overrides deploy/config.yaml.j2. `--prefix` is deprecated.",
       "route": ["deploy", "bootstrap", "run"]
     },
     {
