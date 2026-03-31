@@ -260,14 +260,16 @@ def _merge_optional_cli_spec(cli_spec, custom_cli_spec):
     if custom_cli_spec is None:
         return cli_spec
 
+    merged_meta = dict(cli_spec.get('meta', {}))  # type: dict
+    merged_arguments = list(cli_spec.get('arguments', []))  # type: list
     merged = {
-        'meta': dict(cli_spec.get('meta', {})),
-        'arguments': list(cli_spec.get('arguments', [])),
+        'meta': merged_meta,
+        'arguments': merged_arguments,
     }
 
     seen_dests = set()
     seen_flags = set()
-    for entry in merged['arguments']:
+    for entry in merged_arguments:
         dest = entry.get('dest')
         if dest:
             seen_dests.add(dest)
@@ -289,7 +291,7 @@ def _merge_optional_cli_spec(cli_spec, custom_cli_spec):
                 'ERROR: deploy/custom_cli_spec.json duplicates generated '
                 f'flags: {dup_str}'
             )
-        merged['arguments'].append(entry)
+        merged_arguments.append(entry)
         if dest:
             seen_dests.add(dest)
         seen_flags.update(flags)
@@ -540,21 +542,30 @@ def _run_mache_deploy_run(pixi_exe, repo_root, mache_run_argv):
             f'ERROR: bootstrap pixi project not found. Expected: {pixi_toml}'
         )
 
-    # Build a bash command that runs mache inside pixi, then cd's to repo.
-    mache_cmd = 'mache deploy run'
-    if mache_run_argv:
-        mache_cmd = f'{mache_cmd} ' + ' '.join(
-            shlex.quote(a) for a in mache_run_argv
-        )
+    env = os.environ.copy()
+    for var in (
+        'PIXI_PROJECT_MANIFEST',
+        'PIXI_PROJECT_ROOT',
+        'PIXI_ENVIRONMENT_NAME',
+        'PIXI_IN_SHELL',
+    ):
+        env.pop(var, None)
 
-    cmd = (
-        f'env -u PIXI_PROJECT_MANIFEST -u PIXI_PROJECT_ROOT '
-        f'-u PIXI_ENVIRONMENT_NAME -u PIXI_IN_SHELL '
-        f'{shlex.quote(pixi_exe)} run -m {shlex.quote(pixi_toml)} bash -lc '
-        f'{shlex.quote("cd " + repo_root + " && " + mache_cmd)}'
-    )
+    cmd = [
+        pixi_exe,
+        'run',
+        '-m',
+        pixi_toml,
+        '--',
+        'mache',
+        'deploy',
+        'run',
+    ]
+    if mache_run_argv:
+        cmd.extend(mache_run_argv)
+
     try:
-        subprocess.check_call(['/bin/bash', '-lc', cmd])
+        subprocess.run(cmd, cwd=repo_root, env=env, check=True)
     except subprocess.CalledProcessError as e:
         raise SystemExit(
             f'\nERROR: Deployment step failed (exit code {e.returncode}). '
