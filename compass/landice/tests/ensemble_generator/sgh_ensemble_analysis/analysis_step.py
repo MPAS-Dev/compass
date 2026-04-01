@@ -15,8 +15,7 @@ from compass.step import Step
 
 
 def _sanitize_for_json(obj):
-    """Recursively convert numpy types to native
-    Python types for JSON safety."""
+    """Recursively convert numpy types to native Python types for JSON safety."""
     if isinstance(obj, dict):
         return {k: _sanitize_for_json(v) for k, v in obj.items()}
     elif isinstance(obj, list):
@@ -112,6 +111,10 @@ class AnalysisStep(Step):
         logger.info(f"Loaded validation config: "
                     f"{analysis_config['validation']}")
 
+        # Create top-level figures directory next to analysis_summary.json
+        figures_dir = os.path.join(self.work_dir, 'figures')
+        os.makedirs(figures_dir, exist_ok=True)
+
         # Initialize results
         summary = {
             'timestamp': datetime.now().isoformat(),
@@ -162,8 +165,12 @@ class AnalysisStep(Step):
 
         # Analyze each run with output
         for run_num, run_dir, run_name in runs_with_output:
+            # Create per-run figure subdirectory
+            run_fig_dir = os.path.join(figures_dir, run_name)
+            os.makedirs(run_fig_dir, exist_ok=True)
+
             results = self._run_analysis_on_run(
-                run_dir, run_name, analysis_config)
+                run_dir, run_name, analysis_config, run_fig_dir)
             summary['individual_results'][run_num] = results
 
             # Categorize based on steady state
@@ -220,7 +227,7 @@ class AnalysisStep(Step):
         return max(files, key=os.path.getmtime)
 
     def _run_analysis_on_run(self, run_dir, run_name,
-                             analysis_config):
+                             analysis_config, run_fig_dir):
         """Run analysis on a completed run."""
         self.logger.info(f"  Analyzing {run_name}...")
 
@@ -245,7 +252,7 @@ class AnalysisStep(Step):
 
             ss_results = self._run_steadystate_analysis(
                 output_file, window_years, imbalance_threshold,
-                plot_results)
+                plot_results, run_fig_dir)
             results['steady_state'] = ss_results
 
         except Exception as e:
@@ -270,7 +277,7 @@ class AnalysisStep(Step):
                         f"No output*.nc files found in {output_dir}")
                 val_results = self._run_validation_analysis(
                     latest_output, spec_tiff, ba_threshold,
-                    plot_validation)
+                    plot_validation, run_fig_dir)
                 results['validation'] = val_results
             else:
                 results['validation'] = {'status': 'no_spec_file',
@@ -284,7 +291,8 @@ class AnalysisStep(Step):
         return results
 
     def _run_steadystate_analysis(self, output_file, window_years,
-                                  imbalance_threshold, plot=False):
+                                  imbalance_threshold, plot=False,
+                                  plot_dir=None):
         """Run steady-state analysis via subprocess."""
         script = os.path.join(
             self.script_dir,
@@ -305,9 +313,11 @@ class AnalysisStep(Step):
 
             if plot:
                 cmd.append('--plot')
+                if plot_dir is not None:
+                    cmd += ['--plot_dir', plot_dir]
 
             result = subprocess.run(cmd, capture_output=True,
-                                    text=True)
+                                    text=True, timeout=300)
 
             if result.returncode == 0 and os.path.exists(temp_json):
                 with open(temp_json, 'r') as f:
@@ -322,7 +332,8 @@ class AnalysisStep(Step):
                 os.unlink(temp_json)
 
     def _run_validation_analysis(self, output_file, spec_tiff,
-                                 ba_threshold, plot=False):
+                                 ba_threshold, plot=False,
+                                 plot_dir=None):
         """Run validation analysis via subprocess."""
         script = os.path.join(
             self.script_dir, 'validate_mali_with_spec.py')
@@ -342,9 +353,11 @@ class AnalysisStep(Step):
 
             if plot:
                 cmd.append('--plot')
+                if plot_dir is not None:
+                    cmd += ['--plot_dir', plot_dir]
 
             result = subprocess.run(cmd, capture_output=True,
-                                    text=True)
+                                    text=True, timeout=300)
 
             if result.returncode == 0 and os.path.exists(temp_json):
                 with open(temp_json, 'r') as f:
