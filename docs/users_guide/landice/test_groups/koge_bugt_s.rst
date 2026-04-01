@@ -53,7 +53,7 @@ the mesh generation options are adjusted through the config file.
     use_dist_to_grounding_line = False
     use_dist_to_edge = True
 
-    # Whether to interpolate data (controls run_optional_bespoke_interpolation)
+    # Whether to interpolate data (controls run_optional_interpolation)
     interpolate_data = False
     # path to directory containing BedMachine and Measures datasets
     # (default value is for Perlmutter)

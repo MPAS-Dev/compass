@@ -36,7 +36,7 @@ Optional BedMachine and MEaSUREs interpolation can be enabled through
 datasets are subset to the
 configured mesh bounding box before SCRIP generation and conservative
 remapping.
-The ``src_proj`` option is used for optional bespoke remapping only; the
+The ``src_proj`` option is used for optional remapping only; the
 base-mesh projection in ``build_mali_mesh()`` is fixed for this test case.
 
 run_model

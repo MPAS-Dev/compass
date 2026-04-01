@@ -84,7 +84,7 @@ The other test cases do not use config options.
    use_bed = True
 
    [greenland]
-   # Whether to interpolate data (controls run_optional_bespoke_interpolation)
+   # Whether to interpolate data (controls run_optional_interpolation)
    interpolate_data = True
    # path to directory containing BedMachine and Measures datasets
    # (default value is for Perlmutter)

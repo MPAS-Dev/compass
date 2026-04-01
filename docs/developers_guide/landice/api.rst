@@ -499,7 +499,7 @@ Landice Framework
    mesh.interp_gridded2mali
    mesh.mpas_flood_fill
    mesh.preprocess_ais_data
-   mesh.run_optional_bespoke_interpolation
+   mesh.run_optional_interpolation
    mesh.set_rectangular_geom_points_and_edges
    mesh.set_cell_width
    mesh.subset_gridded_dataset_to_bounds

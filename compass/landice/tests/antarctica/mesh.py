@@ -8,7 +8,7 @@ from compass.landice.mesh import (
     get_optional_interp_datasets,
     make_region_masks,
     preprocess_ais_data,
-    run_optional_bespoke_interpolation,
+    run_optional_interpolation,
 )
 from compass.model import make_graph_file
 from compass.step import Step
@@ -45,8 +45,8 @@ class Mesh(Step):
         self.add_output_file(
             filename=f'{self.mesh_filename[:-3]}_ismip6_regionMasks.nc')
         self.add_input_file(
-            filename='antarctica_8km_2024_01_29.nc',
-            target='antarctica_8km_2024_01_29.nc',
+            filename='antarctica_1km_2024_01_29.nc',
+            target='antarctica_1km_2024_01_29.nc',
             database='')
 
     # no setup() method is needed
@@ -69,7 +69,7 @@ class Mesh(Step):
         section_name = 'mesh'
 
         # TODO: do we want to add this to the config file?
-        source_gridded_dataset = 'antarctica_8km_2024_01_29.nc'
+        source_gridded_dataset = 'antarctica_1km_2024_01_29.nc'
 
         if bedmachine_dataset is not None:
             bm_updated_gridded_dataset = (
@@ -135,7 +135,7 @@ class Mesh(Step):
         interpolate_data = section_ais.getboolean(
             'interpolate_data', fallback=False)
         if interpolate_data:
-            run_optional_bespoke_interpolation(
+            run_optional_interpolation(
                 self, self.mesh_filename, src_proj,
                 parallel_executable, nProcs,
                 bedmachine_dataset=bedmachine_dataset,

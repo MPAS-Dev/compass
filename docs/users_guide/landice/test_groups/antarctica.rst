@@ -70,7 +70,7 @@ the mesh generation options are adjusted through the config file.
     use_bed = False
 
     [antarctica]
-    # Whether to interpolate data (controls run_optional_bespoke_interpolation)
+    # Whether to interpolate data (controls run_optional_interpolation)
     interpolate_data = True
     # path to directory containing BedMachine and Measures datasets
     # (default value is for Perlmutter)

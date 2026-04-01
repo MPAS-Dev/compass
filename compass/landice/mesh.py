@@ -1194,7 +1194,7 @@ def clean_up_after_interp(fname):
 
 def get_optional_interp_datasets(section, logger):
     """
-    Determine whether optional bespoke interpolation inputs are configured.
+    Determine whether optional interpolation inputs are configured.
 
     Parameters
     ----------
@@ -1355,11 +1355,11 @@ def subset_gridded_dataset_to_bounds(
     return subset_dataset
 
 
-def run_optional_bespoke_interpolation(
+def run_optional_interpolation(
         self, mesh_filename, src_proj, parallel_executable, nProcs,
         bedmachine_dataset=None, measures_dataset=None, subset_bounds=None):
     """
-    Run optional bespoke interpolation and cleanup if datasets are configured.
+    Run optional interpolation and cleanup if datasets are configured.
 
     Parameters
     ----------
@@ -1392,9 +1392,9 @@ def run_optional_bespoke_interpolation(
     """
 
     logger = self.logger
-    do_bespoke_interp = bedmachine_dataset is not None or \
+    do_optional_interp = bedmachine_dataset is not None or \
         measures_dataset is not None
-    if not do_bespoke_interp:
+    if not do_optional_interp:
         return
 
     if nProcs is None:

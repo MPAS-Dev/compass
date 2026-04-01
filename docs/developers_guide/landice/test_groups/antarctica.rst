@@ -47,7 +47,7 @@ Third, ``preprocess_ais_data`` is called to perform a series of adjustments
 to the AIS datasets needed to work with the rest of the workflow.
 
 From here, dataset interpolation happens, starting with the standard
-interpolation script applied to the standard dataset, followed by bespoke
+interpolation script applied to the standard dataset, followed by optional
 interpolation of the high resolution BedMachine and MEASURES datasets.
 The step completes with some clean up and creation of a graph file.
 

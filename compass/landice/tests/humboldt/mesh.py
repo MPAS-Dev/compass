@@ -3,7 +3,7 @@ from compass.landice.mesh import (
     build_mali_mesh,
     get_mesh_config_bounding_box,
     get_optional_interp_datasets,
-    run_optional_bespoke_interpolation,
+    run_optional_interpolation,
 )
 from compass.model import make_graph_file
 from compass.step import Step
@@ -81,7 +81,7 @@ class Mesh(Step):
         interpolate_data = section.getboolean(
             'interpolate_data', fallback=False)
         if interpolate_data:
-            run_optional_bespoke_interpolation(
+            run_optional_interpolation(
                 self, mesh_name, src_proj, parallel_executable, nProcs,
                 subset_bounds=get_mesh_config_bounding_box(section),
                 bedmachine_dataset=bedmachine_dataset,
