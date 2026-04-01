@@ -18,6 +18,7 @@ from __future__ import (
 
 import argparse
 import json
+import os
 import sys
 
 import netCDF4 as nc
@@ -60,6 +61,11 @@ parser.add_argument(
     default="steadystate_results.json")
 parser.add_argument("--plot", dest="plot", action='store_true', default=False,
                     help="Generate plots (default: False)")
+parser.add_argument(
+    "--plot_dir",
+    dest="plot_dir",
+    help="Directory to save plots (default: current directory)",
+    default=None)
 args = parser.parse_args()
 
 # Scaling assuming variables are in kg
@@ -370,10 +376,12 @@ if args.plot:
     plt.title('Subglacial Water Mass Balance')
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
-    plt.savefig(
-        "subglacial_water_mass_balance.png",
-        dpi=300,
-        bbox_inches="tight")
+    if args.plot_dir:
+        fig_path = os.path.join(
+            args.plot_dir, "subglacial_water_mass_balance.png")
+    else:
+        fig_path = "subglacial_water_mass_balance.png"
+    plt.savefig(fig_path, dpi=300, bbox_inches="tight")
 
     # Plot 2: Mass balance residual
     fig, axes = plt.subplots(
@@ -432,10 +440,12 @@ if args.plot:
     axes[1].grid(True, alpha=0.3)
     axes[1].set_title('Relative Mass Balance Imbalance')
 
-    plt.savefig(
-        "water_mass_balance_residual.png",
-        dpi=300,
-        bbox_inches="tight")
+    if args.plot_dir:
+        fig_path = os.path.join(
+            args.plot_dir, "water_mass_balance_residual.png")
+    else:
+        fig_path = "water_mass_balance_residual.png"
+    plt.savefig(fig_path, dpi=300, bbox_inches="tight")
 
     # Plot 3: Other time-series
     fig, axes = plt.subplots(
@@ -471,10 +481,12 @@ if args.plot:
     for ax in axes:
         ax.set_xlabel("Year")
 
-    plt.savefig(
-        "subglacial_hydrology_timeseries.png",
-        dpi=300,
-        bbox_inches="tight")
+    if args.plot_dir:
+        fig_path = os.path.join(
+            args.plot_dir, "subglacial_hydrology_timeseries.png")
+    else:
+        fig_path = "subglacial_hydrology_timeseries.png"
+    plt.savefig(fig_path, dpi=300, bbox_inches="tight")
 
 # ============================================================================
 # SAVE RESULTS
