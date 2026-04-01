@@ -58,6 +58,12 @@ class RestartEnsemble(TestCase):
         4. Sets up ensemble_manager to handle job submission
         """
         config = self.config
+        # Load shipped defaults before reading any options so that the
+        # compass config infrastructure (MpasConfigParser) can resolve them
+        # without needing fallback= kwargs.
+        self.config.add_from_package(
+            'compass.landice.tests.ensemble_generator.sgh_restart_ensemble',
+            'ensemble_generator.cfg')
         # Bug fix: use dict-style access to get a SectionProxy, not .get()
         section = config['restart_ensemble']
 
@@ -75,19 +81,16 @@ class RestartEnsemble(TestCase):
             raise ValueError(f"spinup_work_dir not found: {spinup_work_dir}")
 
         # Get restart configuration
-        max_consecutive_restarts = section.getint(
-            'max_consecutive_restarts', fallback=3)
+        max_consecutive_restarts = section.getint('max_consecutive_restarts')
         min_simulation_years = section.getfloat(
-            'min_simulation_years_before_restart', fallback=50.0)
-        auto_restart = section.getboolean(
-            'auto_restart_incomplete', fallback=True)
+            'min_simulation_years_before_restart')
+        auto_restart = section.getboolean('auto_restart_incomplete')
 
         # Load per-run analysis results from analysis_summary.json if provided.
         # The sgh_ensemble_analysis test case writes this file; it contains
         # an 'individual_results' dict keyed by run number (strings in JSON).
         analysis_summary = {}
-        analysis_summary_file = section.get('analysis_summary_file',
-                                            fallback=None)
+        analysis_summary_file = section.get('analysis_summary_file')
         if analysis_summary_file and \
                 analysis_summary_file.lower() != 'none':
             if not os.path.exists(analysis_summary_file):
