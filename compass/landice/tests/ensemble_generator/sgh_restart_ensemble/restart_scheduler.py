@@ -149,6 +149,9 @@ ensemble_template = sgh_ensemble
 # Path to the spinup ensemble to restart from
 spinup_work_dir = {self.original_ensemble_dir}
 
+# Path to the analysis_summary.json from sgh_ensemble_analysis
+analysis_summary_file = {self.summary_file}
+
 # Restart configuration
 # Maximum consecutive restart attempts per run (prevents infinite loops)
 max_consecutive_restarts = 3
@@ -242,12 +245,12 @@ def schedule_restarts(
 
     Examples
     --------
-    >>> from compass.landice.tests.ensemble_generator.
-            ensemble_templates.sgh_ensemble.restart
-            import schedule_restarts
+    >>> from compass.landice.tests.ensemble_generator.sgh_restart_ensemble \
+    ...     .restart_scheduler import schedule_restarts
     >>>
     >>> config_file, restart_runs = schedule_restarts(
-    ...     '/work/ensemble1/spinup_ensemble/analysis_summary.json',
+    ...     '/work/analysis/sgh_ensemble_analysis/analyze_ensemble/'
+    ...     'analysis_summary.json',
     ...     '/work/ensemble2',
     ...     min_years=50.0,
     ...     max_attempts=3
