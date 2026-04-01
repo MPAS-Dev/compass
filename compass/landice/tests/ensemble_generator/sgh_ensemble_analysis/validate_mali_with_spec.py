@@ -25,6 +25,20 @@ from scipy.interpolate import griddata
 from scipy.stats import binned_statistic_2d
 
 
+def _sanitize_for_json(obj):
+    """Recursively convert numpy types to native Python types for JSON safety."""
+    if isinstance(obj, dict):
+        return {k: _sanitize_for_json(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [_sanitize_for_json(v) for v in obj]
+    elif isinstance(obj, np.generic):
+        return obj.item()
+    elif isinstance(obj, np.ndarray):
+        return obj.tolist()
+    else:
+        return obj
+
+
 class validateWithSpec:
     """
     Validator for MALI simulations using specularity content observations.
@@ -313,7 +327,7 @@ class validateWithSpec:
         }
 
         with open(self.options.output_json, 'w') as f:
-            json.dump(results, f, indent=2)
+            json.dump(_sanitize_for_json(results), f, indent=2)
 
         print(f"Validation results saved to {self.options.output_json}")
 
