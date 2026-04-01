@@ -64,7 +64,8 @@ class EnsembleManager(Step):
         for run in runs:
             # Get step object from 'steps' dictionary
             runStep = self.test_case.steps[run]
-            os.chdir(runStep.work_dir)
+            run_dir = getattr(runStep, 'spinup_run_dir', runStep.work_dir)
+            os.chdir(run_dir)
 
             # Skip run if an error is detected
             err_files = glob.glob('log.landice.*.err')
