@@ -15,7 +15,8 @@ from compass.step import Step
 
 
 def _sanitize_for_json(obj):
-    """Recursively convert numpy types to native Python types for JSON safety."""
+    """Recursively convert numpy types to native
+    Python types for JSON safety."""
     if isinstance(obj, dict):
         return {k: _sanitize_for_json(v) for k, v in obj.items()}
     elif isinstance(obj, list):
@@ -306,7 +307,7 @@ class AnalysisStep(Step):
                 cmd.append('--plot')
 
             result = subprocess.run(cmd, capture_output=True,
-                                    text=True, timeout=300)
+                                    text=True)
 
             if result.returncode == 0 and os.path.exists(temp_json):
                 with open(temp_json, 'r') as f:
@@ -343,7 +344,7 @@ class AnalysisStep(Step):
                 cmd.append('--plot')
 
             result = subprocess.run(cmd, capture_output=True,
-                                    text=True, timeout=300)
+                                    text=True)
 
             if result.returncode == 0 and os.path.exists(temp_json):
                 with open(temp_json, 'r') as f:
