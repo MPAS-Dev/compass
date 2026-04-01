@@ -2,11 +2,8 @@
 Step for restarting a single incomplete ensemble member in-place.
 """
 
-import configparser
 import os
 
-from compass.io import symlink
-from compass.job import write_job_script
 from compass.step import Step
 
 
@@ -42,9 +39,9 @@ class InPlaceRestartMember(Step):
 
     Rather than copying files to a new directory, this step operates directly
     in the original run directory. It sets ``config_do_restart = .true.`` in
-    ``namelist.landice`` and writes a new ``job_script.sh`` so that the run
-    continues from its last checkpoint when ``EnsembleManager`` calls
-    ``sbatch job_script.sh``.
+    ``namelist.landice`` so that the run continues from its last checkpoint
+    when ``EnsembleManager`` calls ``sbatch job_script.sh`` using the
+    original, unmodified job script.
 
     Attributes
     ----------
@@ -84,14 +81,16 @@ class InPlaceRestartMember(Step):
         """
         Prepare the original run directory for an in-place restart.
 
-        This method:
-        1. Sets config_do_restart = .true. in namelist.landice
-        2. Registers the MALI model as an input
-        3. Writes a new job_script.sh for sbatch submission
-        4. Symlinks load_compass_env.sh if available
+        ``self.work_dir`` is already set to the original spinup run directory
+        by ``__init__``.  This method:
 
-        No files are copied and no new subdirectories are created.
-        Job submission is handled by EnsembleManager.
+        1. Verifies the run directory and namelist.landice exist.
+        2. Sets config_do_restart = .true. in namelist.landice.
+        3. Creates a restart_attempt_N/ tracking directory.
+
+        No files are copied or written, and no new job script is created.
+        Job submission is handled by EnsembleManager using the original
+        job_script.sh that was created when the spinup ensemble was set up.
         """
         run_dir = self.work_dir
 
@@ -122,28 +121,5 @@ class InPlaceRestartMember(Step):
         attempt_dir = os.path.join(run_dir, f'restart_attempt_{attempt_num}')
         os.makedirs(attempt_dir, exist_ok=True)
         print(f'Tracking restart attempt {attempt_num} in {attempt_dir}')
-
-        # Register MALI executable so compass knows this step needs the model
-        self.add_model_as_input()
-
-        # 128 matches a typical HPC node count; user can override via config
-        try:
-            self.ntasks = self.config.getint('ensemble', 'ntasks')
-        except (configparser.NoOptionError, configparser.NoSectionError):
-            self.ntasks = 128
-
-        self.min_tasks = self.ntasks
-
-        run_name = f'run{self.run_num:03}'
-        self.config.set('job', 'job_name', f'uq_{run_name}_restart')
-        machine = self.config.get('deploy', 'machine')
-        write_job_script(self.config, machine,
-                         target_cores=self.ntasks, min_cores=self.min_tasks,
-                         work_dir=self.work_dir)
-
-        if 'LOAD_COMPASS_ENV' in os.environ:
-            script_filename = os.environ['LOAD_COMPASS_ENV']
-            symlink(script_filename, os.path.join(self.work_dir,
-                                                  'load_compass_env.sh'))
 
     # No run() method — EnsembleManager handles job submission via sbatch
