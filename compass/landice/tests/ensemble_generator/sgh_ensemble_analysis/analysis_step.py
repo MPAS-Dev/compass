@@ -9,7 +9,23 @@ import subprocess
 import tempfile
 from datetime import datetime
 
+import numpy as np
+
 from compass.step import Step
+
+
+def _sanitize_for_json(obj):
+    """Recursively convert numpy types to native Python types for JSON safety."""
+    if isinstance(obj, dict):
+        return {k: _sanitize_for_json(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [_sanitize_for_json(v) for v in obj]
+    elif isinstance(obj, np.generic):
+        return obj.item()
+    elif isinstance(obj, np.ndarray):
+        return obj.tolist()
+    else:
+        return obj
 
 
 class AnalysisStep(Step):
@@ -173,9 +189,13 @@ class AnalysisStep(Step):
         # Save summary to work directory
         summary_file = os.path.join(self.work_dir,
                                     'analysis_summary.json')
+        summary = _sanitize_for_json(summary)
         with open(summary_file, 'w') as f:
-            json.dump(summary, f, indent=2)
-
+            try:
+                json.dump(summary, f, indent=2)
+            except TypeError as err:
+                raise ValueError(
+                    f"Results contain unserializable values: {err}")
         logger.info(f"Summary saved to {summary_file}")
 
     def _get_all_runs(self):
@@ -190,6 +210,13 @@ class AnalysisStep(Step):
                                    'globalStats.nc')
 
         return os.path.exists(output_file)
+
+    def _find_latest_output_file(self, output_dir):
+        """Find the most recently modified output*.nc file in output_dir."""
+        files = glob.glob(os.path.join(output_dir, 'output*.nc'))
+        if not files:
+            return None
+        return max(files, key=os.path.getmtime)
 
     def _run_analysis_on_run(self, run_dir, run_name,
                              analysis_config):
@@ -235,16 +262,15 @@ class AnalysisStep(Step):
                 'plot_validation', False)
 
             if spec_tiff and os.path.exists(spec_tiff):
-                output_hist = os.path.join(run_dir, 'output',
-                                           'history.nc')
-                if os.path.exists(output_hist):
-                    val_results = self._run_validation_analysis(
-                        output_hist, spec_tiff, ba_threshold,
-                        plot_validation)
-                    results['validation'] = val_results
-                else:
-                    results['validation'] = {
-                        'status': 'no_history_file'}
+                output_dir = os.path.join(run_dir, 'output')
+                latest_output = self._find_latest_output_file(output_dir)
+                if latest_output is None:
+                    raise ValueError(
+                        f"No output*.nc files found in {output_dir}")
+                val_results = self._run_validation_analysis(
+                    latest_output, spec_tiff, ba_threshold,
+                    plot_validation)
+                results['validation'] = val_results
             else:
                 results['validation'] = {'status': 'no_spec_file',
                                          'spec_tiff': spec_tiff}
