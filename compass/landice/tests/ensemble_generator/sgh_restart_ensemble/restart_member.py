@@ -50,6 +50,9 @@ class InPlaceRestartMember(Step):
 
     spinup_work_dir : str
         Path to the original spinup ensemble work directory
+
+    spinup_run_dir : str
+        Path to the specific original spinup run directory for this member
     """
 
     def __init__(self, test_case, run_num, spinup_work_dir):
@@ -69,33 +72,30 @@ class InPlaceRestartMember(Step):
         """
         self.run_num = run_num
         self.spinup_work_dir = spinup_work_dir
+        self.spinup_run_dir = os.path.join(spinup_work_dir, f'run{run_num:03}')
 
         name = f'run{run_num:03}_restart'
         super().__init__(test_case=test_case, name=name)
 
-        # Override work_dir to point to the original run directory so that
-        # EnsembleManager submits job_script.sh from the correct location.
-        self.work_dir = os.path.join(spinup_work_dir, f'run{run_num:03}')
-
     def setup(self):
         """
-        Prepare the original run directory for an in-place restart.
+        Prepare the original spinup run directory for an in-place restart.
 
-        ``self.work_dir`` is already set to the original spinup run directory
-        by ``__init__``.  This method:
+        Uses ``self.spinup_run_dir`` (set in ``__init__``) rather than
+        ``self.work_dir`` so that compass's framework files
+        (``step.pickle``, ``job_script.sh``, etc.) are written into the
+        normal compass step directory and never overwrite the original
+        spinup run directory.  This method:
 
-        1. Verifies the run directory and namelist.landice exist.
+        1. Verifies the spinup run directory and namelist.landice exist.
         2. Sets config_do_restart = .true. in namelist.landice.
         3. Creates a restart_attempt_N/ tracking directory.
 
-        No files are copied or written, and no new job script is created.
-        Job submission is handled by EnsembleManager using the original
-        job_script.sh that was created when the spinup ensemble was set up.
+        No files are copied or moved.  Job submission is handled by
+        EnsembleManager using the original job_script.sh that lives in
+        ``self.spinup_run_dir``.
         """
-        self.work_dir = os.path.join(
-            self.spinup_work_dir, f'run{self.run_num:03}')
-
-        run_dir = self.work_dir
+        run_dir = self.spinup_run_dir
 
         if not os.path.exists(run_dir):
             raise RuntimeError(
