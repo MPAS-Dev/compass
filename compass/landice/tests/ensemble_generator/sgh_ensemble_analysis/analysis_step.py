@@ -2,7 +2,6 @@
 Analysis step that performs the actual ensemble analysis.
 """
 
-import configparser
 import glob
 import json
 import os
@@ -29,9 +28,6 @@ class AnalysisStep(Step):
 
         ensemble_dir : str
             Directory containing completed ensemble runs
-
-        config_file : str
-            Path to configuration file for analysis
         """
         self.ensemble_dir = ensemble_dir
 
@@ -48,33 +44,56 @@ class AnalysisStep(Step):
 
         logger.info(f"Analyzing ensemble: {self.ensemble_dir}")
 
-        if self.config_file is None:
-            raise FileNotFoundError(
-                f"Could not find ensemble config file for "
-                f"{self.ensemble_dir}"
-            )
+        config = self.config
 
-        logger.info(f"Using config file: {self.config_file}")
+        # Read steady_state config, using has_option to handle missing keys
+        ss_section = 'steady_state'
+        window_years = (config.getfloat(ss_section, 'window_years')
+                        if config.has_option(ss_section, 'window_years')
+                        else 10.0)
+        imbalance_threshold = (
+            config.getfloat(ss_section, 'imbalance_threshold')
+            if config.has_option(ss_section, 'imbalance_threshold')
+            else 0.05)
+        plot_results = (config.getboolean(ss_section, 'plot_results')
+                        if config.has_option(ss_section, 'plot_results')
+                        else False)
 
-        # Load configurations
-        config_dict = self._load_config(self.config_file)
+        # Read validation config
+        val_section = 'validation'
+        ba_threshold = (
+            config.getfloat(val_section, 'balanced_accuracy_threshold')
+            if config.has_option(val_section, 'balanced_accuracy_threshold')
+            else 0.65)
+        spec_tiff_file = (
+            config.get(val_section, 'spec_tiff_file')
+            if config.has_option(val_section, 'spec_tiff_file')
+            else None)
+        # treat the string 'None' as actual None
+        if spec_tiff_file is not None and spec_tiff_file.lower() == 'none':
+            spec_tiff_file = None
+        plot_validation = (
+            config.getboolean(val_section, 'plot_validation')
+            if config.has_option(val_section, 'plot_validation')
+            else False)
 
-        # Get analysis configs with defaults
         analysis_config = {
-            'steady_state': self._merge_config(
-                config_dict.get('steady_state', {}),
-                self._get_default_steady_state_config()
-            ),
-            'validation': self._merge_config(
-                config_dict.get('validation', {}),
-                self._get_default_validation_config()
-            ),
+            'steady_state': {
+                'window_years': window_years,
+                'imbalance_threshold': imbalance_threshold,
+                'plot_results': plot_results,
+            },
+            'validation': {
+                'balanced_accuracy_threshold': ba_threshold,
+                'spec_tiff_file': spec_tiff_file,
+                'plot_validation': plot_validation,
+            },
         }
 
-        logger.info(f"Loaded steady_state config: \
-                {analysis_config['steady_state']}")
-        logger.info(f"Loaded validation config: \
-                {analysis_config['validation']}")
+        logger.info(f"Loaded steady_state config: "
+                    f"{analysis_config['steady_state']}")
+        logger.info(f"Loaded validation config: "
+                    f"{analysis_config['validation']}")
 
         # Initialize results
         summary = {
@@ -309,70 +328,6 @@ class AnalysisStep(Step):
         finally:
             if os.path.exists(temp_json):
                 os.unlink(temp_json)
-
-    @staticmethod
-    def _load_config(config_file):
-        """Load configuration file."""
-        config = configparser.ConfigParser()
-        config.read(config_file)
-
-        config_dict = {}
-        for section in config.sections():
-            config_dict[section] = {}
-            for key, value in config.items(section):
-                try:
-                    config_dict[section][key] = float(value)
-                except ValueError:
-                    try:
-                        config_dict[section][key] = (
-                            config.getboolean(section, key))
-                    except ValueError:
-                        if value.lower() == 'none':
-                            config_dict[section][key] = None
-                        else:
-                            config_dict[section][key] = value
-
-        return config_dict
-
-    @staticmethod
-    def _merge_config(user_config, defaults):
-        """
-        Merge user config with defaults.
-        User config values take precedence.
-
-        Parameters
-        ----------
-        user_config : dict
-            User-provided configuration
-        defaults : dict
-            Default configuration values
-
-        Returns
-        -------
-        dict
-            Merged configuration
-        """
-        merged = defaults.copy()
-        merged.update(user_config)
-        return merged
-
-    @staticmethod
-    def _get_default_steady_state_config():
-        """Get default steady-state configuration."""
-        return {
-            'window_years': 10.0,
-            'imbalance_threshold': 0.05,
-            'plot_results': False,
-        }
-
-    @staticmethod
-    def _get_default_validation_config():
-        """Get default validation configuration."""
-        return {
-            'balanced_accuracy_threshold': 0.65,
-            'spec_tiff_file': None,
-            'plot_validation': False,
-        }
 
     @staticmethod
     def _print_summary(summary, logger):
