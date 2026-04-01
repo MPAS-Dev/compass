@@ -108,6 +108,21 @@ class InPlaceRestartMember(Step):
         print(f'Setting config_do_restart = .true. in {namelist_path}')
         _set_restart_in_namelist(namelist_path)
 
+        # Create a restart_attempt_N/ directory to track how many restarts
+        # have been attempted for this run.  configure() counts these dirs
+        # to enforce max_consecutive_restarts.  List the directory once to
+        # find the highest existing attempt number, then create the next one.
+        existing_nums = [
+            int(d[len('restart_attempt_'):])
+            for d in os.listdir(run_dir)
+            if d.startswith('restart_attempt_') and
+            d[len('restart_attempt_'):].isdigit()
+        ]
+        attempt_num = max(existing_nums, default=0) + 1
+        attempt_dir = os.path.join(run_dir, f'restart_attempt_{attempt_num}')
+        os.makedirs(attempt_dir, exist_ok=True)
+        print(f'Tracking restart attempt {attempt_num} in {attempt_dir}')
+
         # Register MALI executable so compass knows this step needs the model
         self.add_model_as_input()
 
