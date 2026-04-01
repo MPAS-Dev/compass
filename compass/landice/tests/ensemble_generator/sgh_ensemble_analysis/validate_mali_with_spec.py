@@ -13,6 +13,7 @@ below the bed 15 dB within the bed echo.
 """
 
 import json
+import os
 from argparse import ArgumentParser
 
 import cmocean
@@ -57,6 +58,10 @@ class validateWithSpec:
                             default="validation_results.json")
         parser.add_argument("--plot", dest="plot", action='store_true',
                             help="Generate comparison plots")
+        parser.add_argument("--plot_dir", dest="plot_dir",
+                            help="Directory to save plots "
+                                 "(default: current directory)",
+                            default=None)
 
         args = parser.parse_args()
         self.options = args
@@ -289,11 +294,13 @@ class validateWithSpec:
                 f"balanced accuracy east: \
                         {np.round(self.BA_e, 2)}", fontsize=10)
         ax.set_aspect('equal', adjustable='box')
-        plt.savefig(
-            "spec_subglacialHydro_validation.png",
-            dpi=1000,
-            bbox_inches="tight")
-        print("Saved validation plot: spec_subglacialHydro_validation.png")
+        if self.options.plot_dir:
+            fig_path = os.path.join(self.options.plot_dir,
+                                    "spec_subglacialHydro_validation.png")
+        else:
+            fig_path = "spec_subglacialHydro_validation.png"
+        plt.savefig(fig_path, dpi=1000, bbox_inches="tight")
+        print(f"Saved validation plot: {fig_path}")
 
     def save_results(self, is_compatible, compatibility_metrics):
         """Save validation results to JSON."""
