@@ -92,6 +92,9 @@ class InPlaceRestartMember(Step):
         Job submission is handled by EnsembleManager using the original
         job_script.sh that was created when the spinup ensemble was set up.
         """
+        self.work_dir = os.path.join(
+            self.spinup_work_dir, f'run{self.run_num:03}')
+
         run_dir = self.work_dir
 
         if not os.path.exists(run_dir):
