@@ -1,5 +1,6 @@
 import glob
 import os
+import re
 from importlib.resources import path
 
 from mpas_tools.logging import check_call
@@ -7,6 +8,49 @@ from mpas_tools.logging import check_call
 import compass.namelist
 from compass.io import symlink
 from compass.step import Step
+
+
+def _write_restart_job_script(spinup_run_dir, step_work_dir):
+    """
+    Rewrite ``job_script.sh`` in *spinup_run_dir* so that the SLURM job
+    changes into the compass step work directory before calling ``compass run``.
+
+    The existing script's SBATCH headers (and any ``source`` / environment
+    setup lines) are preserved verbatim.  Only the ``compass run`` invocation
+    at the end is replaced with::
+
+        cd <step_work_dir>
+        compass run
+
+    Parameters
+    ----------
+    spinup_run_dir : str
+        Path to the original spinup run directory that contains the
+        ``job_script.sh`` to be rewritten.
+
+    step_work_dir : str
+        Absolute path to the compass step work directory where
+        ``step.pickle`` lives (i.e. ``InPlaceRestartMember.work_dir``).
+    """
+    job_script_path = os.path.join(spinup_run_dir, 'job_script.sh')
+
+    with open(job_script_path, 'r') as f:
+        lines = f.readlines()
+
+    new_lines = []
+    compass_run_pattern = re.compile(r'^(\s*)compass\s+run(.*)')
+    for line in lines:
+        m = compass_run_pattern.match(line)
+        if m:
+            indent = m.group(1)
+            trailing = m.group(2)
+            new_lines.append(f'{indent}cd {step_work_dir}\n')
+            new_lines.append(f'{indent}compass run{trailing}\n')
+        else:
+            new_lines.append(line)
+
+    with open(job_script_path, 'w') as f:
+        f.writelines(new_lines)
 
 
 class EnsembleManager(Step):
@@ -84,6 +128,14 @@ class EnsembleManager(Step):
                     print(f'{run} has reached stop time.  Skipping.')
                     continue
             # If we didn't skip this run, submit it
+            # For InPlaceRestartMember steps the step.pickle lives in
+            # runStep.work_dir, not in spinup_run_dir.  Rewrite the
+            # job_script.sh to cd into the compass step directory before
+            # calling 'compass run' so SLURM picks up the correct pickle.
+            if hasattr(runStep, 'spinup_run_dir'):
+                _write_restart_job_script(
+                    spinup_run_dir=run_dir,
+                    step_work_dir=runStep.work_dir)
             check_call(['sbatch', 'job_script.sh'], logger)
             logger.info(f'{run} submitted.')
         logger.info('All runs submitted.')
