@@ -162,6 +162,14 @@ This is used by the <code class="docutils literal notranslate"><span class="pre"
 <p>The <a class="reference internal" href="../generated/compass.landice.tests.isunnguata_sermia.mesh_gen.MeshGen.html#compass.landice.tests.isunnguata_sermia.mesh_gen.MeshGen" title="compass.landice.tests.isunnguata_sermia.mesh_gen.MeshGen"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.isunnguata_sermia.mesh_gen.MeshGen</span></code></a>
 calls the <a class="reference internal" href="../generated/compass.landice.tests.isunnguata_sermia.mesh.Mesh.html#compass.landice.tests.isunnguata_sermia.mesh.Mesh" title="compass.landice.tests.isunnguata_sermia.mesh.Mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.isunnguata_sermia.mesh.Mesh</span></code></a> to create
 the variable resolution Isunnguata Sermia mesh.</p>
+<p>Optional BedMachine and MEaSUREs interpolation can be enabled through
+<code class="docutils literal notranslate"><span class="pre">[mesh]</span></code> config options <code class="docutils literal notranslate"><span class="pre">nProcs</span></code>, <code class="docutils literal notranslate"><span class="pre">src_proj</span></code>, <code class="docutils literal notranslate"><span class="pre">data_path</span></code>,
+<code class="docutils literal notranslate"><span class="pre">bedmachine_filename</span></code>, and <code class="docutils literal notranslate"><span class="pre">measures_filename</span></code>. If enabled, source
+datasets are subset to the
+configured mesh bounding box before SCRIP generation and conservative
+remapping.
+The <code class="docutils literal notranslate"><span class="pre">src_proj</span></code> option is used for optional remapping only; the
+base-mesh projection in <code class="docutils literal notranslate"><span class="pre">build_mali_mesh()</span></code> is fixed for this test case.</p>
 </section>
 </section>
 

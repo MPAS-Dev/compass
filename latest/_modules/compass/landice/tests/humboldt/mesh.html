@@ -109,7 +109,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice.tests.humboldt.mesh</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_cell_width</span><span class="p">,</span> <span class="n">build_mali_mesh</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">build_cell_width</span><span class="p">,</span>
+    <span class="n">build_mali_mesh</span><span class="p">,</span>
+    <span class="n">get_mesh_config_bounding_box</span><span class="p">,</span>
+    <span class="n">get_optional_interp_datasets</span><span class="p">,</span>
+    <span class="n">run_optional_interpolation</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_graph_file</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
@@ -166,8 +172,13 @@
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">section_name</span> <span class="o">=</span> <span class="s1">&#39;mesh&#39;</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="n">section_name</span><span class="p">]</span>
         <span class="n">mesh_name</span> <span class="o">=</span> <span class="s1">&#39;Humboldt.nc&#39;</span>
+        <span class="n">src_proj</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;src_proj&#39;</span><span class="p">)</span>
+        <span class="n">bedmachine_dataset</span><span class="p">,</span> <span class="n">measures_dataset</span> <span class="o">=</span> <span class="n">get_optional_interp_datasets</span><span class="p">(</span>
+            <span class="n">section</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;calling build_cell_width&#39;</span><span class="p">)</span>
         <span class="n">cell_width</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">geom_points</span><span class="p">,</span> <span class="n">geom_edges</span><span class="p">,</span> <span class="n">floodMask</span> <span class="o">=</span> \
@@ -181,6 +192,18 @@
             <span class="n">gridded_dataset</span><span class="o">=</span><span class="s1">&#39;humboldt_1km_2024_01_29.epsg3413.icesheetonly.nc&#39;</span><span class="p">,</span>
             <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;gis-gimp&#39;</span><span class="p">,</span> <span class="n">geojson_file</span><span class="o">=</span><span class="s1">&#39;Humboldt.geojson&#39;</span><span class="p">,</span>
             <span class="n">cores</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span><span class="p">)</span>
+
+        <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;parallel_executable&#39;</span><span class="p">)</span>
+        <span class="n">nProcs</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;nProcs&#39;</span><span class="p">)</span>
+        <span class="c1"># Only interpolate data if interpolate_data is True in mesh_gen.cfg</span>
+        <span class="n">interpolate_data</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span>
+            <span class="s1">&#39;interpolate_data&#39;</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">interpolate_data</span><span class="p">:</span>
+            <span class="n">run_optional_interpolation</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">src_proj</span><span class="p">,</span> <span class="n">parallel_executable</span><span class="p">,</span> <span class="n">nProcs</span><span class="p">,</span>
+                <span class="n">subset_bounds</span><span class="o">=</span><span class="n">get_mesh_config_bounding_box</span><span class="p">(</span><span class="n">section</span><span class="p">),</span>
+                <span class="n">bedmachine_dataset</span><span class="o">=</span><span class="n">bedmachine_dataset</span><span class="p">,</span>
+                <span class="n">measures_dataset</span><span class="o">=</span><span class="n">measures_dataset</span><span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;creating graph.info&#39;</span><span class="p">)</span>
         <span class="n">make_graph_file</span><span class="p">(</span><span class="n">mesh_filename</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">,</span>

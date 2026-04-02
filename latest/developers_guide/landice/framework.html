@@ -217,9 +217,7 @@ Humboldt mesh):</p>
 <span class="c1"># number of levels in the mesh</span>
 <span class="na">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span>
 
-<span class="c1"># Bounds of Humboldt domain. If you want the extent</span>
-<span class="c1"># of the gridded dataset to determine the extent of</span>
-<span class="c1"># the MALI domain, set these to None.</span>
+<span class="c1"># Bounds of Humboldt domain</span>
 <span class="na">x_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-630000.</span>
 <span class="na">x_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">84000.</span>
 <span class="na">y_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-1560000.</span>
@@ -243,8 +241,6 @@ Humboldt mesh):</p>
 <span class="na">high_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e5</span>
 <span class="c1"># distance within which cell spacing = min_spac (meters)</span>
 <span class="na">low_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e4</span>
-
-<span class="c1"># These *_bed settings are only applied when use_bed = True.</span>
 <span class="c1"># distance at which bed topography has no effect</span>
 <span class="na">high_dist_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e5</span>
 <span class="c1"># distance within which bed topography has maximum effect</span>
@@ -259,8 +255,36 @@ Humboldt mesh):</p>
 <span class="na">use_dist_to_grounding_line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
 <span class="na">use_dist_to_edge</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
 <span class="na">use_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+
+<span class="c1"># Optional interpolation inputs (skip when set to None)</span>
+<span class="c1"># Whether to interpolate data (controls run_optional_interpolation)</span>
+<span class="na">interpolate_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+
+<span class="c1"># path to directory containing BedMachine and Measures datasets</span>
+<span class="c1"># (default value is for Perlmutter)</span>
+<span class="na">data_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/standard_datasets/GIS_datasets/</span>
+
+<span class="c1"># filename of the BedMachine thickness and bedTopography dataset</span>
+<span class="c1"># (default value is for Perlmutter)</span>
+<span class="na">bedmachine_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">BedMachineGreenland-v6_edits_floodFill_extrap.nc</span>
+
+<span class="c1"># filename of the MEaSUREs ice velocity dataset</span>
+<span class="c1"># (default value is for Perlmutter)</span>
+<span class="na">measures_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">greenland_vel_mosaic500_extrap.nc</span>
+
+<span class="c1"># projection of the source datasets, according to the dictionary keys</span>
+<span class="c1"># create_scrip_file_from_planar_rectangular_grid from MPAS_Tools</span>
+<span class="na">src_proj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">gis-gimp</span>
+
+<span class="c1"># number of processors to use for ESMF_RegridWeightGen</span>
+<span class="na">nProcs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">128</span>
 </pre></div>
 </div>
+<p>For mesh prototyping, it is a good idea to use <cite>interpolate_data = False</cite>,
+as the interpolation step can be slow and require many more resources than
+the rest of the mesh generation process. For instance, a 1–10km Greenland mesh
+can be created on a single Perlmutter CPU node, but data interpolation may
+require up to 16 nodes.</p>
 </section>
 </section>
 

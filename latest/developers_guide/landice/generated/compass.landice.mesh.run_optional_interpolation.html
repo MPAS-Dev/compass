@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.landice.mesh.preprocess_ais_data &mdash; compass latest documentation</title>
+  <title>compass.landice.mesh.run_optional_interpolation &mdash; compass latest documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
@@ -19,8 +19,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="compass.landice.mesh.run_optional_interpolation" href="compass.landice.mesh.run_optional_interpolation.html" />
-    <link rel="prev" title="compass.landice.mesh.mpas_flood_fill" href="compass.landice.mesh.mpas_flood_fill.html" /> 
+    <link rel="next" title="compass.landice.mesh.set_rectangular_geom_points_and_edges" href="compass.landice.mesh.set_rectangular_geom_points_and_edges.html" />
+    <link rel="prev" title="compass.landice.mesh.preprocess_ais_data" href="compass.landice.mesh.preprocess_ais_data.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -115,9 +115,9 @@
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../api.html">API reference</a></li>
           <li class="breadcrumb-item"><a href="../api.html">landice</a></li>
-      <li class="breadcrumb-item active">compass.landice.mesh.preprocess_ais_data</li>
+      <li class="breadcrumb-item active">compass.landice.mesh.run_optional_interpolation</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/developers_guide/landice/generated/compass.landice.mesh.preprocess_ais_data.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/developers_guide/landice/generated/compass.landice.mesh.run_optional_interpolation.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -125,22 +125,32 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="compass-landice-mesh-preprocess-ais-data">
-<h1>compass.landice.mesh.preprocess_ais_data<a class="headerlink" href="#compass-landice-mesh-preprocess-ais-data" title="Link to this heading"></a></h1>
+  <section id="compass-landice-mesh-run-optional-interpolation">
+<h1>compass.landice.mesh.run_optional_interpolation<a class="headerlink" href="#compass-landice-mesh-run-optional-interpolation" title="Link to this heading"></a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="compass.landice.mesh.preprocess_ais_data">
-<span class="sig-prename descclassname"><span class="pre">compass.landice.mesh.</span></span><span class="sig-name descname"><span class="pre">preprocess_ais_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_gridded_dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">floodFillMask</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/mesh.html#preprocess_ais_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.mesh.preprocess_ais_data" title="Link to this definition"></a></dt>
-<dd><p>Perform adjustments to gridded AIS datasets needed
-for rest of compass workflow to utilize them</p>
+<dt class="sig sig-object py" id="compass.landice.mesh.run_optional_interpolation">
+<span class="sig-prename descclassname"><span class="pre">compass.landice.mesh.</span></span><span class="sig-name descname"><span class="pre">run_optional_interpolation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_proj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallel_executable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nProcs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bedmachine_dataset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measures_dataset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subset_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/mesh.html#run_optional_interpolation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.mesh.run_optional_interpolation" title="Link to this definition"></a></dt>
+<dd><p>Run optional interpolation from high-resolution BedMachine and MEaSUREs
+datasets and perform some necessary cleanup. This can require many
+more resources than the rest of the mesh generation process, so it is
+usually desirable to skip this step when prototyping meshes. This step
+is only run if <cite>interpolate_data</cite> is set to True in the config file
+and the necessary dataset paths are provided.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>source_gridded_dataset</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – name of NetCDF file containing original AIS gridded datasets</p></li>
-<li><p><strong>floodFillMask</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) – 0/1 mask of flood filled ice region</p></li>
+<li><p><strong>self</strong> (<a class="reference internal" href="../../generated/compass.Step.html#compass.Step" title="compass.step.Step"><em>compass.step.Step</em></a>) – Step instance providing logger and context</p></li>
+<li><p><strong>mesh_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Destination MALI mesh file to interpolate to</p></li>
+<li><p><strong>src_proj</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Source dataset projection for SCRIP generation</p></li>
+<li><p><strong>parallel_executable</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Parallel launcher executable (e.g. <code class="docutils literal notranslate"><span class="pre">srun</span></code>/<code class="docutils literal notranslate"><span class="pre">mpirun</span></code>)</p></li>
+<li><p><strong>nProcs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Number of processes for regridding weight generation</p></li>
+<li><p><strong>bedmachine_dataset</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – BedMachine dataset path; if <code class="docutils literal notranslate"><span class="pre">None</span></code> this interpolation is skipped</p></li>
+<li><p><strong>measures_dataset</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – MEaSUREs dataset path; if <code class="docutils literal notranslate"><span class="pre">None</span></code> this interpolation is skipped</p></li>
+<li><p><strong>subset_bounds</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Optional source-dataset subset bounds in the form
+<code class="docutils literal notranslate"><span class="pre">[x_min,</span> <span class="pre">x_max,</span> <span class="pre">y_min,</span> <span class="pre">y_max]</span></code>. If provided, BedMachine and
+MEaSUREs datasets are subsetted before SCRIP generation and
+interpolation.</p></li>
 </ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>preprocessed_gridded_dataset</strong> (<em>str</em>) – name of NetCDF file with preprocessed version of gridded dataset</p>
 </dd>
 </dl>
 </dd></dl>
@@ -151,8 +161,8 @@ for rest of compass workflow to utilize them</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="compass.landice.mesh.mpas_flood_fill.html" class="btn btn-neutral float-left" title="compass.landice.mesh.mpas_flood_fill" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="compass.landice.mesh.run_optional_interpolation.html" class="btn btn-neutral float-right" title="compass.landice.mesh.run_optional_interpolation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.landice.mesh.preprocess_ais_data.html" class="btn btn-neutral float-left" title="compass.landice.mesh.preprocess_ais_data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.landice.mesh.set_rectangular_geom_points_and_edges.html" class="btn btn-neutral float-right" title="compass.landice.mesh.set_rectangular_geom_points_and_edges" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

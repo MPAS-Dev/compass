@@ -193,9 +193,6 @@ The other test cases do not use config options.</p>
 <span class="c1"># to cull based on distance from margin.</span>
 <span class="na">cull_distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span>
 
-<span class="c1"># number of processors to use for ESMF_RegridWeightGen</span>
-<span class="na">nProcs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">128</span>
-
 <span class="c1"># mesh density parameters</span>
 <span class="c1"># minimum cell spacing (meters)</span>
 <span class="na">min_spac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3.e3</span>
@@ -225,15 +222,20 @@ The other test cases do not use config options.</p>
 <span class="na">use_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
 
 <span class="k">[greenland]</span>
+<span class="c1"># Whether to interpolate data (controls run_optional_interpolation)</span>
+<span class="na">interpolate_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
 <span class="c1"># path to directory containing BedMachine and Measures datasets</span>
 <span class="c1"># (default value is for Perlmutter)</span>
 <span class="na">data_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/standard_datasets/GIS_datasets/</span>
+
+<span class="c1"># geojson used to create the cull mask in mesh generation</span>
+<span class="na">geojson_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">greenland_only_outline_45km_buffer_latlon_singlepart.geojson</span>
 
 <span class="c1"># filename of the BedMachine thickness and bedTopography dataset</span>
 <span class="c1"># (default value is for Perlmutter)</span>
 <span class="na">bedmachine_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">BedMachineGreenland-v6_edits_floodFill_extrap.nc</span>
 
-<span class="c1"># filename of the MEASURES ice velocity dataset</span>
+<span class="c1"># filename of the MEaSUREs ice velocity dataset</span>
 <span class="c1"># (default value is for Perlmutter)</span>
 <span class="na">measures_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">greenland_vel_mosaic500_extrap.nc</span>
 
@@ -291,6 +293,12 @@ that pre-processing could be integrated into a new step in COMPASS, or
 the processed data files could be added to the server on Anvil and downloaded
 as needed. However, until then, this test case provides a reproducible workflow
 for setting up Greenland meshes at varying resolutions.</p>
+<p>The BedMachine and MEaSUREs interpolation is optional. If <code class="docutils literal notranslate"><span class="pre">data_path</span></code> or the
+corresponding filename in <code class="docutils literal notranslate"><span class="pre">[greenland]</span></code> is unset (empty or <code class="docutils literal notranslate"><span class="pre">None</span></code>), that
+dataset interpolation step is skipped. The default config values include both
+datasets, so interpolation is enabled by default.
+The base-mesh projection used in <code class="docutils literal notranslate"><span class="pre">build_mali_mesh()</span></code> is fixed for this test
+case.</p>
 </section>
 </section>
 

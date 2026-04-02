@@ -112,6 +112,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">shutil</span><span class="w"> </span><span class="kn">import</span> <span class="n">copyfile</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">jigsawpy</span>
@@ -124,6 +125,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.mesh.conversion</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">cull</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.mesh.creation</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_planar_mesh</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.mesh.creation.sort_mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">sort_mesh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.scrip.from_mpas</span><span class="w"> </span><span class="kn">import</span> <span class="n">scrip_from_mpas</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">netCDF4</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dataset</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">NearestNDInterpolator</span><span class="p">,</span> <span class="n">interpn</span>
 
@@ -766,13 +768,10 @@
 
     <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="c1"># Get bounds defined by user, or use bound of gridded dataset</span>
-    <span class="n">bnds</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">y1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">y1</span><span class="p">)]</span>
-    <span class="n">bnds_options</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x_min&#39;</span><span class="p">,</span> <span class="s1">&#39;x_max&#39;</span><span class="p">,</span> <span class="s1">&#39;y_min&#39;</span><span class="p">,</span> <span class="s1">&#39;y_max&#39;</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">option</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">bnds_options</span><span class="p">):</span>
-        <span class="n">bnd</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">bnd</span> <span class="o">!=</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
-            <span class="n">bnds</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">bnd</span><span class="p">)</span>
+    <span class="c1"># Get bounds defined by user, or use bounds from the gridded dataset.</span>
+    <span class="n">bnds</span> <span class="o">=</span> <span class="n">get_mesh_config_bounding_box</span><span class="p">(</span>
+        <span class="n">section</span><span class="p">,</span>
+        <span class="n">default_bounds</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">y1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">y1</span><span class="p">)])</span>
 
     <span class="n">geom_points</span><span class="p">,</span> <span class="n">geom_edges</span> <span class="o">=</span> <span class="n">set_rectangular_geom_points_and_edges</span><span class="p">(</span><span class="o">*</span><span class="n">bnds</span><span class="p">)</span>
 
@@ -1339,6 +1338,282 @@
         <span class="n">data</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;observedSurfaceVelocityUncertainty&#39;</span><span class="p">][:]</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">)</span>
     <span class="n">data</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;observedSurfaceVelocityUncertainty&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="n">mask</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]]</span> <span class="o">=</span> <span class="mf">1.0</span>
     <span class="n">data</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="get_optional_interp_datasets">
+<a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.mesh.get_optional_interp_datasets.html#compass.landice.mesh.get_optional_interp_datasets">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_optional_interp_datasets</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determine whether optional interpolation inputs are configured.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    section : configparser.SectionProxy</span>
+<span class="sd">        Config section containing optional interpolation options</span>
+
+<span class="sd">    logger : logging.Logger</span>
+<span class="sd">        Logger for status messages</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bedmachine_dataset : str or None</span>
+<span class="sd">        Path to BedMachine dataset if configured, otherwise ``None``</span>
+
+<span class="sd">    measures_dataset : str or None</span>
+<span class="sd">        Path to MEaSUREs dataset if configured, otherwise ``None``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_specified</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">]</span>
+
+    <span class="n">data_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data_path&#39;</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">bedmachine_filename</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;bedmachine_filename&#39;</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">measures_filename</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;measures_filename&#39;</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="n">use_bedmachine_interp</span> <span class="o">=</span> <span class="n">_specified</span><span class="p">(</span><span class="n">data_path</span><span class="p">)</span> <span class="ow">and</span> \
+        <span class="n">_specified</span><span class="p">(</span><span class="n">bedmachine_filename</span><span class="p">)</span>
+    <span class="n">use_measures_interp</span> <span class="o">=</span> <span class="n">_specified</span><span class="p">(</span><span class="n">data_path</span><span class="p">)</span> <span class="ow">and</span> \
+        <span class="n">_specified</span><span class="p">(</span><span class="n">measures_filename</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">use_bedmachine_interp</span><span class="p">:</span>
+        <span class="n">bedmachine_dataset</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">bedmachine_filename</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">bedmachine_dataset</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Skipping BedMachine interpolation because &#39;</span>
+                    <span class="s1">&#39;`data_path` and/or `bedmachine_filename` are &#39;</span>
+                    <span class="s1">&#39;not specified in config.&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">use_measures_interp</span><span class="p">:</span>
+        <span class="n">measures_dataset</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">measures_filename</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">measures_dataset</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Skipping MEaSUREs interpolation because &#39;</span>
+                    <span class="s1">&#39;`data_path` and/or `measures_filename` are &#39;</span>
+                    <span class="s1">&#39;not specified in config.&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">bedmachine_dataset</span><span class="p">,</span> <span class="n">measures_dataset</span></div>
+
+
+
+<div class="viewcode-block" id="get_mesh_config_bounding_box">
+<a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.mesh.get_mesh_config_bounding_box.html#compass.landice.mesh.get_mesh_config_bounding_box">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_mesh_config_bounding_box</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">default_bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get bounding-box coordinates from a mesh config section.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    section : configparser.SectionProxy</span>
+<span class="sd">        Mesh config section containing ``x_min``, ``x_max``, ``y_min``,</span>
+<span class="sd">        and ``y_max``</span>
+
+<span class="sd">    default_bounds : list of float, optional</span>
+<span class="sd">        Default bounds in the form ``[x_min, x_max, y_min, y_max]`` to use</span>
+<span class="sd">        when config values are missing or set to ``None``</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bounding_box : list of float</span>
+<span class="sd">        Bounding box in the form ``[x_min, x_max, y_min, y_max]``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">default_bounds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">default_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_bound</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="n">default</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">default</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;Missing required config option `</span><span class="si">{</span><span class="n">option</span><span class="si">}</span><span class="s1">` and no &#39;</span>
+                    <span class="s1">&#39;default was provided.&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">default</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">_get_bound</span><span class="p">(</span><span class="s1">&#39;x_min&#39;</span><span class="p">,</span> <span class="n">default_bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+        <span class="n">_get_bound</span><span class="p">(</span><span class="s1">&#39;x_max&#39;</span><span class="p">,</span> <span class="n">default_bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="n">_get_bound</span><span class="p">(</span><span class="s1">&#39;y_min&#39;</span><span class="p">,</span> <span class="n">default_bounds</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+        <span class="n">_get_bound</span><span class="p">(</span><span class="s1">&#39;y_max&#39;</span><span class="p">,</span> <span class="n">default_bounds</span><span class="p">[</span><span class="mi">3</span><span class="p">])]</span></div>
+
+
+
+<div class="viewcode-block" id="subset_gridded_dataset_to_bounds">
+<a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.mesh.subset_gridded_dataset_to_bounds.html#compass.landice.mesh.subset_gridded_dataset_to_bounds">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">subset_gridded_dataset_to_bounds</span><span class="p">(</span>
+        <span class="n">source_dataset</span><span class="p">,</span> <span class="n">bounding_box</span><span class="p">,</span> <span class="n">subset_tag</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Subset a gridded source dataset to a bounding box.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    source_dataset : str</span>
+<span class="sd">        Path to source gridded dataset</span>
+
+<span class="sd">    bounding_box : list of float</span>
+<span class="sd">        Bounding box in the form ``[x_min, x_max, y_min, y_max]``</span>
+
+<span class="sd">    subset_tag : str</span>
+<span class="sd">        Tag to include in the subset filename</span>
+
+<span class="sd">    logger : logging.Logger</span>
+<span class="sd">        Logger for status messages</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    subset_dataset : str</span>
+<span class="sd">        Path to subsetted gridded dataset written to the current directory</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="n">y_min</span><span class="p">,</span> <span class="n">y_max</span> <span class="o">=</span> <span class="n">bounding_box</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">source_dataset</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s1">&#39;x1&#39;</span> <span class="ow">in</span> <span class="n">ds</span> <span class="ow">and</span> <span class="s1">&#39;y1&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
+        <span class="n">x_name</span> <span class="o">=</span> <span class="s1">&#39;x1&#39;</span>
+        <span class="n">y_name</span> <span class="o">=</span> <span class="s1">&#39;y1&#39;</span>
+    <span class="k">elif</span> <span class="s1">&#39;x&#39;</span> <span class="ow">in</span> <span class="n">ds</span> <span class="ow">and</span> <span class="s1">&#39;y&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
+        <span class="n">x_name</span> <span class="o">=</span> <span class="s1">&#39;x&#39;</span>
+        <span class="n">y_name</span> <span class="o">=</span> <span class="s1">&#39;y&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;Could not find x/y coordinates in </span><span class="si">{</span><span class="n">source_dataset</span><span class="si">}</span><span class="s1">. &#39;</span>
+            <span class="s1">&#39;Expected either x1/y1 or x/y.&#39;</span><span class="p">)</span>
+
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="n">x_name</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">x_min</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="n">x_name</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">x_max</span><span class="p">)</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="n">y_name</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">y_min</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="n">y_name</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">y_max</span><span class="p">),</span>
+        <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Check for empty subset, handling possible mismatch</span>
+    <span class="c1"># between variable and dimension names</span>
+    <span class="n">x_dim</span> <span class="o">=</span> <span class="n">x_name</span> <span class="k">if</span> <span class="n">x_name</span> <span class="ow">in</span> <span class="n">subset</span><span class="o">.</span><span class="n">sizes</span> <span class="k">else</span> <span class="p">(</span>
+        <span class="s1">&#39;x&#39;</span> <span class="k">if</span> <span class="s1">&#39;x&#39;</span> <span class="ow">in</span> <span class="n">subset</span><span class="o">.</span><span class="n">sizes</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">y_dim</span> <span class="o">=</span> <span class="n">y_name</span> <span class="k">if</span> <span class="n">y_name</span> <span class="ow">in</span> <span class="n">subset</span><span class="o">.</span><span class="n">sizes</span> <span class="k">else</span> <span class="p">(</span>
+        <span class="s1">&#39;y&#39;</span> <span class="k">if</span> <span class="s1">&#39;y&#39;</span> <span class="ow">in</span> <span class="n">subset</span><span class="o">.</span><span class="n">sizes</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">x_dim</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">y_dim</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">subset</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="n">x_dim</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">subset</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="n">y_dim</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># noqa</span>
+        <span class="n">subset</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;Bounding box </span><span class="si">{</span><span class="n">bounding_box</span><span class="si">}</span><span class="s1"> produced an empty subset for &#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">source_dataset</span><span class="si">}</span><span class="s1">. Dimension names in subset: &#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">subset</span><span class="o">.</span><span class="n">sizes</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">base</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">source_dataset</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">unique_id</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span>
+    <span class="n">subset_dataset</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">subset_tag</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">unique_id</span><span class="si">}</span><span class="s1">_subset.nc&#39;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Writing subset dataset: </span><span class="si">{</span><span class="n">subset_dataset</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">subset</span><span class="o">.</span><span class="n">to_netcdf</span><span class="p">(</span><span class="n">subset_dataset</span><span class="p">)</span>
+
+    <span class="n">subset</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">subset_dataset</span></div>
+
+
+
+<div class="viewcode-block" id="run_optional_interpolation">
+<a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.mesh.run_optional_interpolation.html#compass.landice.mesh.run_optional_interpolation">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">run_optional_interpolation</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span> <span class="n">src_proj</span><span class="p">,</span> <span class="n">parallel_executable</span><span class="p">,</span> <span class="n">nProcs</span><span class="p">,</span>
+        <span class="n">bedmachine_dataset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">measures_dataset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">subset_bounds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run optional interpolation from high-resolution BedMachine and MEaSUREs</span>
+<span class="sd">    datasets and perform some necessary cleanup. This can require many</span>
+<span class="sd">    more resources than the rest of the mesh generation process, so it is</span>
+<span class="sd">    usually desirable to skip this step when prototyping meshes. This step</span>
+<span class="sd">    is only run if `interpolate_data` is set to True in the config file</span>
+<span class="sd">    and the necessary dataset paths are provided.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    self : compass.step.Step</span>
+<span class="sd">        Step instance providing logger and context</span>
+
+<span class="sd">    mesh_filename : str</span>
+<span class="sd">        Destination MALI mesh file to interpolate to</span>
+
+<span class="sd">    src_proj : str</span>
+<span class="sd">        Source dataset projection for SCRIP generation</span>
+
+<span class="sd">    parallel_executable : str</span>
+<span class="sd">        Parallel launcher executable (e.g. ``srun``/``mpirun``)</span>
+
+<span class="sd">    nProcs : int or str</span>
+<span class="sd">        Number of processes for regridding weight generation</span>
+
+<span class="sd">    bedmachine_dataset : str, optional</span>
+<span class="sd">        BedMachine dataset path; if ``None`` this interpolation is skipped</span>
+
+<span class="sd">    measures_dataset : str, optional</span>
+<span class="sd">        MEaSUREs dataset path; if ``None`` this interpolation is skipped</span>
+
+<span class="sd">    subset_bounds : list of float, optional</span>
+<span class="sd">        Optional source-dataset subset bounds in the form</span>
+<span class="sd">        ``[x_min, x_max, y_min, y_max]``. If provided, BedMachine and</span>
+<span class="sd">        MEaSUREs datasets are subsetted before SCRIP generation and</span>
+<span class="sd">        interpolation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+    <span class="n">do_optional_interp</span> <span class="o">=</span> <span class="n">bedmachine_dataset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> \
+        <span class="n">measures_dataset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">do_optional_interp</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="k">if</span> <span class="n">nProcs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;nProcs must be provided as an int or str&quot;</span><span class="p">)</span>
+    <span class="n">nProcs</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">nProcs</span><span class="p">)</span>
+
+    <span class="n">subset_files</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">subset_bounds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">bedmachine_dataset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">bedmachine_dataset</span> <span class="o">=</span> <span class="n">subset_gridded_dataset_to_bounds</span><span class="p">(</span>
+                    <span class="n">bedmachine_dataset</span><span class="p">,</span>
+                    <span class="n">subset_bounds</span><span class="p">,</span>
+                    <span class="s1">&#39;bedmachine&#39;</span><span class="p">,</span>
+                    <span class="n">logger</span><span class="p">)</span>
+                <span class="n">subset_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bedmachine_dataset</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">measures_dataset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">measures_dataset</span> <span class="o">=</span> <span class="n">subset_gridded_dataset_to_bounds</span><span class="p">(</span>
+                    <span class="n">measures_dataset</span><span class="p">,</span>
+                    <span class="n">subset_bounds</span><span class="p">,</span>
+                    <span class="s1">&#39;measures&#39;</span><span class="p">,</span>
+                    <span class="n">logger</span><span class="p">)</span>
+                <span class="n">subset_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">measures_dataset</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;creating scrip file for destination mesh&#39;</span><span class="p">)</span>
+        <span class="n">mesh_base</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">dst_scrip_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_base</span><span class="si">}</span><span class="s1">_scrip.nc&#39;</span>
+        <span class="n">scrip_from_mpas</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">,</span> <span class="n">dst_scrip_file</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">bedmachine_dataset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">interp_gridded2mali</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bedmachine_dataset</span><span class="p">,</span> <span class="n">dst_scrip_file</span><span class="p">,</span>
+                                <span class="n">parallel_executable</span><span class="p">,</span> <span class="n">nProcs</span><span class="p">,</span>
+                                <span class="n">mesh_filename</span><span class="p">,</span> <span class="n">src_proj</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">measures_dataset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">measures_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;observedSurfaceVelocityX&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;observedSurfaceVelocityY&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;observedSurfaceVelocityUncertainty&#39;</span><span class="p">]</span>
+            <span class="n">interp_gridded2mali</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">measures_dataset</span><span class="p">,</span> <span class="n">dst_scrip_file</span><span class="p">,</span>
+                                <span class="n">parallel_executable</span><span class="p">,</span> <span class="n">nProcs</span><span class="p">,</span>
+                                <span class="n">mesh_filename</span><span class="p">,</span> <span class="n">src_proj</span><span class="p">,</span>
+                                <span class="n">variables</span><span class="o">=</span><span class="n">measures_vars</span><span class="p">)</span>
+
+        <span class="n">clean_up_after_interp</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">subset_file</span> <span class="ow">in</span> <span class="n">subset_files</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">subset_file</span><span class="p">):</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Removing subset dataset: </span><span class="si">{</span><span class="n">subset_file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">subset_file</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Could not remove subset dataset &#39;</span>
+                                   <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">subset_file</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 </pre></div>
 

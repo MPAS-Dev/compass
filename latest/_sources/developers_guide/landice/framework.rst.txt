@@ -110,16 +110,14 @@ not necessarily with the same values shown here, which are the defaults for the 
 Humboldt mesh):
 
 .. code-block:: cfg
-
+    
     # config options for humboldt test cases
     [mesh]
 
     # number of levels in the mesh
     levels = 10
 
-    # Bounds of Humboldt domain. If you want the extent
-    # of the gridded dataset to determine the extent of
-    # the MALI domain, set these to None.
+    # Bounds of Humboldt domain
     x_min = -630000.
     x_max = 84000.
     y_min = -1560000.
@@ -143,8 +141,6 @@ Humboldt mesh):
     high_dist = 1.e5
     # distance within which cell spacing = min_spac (meters)
     low_dist = 1.e4
-
-    # These *_bed settings are only applied when use_bed = True.
     # distance at which bed topography has no effect
     high_dist_bed = 1.e5
     # distance within which bed topography has maximum effect
@@ -159,3 +155,32 @@ Humboldt mesh):
     use_dist_to_grounding_line = False
     use_dist_to_edge = True
     use_bed = True
+
+    # Optional interpolation inputs (skip when set to None)
+    # Whether to interpolate data (controls run_optional_interpolation)
+    interpolate_data = False
+
+    # path to directory containing BedMachine and Measures datasets
+    # (default value is for Perlmutter)
+    data_path = /global/cfs/cdirs/fanssie/standard_datasets/GIS_datasets/
+
+    # filename of the BedMachine thickness and bedTopography dataset
+    # (default value is for Perlmutter)
+    bedmachine_filename = BedMachineGreenland-v6_edits_floodFill_extrap.nc
+
+    # filename of the MEaSUREs ice velocity dataset
+    # (default value is for Perlmutter)
+    measures_filename = greenland_vel_mosaic500_extrap.nc
+
+    # projection of the source datasets, according to the dictionary keys
+    # create_scrip_file_from_planar_rectangular_grid from MPAS_Tools
+    src_proj = gis-gimp
+
+    # number of processors to use for ESMF_RegridWeightGen
+    nProcs = 128
+
+For mesh prototyping, it is a good idea to use `interpolate_data = False`,
+as the interpolation step can be slow and require many more resources than
+the rest of the mesh generation process. For instance, a 1–10km Greenland mesh
+can be created on a single Perlmutter CPU node, but data interpolation may
+require up to 16 nodes.

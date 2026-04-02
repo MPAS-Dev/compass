@@ -188,6 +188,30 @@ the mesh generation options are adjusted through the config file.</p>
 <span class="na">use_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
 <span class="na">use_dist_to_grounding_line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
 <span class="na">use_dist_to_edge</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+
+<span class="c1"># Whether to interpolate data (controls run_optional_interpolation)</span>
+<span class="na">interpolate_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+<span class="c1"># path to directory containing BedMachine and Measures datasets</span>
+<span class="c1"># (default value is for Perlmutter)</span>
+<span class="na">data_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/standard_datasets/GIS_datasets/</span>
+
+<span class="c1"># geojson used to create the cull mask in mesh generation</span>
+<span class="na">geojson_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">greenland_only_outline_45km_buffer_latlon_singlepart.geojson</span>
+
+<span class="c1"># filename of the BedMachine thickness and bedTopography dataset</span>
+<span class="c1"># (default value is for Perlmutter)</span>
+<span class="na">bedmachine_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">BedMachineGreenland-v6_edits_floodFill_extrap.nc</span>
+
+<span class="c1"># filename of the MEaSUREs ice velocity dataset</span>
+<span class="c1"># (default value is for Perlmutter)</span>
+<span class="na">measures_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">greenland_vel_mosaic500_extrap.nc</span>
+
+<span class="c1"># projection of the source datasets, according to the dictionary keys</span>
+<span class="c1"># create_scrip_file_from_planar_rectangular_grid from MPAS_Tools</span>
+<span class="na">src_proj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">gis-gimp</span>
+
+<span class="c1"># number of processors to use for ESMF_RegridWeightGen</span>
+<span class="na">nProcs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">128</span>
 </pre></div>
 </div>
 </section>
@@ -197,6 +221,11 @@ the mesh generation options are adjusted through the config file.</p>
 The default is 500m-4km resolution with mesh density determined by
 observed ice speed and distance to ice margin. There is no model
 integration step.</p>
+<p>If optional BedMachine and/or MEaSUREs datasets are configured, they are
+subset to the mesh bounding box from <code class="docutils literal notranslate"><span class="pre">[mesh]</span></code> before SCRIP generation and
+conservative remapping to reduce memory and runtime.
+The base-mesh projection used in <code class="docutils literal notranslate"><span class="pre">build_mali_mesh()</span></code> is fixed for this test
+case.</p>
 </section>
 </section>
 
