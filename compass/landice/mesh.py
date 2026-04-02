@@ -1359,7 +1359,12 @@ def run_optional_interpolation(
         self, mesh_filename, src_proj, parallel_executable, nProcs,
         bedmachine_dataset=None, measures_dataset=None, subset_bounds=None):
     """
-    Run optional interpolation and cleanup if datasets are configured.
+    Run optional interpolation from high-resolution BedMachine and MEaSUREs
+    datasets and perform some necessary cleanup. This can require many
+    more resources than the rest of the mesh generation process, so it is
+    usually desirable to skip this step when prototyping meshes. This step
+    is only run if `interpolate_data` is set to True in the config file
+    and the necessary dataset paths are provided.
 
     Parameters
     ----------
