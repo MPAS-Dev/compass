@@ -1,15 +1,13 @@
-import os
-
 import numpy as np
 import xarray as xr
-from mpas_tools.scrip.from_mpas import scrip_from_mpas
 
 from compass.landice.mesh import (
     build_cell_width,
     build_mali_mesh,
-    clean_up_after_interp,
-    interp_gridded2mali,
+    get_mesh_config_bounding_box,
+    get_optional_interp_datasets,
     make_region_masks,
+    run_optional_interpolation,
 )
 from compass.model import make_graph_file
 from compass.step import Step
@@ -78,15 +76,23 @@ class Mesh(Step):
         parallel_executable = config.get('parallel', 'parallel_executable')
         nProcs = section_gis.get('nProcs')
         src_proj = section_gis.get("src_proj")
-        data_path = section_gis.get('data_path')
-        measures_filename = section_gis.get("measures_filename")
-        bedmachine_filename = section_gis.get("bedmachine_filename")
         geojson_filename = section_gis.get('geojson_filename')
 
-        measures_dataset = os.path.join(data_path, measures_filename)
-        bedmachine_dataset = os.path.join(data_path, bedmachine_filename)
+        bedmachine_dataset, measures_dataset = get_optional_interp_datasets(
+            section_gis, logger)
 
-        bounding_box = self._get_bedmachine_bounding_box(bedmachine_dataset)
+        if bedmachine_dataset is not None:
+            ds_bm = xr.open_dataset(bedmachine_dataset)
+            default_bounds = [
+                float(ds_bm.x1.min()),
+                float(ds_bm.x1.max()),
+                float(ds_bm.y1.min()),
+                float(ds_bm.y1.max())]
+            ds_bm.close()
+            bounding_box = get_mesh_config_bounding_box(
+                section_gis, default_bounds=default_bounds)
+        else:
+            bounding_box = None
 
         section_name = 'mesh'
 
@@ -104,33 +110,21 @@ class Mesh(Step):
         build_mali_mesh(
             self, cell_width, x1, y1, geom_points, geom_edges,
             mesh_name=self.mesh_filename, section_name=section_name,
-            gridded_dataset=source_gridded_dataset_1km, projection=src_proj,
+            gridded_dataset=source_gridded_dataset_1km,
+            projection='gis-gimp',
             geojson_file=geojson_filename,
             bounding_box=bounding_box,
         )
 
-        # Create scrip file for the newly generated mesh
-        logger.info('creating scrip file for destination mesh')
-        dst_scrip_file = f"{self.mesh_filename.split('.')[:-1][0]}_scrip.nc"
-        scrip_from_mpas(self.mesh_filename, dst_scrip_file)
-
-        # Now perform bespoke interpolation of geometry and velocity data
-        # from their respective sources
-        interp_gridded2mali(self, bedmachine_dataset, dst_scrip_file,
-                            parallel_executable, nProcs,
-                            self.mesh_filename, src_proj, variables="all")
-
-        # only interpolate a subset of MEaSUREs variables onto the MALI mesh
-        measures_vars = ['observedSurfaceVelocityX',
-                         'observedSurfaceVelocityY',
-                         'observedSurfaceVelocityUncertainty']
-        interp_gridded2mali(self, measures_dataset, dst_scrip_file,
-                            parallel_executable, nProcs,
-                            self.mesh_filename, src_proj,
-                            variables=measures_vars)
-
-        # perform some final cleanup details
-        clean_up_after_interp(self.mesh_filename)
+        # Only interpolate data if interpolate_data is True in mesh_gen.cfg
+        interpolate_data = section_gis.getboolean(
+            'interpolate_data', fallback=False)
+        if interpolate_data:
+            run_optional_interpolation(
+                self, self.mesh_filename, src_proj,
+                parallel_executable, nProcs,
+                bedmachine_dataset=bedmachine_dataset,
+                measures_dataset=measures_dataset)
 
         # create graph file
         logger.info('creating graph.info')
@@ -176,14 +170,3 @@ class Mesh(Step):
         ds["observedThicknessTendencyUncertainty"] = dHdtErr
         # Write the data to disk
         ds.to_netcdf(self.mesh_filename, 'a')
-
-    def _get_bedmachine_bounding_box(self, bedmachine_filepath):
-
-        ds = xr.open_dataset(bedmachine_filepath)
-
-        x_min = ds.x1.min()
-        x_max = ds.x1.max()
-        y_min = ds.y1.min()
-        y_max = ds.y1.max()
-
-        return [x_min, x_max, y_min, y_max]

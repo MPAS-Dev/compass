@@ -73,6 +73,27 @@ the mesh generation options are adjusted through the config file.
     use_dist_to_edge = False
     use_bed = False
 
+    # Whether to interpolate data (controls run_optional_interpolation)
+    interpolate_data = False
+    # path to directory containing BedMachine and Measures datasets
+    # (default value is for Perlmutter)
+    data_path = /global/cfs/cdirs/fanssie/standard_datasets/AIS_datasets
+
+    # filename of the BedMachine thickness and bedTopography dataset
+    # (default value is for Perlmutter)
+    bedmachine_filename = BedMachineAntarctica_2020-07-15_v02_edits_floodFill_extrap_fillVostok.nc
+
+    # filename of the MEASURES ice velocity dataset
+    # (default value is for Perlmutter)
+    measures_filename = antarctica_ice_velocity_450m_v2_edits_extrap.nc
+
+    # projection of the source datasets, according to the dictionary keys
+    # create_scrip_file_from_planar_rectangular_grid from MPAS_Tools
+    src_proj = ais-bedmap2
+
+    # number of processors to use for ESMF_RegridWeightGen
+    nProcs = 128
+
 mesh_gen
 --------
 
@@ -80,3 +101,9 @@ mesh_gen
 The default is 500m-1km resolution with mesh density determined by
 observed ice speed and distance to grounding line. There is no model
 integration step.
+
+If optional BedMachine and/or MEaSUREs datasets are configured, they are
+subset to the mesh bounding box from ``[mesh]`` before SCRIP generation and
+conservative remapping to reduce memory and runtime.
+The base-mesh projection used in ``build_mali_mesh()`` is fixed for this test
+case.

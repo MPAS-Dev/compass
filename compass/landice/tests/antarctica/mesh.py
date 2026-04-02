@@ -1,17 +1,14 @@
-import os
-
 import netCDF4
 from mpas_tools.logging import check_call
-from mpas_tools.scrip.from_mpas import scrip_from_mpas
 
 from compass.landice.mesh import (
     add_bedmachine_thk_to_ais_gridded_data,
     build_cell_width,
     build_mali_mesh,
-    clean_up_after_interp,
-    interp_gridded2mali,
+    get_optional_interp_datasets,
     make_region_masks,
     preprocess_ais_data,
+    run_optional_interpolation,
 )
 from compass.model import make_graph_file
 from compass.step import Step
@@ -48,8 +45,8 @@ class Mesh(Step):
         self.add_output_file(
             filename=f'{self.mesh_filename[:-3]}_ismip6_regionMasks.nc')
         self.add_input_file(
-            filename='antarctica_8km_2024_01_29.nc',
-            target='antarctica_8km_2024_01_29.nc',
+            filename='antarctica_1km_2024_01_29.nc',
+            target='antarctica_1km_2024_01_29.nc',
             database='')
 
     # no setup() method is needed
@@ -66,20 +63,22 @@ class Mesh(Step):
         parallel_executable = config.get('parallel', 'parallel_executable')
         nProcs = section_ais.get('nProcs')
         src_proj = section_ais.get("src_proj")
-        data_path = section_ais.get('data_path')
-        measures_filename = section_ais.get("measures_filename")
-        bedmachine_filename = section_ais.get("bedmachine_filename")
-
-        measures_dataset = os.path.join(data_path, measures_filename)
-        bedmachine_dataset = os.path.join(data_path, bedmachine_filename)
+        bedmachine_dataset, measures_dataset = get_optional_interp_datasets(
+            section_ais, logger)
 
         section_name = 'mesh'
 
         # TODO: do we want to add this to the config file?
-        source_gridded_dataset = 'antarctica_8km_2024_01_29.nc'
+        source_gridded_dataset = 'antarctica_1km_2024_01_29.nc'
 
-        bm_updated_gridded_dataset = add_bedmachine_thk_to_ais_gridded_data(
-            self, source_gridded_dataset, bedmachine_dataset)
+        if bedmachine_dataset is not None:
+            bm_updated_gridded_dataset = (
+                add_bedmachine_thk_to_ais_gridded_data(
+                    self,
+                    source_gridded_dataset,
+                    bedmachine_dataset))
+        else:
+            bm_updated_gridded_dataset = source_gridded_dataset
 
         logger.info('calling build_cell_width')
         cell_width, x1, y1, geom_points, geom_edges, floodFillMask = \
@@ -92,7 +91,7 @@ class Mesh(Step):
             self, cell_width, x1, y1, geom_points, geom_edges,
             mesh_name=self.mesh_filename, section_name=section_name,
             gridded_dataset=bm_updated_gridded_dataset,
-            projection=src_proj, geojson_file=None)
+            projection='ais-bedmap2', geojson_file=None)
 
         # Now that we have base mesh with standard interpolation
         # perform advanced interpolation for specific fields
@@ -132,28 +131,15 @@ class Mesh(Step):
                 'observedThicknessTendencyUncertainty', 'thickness']
         check_call(args, logger=logger)
 
-        # Create scrip file for the newly generated mesh
-        logger.info('creating scrip file for destination mesh')
-        dst_scrip_file = f"{self.mesh_filename.split('.')[:-1][0]}_scrip.nc"
-        scrip_from_mpas(self.mesh_filename, dst_scrip_file)
-
-        # Now perform bespoke interpolation of geometry and velocity data
-        # from their respective sources
-        interp_gridded2mali(self, bedmachine_dataset, dst_scrip_file,
-                            parallel_executable, nProcs,
-                            self.mesh_filename, src_proj, variables="all")
-
-        # only interpolate a subset of MEaSUREs variables onto the MALI mesh
-        measures_vars = ['observedSurfaceVelocityX',
-                         'observedSurfaceVelocityY',
-                         'observedSurfaceVelocityUncertainty']
-        interp_gridded2mali(self, measures_dataset, dst_scrip_file,
-                            parallel_executable, nProcs,
-                            self.mesh_filename, src_proj,
-                            variables=measures_vars)
-
-        # perform some final cleanup details
-        clean_up_after_interp(self.mesh_filename)
+        # Only interpolate data if interpolate_data is True in mesh_gen.cfg
+        interpolate_data = section_ais.getboolean(
+            'interpolate_data', fallback=False)
+        if interpolate_data:
+            run_optional_interpolation(
+                self, self.mesh_filename, src_proj,
+                parallel_executable, nProcs,
+                bedmachine_dataset=bedmachine_dataset,
+                measures_dataset=measures_dataset)
 
         # create graph file
         logger.info('creating graph.info')
