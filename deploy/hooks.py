@@ -52,6 +52,9 @@ def post_spack(ctx: DeployContext) -> None:
     if getattr(ctx.args, 'no_spack', False):
         return
 
+    if not _spack_deploy_enabled(ctx):
+        return
+
     spack_path = _resolve_spack_path(ctx)
     if spack_path is None:
         return
@@ -144,6 +147,24 @@ def _resolve_spack_path(ctx: DeployContext) -> str | None:
             return os.path.abspath(os.path.expanduser(str(spack_path)))
 
     return _get_spack_path(ctx.config, ctx.machine, ctx.machine_config)
+
+
+def _spack_deploy_enabled(ctx: DeployContext) -> bool:
+    if bool(getattr(ctx.args, 'deploy_spack', False)):
+        return True
+
+    runtime_spack = ctx.runtime.get('spack', {})
+    if (
+        isinstance(runtime_spack, dict) and runtime_spack.get('deploy')
+        is not None
+    ):
+        return bool(runtime_spack.get('deploy'))
+
+    spack_cfg = ctx.config.get('spack', {})
+    if isinstance(spack_cfg, dict):
+        return bool(spack_cfg.get('deploy', False))
+
+    return False
 
 
 def _get_spack_env_name_prefix(ctx: DeployContext) -> str:
