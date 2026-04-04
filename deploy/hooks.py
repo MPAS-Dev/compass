@@ -68,23 +68,6 @@ def post_spack(ctx: DeployContext) -> None:
             spack_path=spack_path,
             env_name=env_name,
         )
-        include_path = Path(
-            spack_path,
-            'var',
-            'spack',
-            'environments',
-            env_name,
-            '.spack-env',
-            'view',
-            'include',
-        )
-        removed = _remove_esmf_include_files(include_path)
-        if removed:
-            ctx.logger.info(
-                'Removed %s ESMF/ESMC include file(s) from %s',
-                removed,
-                include_path,
-            )
 
 
 def _get_version() -> str:
@@ -203,16 +186,6 @@ def _get_toolchain_pairs(ctx: DeployContext) -> list[tuple[str, str]]:
         if compiler and mpi:
             toolchain_pairs.append((compiler, mpi))
     return toolchain_pairs
-
-
-def _remove_esmf_include_files(include_path: Path) -> int:
-    removed = 0
-    for prefix in ('ESMC', 'esmf'):
-        for filename in include_path.glob(f'{prefix}*'):
-            if filename.is_file():
-                filename.unlink()
-                removed += 1
-    return removed
 
 
 def _set_ld_library_path_for_spack_env(
