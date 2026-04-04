@@ -1,7 +1,7 @@
 .. _landice_slm_circ_icesheet:
 
 slm_circ_icesheet
-==================
+=================
 
 The ``landice/slm_circ_icesheet`` test group adds a workflow for coupled
 MALI and Sea-Level Model (SLM) configurations. It contains two test cases:
@@ -17,6 +17,15 @@ The test cases are useful for:
 * validating coupled MALI-SLM setup and mapping files,
 * comparing sensitivity to MALI horizontal resolution and SLM ``nglv``, and
 * generating summary error plots for sea-level diagnostics.
+
+Note the following when using this test group:
+
+* The SeaLevelModel submodule in the E3SM/MALI repository must be set up with 
+  `git submodule update --init components/mpas-albany-landice/src/SeaLevelModel`.
+* MALI must be checked compiled wtih `SLM=true`.
+* The SLM input files are currently available only on Perlmutter.  Running
+  this test group outside of Perlmutter will fail unless the SLM input files
+  are made available locally.
 
 mesh_convergence
 ----------------
