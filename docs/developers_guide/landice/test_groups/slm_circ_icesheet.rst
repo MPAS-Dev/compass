@@ -16,7 +16,7 @@ framework
 ---------
 
 The shared config options for this group are documented in
-:ref:`landice_slm` in the User's Guide.
+:ref:`landice_slm_circ_icesheet` in the User's Guide.
 
 The ``configure()`` method of ``CircIcesheetTest`` parses two comma-delimited
 parameter lists from the config:

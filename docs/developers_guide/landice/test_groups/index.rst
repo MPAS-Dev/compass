@@ -25,5 +25,5 @@ Test groups
    koge_bugt_s
    mesh_modifications
    mismipplus
-   slm
+   slm_circ_icesheet
    thwaites
