@@ -70,17 +70,19 @@ If you are on a login node, machine detection typically works automatically.
 You can pass ``--machine <machine>`` explicitly if needed.
 
 By default, Compass will reuse existing machine-specific Spack environments
-when the current deployment needs them.  Use ``--deploy-spack`` when you want
-to build or update those Spack environments.  Use ``--no-spack`` for a
-pixi-only deployment.
+when the current deployment needs them.  On supported machines, this now means
+per-toolchain library environments together with a shared software
+environment for tool binaries such as ESMF and MOAB.  Use ``--deploy-spack``
+when you want to build or update those Spack environments.  Use ``--no-spack``
+for a pixi-only deployment.
 
 Environments with Albany
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you are working with MALI, use ``--with-albany`` so the Albany and
-Trilinos libraries are included in the deployed Spack environment.  Albany is
-currently only supported for some machine/compiler/MPI combinations, most
-commonly ``gnu`` builds on supported machines.
+Trilinos libraries are included in the deployed Spack library environment.
+Albany is currently only supported for some machine/compiler/MPI
+combinations, most commonly ``gnu`` builds on supported machines.
 
 Unknown machines
 ~~~~~~~~~~~~~~~~
@@ -104,8 +106,9 @@ What the script does
 * install the ``compass`` package from the local branch in editable mode so
   changes you make to the repo are reflected immediately
 
-* optionally deploy or reuse Spack environments for selected compiler/MPI
-  toolchains
+* optionally deploy or reuse Spack library environments for selected
+  compiler/MPI toolchains, plus a shared Spack software environment for
+  supporting binaries
 
 * generate activation scripts (``load_*.sh``)
 
@@ -122,7 +125,8 @@ Useful flags
     Select compiler/MPI combinations, primarily for Spack deployment
 
 ``--deploy-spack``
-    Deploy supported Spack environments instead of only reusing existing ones
+    Deploy supported Spack library/software environments instead of only
+    reusing existing ones
 
 ``--no-spack``
     Disable all Spack use for this run and rely on pixi dependencies instead

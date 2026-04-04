@@ -25,6 +25,7 @@ def pre_pixi(ctx: DeployContext) -> dict[str, Any] | None:
 def pre_spack(ctx: DeployContext) -> dict[str, Any] | None:
     toolchain_pairs = _get_toolchain_pairs(ctx)
     _check_unsupported(ctx.machine, toolchain_pairs)
+    _ensure_software_compiler(ctx.machine_config)
 
     updates: dict[str, Any] = {}
     exclude_packages = _get_spack_exclude_packages(ctx.config)
@@ -258,6 +259,19 @@ def _get_spack_exclude_packages(config) -> list[str]:
         return [exclude_packages]
 
     return [str(package) for package in exclude_packages]
+
+
+def _ensure_software_compiler(machine_config) -> None:
+    if not machine_config.has_section('deploy'):
+        return
+    if machine_config.has_option('deploy', 'software_compiler'):
+        value = machine_config.get('deploy', 'software_compiler').strip()
+        if value:
+            return
+
+    compiler = machine_config.get('deploy', 'compiler', fallback='').strip()
+    if compiler:
+        machine_config.set('deploy', 'software_compiler', compiler)
 
 
 def _maybe_exclude_e3sm_hdf5_netcdf(

@@ -51,11 +51,12 @@ following changes:
 Because these environments are shared, it is usually appropriate to bump the
 Compass version before redeploying them.
 
-The current automated Compass Spack deployment covers the libraries listed in
-``deploy/spack.yaml.j2``.  In this branch, that includes packages such as
-ESMF, MOAB, SCORPIO and optional Albany/Trilinos support.  PETSc and
-Netlib-LAPACK are no longer part of the automated ``./deploy.py`` workflow in
-this repository.
+The current automated Compass Spack deployment covers the packages listed in
+``deploy/spack.yaml.j2``.  Compass now splits these into per-toolchain
+library environments for MPAS link dependencies such as SCORPIO and optional
+Albany/Trilinos, plus a shared software environment for tool binaries such as
+ESMF, MOAB and CMake.  PETSc and Netlib-LAPACK are no longer part of the
+automated ``./deploy.py`` workflow in this repository.
 
 Testing a Spack deployment
 ==========================
@@ -80,7 +81,7 @@ Useful flags
 ------------
 
 ``--deploy-spack``
-    Build or update supported Spack environments.
+    Build or update the supported Spack library and software environments.
 
 ``--spack-path <path>``
     Use a test Spack checkout and install location instead of the shared one.
@@ -92,7 +93,8 @@ Useful flags
     Start from a clean deployment for this run.
 
 ``--with-albany``
-    Deploy the Albany-enabled Spack environment in addition to the default one.
+    Deploy the Albany-enabled Spack library environment in addition to the
+    default one.
 
 If you need a non-default temporary directory for Spack builds, set
 ``spack.tmpdir`` in ``deploy/config.yaml.j2`` before running deployment.
