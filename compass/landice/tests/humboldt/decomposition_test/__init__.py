@@ -138,19 +138,21 @@ class DecompositionTest(TestCase):
             if name in self.run_dirs:
                 name = '{}_{}'.format(name, len(self.run_dirs) + 1)
             self.run_dirs.append(name)
-            step = RunModel(test_case=self, name=name, subdir=name, ntasks=procs,
+            step = RunModel(test_case=self, name=name, subdir=name,
+                            ntasks=procs,
                             min_tasks=procs,
-                         openmp_threads=1, velo_solver=self.velo_solver,
-                         calving_law=self.calving_law,
-                         damage=self.damage,
-                         face_melt=self.face_melt,
-                         depth_integrated=self.depth_integrated,
-                         hydro=self.hydro,
-                         mesh_type=self.mesh_type)
+                            openmp_threads=1, velo_solver=self.velo_solver,
+                            calving_law=self.calving_law,
+                            damage=self.damage,
+                            face_melt=self.face_melt,
+                            depth_integrated=self.depth_integrated,
+                            hydro=self.hydro,
+                            mesh_type=self.mesh_type)
             if self.advection_type == 'fct':
                 step.add_namelist_options(
                     {'config_thickness_advection': "'fct'",
-                     'config_tracer_advection': "'fct'"},
+                     'config_tracer_advection': "'fct'",
+                     'config_time_integration': "'runge_kutta'"},
                     out_name='namelist.landice')
             self.add_step(step)
 
