@@ -74,7 +74,8 @@ class DecompositionTest(TestCase):
             if self.advection_type == 'fct':
                 step.add_namelist_options(
                     {'config_thickness_advection': "'fct'",
-                     'config_tracer_advection': "'fct'"},
+                     'config_tracer_advection': "'fct'",
+                     'config_time_integration': "'runge_kutta'"},
                     out_name='namelist.landice')
             self.add_step(step)
 

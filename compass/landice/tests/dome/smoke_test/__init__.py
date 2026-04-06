@@ -60,7 +60,8 @@ class SmokeTest(TestCase):
         if advection_type == 'fct':
             step.add_namelist_options(
                 {'config_thickness_advection': "'fct'",
-                 'config_tracer_advection': "'fct'"})
+                 'config_tracer_advection': "'fct'",
+                 'config_time_integration': "'runge_kutta'"})
         self.add_step(step)
 
         step = Visualize(test_case=self, mesh_type=mesh_type)
