@@ -115,7 +115,9 @@ class Analysis(ConvAnalysis):
 
         timelev = -1  # todo: determine a specified time level and err check
 
-        ds = xr.open_dataset('{}_output.nc'.format(res_tag), decode_cf=False)
+        ds = xr.open_dataset('{}_output.nc'.format(res_tag),
+                             decode_cf=False,
+                             decode_timedelta=False)
         # Find out what the ice density and flowA values for this run were.
         print('Collecting parameter values from the output file.')
         flowA = float(ds.config_default_flowParamA)
@@ -130,7 +132,7 @@ class Analysis(ConvAnalysis):
         dynamicThickness = float(ds.config_dynamic_thickness)
         print(f'Dynamic thickness for this run = {dynamicThickness}')
         daysSinceStart = ds.daysSinceStart
-        print(f'Using model time of {daysSinceStart/365.0} years')
+        print(f'Using model time of {daysSinceStart / 365.0} years')
         if ds.config_calendar_type != "noleap":
             sys.exit('Error: The Halfar script currently assumes a '
                      'gregorian_noleap calendar.')

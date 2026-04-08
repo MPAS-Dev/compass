@@ -94,7 +94,8 @@ class Analysis(ConvAnalysis):
         """
         res_tag = '{}km'.format(resolution)
 
-        ds = xr.open_dataset('{}_output.nc'.format(res_tag))
+        ds = xr.open_dataset('{}_output.nc'.format(res_tag),
+                             decode_timedelta=False)
         init = ds[variable].isel(Time=0)
         final = ds[variable].isel(Time=-1)
         diff = final - init
