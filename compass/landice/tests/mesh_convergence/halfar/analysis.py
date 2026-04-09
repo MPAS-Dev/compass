@@ -52,7 +52,7 @@ class Analysis(ConvAnalysis):
         conv = abs(p[0]) * 2.0
         error_fit = ncells**p[0] * 10**p[1]
 
-        plt.figure(1)
+        plt.figure()
         plt.loglog(ncells, error_fit, 'k')
         plt.loglog(ncells, rmse_errors, 'or')
         plt.annotate('Order of Convergence = {}'.format(np.round(conv, 3)),
@@ -66,7 +66,7 @@ class Analysis(ConvAnalysis):
                     pad_inches=0.1)
 
         # now repeat for center errors
-        plt.figure(2)
+        plt.figure()
         p = np.polyfit(np.log10(ncells), np.log10(center_errors), 1)
         conv2 = abs(p[0]) * 2.0
         error_fit = ncells**p[0] * 10**p[1]

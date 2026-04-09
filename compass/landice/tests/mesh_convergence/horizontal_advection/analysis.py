@@ -48,6 +48,7 @@ class Analysis(ConvAnalysis):
 
         error_fit = ncells**p[0] * 10**p[1]
 
+        plt.figure()
         plt.loglog(ncells, error_fit, 'k')
         plt.loglog(ncells, errors, 'or')
         plt.annotate('Order of Convergence = {}'.format(np.round(conv, 3)),
