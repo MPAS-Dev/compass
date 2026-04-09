@@ -123,7 +123,7 @@ halfar
 
 ``landice/mesh_convergence/halfar`` tests the spatial convergence of MALI's
 ice dynamics by comparing the simulated ice-sheet geometry to the Halfar
-analytic similarity solution :cite:`Halfar1983`.  The test begins from the
+analytic similarity solution (Halfar 1983).  The test begins from the
 analytic Halfar ice dome (using the same initial condition as the
 :ref:`landice_dome` test case with ``dome_type = halfar``) and runs the model
 for a configurable duration.  Two error metrics are computed at the end of the
