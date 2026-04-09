@@ -417,6 +417,64 @@ koge_bugt_s
    mesh.Mesh
    mesh.Mesh.run
 
+mesh_convergence
+~~~~~~~~~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.mesh_convergence
+
+.. autosummary::
+   :toctree: generated/
+
+   MeshConvergence
+
+   conv_test_case.ConvTestCase
+   conv_test_case.ConvTestCase.configure
+   conv_test_case.ConvTestCase.update_cores
+
+   conv_init.ConvInit
+   conv_init.ConvInit.run
+
+   conv_analysis.ConvAnalysis
+
+   forward.Forward
+   forward.Forward.setup
+   forward.Forward.constrain_resources
+   forward.Forward.run
+   forward.Forward.get_dt_duration
+
+   halfar.Halfar
+   halfar.Halfar.create_init
+   halfar.Halfar.create_analysis
+
+   halfar.init.Init
+   halfar.init.Init.run
+
+   halfar.analysis.Analysis
+   halfar.analysis.Analysis.run
+   halfar.analysis.Analysis.rmse
+
+   horizontal_advection.HorizontalAdvection
+   horizontal_advection.HorizontalAdvection.create_init
+   horizontal_advection.HorizontalAdvection.create_analysis
+
+   horizontal_advection.init.Init
+   horizontal_advection.init.Init.run
+
+   horizontal_advection.analysis.Analysis
+   horizontal_advection.analysis.Analysis.run
+   horizontal_advection.analysis.Analysis.rmse
+
+   horizontal_advection_thickness.HorizontalAdvectionThickness
+   horizontal_advection_thickness.HorizontalAdvectionThickness.create_init
+   horizontal_advection_thickness.HorizontalAdvectionThickness.create_analysis
+
+   horizontal_advection_thickness.init.Init
+   horizontal_advection_thickness.init.Init.run
+
+   horizontal_advection_thickness.analysis.Analysis
+   horizontal_advection_thickness.analysis.Analysis.run
+   horizontal_advection_thickness.analysis.Analysis.rmse
+
 mesh_modifications
 ~~~~~~~~~~~~~~~~~~
 
