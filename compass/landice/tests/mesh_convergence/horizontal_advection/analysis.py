@@ -65,11 +65,11 @@ class Analysis(ConvAnalysis):
 
         if conv < conv_thresh:
             raise ValueError(f'order of convergence '
-                             f' {conv} < min tolerence {conv_thresh}')
+                             f'{conv} < min tolerance {conv_thresh}')
 
         if conv > conv_max:
             warnings.warn(f'order of convergence '
-                          f'{conv} > max tolerence {conv_max}')
+                          f'{conv} > max tolerance {conv_max}')
 
     def rmse(self, resolution, variable):
         """

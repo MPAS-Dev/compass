@@ -129,7 +129,9 @@ class Forward(Step):
 
         # check that dt*nt is acceptably close to duration
         time_err = abs(dur_sec - nt * dt) / dur_sec
-        assert time_err < 1e-4, f'nt*dt differs from duration by {time_err}'
+        if time_err >= 1e-4:
+            raise ValueError(
+                f'nt*dt differs from duration by {time_err}')
 
         # the duration (years) of the run
         duration = f'{duration:05d}-00-00_00:00:00'

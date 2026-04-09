@@ -88,11 +88,11 @@ class Analysis(ConvAnalysis):
 
         if conv < conv_thresh:
             raise ValueError(f'order of convergence '
-                             f' {conv} < min tolerence {conv_thresh}')
+                             f'{conv} < min tolerance {conv_thresh}')
 
         if conv > conv_max:
             warnings.warn(f'order of convergence '
-                          f'{conv} > max tolerence {conv_max}')
+                          f'{conv} > max tolerance {conv_max}')
 
     def rmse(self, resolution):
         """
@@ -152,7 +152,7 @@ class Analysis(ConvAnalysis):
                       areaCell[mask].sum()).sum())**0.5
 
         center_idx = np.where((xCell == 0.0) * (yCell == 0.0))
-        center_error = np.absolute(diff[center_idx])
+        center_error = float(np.asarray(np.absolute(diff[center_idx])).item())
 
         return rms_error, center_error, ncells
 

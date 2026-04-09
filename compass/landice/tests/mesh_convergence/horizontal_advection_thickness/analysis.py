@@ -56,7 +56,7 @@ class Analysis(ConvAnalysis):
         plt.ylabel('L2 Norm', fontsize=14)
         section = self.config['mesh_convergence']
         duration = section.getfloat('duration')
-        plt.title(f'Thickness horizontal advection convergence test,'
+        plt.title(f'Thickness horizontal advection convergence test, '
                   f'{duration} yrs')
         plt.savefig('convergence.png', bbox_inches='tight', pad_inches=0.1)
 
@@ -66,11 +66,11 @@ class Analysis(ConvAnalysis):
 
         if conv < conv_thresh:
             raise ValueError(f'order of convergence '
-                             f' {conv} < min tolerence {conv_thresh}')
+                             f'{conv} < min tolerance {conv_thresh}')
 
         if conv > conv_max:
             warnings.warn(f'order of convergence '
-                          f'{conv} > max tolerence {conv_max}')
+                          f'{conv} > max tolerance {conv_max}')
 
     def rmse(self, resolution, variable):
         """
