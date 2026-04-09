@@ -1,4 +1,3 @@
-import sys
 import warnings
 
 import matplotlib.pyplot as plt
@@ -125,8 +124,8 @@ class Analysis(ConvAnalysis):
         flow_n = float(ds.config_flowLawExponent)
         print(f'Using a flowLawExponent value of: {flow_n}')
         if flow_n != 3:
-            sys.exit('Error: The Halfar script currently only supports a '
-                     'flow law exponent of 3.')
+            raise ValueError('Error: The Halfar script currently only '
+                             'supports a flow law exponent of 3.')
         rhoi = ds.config_ice_density
         print(f'Using an ice density value of: {rhoi}')
         dynamicThickness = float(ds.config_dynamic_thickness)
@@ -134,8 +133,8 @@ class Analysis(ConvAnalysis):
         daysSinceStart = ds.daysSinceStart
         print(f'Using model time of {daysSinceStart / 365.0} years')
         if ds.config_calendar_type != "noleap":
-            sys.exit('Error: The Halfar script currently assumes a '
-                     'gregorian_noleap calendar.')
+            raise ValueError('Error: The Halfar script currently assumes a '
+                             'noleap calendar.')
 
         ncells = ds.sizes['nCells']
         thk = ds['thickness'].isel(Time=timelev)
