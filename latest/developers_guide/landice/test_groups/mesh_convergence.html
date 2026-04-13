@@ -1,0 +1,298 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mesh_convergence &mdash; compass latest documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=c6e86fd7"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="mesh_modifications" href="mesh_modifications.html" />
+    <link rel="prev" title="koge_bugt_s" href="koge_bugt_s.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../organization.html">Organization of Tests</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Landice core</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Test groups</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="antarctica.html">antarctica</a></li>
+<li class="toctree-l3"><a class="reference internal" href="calving_dt_convergence.html">calving_dt_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="circular_shelf.html">circular_shelf</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crane.html">crane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dome.html">dome</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ensemble_generator.html">ensemble_generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="enthalpy_benchmark.html">enthalpy_benchmark</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eismint2.html">eismint2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="greenland.html">greenland</a></li>
+<li class="toctree-l3"><a class="reference internal" href="humboldt.html">humboldt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydro_radial.html">hydro_radial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ismip6_forcing.html">ismip6_forcing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ismip6_run.html">ismip6_run</a></li>
+<li class="toctree-l3"><a class="reference internal" href="isunnguata_sermia.html">isunnguata_sermia</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kangerlussuaq.html">kangerlussuaq</a></li>
+<li class="toctree-l3"><a class="reference internal" href="koge_bugt_s.html">koge_bugt_s</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">mesh_convergence</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#framework">framework</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-cases">test cases</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mesh_modifications.html">mesh_modifications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mismipplus.html">mismipplus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slm.html">slm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thwaites.html">thwaites</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../framework.html">Land-ice Framework</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Landice core</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Test groups</a></li>
+      <li class="breadcrumb-item active">mesh_convergence</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/developers_guide/landice/test_groups/mesh_convergence.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="mesh-convergence">
+<span id="dev-landice-mesh-convergence"></span><h1>mesh_convergence<a class="headerlink" href="#mesh-convergence" title="Link to this heading"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">mesh_convergence</span></code> test group
+(<a class="reference internal" href="../generated/compass.landice.tests.mesh_convergence.MeshConvergence.html#compass.landice.tests.mesh_convergence.MeshConvergence" title="compass.landice.tests.mesh_convergence.MeshConvergence"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.mesh_convergence.MeshConvergence</span></code></a>)
+implements a suite of spatial convergence tests for MALI on planar, doubly
+periodic hexagonal meshes (see <a class="reference internal" href="../../../users_guide/landice/test_groups/mesh_convergence.html#landice-mesh-convergence"><span class="std std-ref">mesh_convergence</span></a>).  Here we
+describe the shared framework and the individual test cases.</p>
+<section id="framework">
+<span id="dev-landice-mesh-convergence-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Link to this heading"></a></h2>
+<p>The test group shares several base classes and config/namelist/streams files
+that are used by all three test cases.</p>
+<section id="convtestcase">
+<h3>ConvTestCase<a class="headerlink" href="#convtestcase" title="Link to this heading"></a></h3>
+<p><a class="reference internal" href="../generated/compass.landice.tests.mesh_convergence.conv_test_case.ConvTestCase.html#compass.landice.tests.mesh_convergence.conv_test_case.ConvTestCase" title="compass.landice.tests.mesh_convergence.conv_test_case.ConvTestCase"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.mesh_convergence.conv_test_case.ConvTestCase</span></code></a>
+is the shared base class for all convergence test cases.  It reads the list of
+resolutions from <code class="docutils literal notranslate"><span class="pre">[mesh_convergence]</span> <span class="pre">resolutions</span></code> and calls
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">_setup_steps()</span></code>
+to construct the appropriate <code class="docutils literal notranslate"><span class="pre">init</span></code> and <code class="docutils literal notranslate"><span class="pre">forward</span></code> steps for each
+resolution.  Each child class must implement <code class="docutils literal notranslate"><span class="pre">create_init</span></code> and
+<code class="docutils literal notranslate"><span class="pre">create_analysis</span></code> to supply the test-case-specific init and analysis step
+objects.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">configure</span></code> method re-runs <code class="docutils literal notranslate"><span class="pre">_setup_steps</span></code> in case the user has changed
+the resolution list in a config file, and then calls <code class="docutils literal notranslate"><span class="pre">update_cores</span></code> to set
+the number of MPI tasks for each forward step based on the mesh size and the
+<code class="docutils literal notranslate"><span class="pre">goal_cells_per_core</span></code> / <code class="docutils literal notranslate"><span class="pre">max_cells_per_core</span></code> config options.</p>
+</section>
+<section id="convinit">
+<h3>ConvInit<a class="headerlink" href="#convinit" title="Link to this heading"></a></h3>
+<p><a class="reference internal" href="../generated/compass.landice.tests.mesh_convergence.conv_init.ConvInit.html#compass.landice.tests.mesh_convergence.conv_init.ConvInit" title="compass.landice.tests.mesh_convergence.conv_init.ConvInit"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.mesh_convergence.conv_init.ConvInit</span></code></a>
+is the shared base class for all init steps.  Its <code class="docutils literal notranslate"><span class="pre">run</span></code> method creates a
+planar hexagonal mesh of the requested resolution using
+<code class="docutils literal notranslate"><span class="pre">mpas_tools.planar_hex.make_planar_hex_mesh</span></code>, culls and converts the mesh,
+centers it, and writes <code class="docutils literal notranslate"><span class="pre">mesh.nc</span></code> and <code class="docutils literal notranslate"><span class="pre">graph.info</span></code>.  Each test case
+provides a child class of <code class="docutils literal notranslate"><span class="pre">ConvInit</span></code> that calls <code class="docutils literal notranslate"><span class="pre">super().run()</span></code> and then
+adds the appropriate initial conditions for that test.</p>
+</section>
+<section id="convanalysis">
+<h3>ConvAnalysis<a class="headerlink" href="#convanalysis" title="Link to this heading"></a></h3>
+<p><a class="reference internal" href="../generated/compass.landice.tests.mesh_convergence.conv_analysis.ConvAnalysis.html#compass.landice.tests.mesh_convergence.conv_analysis.ConvAnalysis" title="compass.landice.tests.mesh_convergence.conv_analysis.ConvAnalysis"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.mesh_convergence.conv_analysis.ConvAnalysis</span></code></a>
+is the shared base class for all analysis steps.  Its <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method
+registers the forward-step output files as analysis inputs using the naming
+convention <code class="docutils literal notranslate"><span class="pre">{resolution}km_output.nc</span> <span class="pre">→</span> <span class="pre">../{resolution}km/forward/output.nc</span></code>.
+Each test case provides a child class that implements the <code class="docutils literal notranslate"><span class="pre">run</span></code> method and,
+typically, an <code class="docutils literal notranslate"><span class="pre">rmse</span></code> helper method.</p>
+</section>
+<section id="forward">
+<h3>Forward<a class="headerlink" href="#forward" title="Link to this heading"></a></h3>
+<p><a class="reference internal" href="../generated/compass.landice.tests.mesh_convergence.forward.Forward.html#compass.landice.tests.mesh_convergence.forward.Forward" title="compass.landice.tests.mesh_convergence.forward.Forward"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.mesh_convergence.forward.Forward</span></code></a>
+is shared by all test cases.  It reads the common <code class="docutils literal notranslate"><span class="pre">namelist.forward</span></code> and
+<code class="docutils literal notranslate"><span class="pre">streams.forward</span></code> files from the <code class="docutils literal notranslate"><span class="pre">mesh_convergence</span></code> package, and
+additionally reads test-case-specific namelist/streams files if they exist in
+the child test-case package.  The time step for each resolution is set via the
+<code class="docutils literal notranslate"><span class="pre">get_dt_duration</span></code> method to satisfy an advective CFL condition based on
+<code class="docutils literal notranslate"><span class="pre">target_velocity</span></code> and scaled proportionally to each mesh resolution.</p>
+</section>
+<section id="config-namelist-streams-files">
+<h3>Config / namelist / streams files<a class="headerlink" href="#config-namelist-streams-files" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">mesh_convergence.cfg</span></code> sets default values for options shared across all
+test cases (resolutions, domain size, core counts, etc.).  Each test case
+additionally ships its own <code class="docutils literal notranslate"><span class="pre">&lt;name&gt;.cfg</span></code> with test-specific defaults.</p>
+<p><code class="docutils literal notranslate"><span class="pre">namelist.forward</span></code> sets common MALI namelist options (e.g. third-order
+spatial and temporal advection schemes) and is applied first; test-case
+namelist files are applied on top to allow overrides.</p>
+<p><code class="docutils literal notranslate"><span class="pre">streams.forward</span></code> and <code class="docutils literal notranslate"><span class="pre">streams.template</span></code> define the <code class="docutils literal notranslate"><span class="pre">input</span></code>
+and <code class="docutils literal notranslate"><span class="pre">output</span></code> streams; the output interval is filled in by the <code class="docutils literal notranslate"><span class="pre">Forward</span></code>
+step from the computed run duration.</p>
+</section>
+</section>
+<section id="test-cases">
+<span id="dev-landice-mesh-convergence-test-cases"></span><h2>test cases<a class="headerlink" href="#test-cases" title="Link to this heading"></a></h2>
+<section id="horizontal-advection">
+<h3>horizontal_advection<a class="headerlink" href="#horizontal-advection" title="Link to this heading"></a></h3>
+<p><a class="reference internal" href="../generated/compass.landice.tests.mesh_convergence.horizontal_advection.HorizontalAdvection.html#compass.landice.tests.mesh_convergence.horizontal_advection.HorizontalAdvection" title="compass.landice.tests.mesh_convergence.horizontal_advection.HorizontalAdvection"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.mesh_convergence.horizontal_advection.HorizontalAdvection</span></code></a>
+tests convergence of passive-tracer advection.</p>
+<p>Init
+(<a class="reference internal" href="../generated/compass.landice.tests.mesh_convergence.horizontal_advection.init.Init.html#compass.landice.tests.mesh_convergence.horizontal_advection.init.Init" title="compass.landice.tests.mesh_convergence.horizontal_advection.init.Init"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.mesh_convergence.horizontal_advection.init.Init</span></code></a>)
+sets up a uniform ice slab with a Gaussian blob of <code class="docutils literal notranslate"><span class="pre">passiveTracer2d</span></code> at the
+domain center plus a spatially uniform prescribed velocity
+(<code class="docutils literal notranslate"><span class="pre">uReconstructX</span></code>, <code class="docutils literal notranslate"><span class="pre">uReconstructY</span></code>) chosen so that the tracer completes
+exactly one circuit of the periodic domain in the configured run duration.</p>
+<p>Analysis
+(<a class="reference internal" href="../generated/compass.landice.tests.mesh_convergence.horizontal_advection.analysis.Analysis.html#compass.landice.tests.mesh_convergence.horizontal_advection.analysis.Analysis" title="compass.landice.tests.mesh_convergence.horizontal_advection.analysis.Analysis"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.mesh_convergence.horizontal_advection.analysis.Analysis</span></code></a>)
+computes the RMSE of <code class="docutils literal notranslate"><span class="pre">passiveTracer2d</span></code> between the initial and final states
+at each resolution, fits a power law, and saves <code class="docutils literal notranslate"><span class="pre">convergence.png</span></code>.</p>
+</section>
+<section id="horizontal-advection-thickness">
+<h3>horizontal_advection_thickness<a class="headerlink" href="#horizontal-advection-thickness" title="Link to this heading"></a></h3>
+<p><a class="reference internal" href="../generated/compass.landice.tests.mesh_convergence.horizontal_advection_thickness.HorizontalAdvectionThickness.html#compass.landice.tests.mesh_convergence.horizontal_advection_thickness.HorizontalAdvectionThickness" title="compass.landice.tests.mesh_convergence.horizontal_advection_thickness.HorizontalAdvectionThickness"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.mesh_convergence.horizontal_advection_thickness.HorizontalAdvectionThickness</span></code></a>
+is structurally identical to <code class="docutils literal notranslate"><span class="pre">horizontal_advection</span></code> but tests convergence of
+ice-thickness advection instead.</p>
+<p>Init
+(<a class="reference internal" href="../generated/compass.landice.tests.mesh_convergence.horizontal_advection_thickness.init.Init.html#compass.landice.tests.mesh_convergence.horizontal_advection_thickness.init.Init" title="compass.landice.tests.mesh_convergence.horizontal_advection_thickness.init.Init"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.mesh_convergence.horizontal_advection_thickness.init.Init</span></code></a>)
+places a Gaussian bump of ice thickness on top of a uniform background layer,
+with the same prescribed velocity approach as the tracer test.</p>
+<p>Analysis
+(<a class="reference internal" href="../generated/compass.landice.tests.mesh_convergence.horizontal_advection_thickness.analysis.Analysis.html#compass.landice.tests.mesh_convergence.horizontal_advection_thickness.analysis.Analysis" title="compass.landice.tests.mesh_convergence.horizontal_advection_thickness.analysis.Analysis"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.mesh_convergence.horizontal_advection_thickness.analysis.Analysis</span></code></a>)
+computes the RMSE of <code class="docutils literal notranslate"><span class="pre">thickness</span></code> between the initial and final states.</p>
+</section>
+<section id="halfar">
+<h3>halfar<a class="headerlink" href="#halfar" title="Link to this heading"></a></h3>
+<p><a class="reference internal" href="../generated/compass.landice.tests.mesh_convergence.halfar.Halfar.html#compass.landice.tests.mesh_convergence.halfar.Halfar" title="compass.landice.tests.mesh_convergence.halfar.Halfar"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.mesh_convergence.halfar.Halfar</span></code></a>
+tests convergence of the ice-dynamics solver by comparing against the Halfar
+analytic similarity solution.</p>
+<p>Init
+(<a class="reference internal" href="../generated/compass.landice.tests.mesh_convergence.halfar.init.Init.html#compass.landice.tests.mesh_convergence.halfar.init.Init" title="compass.landice.tests.mesh_convergence.halfar.init.Init"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.mesh_convergence.halfar.init.Init</span></code></a>)
+calls
+<code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.tests.dome.setup_mesh.setup_dome_initial_conditions()</span></code>
+to create the Halfar dome initial condition on the planar hexagonal mesh.</p>
+<p>Analysis
+(<a class="reference internal" href="../generated/compass.landice.tests.mesh_convergence.halfar.analysis.Analysis.html#compass.landice.tests.mesh_convergence.halfar.analysis.Analysis" title="compass.landice.tests.mesh_convergence.halfar.analysis.Analysis"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.mesh_convergence.halfar.analysis.Analysis</span></code></a>)
+computes two error metrics:</p>
+<ul class="simple">
+<li><p>The RMSE between simulated and analytic Halfar thickness over all cells
+that contain ice in either solution (<code class="docutils literal notranslate"><span class="pre">convergence_rmse.png</span></code>).</p></li>
+<li><p>The absolute error at the dome center (<code class="docutils literal notranslate"><span class="pre">convergence_dome.png</span></code>).</p></li>
+</ul>
+<p>The order of convergence is derived from the RMSE metric and compared against
+<code class="docutils literal notranslate"><span class="pre">conv_thresh</span></code> (fail below) and <code class="docutils literal notranslate"><span class="pre">conv_max</span></code> (warn above) config options.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="koge_bugt_s.html" class="btn btn-neutral float-left" title="koge_bugt_s" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mesh_modifications.html" class="btn btn-neutral float-right" title="mesh_modifications" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

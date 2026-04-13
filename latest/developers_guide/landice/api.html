@@ -821,6 +821,121 @@
 </tbody>
 </table>
 </section>
+<section id="mesh-convergence">
+<h3>mesh_convergence<a class="headerlink" href="#mesh-convergence" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.MeshConvergence.html#compass.landice.tests.mesh_convergence.MeshConvergence" title="compass.landice.tests.mesh_convergence.MeshConvergence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeshConvergence</span></code></a>(mpas_core)</p></td>
+<td><p>A test group for convergence tests with MALI</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.conv_test_case.ConvTestCase.html#compass.landice.tests.mesh_convergence.conv_test_case.ConvTestCase" title="compass.landice.tests.mesh_convergence.conv_test_case.ConvTestCase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">conv_test_case.ConvTestCase</span></code></a>(test_group, name)</p></td>
+<td><p>A test case for various convergence tests on in MALI with planar, doubly periodic meshes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.conv_test_case.ConvTestCase.configure.html#compass.landice.tests.mesh_convergence.conv_test_case.ConvTestCase.configure" title="compass.landice.tests.mesh_convergence.conv_test_case.ConvTestCase.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">conv_test_case.ConvTestCase.configure</span></code></a>()</p></td>
+<td><p>Set config options for the test case</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.conv_test_case.ConvTestCase.update_cores.html#compass.landice.tests.mesh_convergence.conv_test_case.ConvTestCase.update_cores" title="compass.landice.tests.mesh_convergence.conv_test_case.ConvTestCase.update_cores"><code class="xref py py-obj docutils literal notranslate"><span class="pre">conv_test_case.ConvTestCase.update_cores</span></code></a>()</p></td>
+<td><p>Update the number of cores and min_tasks for each forward step</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.conv_init.ConvInit.html#compass.landice.tests.mesh_convergence.conv_init.ConvInit" title="compass.landice.tests.mesh_convergence.conv_init.ConvInit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">conv_init.ConvInit</span></code></a>(test_case, resolution)</p></td>
+<td><p>A step for creating a mesh for a given resolution in a mesh convergence test case.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.conv_init.ConvInit.run.html#compass.landice.tests.mesh_convergence.conv_init.ConvInit.run" title="compass.landice.tests.mesh_convergence.conv_init.ConvInit.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">conv_init.ConvInit.run</span></code></a>()</p></td>
+<td><p>Run this step of the test case</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.conv_analysis.ConvAnalysis.html#compass.landice.tests.mesh_convergence.conv_analysis.ConvAnalysis" title="compass.landice.tests.mesh_convergence.conv_analysis.ConvAnalysis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">conv_analysis.ConvAnalysis</span></code></a>(test_case, ...)</p></td>
+<td><p>A step for visualizing and/or analyzing the output from a convergence test case</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.forward.Forward.html#compass.landice.tests.mesh_convergence.forward.Forward" title="compass.landice.tests.mesh_convergence.forward.Forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.Forward</span></code></a>(test_case, resolution)</p></td>
+<td><p>A step for performing forward MALI runs as part of a mesh convergence test case</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.forward.Forward.setup.html#compass.landice.tests.mesh_convergence.forward.Forward.setup" title="compass.landice.tests.mesh_convergence.forward.Forward.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.Forward.setup</span></code></a>()</p></td>
+<td><p>Set namelist options based on config options</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.forward.Forward.constrain_resources.html#compass.landice.tests.mesh_convergence.forward.Forward.constrain_resources" title="compass.landice.tests.mesh_convergence.forward.Forward.constrain_resources"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.Forward.constrain_resources</span></code></a>(...)</p></td>
+<td><p>Update resources at runtime from config options</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.forward.Forward.run.html#compass.landice.tests.mesh_convergence.forward.Forward.run" title="compass.landice.tests.mesh_convergence.forward.Forward.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.Forward.run</span></code></a>()</p></td>
+<td><p>Run this step of the testcase</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.forward.Forward.get_dt_duration.html#compass.landice.tests.mesh_convergence.forward.Forward.get_dt_duration" title="compass.landice.tests.mesh_convergence.forward.Forward.get_dt_duration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.Forward.get_dt_duration</span></code></a>()</p></td>
+<td><p>Get the time step and run duration as namelist options from config options</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.halfar.Halfar.html#compass.landice.tests.mesh_convergence.halfar.Halfar" title="compass.landice.tests.mesh_convergence.halfar.Halfar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">halfar.Halfar</span></code></a>(test_group)</p></td>
+<td><p>A test case for testing mesh convergence with the Halfar analytic test</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.halfar.Halfar.create_init.html#compass.landice.tests.mesh_convergence.halfar.Halfar.create_init" title="compass.landice.tests.mesh_convergence.halfar.Halfar.create_init"><code class="xref py py-obj docutils literal notranslate"><span class="pre">halfar.Halfar.create_init</span></code></a>(resolution)</p></td>
+<td><p>Child class must override this to return an instance of a ConvInit step</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.halfar.Halfar.create_analysis.html#compass.landice.tests.mesh_convergence.halfar.Halfar.create_analysis" title="compass.landice.tests.mesh_convergence.halfar.Halfar.create_analysis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">halfar.Halfar.create_analysis</span></code></a>(resolutions)</p></td>
+<td><p>Child class must override this to return an instance of a ConvergenceInit step</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.halfar.init.Init.html#compass.landice.tests.mesh_convergence.halfar.init.Init" title="compass.landice.tests.mesh_convergence.halfar.init.Init"><code class="xref py py-obj docutils literal notranslate"><span class="pre">halfar.init.Init</span></code></a>(test_case, resolution)</p></td>
+<td><p>A step for creating an initial_condition for advection convergence test case</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.halfar.init.Init.run.html#compass.landice.tests.mesh_convergence.halfar.init.Init.run" title="compass.landice.tests.mesh_convergence.halfar.init.Init.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">halfar.init.Init.run</span></code></a>()</p></td>
+<td><p>Run this step of the test case</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.halfar.analysis.Analysis.html#compass.landice.tests.mesh_convergence.halfar.analysis.Analysis" title="compass.landice.tests.mesh_convergence.halfar.analysis.Analysis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">halfar.analysis.Analysis</span></code></a>(test_case, resolutions)</p></td>
+<td><p>A step for visualizing the output from the advection convergence test case</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.halfar.analysis.Analysis.run.html#compass.landice.tests.mesh_convergence.halfar.analysis.Analysis.run" title="compass.landice.tests.mesh_convergence.halfar.analysis.Analysis.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">halfar.analysis.Analysis.run</span></code></a>()</p></td>
+<td><p>Run this step of the test case</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.halfar.analysis.Analysis.rmse.html#compass.landice.tests.mesh_convergence.halfar.analysis.Analysis.rmse" title="compass.landice.tests.mesh_convergence.halfar.analysis.Analysis.rmse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">halfar.analysis.Analysis.rmse</span></code></a>(resolution)</p></td>
+<td><p>Compute the RMSE for a given resolution</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.horizontal_advection.HorizontalAdvection.html#compass.landice.tests.mesh_convergence.horizontal_advection.HorizontalAdvection" title="compass.landice.tests.mesh_convergence.horizontal_advection.HorizontalAdvection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">horizontal_advection.HorizontalAdvection</span></code></a>(...)</p></td>
+<td><p>A test case for testing horizontal advection in MALI with planar, doubly periodic meshes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.horizontal_advection.HorizontalAdvection.create_init.html#compass.landice.tests.mesh_convergence.horizontal_advection.HorizontalAdvection.create_init" title="compass.landice.tests.mesh_convergence.horizontal_advection.HorizontalAdvection.create_init"><code class="xref py py-obj docutils literal notranslate"><span class="pre">horizontal_advection.HorizontalAdvection.create_init</span></code></a>(...)</p></td>
+<td><p>Child class must override this to return an instance of a ConvInit step</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.horizontal_advection.HorizontalAdvection.create_analysis.html#compass.landice.tests.mesh_convergence.horizontal_advection.HorizontalAdvection.create_analysis" title="compass.landice.tests.mesh_convergence.horizontal_advection.HorizontalAdvection.create_analysis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">horizontal_advection.HorizontalAdvection.create_analysis</span></code></a>(...)</p></td>
+<td><p>Child class must override this to return an instance of a ConvergenceInit step</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.horizontal_advection.init.Init.html#compass.landice.tests.mesh_convergence.horizontal_advection.init.Init" title="compass.landice.tests.mesh_convergence.horizontal_advection.init.Init"><code class="xref py py-obj docutils literal notranslate"><span class="pre">horizontal_advection.init.Init</span></code></a>(test_case, ...)</p></td>
+<td><p>A step for creating an initial_condition for advection convergence test case</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.horizontal_advection.init.Init.run.html#compass.landice.tests.mesh_convergence.horizontal_advection.init.Init.run" title="compass.landice.tests.mesh_convergence.horizontal_advection.init.Init.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">horizontal_advection.init.Init.run</span></code></a>()</p></td>
+<td><p>Run this step of the test case</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.horizontal_advection.analysis.Analysis.html#compass.landice.tests.mesh_convergence.horizontal_advection.analysis.Analysis" title="compass.landice.tests.mesh_convergence.horizontal_advection.analysis.Analysis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">horizontal_advection.analysis.Analysis</span></code></a>(...)</p></td>
+<td><p>A step for visualizing the output from the advection convergence test case</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.horizontal_advection.analysis.Analysis.run.html#compass.landice.tests.mesh_convergence.horizontal_advection.analysis.Analysis.run" title="compass.landice.tests.mesh_convergence.horizontal_advection.analysis.Analysis.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">horizontal_advection.analysis.Analysis.run</span></code></a>()</p></td>
+<td><p>Run this step of the test case</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.horizontal_advection.analysis.Analysis.rmse.html#compass.landice.tests.mesh_convergence.horizontal_advection.analysis.Analysis.rmse" title="compass.landice.tests.mesh_convergence.horizontal_advection.analysis.Analysis.rmse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">horizontal_advection.analysis.Analysis.rmse</span></code></a>(...)</p></td>
+<td><p>Compute the RMSE for a given resolution</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.horizontal_advection_thickness.HorizontalAdvectionThickness.html#compass.landice.tests.mesh_convergence.horizontal_advection_thickness.HorizontalAdvectionThickness" title="compass.landice.tests.mesh_convergence.horizontal_advection_thickness.HorizontalAdvectionThickness"><code class="xref py py-obj docutils literal notranslate"><span class="pre">horizontal_advection_thickness.HorizontalAdvectionThickness</span></code></a>(...)</p></td>
+<td><p>A test case for testing horizontal advection of thickness in MALI with planar, doubly periodic meshes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.horizontal_advection_thickness.HorizontalAdvectionThickness.create_init.html#compass.landice.tests.mesh_convergence.horizontal_advection_thickness.HorizontalAdvectionThickness.create_init" title="compass.landice.tests.mesh_convergence.horizontal_advection_thickness.HorizontalAdvectionThickness.create_init"><code class="xref py py-obj docutils literal notranslate"><span class="pre">horizontal_advection_thickness.HorizontalAdvectionThickness.create_init</span></code></a>(...)</p></td>
+<td><p>Child class must override this to return an instance of a ConvInit step</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.horizontal_advection_thickness.HorizontalAdvectionThickness.create_analysis.html#compass.landice.tests.mesh_convergence.horizontal_advection_thickness.HorizontalAdvectionThickness.create_analysis" title="compass.landice.tests.mesh_convergence.horizontal_advection_thickness.HorizontalAdvectionThickness.create_analysis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">horizontal_advection_thickness.HorizontalAdvectionThickness.create_analysis</span></code></a>(...)</p></td>
+<td><p>Child class must override this to return an instance of a ConvergenceInit step</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.horizontal_advection_thickness.init.Init.html#compass.landice.tests.mesh_convergence.horizontal_advection_thickness.init.Init" title="compass.landice.tests.mesh_convergence.horizontal_advection_thickness.init.Init"><code class="xref py py-obj docutils literal notranslate"><span class="pre">horizontal_advection_thickness.init.Init</span></code></a>(...)</p></td>
+<td><p>A step for creating an initial_condition for advection convergence test case</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.horizontal_advection_thickness.init.Init.run.html#compass.landice.tests.mesh_convergence.horizontal_advection_thickness.init.Init.run" title="compass.landice.tests.mesh_convergence.horizontal_advection_thickness.init.Init.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">horizontal_advection_thickness.init.Init.run</span></code></a>()</p></td>
+<td><p>Run this step of the test case</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.horizontal_advection_thickness.analysis.Analysis.html#compass.landice.tests.mesh_convergence.horizontal_advection_thickness.analysis.Analysis" title="compass.landice.tests.mesh_convergence.horizontal_advection_thickness.analysis.Analysis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">horizontal_advection_thickness.analysis.Analysis</span></code></a>(...)</p></td>
+<td><p>A step for visualizing the output from the advection convergence test case</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.horizontal_advection_thickness.analysis.Analysis.run.html#compass.landice.tests.mesh_convergence.horizontal_advection_thickness.analysis.Analysis.run" title="compass.landice.tests.mesh_convergence.horizontal_advection_thickness.analysis.Analysis.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">horizontal_advection_thickness.analysis.Analysis.run</span></code></a>()</p></td>
+<td><p>Run this step of the test case</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.landice.tests.mesh_convergence.horizontal_advection_thickness.analysis.Analysis.rmse.html#compass.landice.tests.mesh_convergence.horizontal_advection_thickness.analysis.Analysis.rmse" title="compass.landice.tests.mesh_convergence.horizontal_advection_thickness.analysis.Analysis.rmse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">horizontal_advection_thickness.analysis.Analysis.rmse</span></code></a>(...)</p></td>
+<td><p>Compute the RMSE for a given resolution</p></td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="mesh-modifications">
 <h3>mesh_modifications<a class="headerlink" href="#mesh-modifications" title="Link to this heading"></a></h3>
 <table class="autosummary longtable docutils align-default">

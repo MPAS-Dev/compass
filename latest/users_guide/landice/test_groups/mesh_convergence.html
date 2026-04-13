@@ -1,0 +1,349 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mesh_convergence &mdash; compass latest documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=c6e86fd7"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="mesh_modifications" href="mesh_modifications.html" />
+    <link rel="prev" title="koge_bugt_s" href="koge_bugt_s.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_suites.html">Test Suites</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Landice core</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Test Groups</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="antarctica.html">antarctica</a></li>
+<li class="toctree-l3"><a class="reference internal" href="calving_dt_convergence.html">calving_dt_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="circular_shelf.html">circular_shelf</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crane.html">crane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dome.html">dome</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eismint2.html">eismint2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ensemble_generator.html">ensemble_generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="enthalpy_benchmark.html">enthalpy_benchmark</a></li>
+<li class="toctree-l3"><a class="reference internal" href="greenland.html">greenland</a></li>
+<li class="toctree-l3"><a class="reference internal" href="humboldt.html">humboldt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydro_radial.html">hydro_radial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ismip6_forcing.html">ismip6_forcing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ismip6_run.html">ismip6_run</a></li>
+<li class="toctree-l3"><a class="reference internal" href="isunnguata_sermia.html">isunnguata_sermia</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kangerlussuaq.html">kangerlussuaq</a></li>
+<li class="toctree-l3"><a class="reference internal" href="koge_bugt_s.html">koge_bugt_s</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">mesh_convergence</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#horizontal-advection">horizontal_advection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#horizontal-advection-thickness">horizontal_advection_thickness</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#halfar">halfar</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mesh_modifications.html">mesh_modifications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mismipplus.html">mismipplus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slm.html">slm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thwaites.html">thwaites</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../suites.html">Test suites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../framework.html">Land-ice Framework</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Landice core</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Test Groups</a></li>
+      <li class="breadcrumb-item active">mesh_convergence</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/users_guide/landice/test_groups/mesh_convergence.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="mesh-convergence">
+<span id="landice-mesh-convergence"></span><h1>mesh_convergence<a class="headerlink" href="#mesh-convergence" title="Link to this heading"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">landice/mesh_convergence</span></code> test group includes tests for assessing the
+spatial (mesh) convergence of MALI on planar, doubly periodic hexagonal
+meshes.  Currently, three test cases are available:
+<a class="reference internal" href="#landice-mesh-convergence-horizontal-advection"><span class="std std-ref">horizontal_advection</span></a>,
+<a class="reference internal" href="#landice-mesh-convergence-horizontal-advection-thickness"><span class="std std-ref">horizontal_advection_thickness</span></a>, and
+<a class="reference internal" href="#landice-mesh-convergence-halfar"><span class="std std-ref">halfar</span></a>.</p>
+<p>Each test case runs MALI at a series of resolutions, then computes and plots
+the order of convergence of an error metric as a function of the number of
+cells in the mesh.  The analysis step raises an error if the computed order of
+convergence falls below a configurable threshold.</p>
+<section id="config-options">
+<h2>config options<a class="headerlink" href="#config-options" title="Link to this heading"></a></h2>
+<p>All test cases in this test group share the following <code class="docutils literal notranslate"><span class="pre">[mesh_convergence]</span></code>
+config options, which may be overridden on a per-test-case basis:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for mesh convergence test cases</span>
+<span class="k">[mesh_convergence]</span>
+
+<span class="c1"># a list of resolutions (km) to test</span>
+<span class="na">resolutions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8, 4, 2, 1</span>
+
+<span class="c1"># number of mesh cells in x and y for 1 km resolution.  Other resolutions</span>
+<span class="c1"># have the same physical size.</span>
+<span class="na">nx_1km</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">512</span>
+<span class="na">ny_1km</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">640</span>
+
+<span class="c1"># whether to make mesh nonperiodic or not</span>
+<span class="na">nonperiodic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+
+<span class="c1"># the number of cells per core to aim for</span>
+<span class="na">goal_cells_per_core</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">300</span>
+
+<span class="c1"># the approximate maximum number of cells per core</span>
+<span class="na">max_cells_per_core</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3000</span>
+
+<span class="c1"># target velocity (m/yr) used to define the time step via an advective CFL</span>
+<span class="c1"># condition</span>
+<span class="na">target_velocity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2000.0</span>
+
+<span class="c1"># the duration (years) of the run</span>
+<span class="na">duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span>
+</pre></div>
+</div>
+</section>
+<section id="horizontal-advection">
+<span id="landice-mesh-convergence-horizontal-advection"></span><h2>horizontal_advection<a class="headerlink" href="#horizontal-advection" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">landice/mesh_convergence/horizontal_advection</span></code> tests the spatial convergence
+of passive tracer advection in MALI.  A Gaussian blob of a 2-D passive tracer
+(<code class="docutils literal notranslate"><span class="pre">passiveTracer2d</span></code>) is placed on a doubly periodic mesh and advected with a
+prescribed, spatially uniform velocity exactly once around the domain.  The
+root-mean-squared difference between the final and initial tracer fields is
+then used as the error metric.</p>
+<p>The test case config options are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for planar horizontal advection test case</span>
+<span class="k">[horizontal_advection]</span>
+
+<span class="c1"># Number of vertical levels</span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
+
+<span class="c1"># ice thickness (m)</span>
+<span class="na">ice_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000.0</span>
+
+<span class="c1"># bed elevation (m)</span>
+<span class="na">bed_elevation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.0</span>
+
+<span class="c1"># center of the tracer gaussian (km)</span>
+<span class="na">x_center</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.</span>
+<span class="na">y_center</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.</span>
+
+<span class="c1"># width of gaussian tracer &quot;blob&quot; (km)</span>
+<span class="na">gaussian_width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">50</span>
+
+<span class="c1"># whether to advect in x, y, or both</span>
+<span class="na">advect_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="na">advect_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+
+<span class="c1"># convergence threshold below which the test fails</span>
+<span class="na">conv_thresh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.6</span>
+
+<span class="c1"># Convergence rate above which a warning is issued</span>
+<span class="na">conv_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3.0</span>
+
+<span class="c1"># options for mesh convergence test cases</span>
+<span class="k">[mesh_convergence]</span>
+
+<span class="c1"># a list of resolutions (km) to test</span>
+<span class="na">resolutions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">16, 8, 4, 2</span>
+</pre></div>
+</div>
+</section>
+<section id="horizontal-advection-thickness">
+<span id="landice-mesh-convergence-horizontal-advection-thickness"></span><h2>horizontal_advection_thickness<a class="headerlink" href="#horizontal-advection-thickness" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">landice/mesh_convergence/horizontal_advection_thickness</span></code> tests the spatial
+convergence of ice-thickness advection in MALI.  A Gaussian bump of ice
+thickness (on top of a uniform background layer) is placed on a doubly
+periodic mesh and advected with a prescribed, spatially uniform velocity
+exactly once around the domain.  The root-mean-squared difference between the
+final and initial thickness fields is used as the error metric.</p>
+<p>The test case uses the same config options as
+<a class="reference internal" href="#landice-mesh-convergence-horizontal-advection"><span class="std std-ref">horizontal_advection</span></a>.</p>
+</section>
+<section id="halfar">
+<span id="landice-mesh-convergence-halfar"></span><h2>halfar<a class="headerlink" href="#halfar" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">landice/mesh_convergence/halfar</span></code> tests the spatial convergence of MALI’s
+ice dynamics by comparing the simulated ice-sheet geometry to the Halfar
+analytic similarity solution (Halfar 1983).  The test begins from the
+analytic Halfar ice dome (using the same initial condition as the
+<a class="reference internal" href="dome.html#landice-dome"><span class="std std-ref">dome</span></a> test case with <code class="docutils literal notranslate"><span class="pre">dome_type</span> <span class="pre">=</span> <span class="pre">halfar</span></code>) and runs the model
+for a configurable duration.  Two error metrics are computed at the end of the
+run:</p>
+<ul class="simple">
+<li><p><strong>RMSE</strong> — the root-mean-squared difference between the simulated and
+analytic thickness fields over all cells that contain ice in either solution,
+plotted in <code class="docutils literal notranslate"><span class="pre">convergence_rmse.png</span></code>.</p></li>
+<li><p><strong>dome center error</strong> — the absolute difference between the simulated and
+analytic thickness at the dome center, plotted in <code class="docutils literal notranslate"><span class="pre">convergence_dome.png</span></code>.</p></li>
+</ul>
+<p>The order of convergence is estimated from the RMSE metric.  The test fails if
+the order of convergence is below <code class="docutils literal notranslate"><span class="pre">conv_thresh</span></code> and issues a warning if it
+exceeds <code class="docutils literal notranslate"><span class="pre">conv_max</span></code>.</p>
+<p>The test case config options are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for halfar mesh convergence test</span>
+<span class="k">[halfar]</span>
+
+<span class="c1"># Number of vertical levels</span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span>
+
+<span class="c1"># convergence threshold below which the test fails</span>
+<span class="na">conv_thresh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.0</span>
+
+<span class="c1"># Convergence rate above which a warning is issued</span>
+<span class="na">conv_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3.0</span>
+
+<span class="c1"># config options for dome test cases</span>
+<span class="k">[dome]</span>
+
+<span class="c1"># the dome type (&#39;halfar&#39; or &#39;cism&#39;)</span>
+<span class="na">dome_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">halfar</span>
+
+<span class="c1"># Whether to center the dome in the center of the cell that is closest to</span>
+<span class="c1"># the center of the domain</span>
+<span class="na">put_origin_on_a_cell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+
+<span class="c1"># whether to add a small shelf to the test</span>
+<span class="na">shelf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+
+<span class="c1"># whether to add hydrology to the initial condition</span>
+<span class="na">hydro</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+
+<span class="k">[mesh_convergence]</span>
+
+<span class="c1"># a list of resolutions (km) to test</span>
+<span class="na">resolutions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8, 4, 2, 1</span>
+
+<span class="na">nx_1km</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">128</span>
+<span class="na">ny_1km</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">128</span>
+<span class="na">nonperiodic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+
+<span class="c1"># target velocity (m/yr); artificially large to satisfy the more</span>
+<span class="c1"># restrictive diffusive CFL condition for Halfar</span>
+<span class="na">target_velocity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">30000.0</span>
+
+<span class="c1"># the duration (years) of the run</span>
+<span class="na">duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">200</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="koge_bugt_s.html" class="btn btn-neutral float-left" title="koge_bugt_s" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mesh_modifications.html" class="btn btn-neutral float-right" title="mesh_modifications" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
