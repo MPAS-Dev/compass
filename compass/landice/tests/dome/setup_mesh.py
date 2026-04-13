@@ -80,11 +80,11 @@ class SetupMesh(Step):
         make_graph_file(mesh_filename='landice_grid.nc',
                         graph_filename='graph.info')
 
-        _setup_dome_initial_conditions(config, logger,
-                                       filename='landice_grid.nc')
+        setup_dome_initial_conditions(config, logger,
+                                      filename='landice_grid.nc')
 
 
-def _setup_dome_initial_conditions(config, logger, filename):
+def setup_dome_initial_conditions(config, logger, filename):
     """
     Add the initial condition to the given MPAS mesh file
 
@@ -104,7 +104,7 @@ def _setup_dome_initial_conditions(config, logger, filename):
     dome_type = section.get('dome_type')
     put_origin_on_a_cell = section.getboolean('put_origin_on_a_cell')
     shelf = section.getboolean('shelf')
-    hydro = section.getboolean('hyrdo')
+    hydro = section.getboolean('hydro')
 
     # Open the file, get needed dimensions
     gridfile = NetCDFFile(filename, 'r+')

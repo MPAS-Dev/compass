@@ -28,6 +28,7 @@ physics but that are not run routinely.
    isunnguata_sermia
    kangerlussuaq
    koge_bugt_s
+   mesh_convergence
    mesh_modifications
    mismipplus
    slm

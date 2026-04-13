@@ -23,6 +23,7 @@ Test groups
    isunnguata_sermia
    kangerlussuaq
    koge_bugt_s
+   mesh_convergence
    mesh_modifications
    mismipplus
    slm
