@@ -1132,7 +1132,7 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
 
         return f"{base_fn}.scrip.nc"
 
-    def __partition_scrip_file(scrip_filename, n_procs):
+    def _partition_scrip_file(scrip_filename, n_procs):
         n_procs = str(n_procs)
         stem = os.path.splitext(scrip_filename)[0]
         h5m_filename = f'{stem}.h5m'
@@ -1170,8 +1170,8 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
 
     # Generate remapping weights
     logger.info('generating gridded dataset -> MPAS weights')
-    source_part = __partition_scrip_file(source_scrip, nProcs)
-    destination_part = __partition_scrip_file(mali_scrip, nProcs)
+    source_part = _partition_scrip_file(source_scrip, nProcs)
+    destination_part = _partition_scrip_file(mali_scrip, nProcs)
     args = [parallel_executable, '-n', nProcs, 'mbtempest',
             '--type', '5',
             '--load', source_part,
