@@ -1133,6 +1133,7 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
         return f"{base_fn}.scrip.nc"
 
     def __partition_scrip_file(scrip_filename, n_procs):
+        n_procs = str(n_procs)
         stem = os.path.splitext(scrip_filename)[0]
         h5m_filename = f'{stem}.h5m'
         part_filename = f'{stem}.p{n_procs}.h5m'
