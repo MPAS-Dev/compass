@@ -105,7 +105,7 @@ The other test cases do not use config options.
    # create_scrip_file_from_planar_rectangular_grid from MPAS_Tools
    src_proj = gis-gimp
 
-   # number of processors to use for ESMF_RegridWeightGen
+   # number of processors to use for mbtempest
    nProcs = 128
 
 smoke_test

@@ -1132,10 +1132,24 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
 
         return f"{base_fn}.scrip.nc"
 
+    def __partition_scrip_file(scrip_filename, n_procs):
+        stem = os.path.splitext(scrip_filename)[0]
+        h5m_filename = f'{stem}.h5m'
+        part_filename = f'{stem}.p{n_procs}.h5m'
+
+        args = ['mbconvert', '-B', scrip_filename, h5m_filename]
+        check_call(args, logger=logger)
+
+        args = ['mbpart', n_procs, '-z', 'RCB', h5m_filename, part_filename]
+        check_call(args, logger=logger)
+
+        return part_filename
+
     logger = self.logger
 
     source_scrip = __guess_scrip_name(os.path.basename(source_file))
     weights_filename = "gridded_to_MPAS_weights.nc"
+    nProcs = str(nProcs)
 
     # make sure variables is a list, encompasses the variables="all" case
     if isinstance(variables, str):
@@ -1155,13 +1169,15 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
 
     # Generate remapping weights
     logger.info('generating gridded dataset -> MPAS weights')
-    args = [parallel_executable, '-n', nProcs, 'ESMF_RegridWeightGen',
-            '--source', source_scrip,
-            '--destination', mali_scrip,
-            '--weight', weights_filename,
-            '--method', 'conserve',
-            "--netcdf4",
-            "--dst_regional", "--src_regional", '--ignore_unmapped']
+    source_part = __partition_scrip_file(source_scrip, nProcs)
+    destination_part = __partition_scrip_file(mali_scrip, nProcs)
+    args = [parallel_executable, '-n', nProcs, 'mbtempest',
+            '--type', '5',
+            '--load', source_part,
+            '--load', destination_part,
+            '--file', weights_filename,
+            '--weights', '--gnomonic',
+            '--boxeps', '1e-9']
     check_call(args, logger=logger)
 
     # Perform actual interpolation using the weights
