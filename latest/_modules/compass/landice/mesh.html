@@ -128,6 +128,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.mesh.creation.sort_mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">sort_mesh</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.scrip.from_mpas</span><span class="w"> </span><span class="kn">import</span> <span class="n">scrip_from_mpas</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">netCDF4</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">ndimage</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">NearestNDInterpolator</span><span class="p">,</span> <span class="n">interpn</span>
 
 
@@ -193,73 +194,48 @@
 <a class="viewcode-back" href="../../../developers_guide/landice/generated/compass.landice.mesh.gridded_flood_fill.html#compass.landice.mesh.gridded_flood_fill">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">gridded_flood_fill</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">iStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">jStart</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generic flood-fill routine to create mask of connected elements</span>
-<span class="sd">    in the desired input array (field) from a gridded dataset. This</span>
-<span class="sd">    is generally used to remove glaciers and ice-fields that are not</span>
-<span class="sd">    connected to the ice sheet. Note that there may be more efficient</span>
-<span class="sd">    algorithms.</span>
+<span class="sd">    Uses a flood fill to fill disconnected regions.</span>
+<span class="sd">    Any disconnected regions are set to 0.</span>
+<span class="sd">    This version uses scipy.ndimage.label() to identify connected</span>
+<span class="sd">    components of field &gt; 0, then keeps only the component containing</span>
+<span class="sd">    the seed point.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    field : numpy.ndarray</span>
-<span class="sd">        Array from gridded dataset to use for flood-fill.</span>
-<span class="sd">        Usually ice thickness.</span>
+<span class="sd">    field : ndarray</span>
+<span class="sd">        Input 2D field. Cells with field &gt; 0 are considered fillable.</span>
 
-<span class="sd">    iStart : int</span>
-<span class="sd">        x index from which to start flood fill for field.</span>
-<span class="sd">        Defaults to the center x coordinate.</span>
-
-<span class="sd">    jStart : int</span>
-<span class="sd">        y index from which to start flood fill.</span>
-<span class="sd">        Defaults to the center y coordinate.</span>
+<span class="sd">    iStart, jStart : int, optional</span>
+<span class="sd">        Seed location. If not provided, defaults to the center of the array.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    flood_mask : numpy.ndarray</span>
-<span class="sd">        mask calculated by the flood fill routine,</span>
-<span class="sd">        where cells connected to the ice sheet (or main feature)</span>
-<span class="sd">        are 1 and everything else is 0.</span>
+<span class="sd">    flood_mask : ndarray</span>
+<span class="sd">        Integer mask with 1 for the connected component containing the seed,</span>
+<span class="sd">        and 0 elsewhere.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">sz</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">shape</span>
-    <span class="n">searched_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">sz</span><span class="p">)</span>
-    <span class="n">flood_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">sz</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">iStart</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">jStart</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">iStart</span> <span class="o">=</span> <span class="n">sz</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span>
         <span class="n">jStart</span> <span class="o">=</span> <span class="n">sz</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span>
-    <span class="n">flood_mask</span><span class="p">[</span><span class="n">iStart</span><span class="p">,</span> <span class="n">jStart</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
-    <span class="n">neighbors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="c1"># cells eligible to be part of the connected region</span>
+    <span class="n">valid</span> <span class="o">=</span> <span class="n">field</span> <span class="o">&gt;</span> <span class="mf">0.0</span>
 
-    <span class="n">lastSearchList</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel_multi_index</span><span class="p">([[</span><span class="n">iStart</span><span class="p">],</span> <span class="p">[</span><span class="n">jStart</span><span class="p">]],</span>
-                                          <span class="n">sz</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+    <span class="c1"># if the seed is not in a valid cell, nothing gets filled</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">valid</span><span class="p">[</span><span class="n">iStart</span><span class="p">,</span> <span class="n">jStart</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">sz</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
 
-    <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">lastSearchList</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="n">newSearchList</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;i&#39;</span><span class="p">)</span>
+    <span class="c1"># 4-connectivity to match the original implementation</span>
+    <span class="n">structure</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                          <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                          <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">iii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lastSearchList</span><span class="p">)):</span>
-            <span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">lastSearchList</span><span class="p">[</span><span class="n">iii</span><span class="p">],</span> <span class="n">sz</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
-            <span class="c1"># search neighbors</span>
-            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">neighbors</span><span class="p">:</span>
-                <span class="n">ii</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sz</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># don&#39;t go out of bounds</span>
-                <span class="n">jj</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="n">n</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">sz</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># subscripts to neighbor</span>
-                <span class="c1"># only consider unsearched neighbors</span>
-                <span class="k">if</span> <span class="n">searched_mask</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="n">jj</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">searched_mask</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="n">jj</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># mark as searched</span>
+    <span class="n">labels</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">valid</span><span class="p">,</span> <span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">)</span>
+    <span class="n">seed_label</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">iStart</span><span class="p">,</span> <span class="n">jStart</span><span class="p">]</span>
 
-                    <span class="k">if</span> <span class="n">field</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="n">jj</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
-                        <span class="n">flood_mask</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="n">jj</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># mark as ice</span>
-                        <span class="c1"># add to list of newly found  cells</span>
-                        <span class="n">newSearchList</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newSearchList</span><span class="p">,</span>
-                                                  <span class="n">np</span><span class="o">.</span><span class="n">ravel_multi_index</span><span class="p">(</span>
-                                                      <span class="p">[[</span><span class="n">ii</span><span class="p">],</span> <span class="p">[</span><span class="n">jj</span><span class="p">]],</span> <span class="n">sz</span><span class="p">,</span>
-                                                      <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;clip&#39;</span><span class="p">,</span>
-                                                      <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">lastSearchList</span> <span class="o">=</span> <span class="n">newSearchList</span>
-
-    <span class="k">return</span> <span class="n">flood_mask</span></div>
+    <span class="k">return</span> <span class="p">(</span><span class="n">labels</span> <span class="o">==</span> <span class="n">seed_label</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span></div>
 
 
 
@@ -454,8 +430,8 @@
     <span class="k">if</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;use_bed&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;True&#39;</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Using bed elevation for spacing.&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">flood_fill_iStart</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">flood_fill_jStart</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;calling gridded_flood_fill to find </span><span class="se">\</span>
-<span class="s1">                        bedTopography &lt;= low_bed connected to the ocean.&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;calling gridded_flood_fill to find &#39;</span> <span class="o">+</span>
+                        <span class="s1">&#39;bedTopography &lt;= low_bed connected to the ocean.&#39;</span><span class="p">)</span>
             <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
             <span class="c1"># initialize mask to low bed topography</span>
             <span class="n">in_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">bed</span> <span class="o">&lt;=</span> <span class="n">low_bed</span><span class="p">)</span>

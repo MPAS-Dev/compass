@@ -130,26 +130,22 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="compass.landice.mesh.gridded_flood_fill">
 <span class="sig-prename descclassname"><span class="pre">compass.landice.mesh.</span></span><span class="sig-name descname"><span class="pre">gridded_flood_fill</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iStart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jStart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/mesh.html#gridded_flood_fill"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.mesh.gridded_flood_fill" title="Link to this definition"></a></dt>
-<dd><p>Generic flood-fill routine to create mask of connected elements
-in the desired input array (field) from a gridded dataset. This
-is generally used to remove glaciers and ice-fields that are not
-connected to the ice sheet. Note that there may be more efficient
-algorithms.</p>
+<dd><p>Uses a flood fill to fill disconnected regions.
+Any disconnected regions are set to 0.
+This version uses scipy.ndimage.label() to identify connected
+components of field &gt; 0, then keeps only the component containing
+the seed point.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>field</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>numpy.ndarray</em></a>) – Array from gridded dataset to use for flood-fill.
-Usually ice thickness.</p></li>
-<li><p><strong>iStart</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – x index from which to start flood fill for field.
-Defaults to the center x coordinate.</p></li>
-<li><p><strong>jStart</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – y index from which to start flood fill.
-Defaults to the center y coordinate.</p></li>
+<li><p><strong>field</strong> (<em>ndarray</em>) – Input 2D field. Cells with field &gt; 0 are considered fillable.</p></li>
+<li><p><strong>iStart</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Seed location. If not provided, defaults to the center of the array.</p></li>
+<li><p><strong>jStart</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Seed location. If not provided, defaults to the center of the array.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>flood_mask</strong> (<em>numpy.ndarray</em>) – mask calculated by the flood fill routine,
-where cells connected to the ice sheet (or main feature)
-are 1 and everything else is 0.</p>
+<dd class="field-even"><p><strong>flood_mask</strong> (<em>ndarray</em>) – Integer mask with 1 for the connected component containing the seed,
+and 0 elsewhere.</p>
 </dd>
 </dl>
 </dd></dl>
