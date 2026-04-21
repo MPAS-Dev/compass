@@ -1,4 +1,5 @@
 import netCDF4
+import xarray as xr
 from mpas_tools.logging import check_call
 
 from compass.landice.mesh import (
@@ -80,11 +81,15 @@ class Mesh(Step):
         else:
             bm_updated_gridded_dataset = source_gridded_dataset
 
+        ds = xr.open_dataset(bm_updated_gridded_dataset)
+        nx, ny = ds.sizes["x1"], ds.sizes["y1"]
+        ds.close()
         logger.info('calling build_cell_width')
         cell_width, x1, y1, geom_points, geom_edges, floodFillMask = \
             build_cell_width(
                 self, section_name=section_name,
-                gridded_dataset=bm_updated_gridded_dataset)
+                gridded_dataset=bm_updated_gridded_dataset,
+                flood_fill_start=[nx // 2, ny // 2])
 
         # Now build the base mesh and perform the standard interpolation
         build_mali_mesh(
