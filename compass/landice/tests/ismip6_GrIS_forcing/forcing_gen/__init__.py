@@ -90,8 +90,8 @@ class ForcingGen(TestCase):
         archive_fp = config.get("ISMIP6_GrIS_Forcing", "archive_fp")
 
         # initalize the oceanFileFinder
-        self._atm_file_finder = oceanFileFinder(archive_fp)
-        self._ocn_file_finder = atmosphereFileFinder(archive_fp)
+        self._ocn_file_finder = oceanFileFinder(archive_fp)
+        self._atm_file_finder = atmosphereFileFinder(archive_fp)
 
     def find_forcing_files(
         self, GCM, scenario, variable, start=2015, end=2100

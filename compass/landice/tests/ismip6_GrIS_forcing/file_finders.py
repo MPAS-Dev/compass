@@ -131,12 +131,12 @@ class oceanFileFinder(ISMIP6FileFinder):
             f"MAR3.9_{GCM}_{scenario_no_dot}_{fn_var}_{self.version}.nc"
         )
 
-        out_fp = os.path.join(self.dir2GCMs, fp)
+        out_fp = os.path.join(self.dir_w_GCMs, fp)
 
         return self.check_file_exists(out_fp)
 
 
-class atmosphereFileFinder:
+class atmosphereFileFinder(ISMIP6FileFinder):
     """
     Subclass for itterating ISMIP6 atmosphere archive
     """
@@ -194,10 +194,8 @@ class atmosphereFileFinder:
             GCM, scenario, variable, start, end
         )
 
-        # still need to make the output filename to write combined files to
         out_fn = f"MAR3.9_{GCM}_{scenario}_{variable}_{start}--{end}.nc"
-        # relative to the workdir, which we've already checked if if existed
-        # make the filepath for the nested GCM/scenario/var direcotry struct.
+        # relative to the workdir, which we've already confirmed exists
         top_fp = os.path.join(self.workdir, f"{GCM}-{scenario}/{variable}")
 
         # make the nested directory strucure; if needed
@@ -228,7 +226,7 @@ class atmosphereFileFinder:
         )
 
         # glob the files
-        all_files = glob.glob(os.path.join(self.dir2GCMs, fp))
+        all_files = glob.glob(os.path.join(self.dir_w_GCMs, fp))
         # all directories should have same number of files; so check here to
         # make sure things worked properly
 
