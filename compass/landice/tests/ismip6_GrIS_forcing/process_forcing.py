@@ -42,6 +42,8 @@ class ProcessForcing(Step):
         Run this step of the test case
         """
 
+        config = self.config
+
         # list of variables to process
         atmosphere_vars = ["aSMB", "aST", "dSMBdz", "dSTdz"]
         ocean_vars = ["basin_runoff", "thermal_forcing"]
@@ -54,16 +56,37 @@ class ProcessForcing(Step):
             start = expr_dict["start"]
             end = expr_dict["end"]
 
-            # need a special way to treat the RACMO datasets
-            if expr_name in ["ctrl", "hist"]:
-                continue
-
+            # hard code atm GCM as RACMO for ctrl and hist
+            GCM = "RACMO" if expr_name in ["ctrl", "hist"] else GCM
             atm_fn = f"gis_atm_forcing_{GCM}_{scenario}_{start}--{end}.nc"
+
+            # overwrite start/end for ctrl, to be requested climatology period
+            if expr_name == "ctrl":
+                start = config.getint(
+                    "smb_ref_climatology", "climatology_start"
+                )
+                end = config.getint("smb_ref_climatology", "climatology_end")
+
             self.process_variables(
                 GCM, scenario, start, end, atmosphere_vars, atm_fn
             )
 
+            # hard code ocn GCM as MIROC5 for ctrl and hist
+            GCM = "MIROC5" if expr_name in ["ctrl", "hist"] else GCM
+
+            # overwrite start/end for ctrl, to be requested climatology period
+            if expr_name == "ctrl":
+                start = config.getint(
+                    "TF_ref_climatology", "climatology_start"
+                )
+                end = config.getint("TF_ref_climatology", "climatology_end")
+
             ocn_fn = f"gis_ocn_forcing_{GCM}_{scenario}_{start}--{end}.nc"
+            # We use MIRCO5 RCP8.5 for ctrl and hist ocean forcing.
+            # Overridding `scenario` here, so the correct file is found,
+            # but after the `ocn_fn` variable is set so that the RCP8.5 will
+            # not show up in the file forcing file name.
+            scenario = "rcp8.5" if expr_name in ["ctrl", "hist"] else scenario
             self.process_variables(
                 GCM, scenario, start, end, ocean_vars, ocn_fn
             )
@@ -201,5 +224,8 @@ class ProcessForcing(Step):
             da = remapped_ds[renamed_var]
             # set nan values to zero in the parent dataset
             remapped_ds[renamed_var] = xr.where(da.isnull(), 0, da)
+
+        if scenario == "ctrl":
+            remapped_ds = remapped_ds.mean("Time")
 
         return remapped_ds
