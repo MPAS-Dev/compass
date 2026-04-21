@@ -512,7 +512,7 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y, section_name,
     dx = float(x[1] - x[0])
     dy = float(y[1] - y[0])
 
-    # Same masks as the current implementation
+    # neighbor stencil in all 8 rectangular directions
     neighbors = np.array([
         [1, 0], [-1, 0], [0, 1], [0, -1],
         [1, 1], [-1, 1], [1, -1], [-1, -1]
@@ -559,8 +559,7 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y, section_name,
         ~grounding_line_mask, sampling=(dy, dx)
     )
 
-    # Preserve the current "window_size" behavior by clipping large distances.
-    # The old code returned max_dist for anything outside the search window.
+    # Limit maximum distance
     max_dist = float(np.ceil(window_size / max(dx, dy))) * max(dx, dy)
     dist_to_edge = np.minimum(dist_to_edge, max_dist)
     dist_to_grounding_line = np.minimum(dist_to_grounding_line, max_dist)
