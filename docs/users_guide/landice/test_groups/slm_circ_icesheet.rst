@@ -1,27 +1,38 @@
-.. _landice_slm:
+.. _landice_slm_circ_icesheet:
 
-slm
-===
+slm_circ_icesheet
+=================
 
-The ``landice/slm`` test group adds a workflow for coupled
-MALI and Sea-Level Model (SLM)
-configurations.  It currently contains one test case,
-``circular_icesheet_test``, that creates an idealized circular ice sheet and
-compares MALI- and SLM-derived sea-level diagnostics across a configurable
-sweep of mesh and SLM resolutions.
+The ``landice/slm_circ_icesheet`` test group adds a workflow for coupled
+MALI and Sea-Level Model (SLM) configurations. It contains two test cases:
 
-The test case is useful for:
+- ``mesh_convergence``: a parameter sweep used to compare MALI- and
+    SLM-derived sea-level diagnostics across a configurable sweep of mesh and
+    SLM resolutions.
+- ``smoke_test``: a minimal smoke test that exercises the setup and a
+    short model run for quick validation and CI purposes.
+
+The test cases are useful for:
 
 * validating coupled MALI-SLM setup and mapping files,
 * comparing sensitivity to MALI horizontal resolution and SLM ``nglv``, and
 * generating summary error plots for sea-level diagnostics.
 
-circular_icesheet_test
-----------------------
+Note the following when using this test group:
 
-The test case path is:
+* The SeaLevelModel submodule in the E3SM/MALI repository must be set up with 
+  `git submodule update --init components/mpas-albany-landice/src/SeaLevelModel`.
+* MALI must be checked compiled wtih `SLM=true`.
+* The SLM input files are currently available only on Perlmutter.  Running
+  this test group outside of Perlmutter will fail unless the SLM input files
+  are made available locally.
 
-``landice/slm/circular_icesheet_test``
+mesh_convergence
+----------------
+
+The convergence test case path is:
+
+``landice/slm_circ_icesheet/mesh_convergence``
 
 At configure time, the test case reads:
 
@@ -34,6 +45,17 @@ For each ``(mali_res, slm_nglv)`` combination, it creates:
 * ``mali<res>km_slm<nglv>/run_model``
 
 It also creates one shared ``visualize`` step to analyze all combinations.
+
+smoke_test
+----------
+
+The smoke test path is:
+
+``landice/slm_circ_icesheet/smoke_test``
+
+This test provides a minimal configuration (small mesh and short run) that
+validates the mesh setup, mapping-file generation, and the end-to-end
+coupling workflow without requiring a full parameter sweep.
 
 setup_mesh
 ~~~~~~~~~~
@@ -108,4 +130,4 @@ The test case uses four config sections:
 * ``[circ_icesheet_viz]``: plotting controls and fallback ocean-area constants
 
 The defaults are in
-``compass/landice/tests/slm/circ_icesheet/circ_icesheet.cfg``.
+``compass/landice/tests/slm_circ_icesheet/smoke_test/smoke_test.cfg``.

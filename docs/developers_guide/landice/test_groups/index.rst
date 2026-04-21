@@ -26,5 +26,5 @@ Test groups
    mesh_convergence
    mesh_modifications
    mismipplus
-   slm
+   slm_circ_icesheet
    thwaites

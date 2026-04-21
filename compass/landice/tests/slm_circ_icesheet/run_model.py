@@ -12,8 +12,9 @@ class RunModel(Step):
     A step for performing forward MALI runs as part of dome test cases.
     """
 
-    def __init__(self, test_case, res, nglv, ntasks, name='run_model',
-                 subdir=None, min_tasks=None, openmp_threads=1):
+    def __init__(self, test_case, res, nglv, resource_package=None,
+                 ntasks=None, name='run_model', subdir=None, min_tasks=None,
+                 openmp_threads=1):
         """
         Create a new test case
 
@@ -27,6 +28,10 @@ class RunModel(Step):
 
         nglv : str
             Number of Gauss-Legendre nodes in latitude in the SLM grid
+
+        resource_package : str, optional
+            The resource package (module path) where namelist/streams/template
+            files live. If None, it is derived from the test_case module.
 
         ntasks : int
             the number of tasks the step would ideally use.  If fewer tasks
@@ -55,13 +60,17 @@ class RunModel(Step):
                          ntasks=ntasks, min_tasks=min_tasks,
                          openmp_threads=openmp_threads)
 
-        self.add_namelist_file(
-            'compass.landice.tests.slm.circ_icesheet', 'namelist.landice',
-            out_name='namelist.landice')
+        # determine resource package (module path to circ_icesheet)
+        if resource_package is None:
+            resource_package = test_case.__module__
+        self.resource_package = resource_package
 
-        self.add_streams_file(
-            'compass.landice.tests.slm.circ_icesheet', 'streams.landice',
-            out_name='streams.landice')
+        # add namelist and streams from the circ_icesheet package
+        self.add_namelist_file(self.resource_package, 'namelist.landice',
+                               out_name='namelist.landice')
+
+        self.add_streams_file(self.resource_package, 'streams.landice',
+                              out_name='streams.landice')
 
         self.add_input_file(filename='landice_grid.nc',
                             target='../setup_mesh/landice_grid.nc')
@@ -88,13 +97,12 @@ class RunModel(Step):
         section = self.config['slm']
         slm_input_root = section.get('slm_input_root').rstrip('/')
 
-        # change the sealevel namelist
-        template = Template(resources.read_text
-                            ('compass.landice.tests.slm',
-                             'namelist.sealevel.template'))
-        text = template.render(
-            nglv=self.nglv,
-            slm_input_root=slm_input_root)
+        template = Template(
+            resources.read_text('compass.landice.tests.slm_circ_icesheet',
+                                'namelist.sealevel.template')
+        )
+        text = template.render(nglv=self.nglv,
+                               slm_input_root=slm_input_root)
 
         # write out the namelist.sealevel file
         file_slm_nl = os.path.join(self.work_dir, 'namelist.sealevel')

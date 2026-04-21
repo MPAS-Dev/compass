@@ -1,21 +1,22 @@
-.. _dev_landice_slm:
+.. _dev_landice_slm_circ_icesheet:
 
-slm
-===
+slm_circ_icesheet
+==================
 
-The ``slm`` test group (:py:class:`compass.landice.tests.slm.Slm`) adds an
-framework for evaluating coupled MALI and Sea-Level Model (SLM)
-behavior.  The group currently contains one test case,
-``circular_icesheet_test``
-(:py:class:`compass.landice.tests.slm.circ_icesheet.CircIcesheetTest`),
-which is designed to compare MALI-derived and SLM-derived estimates of sea
-level change for a controlled circular ice-sheet geometry.
+The ``slm_circ_icesheet`` test group (:py:class:`compass.landice.tests.slm_circ_icesheet.SlmCircIcesheet`) adds a
+framework for evaluating coupled MALI and Sea-Level Model (SLM) behavior.
+The group contains two test cases:
+
+* ``mesh_convergence`` (:py:class:`compass.landice.tests.slm_circ_icesheet.circ_icesheet.CircIcesheetTest`),
+  which compares MALI-derived and SLM-derived estimates of sea-level change
+  across a parameter sweep of mesh and SLM resolutions.
+* ``smoke_test``, a minimal test case intended for quick validation and CI.
 
 framework
 ---------
 
 The shared config options for this group are documented in
-:ref:`landice_slm` in the User's Guide.
+:ref:`landice_slm_circ_icesheet` in the User's Guide.
 
 The ``configure()`` method of ``CircIcesheetTest`` parses two comma-delimited
 parameter lists from the config:
@@ -32,7 +33,7 @@ setup_mesh
 ~~~~~~~~~~
 
 The class
-:py:class:`compass.landice.tests.slm.circ_icesheet.setup_mesh.SetupMesh`
+:py:class:`compass.landice.tests.slm_circ_icesheet.circ_icesheet.setup_mesh.SetupMesh`
 builds all inputs required by MALI and SLM coupling for each
 ``(mali_res, slm_nglv)`` combination:
 
@@ -51,7 +52,7 @@ run_model
 ~~~~~~~~~
 
 The class
-:py:class:`compass.landice.tests.slm.circ_icesheet.run_model.RunModel`
+:py:class:`compass.landice.tests.slm_circ_icesheet.circ_icesheet.run_model.RunModel`
 consumes the mesh, graph, SMB forcing, and mapping files from ``setup_mesh``
 and runs MALI with SLM coupling options enabled in ``namelist.landice``.
 
@@ -59,7 +60,7 @@ During ``setup()``, the step also:
 
 * creates ``OUTPUT_SLM`` and ``ICELOAD_SLM`` directories,
 * renders ``namelist.sealevel`` from the Jinja template
-  ``compass.landice.tests.slm.namelist.sealevel.template``, and
+  ``compass.landice.tests.slm_circ_icesheet.namelist.sealevel.template``, and
 * fills SLM input paths from the ``slm_input_root`` config option.
 
 The expected structure beneath ``slm_input_root`` is:
@@ -72,7 +73,7 @@ visualize
 ~~~~~~~~~
 
 The class
-:py:class:`compass.landice.tests.slm.circ_icesheet.visualize.Visualize`
+:py:class:`compass.landice.tests.slm_circ_icesheet.circ_icesheet.visualize.Visualize`
 collects all ``output.nc`` files produced by the parameter sweep and computes
 diagnostic quantities for coupled MALI-SLM comparison.
 

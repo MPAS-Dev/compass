@@ -1,7 +1,6 @@
 import os
 import shutil
 
-import netCDF4
 import numpy as np
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
@@ -305,8 +304,9 @@ def _create_smb_forcing_file(config, logger, mali_mesh_file, filename):
     for t_index in range(len(t_array)):
         yr = start_year + (t_index * dt_year)
         xtime_str = f'{int(yr)}-01-01_00:00:00'.ljust(64)
-        xtime_char = netCDF4.stringtochar(np.array([xtime_str], 'S64'),
-                                          encoding='utf-8')
+        xtime_str_padded = xtime_str.ljust(64)[:64]
+        xtime_char = np.array(list(xtime_str_padded), dtype='S1')
+        xtime[t_index, :] = xtime_char
         xtime[t_index, :] = xtime_char
 
     smbfile.close()
@@ -375,6 +375,8 @@ def _build_mapping_files(config, logger, res, nglv, mali_mesh_file):
     parallel_executable = config.get("parallel", "parallel_executable")
     # split the parallel executable into constituents in case it includes flags
     args = parallel_executable.split(' ')
+    nproc = config.getint("circ_icesheet", "esmf_procs")
+    args.extend(['-n', str(nproc)])
     args.extend(['ESMF_RegridWeightGen',
                  '-s', mali_scripfile,
                  '-d', slm_scripfile,
@@ -386,6 +388,8 @@ def _build_mapping_files(config, logger, res, nglv, mali_mesh_file):
     check_call(args, logger)
 
     args = parallel_executable.split(' ')
+    nproc = config.getint("circ_icesheet", "esmf_procs")
+    args.extend(['-n', str(nproc)])
     args.extend(['ESMF_RegridWeightGen',
                  '-s', slm_scripfile,
                  '-d', mali_scripfile,
