@@ -230,14 +230,14 @@ class CreateMappingFiles(Step):
         # get a list of all projection experiments requesed.
         # (i.e. experiments names that use ISMIP6 forcing)
         proj_exprs = list(filter(lambda x: "Exp" in x,
-                                 self.test_case.experiments.keys()))
+                                 self.test_group.experiments.keys()))
 
         if proj_exprs:
             # b/c all GrIS forcing files are on the same grid, it doesn't
             # matter what expr we use; so just use the first suitable candiate
             expr = proj_exprs[0]
 
-        expr_params = self.test_case.experiments[expr]
+        expr_params = self.test_group.experiments[expr]
         GCM = expr_params["GCM"]
         scenario = expr_params["Scenario"]
         variable = "thermal_forcing"
