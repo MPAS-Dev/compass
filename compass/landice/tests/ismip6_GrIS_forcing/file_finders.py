@@ -189,14 +189,23 @@ class atmosphereFileFinder(ISMIP6FileFinder):
         if GCM == "NorESM1-M":
             GCM = "NorESM1"
 
-        # get a list of all the yearly files within the period of intrest
-        yearly_files = self._find_yearly_files(
-            GCM, scenario, variable, start, end
-        )
-
         out_fn = f"MAR3.9_{GCM}_{scenario}_{variable}_{start}--{end}.nc"
         # relative to the workdir, which we've already confirmed exists
         top_fp = os.path.join(self.workdir, f"{GCM}-{scenario}/{variable}")
+
+        if GCM == "RACMO":
+            # remove MAR3.9 from string
+            out_fn = "_".join(out_fn.split("_")[1:])
+            # find abritarty forcing files for the variable and time period
+            # just need for grid definition. Variables will be zeroed out below
+            yearly_files = self._find_yearly_files(
+                "MIROC5", "rcp8.5", variable, start, end
+            )
+        else:
+            # get a list of all the yearly files within the period of intrest
+            yearly_files = self._find_yearly_files(
+                GCM, scenario, variable, start, end
+            )
 
         # make the nested directory strucure; if needed
         if not os.path.exists(top_fp):
@@ -208,6 +217,13 @@ class atmosphereFileFinder(ISMIP6FileFinder):
         if not os.path.exists(out_fp):
             # with output filename, combine the files to a single
             self._combine_files(yearly_files, out_fp)
+
+        if GCM == "RACMO":
+            # zero anomoly forcing for RACMO
+            with xr.open_dataset(out_fp) as tmp_ds:
+                zeros_ds = xr.zeros_like(tmp_ds)
+
+            zeros_ds.to_netcdf(out_fp, mode='w', engine='netcdf4')
 
         return out_fp
 
