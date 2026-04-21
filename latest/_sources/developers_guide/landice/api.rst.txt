@@ -521,30 +521,31 @@ mismipplus
    tasks.exact_cell_count
    tasks.approx_cell_count 
 
-slm
+slm_circ_icesheet
 ~~~
 
-.. currentmodule:: compass.landice.tests.slm
+.. currentmodule:: compass.landice.tests.slm_circ_icesheet
 
 .. autosummary::
    :toctree: generated/
 
-   Slm
+   SlmCircIcesheet
 
-   circ_icesheet.CircIcesheetTest
-   circ_icesheet.CircIcesheetTest.configure
+   mesh_convergence.MeshConvergenceTest
+   mesh_convergence.MeshConvergenceTest.configure
+   smoke_test.SmokeTest
 
-   circ_icesheet.run_model.RunModel
-   circ_icesheet.run_model.RunModel.setup
-   circ_icesheet.run_model.RunModel.run
+   run_model.RunModel
+   run_model.RunModel.setup
+   run_model.RunModel.run
 
-   circ_icesheet.setup_mesh.SetupMesh
-   circ_icesheet.setup_mesh.SetupMesh.run
+   setup_mesh.SetupMesh
+   setup_mesh.SetupMesh.run
 
-   circ_icesheet.visualize.Visualize
-   circ_icesheet.visualize.Visualize.setup
-   circ_icesheet.visualize.Visualize.run
-   circ_icesheet.visualize.visualize_slm_circsheet
+   visualize.Visualize
+   visualize.Visualize.setup
+   visualize.Visualize.run
+   visualize.visualize_slm_circsheet
 
 thwaites
 ~~~~~~~~

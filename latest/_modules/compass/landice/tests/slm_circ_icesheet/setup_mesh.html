@@ -1,0 +1,556 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.landice.tests.slm_circ_icesheet.setup_mesh &mdash; compass latest documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=c6e86fd7"></script>
+      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../landice.html">compass.landice</a></li>
+          <li class="breadcrumb-item"><a href="../slm_circ_icesheet.html">compass.landice.tests.slm_circ_icesheet</a></li>
+      <li class="breadcrumb-item active">compass.landice.tests.slm_circ_icesheet.setup_mesh</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.landice.tests.slm_circ_icesheet.setup_mesh</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_call</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.mesh.conversion</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">cull</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.planar_hex</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_planar_hex_mesh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.scrip.from_mpas</span><span class="w"> </span><span class="kn">import</span> <span class="n">scrip_from_mpas</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.translate</span><span class="w"> </span><span class="kn">import</span> <span class="n">center</span><span class="p">,</span> <span class="n">translate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">netCDF4</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dataset</span> <span class="k">as</span> <span class="n">NetCDFFile</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_graph_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
+
+
+<div class="viewcode-block" id="SetupMesh">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.slm_circ_icesheet.setup_mesh.SetupMesh.html#compass.landice.tests.slm_circ_icesheet.setup_mesh.SetupMesh">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SetupMesh</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A step for creating a mesh with initial conditions plus forcing file for</span>
+<span class="sd">    circular icesheet test</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    res : str</span>
+<span class="sd">        Resolution of MALI mesh</span>
+
+<span class="sd">    nglv : str</span>
+<span class="sd">        Number of Gauss-Legendre nodes in latitude in the SLM</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SetupMesh.__init__">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.slm_circ_icesheet.setup_mesh.SetupMesh.html#compass.landice.tests.slm_circ_icesheet.setup_mesh.SetupMesh.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">nglv</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the step</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.TestCase</span>
+<span class="sd">            The test case this step belongs to</span>
+
+<span class="sd">        res : str</span>
+<span class="sd">            Resolution of MALI mesh</span>
+
+<span class="sd">        nglv : str</span>
+<span class="sd">            Number of Gauss-Legendre nodes in latitude in the SLM</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">res</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nglv</span> <span class="o">=</span> <span class="n">nglv</span></div>
+
+    <span class="c1"># no setup() method is needed</span>
+
+<div class="viewcode-block" id="SetupMesh.run">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.slm_circ_icesheet.setup_mesh.SetupMesh.run.html#compass.landice.tests.slm_circ_icesheet.setup_mesh.SetupMesh.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run this step of the test case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;circ_icesheet&#39;</span><span class="p">]</span>
+
+        <span class="n">lx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;lx&#39;</span><span class="p">)</span>
+        <span class="n">ly</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;ly&#39;</span><span class="p">)</span>
+        <span class="n">dc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1000.0</span>
+
+        <span class="c1"># calculate the number of grid cells in x and y direction</span>
+        <span class="c1"># for the uniform, hexagonal planar mesh</span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">lx</span> <span class="o">/</span> <span class="n">dc</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">),</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="c1"># factor of 2/sqrt(3) because of hexagonal mesh</span>
+        <span class="n">ny</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">ly</span> <span class="o">*</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span> <span class="o">/</span> <span class="n">dc</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">),</span> <span class="mi">4</span><span class="p">)</span>
+
+        <span class="c1"># call the mesh creation function</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">make_planar_hex_mesh</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="o">=</span><span class="n">ny</span><span class="p">,</span> <span class="n">dc</span><span class="o">=</span><span class="n">dc</span><span class="p">,</span>
+                                      <span class="n">nonperiodic_x</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                      <span class="n">nonperiodic_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="c1"># translating the mesh center to x=0 &amp; y=0</span>
+        <span class="n">center</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">)</span>
+        <span class="c1"># shift the center to a quarter or radius</span>
+        <span class="n">shift</span> <span class="o">=</span> <span class="mf">200000.0</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;shifting the center by </span><span class="si">{</span><span class="n">shift</span><span class="si">}</span><span class="s1"> meters&#39;</span><span class="p">)</span>
+        <span class="n">translate</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">shift</span><span class="p">,</span> <span class="n">shift</span><span class="p">)</span>
+
+        <span class="n">fname_mpas</span> <span class="o">=</span> <span class="s1">&#39;mpas_grid.nc&#39;</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">fname_mpas</span><span class="p">)</span>
+
+        <span class="n">levels</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;create_landice_grid_from_generic_mpas_grid&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas_grid.nc&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">levels</span><span class="p">)]</span>
+
+        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+
+        <span class="n">make_graph_file</span><span class="p">(</span><span class="n">mesh_filename</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">,</span>
+                        <span class="n">graph_filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">)</span>
+
+        <span class="n">_setup_circsheet_initial_conditions</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
+                                            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">)</span>
+
+        <span class="n">_create_smb_forcing_file</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
+                                 <span class="n">mali_mesh_file</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">,</span>
+                                 <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;smb_forcing.nc&#39;</span><span class="p">)</span>
+
+        <span class="n">_build_mapping_files</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nglv</span><span class="p">,</span>
+                             <span class="n">mali_mesh_file</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">)</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">fname_mpas</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_setup_circsheet_initial_conditions</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create initial condition for circular ice sheet</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : compass.config.CompassConfigParser</span>
+<span class="sd">        Configuration options for this test case, a combination of the defaults</span>
+<span class="sd">        for the machine, core and configuration</span>
+
+<span class="sd">    logger : logging.Logger</span>
+<span class="sd">        A logger for output from the step</span>
+
+<span class="sd">    filename : str</span>
+<span class="sd">        file to setup circular icesheet</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;circ_icesheet&#39;</span><span class="p">]</span>
+    <span class="n">ice_type</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ice_type&#39;</span><span class="p">)</span>
+    <span class="n">set_topo_elev</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;set_topo_elev&#39;</span><span class="p">)</span>
+    <span class="n">topo_elev</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;topo_elev&#39;</span><span class="p">)</span>
+    <span class="n">r0</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;r0&#39;</span><span class="p">)</span>
+    <span class="n">h0</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;h0&#39;</span><span class="p">)</span>
+    <span class="n">put_origin_on_a_cell</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;put_origin_on_a_cell&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Open the file, get needed dimensions</span>
+    <span class="n">gridfile</span> <span class="o">=</span> <span class="n">NetCDFFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
+    <span class="n">nVertLevels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">gridfile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">])</span>
+    <span class="c1"># Get variables</span>
+    <span class="n">xCell</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xCell&#39;</span><span class="p">]</span>
+    <span class="n">yCell</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;yCell&#39;</span><span class="p">]</span>
+    <span class="n">xEdge</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xEdge&#39;</span><span class="p">]</span>
+    <span class="n">yEdge</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;yEdge&#39;</span><span class="p">]</span>
+    <span class="n">xVertex</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xVertex&#39;</span><span class="p">]</span>
+    <span class="n">yVertex</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;yVertex&#39;</span><span class="p">]</span>
+    <span class="n">thickness</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">]</span>
+    <span class="n">bedTopography</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;bedTopography&#39;</span><span class="p">]</span>
+    <span class="n">layerThicknessFractions</span> <span class="o">=</span> <span class="n">gridfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;layerThicknessFractions&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Find center of domain</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="n">xCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">xCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">xCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+    <span class="n">y0</span> <span class="o">=</span> <span class="n">yCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">yCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">yCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+    <span class="c1"># Calculate distance of each cell center from dome center</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="p">((</span><span class="n">xCell</span><span class="p">[:]</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">yCell</span><span class="p">[:]</span> <span class="o">-</span> <span class="n">y0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+
+    <span class="k">if</span> <span class="n">put_origin_on_a_cell</span><span class="p">:</span>
+        <span class="c1"># Center the ice in the center of the cell that is closest to the</span>
+        <span class="c1"># center of the domain.</span>
+        <span class="n">centerCellIndex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">r</span><span class="p">[:])</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+        <span class="n">xShift</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">xCell</span><span class="p">[</span><span class="n">centerCellIndex</span><span class="p">]</span>
+        <span class="n">yShift</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">yCell</span><span class="p">[</span><span class="n">centerCellIndex</span><span class="p">]</span>
+        <span class="n">xCell</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">xCell</span><span class="p">[:]</span> <span class="o">+</span> <span class="n">xShift</span>
+        <span class="n">yCell</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">yCell</span><span class="p">[:]</span> <span class="o">+</span> <span class="n">yShift</span>
+        <span class="n">xEdge</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">xEdge</span><span class="p">[:]</span> <span class="o">+</span> <span class="n">xShift</span>
+        <span class="n">yEdge</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">yEdge</span><span class="p">[:]</span> <span class="o">+</span> <span class="n">yShift</span>
+        <span class="n">xVertex</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">xVertex</span><span class="p">[:]</span> <span class="o">+</span> <span class="n">xShift</span>
+        <span class="n">yVertex</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">yVertex</span><span class="p">[:]</span> <span class="o">+</span> <span class="n">yShift</span>
+        <span class="c1"># Now update origin location and distance array</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">y0</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="p">((</span><span class="n">xCell</span><span class="p">[:]</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">yCell</span><span class="p">[:]</span> <span class="o">-</span> <span class="n">y0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+
+    <span class="c1"># Assign variable values for the circular ice sheet</span>
+    <span class="c1"># Set default value for non-circular cells</span>
+    <span class="n">thickness</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="c1"># Calculate the dome thickness for cells within the desired radius</span>
+    <span class="c1"># (thickness will be NaN otherwise)</span>
+    <span class="n">thickness_field</span> <span class="o">=</span> <span class="n">thickness</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+
+    <span class="k">if</span> <span class="n">ice_type</span> <span class="o">==</span> <span class="s1">&#39;cylinder&#39;</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;cylinder ice type is chosen&#39;</span><span class="p">)</span>
+        <span class="n">thickness_field</span><span class="p">[</span><span class="n">r</span> <span class="o">&lt;</span> <span class="n">r0</span><span class="p">]</span> <span class="o">=</span> <span class="n">h0</span>
+    <span class="k">elif</span> <span class="n">ice_type</span> <span class="o">==</span> <span class="s1">&#39;dome-cism&#39;</span><span class="p">:</span>
+        <span class="n">thickness_field</span><span class="p">[</span><span class="n">r</span> <span class="o">&lt;</span> <span class="n">r0</span><span class="p">]</span> <span class="o">=</span> <span class="n">h0</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">r</span> <span class="o">&lt;</span> <span class="n">r0</span><span class="p">]</span> <span class="o">/</span> <span class="n">r0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+    <span class="k">elif</span> <span class="n">ice_type</span> <span class="o">==</span> <span class="s1">&#39;dome-halfar&#39;</span><span class="p">:</span>
+        <span class="n">thickness_field</span><span class="p">[</span><span class="n">r</span> <span class="o">&lt;</span> <span class="n">r0</span><span class="p">]</span> <span class="o">=</span> <span class="n">h0</span> <span class="o">*</span> <span class="p">(</span>
+            <span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">r</span> <span class="o">&lt;</span> <span class="n">r0</span><span class="p">]</span> <span class="o">/</span> <span class="n">r0</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mf">4.0</span> <span class="o">/</span> <span class="mf">3.0</span><span class="p">))</span> <span class="o">**</span> <span class="p">(</span><span class="mf">3.0</span> <span class="o">/</span> <span class="mf">7.0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpected ice_type: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ice_type</span><span class="p">))</span>
+    <span class="n">thickness</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">thickness_field</span>
+
+    <span class="c1"># flat bed at sea level</span>
+    <span class="n">bedTopography</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">if</span> <span class="n">set_topo_elev</span><span class="p">:</span>
+        <span class="c1"># this line will make a small shelf:</span>
+        <span class="n">bedTopography</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">topo_elev</span>
+
+    <span class="c1"># Setup layerThicknessFractions</span>
+    <span class="n">layerThicknessFractions</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">nVertLevels</span>
+
+    <span class="n">gridfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Successfully added circular initial conditions to: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">filename</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_create_smb_forcing_file</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create surface mass balance forcing file for circular ice sheet</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : compass.config.CompassConfigParser</span>
+<span class="sd">        Configuration options for this test case, a combination of the defaults</span>
+<span class="sd">        for the machine, core and configuration</span>
+
+<span class="sd">    logger : logging.Logger</span>
+<span class="sd">        A logger for output from the step</span>
+
+<span class="sd">    mali_mesh_file : str</span>
+<span class="sd">        mesh file created in the current step</span>
+
+<span class="sd">    filename : str</span>
+<span class="sd">        file to setup circular icesheet</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;circ_icesheet&#39;</span><span class="p">]</span>
+    <span class="n">r0</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;r0&#39;</span><span class="p">)</span>
+    <span class="n">h0</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;h0&#39;</span><span class="p">)</span>
+
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;smb_forcing&#39;</span><span class="p">]</span>
+    <span class="n">direction</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;direction&#39;</span><span class="p">)</span>
+    <span class="n">start_year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;start_year&#39;</span><span class="p">))</span>
+    <span class="n">end_year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;end_year&#39;</span><span class="p">))</span>
+    <span class="n">dt_year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;dt_year&#39;</span><span class="p">))</span>
+    <span class="n">dhdt</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;dhdt&#39;</span><span class="p">)</span>
+    <span class="n">drdt</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;drdt&#39;</span><span class="p">)</span>
+
+    <span class="c1"># other constants used in the fuction</span>
+    <span class="c1"># pi = 3.1415926535898  # pi value used in the SLM</span>
+    <span class="n">rhoi</span> <span class="o">=</span> <span class="mf">910.0</span>  <span class="c1"># ice density</span>
+
+    <span class="c1"># Open the file, get needed dimensions</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">mali_mesh_file</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="n">smbfile</span> <span class="o">=</span> <span class="n">NetCDFFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Get variables</span>
+    <span class="n">xCell</span> <span class="o">=</span> <span class="n">smbfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xCell&#39;</span><span class="p">]</span>
+    <span class="n">yCell</span> <span class="o">=</span> <span class="n">smbfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;yCell&#39;</span><span class="p">]</span>
+    <span class="n">nCells</span> <span class="o">=</span> <span class="n">smbfile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+
+    <span class="c1"># time interval for the forcing</span>
+    <span class="n">t_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">start_year</span><span class="p">,</span> <span class="n">end_year</span><span class="p">,</span> <span class="n">dt_year</span><span class="p">)</span>
+    <span class="n">nt</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">t_array</span><span class="p">)</span>
+
+    <span class="c1"># initialize SMB value everywhere in the mesh</span>
+    <span class="n">sfcMassBal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nt</span><span class="p">,</span> <span class="n">nCells</span><span class="p">))</span>
+
+    <span class="c1"># Find center of domain</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="n">xCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">xCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">xCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+    <span class="n">y0</span> <span class="o">=</span> <span class="n">yCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">yCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">yCell</span><span class="p">[:]</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+    <span class="c1"># calculate the radius of circ ice sheet</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="p">((</span><span class="n">xCell</span><span class="p">[:]</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">yCell</span><span class="p">[:]</span> <span class="o">-</span> <span class="n">y0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+
+    <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="s1">&#39;vertical&#39;</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;creating a file that prescribes vertical smb&#39;</span><span class="p">)</span>
+        <span class="n">smb</span> <span class="o">=</span> <span class="n">dhdt</span> <span class="o">*</span> <span class="n">rhoi</span> <span class="o">/</span> <span class="p">(</span><span class="mf">365.0</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;prescribed smb is </span><span class="si">{</span><span class="n">smb</span><span class="si">}</span><span class="s1"> kg/m2/s&#39;</span><span class="p">)</span>
+        <span class="n">indx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">r</span> <span class="o">&lt;=</span> <span class="n">r0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># for loop through time</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t_array</span><span class="p">)):</span>
+            <span class="n">Ht</span> <span class="o">=</span> <span class="n">h0</span> <span class="o">+</span> <span class="p">(</span><span class="n">dhdt</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>  <span class="c1"># calculate a new height each time</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;At time </span><span class="si">{</span><span class="n">start_year</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dt_year</span><span class="si">}</span><span class="s1">, </span><span class="se">\</span>
+<span class="s1">                        new height will be </span><span class="si">{</span><span class="n">Ht</span><span class="si">}</span><span class="s1"> km&#39;</span><span class="p">)</span>
+            <span class="n">sfcMassBal</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="n">indx</span><span class="p">]</span> <span class="o">=</span> <span class="n">smb</span>  <span class="c1"># assign sfcMassBal</span>
+        <span class="n">smbfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;sfcMassBal&#39;</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">sfcMassBal</span><span class="p">[:,</span> <span class="p">:]</span>
+
+    <span class="k">elif</span> <span class="n">direction</span> <span class="o">==</span> <span class="s1">&#39;horizontal&#39;</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;creating a file that prescribes horizontal smb&#39;</span><span class="p">)</span>
+        <span class="n">smb</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="p">((</span><span class="mf">10000.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">rhoi</span> <span class="o">/</span> <span class="p">(</span><span class="mf">365.0</span> <span class="o">*</span> <span class="mf">24.0</span> <span class="o">*</span> <span class="mf">60.0</span> <span class="o">*</span> <span class="mf">60.0</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;prescribed smb is </span><span class="si">{</span><span class="n">smb</span><span class="si">}</span><span class="s1"> kg/m2/s&#39;</span><span class="p">)</span>
+        <span class="c1"># for loop through time</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t_array</span><span class="p">)):</span>
+            <span class="c1"># calculate a new radius at each time</span>
+            <span class="n">Rt</span> <span class="o">=</span> <span class="n">r0</span> <span class="o">+</span> <span class="p">(</span><span class="n">drdt</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">Rt</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="n">Rt</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="n">sfcMassBal</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;At time </span><span class="si">{</span><span class="n">start_year</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dt_year</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">t</span><span class="si">}</span><span class="s1">, </span><span class="se">\</span>
+<span class="s1">                      new radius will be </span><span class="si">{</span><span class="n">Rt</span><span class="si">}</span><span class="s1"> km&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">indx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">r</span> <span class="o">&gt;=</span> <span class="n">Rt</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">sfcMassBal</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="n">indx</span><span class="p">]</span> <span class="o">=</span> <span class="n">smb</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;At time </span><span class="si">{</span><span class="n">start_year</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dt_year</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">t</span><span class="si">}</span><span class="s1">, </span><span class="se">\</span>
+<span class="s1">                      new radius will be </span><span class="si">{</span><span class="n">Rt</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1000</span><span class="si">}</span><span class="s1"> km&#39;</span><span class="p">)</span>
+        <span class="n">smbfile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;sfcMassBal&#39;</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">sfcMassBal</span><span class="p">[:,</span> <span class="p">:]</span>
+
+    <span class="c1"># add xtime variable</span>
+    <span class="n">smbfile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;StrLen&#39;</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+    <span class="n">xtime</span> <span class="o">=</span> <span class="n">smbfile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;xtime&#39;</span><span class="p">,</span> <span class="s1">&#39;S1&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;StrLen&#39;</span><span class="p">))</span>
+
+    <span class="c1"># initialize SMB value everywhere in the mesh</span>
+    <span class="n">xtime_str</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">t_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t_array</span><span class="p">)):</span>
+        <span class="n">yr</span> <span class="o">=</span> <span class="n">start_year</span> <span class="o">+</span> <span class="p">(</span><span class="n">t_index</span> <span class="o">*</span> <span class="n">dt_year</span><span class="p">)</span>
+        <span class="n">xtime_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">yr</span><span class="p">)</span><span class="si">}</span><span class="s1">-01-01_00:00:00&#39;</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
+        <span class="n">xtime_str_padded</span> <span class="o">=</span> <span class="n">xtime_str</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">64</span><span class="p">)[:</span><span class="mi">64</span><span class="p">]</span>
+        <span class="n">xtime_char</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">xtime_str_padded</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;S1&#39;</span><span class="p">)</span>
+        <span class="n">xtime</span><span class="p">[</span><span class="n">t_index</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">xtime_char</span>
+        <span class="n">xtime</span><span class="p">[</span><span class="n">t_index</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">xtime_char</span>
+
+    <span class="n">smbfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_mapping_files</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">nglv</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build a mapping file if it does not exist.</span>
+<span class="sd">    Mapping file is then used to remap the ismip6 source file in polarstero</span>
+<span class="sd">    coordinate to unstructured mali mesh</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : compass.config.CompassConfigParser</span>
+<span class="sd">        Configuration options for a ismip6 forcing test case</span>
+
+<span class="sd">    logger : logging.Logger</span>
+<span class="sd">        A logger for output from the step</span>
+
+<span class="sd">    name : str</span>
+<span class="sd">        Name of the step</span>
+
+<span class="sd">    res : str</span>
+<span class="sd">        Resolution of MALI mesh</span>
+
+<span class="sd">    nglv : str</span>
+<span class="sd">            Number of Gauss-Legendre nodes in latitude in the SLM</span>
+
+<span class="sd">    mali_mesh_file : str</span>
+<span class="sd">        The MALI mesh file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;slm&#39;</span><span class="p">]</span>
+    <span class="n">slm_res</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;slm_res&#39;</span><span class="p">)</span>
+    <span class="n">slm_nglv</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nglv</span><span class="p">)</span>
+    <span class="n">method_mali_to_slm</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mapping_method_mali_to_slm&#39;</span><span class="p">)</span>
+    <span class="n">method_slm_to_mali</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mapping_method_slm_to_mali&#39;</span><span class="p">)</span>
+
+    <span class="n">mali_scripfile</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;mali</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="si">}</span><span class="s1">km_scripfile.nc&#39;</span>
+    <span class="n">slm_scripfile</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;slm</span><span class="si">{</span><span class="n">slm_res</span><span class="si">}</span><span class="s1">_nglv</span><span class="si">{</span><span class="n">slm_nglv</span><span class="si">}</span><span class="s1">scripfile.nc&#39;</span>
+
+    <span class="c1"># create slm scripfile</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;creating scripfile for the SH-degree </span><span class="si">{</span><span class="n">slm_res</span><span class="si">}</span><span class="s1"> &#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;resolution and </span><span class="si">{</span><span class="n">slm_nglv</span><span class="si">}</span><span class="s1"> nglv points for the SLM grid&#39;</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ncremap&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="n">slm_scripfile</span><span class="p">,</span>
+            <span class="s1">&#39;-G&#39;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">&#39;latlon=</span><span class="si">{</span><span class="n">slm_nglv</span><span class="si">}</span><span class="s1">,</span><span class="si">{</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">slm_nglv</span><span class="p">)</span><span class="si">}</span><span class="s1">#lat_typ=gss#lat_drc=n2s&#39;</span><span class="p">]</span>
+
+    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+    <span class="c1"># adjust the lat-lon values</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;set_lat_lon_fields_in_planar_grid&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--file&#39;</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="p">,</span>
+            <span class="s1">&#39;--proj&#39;</span><span class="p">,</span> <span class="s1">&#39;ais-bedmap2-sphere&#39;</span><span class="p">]</span>
+
+    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+    <span class="c1"># create scrip files for source and destination grids</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;creating scrip file for the mali mesh&#39;</span><span class="p">)</span>
+    <span class="n">scrip_from_mpas</span><span class="p">(</span><span class="n">mali_mesh_file</span><span class="p">,</span> <span class="n">mali_scripfile</span><span class="p">)</span>
+
+    <span class="c1"># create a mapping file using ESMF weight gen</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Creating a mapping file...&#39;</span><span class="p">)</span>
+
+    <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parallel&quot;</span><span class="p">,</span> <span class="s2">&quot;parallel_executable&quot;</span><span class="p">)</span>
+    <span class="c1"># split the parallel executable into constituents in case it includes flags</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parallel_executable</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+    <span class="n">nproc</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s2">&quot;circ_icesheet&quot;</span><span class="p">,</span> <span class="s2">&quot;esmf_procs&quot;</span><span class="p">)</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">nproc</span><span class="p">)])</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;ESMF_RegridWeightGen&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="n">mali_scripfile</span><span class="p">,</span>
+                 <span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="n">slm_scripfile</span><span class="p">,</span>
+                 <span class="s1">&#39;-w&#39;</span><span class="p">,</span> <span class="s1">&#39;mapping_file_mali_to_slm.nc&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">method_mali_to_slm</span><span class="p">,</span>
+                 <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;-64bit_offset&#39;</span><span class="p">,</span> <span class="s1">&#39;--netcdf4&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;--src_regional&#39;</span><span class="p">])</span>
+
+    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parallel_executable</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+    <span class="n">nproc</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s2">&quot;circ_icesheet&quot;</span><span class="p">,</span> <span class="s2">&quot;esmf_procs&quot;</span><span class="p">)</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">nproc</span><span class="p">)])</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;ESMF_RegridWeightGen&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="n">slm_scripfile</span><span class="p">,</span>
+                 <span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="n">mali_scripfile</span><span class="p">,</span>
+                 <span class="s1">&#39;-w&#39;</span><span class="p">,</span> <span class="s1">&#39;mapping_file_slm_to_mali.nc&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">method_slm_to_mali</span><span class="p">,</span>
+                 <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;-64bit_offset&#39;</span><span class="p">,</span> <span class="s1">&#39;--netcdf4&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;--dst_regional&#39;</span><span class="p">])</span>
+
+    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+
+    <span class="c1"># remove the temporary scripfiles once the mapping file is generated</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Removing the temporary mesh and scripfiles...&#39;</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">slm_scripfile</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">mali_scripfile</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -31,5 +31,5 @@ physics but that are not run routinely.
    mesh_convergence
    mesh_modifications
    mismipplus
-   slm
+   slm_circ_icesheet
    thwaites

@@ -1,0 +1,776 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.landice.tests.slm_circ_icesheet.visualize &mdash; compass latest documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=c6e86fd7"></script>
+      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../landice.html">compass.landice</a></li>
+          <li class="breadcrumb-item"><a href="../slm_circ_icesheet.html">compass.landice.tests.slm_circ_icesheet</a></li>
+      <li class="breadcrumb-item active">compass.landice.tests.slm_circ_icesheet.visualize</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.landice.tests.slm_circ_icesheet.visualize</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
+
+
+<div class="viewcode-block" id="Visualize">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.slm_circ_icesheet.visualize.Visualize.html#compass.landice.tests.slm_circ_icesheet.visualize.Visualize">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Visualize</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A step for visualizing the output from a dome test case</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Visualize.__init__">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.slm_circ_icesheet.visualize.Visualize.html#compass.landice.tests.slm_circ_icesheet.visualize.Visualize.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;visualize&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">input_dir</span><span class="o">=</span><span class="s1">&#39;run_model&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the step</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.TestCase</span>
+<span class="sd">            The test case this step belongs to</span>
+
+<span class="sd">        name : str, optional</span>
+<span class="sd">            the name of the test case</span>
+
+<span class="sd">        subdir : str, optional</span>
+<span class="sd">            the subdirectory for the step.  The default is ``name``</span>
+
+<span class="sd">        input_dir : str, optional</span>
+<span class="sd">            The input directory within the test case with a file ``output.nc``</span>
+<span class="sd">            to visualize</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Visualize.setup">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.slm_circ_icesheet.visualize.Visualize.setup.html#compass.landice.tests.slm_circ_icesheet.visualize.Visualize.setup">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;circ_icesheet&#39;</span><span class="p">]</span>
+        <span class="n">mali_res</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mali_res&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;slm&#39;</span><span class="p">]</span>
+        <span class="n">slm_nglv</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;slm_nglv&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">mali_res</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">nglv</span> <span class="ow">in</span> <span class="n">slm_nglv</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;output_mali</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km_&#39;</span>
+                                    <span class="sa">f</span><span class="s1">&#39;slm</span><span class="si">{</span><span class="n">nglv</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">,</span>
+                                    <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../mali</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km_slm</span><span class="si">{</span><span class="n">nglv</span><span class="si">}</span><span class="s1">/&#39;</span>
+                                    <span class="s1">&#39;run_model/output/output.nc&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Visualize.run">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.slm_circ_icesheet.visualize.Visualize.run.html#compass.landice.tests.slm_circ_icesheet.visualize.Visualize.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run this step of the test case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;circ_icesheet&#39;</span><span class="p">]</span>
+        <span class="n">mali_res</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mali_res&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+        <span class="n">coupling</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;slm&#39;</span><span class="p">]</span>
+        <span class="n">slm_nglv</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;slm_nglv&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;circ_icesheet_viz&#39;</span><span class="p">]</span>
+        <span class="n">save_images</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;save_images&#39;</span><span class="p">)</span>
+
+        <span class="c1"># visualize run model results</span>
+        <span class="n">num_files</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">mali_res</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">nglv</span> <span class="ow">in</span> <span class="n">slm_nglv</span><span class="p">:</span>
+                <span class="n">run_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;../mali</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km_slm</span><span class="si">{</span><span class="n">nglv</span><span class="si">}</span><span class="s1">/run_model/&#39;</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;analyzing outputs in path: </span><span class="si">{</span><span class="n">run_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">visualize_slm_circsheet</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">nglv</span><span class="p">)</span>
+                <span class="n">num_files</span> <span class="o">=</span> <span class="n">num_files</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="c1"># calculate and plot rmse in SLC</span>
+        <span class="k">if</span> <span class="n">coupling</span> <span class="ow">and</span> <span class="n">num_files</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># ncells_list = list()</span>
+            <span class="c1"># rmse_list = list()</span>
+            <span class="n">pct_err_slc_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+            <span class="n">pct_err_slc_z0_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+            <span class="n">pct_err_slc_z0_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">mali_res</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">slm_nglv</span><span class="p">)))</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">mali_res</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">nglv</span> <span class="ow">in</span> <span class="n">slm_nglv</span><span class="p">:</span>
+                    <span class="n">run_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;../mali</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km_slm</span><span class="si">{</span><span class="n">nglv</span><span class="si">}</span><span class="s1">/run_model/&#39;</span>
+                    <span class="n">run_data</span> <span class="o">=</span> <span class="n">output_analysis</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
+                                               <span class="n">res</span><span class="p">,</span> <span class="n">nglv</span><span class="p">,</span> <span class="n">run_path</span><span class="p">)</span>
+                    <span class="c1"># ncells_res = run_data.ncells</span>
+                    <span class="c1"># rmse_res = run_data.rmse_slc</span>
+                    <span class="n">pct_err_slc_res</span> <span class="o">=</span> <span class="n">run_data</span><span class="o">.</span><span class="n">pct_err_slc</span>
+                    <span class="n">pct_err_slc_z0_res</span> <span class="o">=</span> <span class="n">run_data</span><span class="o">.</span><span class="n">pct_err_slm_z0</span>
+                    <span class="c1"># ncells_list.append(ncells_res)</span>
+                    <span class="c1"># rmse_list.append(rmse_res)</span>
+                    <span class="n">pct_err_slc_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pct_err_slc_res</span><span class="p">)</span>
+                    <span class="n">pct_err_slc_z0_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pct_err_slc_z0_res</span><span class="p">)</span>
+
+                    <span class="c1"># ncells = np.array(ncells_list)</span>
+                    <span class="c1"># rmse = np.array(rmse_list)</span>
+                    <span class="n">pct_err_slc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pct_err_slc_list</span><span class="p">)</span>
+                    <span class="n">pct_err_slc_z0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pct_err_slc_z0_list</span><span class="p">)</span>
+
+                <span class="c1"># assign the percentage error array in matrix</span>
+                <span class="n">pct_err_slc_z0_matrix</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">pct_err_slc_z0</span>
+                <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="c1"># plot mean percentage error for fixed MALI res</span>
+                <span class="n">plot_pct_err_slc</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">slm_nglv</span><span class="p">,</span> <span class="n">pct_err_slc</span><span class="p">,</span>
+                                 <span class="s1">&#39;Mean Percent Error in SLC&#39;</span><span class="p">)</span>
+                <span class="n">plot_pct_err_slc</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">slm_nglv</span><span class="p">,</span> <span class="n">pct_err_slc_z0</span><span class="p">,</span>
+                                 <span class="s1">&#39;Mean Percent Error in SLC-z0&#39;</span><span class="p">)</span>
+                <span class="c1"># reset the lists for percentage error</span>
+                <span class="k">del</span> <span class="n">pct_err_slc_list</span><span class="p">[:],</span> <span class="n">pct_err_slc_z0_list</span><span class="p">[:]</span>
+
+            <span class="c1"># plot the heat map of mean percentage errors</span>
+            <span class="n">plot_heatmap</span><span class="p">(</span><span class="n">pct_err_slc_z0_matrix</span><span class="p">,</span> <span class="n">mali_res</span><span class="p">,</span> <span class="n">slm_nglv</span><span class="p">,</span>
+                         <span class="n">save_images</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_heatmap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">mali_res</span><span class="p">,</span> <span class="n">slm_nglv</span><span class="p">,</span> <span class="n">save_images</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot a heat map of mean percentage error in SLC.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : float</span>
+<span class="sd">        Matrix of arrays containing mean percentage error values</span>
+
+<span class="sd">    mali_res : str</span>
+<span class="sd">        List of MALI-resolution strings</span>
+
+<span class="sd">    slm_nglv : str</span>
+<span class="sd">        List of SLM nglv values</span>
+
+<span class="sd">    save_images : str</span>
+<span class="sd">        Boolean on whether to save the plot or not</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">fig1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig1</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">im</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Blues&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Mean Percentage Error (%)&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">slm_nglv</span><span class="p">)),</span> <span class="n">labels</span><span class="o">=</span><span class="n">slm_nglv</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mali_res</span><span class="p">)),</span> <span class="n">labels</span><span class="o">=</span><span class="n">mali_res</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;# of GL nodes in Latitude&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;MALI domain resolution (km)&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">save_images</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;Heatmap_MPE.png&#39;</span><span class="p">)</span>
+        <span class="n">fig1</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_pct_err_slc</span><span class="p">(</span><span class="n">mali_res</span><span class="p">,</span> <span class="n">slm_nglv</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">figure_title</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot mean percentage errors in sea-level change where</span>
+<span class="sd">    MALI-calculation is taken as a true value.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mali_res : str</span>
+<span class="sd">        Resolution of the MALI domain</span>
+
+<span class="sd">    slm_nglv : int</span>
+<span class="sd">        Array of the number of Gauss-Legendre nodes in latitude</span>
+<span class="sd">        in the SLM grid</span>
+
+<span class="sd">    data : float</span>
+<span class="sd">        Data array containing the percentage error values</span>
+
+<span class="sd">    figure_title : str</span>
+<span class="sd">        Title of the figure</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">fig1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig1</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">slm_nglv</span><span class="p">),</span> <span class="n">data</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;# of Gauss-Legendre nodes in latitude (SLM)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">figure_title</span><span class="si">}</span><span class="s1"> for </span><span class="si">{</span><span class="n">mali_res</span><span class="si">}</span><span class="s1">km MALI res&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;percent error (%)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">figure_title</span><span class="si">}</span><span class="s1"> for </span><span class="si">{</span><span class="n">mali_res</span><span class="si">}</span><span class="s1">km MALI res.png&#39;</span><span class="p">,</span>
+                <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+    <span class="n">fig1</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="visualize_slm_circsheet">
+<a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.slm_circ_icesheet.visualize.visualize_slm_circsheet.html#compass.landice.tests.slm_circ_icesheet.visualize.visualize_slm_circsheet">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">visualize_slm_circsheet</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">nglv</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot the output from a circular ice sheet test case</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : compass.config.CompassConfigParser</span>
+<span class="sd">        Configuration options for this test case,</span>
+<span class="sd">        a combination of the defaults for the machine,</span>
+<span class="sd">        core and configuration</span>
+
+<span class="sd">    logger : logging.Logger</span>
+<span class="sd">        A logger for output from the step</span>
+
+<span class="sd">    res : str</span>
+<span class="sd">        resolution of MALI mesh</span>
+
+<span class="sd">    nglv : str</span>
+<span class="sd">        Number of Gauss-Legendre points in latitude in the SLM grid</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;circ_icesheet_viz&#39;</span><span class="p">]</span>
+    <span class="n">save_images</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;save_images&#39;</span><span class="p">)</span>
+    <span class="n">hide_figs</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;hide_figs&#39;</span><span class="p">)</span>
+
+    <span class="n">coupling</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># get an instance of output analysis class</span>
+    <span class="n">run_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;../mali</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km_slm</span><span class="si">{</span><span class="n">nglv</span><span class="si">}</span><span class="s1">/run_model/&#39;</span>
+    <span class="n">run_data</span> <span class="o">=</span> <span class="n">output_analysis</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">nglv</span><span class="p">,</span> <span class="n">run_path</span><span class="p">)</span>
+    <span class="n">yrs</span> <span class="o">=</span> <span class="n">run_data</span><span class="o">.</span><span class="n">yrs</span>
+
+    <span class="c1"># figure 1</span>
+    <span class="n">fig1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig1</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">yrs</span><span class="p">,</span> <span class="n">run_data</span><span class="o">.</span><span class="n">grnd_vol_unscaled</span><span class="p">,</span>
+             <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MALI unscaled&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">yrs</span><span class="p">,</span> <span class="n">run_data</span><span class="o">.</span><span class="n">grnd_vol</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MALI scaled&#39;</span><span class="p">,</span>
+             <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">coupling</span><span class="p">:</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">yrs</span><span class="p">,</span> <span class="n">run_data</span><span class="o">.</span><span class="n">ice_vol_slm</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;SLM&#39;</span><span class="p">,</span>
+                 <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Year&#39;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Grounded Ice Mass&#39;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Mass (Gt)&#39;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">save_images</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ice_mass_mali</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km_slm</span><span class="si">{</span><span class="n">nglv</span><span class="si">}</span><span class="s1">.png&#39;</span><span class="p">)</span>
+        <span class="n">fig1</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+
+    <span class="c1"># figure 2</span>
+    <span class="n">fig2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig2</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">yrs</span><span class="p">,</span> <span class="n">run_data</span><span class="o">.</span><span class="n">dgrnd_vol_unscaled</span><span class="p">,</span>
+             <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MALI unscaled&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">yrs</span><span class="p">,</span> <span class="n">run_data</span><span class="o">.</span><span class="n">dgrnd_vol</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MALI scaled&#39;</span><span class="p">,</span>
+             <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">coupling</span><span class="p">:</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">yrs</span><span class="p">,</span> <span class="n">run_data</span><span class="o">.</span><span class="n">dice_vol_slm</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;SLM&#39;</span><span class="p">,</span>
+                 <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Year&#39;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Change in Grounded Ice Mass&#39;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Mass (Gt)&#39;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">save_images</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ice_mass_change_mali</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km_slm</span><span class="si">{</span><span class="n">nglv</span><span class="si">}</span><span class="s1">.png&#39;</span><span class="p">)</span>
+        <span class="n">fig2</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+
+    <span class="c1"># figure 3</span>
+    <span class="n">fig3</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="n">ax3</span> <span class="o">=</span> <span class="n">fig3</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">yrs</span><span class="p">,</span> <span class="n">run_data</span><span class="o">.</span><span class="n">SLCaf</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MALI SLC VAF&#39;</span><span class="p">,</span>
+             <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">yrs</span><span class="p">,</span> <span class="n">run_data</span><span class="o">.</span><span class="n">SLCcorr_Aocn</span><span class="p">,</span>
+             <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MALI SLCcorr (grnded ice flooded)&#39;</span><span class="p">,</span>
+             <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">yrs</span><span class="p">,</span> <span class="n">run_data</span><span class="o">.</span><span class="n">SLCcorr_AocnBeta</span><span class="p">,</span>
+             <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MALI SLCcorr (grnded ice NOT flooded)&#39;</span><span class="p">,</span>
+             <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">yrs</span><span class="p">,</span> <span class="n">run_data</span><span class="o">.</span><span class="n">SLCcorr_z0_AocnBeta</span><span class="p">,</span>
+             <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MALI SLCcorr+z0 (grnded ice NOT flooded)&#39;</span><span class="p">,</span>
+             <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">coupling</span><span class="p">:</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">yrs</span><span class="p">,</span> <span class="n">run_data</span><span class="o">.</span><span class="n">SLC_slm_Aocn</span><span class="p">,</span>
+                 <span class="n">label</span><span class="o">=</span><span class="s1">&#39;SLM (grnded ice flooded)&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">yrs</span><span class="p">,</span> <span class="n">run_data</span><span class="o">.</span><span class="n">SLC_slm_AocnBeta</span><span class="p">,</span>
+                 <span class="n">label</span><span class="o">=</span><span class="s1">&#39;SLM (grnded ice NOT flooded)&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
+                 <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Year&#39;</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Ice-sheet contribution to SLC&#39;</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Sea-level change (m)&#39;</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">save_images</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ice_contribution_to_SLC_mali</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km_slm</span><span class="si">{</span><span class="n">nglv</span><span class="si">}</span><span class="s1">.png&#39;</span><span class="p">)</span>
+        <span class="n">fig3</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+
+    <span class="c1"># figure 4 &amp; 5</span>
+    <span class="k">if</span> <span class="n">coupling</span><span class="p">:</span>
+        <span class="n">fig4</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">ax4</span> <span class="o">=</span> <span class="n">fig4</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">ax4</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">yrs</span><span class="p">,</span> <span class="n">run_data</span><span class="o">.</span><span class="n">dgrnd_vol</span> <span class="o">-</span> <span class="n">run_data</span><span class="o">.</span><span class="n">dice_vol_slm</span><span class="p">,</span>
+                 <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MALI minus SLM&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+        <span class="n">ax4</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Year&#39;</span><span class="p">)</span>
+        <span class="n">ax4</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
+        <span class="n">ax4</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Difference in ice mass change&#39;</span><span class="p">)</span>
+        <span class="n">ax4</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Mass (Gt)&#39;</span><span class="p">)</span>
+        <span class="n">ax4</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">save_images</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;diff_ice_mass_change_mali</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km_slm</span><span class="si">{</span><span class="n">nglv</span><span class="si">}</span><span class="s1">.png&#39;</span><span class="p">)</span>
+            <span class="n">fig4</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+
+        <span class="n">fig5</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">ax5</span> <span class="o">=</span> <span class="n">fig5</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">ax5</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">yrs</span><span class="p">,</span> <span class="n">run_data</span><span class="o">.</span><span class="n">diff_slc</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MALI minus SLM&#39;</span><span class="p">,</span>
+                 <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+        <span class="n">ax5</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">yrs</span><span class="p">,</span> <span class="n">run_data</span><span class="o">.</span><span class="n">diff_slc_z0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MALI minus SLM (z0)&#39;</span><span class="p">,</span>
+                 <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">ax5</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Year&#39;</span><span class="p">)</span>
+        <span class="n">ax5</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
+        <span class="n">ax5</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Difference in sea-level change&#39;</span><span class="p">)</span>
+        <span class="n">ax5</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;sea-level change (m)&#39;</span><span class="p">)</span>
+        <span class="n">ax5</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">save_images</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;diff_sea_level_change_mali</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km_slm</span><span class="si">{</span><span class="n">nglv</span><span class="si">}</span><span class="s1">.png&#39;</span><span class="p">)</span>
+            <span class="n">fig5</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">hide_figs</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Plot display disabled with hide_plot config option.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">output_analysis</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Analyze outputs</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mali_slc : float</span>
+<span class="sd">       ice-sheet contribution to sea-level change calculated</span>
+<span class="sd">       based on MALI outputs</span>
+
+<span class="sd">    slm_slc : float</span>
+<span class="sd">       ice-sheet contribution to sea-level change calculated</span>
+<span class="sd">       based on SLM outputs</span>
+
+<span class="sd">    rmse : float</span>
+<span class="sd">       root mean square error between mali_slc and slm_slc</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">nglv</span><span class="p">,</span> <span class="n">run_path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate sea-level change from run outputs</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config : compass.config.CompassConfigParser</span>
+<span class="sd">            Configuration options for this test case,</span>
+<span class="sd">            a combination of the defaults for the machine,</span>
+<span class="sd">            core and configuration</span>
+
+<span class="sd">        logger : logging.Logger</span>
+<span class="sd">            A logger for output from the step</span>
+
+<span class="sd">        res : str</span>
+<span class="sd">            Resolution of MALI mesh</span>
+
+<span class="sd">        nglv : str</span>
+<span class="sd">            Number of Gauss-Legendre points in latitude in the SLM</span>
+
+<span class="sd">        run_path : str</span>
+<span class="sd">            Path to runs where the output file exists</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">res</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nglv</span> <span class="o">=</span> <span class="n">nglv</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_path</span> <span class="o">=</span> <span class="n">run_path</span>
+
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;circ_icesheet_viz&#39;</span><span class="p">]</span>
+        <span class="n">Aocn_const</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;Aocn_const&#39;</span><span class="p">)</span>
+        <span class="n">AocnBeta_const</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;AocnBeta_const&#39;</span><span class="p">)</span>
+
+        <span class="c1"># mali output file name</span>
+        <span class="n">fname_mali</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;output_mali</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km_slm</span><span class="si">{</span><span class="n">nglv</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+
+        <span class="c1"># read in the MALI outputs</span>
+        <span class="n">DS</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span><span class="n">fname_mali</span><span class="p">,</span> <span class="n">combine</span><span class="o">=</span><span class="s1">&#39;nested&#39;</span><span class="p">,</span>
+                               <span class="n">concat_dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span>
+                               <span class="n">decode_timedelta</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># default constants</span>
+        <span class="n">rhoi</span> <span class="o">=</span> <span class="mf">910.0</span>   <span class="c1"># ice density in kg/m^3</span>
+        <span class="n">rhoo</span> <span class="o">=</span> <span class="mf">1000.0</span>  <span class="c1"># ocean density used by the SLM (MALI uses 1028.0)</span>
+        <span class="n">rhow</span> <span class="o">=</span> <span class="mf">1000.0</span>  <span class="c1"># fresh water density</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ncells</span> <span class="o">=</span> <span class="n">DS</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]</span>
+        <span class="n">cellMask</span> <span class="o">=</span> <span class="n">DS</span><span class="p">[</span><span class="s1">&#39;cellMask&#39;</span><span class="p">]</span>
+        <span class="n">bed</span> <span class="o">=</span> <span class="n">DS</span><span class="p">[</span><span class="s1">&#39;bedTopography&#39;</span><span class="p">]</span>
+        <span class="c1"># bed0 = bed.isel(Time=0).load()</span>
+        <span class="n">thickness</span> <span class="o">=</span> <span class="n">DS</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">]</span>
+        <span class="n">areaCell</span> <span class="o">=</span> <span class="n">DS</span><span class="p">[</span><span class="s1">&#39;areaCell&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+        <span class="n">latCell</span> <span class="o">=</span> <span class="n">DS</span><span class="p">[</span><span class="s1">&#39;latCell&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+        <span class="n">lonCell</span> <span class="o">=</span> <span class="n">DS</span><span class="p">[</span><span class="s1">&#39;lonCell&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">load</span><span class="p">()</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>  <span class="c1"># correct range: [-pi pi]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lat_deg</span> <span class="o">=</span> <span class="n">latCell</span> <span class="o">*</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+
+        <span class="c1"># calculate the area distortion (scale) factor for the</span>
+        <span class="c1"># polar stereographic projection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">latCell</span><span class="p">),)</span>
+        <span class="n">k0</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="o">-</span><span class="mi">71</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="c1"># center of the latitude</span>
+        <span class="n">lat0</span> <span class="o">=</span> <span class="o">-</span><span class="mi">90</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span>
+        <span class="c1"># standard parallel in radians where distortion should be zero (k=1)</span>
+        <span class="n">lon0</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># center of the longitude</span>
+        <span class="c1"># expression for &#39;k&#39; from p. 157</span>
+        <span class="c1"># eqn. 21-4 in https://pubs.usgs.gov/pp/1395/report.pdf.</span>
+        <span class="c1"># p. 142 provides a table showing &#39;k&#39; for stereographic projection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">k0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">lat0</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">latCell</span><span class="p">[:]))</span> <span class="o">+</span>
+                              <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">lat0</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">latCell</span><span class="p">[:])</span> <span class="o">*</span>
+                               <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">lonCell</span><span class="p">[:]</span> <span class="o">-</span> <span class="n">lon0</span><span class="p">)))</span>
+
+        <span class="c1"># default MALI time steps from the MALI outputs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">yrs_mali</span> <span class="o">=</span> <span class="n">DS</span><span class="p">[</span><span class="s1">&#39;daysSinceStart&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">load</span><span class="p">()</span> <span class="o">/</span> <span class="mf">365.0</span> <span class="o">+</span> <span class="mf">2015.0</span>
+        <span class="c1"># path to the SLM output data</span>
+        <span class="n">fpath_slm</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">run_path</span><span class="p">,</span> <span class="s1">&#39;OUTPUT_SLM/&#39;</span><span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;slm&#39;</span><span class="p">]</span>
+        <span class="n">time_stride</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;time_stride&#39;</span><span class="p">))</span>
+        <span class="c1"># reset the time indices to match the # of SLM timesteps</span>
+        <span class="n">nt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">DS</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">],</span> <span class="n">time_stride</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;i&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">yrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">yrs_mali</span><span class="p">[</span><span class="n">nt</span><span class="p">]</span>
+        <span class="n">nyrs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yrs</span><span class="p">)</span>
+        <span class="n">z0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nyrs</span><span class="p">,</span> <span class="p">))</span>
+        <span class="n">Aocn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">nyrs</span><span class="p">,</span> <span class="p">),</span> <span class="n">Aocn_const</span><span class="p">)</span>
+        <span class="n">AocnBeta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">nyrs</span><span class="p">,</span> <span class="p">),</span> <span class="n">AocnBeta_const</span><span class="p">)</span>
+
+        <span class="c1"># get ice mass on the SLM interpolated from the MALI mesh</span>
+        <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fpath_slm</span><span class="p">,</span> <span class="s1">&#39;ice_volume&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ice_vol_slm</span> <span class="o">=</span> <span class="n">slm_outputs</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">nyrs</span><span class="p">)</span><span class="o">.</span><span class="n">data</span> <span class="o">*</span> <span class="n">rhoi</span> <span class="o">/</span> <span class="mf">1.0e12</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dice_vol_slm</span> <span class="o">=</span> <span class="n">slm_outputs</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">nyrs</span><span class="p">)</span><span class="o">.</span><span class="n">change_total</span> <span class="o">*</span> \
+            <span class="n">rhoi</span> <span class="o">/</span> <span class="mf">1.0e12</span>  <span class="c1"># in Gt</span>
+        <span class="c1"># get slc correction and ocean area from the SLM</span>
+        <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fpath_slm</span><span class="p">,</span> <span class="s1">&#39;gmslc_ocnArea&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;reading in file </span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">z0</span> <span class="o">=</span> <span class="n">slm_outputs</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">nyrs</span><span class="p">)</span><span class="o">.</span><span class="n">change_total</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SLC_slm_Aocn</span> <span class="o">=</span> <span class="n">slm_outputs</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">nyrs</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+
+        <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fpath_slm</span><span class="p">,</span> <span class="s1">&#39;gmslc_ocnBetaArea&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;reading in file </span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SLC_slm_AocnBeta</span> <span class="o">=</span> <span class="n">slm_outputs</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">nyrs</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+
+        <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fpath_slm</span><span class="p">,</span> <span class="s1">&#39;ocean_area&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;reading in file </span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">Aocn</span> <span class="o">=</span> <span class="n">slm_outputs</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">nyrs</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;&#39;ocean_area&#39; file doesn&#39;t exist. Using &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;constant ocean area defined: </span><span class="si">{</span><span class="n">Aocn_const</span><span class="si">}</span><span class="s2">m2&quot;</span><span class="p">)</span>
+        <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fpath_slm</span><span class="p">,</span> <span class="s1">&#39;oceanBeta_area&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;reading in file </span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">AocnBeta</span> <span class="o">=</span> <span class="n">slm_outputs</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">nyrs</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;&#39;oceanBeta_area&#39; file doesn&#39;t exist. Using &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;constant oceanBeta area defined: </span><span class="si">{</span><span class="n">AocnBeta_const</span><span class="si">}</span><span class="s2">m2&quot;</span><span class="p">)</span>
+
+        <span class="c1"># calculate ice-sheet contribution to sea-level change</span>
+        <span class="c1"># create empty arrays</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grnd_vol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grnd_vol_unscaled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dgrnd_vol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dgrnd_vol_unscaled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vaf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vaf_z0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pov_z0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">den</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SLEaf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SLCaf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SLCpov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SLCden</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SLCcorr_Aocn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SLEaf_AocnBeta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SLEaf_AocnBeta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SLCaf_AocnBeta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SLCpov_AocnBeta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SLCden_AocnBeta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SLCcorr_AocnBeta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SLEaf_z0_AocnBeta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SLCaf_z0_AocnBeta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SLCpov_z0_AocnBeta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SLCcorr_z0_AocnBeta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">nt</span><span class="p">)):</span>
+            <span class="c1"># get appropriate time index for the MALI output data</span>
+            <span class="n">indx</span> <span class="o">=</span> <span class="n">nt</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+
+            <span class="n">bedt</span> <span class="o">=</span> <span class="n">bed</span><span class="p">[</span><span class="n">indx</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+            <span class="n">cellMaskt</span> <span class="o">=</span> <span class="n">cellMask</span><span class="p">[</span><span class="n">indx</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+            <span class="n">thicknesst</span> <span class="o">=</span> <span class="n">thickness</span><span class="p">[</span><span class="n">indx</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+            <span class="c1"># areaCellt = areaCell.sum()</span>
+            <span class="c1"># logger.info(f&#39;area of the mali domain is {areaCellt}&#39;)</span>
+
+            <span class="c1"># calculation of sea-level change following Goelzer et al. 2020</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grnd_vol_unscaled</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">areaCell</span> <span class="o">*</span> <span class="n">grounded</span><span class="p">(</span><span class="n">cellMaskt</span><span class="p">)</span> <span class="o">*</span>
+                                         <span class="n">thicknesst</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="n">rhoi</span> <span class="o">/</span> <span class="mf">1.0e12</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grnd_vol</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">areaCell</span> <span class="o">*</span> <span class="n">grounded</span><span class="p">(</span><span class="n">cellMaskt</span><span class="p">)</span> <span class="o">*</span>
+                                <span class="n">thicknesst</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="n">rhoi</span> <span class="o">/</span> <span class="mf">1.0e12</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vaf</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">areaCell</span> <span class="o">*</span> <span class="n">grounded</span><span class="p">(</span><span class="n">cellMaskt</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span>
+                           <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">thicknesst</span> <span class="o">+</span> <span class="p">(</span><span class="n">rhoo</span> <span class="o">/</span> <span class="n">rhoi</span><span class="p">)</span> <span class="o">*</span>
+                                      <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">ncells</span><span class="p">,)),</span>
+                                                 <span class="n">bedt</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>  <span class="c1"># eqn. 1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pov</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">areaCell</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span>
+                           <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mf">0.0</span> <span class="o">*</span> <span class="n">bedt</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">bedt</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>  <span class="c1"># eqn.8</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vaf_z0</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">areaCell</span> <span class="o">*</span> <span class="n">grounded</span><span class="p">(</span><span class="n">cellMaskt</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span>
+                              <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">thicknesst</span> <span class="o">+</span> <span class="p">(</span><span class="n">rhoo</span> <span class="o">/</span> <span class="n">rhoi</span><span class="p">)</span> <span class="o">*</span>
+                              <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">ncells</span><span class="p">,)),</span>
+                                         <span class="n">bedt</span> <span class="o">+</span> <span class="n">z0</span><span class="p">[</span><span class="n">t</span><span class="p">]),</span> <span class="mf">0.0</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>  <span class="c1"># eqn. 13</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pov_z0</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">areaCell</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mf">0.0</span> <span class="o">*</span> <span class="n">bedt</span><span class="p">,</span>
+                              <span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">bedt</span> <span class="o">+</span> <span class="n">z0</span><span class="p">[</span><span class="n">t</span><span class="p">]))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>  <span class="c1"># eqn. 14</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">den</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">areaCell</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">grounded</span><span class="p">(</span><span class="n">cellMaskt</span><span class="p">)</span> <span class="o">*</span>
+                           <span class="p">(</span><span class="n">rhoi</span> <span class="o">/</span> <span class="n">rhow</span> <span class="o">-</span> <span class="n">rhoi</span> <span class="o">/</span> <span class="n">rhoo</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>  <span class="c1"># eqn. 10</span>
+
+            <span class="c1"># SLC(m) using the ocean area where anywhere below sea level</span>
+            <span class="c1"># is considered as ocean (even where marine-based ice exists)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SLEaf</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vaf</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">/</span> <span class="n">Aocn</span><span class="p">[</span><span class="n">t</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="n">rhoi</span> <span class="o">/</span> <span class="n">rhoo</span><span class="p">)</span>  <span class="c1"># eqn. 2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SLCaf</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLEaf</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">SLEaf</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># eqn. 3</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SLCpov</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pov</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">/</span> <span class="n">Aocn</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">pov</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span>
+                                     <span class="n">Aocn</span><span class="p">[</span><span class="n">t</span><span class="p">])</span>  <span class="c1"># eqn. 9</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SLCden</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">den</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">/</span> <span class="n">Aocn</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">den</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span>
+                                     <span class="n">Aocn</span><span class="p">[</span><span class="n">t</span><span class="p">])</span>  <span class="c1"># eqn. 11</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SLCcorr_Aocn</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">SLCaf</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">SLCpov</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">+</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">SLCden</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+
+            <span class="c1"># SLC(m) including the z0 term using the ocean+iced area</span>
+            <span class="c1"># i.e. water can&#39;t go where marine-based ice exists</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SLEaf_AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vaf</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">/</span> <span class="n">AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">])</span> <span class="o">*</span> \
+                                     <span class="p">(</span><span class="n">rhoi</span> <span class="o">/</span> <span class="n">rhoo</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SLCaf_AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLEaf_AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">-</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">SLEaf_AocnBeta</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SLCpov_AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pov</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">/</span> <span class="n">AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">-</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">pov</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SLCden_AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">den</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">/</span> <span class="n">AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">-</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">den</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SLCcorr_AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">SLCaf_AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">+</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">SLCpov_AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">+</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">SLCden_AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+
+            <span class="c1"># same as above but adding the eustatic sea-level change term &#39;z0&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SLEaf_z0_AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vaf_z0</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">/</span> <span class="n">AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">])</span> <span class="o">*</span> \
+                                        <span class="p">(</span><span class="n">rhoi</span> <span class="o">/</span> <span class="n">rhoo</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SLCaf_z0_AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLEaf_z0_AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">-</span>
+                                                <span class="bp">self</span><span class="o">.</span><span class="n">SLEaf_z0_AocnBeta</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SLCpov_z0_AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pov_z0</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">/</span> <span class="n">AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">-</span>
+                                                 <span class="bp">self</span><span class="o">.</span><span class="n">pov_z0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SLCcorr_z0_AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">SLCaf_z0_AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">+</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">SLCpov_z0_AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">+</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">SLCden_AocnBeta</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+
+            <span class="c1"># get total ice mass change at each time step</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dgrnd_vol</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grnd_vol</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">grnd_vol</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dgrnd_vol_unscaled</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grnd_vol_unscaled</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">-</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">grnd_vol_unscaled</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">DS</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="c1"># calculate RMSE between MALI and SLM calculation of SLC</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">diff_slc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">SLC_slm_AocnBeta</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">SLCcorr_AocnBeta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">diff_slc_z0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">SLC_slm_AocnBeta</span> <span class="o">-</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">SLCcorr_z0_AocnBeta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rmse_slc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">diff_slc</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pct_err_slc</span> <span class="o">=</span> <span class="p">((</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diff_slc</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="o">/</span>
+                             <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLCcorr_AocnBeta</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span> <span class="o">*</span>
+                            <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pct_err_slc_z0</span> <span class="o">=</span> <span class="p">((</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diff_slc_z0</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="o">/</span>
+                                <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLCcorr_z0_AocnBeta</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span> <span class="o">*</span>
+                               <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pct_err_slm</span> <span class="o">=</span> <span class="p">((</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diff_slc</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="o">/</span>
+                             <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLC_slm_AocnBeta</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span> <span class="o">*</span>
+                            <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pct_err_slm_z0</span> <span class="o">=</span> <span class="p">((</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diff_slc_z0</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="o">/</span>
+                                <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLC_slm_AocnBeta</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span> <span class="o">*</span>
+                               <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">grounded</span><span class="p">(</span><span class="n">cellMask</span><span class="p">):</span>
+    <span class="c1"># return ((cellMask&amp;32)//32) &amp; ~((cellMask&amp;4)//4)</span>
+    <span class="k">return</span> <span class="p">((</span><span class="n">cellMask</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">//</span> <span class="mi">32</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">((</span><span class="n">cellMask</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">//</span> <span class="mi">4</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">slm_outputs</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read and calculate the SLM outputs</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : float</span>
+<span class="sd">        SLM text-formatted outputs</span>
+
+<span class="sd">    change_dt : float</span>
+<span class="sd">        Change in data value between each time step</span>
+
+<span class="sd">    change_total : float</span>
+<span class="sd">        Change in data value at a time step</span>
+<span class="sd">        with respect to the intial time step</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">nyrs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate the sea-level model output file</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename : str</span>
+<span class="sd">            Filename of SLM output data</span>
+
+<span class="sd">        nyrs : int</span>
+<span class="sd">            Number of time indices to be analyzed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fname</span> <span class="o">=</span> <span class="n">filename</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="n">nyrs</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">change_dt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nyrs</span><span class="p">,)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">change_total</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nyrs</span><span class="p">,)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">change_dt</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">change_dt</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">-</span>
+                                     <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">change_total</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">-</span>
+                                        <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
