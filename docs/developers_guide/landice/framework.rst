@@ -176,7 +176,7 @@ Humboldt mesh):
     # create_scrip_file_from_planar_rectangular_grid from MPAS_Tools
     src_proj = gis-gimp
 
-    # number of processors to use for ESMF_RegridWeightGen
+    # number of processors to use for mbtempest
     nProcs = 128
 
 For mesh prototyping, it is a good idea to use `interpolate_data = False`,
