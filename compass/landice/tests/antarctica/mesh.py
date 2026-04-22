@@ -46,8 +46,8 @@ class Mesh(Step):
         self.add_output_file(
             filename=f'{self.mesh_filename[:-3]}_ismip6_regionMasks.nc')
         self.add_input_file(
-            filename='antarctica_1km_2024_01_29.nc',
-            target='antarctica_1km_2024_01_29.nc',
+            filename='antarctica_8km_2024_01_29.nc',
+            target='antarctica_8km_2024_01_29.nc',
             database='')
 
     # no setup() method is needed
@@ -70,7 +70,7 @@ class Mesh(Step):
         section_name = 'mesh'
 
         # TODO: do we want to add this to the config file?
-        source_gridded_dataset = 'antarctica_1km_2024_01_29.nc'
+        source_gridded_dataset = 'antarctica_8km_2024_01_29.nc'
 
         if bedmachine_dataset is not None:
             bm_updated_gridded_dataset = (
