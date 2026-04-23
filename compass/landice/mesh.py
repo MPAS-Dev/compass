@@ -298,17 +298,6 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
     # Get config inputs for cell spacing functions
     min_spac = section.getfloat('min_spac')
     max_spac = section.getfloat('max_spac')
-    high_log_speed = section.getfloat('high_log_speed')
-    low_log_speed = section.getfloat('low_log_speed')
-    high_dist = section.getfloat('high_dist')
-    low_dist = section.getfloat('low_dist')
-    high_dist_coast = section.getfloat('high_dist_coast')
-    low_dist_coast = section.getfloat('low_dist_coast')
-    high_dist_bed = section.getfloat('high_dist_bed')
-    low_dist_bed = section.getfloat('low_dist_bed')
-    low_bed = section.getfloat('low_bed')
-    high_bed = section.getfloat('high_bed')
-
     # convert km to m
     cull_distance = section.getfloat('cull_distance') * 1.e3
 
@@ -318,6 +307,10 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
     # Cell spacing function based on union of masks
     if section.get('use_bed') == 'True':
         logger.info('Using bed elevation for spacing.')
+        high_dist_bed = section.getfloat('high_dist_bed')
+        low_dist_bed = section.getfloat('low_dist_bed')
+        low_bed = section.getfloat('low_bed')
+        high_bed = section.getfloat('high_bed')
         if flood_fill_iStart is not None and flood_fill_jStart is not None:
             logger.info('calling gridded_flood_fill to find ' +
                         'bedTopography <= low_bed connected to the ocean.')
@@ -367,6 +360,8 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
     # Make cell spacing function mapping from log speed to cell spacing
     if section.get('use_speed') == 'True':
         logger.info('Using speed for cell spacing')
+        high_log_speed = section.getfloat('high_log_speed')
+        low_log_speed = section.getfloat('low_log_speed')
         speed = (vx ** 2 + vy ** 2) ** 0.5
         lspd = np.log10(speed)
         spacing_speed = np.interp(lspd, [low_log_speed, high_log_speed],
@@ -390,6 +385,8 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
     # Make cell spacing function mapping from distance to ice edge
     if section.get('use_dist_to_edge') == 'True':
         logger.info('Using distance to ice edge for cell spacing')
+        high_dist = section.getfloat('high_dist')
+        low_dist = section.getfloat('low_dist')
         spacing_edge = np.interp(dist_to_edge, [low_dist, high_dist],
                                  [min_spac, max_spac], left=min_spac,
                                  right=max_spac)
@@ -399,6 +396,8 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
     # Make cell spacing function mapping from distance to grounding line
     if section.get('use_dist_to_grounding_line') == 'True':
         logger.info('Using distance to grounding line for cell spacing')
+        high_dist = section.getfloat('high_dist')
+        low_dist = section.getfloat('low_dist')
         spacing_gl = np.interp(dist_to_grounding_line, [low_dist, high_dist],
                                [min_spac, max_spac], left=min_spac,
                                right=max_spac)
@@ -408,6 +407,8 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
     # Make cell spacing function mapping from distance to coast
     if section.get('use_dist_to_coast') == 'True':
         logger.info('Using distance to coast for cell spacing')
+        high_dist_coast = section.getfloat('high_dist_coast')
+        low_dist_coast = section.getfloat('low_dist_coast')
         spacing_coast = np.interp(dist_to_coast,
                                   [low_dist_coast, high_dist_coast],
                                   [min_spac, max_spac], left=min_spac,
