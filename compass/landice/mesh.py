@@ -557,11 +557,11 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y, section_name,
     fig, ax = plt.subplots(1, 3, sharex=True, sharey=True, figsize=(9, 3))
     margin_plot = ax[0].pcolor(margin_mask)
     gl_plot = ax[1].pcolor(grounding_line_mask)  # noqa F841
-    coast_plot = ax[2].pcolor(coast_mask)
+    coast_plot = ax[2].pcolor(coast_mask)  # noqa F841
     ax[0].set_title("margin mask")
     ax[1].set_title("grounding line mask")
     ax[2].set_title("coast mask")
-    plt.colorbar(margin_plot, ax=[ax[0], ax[1]], shrink=0.7)
+    plt.colorbar(margin_plot, ax=ax, shrink=0.7)
     [ax.set_aspect('equal') for ax in ax]
     fig.savefig("masks.png", dpi=400)
 
