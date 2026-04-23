@@ -101,7 +101,7 @@ replace this hybrid method.
 
 Once the mesh is created, scrip files and the associated weights files
 are created for the mesh and observational data sets. Then, ice geometry and
-velocity observations are conservatively remapped from BedMachine v5 and
+velocity observations are conservatively remapped from BedMachine v6 and
 MEaSUREs 2006-2010 data sets. Finally, there is some cleanup to set large
 velocity uncertainties outside the ice mask, check the sign of the basal heat
 flux, and set reasonable values for dH/dt and its uncertainty.
@@ -111,3 +111,7 @@ The BedMachine and MEaSUREs remapping steps are optional and are controlled by
 is unset (empty or ``None``), that dataset interpolation is skipped. The
 default config includes both datasets, so interpolation is enabled by default.
 The base-mesh projection in ``build_mali_mesh()`` is fixed for this test case.
+
+An alternative config file, ``mesh_gen_1to10km.cfg``, creates a finer 1–10km
+mesh using ``use_dist_to_coast = True`` to refine ocean resolution near the
+coast and a negative ``cull_distance`` to retain the open ocean.

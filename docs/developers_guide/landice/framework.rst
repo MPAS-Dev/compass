@@ -76,13 +76,17 @@ and edge coordinates to pass to py:func:`mpas_tools.mesh.creation.build_mesh.bui
 
 :py:func:`compass.landice.mesh.set_cell_width()` sets cell widths based on settings
 in config file to pass to :py:func:`mpas_tools.mesh.creation.build_mesh.build_planar_mesh()`.
-Requires the following options to be set in the given config section: ``min_spac``,
-``max_spac``, ``high_log_speed``, ``low_log_speed``, ``high_dist``, ``low_dist``,
-``high_dist_bed``, ``low_dist_bed``, ``high_bed``, ``low_bed``, ``cull_distance``,
-``use_speed``, ``use_dist_to_edge``, ``use_dist_to_grounding_line``, and ``use_bed``.
+Always requires ``min_spac``, ``max_spac``, ``cull_distance``, ``use_speed``,
+``use_dist_to_edge``, ``use_dist_to_grounding_line``, ``use_dist_to_coast``, and
+``use_bed``. Additional options are only required when the corresponding density
+function is enabled: ``high_log_speed``, ``low_log_speed`` (``use_speed = True``);
+``high_dist``, ``low_dist`` (``use_dist_to_edge`` or ``use_dist_to_grounding_line = True``);
+``high_dist_bed``, ``low_dist_bed``, ``high_bed``, ``low_bed`` (``use_bed = True``);
+``high_dist_coast``, ``low_dist_coast`` (``use_dist_to_coast = True``).
 
 :py:func:`compass.landice.mesh.get_dist_to_edge_and_gl()` calculates distance from
-each point to ice edge and grounding line, to be used in mesh density functions in
+each point to ice edge, grounding line, and coast, returning a three-element tuple
+``(dist_to_edge, dist_to_grounding_line, dist_to_coast)``. Used by
 :py:func:`compass.landice.mesh.set_cell_width()`. In future development,
 this should be updated to use a faster package such as `scikit-fmm`.
 
@@ -154,6 +158,8 @@ Humboldt mesh):
     use_speed = True
     use_dist_to_grounding_line = False
     use_dist_to_edge = True
+    # When use_dist_to_coast = True, also set high_dist_coast and low_dist_coast
+    use_dist_to_coast = False
     use_bed = True
 
     # Optional interpolation inputs (skip when set to None)
