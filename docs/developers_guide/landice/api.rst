@@ -515,6 +515,7 @@ mismipplus
    run_model.RunModel
    run_model.RunModel.setup
    run_model.RunModel.constrain_resources
+   run_model.RunModel.process_inputs_and_outputs
    run_model.RunModel.run
 
    tasks.get_ntasks_from_cell_count
