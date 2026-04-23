@@ -447,8 +447,7 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y, section_name,
     """
     Calculate distance from each point to ice edge and grounding line,
     to be used in mesh density functions in
-    :py:func:`compass.landice.mesh.set_cell_width()`. In future development,
-    this should be updated to use a faster package such as ``scikit-fmm``.
+    :py:func:`compass.landice.mesh.set_cell_width()`.
 
     Parameters
     ----------

@@ -87,8 +87,7 @@ function is enabled: ``high_log_speed``, ``low_log_speed`` (``use_speed = True``
 :py:func:`compass.landice.mesh.get_dist_to_edge_and_gl()` calculates distance from
 each point to ice edge, grounding line, and coast, returning a three-element tuple
 ``(dist_to_edge, dist_to_grounding_line, dist_to_coast)``. Used by
-:py:func:`compass.landice.mesh.set_cell_width()`. In future development,
-this should be updated to use a faster package such as `scikit-fmm`.
+:py:func:`compass.landice.mesh.set_cell_width()`.
 
 :py:func:`compass.landice.mesh.build_cell_width()` determine final MPAS mesh cell sizes
 using desired cell widths calculated by py:func:`compass.landice.mesh.set_cell_width()`,
