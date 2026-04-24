@@ -34,51 +34,26 @@ the compass repository.
 
 .. _dev_conda_env:
 
-compass conda environment, compilers and system modules
--------------------------------------------------------
+compass pixi and Spack environments, compilers and system modules
+-----------------------------------------------------------------
 
-As a developer, you will need your own environment with the latest dependencies
-for compass and a development installation of ``compass`` from the branch
-you're working on.
+As a developer, you will need your own deployment environment with the latest
+dependencies for compass and a development installation of ``compass`` from
+the branch you're working on.
 
-The ``conda`` directory in the repository has a tool ``configure_compass_env.py``
-that can get you started.
+Compass now uses ``mache.deploy`` for deployment.  In this repository, the
+entry point is ``./deploy.py``.
 
-You will need to run ``./conda/configure_compass_env.py`` each time you check
-out a new branch or create a new worktree with ``git``.  Typically, you will
-*not* need to run this command when you make changes to files within the
-``compass`` python package.  These will automatically be recognized because
-``compass`` is installed into the conda environment in "editable" mode.  You
-*will* need to run the command if you add new code files or data files to the
-package because these don't get added automatically.
-
-Whether you are on one of the :ref:`dev_supported_machines` or an "unknown"
-machine, you will need to specify a path where
-`Miniforge3 <https://github.com/conda-forge/miniforge?tab=readme-ov-file#miniforge3>`_ either has
-already been installed or an empty directory where the script can install it.
-You must have write permission in the base environment (if it exists).
+You will typically rerun ``./deploy.py`` each time you check out a new branch
+or create a new worktree with ``git``.  In most cases, you do not need to
+rerun deployment while you are editing existing files in the ``compass``
+package because ``compass`` is installed in editable mode.
 
 .. note::
 
-    We have found that an existing Miniconda3 installation **does not** always
-    work well for ``compass``, so please start with Miniforge3 instead.
-
-.. note::
-
-    It is *very* important that you not use a shared installation of Miniforge3
-    or Miniconda3 such as the base environment for E3SM-Unified for ``compass``
-    development. Most developers will not have write access to shared
-    environments, meaning that you will get write-permission errors when you
-    try to update the base environment or create the compass development
-    environment.
-
-    For anyone who does have write permission to a shared environment, you
-    would be creating your compass development environment in a shared space,
-    which could cause confusion.
-
-    Please use your own personal installation of Miniforge3 for development,
-    letting ``configure_compass_env.py`` download and install Miniforge3 for
-    you if you don't already have it installed.
+    ``./deploy.py`` expects ``pixi`` to be available either on ``PATH`` or at
+    ``~/.pixi/bin/pixi``.  If your ``pixi`` executable lives somewhere else,
+    pass it explicitly with ``--pixi <path>``.
 
 Supported machines
 ~~~~~~~~~~~~~~~~~~
@@ -87,199 +62,119 @@ If you are on one of the :ref:`dev_supported_machines`, run:
 
 .. code-block:: bash
 
-    ./conda/configure_compass_env.py --conda <base_path_to_install_or_update_conda> \
-        -c <compiler> [--mpi <mpi>] [-m <machine>] [--with_albany] \
-        [--with_petsc]
+    ./deploy.py [--machine <machine>] [--compiler <compiler> ...] \
+        [--mpi <mpi> ...] [--deploy-spack] [--no-spack] \
+        [--prefix <prefix>] [--recreate] [--with-albany]
 
-The ``<base_path_to_install_or_update_conda>`` is typically ``~/miniforge3``.
-This is the location where you would like to install Miniforge3 or where it is
-already installed. If you have limited space in your home directory, you may
-want to give another path.  If you already have it installed, that path will
-be used to add (or update) the compass test environment.
+If you are on a login node, machine detection typically works automatically.
+You can pass ``--machine <machine>`` explicitly if needed.
 
-See the machine under :ref:`dev_supported_machines` for a list of available
-compilers to pass to ``-c``.  If you don't supply a compiler, you will get
-the default one for that machine (usually Intel). Typically, you will want the
-default MPI flavor that compass has defined for each compiler, so you should
-not need to specify which MPI version to use but you may do so with ``--mpi``
-if you need to.
-
-If you are on a login node, the script should automatically recognize what
-machine you are on.  You can supply the machine name with ``-m <machine>`` if
-you run into trouble with the automatic recognition (e.g. if you're setting
-up the environment on a compute node, which is not recommended).
+By default, Compass will reuse existing machine-specific Spack environments
+when the current deployment needs them.  On supported machines, this now means
+per-toolchain library environments together with a shared software
+environment for tool binaries such as ESMF and MOAB.  Use ``--deploy-spack``
+when you want to build or update those Spack environments.  Use ``--no-spack``
+for a pixi-only deployment.
 
 Environments with Albany
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you are working with MALI, you should specify ``--with_albany``.  This will
-ensure that the Albany and Trilinos libraries are included among those built
-with system compilers and MPI libraries, a requirement for many MAlI test
-cases.  Currently, only Albany is only supported with ``gnu`` compilers.
-
-It is safe to add the ``--with_albany`` flag for MPAS-Ocean but it is not
-recommended unless a user wants to be able to run both models with the same
-conda/spack environment.  The main downside is simply that unneeded libraries
-will be linked in to MPAS-Ocean.
-
-Environments with PETSc and Netlib-LAPACK
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-If you are working with MPAS-Ocean test cases that need PETSc and
-Netlib-LAPACK, you should specify ``--with_petsc`` to
-point to Spack environments where these libraries are included.  Appropriate
-environment variables for pointing to these libraries will be build into the
-resulting load script (see below).
+If you are working with MALI, use ``--with-albany`` so the Albany and
+Trilinos libraries are included in the deployed Spack library environment.
+Albany is currently only supported for some machine/compiler/MPI
+combinations, most commonly ``gnu`` builds on supported machines.
 
 Unknown machines
 ~~~~~~~~~~~~~~~~
 
-If your are on an "unknown" machine, typically a Mac or Linux laptop or
-workstation, you will need to specify which flavor of MPI you want to use
-(``mpich`` or ``openmpi``):
+If a machine is not known to ``mache``, add machine support first
+(see :ref:`dev_add_supported_machine`).
 
-.. code-block:: bash
-
-  ./conda/configure_compass_env.py --conda <conda_path> --mpi <mpi>
-
-Again, the ``<conda_path>`` is typically ``~/miniforge3``, and is the location
-where you would like to install Miniforge3 or where it is already installed.
-If you already have it installed, that path will be used to add (or update) the
-compass test environment.
-
-We only support one set of compilers for Mac and Linux (``gnu`` for Linux and
-``clang`` with ``gfortran`` for Mac), so there is no need to specify them.
-See :ref:`dev_other_machines` for more details.
-
-In addition, unknown machines require a config file to be specified when setting
-up the compass test environment.  A config file can be specified using
-``-f <filename>``, where ``<filename>`` is an absolute or relative path to the
-file. More information, including example config files, can be found
-in :ref:`config_files`.
-
-.. note::
-
-    Currently, there is not a good way to build Albany for an unknown machine as
-    part of the compass deployment process, meaning MALI will be limited to the
-    shallow-ice approximation (SIA) solver.
-
-    To get started on HPC systems that aren't supported by Compass, get in touch
-    with the developers.
+For workflows that need custom machine config files, see :ref:`config_files`.
 
 What the script does
 ~~~~~~~~~~~~~~~~~~~~
 
-In addition to installing Miniforge3 and creating the conda environment for
-you, this script will also:
+``./deploy.py`` can:
+
+* create or update a local pixi deployment prefix (``pixi-env`` by default)
 
 * install `Jigsaw <https://github.com/dengwirda/jigsaw>`_ and
-  `Jigsaw-Python <https://github.com/dengwirda/jigsaw-python>`_ from source
-  from the `jigsaw-python` submodule. These tools are used to create many of
-  the meshes used in Compass.
+  `Jigsaw-Python <https://github.com/dengwirda/jigsaw-python>`_ from the
+  ``jigsaw-python`` submodule when needed
 
-* install the ``compass`` package from the local branch in "development" mode
-  so changes you make to the repo are immediately reflected in the conda
-  environment.
+* install the ``compass`` package from the local branch in editable mode so
+  changes you make to the repo are reflected immediately
 
-* with the ``--update_spack`` flag on supported machines, installs or
-  reinstalls a spack environment with various system libraries.  The
-  ``--spack`` flag can be used to point to a location for the spack repo to be
-  checked out.  Without this flag, a default location is used. Spack is used to
-  build several libraries with system compilers and MPI library, including:
-  `ParallelIO <https://github.com/NCAR/ParallelIO>`_ (parallel i/o in NetCDF
-  format) `ESMF <https://earthsystemmodeling.org/>`_ (making mapping files
-  in parallel), `Trilinos <https://trilinos.github.io/>`_,
-  `Albany <https://github.com/sandialabs/Albany>`_,
-  `Netlib-LAPACK <http://www.netlib.org/lapack/>`_ and
-  `PETSc <https://petsc.org/>`_. **Please uses these flags with caution, as
-  they can affect shared environments!**  See :ref:`dev_deploying_spack`.
+* optionally deploy or reuse Spack library environments for selected
+  compiler/MPI toolchains, plus a shared Spack software environment for
+  supporting binaries
 
-* with the ``--with_albany`` flag, creates or uses an existing Spack
-  environment that includes Albany and Trilinos.
+* generate activation scripts (``load_*.sh``)
 
-* with the ``--with_petsc`` flag, creates or uses an
-  existing Spack environment that includes PETSc and Netlib-LAPACK.
+Useful flags
+~~~~~~~~~~~~
 
-* make an activation script called ``load_*.sh``, where the details of the
-  name encode the conda environment name, the machine, compilers, MPI
-  libraries, and optional libraries,  e.g.
-  ``load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh`` (``<version>``
-  is the compass version, ``<machine>`` is the name of the
-  machine, ``<compiler>`` is the compiler name, and ``mpi`` is the MPI flavor).
+``--machine``
+    Set the machine explicitly instead of relying on automatic detection
 
-* optionally (with the ``--check`` flag), run some tests to make sure some of
-  the expected packages are available.
+``--prefix``
+    Choose the deployment prefix for the pixi environment
 
-Optional flags
-~~~~~~~~~~~~~~
+``--compiler``, ``--mpi``
+    Select compiler/MPI combinations, primarily for Spack deployment
 
-``--check``
-    Check to make sure expected commands are present
+``--deploy-spack``
+    Deploy supported Spack library/software environments instead of only
+    reusing existing ones
 
-``--python``
-    Select a particular python version (the default is currently 3.13)
+``--no-spack``
+    Disable all Spack use for this run and rely on pixi dependencies instead
 
-``--env_name``
-    Set the name of the environment (and the prefix for the activation script)
-    to something other than the default (``dev_compass_<version>`` or
-    ``dev_compass_<version>_<mpi>``).
+``--spack-path``
+    Set the Spack checkout path used for deployment
 
-``--update_jigsaw``
-    Used to reinstall Jigsaw and Jigsaw-Python into the conda environment if
-    you have made changes to the Jigsaw (c++) code in the ``jigsaw-python``
-    submodule. You should not need to reinstall Jigsaw-Python if you have made
-    changes only to the python code in ``jigsaw-python``, as the python package
-    is installed in
-    `edit mode <https://setuptools.pypa.io/en/latest/userguide/development_mode.html>`_.
+``--recreate``
+    Recreate deployment artifacts if they already exist
+
+``--bootstrap-only``
+    Update only the bootstrap pixi environment used internally by deployment
+
+``--mache-fork``, ``--mache-branch``, ``--mache-version``
+    Test deployment against a specific mache fork, branch or version
 
 Activating the environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Each time you want to work with compass, you will need to run:
+Each time you want to work with compass, source one of the generated load
+scripts:
 
 .. code-block:: bash
 
-    source ./load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh
+    source ./load_*.sh
 
-This will load the appropriate conda environment, load system modules for
-compilers, MPI and libraries needed to build and run MPAS components, and
-set environment variables needed for MPAS or ``compass``.  It will also set an
-environment variable ``LOAD_COMPASS_ENV`` that points to the activation script.
-``compass`` uses this to make an symlink to the activation script called
-``load_compass_env.sh`` in the work directory.  When the load script is
-executed from the base of the compass repository (i.e., as
-``source ./load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh``),
-it will install the version of the ``compass`` package from that location into the associated
-conda environment.  When the load script is executed from the work
-directory through the symlink, it will activate the associated conda
-environment, but does *not* install the ``compass`` package into the conda
-environment; it is assumed that is already up to date from when the conda
-environment was created or last updated.
+This activates the deployment environment, loads machine modules when
+appropriate, and sets environment variables needed by ``compass`` and MPAS
+components.
 
-It is generally recommended to activate the ``compass`` environment (from
-either the compass repo or via the workdir symlink) from a
-clean environment.  Unexpected behavior may occur if activating a different
-``compass`` environment after having one already activated.
+When you are working inside a suite or test-case work directory, source
+``load_compass_env.sh`` instead.  This is a symlink to the load script you
+used while setting up the work directory.
 
-Once you have sourced the activation script, you can run ``compass`` commands
-anywhere, and it always refers to that branch.  To find out which branch you
-are actually running ``compass`` from, you should run:
+When a generated load script is sourced from the root of the compass
+repository, it reinstalls the version of ``compass`` from that location into
+the active deployment environment.  This is what lets one deployment prefix be
+shared across several branches or worktrees, as long as you re-source the load
+script in the repo you want to work from.
 
-.. code-block:: bash
+The active load script path is exported in ``COMPASS_LOAD_SCRIPT``.  Compass
+still accepts ``LOAD_COMPASS_ENV`` as a legacy fallback while the migration is
+in progress.
 
-    echo $LOAD_COMPASS_ENV
-
-This will give you the path to the load script, which will also tell you where
-the branch is.  If you do not use the worktree approach, you will also need to
-check what branch you are currently on with ``git log``, ``git branch`` or
-a similar command.
-
-If you wish to work with another compiler, simply rerun the configure script with a new
-compiler name and an activation script will be produced.  You can then source
-either activation script to get the same conda environment but with different
-compilers and related modules.  Make sure you are careful to set up compass by
-pointing to a version of the MPAS model that was compiled with the correct
-compiler.
+If you wish to work with another compiler or MPI library, rerun
+``./deploy.py`` with the desired options so the corresponding load script is
+generated or refreshed.  Make sure you build MPAS with the same compiler and
+MPI combination as the load script you plan to use.
 
 Switching between different compass environments
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -288,50 +183,43 @@ Many developers are switching between different ``compass`` branches.
 We have 2 main workflows for doing this: checking out different branches
 in the same directory (with ``git checkout``) or creating new directories for
 each branch (with ``git worktree``).  Either way, you need to be careful that
-the version of the ``compass`` package that is installed in the conda
-environment you are using is the one you want.  But how to handle it
+the version of the ``compass`` package that is installed in the environment
+you are using is the one you want.  But how to handle it
 differs slightly between these workflows.
 
 If you are developing or using multiple ``compass`` branches in the same
 directory (switching between them using ``git checkout``), you will need
-to make sure you update your ``compass`` environment after changing
-branches.  Often the branches you're developing will make use of the
-same conda environment, because they are using the same
-``compass`` version (so the dependencies aren't changing).  The same
-conda environment (e.g. ``dev_compass_<version>``) can safely be used
-with multiple branches if you explicitly reinstall the ``compass`` package
-you want to use into the conda environment *after* moving to a new branch.
-You can do this by simply re-executing
-``source ./load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh``
-from the *root of the repo* before proceeding.
+to make sure you update your environment after changing branches.  If
+dependencies are unchanged, you can usually just re-source a load script in
+the branch root:
+
+``source ./load_*.sh``
 
 Similarly, if you are developing or using multiple ``compass`` branches
 but you use a different directory for each
 (creating the directories with ``git worktree``),
 you will need to make sure the version of the ``compass`` package
-in your conda environment is the one you want.
+in your active environment is the one you want.
 If your branches use the same ``compass`` version (so the dependencies
-are the same), you can use the same conda environment
-(e.g. ``dev_compass_<version>``) for all of them.  But you will only
-be able to test one of them at a time.  You will tell the conda environment
-which branch to use by running
-``source ./load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh``
+are the same), you can use the same deployment prefix for all of them.  You
+will tell the environment which branch to use by running
+``source ./load_*.sh``
 from the *root of the directory (worktree) you want to work with* before
 proceeding.
 
-In both of these workflows, you can modify the ``compass`` code and the conda
+In both of these workflows, you can modify the ``compass`` code and the
 environment will notice the changes as you make them.  However, if you have
 added or removed any files during your development, you need to source the
 load script again:
-``source ./load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh``
+``source ./load_*.sh``
 in the root of the repo or worktree so that the added or removed files will be
-accounted for in the conda environment.
+accounted for in the environment.
 
 If you know that ``compass`` has different dependencies
 in a branch or worktree you are working on compared to a previous branch
 you have worked with (or if you aren't sure), it is safest to not just reinstall
-the ``compass`` package but also to check the dependencies by re-running:
-``./conda/configure_compass_env.py``  with the same arguments as above.
+the ``compass`` package but also to check the dependencies by re-running
+``./deploy.py`` with the same arguments as above.
 This will also reinstall the ``compass`` package from the current directory.
 The activation script includes a check to see if the version of compass used
 to produce the load script is the same as the version of compass in the
@@ -347,25 +235,18 @@ and the environment is not activated:
     Your code is version:
     __version__ = '1.2.0-alpha.7'
 
-    You need to run ./conda/configure_compass_env.py to update your conda
-    environment and load script.
+    You need to run ./deploy.py to update your environment and load script.
 
-If you need more than one conda environment (e.g. because you are testing
-multiple branches at the same time), you can choose your own name
-for the conda environment.  Typically, this might be something related to the
-name of the branch you are developing.  This can be done with the
-``--env-name`` argument to ``./conda/configure_compass_env.py``.  You
-can reuse the same custom-named environment across multiple branches
-if that is useful.  Just remember to reinstall ``compass`` each time you
-switch branches.
+If you need more than one environment (e.g. because you are testing multiple
+branches at the same time), use different deployment prefixes with
+``./deploy.py --prefix <path>``.
 
 .. note::
 
-    If you switch branches and *do not* remember to recreate the conda
-    environment (``./conda/configure_compass_env.py``) or at least source the
-    activation script (``load_dev_compass*.sh``), you are likely to end up with
-    an incorrect and possibly unusable ``compass`` package in your conda
-    environment.
+    If you switch branches and *do not* remember to recreate the environment
+    (``./deploy.py``) or at least source the activation script
+    (``load_*.sh``), you are likely to end up with an incorrect and possibly
+    unusable ``compass`` package in your environment.
 
     In general, if one wishes to switch between environments created for
     different compass branches or applications, the best practice is to end
@@ -377,18 +258,18 @@ switch branches.
 
 .. note::
 
-    With the conda environment activated, you can switch branches and update
+    With the environment activated, you can switch branches and update
     just the ``compass`` package with:
 
     .. code-block:: bash
 
         python -m pip install --no-deps --no-build-isolation -e .
 
-    The activation script will do this automatically when you source it in
-    the root directory of your compass branch.  The activation script will also
+    The activation script will do this automatically when you source it in the
+    root directory of your compass branch.  The activation script will also
     check if the current compass version matches the one used to create the
     activation script, thus catching situations where the dependencies are out
-    of date and the configure script needs to be rerun.
+    of date and ``./deploy.py`` needs to be rerun.
 
 Troubleshooting
 ~~~~~~~~~~~~~~~
@@ -398,60 +279,65 @@ can run:
 
 .. code-block:: bash
 
-  ./conda/configure_compass_env.py --conda <conda_path> -c <compiler> --recreate
+    ./deploy.py [--machine <machine>] [--compiler <compiler> ...] \
+        [--mpi <mpi> ...] [--deploy-spack] [--no-spack] --recreate
 
-The ``--recreate`` flag will delete the conda environment and create it from
-scratch.  This takes just a little extra time.
+The ``--recreate`` flag will delete the deployment artifacts and create them
+from scratch.  This takes just a little extra time.
 
 .. _dev_creating_only_env:
 
 Creating/updating only the compass environment
 ----------------------------------------------
 
-For some workflows (e.g. for MALI development with the Albany library when the
-MALI build environment has been created outside of ``compass``, for example,
-on an unsupported machine), you may only want to create the conda environment
-and not build PIO, ESMF or other packages with system compilers, or
-include any system modules or environment variables in your activation script.
-In such cases, run with the ``--env_only`` flag:
+For some workflows, you may only want to create the pixi environment and not
+build or reuse Spack environments.  In such cases, run:
 
 .. code-block:: bash
 
-    ./conda/configure_compass_env.py --conda <conda_path> --env_only
+    ./deploy.py --no-spack
 
-Each time you want to work with compass, you will need to run:
+When ``--no-spack`` is not used, omitting ``--deploy-spack`` still means
+Compass will try to reuse any required pre-existing Spack environments.
+
+To update only the bootstrap environment used internally by deployment, run:
 
 .. code-block:: bash
 
-    source ./load_dev_compass_<version>.sh
+    ./deploy.py --bootstrap-only
 
-This will load the appropriate conda environment for ``compass``.  It will also
-set an environment variable ``LOAD_COMPASS_ENV`` that points to the activation
-script. ``compass`` uses this to make a symlink to the activation script
-called ``load_compass_env.sh`` in the work directory.
+Each time you want to work with compass, source the generated load script:
+
+.. code-block:: bash
+
+    source ./load_*.sh
+
+This will load the appropriate deployment environment for ``compass``.  It
+will also set an environment variable ``COMPASS_LOAD_SCRIPT`` that points to
+the activation script.  ``compass`` uses this to make a symlink to the
+activation script called ``load_compass_env.sh`` in the work directory.
 
 If you switch to another branch, you will need to rerun:
 
 .. code-block:: bash
 
-    ./conda/configure_compass_env.py --conda <conda_path> --env_only
+    ./deploy.py
 
-to make sure dependencies are up to date and the ``compass`` package points
-to the current directory.
+to make sure dependencies are up to date and the ``compass`` package points to
+the current directory.
 
 .. note::
 
-    With the conda environment activated, you can switch branches and update
+    With the environment activated, you can switch branches and update
     just the ``compass`` package with:
 
     .. code-block:: bash
 
         python -m pip install --no-deps --no-build-isolation -e .
 
-    This will be substantially faster than rerunning
-    ``./conda/configure_compass_env.py ...`` but at the risk that dependencies are
-    not up-to-date.  Since dependencies change fairly rarely, this will usually
-    be safe.
+    This will be substantially faster than rerunning ``./deploy.py ...`` but
+    at the risk that dependencies are not up to date.  Since dependencies
+    change fairly rarely, this will usually be safe.
 
 
 .. _dev_build_mpas:
@@ -464,7 +350,7 @@ compile MPAS-Ocean:
 
 .. code-block:: bash
 
-    source ./load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh
+    source ./load_*.sh
     cd E3SM-Project/components/mpas-ocean/
     make <mpas_make_target>
 
@@ -478,7 +364,7 @@ MPAS-Ocean, i.e.:
 
 .. code-block:: bash
 
-    source ./load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh
+    source ./load_*.sh
     cd MALI-Dev/components/mpas-albany-landice
     make <mpas_make_target>
 
@@ -539,10 +425,9 @@ case), log onto a compute node (if on an HPC machine) and run:
     source load_compass_env.sh
     compass run
 
-The first command will source the same activation script
-(``load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh``) that you used to set
-up the suite or test case (``load_compass_env.sh`` is just a symlink to that
-activation script you sourced before setting up the suite or test case).
+The first command will source the same activation script that you used to set
+up the suite or test case (``load_compass_env.sh`` is just a symlink to the
+load script you sourced before setting up the suite or test case).
 
 .. _dev_compass_style:
 
@@ -562,9 +447,9 @@ for some tips on checking code style in PyCharm.
 Here's the manual way to check for PEP8 compliance.
 
 `Flake8 <https://flake8.pycqa.org/en/latest/>`_ is a PEP8 checker that is
-included in the ``compass`` conda environment. For each of the files you have
-modified, you can run the Flake8 checker to see a list of all instances of
-non-compliance in that file.
+included in the ``compass`` development environment. For each of the files you
+have modified, you can run the Flake8 checker to see a list of all instances
+of non-compliance in that file.
 
 .. code-block:: bash
 

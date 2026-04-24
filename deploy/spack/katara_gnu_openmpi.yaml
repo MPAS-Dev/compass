@@ -1,37 +1,41 @@
+{%- set compiler = "gcc@13.3.0" %}
+{%- set mpi = "openmpi@4.1.6" %}
 spack:
   specs:
-  - gcc
-  - openmpi
-{{ specs }}
+  - {{ compiler }}
+  - {{ mpi }}%{{ compiler }}
+{%- for spec in specs %}
+  - "{{ spec }}%{{ compiler }}"
+{%- endfor %}
   concretizer:
     unify: true
   packages:
     all:
-      compiler: [gcc@9.4.0]
+      compiler: [{{ compiler }}]
       providers:
-        mpi: [openmpi]
-    curl:
-      externals:
-      - spec:  curl@7.68.0
-        prefix: /usr
-      buildable: false
+        mpi: [{{ mpi }}%{{ compiler }}]
     gcc:
       externals:
-      - spec: gcc@9.4.0
+      - spec: {{ compiler }}
+        prefix: /usr
+      buildable: false
+    openmpi:
+      externals:
+      - spec: {{ mpi }}%{{ compiler }}
         prefix: /usr
       buildable: false
   config:
     install_missing_compilers: false
   compilers:
   - compiler:
-      spec: gcc@9.4.0
+      spec: {{ compiler }}
       paths:
         cc: /usr/bin/gcc
         cxx: /usr/bin/g++
         f77: /usr/bin/gfortran
         fc: /usr/bin/gfortran
       flags: {}
-      operating_system: ubuntu20.04
+      operating_system: ubuntu24.04
       target: x86_64
       modules: []
       environment: {}

@@ -6,9 +6,9 @@ from importlib import resources
 import netCDF4
 import yaml
 
-from compass.io import symlink
 from compass.job import write_job_script
 from compass.landice.extrapolate import extrapolate_variable
+from compass.load_script import symlink_load_script
 from compass.model import make_graph_file, run_model
 from compass.step import Step
 
@@ -262,14 +262,7 @@ class EnsembleMember(Step):
                          target_cores=self.ntasks, min_cores=self.min_tasks,
                          work_dir=self.work_dir)
 
-        # COMPASS does not create symlinks for the load script in step dirs,
-        # so use the standard approach for creating that symlink in each
-        # step dir.
-        if 'LOAD_COMPASS_ENV' in os.environ:
-            script_filename = os.environ['LOAD_COMPASS_ENV']
-            # make a symlink to the script for loading the compass conda env.
-            symlink(script_filename, os.path.join(self.work_dir,
-                                                  'load_compass_env.sh'))
+        symlink_load_script(self.work_dir)
 
         # save run info for analysis/viz
         with open(os.path.join(self.work_dir, 'run_info.cfg'), 'w') \
