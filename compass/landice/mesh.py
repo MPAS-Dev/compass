@@ -224,7 +224,7 @@ def clip_mesh_to_bounding_box(mask_ds, base_ds, bounding_box):
     return mask_ds
 
 
-def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
+def set_cell_width(self, section_name, thk, bed, vx=None, vy=None,
                    dist_to_edge=None, dist_to_grounding_line=None,
                    dist_to_coast=None,
                    flood_fill_iStart=None, flood_fill_jStart=None):
