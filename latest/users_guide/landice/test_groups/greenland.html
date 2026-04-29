@@ -175,9 +175,6 @@ The other test cases do not use config options.</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for high_res_mesh test case</span>
 <span class="k">[mesh]</span>
 
-<span class="c1"># path to directory containing BedMachine and Measures datasets</span>
-<span class="na">data_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/fanssie/standard_datasets/GIS_datasets/</span>
-
 <span class="c1"># number of levels in the mesh</span>
 <span class="na">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span>
 
@@ -192,13 +189,13 @@ The other test cases do not use config options.</p>
 <span class="c1"># distance from ice margin to cull (km).</span>
 <span class="c1"># Set to a value &lt;= 0 if you do not want</span>
 <span class="c1"># to cull based on distance from margin.</span>
-<span class="na">cull_distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span>
+<span class="na">cull_distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-100.0</span>
 
 <span class="c1"># mesh density parameters</span>
 <span class="c1"># minimum cell spacing (meters)</span>
-<span class="na">min_spac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3.e3</span>
+<span class="na">min_spac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4.e3</span>
 <span class="c1"># maximum cell spacing (meters)</span>
-<span class="na">max_spac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">30.e3</span>
+<span class="na">max_spac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">40.e3</span>
 <span class="c1"># log10 of max speed for cell spacing</span>
 <span class="na">high_log_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2.5</span>
 <span class="c1"># log10 of min speed for cell spacing</span>
@@ -207,6 +204,10 @@ The other test cases do not use config options.</p>
 <span class="na">high_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e5</span>
 <span class="c1"># distance within which cell spacing = min_spac</span>
 <span class="na">low_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e4</span>
+<span class="c1"># distance at which cell spacing in ocean = max_spac</span>
+<span class="na">high_dist_coast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">16.e3</span>
+<span class="c1"># distance within which cell spacing in ocean = min_spac</span>
+<span class="na">low_dist_coast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8.e3</span>
 <span class="c1"># distance at which bed topography has no effect</span>
 <span class="na">high_dist_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e5</span>
 <span class="c1"># distance within which bed topography has maximum effect</span>
@@ -220,6 +221,7 @@ The other test cases do not use config options.</p>
 <span class="na">use_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
 <span class="na">use_dist_to_grounding_line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
 <span class="na">use_dist_to_edge</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="na">use_dist_to_coast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
 <span class="na">use_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
 
 <span class="k">[greenland]</span>
@@ -282,8 +284,8 @@ performed separately and is not part of this test case.</p>
 datasets to the Greenland mesh. This takes care of the peculiarities of
 the current gridded compilation dataset (greenland_1km_2024_01_29.epsg3413.icesheetonly.nc),
 as well as using conservative remapping directly from the high-resolution
-BedMachine v5 and MeASUReS 2006-2010 velocity datasets. There is a fairly
-heavy degree of pre-processing done to get the BedMachine and MeASUReS
+BedMachine v6 and MEaSUREs 2006-2010 velocity datasets. There is a fairly
+heavy degree of pre-processing done to get the BedMachine and MEaSUREs
 datasets ready to be used here. The pre-processing includes renaming
 variables, setting reasonable _FillValue and missing_value attributes
 extrapolating fields to avoid interpolation ramps at ice margins,
@@ -294,6 +296,10 @@ that pre-processing could be integrated into a new step in COMPASS, or
 the processed data files could be added to the server on Anvil and downloaded
 as needed. However, until then, this test case provides a reproducible workflow
 for setting up Greenland meshes at varying resolutions.</p>
+<p>An alternative config file, <code class="docutils literal notranslate"><span class="pre">mesh_gen_1to10km.cfg</span></code>, is provided for
+creating a finer 1–10km mesh. It uses <code class="docutils literal notranslate"><span class="pre">use_dist_to_coast</span> <span class="pre">=</span> <span class="pre">True</span></code> to
+refine ocean resolution near the coast and sets <code class="docutils literal notranslate"><span class="pre">cull_distance</span> <span class="pre">=</span> <span class="pre">-100</span></code>
+to retain the open ocean in the mesh domain.</p>
 <p>The BedMachine and MEaSUREs interpolation is optional. If <code class="docutils literal notranslate"><span class="pre">data_path</span></code> or the
 corresponding filename in <code class="docutils literal notranslate"><span class="pre">[greenland]</span></code> is unset (empty or <code class="docutils literal notranslate"><span class="pre">None</span></code>), that
 dataset interpolation step is skipped. The default config values include both

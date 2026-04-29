@@ -222,7 +222,7 @@ data.  In the future, a complete workflow from source datasets may
 replace this hybrid method.</p>
 <p>Once the mesh is created, scrip files and the associated weights files
 are created for the mesh and observational data sets. Then, ice geometry and
-velocity observations are conservatively remapped from BedMachine v5 and
+velocity observations are conservatively remapped from BedMachine v6 and
 MEaSUREs 2006-2010 data sets. Finally, there is some cleanup to set large
 velocity uncertainties outside the ice mask, check the sign of the basal heat
 flux, and set reasonable values for dH/dt and its uncertainty.</p>
@@ -231,6 +231,9 @@ flux, and set reasonable values for dH/dt and its uncertainty.</p>
 is unset (empty or <code class="docutils literal notranslate"><span class="pre">None</span></code>), that dataset interpolation is skipped. The
 default config includes both datasets, so interpolation is enabled by default.
 The base-mesh projection in <code class="docutils literal notranslate"><span class="pre">build_mali_mesh()</span></code> is fixed for this test case.</p>
+<p>An alternative config file, <code class="docutils literal notranslate"><span class="pre">mesh_gen_1to10km.cfg</span></code>, creates a finer 1–10km
+mesh using <code class="docutils literal notranslate"><span class="pre">use_dist_to_coast</span> <span class="pre">=</span> <span class="pre">True</span></code> to refine ocean resolution near the
+coast and a negative <code class="docutils literal notranslate"><span class="pre">cull_distance</span></code> to retain the open ocean.</p>
 </section>
 </section>
 

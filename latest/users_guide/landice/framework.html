@@ -129,9 +129,26 @@ from a similar script in MPAS-Tools.</p>
 </section>
 <section id="mesh">
 <h2>mesh<a class="headerlink" href="#mesh" title="Link to this heading"></a></h2>
-<p>The following config options should be defined for all <code class="docutils literal notranslate"><span class="pre">mesh_gen</span></code> test cases (although
-not necessarily with the same values shown here, which are the defaults for the 1–10km
-Humboldt mesh):</p>
+<p>The config options below should be defined for all <code class="docutils literal notranslate"><span class="pre">mesh_gen</span></code> test cases
+(although not necessarily with the same values shown here, which are the
+defaults for the 1–10km Humboldt mesh).</p>
+<p>A core set of options is <strong>always required</strong>: <code class="docutils literal notranslate"><span class="pre">levels</span></code>,
+<code class="docutils literal notranslate"><span class="pre">x_min</span></code>/<code class="docutils literal notranslate"><span class="pre">x_max</span></code>/<code class="docutils literal notranslate"><span class="pre">y_min</span></code>/<code class="docutils literal notranslate"><span class="pre">y_max</span></code>, <code class="docutils literal notranslate"><span class="pre">cull_distance</span></code>, <code class="docutils literal notranslate"><span class="pre">min_spac</span></code>,
+<code class="docutils literal notranslate"><span class="pre">max_spac</span></code>, and the five density-function toggles <code class="docutils literal notranslate"><span class="pre">use_speed</span></code>,
+<code class="docutils literal notranslate"><span class="pre">use_dist_to_edge</span></code>, <code class="docutils literal notranslate"><span class="pre">use_dist_to_grounding_line</span></code>, <code class="docutils literal notranslate"><span class="pre">use_dist_to_coast</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">use_bed</span></code>.</p>
+<p>The remaining mesh-density parameters are <strong>only required when their
+corresponding toggle is enabled</strong>, so configs that disable a density function
+may omit the associated options entirely:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">use_speed</span> <span class="pre">=</span> <span class="pre">True</span></code> requires <code class="docutils literal notranslate"><span class="pre">high_log_speed</span></code> and <code class="docutils literal notranslate"><span class="pre">low_log_speed</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">use_dist_to_edge</span> <span class="pre">=</span> <span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">use_dist_to_grounding_line</span> <span class="pre">=</span> <span class="pre">True</span></code>
+requires <code class="docutils literal notranslate"><span class="pre">high_dist</span></code> and <code class="docutils literal notranslate"><span class="pre">low_dist</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">use_dist_to_coast</span> <span class="pre">=</span> <span class="pre">True</span></code> requires <code class="docutils literal notranslate"><span class="pre">high_dist_coast</span></code> and
+<code class="docutils literal notranslate"><span class="pre">low_dist_coast</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">use_bed</span> <span class="pre">=</span> <span class="pre">True</span></code> requires <code class="docutils literal notranslate"><span class="pre">high_dist_bed</span></code>, <code class="docutils literal notranslate"><span class="pre">low_dist_bed</span></code>,
+<code class="docutils literal notranslate"><span class="pre">high_bed</span></code>, and <code class="docutils literal notranslate"><span class="pre">low_bed</span></code>.</p></li>
+</ul>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for humboldt test cases</span>
 <span class="k">[mesh]</span>
 
@@ -156,16 +173,35 @@ Humboldt mesh):</p>
 <span class="na">min_spac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e3</span>
 <span class="c1"># maximum cell spacing (meters)</span>
 <span class="na">max_spac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e4</span>
+
+<span class="c1"># mesh density functions</span>
+<span class="na">use_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="na">use_dist_to_grounding_line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+<span class="na">use_dist_to_edge</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="c1"># When use_dist_to_coast = True, also set high_dist_coast and low_dist_coast</span>
+<span class="na">use_dist_to_coast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+<span class="na">use_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+
+<span class="c1"># Required when use_speed = True</span>
 <span class="c1"># log10 of max speed (m/yr) for cell spacing</span>
 <span class="na">high_log_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2.5</span>
 <span class="c1"># log10 of min speed (m/yr) for cell spacing</span>
 <span class="na">low_log_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.75</span>
+
+<span class="c1"># Required when use_dist_to_edge = True or</span>
+<span class="c1"># use_dist_to_grounding_line = True</span>
 <span class="c1"># distance at which cell spacing = max_spac (meters)</span>
 <span class="na">high_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e5</span>
 <span class="c1"># distance within which cell spacing = min_spac (meters)</span>
 <span class="na">low_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e4</span>
 
-<span class="c1"># These *_bed settings are only applied when use_bed = True.</span>
+<span class="c1"># Required when use_dist_to_coast = True</span>
+<span class="c1"># distance at which cell spacing in ocean = max_spac (meters)</span>
+<span class="na">high_dist_coast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">16.e3</span>
+<span class="c1"># distance within which cell spacing in ocean = min_spac (meters)</span>
+<span class="na">low_dist_coast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8.e3</span>
+
+<span class="c1"># Required when use_bed = True</span>
 <span class="c1"># distance at which bed topography has no effect</span>
 <span class="na">high_dist_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e5</span>
 <span class="c1"># distance within which bed topography has maximum effect</span>
@@ -174,12 +210,6 @@ Humboldt mesh):</p>
 <span class="na">low_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">50.0</span>
 <span class="c1"># Bed elev above which cell spacing is maximized</span>
 <span class="na">high_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100.0</span>
-
-<span class="c1"># mesh density functions</span>
-<span class="na">use_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
-<span class="na">use_dist_to_grounding_line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
-<span class="na">use_dist_to_edge</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
-<span class="na">use_bed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
 </pre></div>
 </div>
 </section>
