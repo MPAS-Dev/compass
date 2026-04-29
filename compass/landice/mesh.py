@@ -224,8 +224,9 @@ def clip_mesh_to_bounding_box(mask_ds, base_ds, bounding_box):
     return mask_ds
 
 
-def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
+def set_cell_width(self, section_name, thk, bed, vx=None, vy=None,
                    dist_to_edge=None, dist_to_grounding_line=None,
+                   dist_to_coast=None,
                    flood_fill_iStart=None, flood_fill_jStart=None):
     """
     Set cell widths based on settings in config file to pass to
@@ -238,9 +239,10 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
         following options to be set in the given config section:
         ``levels``, ``x_min``, ``x_max``, ``y_min``, ``y_max``,
         ``min_spac``, ``max_spac``, ``high_log_speed``, ``low_log_speed``,
-        ``high_dist``, ``low_dist``, ``high_dist_bed``, ``low_dist_bed``,
-        ``high_bed``, ``low_bed``, ``cull_distance``, ``use_speed``,
-        ``use_dist_to_edge``, ``use_dist_to_grounding_line``, and ``use_bed``.
+        ``high_dist``, ``low_dist``, ``high_dist_coast``, ``low_dist_coast``,
+        ``high_dist_bed``, ``low_dist_bed``, ``high_bed``, ``low_bed``,
+        ``cull_distance``, ``use_speed``, ``use_dist_to_edge``,
+        ``use_dist_to_grounding_line``, ``use_dist_to_coast``, and ``use_bed``.
         See the Land-Ice Framework section of the Users or Developers guide
         for more information about these options and their uses.
 
@@ -272,6 +274,11 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
         function.  Can be set to ``None`` if
         ``use_dist_to_grounding_line == False`` in config file.
 
+    dist_to_coast : numpy.ndarray, optional
+        Distance from each cell to coast, calculated in separate
+        function.  Can be set to ``None`` if
+        ``use_dist_to_coast == False`` in config file.
+
     flood_fill_iStart : int, optional
         x-index location to start flood-fill when using bed topography
 
@@ -291,21 +298,19 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
     # Get config inputs for cell spacing functions
     min_spac = section.getfloat('min_spac')
     max_spac = section.getfloat('max_spac')
-    high_log_speed = section.getfloat('high_log_speed')
-    low_log_speed = section.getfloat('low_log_speed')
-    high_dist = section.getfloat('high_dist')
-    low_dist = section.getfloat('low_dist')
-    high_dist_bed = section.getfloat('high_dist_bed')
-    low_dist_bed = section.getfloat('low_dist_bed')
-    low_bed = section.getfloat('low_bed')
-    high_bed = section.getfloat('high_bed')
-
     # convert km to m
     cull_distance = section.getfloat('cull_distance') * 1.e3
+
+    land_mask = np.logical_and(thk == 0.0, bed >= 0.)
+    ocean_mask = np.logical_and(thk == 0.0, bed < 0.)
 
     # Cell spacing function based on union of masks
     if section.get('use_bed') == 'True':
         logger.info('Using bed elevation for spacing.')
+        high_dist_bed = section.getfloat('high_dist_bed')
+        low_dist_bed = section.getfloat('low_dist_bed')
+        low_bed = section.getfloat('low_bed')
+        high_bed = section.getfloat('high_bed')
         if flood_fill_iStart is not None and flood_fill_jStart is not None:
             logger.info('calling gridded_flood_fill to find ' +
                         'bedTopography <= low_bed connected to the ocean.')
@@ -355,6 +360,8 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
     # Make cell spacing function mapping from log speed to cell spacing
     if section.get('use_speed') == 'True':
         logger.info('Using speed for cell spacing')
+        high_log_speed = section.getfloat('high_log_speed')
+        low_log_speed = section.getfloat('low_log_speed')
         speed = (vx ** 2 + vy ** 2) ** 0.5
         lspd = np.log10(speed)
         spacing_speed = np.interp(lspd, [low_log_speed, high_log_speed],
@@ -372,33 +379,53 @@ def set_cell_width(self, section_name, thk, bed=None, vx=None, vy=None,
                     f'dataset with missing velocity values. Setting '
                     f'velocity-based spacing to maximum value.')
 
-        spacing_speed[thk == 0.0] = min_spac
     else:
         spacing_speed = max_spac * np.ones_like(thk)
 
     # Make cell spacing function mapping from distance to ice edge
     if section.get('use_dist_to_edge') == 'True':
         logger.info('Using distance to ice edge for cell spacing')
+        high_dist = section.getfloat('high_dist')
+        low_dist = section.getfloat('low_dist')
         spacing_edge = np.interp(dist_to_edge, [low_dist, high_dist],
                                  [min_spac, max_spac], left=min_spac,
                                  right=max_spac)
-        spacing_edge[thk == 0.0] = min_spac
     else:
         spacing_edge = max_spac * np.ones_like(thk)
 
     # Make cell spacing function mapping from distance to grounding line
     if section.get('use_dist_to_grounding_line') == 'True':
         logger.info('Using distance to grounding line for cell spacing')
+        high_dist = section.getfloat('high_dist')
+        low_dist = section.getfloat('low_dist')
         spacing_gl = np.interp(dist_to_grounding_line, [low_dist, high_dist],
                                [min_spac, max_spac], left=min_spac,
                                right=max_spac)
-        spacing_gl[thk == 0.0] = min_spac
     else:
         spacing_gl = max_spac * np.ones_like(thk)
 
+    # Make cell spacing function mapping from distance to coast
+    if section.get('use_dist_to_coast') == 'True':
+        logger.info('Using distance to coast for cell spacing')
+        high_dist_coast = section.getfloat('high_dist_coast')
+        low_dist_coast = section.getfloat('low_dist_coast')
+        spacing_coast = np.interp(dist_to_coast,
+                                  [low_dist_coast, high_dist_coast],
+                                  [min_spac, max_spac], left=min_spac,
+                                  right=max_spac)
+        # distance from coast is only used to set spacing in ocean
+        spacing_coast[bed > 0.] = max_spac
+    else:
+        spacing_coast = max_spac * np.ones_like(thk)
+        # If not using distance from coast, use finest spacing
+        # in the ocean as well as ice-free land.
+        spacing_coast[land_mask] = min_spac
+        spacing_coast[ocean_mask] = min_spac
+
     # Merge cell spacing methods
     cell_width = max_spac * np.ones_like(thk)
-    for width in [spacing_bed, spacing_speed, spacing_edge, spacing_gl]:
+    for width in [spacing_bed, spacing_speed, spacing_edge,
+                  spacing_gl, spacing_coast]:
         cell_width = np.minimum(cell_width, width)
 
     # Set large cell_width in areas we are going to cull anyway (speeds up
@@ -420,8 +447,7 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y, section_name,
     """
     Calculate distance from each point to ice edge and grounding line,
     to be used in mesh density functions in
-    :py:func:`compass.landice.mesh.set_cell_width()`. In future development,
-    this should be updated to use a faster package such as ``scikit-fmm``.
+    :py:func:`compass.landice.mesh.set_cell_width()`.
 
     Parameters
     ----------
@@ -465,6 +491,11 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y, section_name,
 
     dist_to_grounding_line : numpy.ndarray
         Distance from each cell to the grounding line
+
+    dist_to_coast : numpy.ndarray
+        Distance from each cell to the coast, defined as the last cell
+        adjacent to ocean (ice free with bed < 0) whether ice-filled
+        or ice-free.
     """
 
     logger = self.logger
@@ -495,12 +526,14 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y, section_name,
     ])
 
     ice_mask = thk > 0.0
+    ocean_mask = np.logical_and(thk == 0., topg < 0.)
     grounded_mask = np.logical_and(thk > (-1028.0 / 910.0 * topg),
                                    ice_mask)
     float_mask = np.logical_and(thk < (-1028.0 / 910.0 * topg),
                                 ice_mask)
     margin_mask = np.zeros(thk.shape, dtype=bool)
     grounding_line_mask = np.zeros(thk.shape, dtype=bool)
+    coast_mask = np.zeros(thk.shape, dtype=bool)
 
     for n in neighbors:
         shifted_ice = np.roll(ice_mask, n, axis=[0, 1])
@@ -512,17 +545,24 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y, section_name,
         grounding_line_mask = np.logical_or(grounding_line_mask,
                                             not_grounded_mask)
 
+        shifted_ocean = np.roll(ocean_mask, n, axis=[0, 1])
+        coast_mask = np.logical_or(coast_mask, shifted_ocean)
+
     # where ice exists and neighbors non-ice locations
     margin_mask = np.logical_and(margin_mask, ice_mask)
     # where grounded ice exists and neighbors floating ice
     grounding_line_mask = np.logical_and(grounding_line_mask, grounded_mask)
+    # where non-ocean exists and neighbors ocean locations
+    coast_mask = np.logical_and(coast_mask, np.logical_not(ocean_mask))
 
-    fig, ax = plt.subplots(1, 2, sharex=True, sharey=True, figsize=(6, 3))
+    fig, ax = plt.subplots(1, 3, sharex=True, sharey=True, figsize=(9, 3))
     margin_plot = ax[0].pcolor(margin_mask)
     gl_plot = ax[1].pcolor(grounding_line_mask)  # noqa F841
+    coast_plot = ax[2].pcolor(coast_mask)  # noqa F841
     ax[0].set_title("margin mask")
     ax[1].set_title("grounding line mask")
-    plt.colorbar(margin_plot, ax=[ax[0], ax[1]], shrink=0.7)
+    ax[2].set_title("coast mask")
+    plt.colorbar(margin_plot, ax=ax, shrink=0.7)
     [ax.set_aspect('equal') for ax in ax]
     fig.savefig("masks.png", dpi=400)
 
@@ -534,11 +574,15 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y, section_name,
     dist_to_grounding_line = distance_transform_edt(
         ~grounding_line_mask, sampling=(dy, dx)
     )
+    dist_to_coast = distance_transform_edt(
+        ~coast_mask, sampling=(dy, dx)
+    )
 
     # Limit maximum distance
     max_dist = float(np.ceil(window_size / max(dx, dy))) * max(dx, dy)
     dist_to_edge = np.minimum(dist_to_edge, max_dist)
     dist_to_grounding_line = np.minimum(dist_to_grounding_line, max_dist)
+    dist_to_coast = np.minimum(dist_to_coast, max_dist)
 
     toc = time.time()
     logger.info(
@@ -546,7 +590,7 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y, section_name,
         f'{toc - tic:0.2f} seconds'
     )
 
-    return dist_to_edge, dist_to_grounding_line
+    return dist_to_edge, dist_to_grounding_line, dist_to_coast
 
 
 def build_cell_width(self, section_name, gridded_dataset,
@@ -628,7 +672,7 @@ def build_cell_width(self, section_name, gridded_dataset,
 
     # Calculate distance from each grid point to ice edge
     # and grounding line, for use in cell spacing functions.
-    distToEdge, distToGL = get_dist_to_edge_and_gl(
+    distToEdge, distToGL, distToCoast = get_dist_to_edge_and_gl(
         self, thk, topg, x1,
         y1, section_name=section_name)
 
@@ -637,6 +681,7 @@ def build_cell_width(self, section_name, gridded_dataset,
                                 thk=thk, bed=topg, vx=vx, vy=vy,
                                 dist_to_edge=distToEdge,
                                 dist_to_grounding_line=distToGL,
+                                dist_to_coast=distToCoast,
                                 flood_fill_iStart=flood_fill_start[0],
                                 flood_fill_jStart=flood_fill_start[1])
 
@@ -683,9 +728,10 @@ def build_mali_mesh(self, cell_width, x1, y1, geom_points,
         following options to be set in the given config section:
         ``levels``, ``x_min``, ``x_max``, ``y_min``, ``y_max``,
         ``min_spac``, ``max_spac``, ``high_log_speed``, ``low_log_speed``,
-        ``high_dist``, ``low_dist``, ``high_dist_bed``, ``low_dist_bed``,
-        ``high_bed``, ``low_bed``, ``cull_distance``, ``use_speed``,
-        ``use_dist_to_edge``, ``use_dist_to_grounding_line``, and ``use_bed``.
+        ``high_dist``, ``low_dist``, ``high_dist_coast``, ``low_dist_coast``,
+        ``high_dist_bed``, ``low_dist_bed``, ``high_bed``, ``low_bed``,
+        ``cull_distance``, ``use_speed``, ``use_dist_to_edge``,
+        ``use_dist_to_grounding_line``, ``use_dist_to_coast``, and ``use_bed``.
         See the Land-Ice Framework section of the Users or Developers guide
         for more information about these options and their uses.
 

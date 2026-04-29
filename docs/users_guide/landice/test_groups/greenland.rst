@@ -36,9 +36,6 @@ The other test cases do not use config options.
    # config options for high_res_mesh test case
    [mesh]
 
-   # path to directory containing BedMachine and Measures datasets
-   data_path = /global/cfs/cdirs/fanssie/standard_datasets/GIS_datasets/
-
    # number of levels in the mesh
    levels = 10
 
@@ -53,13 +50,13 @@ The other test cases do not use config options.
    # distance from ice margin to cull (km).
    # Set to a value <= 0 if you do not want
    # to cull based on distance from margin.
-   cull_distance = 10.0
+   cull_distance = -100.0
 
    # mesh density parameters
    # minimum cell spacing (meters)
-   min_spac = 3.e3
+   min_spac = 4.e3
    # maximum cell spacing (meters)
-   max_spac = 30.e3
+   max_spac = 40.e3
    # log10 of max speed for cell spacing
    high_log_speed = 2.5
    # log10 of min speed for cell spacing
@@ -68,6 +65,10 @@ The other test cases do not use config options.
    high_dist = 1.e5
    # distance within which cell spacing = min_spac
    low_dist = 1.e4
+   # distance at which cell spacing in ocean = max_spac
+   high_dist_coast = 16.e3
+   # distance within which cell spacing in ocean = min_spac
+   low_dist_coast = 8.e3
    # distance at which bed topography has no effect
    high_dist_bed = 1.e5
    # distance within which bed topography has maximum effect
@@ -81,6 +82,7 @@ The other test cases do not use config options.
    use_speed = True
    use_dist_to_grounding_line = False
    use_dist_to_edge = True
+   use_dist_to_coast = True
    use_bed = True
 
    [greenland]
@@ -146,8 +148,8 @@ The test case performs interpolation of observational data from gridded
 datasets to the Greenland mesh. This takes care of the peculiarities of
 the current gridded compilation dataset (greenland_1km_2024_01_29.epsg3413.icesheetonly.nc),
 as well as using conservative remapping directly from the high-resolution
-BedMachine v5 and MeASUReS 2006-2010 velocity datasets. There is a fairly
-heavy degree of pre-processing done to get the BedMachine and MeASUReS
+BedMachine v6 and MEaSUREs 2006-2010 velocity datasets. There is a fairly
+heavy degree of pre-processing done to get the BedMachine and MEaSUREs
 datasets ready to be used here. The pre-processing includes renaming
 variables, setting reasonable _FillValue and missing_value attributes
 extrapolating fields to avoid interpolation ramps at ice margins,
@@ -159,6 +161,11 @@ that pre-processing could be integrated into a new step in COMPASS, or
 the processed data files could be added to the server on Anvil and downloaded
 as needed. However, until then, this test case provides a reproducible workflow
 for setting up Greenland meshes at varying resolutions.
+
+An alternative config file, ``mesh_gen_1to10km.cfg``, is provided for
+creating a finer 1–10km mesh. It uses ``use_dist_to_coast = True`` to
+refine ocean resolution near the coast and sets ``cull_distance = -100``
+to retain the open ocean in the mesh domain.
 
 The BedMachine and MEaSUREs interpolation is optional. If ``data_path`` or the
 corresponding filename in ``[greenland]`` is unset (empty or ``None``), that
