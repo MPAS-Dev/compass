@@ -11,6 +11,7 @@ import mpas_tools.io
 import numpy as np
 import xarray
 from geometric_features import FeatureCollection, GeometricFeatures
+from matplotlib.path import Path
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 from mpas_tools.mesh.conversion import convert, cull
@@ -18,9 +19,11 @@ from mpas_tools.mesh.creation import build_planar_mesh
 from mpas_tools.mesh.creation.sort_mesh import sort_mesh
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
 from netCDF4 import Dataset
+from pyproj import Transformer
 from scipy import ndimage
 from scipy.interpolate import interpn
 from scipy.ndimage import distance_transform_edt
+from scipy.spatial import ConvexHull
 
 
 def mpas_flood_fill(seed_mask, grow_mask, cellsOnCell, nEdgesOnCell,
@@ -1130,6 +1133,170 @@ def preprocess_ais_data(self, source_gridded_dataset, floodFillMask):
     return preprocessed_gridded_dataset
 
 
+def add_grid_imask_from_dst_scrip_hull(source_scrip, dest_scrip,
+                                       masked_source_scrip, domain,
+                                       buffer_m=50e3,
+                                       source_crs='EPSG:4326',
+                                       mesh_crs=None,
+                                       logger=None):
+    """
+    Create a new source SCRIP file with grid_imask set to 1 only for cells
+    that fall within the convex hull (plus buffer) of the destination SCRIP
+    footprint. This dramatically reduces the work ESMF_RegridWeightGen must do
+    when the source dataset is much larger than the destination mesh.
+
+    Parameters
+    ----------
+    source_scrip : str
+        Input source SCRIP file
+
+    dest_scrip : str
+        Destination SCRIP file used by ESMF_RegridWeightGen
+
+    masked_source_scrip : str
+        Output source SCRIP file with updated grid_imask
+
+    domain : str
+        Projection domain. Recognised convenience keys: 'greenland',
+        'gis-gimp', 'antarctica', 'ais-bedmap2'. Any other value requires
+        mesh_crs to be supplied explicitly.
+
+    buffer_m : float, optional
+        Approximate outward hull expansion in meters
+
+    source_crs : str, optional
+        CRS of lon/lat variables in SCRIP files (default 'EPSG:4326')
+
+    mesh_crs : str, optional
+        Proj4/EPSG string for planar coordinates. Derived from domain if None.
+
+    logger : logging.Logger, optional
+        Logger for status messages; falls back to print if None.
+    """
+
+    def _log(msg):
+        if logger is not None:
+            logger.info(msg)
+        else:
+            print(msg)
+
+    projections = {
+        'greenland': (
+            '+proj=stere +lat_ts=70.0 +lat_0=90 +lon_0=315.0 +k_0=1.0 '
+            '+x_0=0.0 +y_0=0.0 +ellps=WGS84'
+        ),
+        'antarctica': (
+            '+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0 +k_0=1.0 '
+            '+x_0=0.0 +y_0=0.0 +ellps=WGS84'
+        ),
+    }
+    projections['gis-gimp'] = projections['greenland']
+    projections['ais-bedmap2'] = projections['antarctica']
+
+    if mesh_crs is None:
+        if domain not in projections:
+            raise ValueError(
+                f"Unknown domain '{domain}'. Expected one of "
+                f"{list(projections.keys())}, or supply mesh_crs explicitly."
+            )
+        mesh_crs = projections[domain]
+
+    transformer = Transformer.from_crs(source_crs, mesh_crs, always_xy=True)
+
+    def _maybe_deg(lon, lat):
+        if (np.nanmax(np.abs(lon)) <= 2.0 * np.pi + 1.0e-6 and
+                np.nanmax(np.abs(lat)) <= 0.5 * np.pi + 1.0e-6):
+            lon = np.rad2deg(lon)
+            lat = np.rad2deg(lat)
+        return lon, lat
+
+    def _projected_centers(ds):
+        if ('grid_center_x' in ds.variables and
+                'grid_center_y' in ds.variables):
+            xc = ds['grid_center_x'].values
+            yc = ds['grid_center_y'].values
+            _log('Using existing projected source centers.')
+        else:
+            lon = ds['grid_center_lon'].values
+            lat = ds['grid_center_lat'].values
+            lon, lat = _maybe_deg(lon, lat)
+            xc, yc = transformer.transform(lon, lat)
+            _log('Projected source centers from lon/lat.')
+        return np.asarray(xc), np.asarray(yc)
+
+    def _projected_dest_points(ds):
+        if ('grid_corner_x' in ds.variables and
+                'grid_corner_y' in ds.variables):
+            x = ds['grid_corner_x'].values
+            y = ds['grid_corner_y'].values
+            _log('Using existing projected destination corners.')
+        elif ('grid_corner_lon' in ds.variables and
+              'grid_corner_lat' in ds.variables):
+            lon = ds['grid_corner_lon'].values
+            lat = ds['grid_corner_lat'].values
+            lon, lat = _maybe_deg(lon, lat)
+            x, y = transformer.transform(lon, lat)
+            _log('Projected destination corners from lon/lat.')
+        elif ('grid_center_x' in ds.variables and
+              'grid_center_y' in ds.variables):
+            x = ds['grid_center_x'].values
+            y = ds['grid_center_y'].values
+            _log('Using existing projected destination centers.')
+        else:
+            lon = ds['grid_center_lon'].values
+            lat = ds['grid_center_lat'].values
+            lon, lat = _maybe_deg(lon, lat)
+            x, y = transformer.transform(lon, lat)
+            _log('Projected destination centers from lon/lat.')
+        pts = np.column_stack([np.ravel(x), np.ravel(y)])
+        pts = pts[np.all(np.isfinite(pts), axis=1)]
+        pts = np.unique(pts, axis=0)
+        return pts
+
+    with xarray.open_dataset(dest_scrip) as ds_dst:
+        dst_points = _projected_dest_points(ds_dst)
+
+    if dst_points.shape[0] < 3:
+        raise ValueError(
+            'Not enough destination points to build a convex hull.')
+
+    hull = ConvexHull(dst_points)
+    hull_points = dst_points[hull.vertices]
+
+    if buffer_m > 0.0:
+        centroid = hull_points.mean(axis=0)
+        vec = hull_points - centroid
+        radius = np.sqrt((vec ** 2).sum(axis=1))
+        nonzero = radius > 0.0
+        vec[nonzero] = vec[nonzero] / radius[nonzero, np.newaxis]
+        hull_points = hull_points + buffer_m * vec
+
+    hull_path = Path(hull_points, closed=True)
+
+    with xarray.open_dataset(source_scrip) as ds_src:
+        xc, yc = _projected_centers(ds_src)
+
+        _log(f'destination hull x extent: {hull_points[:, 0].min():.0f} to '
+             f'{hull_points[:, 0].max():.0f}')
+        _log(f'destination hull y extent: {hull_points[:, 1].min():.0f} to '
+             f'{hull_points[:, 1].max():.0f}')
+        _log(f'source x extent: {np.nanmin(xc):.0f} to {np.nanmax(xc):.0f}')
+        _log(f'source y extent: {np.nanmin(yc):.0f} to {np.nanmax(yc):.0f}')
+
+        src_pts = np.column_stack([xc, yc])
+        inside = hull_path.contains_points(src_pts).astype(np.int32)
+        _log(f'active source cells after masking: '
+             f'{inside.sum()} / {inside.size}')
+
+        ds_out = ds_src.copy()
+        ds_out['grid_imask'] = xarray.DataArray(
+            inside,
+            dims=('grid_size',),
+            attrs={'long_name': '0/1 mask for active source cells'}
+        )
+        ds_out.to_netcdf(masked_source_scrip, mode='w')
+
+
 def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
                         nProcs, dest_file, proj, variables="all"):
     """
@@ -1194,10 +1361,22 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
             '-r', '2']
     check_call(args, logger=logger)
 
+    # Mask source SCRIP to the footprint of the destination mesh so that
+    # ESMF_RegridWeightGen only processes the cells that overlap the target.
+    stem = os.path.splitext(source_scrip)[0]  # strips .nc
+    masked_source_scrip = f'{stem}_masked.nc'
+    logger.info('masking source SCRIP to destination mesh footprint')
+    add_grid_imask_from_dst_scrip_hull(
+        source_scrip=source_scrip,
+        dest_scrip=mali_scrip,
+        masked_source_scrip=masked_source_scrip,
+        domain=proj,
+        logger=logger)
+
     # Generate remapping weights
     logger.info('generating gridded dataset -> MPAS weights')
     args = [parallel_executable, '-n', nProcs, 'ESMF_RegridWeightGen',
-            '--source', source_scrip,
+            '--source', masked_source_scrip,
             '--destination', mali_scrip,
             '--weight', weights_filename,
             '--method', 'conserve',
