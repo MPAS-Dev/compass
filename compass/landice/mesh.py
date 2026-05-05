@@ -1475,13 +1475,11 @@ def plot_hull_diagnostic(hull_path, dest_scrip, source_bbox_files,
 
         # active source cells — ice-sheet extent (tab:blue)
         xs, ys = _subsample(active_xc, active_yc)
-        ax.scatter(xs, ys, s=0.5, color='tab:blue', alpha=0.4,
-                   label='active source cells', rasterized=True)
 
         # MALI domain extent (tab:pink)
         xs, ys = _subsample(xd, yd)
         ax.scatter(xs, ys, s=1.5, color='tab:pink', alpha=0.6,
-                   label='MALI domain extent', rasterized=True)
+                   label='MALI cells (subsampled)', rasterized=True)
 
         # source bounding boxes
         for filepath, label, color in source_bbox_files:
@@ -1495,7 +1493,7 @@ def plot_hull_diagnostic(hull_path, dest_scrip, source_bbox_files,
                 facecolor='none', label=label)
             ax.add_patch(bbox)
 
-        # convex hull (tab:green)
+        # convex hull
         hull_verts = hull_path.vertices
         hull_patch = MplPolygon(
             hull_verts, closed=True,
