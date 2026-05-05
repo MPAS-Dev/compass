@@ -1133,11 +1133,144 @@ def preprocess_ais_data(self, source_gridded_dataset, floodFillMask):
     return preprocessed_gridded_dataset
 
 
+def build_dst_scrip_hull(dest_scrip, domain, buffer_m=50e3,
+                         source_crs='EPSG:4326', mesh_crs=None,
+                         logger=None):
+    """
+    Build a buffered convex hull from the footprint of a destination SCRIP
+    file and return it as a :py:class:`matplotlib.path.Path`.
+
+    This is factored out of
+    :py:func:`compass.landice.mesh.add_grid_imask_from_dst_scrip_hull` so
+    that the hull can be computed once and reused across multiple source
+    datasets that share the same destination mesh, avoiding redundant I/O
+    and computation.
+
+    Parameters
+    ----------
+    dest_scrip : str
+        Destination SCRIP file
+
+    domain : str
+        Projection domain. Recognised convenience keys: 'greenland',
+        'gis-gimp', 'antarctica', 'ais-bedmap2'. Any other value requires
+        mesh_crs to be supplied explicitly.
+
+    buffer_m : float, optional
+        Approximate outward hull expansion in meters (default 50 km)
+
+    source_crs : str, optional
+        CRS of lon/lat variables in the SCRIP file (default 'EPSG:4326')
+
+    mesh_crs : str, optional
+        Proj4/EPSG string for planar coordinates. Derived from domain if None.
+
+    logger : logging.Logger, optional
+        Logger for status messages; falls back to print if None.
+
+    Returns
+    -------
+    hull_path : matplotlib.path.Path
+        Buffered convex hull of the destination mesh footprint.
+    """
+
+    def _log(msg):
+        if logger is not None:
+            logger.info(msg)
+        else:
+            print(msg)
+
+    projections = {
+        'greenland': (
+            '+proj=stere +lat_ts=70.0 +lat_0=90 +lon_0=315.0 +k_0=1.0 '
+            '+x_0=0.0 +y_0=0.0 +ellps=WGS84'
+        ),
+        'antarctica': (
+            '+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0 +k_0=1.0 '
+            '+x_0=0.0 +y_0=0.0 +ellps=WGS84'
+        ),
+    }
+    projections['gis-gimp'] = projections['greenland']
+    projections['ais-bedmap2'] = projections['antarctica']
+
+    if mesh_crs is None:
+        if domain not in projections:
+            raise ValueError(
+                f"Unknown domain '{domain}'. Expected one of "
+                f"{list(projections.keys())}, or supply mesh_crs explicitly."
+            )
+        mesh_crs = projections[domain]
+
+    transformer = Transformer.from_crs(source_crs, mesh_crs, always_xy=True)
+
+    def _maybe_deg(lon, lat):
+        if (np.nanmax(np.abs(lon)) <= 2.0 * np.pi + 1.0e-6 and
+                np.nanmax(np.abs(lat)) <= 0.5 * np.pi + 1.0e-6):
+            lon = np.rad2deg(lon)
+            lat = np.rad2deg(lat)
+        return lon, lat
+
+    def _projected_dest_points(ds):
+        if ('grid_corner_x' in ds.variables and
+                'grid_corner_y' in ds.variables):
+            x = ds['grid_corner_x'].values
+            y = ds['grid_corner_y'].values
+            _log('Using existing projected destination corners.')
+        elif ('grid_corner_lon' in ds.variables and
+              'grid_corner_lat' in ds.variables):
+            lon = ds['grid_corner_lon'].values
+            lat = ds['grid_corner_lat'].values
+            lon, lat = _maybe_deg(lon, lat)
+            x, y = transformer.transform(lon, lat)
+            _log('Projected destination corners from lon/lat.')
+        elif ('grid_center_x' in ds.variables and
+              'grid_center_y' in ds.variables):
+            x = ds['grid_center_x'].values
+            y = ds['grid_center_y'].values
+            _log('Using existing projected destination centers.')
+        else:
+            lon = ds['grid_center_lon'].values
+            lat = ds['grid_center_lat'].values
+            lon, lat = _maybe_deg(lon, lat)
+            x, y = transformer.transform(lon, lat)
+            _log('Projected destination centers from lon/lat.')
+        pts = np.column_stack([np.ravel(x), np.ravel(y)])
+        pts = pts[np.all(np.isfinite(pts), axis=1)]
+        pts = np.unique(pts, axis=0)
+        return pts
+
+    with xarray.open_dataset(dest_scrip) as ds_dst:
+        dst_points = _projected_dest_points(ds_dst)
+
+    if dst_points.shape[0] < 3:
+        raise ValueError(
+            'Not enough destination points to build a convex hull.')
+
+    hull = ConvexHull(dst_points)
+    hull_points = dst_points[hull.vertices]
+
+    if buffer_m > 0.0:
+        centroid = hull_points.mean(axis=0)
+        vec = hull_points - centroid
+        radius = np.sqrt((vec ** 2).sum(axis=1))
+        nonzero = radius > 0.0
+        vec[nonzero] = vec[nonzero] / radius[nonzero, np.newaxis]
+        hull_points = hull_points + buffer_m * vec
+
+    _log(f'destination hull x extent: {hull_points[:, 0].min():.0f} to '
+         f'{hull_points[:, 0].max():.0f}')
+    _log(f'destination hull y extent: {hull_points[:, 1].min():.0f} to '
+         f'{hull_points[:, 1].max():.0f}')
+
+    return Path(hull_points, closed=True)
+
+
 def add_grid_imask_from_dst_scrip_hull(source_scrip, dest_scrip,
                                        masked_source_scrip, domain,
                                        buffer_m=50e3,
                                        source_crs='EPSG:4326',
                                        mesh_crs=None,
+                                       hull_path=None,
                                        logger=None):
     """
     Create a new source SCRIP file with grid_imask set to 1 only for cells
@@ -1151,7 +1284,8 @@ def add_grid_imask_from_dst_scrip_hull(source_scrip, dest_scrip,
         Input source SCRIP file
 
     dest_scrip : str
-        Destination SCRIP file used by ESMF_RegridWeightGen
+        Destination SCRIP file used by ESMF_RegridWeightGen. Ignored if
+        hull_path is provided.
 
     masked_source_scrip : str
         Output source SCRIP file with updated grid_imask
@@ -1162,13 +1296,21 @@ def add_grid_imask_from_dst_scrip_hull(source_scrip, dest_scrip,
         mesh_crs to be supplied explicitly.
 
     buffer_m : float, optional
-        Approximate outward hull expansion in meters
+        Approximate outward hull expansion in meters. Ignored if hull_path
+        is provided.
 
     source_crs : str, optional
         CRS of lon/lat variables in SCRIP files (default 'EPSG:4326')
 
     mesh_crs : str, optional
         Proj4/EPSG string for planar coordinates. Derived from domain if None.
+
+    hull_path : matplotlib.path.Path or None, optional
+        Pre-built buffered convex hull of the destination mesh footprint, as
+        returned by :py:func:`compass.landice.mesh.build_dst_scrip_hull`.
+        When provided, dest_scrip is not read and the hull is not recomputed,
+        which is useful when masking multiple source datasets against the same
+        destination mesh.
 
     logger : logging.Logger, optional
         Logger for status messages; falls back to print if None.
@@ -1224,62 +1366,18 @@ def add_grid_imask_from_dst_scrip_hull(source_scrip, dest_scrip,
             _log('Projected source centers from lon/lat.')
         return np.asarray(xc), np.asarray(yc)
 
-    def _projected_dest_points(ds):
-        if ('grid_corner_x' in ds.variables and
-                'grid_corner_y' in ds.variables):
-            x = ds['grid_corner_x'].values
-            y = ds['grid_corner_y'].values
-            _log('Using existing projected destination corners.')
-        elif ('grid_corner_lon' in ds.variables and
-              'grid_corner_lat' in ds.variables):
-            lon = ds['grid_corner_lon'].values
-            lat = ds['grid_corner_lat'].values
-            lon, lat = _maybe_deg(lon, lat)
-            x, y = transformer.transform(lon, lat)
-            _log('Projected destination corners from lon/lat.')
-        elif ('grid_center_x' in ds.variables and
-              'grid_center_y' in ds.variables):
-            x = ds['grid_center_x'].values
-            y = ds['grid_center_y'].values
-            _log('Using existing projected destination centers.')
-        else:
-            lon = ds['grid_center_lon'].values
-            lat = ds['grid_center_lat'].values
-            lon, lat = _maybe_deg(lon, lat)
-            x, y = transformer.transform(lon, lat)
-            _log('Projected destination centers from lon/lat.')
-        pts = np.column_stack([np.ravel(x), np.ravel(y)])
-        pts = pts[np.all(np.isfinite(pts), axis=1)]
-        pts = np.unique(pts, axis=0)
-        return pts
-
-    with xarray.open_dataset(dest_scrip) as ds_dst:
-        dst_points = _projected_dest_points(ds_dst)
-
-    if dst_points.shape[0] < 3:
-        raise ValueError(
-            'Not enough destination points to build a convex hull.')
-
-    hull = ConvexHull(dst_points)
-    hull_points = dst_points[hull.vertices]
-
-    if buffer_m > 0.0:
-        centroid = hull_points.mean(axis=0)
-        vec = hull_points - centroid
-        radius = np.sqrt((vec ** 2).sum(axis=1))
-        nonzero = radius > 0.0
-        vec[nonzero] = vec[nonzero] / radius[nonzero, np.newaxis]
-        hull_points = hull_points + buffer_m * vec
-
-    hull_path = Path(hull_points, closed=True)
+    if hull_path is None:
+        hull_path = build_dst_scrip_hull(
+            dest_scrip=dest_scrip,
+            domain=domain,
+            buffer_m=buffer_m,
+            source_crs=source_crs,
+            mesh_crs=mesh_crs,
+            logger=logger)
 
     with xarray.open_dataset(source_scrip) as ds_src:
         xc, yc = _projected_centers(ds_src)
 
-        _log(f'destination hull x extent: {hull_points[:, 0].min():.0f} to '
-             f'{hull_points[:, 0].max():.0f}')
-        _log(f'destination hull y extent: {hull_points[:, 1].min():.0f} to '
-             f'{hull_points[:, 1].max():.0f}')
         _log(f'source x extent: {np.nanmin(xc):.0f} to {np.nanmax(xc):.0f}')
         _log(f'source y extent: {np.nanmin(yc):.0f} to {np.nanmax(yc):.0f}')
 
@@ -1298,7 +1396,8 @@ def add_grid_imask_from_dst_scrip_hull(source_scrip, dest_scrip,
 
 
 def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
-                        nProcs, dest_file, proj, variables="all"):
+                        nProcs, dest_file, proj, variables="all",
+                        hull_path=None):
     """
     Interpolate gridded dataset (e.g. MEASURES, BedMachine) onto a MALI mesh
 
@@ -1324,6 +1423,13 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
 
     variables: "all" or list of strings
         either the string "all" or a list of strings
+
+    hull_path : matplotlib.path.Path or None, optional
+        Pre-built buffered convex hull of the destination mesh footprint, as
+        returned by :py:func:`compass.landice.mesh.build_dst_scrip_hull`.
+        When provided, the hull is not recomputed from mali_scrip, which
+        avoids redundant I/O and computation when this function is called
+        multiple times with the same destination mesh.
     """
 
     def __guess_scrip_name(filename):
@@ -1371,6 +1477,7 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
         dest_scrip=mali_scrip,
         masked_source_scrip=masked_source_scrip,
         domain=proj,
+        hull_path=hull_path,
         logger=logger)
 
     # Generate remapping weights
@@ -1664,19 +1771,20 @@ def run_optional_interpolation(
         dst_scrip_file = f'{mesh_base}_scrip.nc'
         scrip_from_mpas(mesh_filename, dst_scrip_file)
 
+        # Build the destination hull once so it can be reused for both
+        # BedMachine and MEaSUREs without re-reading dst_scrip_file.
+        logger.info('building destination mesh convex hull for source masking')
+        hull_path = build_dst_scrip_hull(
+            dest_scrip=dst_scrip_file,
+            domain=src_proj,
+            logger=logger)
+
         if bedmachine_dataset is not None:
             interp_gridded2mali(self, bedmachine_dataset, dst_scrip_file,
                                 parallel_executable, nProcs,
-                                mesh_filename, src_proj, variables='all')
+                                mesh_filename, src_proj, variables='all',
+                                hull_path=hull_path)
 
-        # Note: interp_gridded2mali independently masks the source SCRIP for
-        # each dataset call below. The destination hull is recomputed for each
-        # call, which is redundant since dst_scrip_file is the same for both.
-        # The redundant cost (reading dst_scrip_file and building the convex
-        # hull) scales with the destination MALI mesh size, so it becomes
-        # non-trivial for large meshes. If this becomes a bottleneck, it would
-        # be worth refactoring to compute the destination hull once and pass it
-        # to each interp_gridded2mali call.
         if measures_dataset is not None:
             measures_vars = ['observedSurfaceVelocityX',
                              'observedSurfaceVelocityY',
@@ -1684,7 +1792,8 @@ def run_optional_interpolation(
             interp_gridded2mali(self, measures_dataset, dst_scrip_file,
                                 parallel_executable, nProcs,
                                 mesh_filename, src_proj,
-                                variables=measures_vars)
+                                variables=measures_vars,
+                                hull_path=hull_path)
 
         clean_up_after_interp(mesh_filename)
     finally:

@@ -66,7 +66,36 @@ to the gridded dataset in order to separate the ice sheet from peripheral ice.
 :py:func:`compass.landice.mesh.interp_gridded2mali()` interpolates gridded data
 (e.g. BedMachine thickness or MEaSUREs ice velocity) to a MALI mesh, accounting
 for masking of the ice extent to avoid interpolation ramps. This functions works
-for both Antarctica and Greenland. 
+for both Antarctica and Greenland. Before calling ``ESMF_RegridWeightGen``, it
+calls :py:func:`compass.landice.mesh.build_dst_scrip_hull()` (unless a pre-built
+``hull_path`` is passed) and then
+:py:func:`compass.landice.mesh.add_grid_imask_from_dst_scrip_hull()` to restrict
+the source SCRIP to only the cells that overlap the destination mesh footprint.
+This can substantially reduce the weight-generation time for high-resolution
+source datasets (e.g. 150 m BedMachine v6) that are much larger than the target
+mesh domain. When interpolating multiple datasets to the same destination mesh,
+pass a pre-built ``hull_path`` (from
+:py:func:`compass.landice.mesh.build_dst_scrip_hull()`) to avoid recomputing the
+hull for each dataset.
+
+:py:func:`compass.landice.mesh.build_dst_scrip_hull()` builds a buffered
+convex hull from a destination SCRIP file and returns it as a
+``matplotlib.path.Path``. It is factored out of
+:py:func:`compass.landice.mesh.add_grid_imask_from_dst_scrip_hull()` so the
+hull can be computed once and passed to multiple
+:py:func:`compass.landice.mesh.interp_gridded2mali()` calls that share the
+same destination mesh, avoiding redundant I/O whose cost scales with
+destination mesh size.
+
+:py:func:`compass.landice.mesh.add_grid_imask_from_dst_scrip_hull()` creates a
+new source SCRIP file with ``grid_imask`` set to 1 only for source cells that
+fall within the convex hull of the destination SCRIP footprint (plus a
+configurable buffer, default 50 km).  The function projects both SCRIP files
+into a planar stereographic coordinate system (determined by the ``domain``
+argument, e.g. ``'gis-gimp'`` or ``'ais-bedmap2'``) and uses a
+``matplotlib.path.Path`` point-in-polygon test for efficiency.  The resulting
+masked SCRIP file is passed to ``ESMF_RegridWeightGen`` in place of the
+full-domain source SCRIP.
 
 :py:func:`compass.landice.mesh.preprocess_ais_data()` performs adjustments to
 gridded AIS datasets needed for rest of compass workflow to utilize them.
@@ -219,4 +248,9 @@ For mesh prototyping, it is a good idea to use `interpolate_data = False`,
 as the interpolation step can be slow and require many more resources than
 the rest of the mesh generation process. For instance, a 1–10km Greenland mesh
 can be created on a single Perlmutter CPU node, but data interpolation may
-require up to 16 nodes.
+require several nodes. The source SCRIP masking performed by
+:py:func:`compass.landice.mesh.add_grid_imask_from_dst_scrip_hull()` before
+calling ``ESMF_RegridWeightGen`` reduces the effective source-grid size to
+only the cells overlapping the destination mesh footprint, which significantly
+reduces the weight-generation time compared to running on the full global or
+continental source SCRIP.

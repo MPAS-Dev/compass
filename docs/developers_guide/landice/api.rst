@@ -595,6 +595,7 @@ Landice Framework
 
    mesh.add_bedmachine_thk_to_ais_gridded_data
    mesh.add_grid_imask_from_dst_scrip_hull
+   mesh.build_dst_scrip_hull
    mesh.clean_up_after_interp
    mesh.clip_mesh_to_bounding_box
    mesh.get_mesh_config_bounding_box
