@@ -4,7 +4,7 @@ import xarray as xr
 from compass.landice.mesh import (
     build_cell_width,
     build_mali_mesh,
-    constrain_resources,
+    constrain_resources as _constrain_resources,
     get_mesh_config_bounding_box,
     get_optional_interp_datasets,
     make_region_masks,
@@ -64,8 +64,7 @@ class Mesh(Step):
                             target=geojson_filename,
                             database=None)
 
-    def constrain_resources(self, available_resources):
-        constrain_resources(self, available_resources)
+    constrain_resources = _constrain_resources
 
     def run(self):
         """
