@@ -20,8 +20,6 @@ jobs:
         shell: bash -l {0}
     steps:
       - uses: actions/checkout@v6
-        with:
-          submodules: recursive
 
       - name: Set up Python 3.14
         uses: actions/setup-python@v6
@@ -53,6 +51,8 @@ jobs:
             exit 1
           fi
           source "$load_script"
+          # only update the MALI-Dev submodule, not others
+          git submodule update --init MALI-Dev
 
       - name: Setup and run step
         run: |
