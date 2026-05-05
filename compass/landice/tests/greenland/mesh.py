@@ -4,17 +4,16 @@ import xarray as xr
 from compass.landice.mesh import (
     build_cell_width,
     build_mali_mesh,
-    constrain_resources as _constrain_resources,
+    LandiceMeshStep,
     get_mesh_config_bounding_box,
     get_optional_interp_datasets,
     make_region_masks,
     run_optional_interpolation,
 )
 from compass.model import make_graph_file
-from compass.step import Step
 
 
-class Mesh(Step):
+class Mesh(LandiceMeshStep):
     """
     A step for creating a mesh and initial condition for greenland test cases
 
@@ -64,7 +63,6 @@ class Mesh(Step):
                             target=geojson_filename,
                             database=None)
 
-    constrain_resources = _constrain_resources
 
     def run(self):
         """

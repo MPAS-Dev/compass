@@ -6,17 +6,16 @@ from compass.landice.mesh import (
     add_bedmachine_thk_to_ais_gridded_data,
     build_cell_width,
     build_mali_mesh,
-    constrain_resources as _constrain_resources,
+    LandiceMeshStep,
     get_optional_interp_datasets,
     make_region_masks,
     preprocess_ais_data,
     run_optional_interpolation,
 )
 from compass.model import make_graph_file
-from compass.step import Step
 
 
-class Mesh(Step):
+class Mesh(LandiceMeshStep):
     """
     A step for creating a mesh and initial condition for Antarctica test cases
 
@@ -51,8 +50,6 @@ class Mesh(Step):
             database='')
 
     # no setup() method is needed
-
-    constrain_resources = _constrain_resources
 
     def run(self):
         """

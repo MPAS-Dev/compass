@@ -1,16 +1,15 @@
 from compass.landice.mesh import (
     build_cell_width,
     build_mali_mesh,
-    constrain_resources as _constrain_resources,
+    LandiceMeshStep,
     get_mesh_config_bounding_box,
     get_optional_interp_datasets,
     run_optional_interpolation,
 )
 from compass.model import make_graph_file
-from compass.step import Step
 
 
-class Mesh(Step):
+class Mesh(LandiceMeshStep):
     """
     A step for creating a mesh and initial condition for thwaites test cases
     """
@@ -38,8 +37,6 @@ class Mesh(Step):
                             database='')
 
     # no setup() method is needed
-
-    constrain_resources = _constrain_resources
 
     def run(self):
         """
