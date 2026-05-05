@@ -1669,6 +1669,14 @@ def run_optional_interpolation(
                                 parallel_executable, nProcs,
                                 mesh_filename, src_proj, variables='all')
 
+        # Note: interp_gridded2mali independently masks the source SCRIP for
+        # each dataset call below. The destination hull is recomputed for each
+        # call, which is redundant since dst_scrip_file is the same for both.
+        # The redundant cost (reading dst_scrip_file and building the convex
+        # hull) scales with the destination MALI mesh size, so it becomes
+        # non-trivial for large meshes. If this becomes a bottleneck, it would
+        # be worth refactoring to compute the destination hull once and pass it
+        # to each interp_gridded2mali call.
         if measures_dataset is not None:
             measures_vars = ['observedSurfaceVelocityX',
                              'observedSurfaceVelocityY',
