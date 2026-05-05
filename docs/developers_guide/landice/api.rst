@@ -598,6 +598,7 @@ Landice Framework
    mesh.build_dst_scrip_hull
    mesh.clean_up_after_interp
    mesh.clip_mesh_to_bounding_box
+   mesh.plot_hull_diagnostic
    mesh.get_mesh_config_bounding_box
    mesh.get_optional_interp_datasets
    mesh.gridded_flood_fill

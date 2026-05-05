@@ -1395,6 +1395,127 @@ def add_grid_imask_from_dst_scrip_hull(source_scrip, dest_scrip,
         ds_out.to_netcdf(masked_source_scrip, mode='w')
 
 
+def plot_hull_diagnostic(hull_path, dest_scrip, source_bbox_files,
+                         transformer, _maybe_deg, active_xc, active_yc,
+                         logger=None):
+    """
+    Save a diagnostic PNG (``convex_hull.png``) showing the masking geometry.
+
+    Parameters
+    ----------
+    hull_path : matplotlib.path.Path
+        Buffered convex hull of the destination mesh.
+
+    dest_scrip : str
+        Destination SCRIP file (used to scatter MALI domain extent).
+
+    source_bbox_files : list of tuple
+        Each entry is ``(filepath, label, edgecolor)`` for a source dataset
+        whose bounding box should be drawn.
+
+    transformer : pyproj.Transformer
+        Transformer from lon/lat to planar coordinates.
+
+    _maybe_deg : callable
+        Helper that converts radian angles to degrees when needed.
+
+    active_xc : numpy.ndarray
+        Projected x-coordinates of all active (masked-in) source cells.
+
+    active_yc : numpy.ndarray
+        Projected y-coordinates of all active (masked-in) source cells.
+
+    logger : logging.Logger, optional
+        Logger for status messages; falls back to print if None.
+    """
+    def _log(msg):
+        if logger is not None:
+            logger.info(msg)
+        else:
+            print(msg)
+
+    try:
+        from matplotlib.patches import Polygon as MplPolygon
+        from matplotlib.patches import Rectangle
+
+        # --- destination SCRIP centers (MALI domain extent) ---
+        with xarray.open_dataset(dest_scrip) as ds_dst:
+            if ('grid_center_x' in ds_dst.variables and
+                    'grid_center_y' in ds_dst.variables):
+                xd = np.asarray(ds_dst['grid_center_x'].values)
+                yd = np.asarray(ds_dst['grid_center_y'].values)
+            else:
+                lon = ds_dst['grid_center_lon'].values
+                lat = ds_dst['grid_center_lat'].values
+                lon, lat = _maybe_deg(lon, lat)
+                xd, yd = transformer.transform(lon, lat)
+                xd, yd = np.asarray(xd), np.asarray(yd)
+
+        rng = np.random.default_rng(seed=0)
+
+        def _subsample(x, y, n=50000):
+            idx = np.where(np.isfinite(x) & np.isfinite(y))[0]
+            if len(idx) > n:
+                idx = rng.choice(idx, size=n, replace=False)
+            return x[idx], y[idx]
+
+        def _src_extent(filepath):
+            """Return (x_min, x_max, y_min, y_max) from a gridded dataset."""
+            with xarray.open_dataset(filepath) as ds:
+                if 'x1' in ds and 'y1' in ds:
+                    x, y = ds['x1'].values, ds['y1'].values
+                elif 'x' in ds and 'y' in ds:
+                    x, y = ds['x'].values, ds['y'].values
+                else:
+                    return None
+            return float(x.min()), float(x.max()), \
+                float(y.min()), float(y.max())
+
+        fig, ax = plt.subplots(figsize=(10, 10))
+
+        # active source cells — ice-sheet extent (tab:blue)
+        xs, ys = _subsample(active_xc, active_yc)
+        ax.scatter(xs, ys, s=0.5, color='tab:blue', alpha=0.4,
+                   label='active source cells', rasterized=True)
+
+        # MALI domain extent (tab:pink)
+        xs, ys = _subsample(xd, yd)
+        ax.scatter(xs, ys, s=1.5, color='tab:pink', alpha=0.6,
+                   label='MALI domain extent', rasterized=True)
+
+        # source bounding boxes
+        for filepath, label, color in source_bbox_files:
+            ext = _src_extent(filepath)
+            if ext is None:
+                continue
+            x0, x1, y0, y1 = ext
+            bbox = Rectangle(
+                (x0, y0), x1 - x0, y1 - y0,
+                linewidth=1.5, edgecolor=color,
+                facecolor='none', label=label)
+            ax.add_patch(bbox)
+
+        # convex hull (tab:green)
+        hull_verts = hull_path.vertices
+        hull_patch = MplPolygon(
+            hull_verts, closed=True,
+            linewidth=2, edgecolor='tab:green',
+            facecolor='none', label='convex hull (buffered)')
+        ax.add_patch(hull_patch)
+
+        ax.set_aspect('equal')
+        ax.set_xlabel('x (m)')
+        ax.set_ylabel('y (m)')
+        ax.legend(loc='best', markerscale=6)
+        ax.set_title('Source SCRIP masking: hull vs. domain')
+        fig.savefig('convex_hull.png', dpi=150,
+                    bbox_inches='tight', facecolor=fig.get_facecolor())
+        plt.close(fig)
+        _log('Saved masking diagnostic plot to convex_hull.png')
+    except Exception as exc:
+        _log(f'Warning: could not save convex hull plot: {exc}')
+
+
 def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
                         nProcs, dest_file, proj, variables="all",
                         hull_path=None):
@@ -1794,6 +1915,86 @@ def run_optional_interpolation(
                                 mesh_filename, src_proj,
                                 variables=measures_vars,
                                 hull_path=hull_path)
+
+        # Diagnostic plot: show hull, MALI domain, and bounding boxes for
+        # all source datasets that were interpolated.
+        if bedmachine_dataset is not None or measures_dataset is not None:
+            projections = {
+                'greenland': (
+                    '+proj=stere +lat_ts=70.0 +lat_0=90 +lon_0=315.0'
+                    ' +k_0=1.0 +x_0=0.0 +y_0=0.0 +ellps=WGS84'
+                ),
+                'antarctica': (
+                    '+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0'
+                    ' +k_0=1.0 +x_0=0.0 +y_0=0.0 +ellps=WGS84'
+                ),
+            }
+            projections['gis-gimp'] = projections['greenland']
+            projections['ais-bedmap2'] = projections['antarctica']
+            mesh_crs = projections.get(src_proj, src_proj)
+            transformer = Transformer.from_crs(
+                'EPSG:4326', mesh_crs, always_xy=True)
+
+            def _maybe_deg_plot(lon, lat):
+                if (np.nanmax(np.abs(lon)) <= 2.0 * np.pi + 1.0e-6 and
+                        np.nanmax(np.abs(lat)) <= 0.5 * np.pi + 1.0e-6):
+                    lon = np.rad2deg(lon)
+                    lat = np.rad2deg(lat)
+                return lon, lat
+
+            # Collect active source cells from BedMachine (first dataset)
+            # as a representative ice-sheet extent for the plot.
+            active_xc = np.array([])
+            active_yc = np.array([])
+            first_src = bedmachine_dataset or measures_dataset
+            bm_stem = os.path.splitext(
+                os.path.basename(first_src))[0]
+            # Try to find the masked SCRIP that was written to workdir
+            import re as _re
+            match = _re.search(r'(^.*[_-]v\d*[_-])+', bm_stem)
+            if match:
+                scrip_stem = bm_stem[:match.end() - 1]
+            else:
+                scrip_stem = bm_stem
+            masked_scrip = f'{scrip_stem}.scrip_masked.nc'
+            if os.path.exists(masked_scrip):
+                with xarray.open_dataset(masked_scrip) as ds_m:
+                    imask = ds_m['grid_imask'].values.astype(bool)
+                    if ('grid_center_x' in ds_m.variables and
+                            'grid_center_y' in ds_m.variables):
+                        active_xc = ds_m['grid_center_x'].values[imask]
+                        active_yc = ds_m['grid_center_y'].values[imask]
+                    elif ('grid_center_lon' in ds_m.variables and
+                          'grid_center_lat' in ds_m.variables):
+                        lon = ds_m['grid_center_lon'].values[imask]
+                        lat = ds_m['grid_center_lat'].values[imask]
+                        lon, lat = _maybe_deg_plot(lon, lat)
+                        active_xc, active_yc = transformer.transform(
+                            lon, lat)
+                        active_xc = np.asarray(active_xc)
+                        active_yc = np.asarray(active_yc)
+
+            bbox_files = []
+            if bedmachine_dataset is not None:
+                bbox_files.append((
+                    bedmachine_dataset,
+                    'BedMachine bounding box',
+                    'black'))
+            if measures_dataset is not None:
+                bbox_files.append((
+                    measures_dataset,
+                    'MEaSUREs bounding box',
+                    'grey'))
+
+            plot_hull_diagnostic(
+                hull_path=hull_path,
+                dest_scrip=dst_scrip_file,
+                source_bbox_files=bbox_files,
+                transformer=transformer,
+                _maybe_deg=_maybe_deg_plot,
+                active_xc=active_xc,
+                active_yc=active_yc,
+                logger=logger)
 
         clean_up_after_interp(mesh_filename)
     finally:
