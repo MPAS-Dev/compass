@@ -174,3 +174,10 @@ dataset interpolation step is skipped. The default config values include both
 datasets, so interpolation is enabled by default.
 The base-mesh projection used in ``build_mali_mesh()`` is fixed for this test
 case.
+
+Before running ``ESMF_RegridWeightGen``, the interpolation step automatically
+masks the source SCRIP file so that only cells overlapping the destination
+mesh footprint (plus a 50 km buffer) are active. This avoids unnecessary
+weight computation for the large portions of the BedMachine v6 domain
+(150 m native resolution, ~187 million cells) that lie outside the target
+mesh and substantially reduces ESMF weight-generation time and memory footprint.
