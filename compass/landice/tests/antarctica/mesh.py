@@ -6,6 +6,7 @@ from compass.landice.mesh import (
     add_bedmachine_thk_to_ais_gridded_data,
     build_cell_width,
     build_mali_mesh,
+    constrain_resources,
     get_optional_interp_datasets,
     make_region_masks,
     preprocess_ais_data,
@@ -52,11 +53,7 @@ class Mesh(Step):
     # no setup() method is needed
 
     def constrain_resources(self, available_resources):
-        """
-        Update ``cpus_per_task`` to use all available cores
-        """
-        super().constrain_resources(available_resources)
-        self.cpus_per_task = available_resources['cores']
+        constrain_resources(self, available_resources)
 
     def run(self):
         """

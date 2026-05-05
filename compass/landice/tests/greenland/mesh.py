@@ -4,6 +4,7 @@ import xarray as xr
 from compass.landice.mesh import (
     build_cell_width,
     build_mali_mesh,
+    constrain_resources,
     get_mesh_config_bounding_box,
     get_optional_interp_datasets,
     make_region_masks,
@@ -64,11 +65,7 @@ class Mesh(Step):
                             database=None)
 
     def constrain_resources(self, available_resources):
-        """
-        Update ``cpus_per_task`` to use all available cores
-        """
-        super().constrain_resources(available_resources)
-        self.cpus_per_task = available_resources['cores']
+        constrain_resources(self, available_resources)
 
     def run(self):
         """

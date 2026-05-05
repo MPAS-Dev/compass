@@ -864,6 +864,21 @@ def build_mali_mesh(self, cell_width, x1, y1, geom_points,
     check_call(args, logger=logger)
 
 
+def constrain_resources(self, available_resources):
+    """
+    Update ``cpus_per_task`` to use all available cores
+
+    Parameters
+    ----------
+    available_resources : dict
+        A dictionary containing available resources (cores, tasks, nodes
+        and cores_per_node)
+    """
+    from compass.step import Step
+    Step.constrain_resources(self, available_resources)
+    self.cpus_per_task = available_resources['cores']
+
+
 def make_region_masks(self, mesh_filename, mask_filename,
                       cores, tags, component='landice', all_tags=True):
     """
