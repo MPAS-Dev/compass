@@ -79,17 +79,22 @@ pass a pre-built ``hull_path`` (from
 hull for each dataset.
 
 :py:func:`compass.landice.mesh.build_dst_scrip_hull()` builds a buffered
-convex hull from a destination SCRIP file and returns it as a
-``matplotlib.path.Path``. It is factored out of
+concave boundary from a destination SCRIP file and returns it as a
+``matplotlib.path.Path``. The boundary is constructed by rasterising
+destination mesh points onto a coarse grid (10 km cell size), dilating
+by the buffer distance (default 50 km), and extracting the outer contour.
+This produces a tight boundary that follows the actual domain shape
+(including bays and fjords) while remaining computationally inexpensive.
+It is factored out of
 :py:func:`compass.landice.mesh.add_grid_imask_from_dst_scrip_hull()` so the
-hull can be computed once and passed to multiple
+boundary can be computed once and passed to multiple
 :py:func:`compass.landice.mesh.interp_gridded2mali()` calls that share the
 same destination mesh, avoiding redundant I/O whose cost scales with
 destination mesh size.
 
 :py:func:`compass.landice.mesh.add_grid_imask_from_dst_scrip_hull()` creates a
 new source SCRIP file with ``grid_imask`` set to 1 only for source cells that
-fall within the convex hull of the destination SCRIP footprint (plus a
+fall within the concave boundary of the destination SCRIP footprint (plus a
 configurable buffer, default 50 km).  The function projects both SCRIP files
 into a planar stereographic coordinate system (determined by the ``domain``
 argument, e.g. ``'gis-gimp'`` or ``'ais-bedmap2'``) and uses a

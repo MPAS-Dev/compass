@@ -125,10 +125,11 @@ The base-mesh projection used in ``build_mali_mesh()`` is fixed for this test
 case.
 
 Before running ``ESMF_RegridWeightGen``, the interpolation step automatically
-masks the source SCRIP file so that only cells overlapping the destination
-mesh footprint (plus a 50 km buffer) are active. This avoids unnecessary
-weight computation for the large portions of the BedMachine Antarctica domain
-that lie outside the target mesh and substantially reduces ESMF
-weight-generation time.
+masks the source SCRIP file so that only cells overlapping a tight concave
+boundary around the destination mesh (plus a 50 km buffer) are active. The
+boundary follows the actual domain shape rather than a simple convex hull.
+This avoids unnecessary weight computation for the large portions of the
+BedMachine Antarctica domain that lie outside the target mesh and substantially
+reduces ESMF weight-generation time.
 
 There is no model integration step.

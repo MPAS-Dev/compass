@@ -22,8 +22,7 @@ from netCDF4 import Dataset
 from pyproj import Transformer
 from scipy import ndimage
 from scipy.interpolate import interpn
-from scipy.ndimage import distance_transform_edt
-from scipy.spatial import ConvexHull
+from scipy.ndimage import binary_dilation, distance_transform_edt
 
 
 def mpas_flood_fill(seed_mask, grow_mask, cellsOnCell, nEdgesOnCell,
@@ -1137,12 +1136,18 @@ def build_dst_scrip_hull(dest_scrip, domain, buffer_m=50e3,
                          source_crs='EPSG:4326', mesh_crs=None,
                          logger=None):
     """
-    Build a buffered convex hull from the footprint of a destination SCRIP
-    file and return it as a :py:class:`matplotlib.path.Path`.
+    Build a buffered concave boundary from the footprint of a destination
+    SCRIP file and return it as a :py:class:`matplotlib.path.Path`.
+
+    The boundary is constructed by rasterising the destination mesh points
+    onto a coarse grid (10 km cell size), dilating by ``buffer_m``, and
+    extracting the outer contour. This produces a tight, concave mask that
+    follows the actual domain shape (including bays and fjords) while
+    remaining computationally inexpensive (< 1 s for any realistic mesh).
 
     This is factored out of
     :py:func:`compass.landice.mesh.add_grid_imask_from_dst_scrip_hull` so
-    that the hull can be computed once and reused across multiple source
+    that the boundary can be computed once and reused across multiple source
     datasets that share the same destination mesh, avoiding redundant I/O
     and computation.
 
@@ -1157,7 +1162,7 @@ def build_dst_scrip_hull(dest_scrip, domain, buffer_m=50e3,
         mesh_crs to be supplied explicitly.
 
     buffer_m : float, optional
-        Approximate outward hull expansion in meters (default 50 km)
+        Outward buffer distance in meters (default 50 km)
 
     source_crs : str, optional
         CRS of lon/lat variables in the SCRIP file (default 'EPSG:4326')
@@ -1171,7 +1176,7 @@ def build_dst_scrip_hull(dest_scrip, domain, buffer_m=50e3,
     Returns
     -------
     hull_path : matplotlib.path.Path
-        Buffered convex hull of the destination mesh footprint.
+        Buffered concave boundary of the destination mesh footprint.
     """
 
     def _log(msg):
@@ -1236,7 +1241,6 @@ def build_dst_scrip_hull(dest_scrip, domain, buffer_m=50e3,
             _log('Projected destination centers from lon/lat.')
         pts = np.column_stack([np.ravel(x), np.ravel(y)])
         pts = pts[np.all(np.isfinite(pts), axis=1)]
-        pts = np.unique(pts, axis=0)
         return pts
 
     with xarray.open_dataset(dest_scrip) as ds_dst:
@@ -1244,25 +1248,68 @@ def build_dst_scrip_hull(dest_scrip, domain, buffer_m=50e3,
 
     if dst_points.shape[0] < 3:
         raise ValueError(
-            'Not enough destination points to build a convex hull.')
+            'Not enough destination points to build a boundary.')
 
-    hull = ConvexHull(dst_points)
-    hull_points = dst_points[hull.vertices]
+    # --- Rasterize-dilate-contour approach ---
+    grid_spacing = 10e3  # 10 km cell size for the coarse raster
 
-    if buffer_m > 0.0:
-        centroid = hull_points.mean(axis=0)
-        vec = hull_points - centroid
-        radius = np.sqrt((vec ** 2).sum(axis=1))
-        nonzero = radius > 0.0
-        vec[nonzero] = vec[nonzero] / radius[nonzero, np.newaxis]
-        hull_points = hull_points + buffer_m * vec
+    x_min = dst_points[:, 0].min() - buffer_m
+    x_max = dst_points[:, 0].max() + buffer_m
+    y_min = dst_points[:, 1].min() - buffer_m
+    y_max = dst_points[:, 1].max() + buffer_m
 
-    _log(f'destination hull x extent: {hull_points[:, 0].min():.0f} to '
-         f'{hull_points[:, 0].max():.0f}')
-    _log(f'destination hull y extent: {hull_points[:, 1].min():.0f} to '
-         f'{hull_points[:, 1].max():.0f}')
+    nx = int(np.ceil((x_max - x_min) / grid_spacing)) + 1
+    ny = int(np.ceil((y_max - y_min) / grid_spacing)) + 1
 
-    return Path(hull_points, closed=True)
+    # Bin destination points onto the coarse grid
+    ix = ((dst_points[:, 0] - x_min) / grid_spacing).astype(int)
+    iy = ((dst_points[:, 1] - y_min) / grid_spacing).astype(int)
+    ix = np.clip(ix, 0, nx - 1)
+    iy = np.clip(iy, 0, ny - 1)
+    occupancy = np.zeros((ny, nx), dtype=bool)
+    occupancy[iy, ix] = True
+
+    # Build a disk structuring element for dilation
+    radius_px = int(np.ceil(buffer_m / grid_spacing))
+    yy, xx = np.ogrid[-radius_px:radius_px + 1,
+                      -radius_px:radius_px + 1]
+    disk = (xx ** 2 + yy ** 2) <= radius_px ** 2
+
+    # Dilate the occupancy mask
+    dilated = binary_dilation(occupancy, structure=disk)
+
+    # Pad with False so the contour never exits the grid boundary
+    # (prevents straight-line artifacts from open contour paths)
+    dilated_padded = np.pad(dilated, pad_width=1,
+                            constant_values=False)
+
+    # Extract the outer contour at the 0.5 level
+    fig_tmp, ax_tmp = plt.subplots()
+    cs = ax_tmp.contour(dilated_padded.astype(float), levels=[0.5])
+    plt.close(fig_tmp)
+
+    # Find the longest contour path (outer boundary)
+    all_paths = cs.allsegs[0]
+    if not all_paths:
+        raise ValueError(
+            'Could not extract a contour from the dilated mask.')
+    longest = max(all_paths, key=lambda p: len(p))
+
+    # Convert pixel coordinates back to projected coordinates
+    # (subtract 1 to account for the padding pixel)
+    poly_x = x_min + (longest[:, 0] - 1) * grid_spacing
+    poly_y = y_min + (longest[:, 1] - 1) * grid_spacing
+    boundary_pts = np.column_stack([poly_x, poly_y])
+
+    _log(f'destination boundary x extent: '
+         f'{boundary_pts[:, 0].min():.0f} to '
+         f'{boundary_pts[:, 0].max():.0f}')
+    _log(f'destination boundary y extent: '
+         f'{boundary_pts[:, 1].min():.0f} to '
+         f'{boundary_pts[:, 1].max():.0f}')
+    _log(f'boundary polygon vertices: {len(boundary_pts)}')
+
+    return Path(boundary_pts, closed=True)
 
 
 def add_grid_imask_from_dst_scrip_hull(source_scrip, dest_scrip,
@@ -1274,7 +1321,7 @@ def add_grid_imask_from_dst_scrip_hull(source_scrip, dest_scrip,
                                        logger=None):
     """
     Create a new source SCRIP file with grid_imask set to 1 only for cells
-    that fall within the convex hull (plus buffer) of the destination SCRIP
+    that fall within the boundary (plus buffer) of the destination SCRIP
     footprint. This dramatically reduces the work ESMF_RegridWeightGen must do
     when the source dataset is much larger than the destination mesh.
 
@@ -1306,11 +1353,11 @@ def add_grid_imask_from_dst_scrip_hull(source_scrip, dest_scrip,
         Proj4/EPSG string for planar coordinates. Derived from domain if None.
 
     hull_path : matplotlib.path.Path or None, optional
-        Pre-built buffered convex hull of the destination mesh footprint, as
-        returned by :py:func:`compass.landice.mesh.build_dst_scrip_hull`.
-        When provided, dest_scrip is not read and the hull is not recomputed,
-        which is useful when masking multiple source datasets against the same
-        destination mesh.
+        Pre-built buffered concave boundary of the destination mesh footprint,
+        as returned by :py:func:`compass.landice.mesh.build_dst_scrip_hull`.
+        When provided, dest_scrip is not read and the boundary is not
+        recomputed, which is useful when masking multiple source datasets
+        against the same destination mesh.
 
     logger : logging.Logger, optional
         Logger for status messages; falls back to print if None.
@@ -1399,12 +1446,12 @@ def plot_hull_diagnostic(hull_path, dest_scrip, source_bbox_files,
                          transformer, _maybe_deg, active_xc, active_yc,
                          logger=None):
     """
-    Save a diagnostic PNG (``convex_hull.png``) showing the masking geometry.
+    Save a diagnostic PNG (``mesh_boundary.png``) showing the masking geometry.
 
     Parameters
     ----------
     hull_path : matplotlib.path.Path
-        Buffered convex hull of the destination mesh.
+        Buffered concave boundary of the destination mesh.
 
     dest_scrip : str
         Destination SCRIP file (used to scatter MALI domain extent).
@@ -1493,25 +1540,25 @@ def plot_hull_diagnostic(hull_path, dest_scrip, source_bbox_files,
                 facecolor='none', label=label)
             ax.add_patch(bbox)
 
-        # convex hull
+        # mesh boundary (concave, buffered)
         hull_verts = hull_path.vertices
         hull_patch = MplPolygon(
             hull_verts, closed=True,
             linewidth=2, edgecolor='tab:green',
-            facecolor='none', label='convex hull (buffered)')
+            facecolor='none', label='mesh boundary (buffered)')
         ax.add_patch(hull_patch)
 
         ax.set_aspect('equal')
         ax.set_xlabel('x (m)')
         ax.set_ylabel('y (m)')
         ax.legend(loc='best', markerscale=6)
-        ax.set_title('Source SCRIP masking: hull vs. domain')
-        fig.savefig('convex_hull.png', dpi=150,
+        ax.set_title('Source SCRIP masking: boundary vs. domain')
+        fig.savefig('mesh_boundary.png', dpi=150,
                     bbox_inches='tight', facecolor=fig.get_facecolor())
         plt.close(fig)
-        _log('Saved masking diagnostic plot to convex_hull.png')
+        _log('Saved masking diagnostic plot to mesh_boundary.png')
     except Exception as exc:
-        _log(f'Warning: could not save convex hull plot: {exc}')
+        _log(f'Warning: could not save mesh boundary plot: {exc}')
 
 
 def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
@@ -1544,9 +1591,9 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
         either the string "all" or a list of strings
 
     hull_path : matplotlib.path.Path or None, optional
-        Pre-built buffered convex hull of the destination mesh footprint, as
-        returned by :py:func:`compass.landice.mesh.build_dst_scrip_hull`.
-        When provided, the hull is not recomputed from mali_scrip, which
+        Pre-built buffered concave boundary of the destination mesh footprint,
+        as returned by :py:func:`compass.landice.mesh.build_dst_scrip_hull`.
+        When provided, the boundary is not recomputed from mali_scrip, which
         avoids redundant I/O and computation when this function is called
         multiple times with the same destination mesh.
     """
@@ -1890,9 +1937,9 @@ def run_optional_interpolation(
         dst_scrip_file = f'{mesh_base}_scrip.nc'
         scrip_from_mpas(mesh_filename, dst_scrip_file)
 
-        # Build the destination hull once so it can be reused for both
+        # Build the destination boundary once so it can be reused for both
         # BedMachine and MEaSUREs without re-reading dst_scrip_file.
-        logger.info('building destination mesh convex hull for source masking')
+        logger.info('building destination mesh boundary for source masking')
         hull_path = build_dst_scrip_hull(
             dest_scrip=dst_scrip_file,
             domain=src_proj,
