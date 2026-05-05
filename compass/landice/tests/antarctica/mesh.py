@@ -35,8 +35,7 @@ class Mesh(Step):
             The test case this step belongs to
 
         """
-        super().__init__(test_case=test_case, name='mesh', cpus_per_task=128,
-                         min_cpus_per_task=1)
+        super().__init__(test_case=test_case, name='mesh')
 
         self.mesh_filename = 'Antarctica.nc'
         self.add_output_file(filename='graph.info')
@@ -51,6 +50,13 @@ class Mesh(Step):
             database='')
 
     # no setup() method is needed
+
+    def constrain_resources(self, available_resources):
+        """
+        Update ``cpus_per_task`` to use all available cores
+        """
+        super().constrain_resources(available_resources)
+        self.cpus_per_task = available_resources['cores']
 
     def run(self):
         """

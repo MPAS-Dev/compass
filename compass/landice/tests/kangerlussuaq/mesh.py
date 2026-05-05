@@ -31,8 +31,7 @@ class Mesh(Step):
         mesh_type : str
             The resolution or mesh type of the test case
         """
-        super().__init__(test_case=test_case, name='mesh', cpus_per_task=128,
-                         min_cpus_per_task=1)
+        super().__init__(test_case=test_case, name='mesh')
 
         self.add_output_file(filename='graph.info')
         self.add_output_file(filename='Kangerlussuaq.nc')
@@ -49,6 +48,13 @@ class Mesh(Step):
                             database='')
 
     # no setup() method is needed
+
+    def constrain_resources(self, available_resources):
+        """
+        Update ``cpus_per_task`` to use all available cores
+        """
+        super().constrain_resources(available_resources)
+        self.cpus_per_task = available_resources['cores']
 
     def run(self):
         """
