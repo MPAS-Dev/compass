@@ -1,0 +1,320 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deploying a new spack environment &mdash; compass 2.0.0-alpha.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=a82a51ee"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API reference" href="api.html" />
+    <link rel="prev" title="Building the Documentation" href="building_docs.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Deploying a new spack environment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-lives-where">What lives where?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#when-do-shared-spack-environments-need-to-be-updated">When do shared Spack environments need to be updated?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-a-spack-deployment">Testing a Spack deployment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#basic-test-deployment">Basic test deployment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#useful-flags">Useful flags</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#testing-against-a-mache-branch">Testing against a mache branch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#albany-deployments">Albany deployments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#validating-the-deployment">Validating the deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting-spack-deployment">Troubleshooting Spack deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#deploying-shared-spack-environments">Deploying shared Spack environments</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Deploying a new spack environment</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/developers_guide/deploying_spack.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="deploying-a-new-spack-environment">
+<span id="dev-deploying-spack"></span><h1>Deploying a new spack environment<a class="headerlink" href="#deploying-a-new-spack-environment" title="Link to this heading"></a></h1>
+<p>Compass now deploys environments through <code class="docutils literal notranslate"><span class="pre">./deploy.py</span></code>, backed by
+<code class="docutils literal notranslate"><span class="pre">mache.deploy</span></code>.  Compared with pixi dependency updates, Spack updates are
+heavier-weight because the resulting environments are often shared on
+supported machines and build times can be substantial.</p>
+<p>Use this page when you need to update or redeploy the shared Spack-backed
+Compass stack on supported HPC systems.</p>
+<section id="what-lives-where">
+<h2>What lives where?<a class="headerlink" href="#what-lives-where" title="Link to this heading"></a></h2>
+<p>The main deployment inputs in this repository are:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">deploy.py</span></code></dt><dd><p>The repository entry point for deployment.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">deploy/pins.cfg</span></code></dt><dd><p>Version pins for pixi, Spack and shared dependencies.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">deploy/config.yaml.j2</span></code></dt><dd><p>Deployment behavior and runtime settings consumed by <code class="docutils literal notranslate"><span class="pre">mache.deploy</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">deploy/spack.yaml.j2</span></code></dt><dd><p>The Compass-specific list of Spack specs to deploy.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">deploy/hooks.py</span></code></dt><dd><p>Compass-specific deployment hooks for machine defaults and optional Albany
+support.</p>
+</dd>
+</dl>
+<p>Machine-specific Spack environment templates now live in
+<a class="reference external" href="https://github.com/E3SM-Project/mache">mache</a>, not in this repository.</p>
+</section>
+<section id="when-do-shared-spack-environments-need-to-be-updated">
+<h2>When do shared Spack environments need to be updated?<a class="headerlink" href="#when-do-shared-spack-environments-need-to-be-updated" title="Link to this heading"></a></h2>
+<p>Shared Spack environments typically need to be redeployed when one of the
+following changes:</p>
+<ul class="simple">
+<li><p>the pinned versions in <code class="docutils literal notranslate"><span class="pre">deploy/pins.cfg</span></code> under <code class="docutils literal notranslate"><span class="pre">[spack]</span></code> or <code class="docutils literal notranslate"><span class="pre">[all]</span></code></p></li>
+<li><p>the requested specs in <code class="docutils literal notranslate"><span class="pre">deploy/spack.yaml.j2</span></code></p></li>
+<li><p>machine-specific Spack behavior in <code class="docutils literal notranslate"><span class="pre">mache</span></code> that affects supported systems</p></li>
+</ul>
+<p>Because these environments are shared, it is usually appropriate to bump the
+Compass version before redeploying them.</p>
+<p>The current automated Compass Spack deployment covers the packages listed in
+<code class="docutils literal notranslate"><span class="pre">deploy/spack.yaml.j2</span></code>.  Compass now splits these into per-toolchain
+library environments for MPAS link dependencies such as SCORPIO and optional
+Albany/Trilinos, plus a shared software environment for tool binaries such as
+ESMF, MOAB and CMake.  PETSc and Netlib-LAPACK are no longer part of the
+automated <code class="docutils literal notranslate"><span class="pre">./deploy.py</span></code> workflow in this repository.</p>
+</section>
+<section id="testing-a-spack-deployment">
+<h2>Testing a Spack deployment<a class="headerlink" href="#testing-a-spack-deployment" title="Link to this heading"></a></h2>
+<p>Before touching any shared location, do a test deployment in a scratch or
+user-owned Spack path.</p>
+<section id="basic-test-deployment">
+<h3>Basic test deployment<a class="headerlink" href="#basic-test-deployment" title="Link to this heading"></a></h3>
+<p>On a supported machine, run something like:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">SCRATCH_SPACK</span><span class="o">=</span>&lt;path_to_test_spack&gt;
+./deploy.py<span class="w"> </span>--deploy-spack<span class="w"> </span>--spack-path<span class="w"> </span><span class="si">${</span><span class="nv">SCRATCH_SPACK</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--compiler<span class="w"> </span>intel<span class="w"> </span>intel<span class="w"> </span>gnu<span class="w"> </span>--mpi<span class="w"> </span>openmpi<span class="w"> </span>impi<span class="w"> </span>openmpi<span class="w"> </span>--recreate
+</pre></div>
+</div>
+<p>Adjust <code class="docutils literal notranslate"><span class="pre">--compiler</span></code> and <code class="docutils literal notranslate"><span class="pre">--mpi</span></code> to match the machine you are testing.</p>
+</section>
+<section id="useful-flags">
+<h3>Useful flags<a class="headerlink" href="#useful-flags" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">--deploy-spack</span></code></dt><dd><p>Build or update the supported Spack library and software environments.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">--spack-path</span> <span class="pre">&lt;path&gt;</span></code></dt><dd><p>Use a test Spack checkout and install location instead of the shared one.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">--compiler</span> <span class="pre">&lt;compiler...&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">--mpi</span> <span class="pre">&lt;mpi...&gt;</span></code></dt><dd><p>Select the toolchain combinations to test.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">--recreate</span></code></dt><dd><p>Start from a clean deployment for this run.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">--with-albany</span></code></dt><dd><p>Deploy the Albany-enabled Spack library environment in addition to the
+default one.</p>
+</dd>
+</dl>
+<p>If you need a non-default temporary directory for Spack builds, set
+<code class="docutils literal notranslate"><span class="pre">spack.tmpdir</span></code> in <code class="docutils literal notranslate"><span class="pre">deploy/config.yaml.j2</span></code> before running deployment.</p>
+</section>
+<section id="testing-against-a-mache-branch">
+<h3>Testing against a mache branch<a class="headerlink" href="#testing-against-a-mache-branch" title="Link to this heading"></a></h3>
+<p>When Compass changes depend on unreleased <code class="docutils literal notranslate"><span class="pre">mache</span></code> updates, test with a fork
+and branch explicitly:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">SCRATCH_SPACK</span><span class="o">=</span>&lt;path_to_test_spack&gt;
+./deploy.py<span class="w"> </span>--mache-fork<span class="w"> </span>&lt;fork&gt;<span class="w"> </span>--mache-branch<span class="w"> </span>&lt;branch&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--deploy-spack<span class="w"> </span>--spack-path<span class="w"> </span><span class="si">${</span><span class="nv">SCRATCH_SPACK</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--compiler<span class="w"> </span>intel<span class="w"> </span>intel<span class="w"> </span>gnu<span class="w"> </span>--mpi<span class="w"> </span>openmpi<span class="w"> </span>impi<span class="w"> </span>openmpi<span class="w"> </span>--recreate
+</pre></div>
+</div>
+<p>This keeps the Compass deployment workflow the same while swapping in the
+requested <code class="docutils literal notranslate"><span class="pre">mache</span></code> branch during bootstrap and deployment.</p>
+</section>
+<section id="albany-deployments">
+<h3>Albany deployments<a class="headerlink" href="#albany-deployments" title="Link to this heading"></a></h3>
+<p>If you are testing MALI workflows that require Albany, add
+<code class="docutils literal notranslate"><span class="pre">--with-albany</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">SCRATCH_SPACK</span><span class="o">=</span>&lt;path_to_test_spack&gt;
+./deploy.py<span class="w"> </span>--deploy-spack<span class="w"> </span>--spack-path<span class="w"> </span><span class="si">${</span><span class="nv">SCRATCH_SPACK</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--compiler<span class="w"> </span>gnu<span class="w"> </span>--mpi<span class="w"> </span>openmpi<span class="w"> </span>--with-albany<span class="w"> </span>--recreate
+</pre></div>
+</div>
+<p>Albany support is restricted to the machine/compiler/MPI combinations allowed
+by the deployment hooks and machine configuration.</p>
+</section>
+</section>
+<section id="validating-the-deployment">
+<h2>Validating the deployment<a class="headerlink" href="#validating-the-deployment" title="Link to this heading"></a></h2>
+<p>After deployment completes:</p>
+<ul class="simple">
+<li><p>source the generated load script for the toolchain you want to validate</p></li>
+<li><p>build the appropriate MPAS component with the matching make target</p></li>
+<li><p>set up and run the relevant Compass suites or test cases</p></li>
+<li><p>confirm the generated work directories contain <code class="docutils literal notranslate"><span class="pre">load_compass_env.sh</span></code> and
+that sourcing it activates the intended environment</p></li>
+</ul>
+<p>The <a class="reference internal" href="quick_start.html#dev-quick-start"><span class="std std-ref">Quick Start for Developers</span></a> page and the machine pages under
+<a class="reference internal" href="machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a> remain the main references for build targets and
+day-to-day usage once deployment has succeeded.</p>
+</section>
+<section id="troubleshooting-spack-deployment">
+<h2>Troubleshooting Spack deployment<a class="headerlink" href="#troubleshooting-spack-deployment" title="Link to this heading"></a></h2>
+<p>If a Spack deployment fails part way through and suggests clearing caches, the
+usual recovery step is:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>&lt;spack_path&gt;/share/spack/setup-env.sh
+spack<span class="w"> </span>clean<span class="w"> </span>-m
+</pre></div>
+</div>
+<p>Then rerun <code class="docutils literal notranslate"><span class="pre">./deploy.py</span></code> with the same arguments.</p>
+<p>If deployment is failing because the wrong architecture or operating system is
+being inferred for a new machine template, use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>&lt;spack_path&gt;/share/spack/setup-env.sh
+spack<span class="w"> </span>arch<span class="w"> </span>-o
+spack<span class="w"> </span>arch<span class="w"> </span>-g
+</pre></div>
+</div>
+<p>and update the corresponding machine support in <code class="docutils literal notranslate"><span class="pre">mache</span></code>.</p>
+<p>If a machine requires a local mirror or site-specific workaround for one of the
+Spack packages, coordinate that change with the machine maintainers and keep
+the Compass pins in <code class="docutils literal notranslate"><span class="pre">deploy/pins.cfg</span></code> aligned with whatever is available at
+the site.</p>
+</section>
+<section id="deploying-shared-spack-environments">
+<h2>Deploying shared Spack environments<a class="headerlink" href="#deploying-shared-spack-environments" title="Link to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Be careful about deploying shared Spack environments, because changes you
+make can affect other Compass users on that machine.</p>
+</div>
+<p>Once test deployments and validation passes are complete, deploy to the shared
+location by omitting <code class="docutils literal notranslate"><span class="pre">--spack-path</span></code> and using the machine defaults from the
+<code class="docutils literal notranslate"><span class="pre">[deploy]</span></code> section of the relevant machine config:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./deploy.py<span class="w"> </span>--deploy-spack<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--compiler<span class="w"> </span>intel<span class="w"> </span>intel<span class="w"> </span>gnu<span class="w"> </span>--mpi<span class="w"> </span>openmpi<span class="w"> </span>impi<span class="w"> </span>openmpi<span class="w"> </span>--recreate
+</pre></div>
+</div>
+<p>For an Albany-enabled shared deployment, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./deploy.py<span class="w"> </span>--deploy-spack<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--compiler<span class="w"> </span>gnu<span class="w"> </span>--mpi<span class="w"> </span>openmpi<span class="w"> </span>--with-albany<span class="w"> </span>--recreate
+</pre></div>
+</div>
+<p>Do this only after the equivalent test deployments have succeeded in a private
+Spack path.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="building_docs.html" class="btn btn-neutral float-left" title="Building the Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-right" title="API reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
