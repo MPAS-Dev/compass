@@ -12,7 +12,7 @@ script similar to:
 
 .. code-block:: bash
 
-    source load_dev_compass_1.2.0-alpha.2_pm-cpu_gnu_mpich.sh
+    source load_compass_pm-cpu_gnu_mpich.sh
 
 Then, you can build the MPAS model with
 

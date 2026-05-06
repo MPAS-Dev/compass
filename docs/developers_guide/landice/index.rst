@@ -3,7 +3,7 @@
 Landice core
 ============
 
-The ``landice`` core is defined by the :py:class:`compass.landice.LandIce`
+The ``landice`` core is defined by the :py:class:`compass.landice.Landice`
 class. All test cases in the ``landice`` core share the following set of
 default config options:
 
@@ -18,27 +18,21 @@ default config options:
     # has been built
     mpas_model = MALI-Dev/components/mpas-albany-landice
 
-    # The namelists section defines paths to example_compact namelists that will be used
-    # to generate specific namelists. By default, these point to the forward and
-    # init namelists in the default_inputs directory after a successful build of
-    # the landice model.  Change these in a custom config file if you need a different
-    # example_compact.
+    # The namelists section defines paths to default namelist templates used
+    # to generate case-specific namelists.
     [namelists]
     forward = ${paths:mpas_model}/default_inputs/namelist.landice
 
-    # The streams section defines paths to example_compact streams files that will be used
-    # to generate specific streams files. By default, these point to the forward and
-    # init streams files in the default_inputs directory after a successful build of
-    # the landice model. Change these in a custom config file if you need a different
-    # example_compact.
+    # The streams section defines paths to default stream templates used to
+    # generate case-specific streams files.
     [streams]
     forward = ${paths:mpas_model}/default_inputs/streams.landice
 
 
     # The executables section defines paths to required executables. These
     # executables are provided for use by specific test cases.  Most tools that
-    # compass needs should be in the conda environment, so this is only the path
-    # to the MPAS-Ocean executable by default.
+    # compass needs should be in the deployment environment, so this is only
+    # the path to the MALI executable by default.
     [executables]
     model = ${paths:mpas_model}/landice_model
 

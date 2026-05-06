@@ -9,8 +9,6 @@ model. For more information on MALI, see
 `Hoffman et al. (2018) <https://doi.org/10.5194/gmd-11-3747-2018>`_ and the
 `MALI User's Guide <https://zenodo.org/record/1227426#.YNSy1R1MGAY>`_.
 There are a number of test groups, listed below.
-Some additional ``landice`` test cases are available through
-:ref:`legacy_compass`.
 
 Some helpful external links:
 

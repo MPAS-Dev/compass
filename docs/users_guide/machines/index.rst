@@ -194,7 +194,7 @@ package, run:
 
 .. code-block:: bash
 
-    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.10 "compass=*=mpi_mpich*"
+    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.14 "compass=*=mpi_mpich*"
 
 This is the recommended default for single-node Linux and OSX machines.
 
@@ -206,7 +206,7 @@ package, run:
 
 .. code-block:: bash
 
-    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.10 "compass=*=mpi_openmpi*"
+    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.14 "compass=*=mpi_openmpi*"
 
 No MPI from conda-forge
 -----------------------
@@ -216,7 +216,7 @@ conda-forge, run:
 
 .. code-block:: bash
 
-    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.10 "compass=*=nompi*"
+    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.14 "compass=*=nompi*"
 
 This would be the starting point for working with ``compass`` on an unknown
 HPC machine.  From there, you would also need to load modules and set

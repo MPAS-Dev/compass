@@ -28,7 +28,8 @@ The test cases in this test group can run with either the SIA or FO velocity
 solvers.  Running with the FO solver requires a build of MALI that includes Albany,
 but the SIA variant of the test can be run without Albany.
 
-The test group includes 3 test cases.  All test cases have 3 steps,
+The test group includes three families of test cases: smoke, decomposition and
+restart.  All of these test cases have three steps,
 ``setup_mesh``, which defines the mesh and initial conditions for the model;
 ``run_model`` (given another name in many test cases to distinguish multiple
 forward runs), which performs time integration of the model; and ``visualize``,
@@ -38,7 +39,7 @@ or both).
 config options
 --------------
 
-All 3 test cases share the same set of default config options:
+All of these test cases share the same set of default config options:
 
 .. code-block:: cfg
 
@@ -83,28 +84,36 @@ All 3 test cases share the same set of default config options:
 smoke_test
 ----------
 
-``landice/dome/2000m/smoke_test`` and ``landice/dome/varres/smoke_test`` are
-the default version of the dome test case which is meant as a minimal example test 
-to set up and run.  There is optional validation against the analytic solution.
-The SIA version of this test runs for 200 years, while the FO version is configured
-to only run for 2 years, given the greater expense of the FO solver.  These default
-durations can be modified in the namelist.landice file in the ``run_step`` directory.
+The smoke-test variants are ``landice/dome/2000m/sia_smoke_test``,
+``landice/dome/2000m/fo_smoke_test``,
+``landice/dome/variable_resolution/sia_smoke_test`` and
+``landice/dome/variable_resolution/fo_smoke_test``.  These are the default
+minimal example tests to set up and run.  There is optional validation
+against the analytic solution.  The SIA versions run for 200 years, while the
+FO versions are configured to run for only 2 years because the FO solver is
+more expensive.  These default durations can be modified in the
+``namelist.landice`` file in the ``run_model`` step directory.
 
 decomposition_test
 ------------------
 
-``landice/dome/2000m/decomposition_test`` and
-``landice/dome/varres/decomposition_test`` run short (1 year) integrations
-of the model forward in time on 1 (``1proc_run`` step) and then on 4 processors
-(``4proc_run`` step) to make sure the resulting prognostic variables are
-bit-for-bit identical between the two runs.
+The decomposition-test variants are
+``landice/dome/2000m/sia_decomposition_test``,
+``landice/dome/2000m/fo_decomposition_test``,
+``landice/dome/variable_resolution/sia_decomposition_test`` and
+``landice/dome/variable_resolution/fo_decomposition_test``.  They run short
+(1 year) integrations of the model forward in time on 1 (``1proc_run`` step)
+and then on 4 processors (``4proc_run`` step) to compare the resulting
+prognostic variables between the two runs.
 
 restart_test
 ------------
 
-``landice/dome/2000m/restart_test`` and ``landice/dome/varres/restart_test``
-first run a short (2 year) integration of the model forward in time
-(``full_run`` step).  Then, a second step (``restart_run``) performs 2
-1-year runs, where the second begins from a restart file saved by the first.
-Prognostic variables are compared between the "full" and "restart" runs at
-year 2 to make sure they are bit-for-bit identical.
+The restart-test variants are ``landice/dome/2000m/sia_restart_test``,
+``landice/dome/2000m/fo_restart_test``,
+``landice/dome/variable_resolution/sia_restart_test`` and
+``landice/dome/variable_resolution/fo_restart_test``.  Each first runs a
+short (2 year) integration of the model forward in time (``full_run`` step).
+Then, a second step (``restart_run``) performs two 1-year runs, where the
+second begins from a restart file saved by the first.  Prognostic variables
+are compared between the "full" and "restart" runs at year 2.

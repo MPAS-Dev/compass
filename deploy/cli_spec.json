@@ -1,0 +1,106 @@
+{
+  "meta": {
+    "software": "compass",
+    "mache_version": "3.6.1",
+    "description": "Deploy compass environment"
+  },
+  "arguments": [
+    {
+      "flags": ["--machine"],
+      "dest": "machine",
+      "help": "Name of the machine to deploy for (must be known to mache). If not provided, mache will attempt to detect the machine from the host.",
+      "route": ["deploy", "run"]
+    },
+    {
+      "flags": ["--pixi"],
+      "dest": "pixi",
+      "help": "Path to the pixi executable. If not provided, pixi is found on PATH.",
+      "route": ["deploy", "bootstrap", "run"]
+    },
+    {
+      "flags": ["--pixi-path", "--prefix"],
+      "dest": "pixi_path",
+      "help": "Install the pixi environment at this path (directory). Overrides deploy/config.yaml.j2. `--prefix` is deprecated.",
+      "route": ["deploy", "bootstrap", "run"]
+    },
+    {
+      "flags": ["--compiler"],
+      "dest": "compiler",
+      "nargs": "+",
+      "help": "Name of the compiler toolchain (primarily for Spack). If not provided, defaults may come from merged machine config [deploy] compiler.",
+      "route": ["deploy", "run"]
+    },
+    {
+      "flags": ["--mpi"],
+      "dest": "mpi",
+      "nargs": "+",
+      "help": "Name of the MPI library (primarily for Spack). If not provided, defaults may come from merged machine config [deploy] mpi_<compiler> (or mpi).",
+      "route": ["deploy", "run"]
+    },
+    {
+      "flags": ["--deploy-spack"],
+      "dest": "deploy_spack",
+      "action": "store_true",
+      "help": "Deploy all supported Spack environments (overrides spack.deploy in deploy/config.yaml.j2).",
+      "route": ["deploy", "run"]
+    },
+    {
+      "flags": ["--no-spack"],
+      "dest": "no_spack",
+      "action": "store_true",
+      "help": "Disable all Spack use for this run, including reuse of existing Spack environments.",
+      "route": ["deploy", "run"]
+    },
+    {
+      "flags": ["--spack-path"],
+      "dest": "spack_path",
+      "help": "Path to the Spack checkout to use (overrides spack.spack_path in deploy/config.yaml.j2).",
+      "route": ["deploy", "run"]
+    },
+    {
+      "flags": ["--recreate"],
+      "dest": "recreate",
+      "action": "store_true",
+      "help": "Recreate the environment if it exists.",
+      "route": ["deploy", "bootstrap", "run"]
+    },
+    {
+      "flags": ["--mache-version"],
+      "dest": "mache_version",
+      "help": "The mache version to use if not using an org/fork/branch.",
+      "route": ["deploy", "bootstrap", "run"]
+    },
+    {
+      "flags": ["--python"],
+      "dest": "python",
+      "help": "The python major and minor version to use. Overrides deploy/pins.cfg.j2.",
+      "route": ["deploy", "bootstrap", "run"]
+    },
+    {
+      "flags": ["--mache-fork"],
+      "dest": "mache_fork",
+      "help": "Point to a mache org/fork (and branch) for testing. Example: E3SM-Project/mache",
+      "route": ["deploy", "bootstrap", "run"]
+    },
+    {
+      "flags": ["--mache-branch"],
+      "dest": "mache_branch",
+      "help": "Point to a mache branch (and fork) for testing.",
+      "route": ["deploy", "bootstrap", "run"]
+    },
+    {
+      "flags": ["--quiet"],
+      "dest": "quiet",
+      "action": "store_true",
+      "help": "Only print output to log files, not to the terminal.",
+      "route": ["deploy", "bootstrap", "run"]
+    },
+    {
+      "flags": ["--bootstrap-only"],
+      "dest": "bootstrap_only",
+      "action": "store_true",
+      "help": "Only create or update the bootstrap pixi environment.",
+      "route": ["deploy"]
+    }
+  ]
+}

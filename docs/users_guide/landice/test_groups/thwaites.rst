@@ -6,7 +6,7 @@ thwaites
 The ``landice/thwaites`` test group runs tests with a coarse (4-14-km)
 `Thwaites Glacier mesh <https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/thwaites.4km.210608.nc>`_.
 The purpose of this test group is to provide a realistic glacier that
-includess an ice shelf.
+includes an ice shelf.
 The mesh and initial condition are already generated.  In the future,
 additional test cases may be added for generating a new version of the
 Thwaites mesh at different resolutions and using different data sources.
@@ -18,16 +18,18 @@ Thwaites mesh at different resolutions and using different data sources.
    FO velocity solution visualized in Paraview.  Grounding line position
    shown with a white line.
 
-The test group includes three test cases, two of which have one or more steps
-that are variants on ``run_model`` (given other names in the decomposition and
-restart test cases to distinguish multiple model runs), which performs time
-integration of the model.  There is a not an explicit smoke test, but the
-``full_run`` step of the ``restart_test`` can be used as a smoke test.
+The test group includes four FO-based model test cases, each with one or more
+steps that are variants on ``run_model`` (given other names in the
+decomposition and restart test cases to distinguish multiple model runs),
+which performs time integration of the model.  These are
+``fo_decomposition_test``, ``fo-depthInt_decomposition_test``,
+``fo_restart_test`` and ``fo-depthInt_restart_test``.  There is also a
+``mesh_gen`` test case.  There is not an explicit smoke test, but the
+``full_run`` step of either restart test can be used as a smoke test.
 
-The ``decomposition_test`` and ``restart_test`` test cases in this test group
-can only be run with the FO velocity solvers. Running with the FO solver requires
-a build of MALI that includes Albany. There is no integration step for the test
-case ``mesh_gen``.
+The model test cases in this test group can only be run with FO velocity
+solvers. Running with FO requires a build of MALI that includes Albany. There
+is no integration step for the ``mesh_gen`` test case.
 
 config options
 --------------
@@ -46,7 +48,7 @@ The other test cases do not use config options.
     # Set to a value <= 0 if you do not want
     # to cull based on distance from margin.
     cull_distance = 10.0
-    
+
     # mesh density parameters
     # minimum cell spacing (meters)
     min_spac = 1.e3
@@ -60,7 +62,7 @@ The other test cases do not use config options.
     high_dist = 1.e5
     # distance within which cell spacing = min_spac
     low_dist = 5.e4
-    
+
     # mesh density functions
     use_speed = True
     use_dist_to_grounding_line = True
@@ -100,18 +102,18 @@ bit-for-bit identical.
 restart_test
 ------------
 
-``landice/thwaites/restart_test`` first runs a short (5-day) integration
-of the model forward in time (``full_run`` step).  Then, a second step
-(``restart_run``) performs two subsequent 2 and 3 day integrations, where the
-second begins from a restart file saved by the first. Prognostic variables
-are compared between the "full" and "restart" runs to make sure they are
-bit-for-bit identical.
+The restart-test variants are ``landice/thwaites/fo_restart_test`` and
+``landice/thwaites/fo-depthInt_restart_test``.  Each first runs a short
+(5-day) integration of the model forward in time (``full_run`` step).  Then,
+a second step (``restart_run``) performs two subsequent 2- and 3-day
+integrations, where the second begins from a restart file saved by the first.
+Prognostic variables are compared between the "full" and "restart" runs.
 
 mesh_gen
 -------------
 
 ``landice/thwaites/mesh_gen`` creates a variable resolution mesh based
-on the the config options listed above. This will not be the same as the
+on the config options listed above. This will not be the same as the
 pre-generated 4-14km mesh used in ``decomposition_test`` and ``restart_test``
 because it uses a newer version of Jigsaw. Note that the basal friction
 optimization is performed separately and is not part of this test case.

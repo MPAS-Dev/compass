@@ -7,8 +7,12 @@ The ``landice/calving_dt_convergence`` test group supports tests for
 assessing the timestep convergence of calving physics in MALI.  The tests all
 use pre-generated meshes.
 
-The test group includes a single test case with many variants for using
-different meshes, calving laws, and velocity solver settings.
+The test group includes many individual test cases that cover combinations of
+three meshes (``mismip+``, ``humboldt`` and ``thwaites``), three calving laws
+(``specified_calving_velocity``, ``von_Mises_stress`` and ``eigencalving``),
+and two velocity settings (``none`` and ``FO``).  The
+``specified_calving_velocity`` cases are only available with ``none``
+velocity because the FO combination is not used in the code.
 
 config options
 --------------
@@ -18,21 +22,21 @@ There currently are no config options.
 dt_convergence_test
 -------------------
 
-``landice/calving_dt_convergence/dt_convergence_test`` runs short
-integrations repeatedly with different values for the fraction of the
-calving CFL limit applied in the adpative timestepper.  Time series of the
+Cases in this test group have names such as
+``landice/calving_dt_convergence/humboldt.von_Mises_stress.none`` or
+``landice/calving_dt_convergence/thwaites.eigencalving.FO``.  Each one runs
+short integrations repeatedly with different values for the fraction of the
+calving CFL limit applied in the adaptive timestepper.  Time series of the
 total calving flux and the calving CFL to actual timestep ratio are then
 plotted, as well as summary of the number of calving warnings for each choice
 of calving CFL fraction (see below).
-The individual tests are named for the mesh, the calving law, and the
-velocity solver setting, separated by periods.
 
 .. figure:: images/calving_dt_comparison.png
    :width: 777 px
    :align: center
 
    Example results of calving dt test for the
-   ``humboldt.specified_calving_velocity.none`` test.  The top plot
+   ``humboldt.specified_calving_velocity.none`` test case.  The top plot
    shows the total calving flux over time for different choices of
    the calving CFL fraction.  Results should be similar for small
    fraction values.  As the fraction is increased,

@@ -5,74 +5,30 @@ Quick Start for Users
 
 .. _conda_env:
 
-compass conda environment
--------------------------
+compass deployment environment
+------------------------------
 
 E3SM supported machines
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 E3SM Compass users are basically all developers so we recommend using the
-:ref:`dev_quick_start` guide.  We used to maintain shared Compass environments
-build for each release but this proved to be a maintenance burden with little
-benefit.
+:ref:`dev_quick_start` guide.  That workflow uses ``./deploy.py`` to create or
+update a local Compass deployment, generates the load scripts that Compass
+work directories link to as ``load_compass_env.sh``, and matches the current
+state of the code in this repository.
 
 Other machines
 ~~~~~~~~~~~~~~
 
-To install your own ``compass`` conda environment on other machines, first,
-install `Miniforge3 <https://github.com/conda-forge/miniforge?tab=readme-ov-file#miniforge3>`_
-(if it is not already installed), then create a new conda environment (called
-``compass`` in this example) as follows:
+Compass no longer maintains the old release-conda workflow documented in
+earlier versions of this page.  In particular, helper commands such as
+``create_compass_load_script`` are no longer part of this repository.
 
-.. code-block:: bash
-
-    conda create -n compass -c e3sm/label/compass -c conda-forge python=3.13 \
-        "compass=*=mpi_mpich*"
-
-This will install the version of the package with MPI from conda-forge's MPICH
-package.  If you want OpenMPI, use ``"compass=*=mpi_openmpi*"`` instead.  If
-you do not want MPI from conda-forge (e.g. because you are working with a
-system with its own MPI), use ``"compass=*=nompi*"``
-
-To get a specific version of ``compass``, you can instead run:
-
-.. code-block:: bash
-
-    conda create -n compass -c e3sm/label/compass -c conda-forge python=3.13 \
-        "compass=1.8.0=mpi_mpich*"
-
-That is, you will replace ``compass=*`` with ``compass=1.8.0``.
-
-Then, you will need to create a load script to activate the conda environment
-and set some environment variables.  On unsupported machines, you should first
-clone and build `Jigsaw <https://github.com/dengwirda/jigsaw>`_ and installs
-both Jigsaw and `Jigsaw-Python <https://github.com/dengwirda/jigsaw-python>`_.
-These tools are used to build MPAS grids and the latest versions are not
-available as conda packages.
-
-.. code-block:: bash
-
-    conda activate compass
-    build_jigsaw --clone --subdir jigsaw-python
-
-Then, in a directory where you want to store the load script, run:
-
-.. code-block:: bash
-
-    create_compass_load_script
-
-From then on, each time you want to set up test cases or suites with compass
-or build MPAS components, you will need to source that load script, for
-example:
-
-.. code-block:: bash
-
-    source load_compass_1.8.0_mpich.sh
-
-When you set up tests, a link called ``load_compass_env.sh`` will be added to
-each test case or suite work directory.  To run the tests, you may find it
-more convenient to source that link instead of finding the path to the original
-load script.
+For current workflows on unsupported machines, use the same deployment path as
+developers where practical, or create an environment with the dependencies
+needed by the cases you plan to run and make sure Jigsaw/Jigsaw-Python are
+available for mesh-generation workflows.  In either case, the maintained
+reference is still :ref:`dev_quick_start`.
 
 .. _build_mpas:
 
@@ -159,22 +115,22 @@ and you get output like this:
    9: landice/dome/variable_resolution/sia_restart_test
    ...
 
-The list is long, so it will likely be useful to ``grep`` for particular
+The list is long, so it will likely be useful to filter for particular
 content:
 
 .. code-block:: bash
 
-    compass list | grep baroclinic_channel
+    compass list -t '^landice/greenland/'
 
 .. code-block:: none
 
-  32: ocean/baroclinic_channel/1km/rpe_test
-  33: ocean/baroclinic_channel/4km/rpe_test
-  34: ocean/baroclinic_channel/10km/rpe_test
-  35: ocean/baroclinic_channel/10km/decomp_test
-  36: ocean/baroclinic_channel/10km/default
-  37: ocean/baroclinic_channel/10km/restart_test
-  38: ocean/baroclinic_channel/10km/threads_test
+  39: landice/greenland/sia_smoke_test
+  40: landice/greenland/sia_decomposition_test
+  41: landice/greenland/sia_restart_test
+  42: landice/greenland/fo_smoke_test
+  43: landice/greenland/fo_decomposition_test
+  44: landice/greenland/fo_restart_test
+  45: landice/greenland/mesh_gen
 
 See :ref:`dev_compass_list` for more information.
 
@@ -183,7 +139,8 @@ test case:
 
 .. code-block:: bash
 
-    compass setup -t ocean/global_ocean/QU240/mesh -w <workdir> -p <mpas_path>
+    compass setup -t landice/greenland/sia_smoke_test \
+        -w <workdir> -p <mpas_path>
 
 or you can replace the ``-t`` flag with the simple shortcut: ``-n 15``.  You
 can set up several test cases at once by passing test numbers separated by
@@ -196,7 +153,7 @@ Chrysalis at LCRC, you might use:
 
     -w /lcrc/group/e3sm/$USER/runs/210131_test_new_branch
 
-The placeholder ``<mpas>`` is the relative or absolute path where the MPAS
+The placeholder ``<mpas_path>`` is the relative or absolute path where the MPAS
 component has been built (the directory, not the executable itself; see
 :ref:`machines`).  You will typically want to provide a path either with ``-p``
 or in a config file (see below) because the default paths are only useful for
@@ -386,11 +343,9 @@ The output is:
 
     Suites:
       -c landice -t calving_dt_convergence
-      -c landice -t fo_integration
       -c landice -t full_integration
       -c landice -t humboldt_calving_tests
       -c landice -t humboldt_calving_tests_fo
-      -c landice -t sia_integration
       -c ocean -t cosine_bell_cached_init
       -c ocean -t ec30to60
       -c ocean -t ecwisc30to60
@@ -398,14 +353,7 @@ The output is:
       -c ocean -t kuroshio12to60
       -c ocean -t nightly
       -c ocean -t pr
-      -c ocean -t qu240_for_e3sm
-      -c ocean -t quwisc240
-      -c ocean -t quwisc240_for_e3sm
-      -c ocean -t so12to30
-      -c ocean -t sowisc12to30
-      -c ocean -t wc14
-      -c ocean -t wcwisc14
-      -c ocean -t wetdry
+      ...
 
 You can set up a suite as follows:
 

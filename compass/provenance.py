@@ -1,8 +1,6 @@
 import os
-import sys
 import subprocess
-
-from compass.config import CompassConfigParser
+import sys
 
 
 def write(work_dir, test_cases, config=None):
@@ -38,11 +36,13 @@ def write(work_dir, test_cases, config=None):
     else:
         mpas_git_version = _get_mpas_git_version(config)
 
+    package_list_name = 'pixi list'
     try:
-        args = ['conda', 'list']
-        conda_list = subprocess.check_output(args).decode('utf-8')
-    except subprocess.CalledProcessError:
-        conda_list = None
+        package_list = subprocess.check_output(
+            ['pixi', 'list']
+        ).decode('utf-8')
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        package_list = None
 
     calling_command = ' '.join(sys.argv)
 
@@ -92,9 +92,9 @@ def write(work_dir, test_cases, config=None):
 
         provenance_file.write('{}\n'.format(print_string))
 
-    if conda_list is not None:
-        provenance_file.write('conda list:\n')
-        provenance_file.write('{}\n'.format(conda_list))
+    if package_list is not None and package_list_name is not None:
+        provenance_file.write(f'{package_list_name}:\n')
+        provenance_file.write('{}\n'.format(package_list))
 
     provenance_file.write('**************************************************'
                           '*********************\n')

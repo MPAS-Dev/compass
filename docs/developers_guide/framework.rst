@@ -48,7 +48,7 @@ clean module
 ~~~~~~~~~~~~
 
 The :py:func:`compass.clean.clean_cases()` function is used by
-``compass clean`` and ``compass suite`` to delete the constants of a test-case
+``compass clean`` and ``compass suite`` to delete the contents of a test-case
 subdirectory in the work directory.
 
 .. _dev_suite:
@@ -85,8 +85,8 @@ and CPUs per task for each step, then it calls each step's ``run()`` method.
 
 Suites run from the base work directory with a pickle file starting with the
 suite name, or ``custom.pickle`` if a suite name was not given. Test cases or
-steps run from their respective subdirectories with a ``testcase.pickle`` or
-``step.pickle`` file in them. Both of these functions reads the local pickle
+steps run from their respective subdirectories with a ``test_case.pickle`` or
+``step.pickle`` file in them. Both of these functions read the local pickle
 file to retrieve information about the test suite, test case and/or step that
 was stored during setup.
 
@@ -94,7 +94,7 @@ If :py:func:`compass.run.serial.run_tests()` is used for a test suite, it will
 run each test case in the test suite in the order that they are given in the
 text file defining the suite (``compass/<mpas_core>/suites/<suite_name>.txt``).
 Output from test cases and their steps are stored in log files in the
-``case_output`` subdirectory of the base work directory. If the function is
+``case_outputs`` subdirectory of the base work directory. If the function is
 used for a single test case, it will run the steps of that test case, writing
 output for each step to a log file starting with the step's name. In either
 case (suite or individual test), it displays a ``PASS`` or ``FAIL`` message for
@@ -103,7 +103,7 @@ within the test case or suite and validation against a baseline (depending on
 the implementation of the ``validate()`` method in the test case and whether a
 baseline was provided during setup).
 
-:py:func:`compass.run.run_single_step()` runs only the selected step from a
+:py:func:`compass.run.serial.run_single_step()` runs only the selected step from a
 given test case, skipping any others, displaying the output in the terminal
 window rather than a log file.
 
@@ -138,7 +138,7 @@ The :py:meth:`mpas_tools.config.MpasConfigParser.add_from_package()` method can
 be used to add the contents of a config file within a package to the config
 options. Examples of this can be found in many test cases as well as
 :py:func:`compass.setup.setup_case()`. Here is a typical example from
-:py:func:`compass.ocean.tests.global_ocean.make_diagnostics_files.MakeDiagnosticsFiles.configure()`:
+:py:meth:`compass.ocean.tests.global_ocean.mesh.Mesh.configure()`:
 
 .. code-block:: python
 
@@ -147,8 +147,10 @@ options. Examples of this can be found in many test cases as well as
         Modify the configuration options for this test case
         """
         self.config.add_from_package(
-           'compass.ocean.tests.global_ocean.make_diagnostics_files',
-           'make_diagnostics_files.cfg', exception=True)
+            'compass.mesh', 'mesh.cfg', exception=True)
+        self.config.add_from_package(
+            'compass.ocean.mesh', 'remap_topography.cfg',
+            exception=True)
 
 The first and second arguments are the name of a package containing the config
 file and the name of the config file itself, respectively.  You can see that
@@ -160,7 +162,7 @@ default behavior.  In some cases, you would like the code to add the config
 options if the config file exists and do nothing if it does not.  This can
 be useful if a common configure function is being used for all test
 cases in a configuration, as in this example from
-:py:func:`setup.setup_case()`:
+:py:func:`compass.setup.setup_case()`:
 
 .. code-block:: python
 
@@ -216,7 +218,7 @@ are attributes that belong to the step or test case.  If you run a step on its
 own, no log file is created and logging happens to ``stdout``/``stderr``.  If
 you run a full test case, each step gets logged to its own log file within the
 test case's work directory.  If you run a test suite, each test case and its
-steps get logged to a file in the ``case_output`` directory of the suite's work
+steps get logged to a file in the ``case_outputs`` directory of the suite's work
 directory.
 
 Although the logger will capture ``print`` statements, anywhere with a

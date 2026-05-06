@@ -8,14 +8,14 @@ suggested solutions.
 
 .. _dev_troubleshooting_conda_solver:
 
-Solver errors when configuring conda environment
-------------------------------------------------
+Solver errors when configuring deployment environment
+-----------------------------------------------------
 
 When setting up :ref:`dev_conda_env`, by calling:
 
 .. code-block:: bash
 
-    ./conda/configure_compass_env.sh ...
+    ./deploy.py ...
 
 you may run into an error like:
 
@@ -31,22 +31,22 @@ you may run into an error like:
 Details of the error may vary but the message indicates in some way that there
 was a problem solving for the requested combination of packages.  This likely
 indicates that you have an existing compass development environment
-(``dev_compass_*``) that can't be updated to be compatible with the new
-set of development packages given in:
+that can't be updated to be compatible with the new set of development
+packages given in:
 
 .. code-block:: none
 
-    conda/build*/spec-file*.txt
+    deploy_tmp/build*/spec-file*.txt
 
 The solution should be to recreate the environment rather than trying to
 update it:
 
 .. code-block:: bash
 
-    ./conda/configure_compass_env.sh --recreate ...
+    ./deploy.py --recreate ...
 
-The ``--recreate`` flag will first delete the existing ``dev_compass_*`` conda
-environment before creating it again with the new set of packages required for
+The ``--recreate`` flag will first delete the existing deployment artifacts
+before creating them again with the new set of packages required for
 developing with the requested compiler and MPI type.
 
 .. _dev_troubleshooting_proxy:

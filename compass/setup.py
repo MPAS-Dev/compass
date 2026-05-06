@@ -8,6 +8,7 @@ from compass import provenance
 from compass.config import CompassConfigParser
 from compass.io import symlink
 from compass.job import write_job_script
+from compass.load_script import symlink_load_script
 from compass.machines import discover_machine
 from compass.mpas_cores import get_mpas_cores
 
@@ -69,6 +70,9 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,  # noq
 
     if machine is None:
         machine = discover_machine()
+
+    if not machine:
+        machine = None
 
     if config_file is None and machine is None:
         raise ValueError('At least one of config_file and machine is needed.')
@@ -160,7 +164,7 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,  # noq
     with open(pickle_file, 'wb') as handle:
         pickle.dump(test_suite, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-    _symlink_load_script(work_dir)
+    symlink_load_script(work_dir)
 
     max_cores, max_of_min_cores = _get_required_cores(test_cases)
 
@@ -307,7 +311,7 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
             pickle.dump((test_case, step), handle,
                         protocol=pickle.HIGHEST_PROTOCOL)
 
-        _symlink_load_script(step.work_dir)
+        symlink_load_script(step.work_dir)
 
         if machine is not None:
             cores = step.cpus_per_task * step.ntasks
@@ -323,7 +327,7 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
                       'work_dir': test_case.work_dir}
         pickle.dump(test_suite, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-    _symlink_load_script(test_case_dir)
+    symlink_load_script(test_case_dir)
 
     if machine is not None:
         max_cores, max_of_min_cores = _get_required_cores({path: test_case})
@@ -423,6 +427,9 @@ def _get_basic_config(config_file, machine, mpas_model_path, mpas_core):
     """
     config = CompassConfigParser()
 
+    if not machine:
+        machine = None
+
     if config_file is not None:
         config.add_user_config(config_file)
 
@@ -458,11 +465,3 @@ def _get_basic_config(config_file, machine, mpas_model_path, mpas_core):
         config.set('paths', 'mpas_model', mpas_model_path, user=True)
 
     return config
-
-
-def _symlink_load_script(work_dir):
-    """ make a symlink to the script for loading the compass conda env. """
-    if 'LOAD_COMPASS_ENV' in os.environ:
-        script_filename = os.environ['LOAD_COMPASS_ENV']
-        symlink(script_filename,
-                os.path.join(work_dir, 'load_compass_env.sh'))
