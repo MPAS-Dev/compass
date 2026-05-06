@@ -10,6 +10,10 @@ from compass.landice.tests.ensemble_generator.branch_ensemble.branch_run import 
 from compass.landice.tests.ensemble_generator.ensemble_manager import (
     EnsembleManager,
 )
+from compass.landice.tests.ensemble_generator.ensemble_template import (
+    add_template_file,
+    get_branch_template_package,
+)
 from compass.testcase import TestCase
 
 
@@ -59,6 +63,9 @@ class BranchEnsemble(TestCase):
         """
 
         config = self.config
+        resource_module = get_branch_template_package(config)
+        add_template_file(config, resource_module, 'branch_ensemble.cfg')
+
         section = config['branch_ensemble']
 
         spinup_test_dir = section.get('spinup_test_dir')
@@ -89,7 +96,8 @@ class BranchEnsemble(TestCase):
                 else:
                     print(f"Adding {run_name}")
                     # use this run
-                    self.add_step(BranchRun(test_case=self, run_num=run_num))
+                    self.add_step(BranchRun(test_case=self, run_num=run_num,
+                                            resource_module=resource_module))
                     # Note: do not add to steps_to_run; ensemble_manager
                     # will handle submitting and running the runs
 

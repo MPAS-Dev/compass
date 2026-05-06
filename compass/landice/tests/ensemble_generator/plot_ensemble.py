@@ -133,12 +133,13 @@ else:
     sys.exit("A usable cfg file for the ensemble was not found. "
              "Please correct the configuration or disable this check.")
 ens_cfg.read(ens_cfg_file)
-ens_info = ens_cfg['ensemble']
+ens_info = ens_cfg['ensemble_generator']
 if 'basin' in ens_info:
     basin = ens_info['basin']
     if basin == 'None':
         basin = None
-input_file_path = ens_info['input_file_path']
+spinup_info = ens_cfg['spinup_ensemble']
+input_file_path = spinup_info['input_file_path']
 if basin is None:
     print("No basin found.  Not using observational data.")
 else:
