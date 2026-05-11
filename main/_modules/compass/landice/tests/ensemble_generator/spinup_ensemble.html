@@ -121,8 +121,10 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ensemble_generator.ensemble_member</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">EnsembleMember</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ensemble_generator.ensemble_template</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">get_spinup_template_package</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.testcase</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestCase</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">compass.validate</span><span class="w"> </span><span class="kn">import</span> <span class="n">compare_variables</span>
 
 
 <div class="viewcode-block" id="SpinupEnsemble">
@@ -177,132 +179,56 @@
 <span class="sd">        configure phase, we must explicitly add the steps to steps_to_run.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c1"># Define some constants</span>
-        <span class="n">rhoi</span> <span class="o">=</span> <span class="mf">910.0</span>
-        <span class="n">rhosw</span> <span class="o">=</span> <span class="mf">1028.0</span>
-        <span class="n">cp_seawater</span> <span class="o">=</span> <span class="mf">3.974e3</span>
-        <span class="n">latent_heat_ice</span> <span class="o">=</span> <span class="mf">335.0e3</span>
-        <span class="n">sec_in_yr</span> <span class="o">=</span> <span class="mf">3600.0</span> <span class="o">*</span> <span class="mf">24.0</span> <span class="o">*</span> <span class="mf">365.0</span>
-        <span class="n">c_melt</span> <span class="o">=</span> <span class="p">(</span><span class="n">rhosw</span> <span class="o">*</span> <span class="n">cp_seawater</span> <span class="o">/</span> <span class="p">(</span><span class="n">rhoi</span> <span class="o">*</span> <span class="n">latent_heat_ice</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">resource_module</span> <span class="o">=</span> <span class="n">get_spinup_template_package</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
-        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;ensemble&#39;</span><span class="p">]</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;ensemble_generator&#39;</span><span class="p">]</span>
+        <span class="n">spinup_section_name</span> <span class="o">=</span> <span class="s1">&#39;spinup_ensemble&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">has_section</span><span class="p">(</span><span class="n">spinup_section_name</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Missing required config section &#39;</span><span class="si">{</span><span class="n">spinup_section_name</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+        <span class="n">spinup_section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="n">spinup_section_name</span><span class="p">]</span>
+        <span class="n">parameter_section_name</span> <span class="o">=</span> <span class="s1">&#39;ensemble.parameters&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">has_section</span><span class="p">(</span><span class="n">parameter_section_name</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Missing required config section &#39;</span><span class="si">{</span><span class="n">parameter_section_name</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+        <span class="n">param_section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="n">parameter_section_name</span><span class="p">]</span>
 
         <span class="c1"># Determine start and end run numbers being requested</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">start_run</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;start_run&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">end_run</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;end_run&#39;</span><span class="p">)</span>
 
-        <span class="c1"># Define parameters being sampled and their ranges</span>
-        <span class="n">param_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;fric_exp&#39;</span><span class="p">,</span> <span class="s1">&#39;mu_scale&#39;</span><span class="p">,</span> <span class="s1">&#39;stiff_scale&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;von_mises_threshold&#39;</span><span class="p">,</span> <span class="s1">&#39;calv_limit&#39;</span><span class="p">,</span> <span class="s1">&#39;gamma0&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;meltflux&#39;</span><span class="p">]</span>
+        <span class="n">parameter_specs</span> <span class="o">=</span> <span class="n">_get_parameter_specs</span><span class="p">(</span><span class="n">param_section</span><span class="p">)</span>
 
-        <span class="c1"># Determine how many and which parameters are being used</span>
-        <span class="n">n_params</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">param_dict</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">param_list</span><span class="p">:</span>
-            <span class="n">param_dict</span><span class="p">[</span><span class="n">param</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="n">param_dict</span><span class="p">[</span><span class="n">param</span><span class="p">][</span><span class="s1">&#39;active&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;use_</span><span class="si">{</span><span class="n">param</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">n_params</span> <span class="o">+=</span> <span class="n">param_dict</span><span class="p">[</span><span class="n">param</span><span class="p">][</span><span class="s1">&#39;active&#39;</span><span class="p">]</span>
+        <span class="c1"># Determine how many parameters are being sampled.</span>
+        <span class="n">n_params</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">parameter_specs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">n_params</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;ERROR: At least one parameter must be specified.&quot;</span><span class="p">)</span>
 
-        <span class="c1"># Generate unit parameter vectors - either uniform or Sobol</span>
-        <span class="n">sampling_method</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sampling_method&#39;</span><span class="p">)</span>
         <span class="n">max_samples</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;max_samples&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">max_samples</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_run</span><span class="p">:</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;ERROR: max_samples is exceeded by end_run&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">sampling_method</span> <span class="o">==</span> <span class="s1">&#39;sobol&#39;</span><span class="p">:</span>
-            <span class="c1"># Generate unit Sobol sequence for number of parameters being used</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generating Sobol sequence for </span><span class="si">{</span><span class="n">n_params</span><span class="si">}</span><span class="s2"> parameter(s)&quot;</span><span class="p">)</span>
-            <span class="n">sampler</span> <span class="o">=</span> <span class="n">qmc</span><span class="o">.</span><span class="n">Sobol</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="n">n_params</span><span class="p">,</span> <span class="n">scramble</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-            <span class="n">param_unit_values</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">max_samples</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">sampling_method</span> <span class="o">==</span> <span class="s1">&#39;uniform&#39;</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generating uniform sampling for </span><span class="si">{</span><span class="n">n_params</span><span class="si">}</span><span class="s2"> parameter(s)&quot;</span><span class="p">)</span>
-            <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">max_samples</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">param_unit_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_params</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;ERROR: Unsupported sampling method specified.&quot;</span><span class="p">)</span>
+        <span class="n">sampling_method</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sampling_method&#39;</span><span class="p">)</span>
+        <span class="n">parameter_specs</span> <span class="o">=</span> <span class="n">_populate_parameter_vectors</span><span class="p">(</span>
+            <span class="n">parameter_specs</span><span class="o">=</span><span class="n">parameter_specs</span><span class="p">,</span>
+            <span class="n">sampling_method</span><span class="o">=</span><span class="n">sampling_method</span><span class="p">,</span>
+            <span class="n">max_samples</span><span class="o">=</span><span class="n">max_samples</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;spinup_ensemble&#39;</span><span class="p">,</span> <span class="s1">&#39;fric_samples_file&#39;</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Including friction samples from file. One friction &quot;</span>
+                  <span class="s2">&quot;sample will be mapped to each run in the ensemble.&quot;</span><span class="p">)</span>
 
-        <span class="c1"># Define parameter vectors for each param being used</span>
-        <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">param_list</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">param_dict</span><span class="p">[</span><span class="n">param</span><span class="p">][</span><span class="s1">&#39;active&#39;</span><span class="p">]:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Including parameter &#39;</span> <span class="o">+</span> <span class="n">param</span><span class="p">)</span>
-                <span class="n">min_val</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">param</span><span class="si">}</span><span class="s1">_min&#39;</span><span class="p">)</span>
-                <span class="n">max_val</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">param</span><span class="si">}</span><span class="s1">_max&#39;</span><span class="p">)</span>
-                <span class="n">param_dict</span><span class="p">[</span><span class="n">param</span><span class="p">][</span><span class="s1">&#39;vec&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">param_unit_values</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">*</span> \
-                    <span class="p">(</span><span class="n">max_val</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span> <span class="o">+</span> <span class="n">min_val</span>
-                <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">param_dict</span><span class="p">[</span><span class="n">param</span><span class="p">][</span><span class="s1">&#39;vec&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">max_samples</span><span class="p">,),</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">spec_by_name</span> <span class="o">=</span> <span class="p">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]:</span> <span class="n">spec</span> <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">parameter_specs</span><span class="p">}</span>
 
-        <span class="c1"># Deal with a few special cases</span>
+        <span class="n">deltaT_vec</span> <span class="o">=</span> <span class="n">_compute_delta_t_vec</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">spinup_section</span><span class="o">=</span><span class="n">spinup_section</span><span class="p">,</span>
+            <span class="n">spec_by_name</span><span class="o">=</span><span class="n">spec_by_name</span><span class="p">,</span>
+            <span class="n">max_samples</span><span class="o">=</span><span class="n">max_samples</span><span class="p">,</span> <span class="n">start_run</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">start_run</span><span class="p">,</span>
+            <span class="n">end_run</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">end_run</span><span class="p">)</span>
 
-        <span class="c1"># change units on calving speed limit from m/yr to s/yr</span>
-        <span class="k">if</span> <span class="n">param_dict</span><span class="p">[</span><span class="s1">&#39;calv_limit&#39;</span><span class="p">][</span><span class="s1">&#39;active&#39;</span><span class="p">]:</span>
-            <span class="n">param_dict</span><span class="p">[</span><span class="s1">&#39;calv_limit&#39;</span><span class="p">][</span><span class="s1">&#39;vec&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="n">param_dict</span><span class="p">[</span><span class="s1">&#39;calv_limit&#39;</span><span class="p">][</span><span class="s1">&#39;vec&#39;</span><span class="p">][:]</span> <span class="o">/</span> <span class="n">sec_in_yr</span>
-
-        <span class="c1"># melt flux needs to be converted to deltaT</span>
-        <span class="k">if</span> <span class="n">param_dict</span><span class="p">[</span><span class="s1">&#39;meltflux&#39;</span><span class="p">][</span><span class="s1">&#39;active&#39;</span><span class="p">]:</span>
-            <span class="c1"># First calculate mean TF for this domain</span>
-            <span class="n">iceshelf_area_obs</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;iceshelf_area_obs&#39;</span><span class="p">)</span>
-            <span class="n">input_file_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input_file_path&#39;</span><span class="p">)</span>
-            <span class="n">TF_file_path</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;TF_file_path&#39;</span><span class="p">)</span>
-            <span class="n">mean_TF</span><span class="p">,</span> <span class="n">iceshelf_area</span> <span class="o">=</span> <span class="n">calc_mean_TF</span><span class="p">(</span><span class="n">input_file_path</span><span class="p">,</span>
-                                                  <span class="n">TF_file_path</span><span class="p">)</span>
-
-            <span class="c1"># Adjust observed melt flux for ice-shelf area in init. condition</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;IS area: model=</span><span class="si">{</span><span class="n">iceshelf_area</span><span class="si">}</span><span class="s1">, Obs=</span><span class="si">{</span><span class="n">iceshelf_area_obs</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">area_correction</span> <span class="o">=</span> <span class="n">iceshelf_area</span> <span class="o">/</span> <span class="n">iceshelf_area_obs</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ice-shelf area correction is </span><span class="si">{</span><span class="n">area_correction</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">area_correction</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.2</span><span class="p">):</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WARNING: ice-shelf area correction is larger than &quot;</span>
-                      <span class="s2">&quot;20%. Check data consistency before proceeding.&quot;</span><span class="p">)</span>
-            <span class="n">param_dict</span><span class="p">[</span><span class="s1">&#39;meltflux&#39;</span><span class="p">][</span><span class="s1">&#39;vec&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="n">iceshelf_area</span> <span class="o">/</span> <span class="n">iceshelf_area_obs</span>
-
-            <span class="c1"># Set up an array of TF values to use for linear interpolation</span>
-            <span class="c1"># Make it span a large enough range to capture deltaT what would</span>
-            <span class="c1"># be needed for the range of gamma0 values considered.</span>
-            <span class="c1"># Not possible to know a priori, so pick a wide range.</span>
-            <span class="n">TFs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">15.0</span> <span class="o">/</span> <span class="mf">0.01</span><span class="p">))</span>
-            <span class="n">deltaT_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">max_samples</span><span class="p">)</span>
-            <span class="c1"># For each run, calculate the deltaT needed to obtain the target</span>
-            <span class="c1"># melt flux</span>
-            <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_run</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_run</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-                <span class="c1"># spatially averaged version of ISMIP6 melt param.:</span>
-                <span class="n">meltfluxes</span> <span class="o">=</span> <span class="p">(</span><span class="n">param_dict</span><span class="p">[</span><span class="s1">&#39;gamma0&#39;</span><span class="p">][</span><span class="s1">&#39;vec&#39;</span><span class="p">][</span><span class="n">ii</span><span class="p">]</span> <span class="o">*</span> <span class="n">c_melt</span> <span class="o">*</span> <span class="n">TFs</span> <span class="o">*</span>
-                              <span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">TFs</span><span class="p">)</span> <span class="o">*</span>
-                              <span class="n">iceshelf_area</span><span class="p">)</span> <span class="o">*</span> <span class="n">rhoi</span> <span class="o">/</span> <span class="mf">1.0e12</span>  <span class="c1"># Gt/yr</span>
-                <span class="c1"># interpolate deltaT value.  Use nan values outside of range</span>
-                <span class="c1"># so out of range results get detected</span>
-                <span class="n">deltaT_vec</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">param_dict</span><span class="p">[</span><span class="s1">&#39;meltflux&#39;</span><span class="p">][</span><span class="s1">&#39;vec&#39;</span><span class="p">][</span><span class="n">ii</span><span class="p">],</span>
-                                           <span class="n">meltfluxes</span><span class="p">,</span> <span class="n">TFs</span><span class="p">,</span>
-                                           <span class="n">left</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
-                                           <span class="n">right</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span> <span class="o">-</span> <span class="n">mean_TF</span>
-                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">deltaT_vec</span><span class="p">[</span><span class="n">ii</span><span class="p">]):</span>
-                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;ERROR: interpolated deltaT out of range. &quot;</span>
-                             <span class="s2">&quot;Adjust definition of &#39;TFs&#39;&quot;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">deltaT_vec</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">max_samples</span>
-
-        <span class="c1"># add runs as steps based on the run range requested</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_run</span> <span class="o">&gt;</span> <span class="n">max_samples</span><span class="p">:</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;Error: end_run specified in config exceeds maximum &quot;</span>
-                     <span class="s2">&quot;sample size available in param_vector_filename&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">run_num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_run</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_run</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">EnsembleMember</span><span class="p">(</span>
-                <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_num</span><span class="o">=</span><span class="n">run_num</span><span class="p">,</span>
-                <span class="n">basal_fric_exp</span><span class="o">=</span><span class="n">param_dict</span><span class="p">[</span><span class="s1">&#39;fric_exp&#39;</span><span class="p">][</span><span class="s1">&#39;vec&#39;</span><span class="p">][</span><span class="n">run_num</span><span class="p">],</span>
-                <span class="n">mu_scale</span><span class="o">=</span><span class="n">param_dict</span><span class="p">[</span><span class="s1">&#39;mu_scale&#39;</span><span class="p">][</span><span class="s1">&#39;vec&#39;</span><span class="p">][</span><span class="n">run_num</span><span class="p">],</span>
-                <span class="n">stiff_scale</span><span class="o">=</span><span class="n">param_dict</span><span class="p">[</span><span class="s1">&#39;stiff_scale&#39;</span><span class="p">][</span><span class="s1">&#39;vec&#39;</span><span class="p">][</span><span class="n">run_num</span><span class="p">],</span>
-                <span class="n">von_mises_threshold</span><span class="o">=</span><span class="n">param_dict</span><span class="p">[</span><span class="s1">&#39;von_mises_threshold&#39;</span><span class="p">][</span><span class="s1">&#39;vec&#39;</span><span class="p">][</span><span class="n">run_num</span><span class="p">],</span>  <span class="c1"># noqa</span>
-                <span class="n">calv_spd_lim</span><span class="o">=</span><span class="n">param_dict</span><span class="p">[</span><span class="s1">&#39;calv_limit&#39;</span><span class="p">][</span><span class="s1">&#39;vec&#39;</span><span class="p">][</span><span class="n">run_num</span><span class="p">],</span>
-                <span class="n">gamma0</span><span class="o">=</span><span class="n">param_dict</span><span class="p">[</span><span class="s1">&#39;gamma0&#39;</span><span class="p">][</span><span class="s1">&#39;vec&#39;</span><span class="p">][</span><span class="n">run_num</span><span class="p">],</span>
-                <span class="n">meltflux</span><span class="o">=</span><span class="n">param_dict</span><span class="p">[</span><span class="s1">&#39;meltflux&#39;</span><span class="p">][</span><span class="s1">&#39;vec&#39;</span><span class="p">][</span><span class="n">run_num</span><span class="p">],</span>
-                <span class="n">deltaT</span><span class="o">=</span><span class="n">deltaT_vec</span><span class="p">[</span><span class="n">run_num</span><span class="p">]))</span>
-            <span class="c1"># Note: do not add to steps_to_run, because ensemble_manager</span>
-            <span class="c1"># will handle submitting and running the runs</span>
+        <span class="n">_add_member_steps</span><span class="p">(</span>
+            <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter_specs</span><span class="o">=</span><span class="n">parameter_specs</span><span class="p">,</span>
+            <span class="n">spec_by_name</span><span class="o">=</span><span class="n">spec_by_name</span><span class="p">,</span> <span class="n">deltaT_vec</span><span class="o">=</span><span class="n">deltaT_vec</span><span class="p">,</span>
+            <span class="n">resource_module</span><span class="o">=</span><span class="n">resource_module</span><span class="p">,</span> <span class="n">max_samples</span><span class="o">=</span><span class="n">max_samples</span><span class="p">)</span>
 
         <span class="c1"># Have &#39;compass run&#39; only run the run_manager but not any actual runs.</span>
         <span class="c1"># This is because the individual runs will be submitted as jobs</span>
@@ -314,6 +240,282 @@
     <span class="c1"># no run() method is needed</span>
 
     <span class="c1"># no validate() method is needed</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_parameter_specs</span><span class="p">(</span><span class="n">section</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build parameter specification dictionaries from config options.</span>
+
+<span class="sd">    Parameters with an ``nl.`` prefix are treated as namelist parameters and</span>
+<span class="sd">    include one or more target namelist option names. Other parameters are</span>
+<span class="sd">    interpreted as supported special parameters (for example ``gamma0``).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list of dict</span>
+<span class="sd">        Ordered parameter metadata with sampled bounds and placeholders for</span>
+<span class="sd">        populated sample vectors.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">specs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">special_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;fric_exp&#39;</span><span class="p">,</span> <span class="s1">&#39;mu_scale&#39;</span><span class="p">,</span> <span class="s1">&#39;stiff_scale&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;gamma0&#39;</span><span class="p">,</span> <span class="s1">&#39;meltflux&#39;</span><span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">option_name</span><span class="p">,</span> <span class="n">raw_value</span> <span class="ow">in</span> <span class="n">section</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">option_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.option_name&#39;</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="n">parameter_name</span> <span class="o">=</span> <span class="n">option_name</span>
+        <span class="n">bounds</span> <span class="o">=</span> <span class="n">_parse_range</span><span class="p">(</span><span class="n">raw_value</span><span class="p">,</span> <span class="n">parameter_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">parameter_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;nl.&#39;</span><span class="p">):</span>
+            <span class="n">option_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">parameter_name</span><span class="si">}</span><span class="s1">.option_name&#39;</span>
+            <span class="k">if</span> <span class="n">option_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">section</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Namelist parameter &#39;</span><span class="si">{</span><span class="n">parameter_name</span><span class="si">}</span><span class="s2">&#39; must define &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">option_key</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+            <span class="n">namelist_options</span> <span class="o">=</span> <span class="n">_split_entries</span><span class="p">(</span><span class="n">section</span><span class="p">[</span><span class="n">option_key</span><span class="p">])</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">namelist_options</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Namelist parameter &#39;</span><span class="si">{</span><span class="n">parameter_name</span><span class="si">}</span><span class="s2">&#39; has no &quot;</span>
+                    <span class="s2">&quot;option names configured.&quot;</span><span class="p">)</span>
+            <span class="n">specs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">parameter_name</span><span class="p">,</span>
+                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;namelist&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;run_info_name&#39;</span><span class="p">:</span> <span class="n">parameter_name</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="s1">&#39;nl.&#39;</span><span class="p">):],</span>
+                <span class="s1">&#39;option_names&#39;</span><span class="p">:</span> <span class="n">namelist_options</span><span class="p">,</span>
+                <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                <span class="s1">&#39;vec&#39;</span><span class="p">:</span> <span class="kc">None</span>
+            <span class="p">})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">parameter_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">special_params</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Unsupported special parameter &#39;</span><span class="si">{</span><span class="n">parameter_name</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+            <span class="n">specs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">parameter_name</span><span class="p">,</span>
+                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;special&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                <span class="s1">&#39;vec&#39;</span><span class="p">:</span> <span class="kc">None</span>
+            <span class="p">})</span>
+
+    <span class="k">return</span> <span class="n">specs</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_populate_parameter_vectors</span><span class="p">(</span><span class="n">parameter_specs</span><span class="p">,</span> <span class="n">sampling_method</span><span class="p">,</span>
+                                <span class="n">max_samples</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate and scale samples to each parameter range.</span>
+
+<span class="sd">    This function updates each ``spec[&#39;vec&#39;]`` in ``parameter_specs`` and</span>
+<span class="sd">    returns the same list for explicit readability at call site.</span>
+<span class="sd">    ``sobol`` creates a space-filling sequence in unit space,</span>
+<span class="sd">    ``uniform`` creates linearly spaced samples, and ``log-uniform`` samples</span>
+<span class="sd">    linearly in log10 space (requiring strictly positive bounds).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list of dict</span>
+<span class="sd">        The same ``parameter_specs`` list with each ``spec[&#39;vec&#39;]`` populated.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_params</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">parameter_specs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sampling_method</span> <span class="o">==</span> <span class="s1">&#39;sobol&#39;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generating Sobol sequence for </span><span class="si">{</span><span class="n">n_params</span><span class="si">}</span><span class="s2"> parameter(s)&quot;</span><span class="p">)</span>
+        <span class="n">sampler</span> <span class="o">=</span> <span class="n">qmc</span><span class="o">.</span><span class="n">Sobol</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="n">n_params</span><span class="p">,</span> <span class="n">scramble</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">param_unit_values</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">max_samples</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">sampling_method</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;uniform&#39;</span><span class="p">,</span> <span class="s1">&#39;log-uniform&#39;</span><span class="p">}:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generating </span><span class="si">{</span><span class="n">sampling_method</span><span class="si">}</span><span class="s2"> sampling for &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n_params</span><span class="si">}</span><span class="s2"> parameter(s)&quot;</span><span class="p">)</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">max_samples</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">param_unit_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_params</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;ERROR: Unsupported sampling method specified.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">sampling_method</span> <span class="o">==</span> <span class="s1">&#39;log-uniform&#39;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">parameter_specs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">spec</span><span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">spec</span><span class="p">[</span><span class="s1">&#39;max&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span>
+                    <span class="s2">&quot;ERROR: log-uniform sampling requires positive min/max &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;for parameter &#39;</span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">spec</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">parameter_specs</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Including parameter &#39;</span> <span class="o">+</span> <span class="n">spec</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">sampling_method</span> <span class="o">==</span> <span class="s1">&#39;log-uniform&#39;</span><span class="p">:</span>
+            <span class="n">log_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">spec</span><span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">])</span>
+            <span class="n">log_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">spec</span><span class="p">[</span><span class="s1">&#39;max&#39;</span><span class="p">])</span>
+            <span class="n">spec</span><span class="p">[</span><span class="s1">&#39;vec&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">**</span> <span class="p">(</span><span class="n">param_unit_values</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">*</span>
+                                   <span class="p">(</span><span class="n">log_max</span> <span class="o">-</span> <span class="n">log_min</span><span class="p">)</span> <span class="o">+</span> <span class="n">log_min</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">spec</span><span class="p">[</span><span class="s1">&#39;vec&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">param_unit_values</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">*</span> \
+                <span class="p">(</span><span class="n">spec</span><span class="p">[</span><span class="s1">&#39;max&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">spec</span><span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="n">spec</span><span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">parameter_specs</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_delta_t_vec</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">spinup_section</span><span class="p">,</span> <span class="n">spec_by_name</span><span class="p">,</span> <span class="n">max_samples</span><span class="p">,</span>
+                         <span class="n">start_run</span><span class="p">,</span> <span class="n">end_run</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute per-run ``deltaT`` values when ``meltflux`` is active.</span>
+
+<span class="sd">    If ``meltflux`` is not sampled, this returns a list of ``None`` values.</span>
+<span class="sd">    When active, the function applies ice-shelf area correction to sampled</span>
+<span class="sd">    melt flux and interpolates the ``deltaT`` needed to match each target</span>
+<span class="sd">    melt flux over the requested run range.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list or numpy.ndarray</span>
+<span class="sd">        ``[None] * max_samples`` when ``meltflux`` is inactive, otherwise a</span>
+<span class="sd">        ``numpy.ndarray`` containing per-run ``deltaT`` values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s1">&#39;meltflux&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">spec_by_name</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">max_samples</span>
+
+    <span class="k">if</span> <span class="s1">&#39;gamma0&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">spec_by_name</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;ERROR: parameter &#39;meltflux&#39; requires &#39;gamma0&#39;.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;spinup_ensemble&#39;</span><span class="p">,</span> <span class="s1">&#39;iceshelf_area_obs&#39;</span><span class="p">):</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span>
+            <span class="s2">&quot;ERROR: parameter &#39;meltflux&#39; requires &quot;</span>
+            <span class="s2">&quot;&#39;iceshelf_area_obs&#39; in [spinup_ensemble].&quot;</span><span class="p">)</span>
+
+    <span class="n">iceshelf_area_obs</span> <span class="o">=</span> <span class="n">spinup_section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;iceshelf_area_obs&#39;</span><span class="p">)</span>
+    <span class="n">input_file_path</span> <span class="o">=</span> <span class="n">spinup_section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input_file_path&#39;</span><span class="p">)</span>
+    <span class="n">TF_file_path</span> <span class="o">=</span> <span class="n">spinup_section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;TF_file_path&#39;</span><span class="p">)</span>
+    <span class="n">mean_TF</span><span class="p">,</span> <span class="n">iceshelf_area</span> <span class="o">=</span> <span class="n">calc_mean_TF</span><span class="p">(</span><span class="n">input_file_path</span><span class="p">,</span> <span class="n">TF_file_path</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;IS area: model=</span><span class="si">{</span><span class="n">iceshelf_area</span><span class="si">}</span><span class="s1">, Obs=</span><span class="si">{</span><span class="n">iceshelf_area_obs</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">area_correction</span> <span class="o">=</span> <span class="n">iceshelf_area</span> <span class="o">/</span> <span class="n">iceshelf_area_obs</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ice-shelf area correction is </span><span class="si">{</span><span class="n">area_correction</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">area_correction</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.2</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WARNING: ice-shelf area correction is larger than &quot;</span>
+              <span class="s2">&quot;20%. Check data consistency before proceeding.&quot;</span><span class="p">)</span>
+
+    <span class="n">spec_by_name</span><span class="p">[</span><span class="s1">&#39;meltflux&#39;</span><span class="p">][</span><span class="s1">&#39;vec&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="n">area_correction</span>
+
+    <span class="n">rhoi</span> <span class="o">=</span> <span class="mf">910.0</span>
+    <span class="n">rhosw</span> <span class="o">=</span> <span class="mf">1028.0</span>
+    <span class="n">cp_seawater</span> <span class="o">=</span> <span class="mf">3.974e3</span>
+    <span class="n">latent_heat_ice</span> <span class="o">=</span> <span class="mf">335.0e3</span>
+    <span class="n">c_melt</span> <span class="o">=</span> <span class="p">(</span><span class="n">rhosw</span> <span class="o">*</span> <span class="n">cp_seawater</span> <span class="o">/</span> <span class="p">(</span><span class="n">rhoi</span> <span class="o">*</span> <span class="n">latent_heat_ice</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">TFs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">15.0</span> <span class="o">/</span> <span class="mf">0.01</span><span class="p">))</span>
+    <span class="n">deltaT_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">max_samples</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start_run</span><span class="p">,</span> <span class="n">end_run</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">meltfluxes</span> <span class="o">=</span> <span class="p">(</span><span class="n">spec_by_name</span><span class="p">[</span><span class="s1">&#39;gamma0&#39;</span><span class="p">][</span><span class="s1">&#39;vec&#39;</span><span class="p">][</span><span class="n">ii</span><span class="p">]</span> <span class="o">*</span> <span class="n">c_melt</span> <span class="o">*</span>
+                      <span class="n">TFs</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">TFs</span><span class="p">)</span> <span class="o">*</span> <span class="n">iceshelf_area</span><span class="p">)</span> <span class="o">*</span> \
+            <span class="n">rhoi</span> <span class="o">/</span> <span class="mf">1.0e12</span>  <span class="c1"># Gt/yr</span>
+        <span class="n">deltaT_vec</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span>
+            <span class="n">spec_by_name</span><span class="p">[</span><span class="s1">&#39;meltflux&#39;</span><span class="p">][</span><span class="s1">&#39;vec&#39;</span><span class="p">][</span><span class="n">ii</span><span class="p">],</span> <span class="n">meltfluxes</span><span class="p">,</span> <span class="n">TFs</span><span class="p">,</span>
+            <span class="n">left</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span> <span class="o">-</span> <span class="n">mean_TF</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">deltaT_vec</span><span class="p">[</span><span class="n">ii</span><span class="p">]):</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;ERROR: interpolated deltaT out of range. &quot;</span>
+                     <span class="s2">&quot;Adjust definition of &#39;TFs&#39;&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">deltaT_vec</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_namelist_values</span><span class="p">(</span><span class="n">parameter_specs</span><span class="p">,</span> <span class="n">run_num</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;For parameter specs of type &#39;namelist&#39;,</span>
+<span class="sd">    collect namelist option values for a given run number</span>
+<span class="sd">    and save them in a dictionary keyed by namelist option name.</span>
+<span class="sd">    These will be applied when the runs are set up.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple of dict</span>
+<span class="sd">        ``(namelist_option_values, namelist_parameter_values)`` for the</span>
+<span class="sd">        requested ``run_num``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">namelist_option_values</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">namelist_parameter_values</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">parameter_specs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">spec</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;namelist&#39;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">spec</span><span class="p">[</span><span class="s1">&#39;vec&#39;</span><span class="p">][</span><span class="n">run_num</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">namelist_option</span> <span class="ow">in</span> <span class="n">spec</span><span class="p">[</span><span class="s1">&#39;option_names&#39;</span><span class="p">]:</span>
+            <span class="n">namelist_option_values</span><span class="p">[</span><span class="n">namelist_option</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="n">namelist_parameter_values</span><span class="p">[</span><span class="n">spec</span><span class="p">[</span><span class="s1">&#39;run_info_name&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">return</span> <span class="n">namelist_option_values</span><span class="p">,</span> <span class="n">namelist_parameter_values</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_add_member_steps</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">parameter_specs</span><span class="p">,</span> <span class="n">spec_by_name</span><span class="p">,</span> <span class="n">deltaT_vec</span><span class="p">,</span>
+                      <span class="n">resource_module</span><span class="p">,</span> <span class="n">max_samples</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create and register ``EnsembleMember`` steps for requested runs.</span>
+
+<span class="sd">    This helper assembles namelist and special-parameter values for each run</span>
+<span class="sd">    and adds one member step per run to ``test_case``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">test_case</span><span class="o">.</span><span class="n">end_run</span> <span class="o">&gt;</span> <span class="n">max_samples</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;Error: end_run specified in config exceeds maximum &quot;</span>
+                 <span class="s2">&quot;sample size available in param_vector_filename&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--- Identifying required parameters is complete ---&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">run_num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">start_run</span><span class="p">,</span> <span class="n">test_case</span><span class="o">.</span><span class="n">end_run</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">namelist_option_values</span><span class="p">,</span> <span class="n">namelist_parameter_values</span> <span class="o">=</span> \
+            <span class="n">_build_namelist_values</span><span class="p">(</span><span class="n">parameter_specs</span><span class="p">,</span> <span class="n">run_num</span><span class="p">)</span>
+
+        <span class="n">fric_exp</span> <span class="o">=</span> <span class="n">_get_special_value</span><span class="p">(</span><span class="n">spec_by_name</span><span class="p">,</span> <span class="s1">&#39;fric_exp&#39;</span><span class="p">,</span> <span class="n">run_num</span><span class="p">)</span>
+        <span class="n">mu_scale</span> <span class="o">=</span> <span class="n">_get_special_value</span><span class="p">(</span><span class="n">spec_by_name</span><span class="p">,</span> <span class="s1">&#39;mu_scale&#39;</span><span class="p">,</span> <span class="n">run_num</span><span class="p">)</span>
+        <span class="n">stiff_scale</span> <span class="o">=</span> <span class="n">_get_special_value</span><span class="p">(</span><span class="n">spec_by_name</span><span class="p">,</span> <span class="s1">&#39;stiff_scale&#39;</span><span class="p">,</span>
+                                         <span class="n">run_num</span><span class="p">)</span>
+        <span class="n">gamma0</span> <span class="o">=</span> <span class="n">_get_special_value</span><span class="p">(</span><span class="n">spec_by_name</span><span class="p">,</span> <span class="s1">&#39;gamma0&#39;</span><span class="p">,</span> <span class="n">run_num</span><span class="p">)</span>
+        <span class="n">meltflux</span> <span class="o">=</span> <span class="n">_get_special_value</span><span class="p">(</span><span class="n">spec_by_name</span><span class="p">,</span> <span class="s1">&#39;meltflux&#39;</span><span class="p">,</span> <span class="n">run_num</span><span class="p">)</span>
+
+        <span class="n">test_case</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">EnsembleMember</span><span class="p">(</span>
+            <span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">run_num</span><span class="o">=</span><span class="n">run_num</span><span class="p">,</span>
+            <span class="n">basal_fric_exp</span><span class="o">=</span><span class="n">fric_exp</span><span class="p">,</span>
+            <span class="n">mu_scale</span><span class="o">=</span><span class="n">mu_scale</span><span class="p">,</span>
+            <span class="n">stiff_scale</span><span class="o">=</span><span class="n">stiff_scale</span><span class="p">,</span>
+            <span class="n">gamma0</span><span class="o">=</span><span class="n">gamma0</span><span class="p">,</span>
+            <span class="n">meltflux</span><span class="o">=</span><span class="n">meltflux</span><span class="p">,</span>
+            <span class="n">deltaT</span><span class="o">=</span><span class="n">deltaT_vec</span><span class="p">[</span><span class="n">run_num</span><span class="p">],</span>
+            <span class="n">namelist_option_values</span><span class="o">=</span><span class="n">namelist_option_values</span><span class="p">,</span>
+            <span class="n">namelist_parameter_values</span><span class="o">=</span><span class="n">namelist_parameter_values</span><span class="p">,</span>
+            <span class="n">resource_module</span><span class="o">=</span><span class="n">resource_module</span><span class="p">))</span>
+        <span class="c1"># Note: do not add to steps_to_run, because ensemble_manager</span>
+        <span class="c1"># will handle submitting and running the runs</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_split_entries</span><span class="p">(</span><span class="n">raw</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Split comma- or whitespace-delimited config lists.</span>
+
+<span class="sd">    Backslash-newline sequences used for line continuation are stripped so</span>
+<span class="sd">    that multi-line values are treated as a single logical line. Remaining</span>
+<span class="sd">    backslashes are also removed to avoid spurious option tokens.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list of str</span>
+<span class="sd">        Non-empty parsed entries.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cleaned</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\\r\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
+    <span class="n">cleaned</span> <span class="o">=</span> <span class="n">cleaned</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">entry</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">cleaned</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">if</span> <span class="n">entry</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_range</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">parameter_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse parameter min,max bounds from a comma-delimited value.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple of float</span>
+<span class="sd">        ``(min_value, max_value)`` parsed from ``raw``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">entry</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">raw</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Parameter &#39;</span><span class="si">{</span><span class="n">parameter_name</span><span class="si">}</span><span class="s2">&#39; must contain exactly &quot;</span>
+            <span class="s2">&quot;two comma-separated values.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_special_value</span><span class="p">(</span><span class="n">spec_by_name</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">run_num</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get sampled value for a special parameter or ``None`` if inactive.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float or None</span>
+<span class="sd">        Sampled value for ``name`` at ``run_num`` when present.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">spec_by_name</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">spec_by_name</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s1">&#39;vec&#39;</span><span class="p">][</span><span class="n">run_num</span><span class="p">]</span>
 </pre></div>
 
            </div>

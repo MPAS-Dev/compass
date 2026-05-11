@@ -155,6 +155,14 @@ by uniform sampling or from a space-filling Sobol sequence
 <span id="dev-landice-ensemble-generator-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Link to this heading"></a></h2>
 <p>The shared config options for the <code class="docutils literal notranslate"><span class="pre">ensemble_generator</span></code> test group are described
 in <a class="reference internal" href="../../../users_guide/landice/test_groups/ensemble_generator.html#landice-ensemble-generator"><span class="std std-ref">ensemble_generator</span></a> in the User’s Guide.</p>
+<p>Model-specific inputs for this test group now live under:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>compass.landice.tests.ensemble_generator.ensemble_templates.&lt;name&gt;
+</pre></div>
+</div>
+<p>with <code class="docutils literal notranslate"><span class="pre">spinup</span></code> and <code class="docutils literal notranslate"><span class="pre">branch</span></code> subpackages that each contain their own cfg,
+namelist, and streams resources (plus <code class="docutils literal notranslate"><span class="pre">albany_input.yaml</span></code> for spinup).
+The selected template name comes from
+<code class="docutils literal notranslate"><span class="pre">[ensemble_generator]</span> <span class="pre">ensemble_template</span></code>.</p>
 <section id="ensemble-member">
 <h3>ensemble_member<a class="headerlink" href="#ensemble-member" title="Link to this heading"></a></h3>
 <p>The class <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ensemble_generator.EnsembleMember</span></code>
@@ -193,6 +201,12 @@ file for another purpose.</p>
 <p>Similarly, because changing gamma0 and deltaT require modifying a basal melt
 parameter file, the baseline file path needs to be specified in the config
 and that file is copied, renamed, and modified in each run directory.</p>
+<p>Optionally, spinup runs can also apply precomputed friction samples from
+Albany inversion products.  If <code class="docutils literal notranslate"><span class="pre">fric_samples_file</span></code>, <code class="docutils literal notranslate"><span class="pre">fric_map_file</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">mpas_cellid_file</span></code> are provided in <code class="docutils literal notranslate"><span class="pre">[spinup_ensemble]</span></code> (with optional
+<code class="docutils literal notranslate"><span class="pre">fric_sample_scale</span></code>), run <code class="docutils literal notranslate"><span class="pre">N</span></code> reads sample <code class="docutils literal notranslate"><span class="pre">N</span></code> from
+<code class="docutils literal notranslate"><span class="pre">fric_samples_file</span></code> and applies it to <code class="docutils literal notranslate"><span class="pre">muFriction</span></code> in the copied run
+input file.</p>
 <p>Additionally, a job script is written for the run so that the run can be
 submitted as a slurm job independent of other runs in the ensemble.  This also
 allows a user to easily run a single ensemble member by submitting the job
@@ -204,7 +218,9 @@ directory, which compass does not do by default.</p>
 friction exponent in the <code class="docutils literal notranslate"><span class="pre">albany_input.yaml</span></code> file and adjusts muFriction
 in the input file to maintain an unchanged basal shear stress.  Similarly,
 there is a function <code class="docutils literal notranslate"><span class="pre">_adjust_basal_melt_params</span></code> that modifes gamma0 and
-deltaT in a basal melt parameter file.</p>
+deltaT in a basal melt parameter file.  There is also an
+<code class="docutils literal notranslate"><span class="pre">_apply_fric_sample</span></code> helper that maps an Albany friction sample onto MPAS
+cell IDs and writes the resulting <code class="docutils literal notranslate"><span class="pre">muFriction</span></code> field.</p>
 </section>
 <section id="ensemble-manager">
 <h3>ensemble_manager<a class="headerlink" href="#ensemble-manager" title="Link to this heading"></a></h3>
@@ -227,11 +243,31 @@ ensemble members, it is better to wait to have them added until the setup
 phase.  Also, by waiting until configure to define the ensemble members, it
 is possible to have the start and end run numbers set in the config,
 because the config is not parsed by the constructor.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">configure</span></code> method is where most of the work happens.  Here, the start
-and end run numbers are read from the config, a parameter array is generated,
-and the parameters to be varied and over what range are defined.
+<p>The <code class="docutils literal notranslate"><span class="pre">configure</span></code> method is where most of the work happens.
+There is no default configuration for this test case, so the user must
+provide a cfg file with the necessary options.  This will typically be the
+cfg located in the desired template directory or a user-modified copy of it.
+With the cfg provided, the individual ensemble members will be set up.
+Spinup run-control options (for example, <code class="docutils literal notranslate"><span class="pre">start_run</span></code>, <code class="docutils literal notranslate"><span class="pre">end_run</span></code>,
+<code class="docutils literal notranslate"><span class="pre">sampling_method</span></code>, <code class="docutils literal notranslate"><span class="pre">max_samples</span></code>, <code class="docutils literal notranslate"><span class="pre">cfl_fraction</span></code>, and <code class="docutils literal notranslate"><span class="pre">ntasks</span></code>)
+are read from <code class="docutils literal notranslate"><span class="pre">[ensemble_generator]</span></code>, while spinup resource paths and
+related values (for example <code class="docutils literal notranslate"><span class="pre">input_file_path</span></code> and <code class="docutils literal notranslate"><span class="pre">iceshelf_area_obs</span></code>)
+are read from <code class="docutils literal notranslate"><span class="pre">[spinup_ensemble]</span></code>.
+Optional spinup friction-sample options
+(<code class="docutils literal notranslate"><span class="pre">fric_samples_file</span></code>, <code class="docutils literal notranslate"><span class="pre">fric_map_file</span></code>, <code class="docutils literal notranslate"><span class="pre">mpas_cellid_file</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">fric_sample_scale</span></code>) are also read from <code class="docutils literal notranslate"><span class="pre">[spinup_ensemble]</span></code> and applied
+per run number when present.
+Supported sampling methods are <code class="docutils literal notranslate"><span class="pre">sobol</span></code>, <code class="docutils literal notranslate"><span class="pre">uniform</span></code>, and <code class="docutils literal notranslate"><span class="pre">log-uniform</span></code>.
 The values for each parameter are
-passed to the <code class="docutils literal notranslate"><span class="pre">EnsembleMember</span></code> constructor to define each run.
+passed to the <code class="docutils literal notranslate"><span class="pre">EnsembleMember</span></code> constructor to define each run.</p>
+<p>Parameter definitions now come from <code class="docutils literal notranslate"><span class="pre">[ensemble.parameters]</span></code> where each
+parameter uses <code class="docutils literal notranslate"><span class="pre">&lt;name&gt;</span> <span class="pre">=</span> <span class="pre">min,</span> <span class="pre">max</span></code> and ordering follows the order in
+that section.  Parameters with names prefixed by <code class="docutils literal notranslate"><span class="pre">nl.</span></code> are interpreted as
+generic float-valued namelist perturbations and must define
+<code class="docutils literal notranslate"><span class="pre">&lt;name&gt;.option_name</span></code> with one or more namelist options.  Parameters without
+the <code class="docutils literal notranslate"><span class="pre">nl.</span></code> prefix are reserved for special perturbations that use custom
+logic (currently <code class="docutils literal notranslate"><span class="pre">fric_exp</span></code>, <code class="docutils literal notranslate"><span class="pre">mu_scale</span></code>, <code class="docutils literal notranslate"><span class="pre">stiff_scale</span></code>, <code class="docutils literal notranslate"><span class="pre">gamma0</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">meltflux</span></code>).
 Finally, each run is now added to the test case as a step to run,
 because they were not automatically added by compass during the test
 case constructor phase.</p>
@@ -253,14 +289,17 @@ member of a previously run spinup ensemble.
 The constructor adds the ensemble_manager as a step, as with the spinup_ensemble.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">configure</span></code> method searches over the range of runs requested and assesses if
 the corresponding spinup_ensemble member reached the requested branch time.
-If so, and if the branch_ensemble memebr directory does not already exist, that
+If so, and if the branch_ensemble member directory does not already exist, that
 run is added as a step.  Within each run (step), the restart file from the branch
 year is copied to the branch run directory.  The time stamp is reassigned to
 2015 (this could be made a cfg option in the future).  Also copied over are
-the namelist and albany_input.yamlm files.  The namelist is updated with
-settings specific to the branch ensemble, and a streams file specific to the
-branch run is added.  Finally, details for managing runs are set up, including
-a job script.</p>
+the namelist and, when present (for Albany-based configurations), the
+<code class="docutils literal notranslate"><span class="pre">albany_input.yaml</span></code> file.  The namelist is updated with settings specific to
+the branch ensemble, and a streams file specific to the branch run is added.
+Finally, details for managing runs are set up, including a job script.</p>
+<p>As in spinup, the branch configure method first loads
+<code class="docutils literal notranslate"><span class="pre">ensemble_templates/&lt;name&gt;/branch/branch_ensemble.cfg</span></code> based on
+<code class="docutils literal notranslate"><span class="pre">[ensemble_generator]</span> <span class="pre">ensemble_template</span></code>.</p>
 <p>As in the spinup_ensemble, the <code class="docutils literal notranslate"><span class="pre">run</span></code> step just runs the model.</p>
 </section>
 </section>

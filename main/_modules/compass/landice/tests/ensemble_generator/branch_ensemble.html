@@ -121,6 +121,9 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ensemble_generator.ensemble_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">EnsembleManager</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.landice.tests.ensemble_generator.ensemble_template</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">get_branch_template_package</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.testcase</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestCase</span>
 
 
@@ -177,6 +180,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">resource_module</span> <span class="o">=</span> <span class="n">get_branch_template_package</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
         <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;branch_ensemble&#39;</span><span class="p">]</span>
 
         <span class="n">spinup_test_dir</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;spinup_test_dir&#39;</span><span class="p">)</span>
@@ -207,7 +212,8 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Adding </span><span class="si">{</span><span class="n">run_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="c1"># use this run</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">BranchRun</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_num</span><span class="o">=</span><span class="n">run_num</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">BranchRun</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_num</span><span class="o">=</span><span class="n">run_num</span><span class="p">,</span>
+                                            <span class="n">resource_module</span><span class="o">=</span><span class="n">resource_module</span><span class="p">))</span>
                     <span class="c1"># Note: do not add to steps_to_run; ensemble_manager</span>
                     <span class="c1"># will handle submitting and running the runs</span>
 
