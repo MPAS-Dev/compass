@@ -4,7 +4,9 @@ import numpy as np
 from netCDF4 import Dataset
 
 
-def extrapolate_variable(nc_file, var_name, extrap_method, set_value=None):
+def extrapolate_variable(nc_file, var_name, extrap_method='auto',  # noqa: C901
+                         valid_region_method='auto',
+                         set_value=None):
     """
     Function to extrapolate variable values into undefined regions
 
@@ -18,6 +20,9 @@ def extrapolate_variable(nc_file, var_name, extrap_method, set_value=None):
 
     extrap_method : str
         idw, min, or value method of extrapolation
+
+    valid_region_method : str
+        choice of how to define region of valid data
 
     set_value : float
         value to set variable to outside keepCellMask
@@ -36,13 +41,33 @@ def extrapolate_variable(nc_file, var_name, extrap_method, set_value=None):
     xCell = dataset.variables["yCell"][:]
     yCell = dataset.variables["xCell"][:]
 
+    # Define extrap method
+    if extrap_method == 'auto':
+        if var_name in ["effectivePressure", "beta", "muFriction"]:
+            extrap_method = 'min'
+        elif var_name in ["floatingBasalMassBal"]:
+            extrap_method = 'idw'
+        else:
+            extrap_method = 'idw'
+
     # Define region of good data to extrapolate from.
-    # Different methods for different variables
-    if var_name in ["effectivePressure", "beta", "muFriction"]:
+    if valid_region_method == 'auto':
+        if var_name in ["effectivePressure", "beta", "muFriction"]:
+            valid_region_method = 'grounded_ice'
+        elif var_name in ["floatingBasalMassBal"]:
+            valid_region_method = 'floating_ice'
+        else:
+            valid_region_method = 'ice'
+
+    print(f"Start {var_name} extrapolation using {extrap_method} method, "
+          f"defining good data using {valid_region_method} method")
+
+    # Calculate seed mask baed on method for defining valid data
+    if valid_region_method == 'positive_val':
+        keepCellMask = (varValue[:] > 0.0)
+    elif valid_region_method == 'grounded_ice':
         groundedMask = (thickness > (-1028.0 / 910.0 * bed))
         keepCellMask = np.copy(groundedMask)
-        extrap_method == "min"
-
         # grow mask by one cell oceanward of GL
         for iCell in range(nCells):
             for n in range(nEdgesOnCell[iCell]):
@@ -51,13 +76,19 @@ def extrapolate_variable(nc_file, var_name, extrap_method, set_value=None):
                     keepCellMask[iCell] = 1
                     continue
         # ensure zero muFriction does not get extrapolated
-        keepCellMask *= (varValue > 0)
-    elif var_name in ["floatingBasalMassBal"]:
+        keepCellMask *= (varValue > 0.0)
+    elif valid_region_method == 'floating_ice':
         floatingMask = (thickness <= (-1028.0 / 910.0 * bed))
         keepCellMask = floatingMask * (varValue != 0.0)
-        extrap_method == "idw"
-    else:
+    elif valid_region_method == 'ice':
         keepCellMask = (thickness > 0.0)
+    else:
+        sys.exit("Unexpected value of valid_region_method encountered "
+                 "in landice/extrapolate.py")
+
+    if keepCellMask.sum() == 0:
+        sys.exit("In landice/extrapolate.py, initial keepCellMask has "
+                 "no valid cells")
 
     # make a copy to edit that will be used later
     keepCellMaskNew = np.copy(keepCellMask)
@@ -72,8 +103,6 @@ def extrapolate_variable(nc_file, var_name, extrap_method, set_value=None):
     # 5) Update mask
     # 6) go to step 1)
 
-    print("Start {} extrapolation using {} method".format(var_name,
-                                                          extrap_method))
     if extrap_method == 'value':
         varValue[np.where(np.logical_not(keepCellMask))] = float(set_value)
     else:

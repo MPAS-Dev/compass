@@ -202,6 +202,11 @@ ensemble_generator
    ensemble_member.EnsembleMember.setup
    ensemble_member.EnsembleMember.run
 
+   ensemble_template.get_ensemble_template_name
+   ensemble_template.get_spinup_template_package
+   ensemble_template.get_branch_template_package
+   ensemble_template.add_template_file
+
    spinup_ensemble.SpinupEnsemble
    spinup_ensemble.SpinupEnsemble.configure
 

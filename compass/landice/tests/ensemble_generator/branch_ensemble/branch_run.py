@@ -28,36 +28,9 @@ class BranchRun(Step):
     input_file_name : str
         name of the input file that was read from the config
 
-    basal_fric_exp : float
-        value of basal friction exponent to use
-
-    mu_scale : float
-        value to scale muFriction by
-
-    stiff_scale : float
-        value to scale stiffnessFactor by
-
-    von_mises_threshold : float
-        value of von Mises stress threshold to use
-
-    calv_spd_lim : float
-        value of calving speed limit to use
-
-    gamma0 : float
-        value of gamma0 to use in ISMIP6 ice-shelf basal melt param.
-
-    deltaT : float
-        value of deltaT to use in ISMIP6 ice-shelf basal melt param.
     """
 
-    def __init__(self, test_case, run_num,
-                 basal_fric_exp=None,
-                 mu_scale=None,
-                 stiff_scale=None,
-                 von_mises_threshold=None,
-                 calv_spd_lim=None,
-                 gamma0=None,
-                 deltaT=None):
+    def __init__(self, test_case, run_num, resource_module):
         """
         Creates a new run within an ensemble
 
@@ -68,8 +41,13 @@ class BranchRun(Step):
 
         run_num : integer
             the run number for this ensemble member
+
+        resource_module : str
+            Package containing configuration-specific branch namelist and
+            streams templates
         """
         self.run_num = run_num
+        self.resource_module = resource_module
 
         # define step (run) name
         self.name = f'run{run_num:03}'
@@ -108,9 +86,10 @@ class BranchRun(Step):
         with open(os.path.join(self.work_dir, 'restart_timestamp'), 'w') as f:
             f.write('2015-01-01_00:00:00')
 
-        # yaml file
-        shutil.copy(os.path.join(spinup_dir, 'albany_input.yaml'),
-                    self.work_dir)
+        # albany_input.yaml may be absent in templates that do not use Albany.
+        albany_input = os.path.join(spinup_dir, 'albany_input.yaml')
+        if os.path.isfile(albany_input):
+            shutil.copy(albany_input, self.work_dir)
 
         # set up namelist
         # start with the namelist from the spinup
@@ -120,8 +99,7 @@ class BranchRun(Step):
                                                         'namelist.landice'))
         # use the namelist in this module to update the spinup namelist
         options = compass.namelist.parse_replacements(
-            'compass.landice.tests.ensemble_generator.branch_ensemble',
-            'namelist.landice')
+            self.resource_module, 'namelist.landice')
         namelist = compass.namelist.replace(namelist, options)
         compass.namelist.write(namelist, os.path.join(self.work_dir,
                                                       'namelist.landice'))
@@ -132,7 +110,7 @@ class BranchRun(Step):
         stream_replacements['TF_file_path'] = TF_file_path
         SMB_file_path = section.get('SMB_file_path')
         stream_replacements['SMB_file_path'] = SMB_file_path
-        strm_src = 'compass.landice.tests.ensemble_generator.branch_ensemble'
+        strm_src = self.resource_module
         self.add_streams_file(strm_src,
                               'streams.landice',
                               out_name='streams.landice',
