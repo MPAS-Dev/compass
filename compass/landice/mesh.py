@@ -1132,6 +1132,47 @@ def preprocess_ais_data(self, source_gridded_dataset, floodFillMask):
     return preprocessed_gridded_dataset
 
 
+# Common helpers shared by build_dst_scrip_hull,
+# add_grid_imask_from_dst_scrip_hull, and the diagnostic plotting code.
+
+LANDICE_PROJECTIONS = {
+    'greenland': (
+        '+proj=stere +lat_ts=70.0 +lat_0=90 +lon_0=315.0 +k_0=1.0 '
+        '+x_0=0.0 +y_0=0.0 +ellps=WGS84'
+    ),
+    'antarctica': (
+        '+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0 +k_0=1.0 '
+        '+x_0=0.0 +y_0=0.0 +ellps=WGS84'
+    ),
+}
+LANDICE_PROJECTIONS['gis-gimp'] = LANDICE_PROJECTIONS['greenland']
+LANDICE_PROJECTIONS['ais-bedmap2'] = LANDICE_PROJECTIONS['antarctica']
+
+
+def _resolve_mesh_crs(domain, mesh_crs):
+    """Return *mesh_crs* resolved from *domain* if it was ``None``."""
+    if mesh_crs is not None:
+        return mesh_crs
+    if domain not in LANDICE_PROJECTIONS:
+        raise ValueError(
+            f"Unknown domain '{domain}'. Expected one of "
+            f"{list(LANDICE_PROJECTIONS.keys())}, or supply mesh_crs "
+            f"explicitly."
+        )
+    return LANDICE_PROJECTIONS[domain]
+
+
+def _maybe_deg(lon, lat):
+    """
+    Convert lon/lat from radians to degrees if they appear to be in radians.
+    """
+    if (np.nanmax(np.abs(lon)) <= 2.0 * np.pi + 1.0e-6 and
+            np.nanmax(np.abs(lat)) <= 0.5 * np.pi + 1.0e-6):
+        lon = np.rad2deg(lon)
+        lat = np.rad2deg(lat)
+    return lon, lat
+
+
 def build_dst_scrip_hull(dest_scrip, domain, buffer_m=50e3,
                          source_crs='EPSG:4326', mesh_crs=None,
                          logger=None):
@@ -1185,35 +1226,8 @@ def build_dst_scrip_hull(dest_scrip, domain, buffer_m=50e3,
         else:
             print(msg)
 
-    projections = {
-        'greenland': (
-            '+proj=stere +lat_ts=70.0 +lat_0=90 +lon_0=315.0 +k_0=1.0 '
-            '+x_0=0.0 +y_0=0.0 +ellps=WGS84'
-        ),
-        'antarctica': (
-            '+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0 +k_0=1.0 '
-            '+x_0=0.0 +y_0=0.0 +ellps=WGS84'
-        ),
-    }
-    projections['gis-gimp'] = projections['greenland']
-    projections['ais-bedmap2'] = projections['antarctica']
-
-    if mesh_crs is None:
-        if domain not in projections:
-            raise ValueError(
-                f"Unknown domain '{domain}'. Expected one of "
-                f"{list(projections.keys())}, or supply mesh_crs explicitly."
-            )
-        mesh_crs = projections[domain]
-
+    mesh_crs = _resolve_mesh_crs(domain, mesh_crs)
     transformer = Transformer.from_crs(source_crs, mesh_crs, always_xy=True)
-
-    def _maybe_deg(lon, lat):
-        if (np.nanmax(np.abs(lon)) <= 2.0 * np.pi + 1.0e-6 and
-                np.nanmax(np.abs(lat)) <= 0.5 * np.pi + 1.0e-6):
-            lon = np.rad2deg(lon)
-            lat = np.rad2deg(lat)
-        return lon, lat
 
     def _projected_dest_points(ds):
         if ('grid_corner_x' in ds.variables and
@@ -1369,35 +1383,8 @@ def add_grid_imask_from_dst_scrip_hull(source_scrip, dest_scrip,
         else:
             print(msg)
 
-    projections = {
-        'greenland': (
-            '+proj=stere +lat_ts=70.0 +lat_0=90 +lon_0=315.0 +k_0=1.0 '
-            '+x_0=0.0 +y_0=0.0 +ellps=WGS84'
-        ),
-        'antarctica': (
-            '+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0 +k_0=1.0 '
-            '+x_0=0.0 +y_0=0.0 +ellps=WGS84'
-        ),
-    }
-    projections['gis-gimp'] = projections['greenland']
-    projections['ais-bedmap2'] = projections['antarctica']
-
-    if mesh_crs is None:
-        if domain not in projections:
-            raise ValueError(
-                f"Unknown domain '{domain}'. Expected one of "
-                f"{list(projections.keys())}, or supply mesh_crs explicitly."
-            )
-        mesh_crs = projections[domain]
-
+    mesh_crs = _resolve_mesh_crs(domain, mesh_crs)
     transformer = Transformer.from_crs(source_crs, mesh_crs, always_xy=True)
-
-    def _maybe_deg(lon, lat):
-        if (np.nanmax(np.abs(lon)) <= 2.0 * np.pi + 1.0e-6 and
-                np.nanmax(np.abs(lat)) <= 0.5 * np.pi + 1.0e-6):
-            lon = np.rad2deg(lon)
-            lat = np.rad2deg(lat)
-        return lon, lat
 
     def _projected_centers(ds):
         if ('grid_center_x' in ds.variables and
@@ -1443,7 +1430,7 @@ def add_grid_imask_from_dst_scrip_hull(source_scrip, dest_scrip,
 
 
 def plot_hull_diagnostic(hull_path, dest_scrip, source_bbox_files,
-                         transformer, _maybe_deg, active_xc, active_yc,
+                         transformer, active_xc, active_yc,
                          logger=None):
     """
     Save a diagnostic PNG (``mesh_boundary.png``) showing the masking geometry.
@@ -1462,9 +1449,6 @@ def plot_hull_diagnostic(hull_path, dest_scrip, source_bbox_files,
 
     transformer : pyproj.Transformer
         Transformer from lon/lat to planar coordinates.
-
-    _maybe_deg : callable
-        Helper that converts radian angles to degrees when needed.
 
     active_xc : numpy.ndarray
         Projected x-coordinates of all active (masked-in) source cells.
@@ -1964,28 +1948,9 @@ def run_optional_interpolation(
         # Diagnostic plot: show hull, MALI domain, and bounding boxes for
         # all source datasets that were interpolated.
         if bedmachine_dataset is not None or measures_dataset is not None:
-            projections = {
-                'greenland': (
-                    '+proj=stere +lat_ts=70.0 +lat_0=90 +lon_0=315.0'
-                    ' +k_0=1.0 +x_0=0.0 +y_0=0.0 +ellps=WGS84'
-                ),
-                'antarctica': (
-                    '+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0'
-                    ' +k_0=1.0 +x_0=0.0 +y_0=0.0 +ellps=WGS84'
-                ),
-            }
-            projections['gis-gimp'] = projections['greenland']
-            projections['ais-bedmap2'] = projections['antarctica']
-            mesh_crs = projections.get(src_proj, src_proj)
+            mesh_crs = LANDICE_PROJECTIONS.get(src_proj, src_proj)
             transformer = Transformer.from_crs(
                 'EPSG:4326', mesh_crs, always_xy=True)
-
-            def _maybe_deg_plot(lon, lat):
-                if (np.nanmax(np.abs(lon)) <= 2.0 * np.pi + 1.0e-6 and
-                        np.nanmax(np.abs(lat)) <= 0.5 * np.pi + 1.0e-6):
-                    lon = np.rad2deg(lon)
-                    lat = np.rad2deg(lat)
-                return lon, lat
 
             # Collect active source cells from BedMachine (first dataset)
             # as a representative ice-sheet extent for the plot.
@@ -2013,7 +1978,7 @@ def run_optional_interpolation(
                           'grid_center_lat' in ds_m.variables):
                         lon = ds_m['grid_center_lon'].values[imask]
                         lat = ds_m['grid_center_lat'].values[imask]
-                        lon, lat = _maybe_deg_plot(lon, lat)
+                        lon, lat = _maybe_deg(lon, lat)
                         active_xc, active_yc = transformer.transform(
                             lon, lat)
                         active_xc = np.asarray(active_xc)
@@ -2036,7 +2001,6 @@ def run_optional_interpolation(
                 dest_scrip=dst_scrip_file,
                 source_bbox_files=bbox_files,
                 transformer=transformer,
-                _maybe_deg=_maybe_deg_plot,
                 active_xc=active_xc,
                 active_yc=active_yc,
                 logger=logger)
