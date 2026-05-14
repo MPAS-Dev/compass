@@ -1580,25 +1580,22 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
         When provided, the boundary is not recomputed from mali_scrip, which
         avoids redundant I/O and computation when this function is called
         multiple times with the same destination mesh.
+
+    Returns
+    -------
+    masked_source_scrip : str
+        Path to the masked source SCRIP file written during interpolation.
     """
-
-    def __guess_scrip_name(filename):
-
-        # try searching for string followed by a version number
-        match = re.search(r'(^.*[_-]v\d*[_-])+', filename)
-
-        if match:
-            # slice string to end of match minus one to leave of final _ or -
-            base_fn = filename[:match.end() - 1]
-        else:
-            # no matches were found, just use the filename (minus extension)
-            base_fn = os.path.splitext(filename)[0]
-
-        return f"{base_fn}.scrip.nc"
 
     logger = self.logger
 
-    source_scrip = __guess_scrip_name(os.path.basename(source_file))
+    bare = os.path.splitext(os.path.basename(source_file))[0]
+    match = re.search(r'(^.*[_-]v\d*[_-])+', bare)
+    if match:
+        scrip_stem = bare[:match.end() - 1]
+    else:
+        scrip_stem = bare
+    source_scrip = f'{scrip_stem}.scrip.nc'
     weights_filename = "gridded_to_MPAS_weights.nc"
 
     # make sure variables is a list, encompasses the variables="all" case
@@ -1651,6 +1648,8 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
             '-v'] + variables
 
     check_call(args, logger=logger)
+
+    return masked_source_scrip
 
 
 def clean_up_after_interp(fname):
@@ -1929,11 +1928,13 @@ def run_optional_interpolation(
             domain=src_proj,
             logger=logger)
 
+        bm_masked_scrip = None
         if bedmachine_dataset is not None:
-            interp_gridded2mali(self, bedmachine_dataset, dst_scrip_file,
-                                parallel_executable, nProcs,
-                                mesh_filename, src_proj, variables='all',
-                                hull_path=hull_path)
+            bm_masked_scrip = interp_gridded2mali(
+                self, bedmachine_dataset, dst_scrip_file,
+                parallel_executable, nProcs,
+                mesh_filename, src_proj, variables='all',
+                hull_path=hull_path)
 
         if measures_dataset is not None:
             measures_vars = ['observedSurfaceVelocityX',
@@ -1956,19 +1957,9 @@ def run_optional_interpolation(
             # as a representative ice-sheet extent for the plot.
             active_xc = np.array([])
             active_yc = np.array([])
-            first_src = bedmachine_dataset or measures_dataset
-            bm_stem = os.path.splitext(
-                os.path.basename(first_src))[0]
-            # Try to find the masked SCRIP that was written to workdir
-            import re as _re
-            match = _re.search(r'(^.*[_-]v\d*[_-])+', bm_stem)
-            if match:
-                scrip_stem = bm_stem[:match.end() - 1]
-            else:
-                scrip_stem = bm_stem
-            masked_scrip = f'{scrip_stem}.scrip_masked.nc'
-            if os.path.exists(masked_scrip):
-                with xarray.open_dataset(masked_scrip) as ds_m:
+            if bm_masked_scrip is not None and \
+                    os.path.exists(bm_masked_scrip):
+                with xarray.open_dataset(bm_masked_scrip) as ds_m:
                     imask = ds_m['grid_imask'].values.astype(bool)
                     if ('grid_center_x' in ds_m.variables and
                             'grid_center_y' in ds_m.variables):
