@@ -1430,8 +1430,7 @@ def add_grid_imask_from_dst_scrip_hull(source_scrip, dest_scrip,
 
 
 def plot_hull_diagnostic(hull_path, dest_scrip, source_bbox_files,
-                         transformer, active_xc, active_yc,
-                         logger=None):
+                         domain, masked_scrip=None, logger=None):
     """
     Save a diagnostic PNG (``mesh_boundary.png``) showing the masking geometry.
 
@@ -1447,14 +1446,14 @@ def plot_hull_diagnostic(hull_path, dest_scrip, source_bbox_files,
         Each entry is ``(filepath, label, edgecolor)`` for a source dataset
         whose bounding box should be drawn.
 
-    transformer : pyproj.Transformer
-        Transformer from lon/lat to planar coordinates.
+    domain : str
+        Projection domain key (e.g. 'greenland', 'antarctica') or a
+        proj4/EPSG string used to build the planar transformer.
 
-    active_xc : numpy.ndarray
-        Projected x-coordinates of all active (masked-in) source cells.
-
-    active_yc : numpy.ndarray
-        Projected y-coordinates of all active (masked-in) source cells.
+    masked_scrip : str or None, optional
+        Path to a masked source SCRIP file. If provided and the file exists,
+        active (masked-in) source cells are plotted as an ice-sheet extent
+        indicator.
 
     logger : logging.Logger, optional
         Logger for status messages; falls back to print if None.
@@ -1468,6 +1467,29 @@ def plot_hull_diagnostic(hull_path, dest_scrip, source_bbox_files,
     try:
         from matplotlib.patches import Polygon as MplPolygon
         from matplotlib.patches import Rectangle
+
+        mesh_crs = LANDICE_PROJECTIONS.get(domain, domain)
+        transformer = Transformer.from_crs(
+            'EPSG:4326', mesh_crs, always_xy=True)
+
+        # --- Load active source cells from masked SCRIP (if available) ---
+        active_xc = np.array([])
+        active_yc = np.array([])
+        if masked_scrip is not None and os.path.exists(masked_scrip):
+            with xarray.open_dataset(masked_scrip) as ds_m:
+                imask = ds_m['grid_imask'].values.astype(bool)
+                if ('grid_center_x' in ds_m.variables and
+                        'grid_center_y' in ds_m.variables):
+                    active_xc = ds_m['grid_center_x'].values[imask]
+                    active_yc = ds_m['grid_center_y'].values[imask]
+                elif ('grid_center_lon' in ds_m.variables and
+                      'grid_center_lat' in ds_m.variables):
+                    lon = ds_m['grid_center_lon'].values[imask]
+                    lat = ds_m['grid_center_lat'].values[imask]
+                    lon, lat = _maybe_deg(lon, lat)
+                    active_xc, active_yc = transformer.transform(lon, lat)
+                    active_xc = np.asarray(active_xc)
+                    active_yc = np.asarray(active_yc)
 
         # --- destination SCRIP centers (MALI domain extent) ---
         with xarray.open_dataset(dest_scrip) as ds_dst:
@@ -1503,9 +1525,6 @@ def plot_hull_diagnostic(hull_path, dest_scrip, source_bbox_files,
                 float(y.min()), float(y.max())
 
         fig, ax = plt.subplots(figsize=(10, 10))
-
-        # active source cells — ice-sheet extent (tab:blue)
-        xs, ys = _subsample(active_xc, active_yc)
 
         # MALI domain extent (tab:pink)
         xs, ys = _subsample(xd, yd)
@@ -1949,32 +1968,6 @@ def run_optional_interpolation(
         # Diagnostic plot: show hull, MALI domain, and bounding boxes for
         # all source datasets that were interpolated.
         if bedmachine_dataset is not None or measures_dataset is not None:
-            mesh_crs = LANDICE_PROJECTIONS.get(src_proj, src_proj)
-            transformer = Transformer.from_crs(
-                'EPSG:4326', mesh_crs, always_xy=True)
-
-            # Collect active source cells from BedMachine (first dataset)
-            # as a representative ice-sheet extent for the plot.
-            active_xc = np.array([])
-            active_yc = np.array([])
-            if bm_masked_scrip is not None and \
-                    os.path.exists(bm_masked_scrip):
-                with xarray.open_dataset(bm_masked_scrip) as ds_m:
-                    imask = ds_m['grid_imask'].values.astype(bool)
-                    if ('grid_center_x' in ds_m.variables and
-                            'grid_center_y' in ds_m.variables):
-                        active_xc = ds_m['grid_center_x'].values[imask]
-                        active_yc = ds_m['grid_center_y'].values[imask]
-                    elif ('grid_center_lon' in ds_m.variables and
-                          'grid_center_lat' in ds_m.variables):
-                        lon = ds_m['grid_center_lon'].values[imask]
-                        lat = ds_m['grid_center_lat'].values[imask]
-                        lon, lat = _maybe_deg(lon, lat)
-                        active_xc, active_yc = transformer.transform(
-                            lon, lat)
-                        active_xc = np.asarray(active_xc)
-                        active_yc = np.asarray(active_yc)
-
             bbox_files = []
             if bedmachine_dataset is not None:
                 bbox_files.append((
@@ -1991,9 +1984,8 @@ def run_optional_interpolation(
                 hull_path=hull_path,
                 dest_scrip=dst_scrip_file,
                 source_bbox_files=bbox_files,
-                transformer=transformer,
-                active_xc=active_xc,
-                active_yc=active_yc,
+                domain=src_proj,
+                masked_scrip=bm_masked_scrip,
                 logger=logger)
 
         clean_up_after_interp(mesh_filename)
