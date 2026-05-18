@@ -1648,13 +1648,17 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
 
     # Generate remapping weights
     logger.info('generating gridded dataset -> MPAS weights')
-    args = [parallel_executable, '-n', nProcs, 'ESMF_RegridWeightGen',
-            '--source', masked_source_scrip,
-            '--destination', mali_scrip,
-            '--weight', weights_filename,
-            '--method', 'conserve',
-            "--netcdf4",
-            "--dst_regional", "--src_regional", '--ignore_unmapped']
+    args = parallel_executable.split() + [
+        '-n', nProcs,
+        'ESMF_RegridWeightGen',
+        '--source', masked_source_scrip,
+        '--destination', mali_scrip,
+        '--weight', weights_filename,
+        '--method', 'conserve',
+        "--netcdf4",
+        "--dst_regional",
+        "--src_regional",
+        '--ignore_unmapped']
     check_call(args, logger=logger)
 
     # Perform actual interpolation using the weights
