@@ -11,6 +11,7 @@ import mpas_tools.io
 import numpy as np
 import xarray
 from geometric_features import FeatureCollection, GeometricFeatures
+from matplotlib.path import Path
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 from mpas_tools.mesh.conversion import convert, cull
@@ -18,9 +19,10 @@ from mpas_tools.mesh.creation import build_planar_mesh
 from mpas_tools.mesh.creation.sort_mesh import sort_mesh
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
 from netCDF4 import Dataset
+from pyproj import Transformer
 from scipy import ndimage
 from scipy.interpolate import interpn
-from scipy.ndimage import distance_transform_edt
+from scipy.ndimage import binary_dilation, distance_transform_edt
 
 
 def mpas_flood_fill(seed_mask, grow_mask, cellsOnCell, nEdgesOnCell,
@@ -1130,8 +1132,441 @@ def preprocess_ais_data(self, source_gridded_dataset, floodFillMask):
     return preprocessed_gridded_dataset
 
 
+# Common helpers shared by build_dst_scrip_hull,
+# add_grid_imask_from_dst_scrip_hull, and the diagnostic plotting code.
+
+LANDICE_PROJECTIONS = {
+    'greenland': (
+        '+proj=stere +lat_ts=70.0 +lat_0=90 +lon_0=315.0 +k_0=1.0 '
+        '+x_0=0.0 +y_0=0.0 +ellps=WGS84'
+    ),
+    'antarctica': (
+        '+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0 +k_0=1.0 '
+        '+x_0=0.0 +y_0=0.0 +ellps=WGS84'
+    ),
+}
+LANDICE_PROJECTIONS['gis-gimp'] = LANDICE_PROJECTIONS['greenland']
+LANDICE_PROJECTIONS['ais-bedmap2'] = LANDICE_PROJECTIONS['antarctica']
+
+
+def _resolve_mesh_crs(domain, mesh_crs):
+    """Return *mesh_crs* resolved from *domain* if it was ``None``."""
+    if mesh_crs is not None:
+        return mesh_crs
+    if domain not in LANDICE_PROJECTIONS:
+        raise ValueError(
+            f"Unknown domain '{domain}'. Expected one of "
+            f"{list(LANDICE_PROJECTIONS.keys())}, or supply mesh_crs "
+            f"explicitly."
+        )
+    return LANDICE_PROJECTIONS[domain]
+
+
+def _maybe_deg(lon, lat):
+    """
+    Convert lon/lat from radians to degrees if they appear to be in radians.
+    """
+    if (np.nanmax(np.abs(lon)) <= 2.0 * np.pi + 1.0e-6 and
+            np.nanmax(np.abs(lat)) <= 0.5 * np.pi + 1.0e-6):
+        lon = np.rad2deg(lon)
+        lat = np.rad2deg(lat)
+    return lon, lat
+
+
+def build_dst_scrip_hull(dest_scrip, domain, buffer_m=50e3,
+                         source_crs='EPSG:4326', mesh_crs=None,
+                         logger=None):
+    """
+    Build a buffered concave boundary from the footprint of a destination
+    SCRIP file and return it as a :py:class:`matplotlib.path.Path`.
+
+    The boundary is constructed by rasterising the destination mesh points
+    onto a coarse grid (10 km cell size), dilating by ``buffer_m``, and
+    extracting the outer contour. This produces a tight, concave mask that
+    follows the actual domain shape (including bays and fjords) while
+    remaining computationally inexpensive (< 1 s for any realistic mesh).
+
+    This is factored out of
+    :py:func:`compass.landice.mesh.add_grid_imask_from_dst_scrip_hull` so
+    that the boundary can be computed once and reused across multiple source
+    datasets that share the same destination mesh, avoiding redundant I/O
+    and computation.
+
+    Parameters
+    ----------
+    dest_scrip : str
+        Destination SCRIP file
+
+    domain : str
+        Projection domain. Recognised convenience keys: 'greenland',
+        'gis-gimp', 'antarctica', 'ais-bedmap2'. Any other value requires
+        mesh_crs to be supplied explicitly.
+
+    buffer_m : float, optional
+        Outward buffer distance in meters (default 50 km)
+
+    source_crs : str, optional
+        CRS of lon/lat variables in the SCRIP file (default 'EPSG:4326')
+
+    mesh_crs : str, optional
+        Proj4/EPSG string for planar coordinates. Derived from domain if None.
+
+    logger : logging.Logger, optional
+        Logger for status messages; falls back to print if None.
+
+    Returns
+    -------
+    hull_path : matplotlib.path.Path
+        Buffered concave boundary of the destination mesh footprint.
+    """
+
+    def _log(msg):
+        if logger is not None:
+            logger.info(msg)
+        else:
+            print(msg)
+
+    mesh_crs = _resolve_mesh_crs(domain, mesh_crs)
+    transformer = Transformer.from_crs(source_crs, mesh_crs, always_xy=True)
+
+    def _projected_dest_points(ds):
+        if ('grid_corner_x' in ds.variables and
+                'grid_corner_y' in ds.variables):
+            x = ds['grid_corner_x'].values
+            y = ds['grid_corner_y'].values
+            _log('Using existing projected destination corners.')
+        elif ('grid_corner_lon' in ds.variables and
+              'grid_corner_lat' in ds.variables):
+            lon = ds['grid_corner_lon'].values
+            lat = ds['grid_corner_lat'].values
+            lon, lat = _maybe_deg(lon, lat)
+            x, y = transformer.transform(lon, lat)
+            _log('Projected destination corners from lon/lat.')
+        elif ('grid_center_x' in ds.variables and
+              'grid_center_y' in ds.variables):
+            x = ds['grid_center_x'].values
+            y = ds['grid_center_y'].values
+            _log('Using existing projected destination centers.')
+        else:
+            lon = ds['grid_center_lon'].values
+            lat = ds['grid_center_lat'].values
+            lon, lat = _maybe_deg(lon, lat)
+            x, y = transformer.transform(lon, lat)
+            _log('Projected destination centers from lon/lat.')
+        pts = np.column_stack([np.ravel(x), np.ravel(y)])
+        pts = pts[np.all(np.isfinite(pts), axis=1)]
+        return pts
+
+    with xarray.open_dataset(dest_scrip) as ds_dst:
+        dst_points = _projected_dest_points(ds_dst)
+
+    if dst_points.shape[0] < 3:
+        raise ValueError(
+            'Not enough destination points to build a boundary.')
+
+    # --- Rasterize-dilate-contour approach ---
+    grid_spacing = 10e3  # 10 km cell size for the coarse raster
+
+    x_min = dst_points[:, 0].min() - buffer_m
+    x_max = dst_points[:, 0].max() + buffer_m
+    y_min = dst_points[:, 1].min() - buffer_m
+    y_max = dst_points[:, 1].max() + buffer_m
+
+    nx = int(np.ceil((x_max - x_min) / grid_spacing)) + 1
+    ny = int(np.ceil((y_max - y_min) / grid_spacing)) + 1
+
+    # Bin destination points onto the coarse grid
+    ix = ((dst_points[:, 0] - x_min) / grid_spacing).astype(int)
+    iy = ((dst_points[:, 1] - y_min) / grid_spacing).astype(int)
+    ix = np.clip(ix, 0, nx - 1)
+    iy = np.clip(iy, 0, ny - 1)
+    occupancy = np.zeros((ny, nx), dtype=bool)
+    occupancy[iy, ix] = True
+
+    # Build a disk structuring element for dilation
+    radius_px = int(np.ceil(buffer_m / grid_spacing))
+    yy, xx = np.ogrid[-radius_px:radius_px + 1,
+                      -radius_px:radius_px + 1]
+    disk = (xx ** 2 + yy ** 2) <= radius_px ** 2
+
+    # Dilate the occupancy mask
+    dilated = binary_dilation(occupancy, structure=disk)
+
+    # Pad with False so the contour never exits the grid boundary
+    # (prevents straight-line artifacts from open contour paths)
+    dilated_padded = np.pad(dilated, pad_width=1,
+                            constant_values=False)
+
+    # Extract the outer contour at the 0.5 level
+    fig_tmp, ax_tmp = plt.subplots()
+    cs = ax_tmp.contour(dilated_padded.astype(float), levels=[0.5])
+    plt.close(fig_tmp)
+
+    # Find the longest contour path (outer boundary)
+    all_paths = cs.allsegs[0]
+    if not all_paths:
+        raise ValueError(
+            'Could not extract a contour from the dilated mask.')
+    longest = max(all_paths, key=lambda p: len(p))
+
+    # Convert pixel coordinates back to projected coordinates
+    # (subtract 1 to account for the padding pixel)
+    poly_x = x_min + (longest[:, 0] - 1) * grid_spacing
+    poly_y = y_min + (longest[:, 1] - 1) * grid_spacing
+    boundary_pts = np.column_stack([poly_x, poly_y])
+
+    _log(f'destination boundary x extent: '
+         f'{boundary_pts[:, 0].min():.0f} to '
+         f'{boundary_pts[:, 0].max():.0f}')
+    _log(f'destination boundary y extent: '
+         f'{boundary_pts[:, 1].min():.0f} to '
+         f'{boundary_pts[:, 1].max():.0f}')
+    _log(f'boundary polygon vertices: {len(boundary_pts)}')
+
+    return Path(boundary_pts, closed=True)
+
+
+def add_grid_imask_from_dst_scrip_hull(source_scrip, dest_scrip,
+                                       masked_source_scrip, domain,
+                                       buffer_m=50e3,
+                                       source_crs='EPSG:4326',
+                                       mesh_crs=None,
+                                       hull_path=None,
+                                       logger=None):
+    """
+    Create a new source SCRIP file with grid_imask set to 1 only for cells
+    that fall within the boundary (plus buffer) of the destination SCRIP
+    footprint. This dramatically reduces the work ESMF_RegridWeightGen must do
+    when the source dataset is much larger than the destination mesh.
+
+    Parameters
+    ----------
+    source_scrip : str
+        Input source SCRIP file
+
+    dest_scrip : str
+        Destination SCRIP file used by ESMF_RegridWeightGen. Ignored if
+        hull_path is provided.
+
+    masked_source_scrip : str
+        Output source SCRIP file with updated grid_imask
+
+    domain : str
+        Projection domain. Recognised convenience keys: 'greenland',
+        'gis-gimp', 'antarctica', 'ais-bedmap2'. Any other value requires
+        mesh_crs to be supplied explicitly.
+
+    buffer_m : float, optional
+        Approximate outward hull expansion in meters. Ignored if hull_path
+        is provided.
+
+    source_crs : str, optional
+        CRS of lon/lat variables in SCRIP files (default 'EPSG:4326')
+
+    mesh_crs : str, optional
+        Proj4/EPSG string for planar coordinates. Derived from domain if None.
+
+    hull_path : matplotlib.path.Path or None, optional
+        Pre-built buffered concave boundary of the destination mesh footprint,
+        as returned by :py:func:`compass.landice.mesh.build_dst_scrip_hull`.
+        When provided, dest_scrip is not read and the boundary is not
+        recomputed, which is useful when masking multiple source datasets
+        against the same destination mesh.
+
+    logger : logging.Logger, optional
+        Logger for status messages; falls back to print if None.
+    """
+
+    def _log(msg):
+        if logger is not None:
+            logger.info(msg)
+        else:
+            print(msg)
+
+    mesh_crs = _resolve_mesh_crs(domain, mesh_crs)
+    transformer = Transformer.from_crs(source_crs, mesh_crs, always_xy=True)
+
+    def _projected_centers(ds):
+        if ('grid_center_x' in ds.variables and
+                'grid_center_y' in ds.variables):
+            xc = ds['grid_center_x'].values
+            yc = ds['grid_center_y'].values
+            _log('Using existing projected source centers.')
+        else:
+            lon = ds['grid_center_lon'].values
+            lat = ds['grid_center_lat'].values
+            lon, lat = _maybe_deg(lon, lat)
+            xc, yc = transformer.transform(lon, lat)
+            _log('Projected source centers from lon/lat.')
+        return np.asarray(xc), np.asarray(yc)
+
+    if hull_path is None:
+        hull_path = build_dst_scrip_hull(
+            dest_scrip=dest_scrip,
+            domain=domain,
+            buffer_m=buffer_m,
+            source_crs=source_crs,
+            mesh_crs=mesh_crs,
+            logger=logger)
+
+    with xarray.open_dataset(source_scrip) as ds_src:
+        xc, yc = _projected_centers(ds_src)
+
+        _log(f'source x extent: {np.nanmin(xc):.0f} to {np.nanmax(xc):.0f}')
+        _log(f'source y extent: {np.nanmin(yc):.0f} to {np.nanmax(yc):.0f}')
+
+        src_pts = np.column_stack([xc, yc])
+        inside = hull_path.contains_points(src_pts).astype(np.int32)
+        _log(f'active source cells after masking: '
+             f'{inside.sum()} / {inside.size}')
+
+        ds_out = ds_src.copy()
+        ds_out['grid_imask'] = xarray.DataArray(
+            inside,
+            dims=('grid_size',),
+            attrs={'long_name': '0/1 mask for active source cells'}
+        )
+        ds_out.to_netcdf(masked_source_scrip, mode='w')
+
+
+def plot_hull_diagnostic(hull_path, dest_scrip, source_bbox_files,
+                         domain, masked_scrip=None, logger=None):
+    """
+    Save a diagnostic PNG (``mesh_boundary.png``) showing the masking geometry.
+
+    Parameters
+    ----------
+    hull_path : matplotlib.path.Path
+        Buffered concave boundary of the destination mesh.
+
+    dest_scrip : str
+        Destination SCRIP file (used to scatter MALI domain extent).
+
+    source_bbox_files : list of tuple
+        Each entry is ``(filepath, label, edgecolor)`` for a source dataset
+        whose bounding box should be drawn.
+
+    domain : str
+        Projection domain key (e.g. 'greenland', 'antarctica') or a
+        proj4/EPSG string used to build the planar transformer.
+
+    masked_scrip : str or None, optional
+        Path to a masked source SCRIP file. If provided and the file exists,
+        active (masked-in) source cells are plotted as an ice-sheet extent
+        indicator.
+
+    logger : logging.Logger, optional
+        Logger for status messages; falls back to print if None.
+    """
+    def _log(msg):
+        if logger is not None:
+            logger.info(msg)
+        else:
+            print(msg)
+
+    try:
+        from matplotlib.patches import Polygon as MplPolygon
+        from matplotlib.patches import Rectangle
+
+        mesh_crs = LANDICE_PROJECTIONS.get(domain, domain)
+        transformer = Transformer.from_crs(
+            'EPSG:4326', mesh_crs, always_xy=True)
+
+        # --- Load active source cells from masked SCRIP (if available) ---
+        active_xc = np.array([])
+        active_yc = np.array([])
+        if masked_scrip is not None and os.path.exists(masked_scrip):
+            with xarray.open_dataset(masked_scrip) as ds_m:
+                imask = ds_m['grid_imask'].values.astype(bool)
+                if ('grid_center_x' in ds_m.variables and
+                        'grid_center_y' in ds_m.variables):
+                    active_xc = ds_m['grid_center_x'].values[imask]
+                    active_yc = ds_m['grid_center_y'].values[imask]
+                elif ('grid_center_lon' in ds_m.variables and
+                      'grid_center_lat' in ds_m.variables):
+                    lon = ds_m['grid_center_lon'].values[imask]
+                    lat = ds_m['grid_center_lat'].values[imask]
+                    lon, lat = _maybe_deg(lon, lat)
+                    active_xc, active_yc = transformer.transform(lon, lat)
+                    active_xc = np.asarray(active_xc)
+                    active_yc = np.asarray(active_yc)
+
+        # --- destination SCRIP centers (MALI domain extent) ---
+        with xarray.open_dataset(dest_scrip) as ds_dst:
+            if ('grid_center_x' in ds_dst.variables and
+                    'grid_center_y' in ds_dst.variables):
+                xd = np.asarray(ds_dst['grid_center_x'].values)
+                yd = np.asarray(ds_dst['grid_center_y'].values)
+            else:
+                lon = ds_dst['grid_center_lon'].values
+                lat = ds_dst['grid_center_lat'].values
+                lon, lat = _maybe_deg(lon, lat)
+                xd, yd = transformer.transform(lon, lat)
+                xd, yd = np.asarray(xd), np.asarray(yd)
+
+        rng = np.random.default_rng(seed=0)
+
+        def _subsample(x, y, n=50000):
+            idx = np.where(np.isfinite(x) & np.isfinite(y))[0]
+            if len(idx) > n:
+                idx = rng.choice(idx, size=n, replace=False)
+            return x[idx], y[idx]
+
+        def _src_extent(filepath):
+            """Return (x_min, x_max, y_min, y_max) from a gridded dataset."""
+            with xarray.open_dataset(filepath) as ds:
+                if 'x1' in ds and 'y1' in ds:
+                    x, y = ds['x1'].values, ds['y1'].values
+                elif 'x' in ds and 'y' in ds:
+                    x, y = ds['x'].values, ds['y'].values
+                else:
+                    return None
+            return float(x.min()), float(x.max()), \
+                float(y.min()), float(y.max())
+
+        fig, ax = plt.subplots(figsize=(10, 10))
+
+        # MALI domain extent (tab:pink)
+        xs, ys = _subsample(xd, yd)
+        ax.scatter(xs, ys, s=1.5, color='tab:pink', alpha=0.6,
+                   label='MALI cells (subsampled)', rasterized=True)
+
+        # source bounding boxes
+        for filepath, label, color in source_bbox_files:
+            ext = _src_extent(filepath)
+            if ext is None:
+                continue
+            x0, x1, y0, y1 = ext
+            bbox = Rectangle(
+                (x0, y0), x1 - x0, y1 - y0,
+                linewidth=1.5, edgecolor=color,
+                facecolor='none', label=label)
+            ax.add_patch(bbox)
+
+        # mesh boundary (concave, buffered)
+        hull_verts = hull_path.vertices
+        hull_patch = MplPolygon(
+            hull_verts, closed=True,
+            linewidth=2, edgecolor='tab:green',
+            facecolor='none', label='mesh boundary (buffered)')
+        ax.add_patch(hull_patch)
+
+        ax.set_aspect('equal')
+        ax.set_xlabel('x (m)')
+        ax.set_ylabel('y (m)')
+        ax.legend(loc='best', markerscale=6)
+        ax.set_title('Source SCRIP masking: boundary vs. domain')
+        fig.savefig('mesh_boundary.png', dpi=150,
+                    bbox_inches='tight', facecolor=fig.get_facecolor())
+        plt.close(fig)
+        _log('Saved masking diagnostic plot to mesh_boundary.png')
+    except Exception as exc:
+        _log(f'Warning: could not save mesh boundary plot: {exc}')
+
+
 def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
-                        nProcs, dest_file, proj, variables="all"):
+                        nProcs, dest_file, proj, variables="all",
+                        hull_path=None):
     """
     Interpolate gridded dataset (e.g. MEASURES, BedMachine) onto a MALI mesh
 
@@ -1157,25 +1592,29 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
 
     variables: "all" or list of strings
         either the string "all" or a list of strings
+
+    hull_path : matplotlib.path.Path or None, optional
+        Pre-built buffered concave boundary of the destination mesh footprint,
+        as returned by :py:func:`compass.landice.mesh.build_dst_scrip_hull`.
+        When provided, the boundary is not recomputed from mali_scrip, which
+        avoids redundant I/O and computation when this function is called
+        multiple times with the same destination mesh.
+
+    Returns
+    -------
+    masked_source_scrip : str
+        Path to the masked source SCRIP file written during interpolation.
     """
-
-    def __guess_scrip_name(filename):
-
-        # try searching for string followed by a version number
-        match = re.search(r'(^.*[_-]v\d*[_-])+', filename)
-
-        if match:
-            # slice string to end of match minus one to leave of final _ or -
-            base_fn = filename[:match.end() - 1]
-        else:
-            # no matches were found, just use the filename (minus extension)
-            base_fn = os.path.splitext(filename)[0]
-
-        return f"{base_fn}.scrip.nc"
 
     logger = self.logger
 
-    source_scrip = __guess_scrip_name(os.path.basename(source_file))
+    bare = os.path.splitext(os.path.basename(source_file))[0]
+    match = re.search(r'(^.*[_-]v\d*[_-])+', bare)
+    if match:
+        scrip_stem = bare[:match.end() - 1]
+    else:
+        scrip_stem = bare
+    source_scrip = f'{scrip_stem}.scrip.nc'
     weights_filename = "gridded_to_MPAS_weights.nc"
 
     # make sure variables is a list, encompasses the variables="all" case
@@ -1194,10 +1633,23 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
             '-r', '2']
     check_call(args, logger=logger)
 
+    # Mask source SCRIP to the footprint of the destination mesh so that
+    # ESMF_RegridWeightGen only processes the cells that overlap the target.
+    stem = os.path.splitext(source_scrip)[0]  # strips .nc
+    masked_source_scrip = f'{stem}_masked.nc'
+    logger.info('masking source SCRIP to destination mesh footprint')
+    add_grid_imask_from_dst_scrip_hull(
+        source_scrip=source_scrip,
+        dest_scrip=mali_scrip,
+        masked_source_scrip=masked_source_scrip,
+        domain=proj,
+        hull_path=hull_path,
+        logger=logger)
+
     # Generate remapping weights
     logger.info('generating gridded dataset -> MPAS weights')
     args = [parallel_executable, '-n', nProcs, 'ESMF_RegridWeightGen',
-            '--source', source_scrip,
+            '--source', masked_source_scrip,
             '--destination', mali_scrip,
             '--weight', weights_filename,
             '--method', 'conserve',
@@ -1215,6 +1667,8 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
             '-v'] + variables
 
     check_call(args, logger=logger)
+
+    return masked_source_scrip
 
 
 def clean_up_after_interp(fname):
@@ -1485,10 +1939,21 @@ def run_optional_interpolation(
         dst_scrip_file = f'{mesh_base}_scrip.nc'
         scrip_from_mpas(mesh_filename, dst_scrip_file)
 
+        # Build the destination boundary once so it can be reused for both
+        # BedMachine and MEaSUREs without re-reading dst_scrip_file.
+        logger.info('building destination mesh boundary for source masking')
+        hull_path = build_dst_scrip_hull(
+            dest_scrip=dst_scrip_file,
+            domain=src_proj,
+            logger=logger)
+
+        bm_masked_scrip = None
         if bedmachine_dataset is not None:
-            interp_gridded2mali(self, bedmachine_dataset, dst_scrip_file,
-                                parallel_executable, nProcs,
-                                mesh_filename, src_proj, variables='all')
+            bm_masked_scrip = interp_gridded2mali(
+                self, bedmachine_dataset, dst_scrip_file,
+                parallel_executable, nProcs,
+                mesh_filename, src_proj, variables='all',
+                hull_path=hull_path)
 
         if measures_dataset is not None:
             measures_vars = ['observedSurfaceVelocityX',
@@ -1497,7 +1962,31 @@ def run_optional_interpolation(
             interp_gridded2mali(self, measures_dataset, dst_scrip_file,
                                 parallel_executable, nProcs,
                                 mesh_filename, src_proj,
-                                variables=measures_vars)
+                                variables=measures_vars,
+                                hull_path=hull_path)
+
+        # Diagnostic plot: show hull, MALI domain, and bounding boxes for
+        # all source datasets that were interpolated.
+        if bedmachine_dataset is not None or measures_dataset is not None:
+            bbox_files = []
+            if bedmachine_dataset is not None:
+                bbox_files.append((
+                    bedmachine_dataset,
+                    'BedMachine bounding box',
+                    'black'))
+            if measures_dataset is not None:
+                bbox_files.append((
+                    measures_dataset,
+                    'MEaSUREs bounding box',
+                    'grey'))
+
+            plot_hull_diagnostic(
+                hull_path=hull_path,
+                dest_scrip=dst_scrip_file,
+                source_bbox_files=bbox_files,
+                domain=src_proj,
+                masked_scrip=bm_masked_scrip,
+                logger=logger)
 
         clean_up_after_interp(mesh_filename)
     finally:
