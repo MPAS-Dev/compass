@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.landice.mesh.interp_gridded2mali &mdash; compass 2.0.0-alpha.1 documentation</title>
+  <title>compass.landice.mesh.add_grid_imask_from_dst_scrip_hull &mdash; compass 2.0.0-alpha.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
@@ -19,8 +19,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="compass.landice.mesh.mpas_flood_fill" href="compass.landice.mesh.mpas_flood_fill.html" />
-    <link rel="prev" title="compass.landice.mesh.gridded_flood_fill" href="compass.landice.mesh.gridded_flood_fill.html" /> 
+    <link rel="next" title="compass.landice.mesh.build_dst_scrip_hull" href="compass.landice.mesh.build_dst_scrip_hull.html" />
+    <link rel="prev" title="compass.landice.mesh.add_bedmachine_thk_to_ais_gridded_data" href="compass.landice.mesh.add_bedmachine_thk_to_ais_gridded_data.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -115,9 +115,9 @@
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../api.html">API reference</a></li>
           <li class="breadcrumb-item"><a href="../api.html">landice</a></li>
-      <li class="breadcrumb-item active">compass.landice.mesh.interp_gridded2mali</li>
+      <li class="breadcrumb-item active">compass.landice.mesh.add_grid_imask_from_dst_scrip_hull</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/developers_guide/landice/generated/compass.landice.mesh.interp_gridded2mali.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/developers_guide/landice/generated/compass.landice.mesh.add_grid_imask_from_dst_scrip_hull.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -125,31 +125,36 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="compass-landice-mesh-interp-gridded2mali">
-<h1>compass.landice.mesh.interp_gridded2mali<a class="headerlink" href="#compass-landice-mesh-interp-gridded2mali" title="Link to this heading"></a></h1>
+  <section id="compass-landice-mesh-add-grid-imask-from-dst-scrip-hull">
+<h1>compass.landice.mesh.add_grid_imask_from_dst_scrip_hull<a class="headerlink" href="#compass-landice-mesh-add-grid-imask-from-dst-scrip-hull" title="Link to this heading"></a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="compass.landice.mesh.interp_gridded2mali">
-<span class="sig-prename descclassname"><span class="pre">compass.landice.mesh.</span></span><span class="sig-name descname"><span class="pre">interp_gridded2mali</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mali_scrip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallel_executable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nProcs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hull_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/mesh.html#interp_gridded2mali"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.mesh.interp_gridded2mali" title="Link to this definition"></a></dt>
-<dd><p>Interpolate gridded dataset (e.g. MEASURES, BedMachine) onto a MALI mesh</p>
+<dt class="sig sig-object py" id="compass.landice.mesh.add_grid_imask_from_dst_scrip_hull">
+<span class="sig-prename descclassname"><span class="pre">compass.landice.mesh.</span></span><span class="sig-name descname"><span class="pre">add_grid_imask_from_dst_scrip_hull</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_scrip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest_scrip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masked_source_scrip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_crs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EPSG:4326'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_crs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hull_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/mesh.html#add_grid_imask_from_dst_scrip_hull"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.mesh.add_grid_imask_from_dst_scrip_hull" title="Link to this definition"></a></dt>
+<dd><p>Create a new source SCRIP file with grid_imask set to 1 only for cells
+that fall within the boundary (plus buffer) of the destination SCRIP
+footprint. This dramatically reduces the work ESMF_RegridWeightGen must do
+when the source dataset is much larger than the destination mesh.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>source_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – filepath to the source gridded datatset to be interpolated</p></li>
-<li><p><strong>mali_scrip</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – name of scrip file corresponding to destination MALI mesh</p></li>
-<li><p><strong>parallel_executable</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – executable needed to launch a parallel job</p></li>
-<li><p><strong>nProcs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – number of processors to use for generating remapping weights</p></li>
-<li><p><strong>dest_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – MALI input file to which data should be remapped</p></li>
-<li><p><strong>proj</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – projection of the source dataset</p></li>
-<li><p><strong>variables</strong> (<em>&quot;all&quot;</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><em>strings</em>) – either the string “all” or a list of strings</p></li>
+<li><p><strong>source_scrip</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Input source SCRIP file</p></li>
+<li><p><strong>dest_scrip</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Destination SCRIP file used by ESMF_RegridWeightGen. Ignored if
+hull_path is provided.</p></li>
+<li><p><strong>masked_source_scrip</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Output source SCRIP file with updated grid_imask</p></li>
+<li><p><strong>domain</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Projection domain. Recognised convenience keys: ‘greenland’,
+‘gis-gimp’, ‘antarctica’, ‘ais-bedmap2’. Any other value requires
+mesh_crs to be supplied explicitly.</p></li>
+<li><p><strong>buffer_m</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Approximate outward hull expansion in meters. Ignored if hull_path
+is provided.</p></li>
+<li><p><strong>source_crs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – CRS of lon/lat variables in SCRIP files (default ‘EPSG:4326’)</p></li>
+<li><p><strong>mesh_crs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Proj4/EPSG string for planar coordinates. Derived from domain if None.</p></li>
 <li><p><strong>hull_path</strong> (<em>matplotlib.path.Path</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Pre-built buffered concave boundary of the destination mesh footprint,
 as returned by <a class="reference internal" href="compass.landice.mesh.build_dst_scrip_hull.html#compass.landice.mesh.build_dst_scrip_hull" title="compass.landice.mesh.build_dst_scrip_hull"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.build_dst_scrip_hull()</span></code></a>.
-When provided, the boundary is not recomputed from mali_scrip, which
-avoids redundant I/O and computation when this function is called
-multiple times with the same destination mesh.</p></li>
+When provided, dest_scrip is not read and the boundary is not
+recomputed, which is useful when masking multiple source datasets
+against the same destination mesh.</p></li>
+<li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><em>logging.Logger</em></a><em>, </em><em>optional</em>) – Logger for status messages; falls back to print if None.</p></li>
 </ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>masked_source_scrip</strong> (<em>str</em>) – Path to the masked source SCRIP file written during interpolation.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -160,8 +165,8 @@ multiple times with the same destination mesh.</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="compass.landice.mesh.gridded_flood_fill.html" class="btn btn-neutral float-left" title="compass.landice.mesh.gridded_flood_fill" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="compass.landice.mesh.mpas_flood_fill.html" class="btn btn-neutral float-right" title="compass.landice.mesh.mpas_flood_fill" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.landice.mesh.add_bedmachine_thk_to_ais_gridded_data.html" class="btn btn-neutral float-left" title="compass.landice.mesh.add_bedmachine_thk_to_ais_gridded_data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.landice.mesh.build_dst_scrip_hull.html" class="btn btn-neutral float-right" title="compass.landice.mesh.build_dst_scrip_hull" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

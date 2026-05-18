@@ -177,7 +177,39 @@ to the gridded dataset in order to separate the ice sheet from peripheral ice.</
 <p><a class="reference internal" href="generated/compass.landice.mesh.interp_gridded2mali.html#compass.landice.mesh.interp_gridded2mali" title="compass.landice.mesh.interp_gridded2mali"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.interp_gridded2mali()</span></code></a> interpolates gridded data
 (e.g. BedMachine thickness or MEaSUREs ice velocity) to a MALI mesh, accounting
 for masking of the ice extent to avoid interpolation ramps. This functions works
-for both Antarctica and Greenland.</p>
+for both Antarctica and Greenland. Before calling <code class="docutils literal notranslate"><span class="pre">ESMF_RegridWeightGen</span></code>, it
+calls <a class="reference internal" href="generated/compass.landice.mesh.build_dst_scrip_hull.html#compass.landice.mesh.build_dst_scrip_hull" title="compass.landice.mesh.build_dst_scrip_hull"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.build_dst_scrip_hull()</span></code></a> (unless a pre-built
+<code class="docutils literal notranslate"><span class="pre">hull_path</span></code> is passed) and then
+<a class="reference internal" href="generated/compass.landice.mesh.add_grid_imask_from_dst_scrip_hull.html#compass.landice.mesh.add_grid_imask_from_dst_scrip_hull" title="compass.landice.mesh.add_grid_imask_from_dst_scrip_hull"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.add_grid_imask_from_dst_scrip_hull()</span></code></a> to restrict
+the source SCRIP to only the cells that overlap the destination mesh footprint.
+This can substantially reduce the weight-generation time for high-resolution
+source datasets (e.g. 150 m BedMachine v6) that are much larger than the target
+mesh domain. When interpolating multiple datasets to the same destination mesh,
+pass a pre-built <code class="docutils literal notranslate"><span class="pre">hull_path</span></code> (from
+<a class="reference internal" href="generated/compass.landice.mesh.build_dst_scrip_hull.html#compass.landice.mesh.build_dst_scrip_hull" title="compass.landice.mesh.build_dst_scrip_hull"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.build_dst_scrip_hull()</span></code></a>) to avoid recomputing the
+hull for each dataset.</p>
+<p><a class="reference internal" href="generated/compass.landice.mesh.build_dst_scrip_hull.html#compass.landice.mesh.build_dst_scrip_hull" title="compass.landice.mesh.build_dst_scrip_hull"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.build_dst_scrip_hull()</span></code></a> builds a buffered
+concave boundary from a destination SCRIP file and returns it as a
+<code class="docutils literal notranslate"><span class="pre">matplotlib.path.Path</span></code>. The boundary is constructed by rasterising
+destination mesh points onto a coarse grid (10 km cell size), dilating
+by the buffer distance (default 50 km), and extracting the outer contour.
+This produces a tight boundary that follows the actual domain shape
+(including bays and fjords) while remaining computationally inexpensive.
+It is factored out of
+<a class="reference internal" href="generated/compass.landice.mesh.add_grid_imask_from_dst_scrip_hull.html#compass.landice.mesh.add_grid_imask_from_dst_scrip_hull" title="compass.landice.mesh.add_grid_imask_from_dst_scrip_hull"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.add_grid_imask_from_dst_scrip_hull()</span></code></a> so the
+boundary can be computed once and passed to multiple
+<a class="reference internal" href="generated/compass.landice.mesh.interp_gridded2mali.html#compass.landice.mesh.interp_gridded2mali" title="compass.landice.mesh.interp_gridded2mali"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.interp_gridded2mali()</span></code></a> calls that share the
+same destination mesh, avoiding redundant I/O whose cost scales with
+destination mesh size.</p>
+<p><a class="reference internal" href="generated/compass.landice.mesh.add_grid_imask_from_dst_scrip_hull.html#compass.landice.mesh.add_grid_imask_from_dst_scrip_hull" title="compass.landice.mesh.add_grid_imask_from_dst_scrip_hull"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.add_grid_imask_from_dst_scrip_hull()</span></code></a> creates a
+new source SCRIP file with <code class="docutils literal notranslate"><span class="pre">grid_imask</span></code> set to 1 only for source cells that
+fall within the concave boundary of the destination SCRIP footprint (plus a
+configurable buffer, default 50 km).  The function projects both SCRIP files
+into a planar stereographic coordinate system (determined by the <code class="docutils literal notranslate"><span class="pre">domain</span></code>
+argument, e.g. <code class="docutils literal notranslate"><span class="pre">'gis-gimp'</span></code> or <code class="docutils literal notranslate"><span class="pre">'ais-bedmap2'</span></code>) and uses a
+<code class="docutils literal notranslate"><span class="pre">matplotlib.path.Path</span></code> point-in-polygon test for efficiency.  The resulting
+masked SCRIP file is passed to <code class="docutils literal notranslate"><span class="pre">ESMF_RegridWeightGen</span></code> in place of the
+full-domain source SCRIP.</p>
 <p><a class="reference internal" href="generated/compass.landice.mesh.preprocess_ais_data.html#compass.landice.mesh.preprocess_ais_data" title="compass.landice.mesh.preprocess_ais_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.preprocess_ais_data()</span></code></a> performs adjustments to
 gridded AIS datasets needed for rest of compass workflow to utilize them.</p>
 <p><a class="reference internal" href="generated/compass.landice.mesh.set_rectangular_geom_points_and_edges.html#compass.landice.mesh.set_rectangular_geom_points_and_edges" title="compass.landice.mesh.set_rectangular_geom_points_and_edges"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.set_rectangular_geom_points_and_edges()</span></code></a> sets node
@@ -319,7 +351,12 @@ requires <code class="docutils literal notranslate"><span class="pre">high_dist<
 as the interpolation step can be slow and require many more resources than
 the rest of the mesh generation process. For instance, a 1–10km Greenland mesh
 can be created on a single Perlmutter CPU node, but data interpolation may
-require up to 16 nodes.</p>
+require several nodes. The source SCRIP masking performed by
+<a class="reference internal" href="generated/compass.landice.mesh.add_grid_imask_from_dst_scrip_hull.html#compass.landice.mesh.add_grid_imask_from_dst_scrip_hull" title="compass.landice.mesh.add_grid_imask_from_dst_scrip_hull"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.mesh.add_grid_imask_from_dst_scrip_hull()</span></code></a> before
+calling <code class="docutils literal notranslate"><span class="pre">ESMF_RegridWeightGen</span></code> reduces the effective source-grid size to
+only the cells overlapping the destination mesh footprint, which significantly
+reduces the weight-generation time compared to running on the full global or
+continental source SCRIP.</p>
 </section>
 </section>
 

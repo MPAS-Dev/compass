@@ -259,6 +259,13 @@ dataset interpolation step is skipped. The default config values include both
 datasets, so interpolation is enabled by default.
 The base-mesh projection used in <code class="docutils literal notranslate"><span class="pre">build_mali_mesh()</span></code> is fixed for this test
 case.</p>
+<p>Before running <code class="docutils literal notranslate"><span class="pre">ESMF_RegridWeightGen</span></code>, the interpolation step automatically
+masks the source SCRIP file so that only cells overlapping a tight concave
+boundary around the destination mesh (plus a 50 km buffer) are active. The
+boundary follows the actual domain shape rather than a simple convex hull.
+This avoids unnecessary weight computation for the large portions of the
+BedMachine Antarctica domain that lie outside the target mesh and substantially
+reduces ESMF weight-generation time.</p>
 <p>There is no model integration step.</p>
 </section>
 </section>

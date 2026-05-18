@@ -205,7 +205,6 @@ ensemble_generator
    ensemble_template.get_ensemble_template_name
    ensemble_template.get_spinup_template_package
    ensemble_template.get_branch_template_package
-   ensemble_template.add_template_file
 
    spinup_ensemble.SpinupEnsemble
    spinup_ensemble.SpinupEnsemble.configure
@@ -594,8 +593,11 @@ Landice Framework
    iceshelf_melt.calc_mean_TF
 
    mesh.add_bedmachine_thk_to_ais_gridded_data
+   mesh.add_grid_imask_from_dst_scrip_hull
+   mesh.build_dst_scrip_hull
    mesh.clean_up_after_interp
    mesh.clip_mesh_to_bounding_box
+   mesh.plot_hull_diagnostic
    mesh.get_mesh_config_bounding_box
    mesh.get_optional_interp_datasets
    mesh.gridded_flood_fill
