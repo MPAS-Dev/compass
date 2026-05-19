@@ -1802,13 +1802,17 @@
 
     <span class="c1"># Generate remapping weights</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;generating gridded dataset -&gt; MPAS weights&#39;</span><span class="p">)</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">parallel_executable</span><span class="p">,</span> <span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="n">nProcs</span><span class="p">,</span> <span class="s1">&#39;ESMF_RegridWeightGen&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;--source&#39;</span><span class="p">,</span> <span class="n">masked_source_scrip</span><span class="p">,</span>
-            <span class="s1">&#39;--destination&#39;</span><span class="p">,</span> <span class="n">mali_scrip</span><span class="p">,</span>
-            <span class="s1">&#39;--weight&#39;</span><span class="p">,</span> <span class="n">weights_filename</span><span class="p">,</span>
-            <span class="s1">&#39;--method&#39;</span><span class="p">,</span> <span class="s1">&#39;conserve&#39;</span><span class="p">,</span>
-            <span class="s2">&quot;--netcdf4&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;--dst_regional&quot;</span><span class="p">,</span> <span class="s2">&quot;--src_regional&quot;</span><span class="p">,</span> <span class="s1">&#39;--ignore_unmapped&#39;</span><span class="p">]</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parallel_executable</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span>
+        <span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="n">nProcs</span><span class="p">,</span>
+        <span class="s1">&#39;ESMF_RegridWeightGen&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;--source&#39;</span><span class="p">,</span> <span class="n">masked_source_scrip</span><span class="p">,</span>
+        <span class="s1">&#39;--destination&#39;</span><span class="p">,</span> <span class="n">mali_scrip</span><span class="p">,</span>
+        <span class="s1">&#39;--weight&#39;</span><span class="p">,</span> <span class="n">weights_filename</span><span class="p">,</span>
+        <span class="s1">&#39;--method&#39;</span><span class="p">,</span> <span class="s1">&#39;conserve&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;--netcdf4&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--dst_regional&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--src_regional&quot;</span><span class="p">,</span>
+        <span class="s1">&#39;--ignore_unmapped&#39;</span><span class="p">]</span>
     <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
     <span class="c1"># Perform actual interpolation using the weights</span>
