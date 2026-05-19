@@ -78,7 +78,7 @@ the mesh generation options are adjusted through the config file.
 
     # filename of the BedMachine thickness and bedTopography dataset
     # (default value is for Perlmutter)
-    bedmachine_filename = BedMachineAntarctica_2020-07-15_v02_edits_floodFill_extrap_fillVostok.nc
+    bedmachine_filename = NSIDC-0756_BedMachineAntarctica_19700101-20191001_V04.1_edits_floodFill_extrap.nc
 
     # filename of the MEASURES ice velocity dataset
     # (default value is for Perlmutter)
