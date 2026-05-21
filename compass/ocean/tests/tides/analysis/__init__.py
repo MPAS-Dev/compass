@@ -171,13 +171,13 @@ class Analysis(Step):
         """
 
         # Run the executable
-        for con in self.constituents:
+        for con in self.extract_constituents:
             print('')
             print(f'run {con}')
 
             commands = []
             for chunk in range(nchunks):
-                commands.append(f'extract_HC < inputs/{con}_setup_{chunk}')
+                commands.append(f'./extract_HC < inputs/{con}_setup_{chunk}')
 
             processes = [subprocess.Popen(cmd, shell=True) for cmd in commands]
 
@@ -222,7 +222,7 @@ class Analysis(Step):
 
         data_nc = netCDF4.Dataset(self.harmonic_analysis_file, 'a',
                                   format='NETCDF3_64BIT_OFFSET')
-        for con in self.constituents:
+        for con in self.extract_constituents:
 
             # Inject amplitude
             amp_varname = f'{con.upper()}Amplitude{self.tpxo_version}'
@@ -265,7 +265,7 @@ class Analysis(Step):
             if (amp_var in data_nc.variables) \
                     and (phase_var in data_nc.variables):
 
-                self.constituents.remove(con)
+                self.extract_constituents.remove(con)
                 print(f'{con} TPXO Constituent already exists '
                       f'in {self.harmonic_analysis_file}')
 
@@ -324,14 +324,17 @@ class Analysis(Step):
             print(f' ====== {con} Constituent ======')
 
             # Get data
-            data1[:] = data_nc.variables[
-                f'{con}Amplitude'][:]
-            data1_phase[:] = data_nc.variables[
-                f'{con}Phase'][:]
-            data2[:] = data_nc.variables[
-                f'{con}Amplitude{self.tpxo_version}'][:]
-            data2_phase[:] = data_nc.variables[
-                f'{con}Phase{self.tpxo_version}'][:]
+            try:
+                data1[:] = data_nc.variables[
+                    f'{con}Amplitude'][:]
+                data1_phase[:] = data_nc.variables[
+                    f'{con}Phase'][:]
+                data2[:] = data_nc.variables[
+                    f'{con}Amplitude{self.tpxo_version}'][:]
+                data2_phase[:] = data_nc.variables[
+                    f'{con}Phase{self.tpxo_version}'][:]
+            except KeyError:
+                continue
 
             data1_phase = data1_phase * np.pi / 180.0
             data2_phase = data2_phase * np.pi / 180.0
@@ -451,6 +454,8 @@ class Analysis(Step):
         """
 
         self.constituents = self.config.getlist('tides', 'constituents')
+        self.extract_constituents = self.config.getlist('tides',
+                                                        'constituents')
 
         # Check if TPXO values aleady exist in harmonic_analysis.nc
         self.check_tpxo_data()
