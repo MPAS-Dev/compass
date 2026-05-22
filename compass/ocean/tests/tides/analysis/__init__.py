@@ -177,7 +177,7 @@ class Analysis(Step):
 
             commands = []
             for chunk in range(nchunks):
-                commands.append(f'./extract_HC < inputs/{con}_setup_{chunk}')
+                commands.append(f'extract_HC < inputs/{con}_setup_{chunk}')
 
             processes = [subprocess.Popen(cmd, shell=True) for cmd in commands]
 
