@@ -49,7 +49,7 @@ class ForwardStep(Step):
         self.add_namelist_file(mesh_package, 'namelist.ocean')
 
         initial_state_path = f'{init.path}/initial_state'
-        interpolate_path = f'{init.path}/interpolate'
+        wave_drag_path = f'{init.path}/wave_drag'
         initial_state_target = f'{initial_state_path}/initial_state.nc'
 
         self.add_input_file(
@@ -60,7 +60,7 @@ class ForwardStep(Step):
             work_dir_target=f'{initial_state_path}/init_mode_forcing_data.nc')
         self.add_input_file(
             filename='topographic_wave_drag.nc',
-            work_dir_target=f'{interpolate_path}/topographic_wave_drag.nc')
+            work_dir_target=f'{wave_drag_path}/topographic_wave_drag.nc')
         self.add_input_file(
             filename='graph.info',
             work_dir_target=f'{initial_state_path}/graph.info')

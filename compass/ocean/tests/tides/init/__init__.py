@@ -1,12 +1,15 @@
 import os
 
-from compass.testcase import TestCase
-from compass.ocean.tests.tides.init.interpolate_wave_drag \
-    import InterpolateWaveDrag
-from compass.ocean.tests.tides.init.remap_bathymetry \
-    import RemapBathymetry
-from compass.ocean.tests.tides.init.initial_state import InitialState
 from compass.ocean.tests.tides.configure import configure_tides
+from compass.ocean.tests.tides.init.calculate_wave_drag import (
+    CalculateWaveDrag,
+)
+from compass.ocean.tests.tides.init.initial_state import InitialState
+from compass.ocean.tests.tides.init.interpolate_wave_drag import (
+    InterpolateWaveDrag,
+)
+from compass.ocean.tests.tides.init.remap_bathymetry import RemapBathymetry
+from compass.testcase import TestCase
 
 
 class Init(TestCase):
@@ -37,7 +40,8 @@ class Init(TestCase):
 
         self.mesh = mesh
 
-        self.add_step(InterpolateWaveDrag(test_case=self, mesh=mesh))
+        # self.add_step(InterpolateWaveDrag(test_case=self, mesh=mesh))
+        self.add_step(CalculateWaveDrag(test_case=self, mesh=mesh))
         self.add_step(RemapBathymetry(test_case=self, mesh=mesh))
         self.add_step(InitialState(test_case=self, mesh=mesh))
 
