@@ -111,13 +111,16 @@
   <h1>Source code for compass.ocean.tests.tides.init</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">compass.testcase</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestCase</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.tides.init.interpolate_wave_drag</span> \
-    <span class="kn">import</span><span class="w"> </span><span class="nn">InterpolateWaveDrag</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.tides.init.remap_bathymetry</span> \
-    <span class="kn">import</span><span class="w"> </span><span class="nn">RemapBathymetry</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.tides.init.initial_state</span><span class="w"> </span><span class="kn">import</span> <span class="n">InitialState</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.tides.configure</span><span class="w"> </span><span class="kn">import</span> <span class="n">configure_tides</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.tides.init.calculate_wave_drag</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CalculateWaveDrag</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.tides.init.initial_state</span><span class="w"> </span><span class="kn">import</span> <span class="n">InitialState</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.tides.init.interpolate_wave_drag</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">InterpolateWaveDrag</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.tides.init.remap_bathymetry</span><span class="w"> </span><span class="kn">import</span> <span class="n">RemapBathymetry</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.testcase</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestCase</span>
 
 
 <div class="viewcode-block" id="Init">
@@ -152,7 +155,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">InterpolateWaveDrag</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">))</span>
+        <span class="c1"># self.add_step(InterpolateWaveDrag(test_case=self, mesh=mesh))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">CalculateWaveDrag</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">RemapBathymetry</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">InitialState</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">))</span></div>
 

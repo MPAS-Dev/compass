@@ -110,7 +110,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.tides.init.initial_state</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">netCDF4</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">netCDF4</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nc</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_model</span>
@@ -235,13 +235,89 @@
         <span class="n">max_depth</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom_depth&#39;</span><span class="p">)</span>
         <span class="n">min_depth</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;min_depth&#39;</span><span class="p">)</span>
 
-        <span class="n">init</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="s2">&quot;initial_state.nc&quot;</span><span class="p">,</span> <span class="s2">&quot;r+&quot;</span><span class="p">)</span>
+        <span class="n">init</span> <span class="o">=</span> <span class="n">nc</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="s2">&quot;initial_state.nc&quot;</span><span class="p">,</span> <span class="s2">&quot;r+&quot;</span><span class="p">)</span>
         <span class="n">init</span><span class="p">[</span><span class="s2">&quot;bottomDepth&quot;</span><span class="p">][:]</span> <span class="o">=</span> \
             <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">max_depth</span><span class="p">,</span>
                        <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">min_depth</span><span class="p">,</span> <span class="n">init</span><span class="p">[</span><span class="s2">&quot;bottomDepthObserved&quot;</span><span class="p">][:]))</span>
 
         <span class="n">init</span><span class="p">[</span><span class="s2">&quot;layerThickness&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">init</span><span class="p">[</span><span class="s2">&quot;bottomDepth&quot;</span><span class="p">][:]</span>
         <span class="n">init</span><span class="p">[</span><span class="s2">&quot;restingThickness&quot;</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">init</span><span class="p">[</span><span class="s2">&quot;bottomDepth&quot;</span><span class="p">][:]</span>
+
+        <span class="c1"># -- Estimate vert. grid for ice-shelves, min.-thicknesses, etc</span>
+        <span class="c1"># -- Darren Engwirda</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Est. layering to account for ice-shelves&quot;</span><span class="p">)</span>
+
+        <span class="n">mesh</span> <span class="o">=</span> <span class="n">nc</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="s2">&quot;mesh.nc&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+
+        <span class="n">botd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">init</span><span class="p">[</span><span class="s2">&quot;bottomDepthObserved&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="c1"># ossh = np.asarray(init[&quot;ssh&quot;][0,:], dtype=np.float64)</span>
+        <span class="n">ossh</span> <span class="o">=</span> <span class="mf">0.</span> <span class="o">*</span> <span class="n">botd</span>  <span class="c1"># assume ssh is zero</span>
+
+        <span class="n">grav</span> <span class="o">=</span> <span class="mf">9.80665</span>  <span class="c1"># gravitational accel.</span>
+        <span class="n">irho</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">init</span><span class="o">.</span><span class="n">config_land_ice_flux_rho_ice</span><span class="p">)</span>
+        <span class="n">orho</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">init</span><span class="o">.</span><span class="n">config_density0</span><span class="p">)</span>
+        <span class="n">minh</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">init</span><span class="o">.</span><span class="n">config_drying_min_cell_height</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ice-shelf density:&quot;</span><span class="p">,</span> <span class="n">irho</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ocn-const density:&quot;</span><span class="p">,</span> <span class="n">orho</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;min-layer thickness:&quot;</span><span class="p">,</span> <span class="n">minh</span><span class="p">)</span>
+
+        <span class="n">iceh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;ice_thickness&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="c1"># icef = np.asarray(mesh[&quot;ice_cover&quot;][:], dtype=np.float64)</span>
+
+        <span class="n">icep</span> <span class="o">=</span> <span class="n">irho</span> <span class="o">*</span> <span class="n">grav</span> <span class="o">*</span> <span class="n">iceh</span>  <span class="c1"># ice pressure</span>
+        <span class="n">iced</span> <span class="o">=</span> <span class="n">icep</span> <span class="o">/</span> <span class="n">grav</span> <span class="o">/</span> <span class="n">orho</span>  <span class="c1"># ice draft</span>
+
+        <span class="c1"># ensure thin-layer beneath ice-shelves</span>
+        <span class="n">iced</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">iced</span><span class="p">,</span> <span class="o">+</span><span class="n">botd</span> <span class="o">-</span> <span class="n">minh</span><span class="p">)</span>
+        <span class="n">iced</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">iced</span><span class="p">,</span> <span class="o">+</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">ossh</span> <span class="o">=</span> <span class="n">ossh</span> <span class="o">-</span> <span class="n">iced</span>
+
+        <span class="n">icep</span><span class="p">[</span><span class="n">iced</span> <span class="o">&lt;=</span> <span class="mf">0.</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+
+        <span class="c1"># allow thin-layer in partially flooded zone</span>
+        <span class="n">ossh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">ossh</span><span class="p">,</span> <span class="o">-</span><span class="n">botd</span> <span class="o">+</span> <span class="n">minh</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;max ice-draft:&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">iced</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;max ice-pressure:&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">icep</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;ssh&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">init</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">init</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;ssh&quot;</span><span class="p">,</span> <span class="s2">&quot;f8&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;landIceDraft&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">init</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">init</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;landIceDraft&quot;</span><span class="p">,</span> <span class="s2">&quot;f8&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;landIcePressure&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">init</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">init</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;landIcePressure&quot;</span><span class="p">,</span> <span class="s2">&quot;f8&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;landIceMask&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">init</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">init</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;landIceMask&quot;</span><span class="p">,</span> <span class="s2">&quot;i4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;landIceFloatingMask&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">init</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">init</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;landIceFloatingMask&quot;</span><span class="p">,</span> <span class="s2">&quot;i4&quot;</span><span class="p">,</span>
+                                <span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;landIceFraction&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">init</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">init</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;landIceFraction&quot;</span><span class="p">,</span> <span class="s2">&quot;f8&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;landIceFloatingFraction&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">init</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">init</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;landIceFloatingFraction&quot;</span><span class="p">,</span> <span class="s2">&quot;f8&quot;</span><span class="p">,</span>
+                                <span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+
+        <span class="n">init</span><span class="p">[</span><span class="s2">&quot;landIceDraft&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="o">-</span><span class="n">iced</span>  <span class="c1"># NB. sign</span>
+        <span class="n">init</span><span class="p">[</span><span class="s2">&quot;landIcePressure&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">icep</span>
+        <span class="n">init</span><span class="p">[</span><span class="s2">&quot;landIceMask&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">icep</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">)</span>
+        <span class="n">init</span><span class="p">[</span><span class="s2">&quot;landIceFloatingMask&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">icep</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">)</span>
+        <span class="n">init</span><span class="p">[</span><span class="s2">&quot;landIceFraction&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">icep</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">)</span>
+        <span class="n">init</span><span class="p">[</span><span class="s2">&quot;landIceFloatingFraction&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">icep</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">)</span>
+
+        <span class="n">init</span><span class="p">[</span><span class="s2">&quot;bottomDepth&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">botd</span>
+        <span class="n">init</span><span class="p">[</span><span class="s2">&quot;ssh&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">ossh</span>
+
+        <span class="n">init</span><span class="p">[</span><span class="s2">&quot;layerThickness&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossh</span> <span class="o">+</span> <span class="n">botd</span>
+        <span class="c1"># init[&quot;restingThickness&quot;][:,0] = ossh + botd</span>
+
         <span class="n">init</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 

@@ -165,7 +165,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">mesh_package</span><span class="p">,</span> <span class="s1">&#39;namelist.ocean&#39;</span><span class="p">)</span>
 
         <span class="n">initial_state_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/initial_state&#39;</span>
-        <span class="n">interpolate_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/interpolate&#39;</span>
+        <span class="n">wave_drag_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/wave_drag&#39;</span>
         <span class="n">initial_state_target</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">initial_state_path</span><span class="si">}</span><span class="s1">/initial_state.nc&#39;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
@@ -176,7 +176,7 @@
             <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">initial_state_path</span><span class="si">}</span><span class="s1">/init_mode_forcing_data.nc&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;topographic_wave_drag.nc&#39;</span><span class="p">,</span>
-            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">interpolate_path</span><span class="si">}</span><span class="s1">/topographic_wave_drag.nc&#39;</span><span class="p">)</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">wave_drag_path</span><span class="si">}</span><span class="s1">/topographic_wave_drag.nc&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
             <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">initial_state_path</span><span class="si">}</span><span class="s1">/graph.info&#39;</span><span class="p">)</span>

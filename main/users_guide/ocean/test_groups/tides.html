@@ -155,11 +155,15 @@ initial conditions, forward simulations, and validation for global,
 realistic ocean domains. These are single layer, barotropic simulations
 forced with tidal potential. Self-attraction and loading effects are included
 as well as a parameterization for topographic wave drag.
+Currently the <a class="reference external" href="https://doi.org/10.1175/JPO2878.1">Zarron and Egbert (2006)</a>
+wave drag parameterization is the default option. But MPAS-Ocean also supports
+the <a class="reference external" href="https://doi.org/10.5194/gmd-14-1125-2021">local generation formula</a> and
+<a class="reference external" href="https://doi.org/10.1029/2000GL012044">Jayne and St.Laurent (2001)</a>.
 Wetting and drying is turned on in these configurations to prevent minimum
 depth issues.
 The tidal solution is decomposed into harmonic constituents during the
 simulation and are compared with the TPXO database.
-Currently, the icosaheral 7 mesh is supported with
+Currently, the icosaheral 7 and vr45to5 meshes are supported with
 more mesh resolutions to be added in the future.</p>
 <section id="shared-config-options">
 <h2>Shared config options<a class="headerlink" href="#shared-config-options" title="Link to this heading"></a></h2>
@@ -227,6 +231,20 @@ Note that meshes and test cases may modify these options, as noted below.</p>
 <span id="tides-mesh"></span><h2>mesh test case<a class="headerlink" href="#mesh-test-case" title="Link to this heading"></a></h2>
 <p>The mesh test case produces the horizontal mesh. The base mesh has global coverage
 and is culled to remove land cells. Cells beneath ice shelves are retained in the mesh.</p>
+<section id="icos7">
+<h3>Icos7<a class="headerlink" href="#icos7" title="Link to this heading"></a></h3>
+<p>This mesh is an Icosahedral mesh with 7 refienemnt steps, resulting in a globally uniform
+resolution of about 60km. This mesh is meant for efficient testing of tidal physics and
+does not produce very accurate global tides (Deep RMSE M2 ~11cm).</p>
+</section>
+<section id="vr45to5">
+<h3>VR45to5<a class="headerlink" href="#vr45to5" title="Link to this heading"></a></h3>
+<p>This is a variable resolution mesh that ranges between 45km to 5km
+at the coasts. It uses refiniment criteria based on depth and bathymetric slope.
+More details can be found in <a class="reference external" href="https://doi.org/10.1029/2022MS003207">Barton et al. (2022)</a>.
+This mesh achieves a more accurate tidal result competitive with other non-data assimilative
+models (Deep RMSE M2 ~3.3cm).</p>
+</section>
 </section>
 <section id="init-test-case">
 <span id="tides-init"></span><h2>init test case<a class="headerlink" href="#init-test-case" title="Link to this heading"></a></h2>
@@ -236,17 +254,21 @@ atmospheric forcing, and prepares the station locations for timeseries output.</
 <h3>remap bathymetry step<a class="headerlink" href="#remap-bathymetry-step" title="Link to this heading"></a></h3>
 <p>This step performs an integral remap of bathymetric data onto the MPAS-O mesh</p>
 </section>
-<section id="interpolate-wave-drag-step">
-<h3>interpolate wave drag step<a class="headerlink" href="#interpolate-wave-drag-step" title="Link to this heading"></a></h3>
-<p>In this step, a timescale factor from HYCOM data is interpolated onto
+<section id="calculate-wave-drag-step">
+<h3>calculate wave drag step<a class="headerlink" href="#calculate-wave-drag-step" title="Link to this heading"></a></h3>
+<p>In this step, a several values are calculated and interpolated onto
 the MPAS-O mesh to be used in the topographic wave drag parameterization.
-A plot is also produced to verify the interpolation.</p>
+The climatological depth-averaged and bottom bouancy frequency values are
+interpolated from WOA are interpolated onto the MPAS mesh. The bathymetric
+gradients are also computed along with the standard deviaion of the subgrid
+bathymetry.</p>
 </section>
 <section id="initial-state-step">
 <h3>initial state step<a class="headerlink" href="#initial-state-step" title="Link to this heading"></a></h3>
 <p>The initial state step runs MPAS-Ocean in init mode to create the initial
 condition file for the forward run. The vertical mesh is setup for a
-single layer.</p>
+single layer. This step also computes the adjusted sea surface height,
+accounting for land ice pressure.</p>
 </section>
 </section>
 <section id="forward-test-case">
@@ -267,7 +289,11 @@ at each cell center from the TPXO database. The TPXO values are used to compute
 global, shallow, and deep RMS errors. The global MPAS-O and TPXO solutions are
 plotted along with the spatial error fields. Below is an example of the type
 of plots produced for the 5 major constituents.</p>
-<a class="reference internal image-reference" href="../../../_images/M2_plot.png"><img alt="../../../_images/M2_plot.png" class="align-center" src="../../../_images/M2_plot.png" style="width: 500px;" />
+<p>For the Icos7 mesh:</p>
+<a class="reference internal image-reference" href="../../../_images/M2_plot_icos7.png"><img alt="../../../_images/M2_plot_icos7.png" class="align-center" src="../../../_images/M2_plot_icos7.png" style="width: 500px;" />
+</a>
+<p>And for the VR45to5 case:</p>
+<a class="reference internal image-reference" href="../../../_images/M2_plot_vr45to5.png"><img alt="../../../_images/M2_plot_vr45to5.png" class="align-center" src="../../../_images/M2_plot_vr45to5.png" style="width: 500px;" />
 </a>
 </section>
 </section>

@@ -110,6 +110,7 @@
              
   <h1>Source code for compass.ocean.tests.tides.analysis</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">cartopy.crs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ccrs</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">cartopy.feature</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cfeature</span>
@@ -117,7 +118,6 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">netCDF4</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">colormaps</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_call</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
@@ -157,7 +157,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">harmonic_analysis_file</span> <span class="o">=</span> <span class="s1">&#39;harmonicAnalysis.nc&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grid_file</span> <span class="o">=</span> <span class="s1">&#39;initial_state.nc&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">constituents</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;k1&#39;</span><span class="p">,</span> <span class="s1">&#39;k2&#39;</span><span class="p">,</span> <span class="s1">&#39;m2&#39;</span><span class="p">,</span> <span class="s1">&#39;n2&#39;</span><span class="p">,</span> <span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="s1">&#39;p1&#39;</span><span class="p">,</span> <span class="s1">&#39;q1&#39;</span><span class="p">,</span> <span class="s1">&#39;s2&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">constituents_valid</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;k1&#39;</span><span class="p">,</span> <span class="s1">&#39;k2&#39;</span><span class="p">,</span> <span class="s1">&#39;m2&#39;</span><span class="p">,</span> <span class="s1">&#39;n2&#39;</span><span class="p">,</span>
+                                   <span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="s1">&#39;p1&#39;</span><span class="p">,</span> <span class="s1">&#39;q1&#39;</span><span class="p">,</span> <span class="s1">&#39;s2&#39;</span><span class="p">]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">harmonic_analysis_file</span><span class="p">,</span>
@@ -177,6 +178,8 @@
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tpxo_version</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tides&#39;</span><span class="p">,</span> <span class="s1">&#39;tpxo_version&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">constituents</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s1">&#39;tides&#39;</span><span class="p">,</span> <span class="s1">&#39;constituents&#39;</span><span class="p">)</span>
 
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="si">}</span><span class="s1">/TPXO_data&#39;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tpxo_version</span> <span class="o">==</span> <span class="s1">&#39;TPXO9&#39;</span><span class="p">:</span>
@@ -211,27 +214,31 @@
 
 <div class="viewcode-block" id="Analysis.write_coordinate_file">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.analysis.Analysis.write_coordinate_file.html#compass.ocean.tests.tides.analysis.Analysis.write_coordinate_file">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">write_coordinate_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write_coordinate_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nchunks</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Write mesh coordinates for TPXO extraction</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Read in mesh</span>
         <span class="n">grid_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-        <span class="n">lon_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">grid_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;lonCell&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">])</span>
-        <span class="n">lat_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">grid_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;latCell&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">])</span>
-        <span class="n">nCells</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lon_grid</span><span class="p">)</span>
+        <span class="n">lon_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">grid_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;lonCell&#39;</span><span class="p">][:])</span>
+        <span class="n">lat_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">grid_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;latCell&#39;</span><span class="p">][:])</span>
+
+        <span class="n">lon_grid_split</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">lon_grid</span><span class="p">,</span> <span class="n">nchunks</span><span class="p">)</span>
+        <span class="n">lat_grid_split</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">lat_grid</span><span class="p">,</span> <span class="n">nchunks</span><span class="p">)</span>
 
         <span class="c1"># Write coordinate file for OTPS2</span>
-        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;lat_lon&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nCells</span><span class="p">):</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">lat_grid</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1">  </span><span class="si">{</span><span class="n">lon_grid</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nchunks</span><span class="p">):</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;inputs/lat_lon_</span><span class="si">{</span><span class="n">chunk</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">lon_grid_split</span><span class="p">[</span><span class="n">chunk</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">lat_grid_split</span><span class="p">[</span><span class="n">chunk</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1"> &#39;</span>
+                        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">lon_grid_split</span><span class="p">[</span><span class="n">chunk</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Analysis.setup_otps2">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.analysis.Analysis.setup_otps2.html#compass.ocean.tests.tides.analysis.Analysis.setup_otps2">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setup_otps2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_otps2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nchunks</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Write input files for TPXO extraction</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -239,90 +246,104 @@
         <span class="k">for</span> <span class="n">con</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">constituents</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;setup </span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-            <span class="c1"># Lines for the setup_con files</span>
-            <span class="n">lines</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;inp&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;inputs/Model_atlas_</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;comment&#39;</span><span class="p">:</span> <span class="s1">&#39;! 1. tidal model control file&#39;</span><span class="p">},</span>
-                     <span class="p">{</span><span class="s1">&#39;inp&#39;</span><span class="p">:</span> <span class="s1">&#39;lat_lon&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;comment&#39;</span><span class="p">:</span> <span class="s1">&#39;! 2. latitude/longitude/&lt;time&gt; file&#39;</span><span class="p">},</span>
-                     <span class="p">{</span><span class="s1">&#39;inp&#39;</span><span class="p">:</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;comment&#39;</span><span class="p">:</span> <span class="s1">&#39;! 3. z/U/V/u/v&#39;</span><span class="p">},</span>
-                     <span class="p">{</span><span class="s1">&#39;inp&#39;</span><span class="p">:</span> <span class="n">con</span><span class="p">,</span>
-                      <span class="s1">&#39;comment&#39;</span><span class="p">:</span> <span class="s1">&#39;! 4. tidal constituents to include&#39;</span><span class="p">},</span>
-                     <span class="p">{</span><span class="s1">&#39;inp&#39;</span><span class="p">:</span> <span class="s1">&#39;AP&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;comment&#39;</span><span class="p">:</span> <span class="s1">&#39;! 5. AP/RI&#39;</span><span class="p">},</span>
-                     <span class="p">{</span><span class="s1">&#39;inp&#39;</span><span class="p">:</span> <span class="s1">&#39;oce&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;comment&#39;</span><span class="p">:</span> <span class="s1">&#39;! 6. oce/geo&#39;</span><span class="p">},</span>
-                     <span class="p">{</span><span class="s1">&#39;inp&#39;</span><span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;comment&#39;</span><span class="p">:</span> <span class="s1">&#39;! 7. 1/0 correct for minor constituents&#39;</span><span class="p">},</span>
-                     <span class="p">{</span><span class="s1">&#39;inp&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;outputs/</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">.out&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;comment&#39;</span><span class="p">:</span> <span class="s1">&#39;! 8. output file (ASCII)&#39;</span><span class="p">}]</span>
+            <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nchunks</span><span class="p">):</span>
 
-            <span class="c1"># Create directory for setup_con and Model_atlas_con files</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;inputs&#39;</span><span class="p">):</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s1">&#39;inputs&#39;</span><span class="p">)</span>
+                <span class="c1"># Lines for the setup_con files</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;inp&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;inputs/Model_atlas_</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;comment&#39;</span><span class="p">:</span> <span class="s1">&#39;! 1. tidal model control file&#39;</span><span class="p">},</span>
+                         <span class="p">{</span><span class="s1">&#39;inp&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;inputs/lat_lon_</span><span class="si">{</span><span class="n">chunk</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;comment&#39;</span><span class="p">:</span> <span class="s1">&#39;! 2. latitude/longitude/&lt;time&gt; file&#39;</span><span class="p">},</span>
+                         <span class="p">{</span><span class="s1">&#39;inp&#39;</span><span class="p">:</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;comment&#39;</span><span class="p">:</span> <span class="s1">&#39;! 3. z/U/V/u/v&#39;</span><span class="p">},</span>
+                         <span class="p">{</span><span class="s1">&#39;inp&#39;</span><span class="p">:</span> <span class="n">con</span><span class="p">,</span>
+                          <span class="s1">&#39;comment&#39;</span><span class="p">:</span> <span class="s1">&#39;! 4. tidal constituents to include&#39;</span><span class="p">},</span>
+                         <span class="p">{</span><span class="s1">&#39;inp&#39;</span><span class="p">:</span> <span class="s1">&#39;AP&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;comment&#39;</span><span class="p">:</span> <span class="s1">&#39;! 5. AP/RI&#39;</span><span class="p">},</span>
+                         <span class="p">{</span><span class="s1">&#39;inp&#39;</span><span class="p">:</span> <span class="s1">&#39;oce&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;comment&#39;</span><span class="p">:</span> <span class="s1">&#39;! 6. oce/geo&#39;</span><span class="p">},</span>
+                         <span class="p">{</span><span class="s1">&#39;inp&#39;</span><span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;comment&#39;</span><span class="p">:</span>
+                          <span class="s1">&#39;! 7. 1/0 correct for minor constituents&#39;</span><span class="p">},</span>
+                         <span class="p">{</span><span class="s1">&#39;inp&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;outputs/</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">chunk</span><span class="si">}</span><span class="s1">.out&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;comment&#39;</span><span class="p">:</span> <span class="s1">&#39;! 8. output file (ASCII)&#39;</span><span class="p">}]</span>
 
-            <span class="c1"># Write the setup_con file</span>
-            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;inputs/</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">_setup&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
-                <span class="n">spaces</span> <span class="o">=</span> <span class="mi">28</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="s1">&#39;inp&#39;</span><span class="p">])</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="s1">&#39;inp&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">spaces</span> <span class="o">*</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">line</span><span class="p">[</span><span class="s1">&#39;comment&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="c1"># Create directory for setup_con and Model_atlas_con files</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;inputs&#39;</span><span class="p">):</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s1">&#39;inputs&#39;</span><span class="p">)</span>
 
-            <span class="c1"># Write the Model_atlas_con file</span>
-            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;inputs/Model_atlas_</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;TPXO_data/h_</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">_tpxo</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;TPXO_data/u_</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">_tpxo</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;TPXO_data/grid_tpxo&#39;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="c1"># Write the setup_con file</span>
+                <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;inputs/</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">_setup_</span><span class="si">{</span><span class="n">chunk</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                    <span class="n">spaces</span> <span class="o">=</span> <span class="p">(</span><span class="mi">28</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="s1">&#39;inp&#39;</span><span class="p">]))</span> <span class="o">*</span> <span class="s1">&#39; &#39;</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">line</span><span class="p">[</span><span class="s1">&#39;inp&#39;</span><span class="p">]</span><span class="si">}{</span><span class="n">spaces</span><span class="si">}{</span><span class="n">line</span><span class="p">[</span><span class="s1">&#39;comment&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-            <span class="c1"># Create directory for the con.out files</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;outputs&#39;</span><span class="p">):</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s1">&#39;outputs&#39;</span><span class="p">)</span></div>
+                <span class="c1"># Write the Model_atlas_con file</span>
+                <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;inputs/Model_atlas_</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;TPXO_data/h_</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">_tpxo</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;TPXO_data/u_</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">_tpxo</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;TPXO_data/grid_tpxo&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+                <span class="c1"># Create directory for the con.out files</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;outputs&#39;</span><span class="p">):</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s1">&#39;outputs&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Analysis.run_otps2">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.analysis.Analysis.run_otps2.html#compass.ocean.tests.tides.analysis.Analysis.run_otps2">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">run_otps2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_otps2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nchunks</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform TPXO extraction</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Run the executable</span>
-        <span class="k">for</span> <span class="n">con</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">constituents</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">con</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_constituents</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;run </span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">check_call</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;extract_HC &lt; inputs/</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">_setup&#39;</span><span class="p">,</span>
-                       <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+            <span class="n">commands</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nchunks</span><span class="p">):</span>
+                <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;extract_HC &lt; inputs/</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">_setup_</span><span class="si">{</span><span class="n">chunk</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="n">processes</span> <span class="o">=</span> <span class="p">[</span><span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="n">commands</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">processes</span><span class="p">:</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Analysis.read_otps2_output">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.analysis.Analysis.read_otps2_output.html#compass.ocean.tests.tides.analysis.Analysis.read_otps2_output">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">read_otps2_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_otps2_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nchunks</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Read TPXO extraction output</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">start</span> <span class="o">=</span> <span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">con</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">constituents</span><span class="p">:</span>
 
-            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;outputs/</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">.out&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-            <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">3</span><span class="p">:]):</span>
-                <span class="n">line_sp</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-                <span class="k">if</span> <span class="n">line_sp</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;*************&#39;</span><span class="p">:</span>
-                    <span class="n">val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line_sp</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">mesh_AP</span><span class="p">[</span><span class="n">con</span><span class="p">][</span><span class="s1">&#39;amp&#39;</span><span class="p">][</span><span class="n">start</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">mesh_AP</span><span class="p">[</span><span class="n">con</span><span class="p">][</span><span class="s1">&#39;amp&#39;</span><span class="p">][</span><span class="n">start</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">9999</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nchunks</span><span class="p">):</span>
 
-                <span class="k">if</span> <span class="n">line_sp</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;Site&#39;</span><span class="p">:</span>
-                    <span class="n">val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line_sp</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
-                    <span class="k">if</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="n">val</span> <span class="o">=</span> <span class="n">val</span> <span class="o">+</span> <span class="mf">360.0</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">mesh_AP</span><span class="p">[</span><span class="n">con</span><span class="p">][</span><span class="s1">&#39;phase&#39;</span><span class="p">][</span><span class="n">start</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+                <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;outputs/</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">chunk</span><span class="si">}</span><span class="s1">.out&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">3</span><span class="p">:]:</span>
+                    <span class="n">line_sp</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">line_sp</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;*************&#39;</span><span class="p">:</span>
+                        <span class="n">val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line_sp</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">mesh_AP</span><span class="p">[</span><span class="n">con</span><span class="p">][</span><span class="s1">&#39;amp&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">mesh_AP</span><span class="p">[</span><span class="n">con</span><span class="p">][</span><span class="s1">&#39;amp&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">9999</span>
 
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">mesh_AP</span><span class="p">[</span><span class="n">con</span><span class="p">][</span><span class="s1">&#39;phase&#39;</span><span class="p">][</span><span class="n">start</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">9999</span></div>
+                    <span class="k">if</span> <span class="n">line_sp</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;Site&#39;</span><span class="p">:</span>
+                        <span class="n">val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line_sp</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                        <span class="k">if</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">val</span> <span class="o">=</span> <span class="n">val</span> <span class="o">+</span> <span class="mf">360.0</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">mesh_AP</span><span class="p">[</span><span class="n">con</span><span class="p">][</span><span class="s1">&#39;phase&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">mesh_AP</span><span class="p">[</span><span class="n">con</span><span class="p">][</span><span class="s1">&#39;phase&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">9999</span>
+
+                    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span></div>
 
 
 <div class="viewcode-block" id="Analysis.append_tpxo_data">
@@ -334,7 +355,7 @@
 
         <span class="n">data_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">harmonic_analysis_file</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span>
                                   <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;NETCDF3_64BIT_OFFSET&#39;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">con</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">constituents</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">con</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_constituents</span><span class="p">:</span>
 
             <span class="c1"># Inject amplitude</span>
             <span class="n">amp_varname</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">con</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s1">Amplitude</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tpxo_version</span><span class="si">}</span><span class="s1">&#39;</span>
@@ -380,7 +401,7 @@
             <span class="k">if</span> <span class="p">(</span><span class="n">amp_var</span> <span class="ow">in</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">)</span> \
                     <span class="ow">and</span> <span class="p">(</span><span class="n">phase_var</span> <span class="ow">in</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">):</span>
 
-                <span class="bp">self</span><span class="o">.</span><span class="n">constituents</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">con</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">extract_constituents</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">con</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1"> TPXO Constituent already exists &#39;</span>
                       <span class="sa">f</span><span class="s1">&#39;in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">harmonic_analysis_file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
@@ -422,7 +443,7 @@
         <span class="n">depth</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">][:]</span>
         <span class="n">area</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;areaCell&#39;</span><span class="p">][:]</span>
 
-        <span class="n">constituent_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;K1&#39;</span><span class="p">,</span> <span class="s1">&#39;M2&#39;</span><span class="p">,</span> <span class="s1">&#39;N2&#39;</span><span class="p">,</span> <span class="s1">&#39;O1&#39;</span><span class="p">,</span> <span class="s1">&#39;S2&#39;</span><span class="p">]</span>
+        <span class="n">constituent_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">constituents</span><span class="p">]</span>
 
         <span class="c1"># Use these to fix up the plots</span>
         <span class="n">subplot_ticks</span> <span class="o">=</span> <span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.65</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.65</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
@@ -442,14 +463,17 @@
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; ====== </span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1"> Constituent ======&#39;</span><span class="p">)</span>
 
             <span class="c1"># Get data</span>
-            <span class="n">data1</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">Amplitude&#39;</span><span class="p">][:]</span>
-            <span class="n">data1_phase</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">Phase&#39;</span><span class="p">][:]</span>
-            <span class="n">data2</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">Amplitude</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tpxo_version</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">][:]</span>
-            <span class="n">data2_phase</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">Phase</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tpxo_version</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">][:]</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">data1</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">Amplitude&#39;</span><span class="p">][:]</span>
+                <span class="n">data1_phase</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">Phase&#39;</span><span class="p">][:]</span>
+                <span class="n">data2</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">Amplitude</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tpxo_version</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">][:]</span>
+                <span class="n">data2_phase</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1">Phase</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tpxo_version</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">][:]</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">continue</span>
 
             <span class="n">data1_phase</span> <span class="o">=</span> <span class="n">data1_phase</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>
             <span class="n">data2_phase</span> <span class="o">=</span> <span class="n">data2_phase</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>
@@ -499,7 +523,7 @@
             <span class="c1"># Plot data</span>
             <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
             <span class="n">subplot_title</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1"> Amplitude (simulation) [m]&#39;</span><span class="p">,</span>
-                             <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1"> Amplitude (TPXO8) [m]&#39;</span><span class="p">,</span>
+                             <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1"> Amplitude (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tpxo_version</span><span class="si">}</span><span class="s1">) [m]&#39;</span><span class="p">,</span>
                              <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1"> RMSE (Amplitude) [m]&#39;</span><span class="p">,</span>
                              <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">con</span><span class="si">}</span><span class="s1"> RMSE (Complex) [m]&#39;</span><span class="p">]</span>
 
@@ -571,16 +595,18 @@
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">constituents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s1">&#39;tides&#39;</span><span class="p">,</span> <span class="s1">&#39;constituents&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extract_constituents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s1">&#39;tides&#39;</span><span class="p">,</span>
+                                                        <span class="s1">&#39;constituents&#39;</span><span class="p">)</span>
+
         <span class="c1"># Check if TPXO values aleady exist in harmonic_analysis.nc</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">check_tpxo_data</span><span class="p">()</span>
 
-        <span class="c1"># Setup input files for TPXO extraction</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setup_otps2</span><span class="p">()</span>
-
         <span class="c1"># Setup chunking for TPXO extraction with large meshes</span>
-        <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nCells</span><span class="p">)</span>
-        <span class="n">nchunks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nCells</span> <span class="o">/</span> <span class="mi">200000</span><span class="p">)</span>
-        <span class="n">index_chunks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="n">nchunks</span><span class="p">)</span>
+        <span class="n">nchunks</span> <span class="o">=</span> <span class="mi">128</span>
+
+        <span class="c1"># Setup input files for TPXO extraction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup_otps2</span><span class="p">(</span><span class="n">nchunks</span><span class="p">)</span>
 
         <span class="c1"># Initialize data structure for TPXO values</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh_AP</span> <span class="o">=</span> <span class="p">{}</span>
@@ -589,10 +615,9 @@
                                  <span class="s1">&#39;phase&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">nCells</span><span class="p">))}</span>
 
         <span class="c1"># Extract TPXO values</span>
-        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">index_chunks</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">write_coordinate_file</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">run_otps2</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">read_otps2_output</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_coordinate_file</span><span class="p">(</span><span class="n">nchunks</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_otps2</span><span class="p">(</span><span class="n">nchunks</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_otps2_output</span><span class="p">(</span><span class="n">nchunks</span><span class="p">)</span>
 
         <span class="c1"># Inject TPXO values</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">append_tpxo_data</span><span class="p">()</span>

@@ -1,0 +1,393 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.ocean.tests.tides.dem.dem_trnsf &mdash; compass 2.0.0-alpha.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=a82a51ee"></script>
+      <script src="../../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../../ocean.html">compass.ocean</a></li>
+          <li class="breadcrumb-item"><a href="../../tides.html">compass.ocean.tests.tides</a></li>
+          <li class="breadcrumb-item"><a href="../dem.html">compass.ocean.tests.tides.dem</a></li>
+      <li class="breadcrumb-item active">compass.ocean.tests.tides.dem.dem_trnsf</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.ocean.tests.tides.dem.dem_trnsf</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">netCDF4</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.tides.dem.dem_names</span><span class="w"> </span><span class="kn">import</span> <span class="n">names</span>
+
+<span class="c1"># Authors: Darren Engwirda</span>
+
+
+<div class="viewcode-block" id="dem_trnsf">
+<a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.dem.dem_trnsf.dem_trnsf.html#compass.ocean.tests.tides.dem.dem_trnsf.dem_trnsf">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">dem_trnsf</span><span class="p">(</span><span class="n">base_mesh</span><span class="p">,</span> <span class="n">part_mesh</span><span class="p">):</span>  <span class="c1"># noqa: C901</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Transfer elevation &amp; ice+ocn-thickness data from a full</span>
+<span class="sd">    sphere MPAS mesh onto a partial sub-mesh resulting from</span>
+<span class="sd">    a culling operation, or equiv.</span>
+
+<span class="sd">    The sub-mesh is expected to be a piece of the base mesh</span>
+<span class="sd">    such that (some) cells match 1:1.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">base</span> <span class="o">=</span> <span class="n">nc</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">base_mesh</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="n">part</span> <span class="o">=</span> <span class="n">nc</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">part_mesh</span><span class="p">,</span> <span class="s2">&quot;r+&quot;</span><span class="p">)</span>
+
+    <span class="c1"># -- make a vector of cell-centre positions to match against</span>
+
+    <span class="n">xpos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span>
+            <span class="n">base</span><span class="p">[</span><span class="s2">&quot;xCell&quot;</span><span class="p">][:],</span>
+            <span class="n">base</span><span class="p">[</span><span class="s2">&quot;yCell&quot;</span><span class="p">][:],</span>
+            <span class="n">base</span><span class="p">[</span><span class="s2">&quot;zCell&quot;</span><span class="p">][:]))</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span>
+            <span class="n">part</span><span class="p">[</span><span class="s2">&quot;xCell&quot;</span><span class="p">][:],</span>
+            <span class="n">part</span><span class="p">[</span><span class="s2">&quot;yCell&quot;</span><span class="p">][:],</span>
+            <span class="n">part</span><span class="p">[</span><span class="s2">&quot;zCell&quot;</span><span class="p">][:]))</span><span class="o">.</span><span class="n">T</span>
+    <span class="p">))</span>
+
+    <span class="n">xidx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
+            <span class="mi">0</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s2">&quot;nCells&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
+            <span class="mi">0</span><span class="p">,</span> <span class="n">part</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s2">&quot;nCells&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="p">))</span>
+
+    <span class="c1"># -- culling shouldn&#39;t introduce fp round-off - but truncate</span>
+    <span class="c1"># -- anyway...</span>
+
+    <span class="n">xpos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">xpos</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+
+    <span class="c1"># -- use stable sorting to bring matching cell xyz (and idx)</span>
+    <span class="c1"># -- into &quot;ascending&quot; order</span>
+
+    <span class="n">imap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">xpos</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;stable&quot;</span><span class="p">)</span>
+    <span class="n">xpos</span> <span class="o">=</span> <span class="n">xpos</span><span class="p">[</span><span class="n">imap</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">xidx</span> <span class="o">=</span> <span class="n">xidx</span><span class="p">[</span><span class="n">imap</span><span class="p">]</span>
+    <span class="n">imap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">xpos</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;stable&quot;</span><span class="p">)</span>
+    <span class="n">xpos</span> <span class="o">=</span> <span class="n">xpos</span><span class="p">[</span><span class="n">imap</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">xidx</span> <span class="o">=</span> <span class="n">xidx</span><span class="p">[</span><span class="n">imap</span><span class="p">]</span>
+    <span class="n">imap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">xpos</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;stable&quot;</span><span class="p">)</span>
+    <span class="n">xpos</span> <span class="o">=</span> <span class="n">xpos</span><span class="p">[</span><span class="n">imap</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">xidx</span> <span class="o">=</span> <span class="n">xidx</span><span class="p">[</span><span class="n">imap</span><span class="p">]</span>
+
+    <span class="n">diff</span> <span class="o">=</span> <span class="n">xpos</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">xpos</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+
+    <span class="n">same</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="o">.</span><span class="n">reduce</span><span class="p">((</span>
+        <span class="n">diff</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">diff</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">diff</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)))</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+    <span class="c1"># -- cell inew in part matches iold in base - re-index elev.</span>
+    <span class="c1"># -- data-sets</span>
+
+    <span class="n">inew</span> <span class="o">=</span> <span class="n">xidx</span><span class="p">[</span><span class="n">same</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">iold</span> <span class="o">=</span> <span class="n">xidx</span><span class="p">[</span><span class="n">same</span> <span class="o">+</span> <span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;bed_elevation&quot;</span> <span class="ow">in</span> <span class="n">base</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;bed_elevation&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">part</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;bed_elevation&quot;</span><span class="p">,</span> <span class="s2">&quot;f4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+
+        <span class="n">btmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+            <span class="n">base</span><span class="p">[</span><span class="s2">&quot;bed_elevation&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="n">ncel</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s2">&quot;nCells&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+
+        <span class="n">ptmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ncel</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">ptmp</span><span class="p">[</span><span class="n">inew</span><span class="p">]</span> <span class="o">=</span> <span class="n">btmp</span><span class="p">[</span><span class="n">iold</span><span class="p">]</span>
+
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;bed_elevation&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s2">&quot;m&quot;</span>
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;bed_elevation&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">bed_elevation</span>
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;bed_elevation&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">ptmp</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;bed_slope&quot;</span> <span class="ow">in</span> <span class="n">base</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;bed_slope&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">part</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;bed_slope&quot;</span><span class="p">,</span> <span class="s2">&quot;f4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+
+        <span class="n">btmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+            <span class="n">base</span><span class="p">[</span><span class="s2">&quot;bed_slope&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="n">ncel</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s2">&quot;nCells&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+
+        <span class="n">ptmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ncel</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">ptmp</span><span class="p">[</span><span class="n">inew</span><span class="p">]</span> <span class="o">=</span> <span class="n">btmp</span><span class="p">[</span><span class="n">iold</span><span class="p">]</span>
+
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;bed_slope&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s2">&quot;deg&quot;</span>
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;bed_slope&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">bed_slope_deg</span>
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;bed_slope&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">ptmp</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;bed_dz_dx&quot;</span> <span class="ow">in</span> <span class="n">base</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;bed_dz_dx&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">part</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;bed_dz_dx&quot;</span><span class="p">,</span> <span class="s2">&quot;f4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+
+        <span class="n">btmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+            <span class="n">base</span><span class="p">[</span><span class="s2">&quot;bed_dz_dx&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="n">ncel</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s2">&quot;nCells&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+
+        <span class="n">ptmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ncel</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">ptmp</span><span class="p">[</span><span class="n">inew</span><span class="p">]</span> <span class="o">=</span> <span class="n">btmp</span><span class="p">[</span><span class="n">iold</span><span class="p">]</span>
+
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;bed_dz_dx&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">bed_dz_dx</span>
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;bed_dz_dx&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">ptmp</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;bed_dz_dy&quot;</span> <span class="ow">in</span> <span class="n">base</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;bed_dz_dy&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">part</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;bed_dz_dy&quot;</span><span class="p">,</span> <span class="s2">&quot;f4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+
+        <span class="n">btmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+            <span class="n">base</span><span class="p">[</span><span class="s2">&quot;bed_dz_dy&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="n">ncel</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s2">&quot;nCells&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+
+        <span class="n">ptmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ncel</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">ptmp</span><span class="p">[</span><span class="n">inew</span><span class="p">]</span> <span class="o">=</span> <span class="n">btmp</span><span class="p">[</span><span class="n">iold</span><span class="p">]</span>
+
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;bed_dz_dy&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">bed_dz_dy</span>
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;bed_dz_dy&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">ptmp</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;ocn_thickness&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;ocn_thickness&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">part</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;ocn_thickness&quot;</span><span class="p">,</span> <span class="s2">&quot;f4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+
+        <span class="n">btmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+            <span class="n">base</span><span class="p">[</span><span class="s2">&quot;ocn_thickness&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="n">ncel</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s2">&quot;nCells&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+
+        <span class="n">ptmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ncel</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">ptmp</span><span class="p">[</span><span class="n">inew</span><span class="p">]</span> <span class="o">=</span> <span class="n">btmp</span><span class="p">[</span><span class="n">iold</span><span class="p">]</span>
+
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;ocn_thickness&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s2">&quot;m&quot;</span>
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;ocn_thickness&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">ocn_thickness</span>
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;ocn_thickness&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">ptmp</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;ice_thickness&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;ice_thickness&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">part</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;ice_thickness&quot;</span><span class="p">,</span> <span class="s2">&quot;f4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+
+        <span class="n">btmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+            <span class="n">base</span><span class="p">[</span><span class="s2">&quot;ice_thickness&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="n">ncel</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s2">&quot;nCells&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+
+        <span class="n">ptmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ncel</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">ptmp</span><span class="p">[</span><span class="n">inew</span><span class="p">]</span> <span class="o">=</span> <span class="n">btmp</span><span class="p">[</span><span class="n">iold</span><span class="p">]</span>
+
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;ice_thickness&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s2">&quot;m&quot;</span>
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;ice_thickness&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">ice_thickness</span>
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;ice_thickness&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">ptmp</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;bed_elevation_profile&quot;</span> <span class="ow">in</span> <span class="n">base</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;bed_elevation_profile&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">part</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;bed_elevation_profile&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;f4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;nCells&quot;</span><span class="p">,</span> <span class="s2">&quot;nProfiles&quot;</span><span class="p">))</span>
+
+        <span class="n">btmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+            <span class="n">base</span><span class="p">[</span><span class="s2">&quot;bed_elevation_profile&quot;</span><span class="p">][:,</span> <span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="n">ncel</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s2">&quot;nCells&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">nprf</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s2">&quot;nProfiles&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+
+        <span class="n">ptmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncel</span><span class="p">,</span> <span class="n">nprf</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">ptmp</span><span class="p">[</span><span class="n">inew</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">btmp</span><span class="p">[</span><span class="n">iold</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;bed_elevation_profile&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s2">&quot;m&quot;</span>
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;bed_elevation_profile&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">bed_elevation_profile</span>
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;bed_elevation_profile&quot;</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">ptmp</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;ocn_thickness_profile&quot;</span> <span class="ow">in</span> <span class="n">base</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;ocn_thickness_profile&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">part</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;ocn_thickness_profile&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;f4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;nCells&quot;</span><span class="p">,</span> <span class="s2">&quot;nProfiles&quot;</span><span class="p">))</span>
+
+        <span class="n">btmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+            <span class="n">base</span><span class="p">[</span><span class="s2">&quot;ocn_thickness_profile&quot;</span><span class="p">][:,</span> <span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="n">ncel</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s2">&quot;nCells&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">nprf</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s2">&quot;nProfiles&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+
+        <span class="n">ptmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncel</span><span class="p">,</span> <span class="n">nprf</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">ptmp</span><span class="p">[</span><span class="n">inew</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">btmp</span><span class="p">[</span><span class="n">iold</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;ocn_thickness_profile&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s2">&quot;m&quot;</span>
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;ocn_thickness_profile&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">ocn_thickness_profile</span>
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;ocn_thickness_profile&quot;</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">ptmp</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;ice_thickness_profile&quot;</span> <span class="ow">in</span> <span class="n">base</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;ice_thickness_profile&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">part</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;ice_thickness_profile&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;f4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;nCells&quot;</span><span class="p">,</span> <span class="s2">&quot;nProfiles&quot;</span><span class="p">))</span>
+
+        <span class="n">btmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+            <span class="n">base</span><span class="p">[</span><span class="s2">&quot;ice_thickness_profile&quot;</span><span class="p">][:,</span> <span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="n">ncel</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s2">&quot;nCells&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">nprf</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s2">&quot;nProfiles&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+
+        <span class="n">ptmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncel</span><span class="p">,</span> <span class="n">nprf</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">ptmp</span><span class="p">[</span><span class="n">inew</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">btmp</span><span class="p">[</span><span class="n">iold</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;ice_thickness_profile&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s2">&quot;m&quot;</span>
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;ice_thickness_profile&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">long_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">ice_thickness_profile</span>
+        <span class="n">part</span><span class="p">[</span><span class="s2">&quot;ice_thickness_profile&quot;</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">ptmp</span>
+
+    <span class="n">base</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">part</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">return</span></div>
+
+
+
+<span class="k">if</span> <span class="p">(</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">):</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">,</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawTextHelpFormatter</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--base-mesh&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;base_mesh&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of (full) MPAS mesh.&quot;</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--part-mesh&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;part_mesh&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of culled MPAS mesh.&quot;</span><span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">base_mesh</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">base_mesh</span>
+    <span class="n">part_mesh</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">part_mesh</span>
+
+    <span class="n">dem_trnsf</span><span class="p">(</span><span class="n">base_mesh</span><span class="p">,</span> <span class="n">part_mesh</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -110,13 +110,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.tides.init.remap_bathymetry</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">compass.ocean.tests.tides.init.dem_pixel</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dem_pixel</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">compass.ocean.tests.tides.init.dem_remap</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dem_remap</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">compass.ocean.tests.tides.init.dem_trnsf</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dem_trnsf</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">compass.ocean.tests.tides.dem.dem_remap</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dem_remap</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">compass.ocean.tests.tides.dem.dem_trnsf</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dem_trnsf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
 
 <div class="viewcode-block" id="RemapBathymetry">
@@ -149,35 +145,20 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">plot</span> <span class="o">=</span> <span class="kc">True</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;GEBCO_2020.nc&#39;</span><span class="p">,</span>
-            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;GEBCO_2020.nc&#39;</span><span class="p">,</span>
-            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;bathymetry_database&#39;</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;RTopo-2.0.4_30sec_bedrock_topography.nc&#39;</span><span class="p">,</span>
-            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;RTopo-2.0.4_30sec_bedrock_topography.nc&#39;</span><span class="p">,</span>
-            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;bathymetry_database&#39;</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;RTopo-2.0.4_30sec_surface_elevation.nc&#39;</span><span class="p">,</span>
-            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;RTopo-2.0.4_30sec_surface_elevation.nc&#39;</span><span class="p">,</span>
-            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;bathymetry_database&#39;</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;RTopo-2.0.4_30sec_ice_base_topography.nc&#39;</span><span class="p">,</span>
-            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;RTopo-2.0.4_30sec_ice_base_topography.nc&#39;</span><span class="p">,</span>
-            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;bathymetry_database&#39;</span><span class="p">)</span>
-
         <span class="n">cull_mesh_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;cull_mesh&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
         <span class="n">base_mesh_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;base_mesh&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
+        <span class="n">pixel_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;pixel&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span>
             <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cull_mesh_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span>
-            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_mesh_path</span><span class="si">}</span><span class="s1">/base_mesh.nc&#39;</span><span class="p">)</span></div>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_mesh_path</span><span class="si">}</span><span class="s1">/base_mesh.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;bathy.nc&#39;</span><span class="p">,</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pixel_path</span><span class="si">}</span><span class="s1">/&#39;</span>
+                            <span class="s1">&#39;RTopo_2_0_4_GEBCO_v2023_30sec_pixel.nc&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="RemapBathymetry.run">
@@ -186,17 +167,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">init_path</span> <span class="o">=</span> <span class="s1">&#39;./&#39;</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;RTopo_2_0_4_30sec_pixel.nc&#39;</span><span class="p">):</span>
-            <span class="n">dem_pixel</span><span class="o">.</span><span class="n">rtopo_30sec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">init_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_path</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;GEBCO_v2020_30sec_pixel.nc&#39;</span><span class="p">):</span>
-            <span class="n">dem_pixel</span><span class="o">.</span><span class="n">gebco_30sec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">init_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_path</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;RTopo_2_0_4_GEBCO_v2020_30sec_pixel.nc&#39;</span><span class="p">):</span>
-            <span class="n">dem_pixel</span><span class="o">.</span><span class="n">rtopo_gebco_30sec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">init_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_path</span><span class="p">)</span>
-
-        <span class="n">dem_remap</span><span class="o">.</span><span class="n">dem_remap</span><span class="p">(</span><span class="s1">&#39;RTopo_2_0_4_GEBCO_v2020_30sec_pixel.nc&#39;</span><span class="p">,</span>
+        <span class="n">dem_remap</span><span class="o">.</span><span class="n">dem_remap</span><span class="p">(</span><span class="s1">&#39;bathy.nc&#39;</span><span class="p">,</span>
                             <span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
         <span class="n">dem_trnsf</span><span class="o">.</span><span class="n">dem_trnsf</span><span class="p">(</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;mesh.nc&#39;</span><span class="p">)</span></div>
 </div>

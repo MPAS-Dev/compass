@@ -1,0 +1,399 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.ocean.tests.tides.mesh.vr45to5 &mdash; compass 2.0.0-alpha.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=a82a51ee"></script>
+      <script src="../../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../../ocean.html">compass.ocean</a></li>
+          <li class="breadcrumb-item"><a href="../../tides.html">compass.ocean.tests.tides</a></li>
+          <li class="breadcrumb-item"><a href="../mesh.html">compass.ocean.tests.tides.mesh</a></li>
+      <li class="breadcrumb-item active">compass.ocean.tests.tides.mesh.vr45to5</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.ocean.tests.tides.mesh.vr45to5</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">jigsawpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">netCDF4</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.cime.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_call</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">skimage.filters</span><span class="w"> </span><span class="kn">import</span> <span class="n">gaussian</span><span class="p">,</span> <span class="n">scharr</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.mesh.spherical</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuasiUniformSphericalMeshStep</span>
+
+<span class="c1"># from skimage.filters import farid</span>
+<span class="c1"># from skimage.filters.rank import median, percentile</span>
+
+
+<div class="viewcode-block" id="VRTidesMesh">
+<a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.mesh.vr45to5.VRTidesMesh.html#compass.ocean.tests.tides.mesh.vr45to5.VRTidesMesh">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">VRTidesMesh</span><span class="p">(</span><span class="n">QuasiUniformSphericalMeshStep</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A step for creating a variable resolution tides mesh</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="VRTidesMesh.__init__">
+<a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.mesh.vr45to5.VRTidesMesh.html#compass.ocean.tests.tides.mesh.vr45to5.VRTidesMesh.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">pixel</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;base_mesh&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">elev_file</span><span class="o">=</span><span class="s1">&#39;RTopo_2_0_4_GEBCO_v2023_30sec_pixel.nc&#39;</span><span class="p">,</span>
+                 <span class="n">spac_dhdx</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">spac_hmin</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">spac_hmax</span><span class="o">=</span><span class="mf">75.0</span><span class="p">,</span> <span class="n">spac_hbar</span><span class="o">=</span><span class="mf">60.0</span><span class="p">,</span>
+                 <span class="n">ncell_nwav</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">ncell_nslp</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">filt_sdev</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">filt_halo</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">filt_plev</span><span class="o">=</span><span class="mf">0.325</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">spac_dhdx</span> <span class="o">=</span> <span class="n">spac_dhdx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spac_hmin</span> <span class="o">=</span> <span class="n">spac_hmin</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spac_hmax</span> <span class="o">=</span> <span class="n">spac_hmax</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spac_hbar</span> <span class="o">=</span> <span class="n">spac_hbar</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">filt_halo</span> <span class="o">=</span> <span class="n">filt_halo</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filt_sdev</span> <span class="o">=</span> <span class="n">filt_sdev</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filt_plev</span> <span class="o">=</span> <span class="n">filt_plev</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ncell_wav</span> <span class="o">=</span> <span class="n">ncell_nwav</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ncell_slp</span> <span class="o">=</span> <span class="n">ncell_nslp</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">elev_file</span> <span class="o">=</span> <span class="n">elev_file</span>
+
+        <span class="n">pixel_path</span> <span class="o">=</span> <span class="n">pixel</span><span class="o">.</span><span class="n">path</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;bathy.nc&#39;</span><span class="p">,</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pixel_path</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">elev_file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VRTidesMesh.make_jigsaw_mesh">
+<a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.mesh.vr45to5.VRTidesMesh.make_jigsaw_mesh.html#compass.ocean.tests.tides.mesh.vr45to5.VRTidesMesh.make_jigsaw_mesh">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_jigsaw_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">cell_width</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Build the JIGSAW mesh.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="o">.</span><span class="n">optm_kern</span> <span class="o">=</span> <span class="s2">&quot;cvt+dqdx&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="o">.</span><span class="n">optm_iter</span> <span class="o">=</span> <span class="mi">32</span>                 <span class="c1"># tighter opt. tol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="o">.</span><span class="n">optm_qtol</span> <span class="o">=</span> <span class="o">+</span><span class="mf">1.00E-05</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">make_jigsaw_mesh</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">cell_width</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VRTidesMesh.build_cell_width_lat_lon">
+<a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.mesh.vr45to5.VRTidesMesh.build_cell_width_lat_lon.html#compass.ocean.tests.tides.mesh.vr45to5.VRTidesMesh.build_cell_width_lat_lon">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">spac</span> <span class="o">=</span> <span class="n">jigsawpy</span><span class="o">.</span><span class="n">jigsaw_msh_t</span><span class="p">()</span>
+
+        <span class="c1"># ------------------------------------ define spacing pattern</span>
+
+        <span class="n">dhdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spac_dhdx</span>   <span class="c1"># max allowable slope in spacing</span>
+        <span class="n">hmin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spac_hmin</span>   <span class="c1"># min mesh-spacing value (km)</span>
+        <span class="n">hmax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spac_hmax</span>   <span class="c1"># max mesh-spacing value (km)</span>
+        <span class="n">hbar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spac_hbar</span>   <span class="c1"># constant spacing value (km)</span>
+
+        <span class="n">halo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filt_halo</span>   <span class="c1"># DEM pixels per filtering radii</span>
+        <span class="n">sdev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filt_sdev</span>   <span class="c1"># std-dev for gaussian filter</span>
+        <span class="n">plev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filt_plev</span>   <span class="c1"># median-style filter percentile</span>
+
+        <span class="n">nwav</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ncell_wav</span>   <span class="c1"># number of cells per wavelength</span>
+        <span class="n">nslp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ncell_slp</span>   <span class="c1"># number of cells per grad(elev)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loading elevation assets...&quot;</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">nc</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="s2">&quot;bathy.nc&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+
+        <span class="n">ocnh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ocn_thickness&quot;</span><span class="p">][:])</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Computing background h(x)...&quot;</span><span class="p">)</span>
+
+        <span class="n">hmat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">ocnh</span><span class="o">.</span><span class="n">shape</span><span class="p">[:]),</span> <span class="p">(</span><span class="n">hbar</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">nwav</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">hmat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span>
+                <span class="n">hmat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">swe_wavelength_spacing</span><span class="p">(</span>
+                    <span class="n">ocnh</span><span class="p">,</span> <span class="n">nwav</span><span class="p">,</span> <span class="n">hmin</span><span class="p">,</span> <span class="n">hmax</span><span class="p">,</span> <span class="n">halo</span><span class="p">,</span> <span class="n">plev</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">nslp</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">hmat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span>
+                <span class="n">hmat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">elev_sharpness_spacing</span><span class="p">(</span>
+                    <span class="n">ocnh</span><span class="p">,</span> <span class="n">nslp</span><span class="p">,</span> <span class="n">hmin</span><span class="p">,</span> <span class="n">hmax</span><span class="p">,</span> <span class="n">halo</span><span class="p">,</span> <span class="n">plev</span><span class="p">,</span>
+                    <span class="n">sdev</span><span class="p">))</span>
+
+        <span class="n">hmat</span><span class="p">[</span><span class="n">ocnh</span> <span class="o">&lt;=</span> <span class="mf">0.</span><span class="p">]</span> <span class="o">=</span> <span class="n">hmax</span>
+        <span class="n">hmat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">hmat</span><span class="p">,</span> <span class="n">hmin</span><span class="p">)</span>
+        <span class="n">hmat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">hmat</span><span class="p">,</span> <span class="n">hmax</span><span class="p">)</span>
+
+        <span class="c1"># -- pack h(x) data into jigsaw data-type: average pixel-to-</span>
+        <span class="c1"># -- node, careful with periodic BC&#39;s.</span>
+
+        <span class="n">hmat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coarsen_spacing_pixels</span><span class="p">(</span><span class="n">hmat</span><span class="p">,</span> <span class="n">down</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+        <span class="n">FULL_SPHERE_RADIUS</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s2">&quot;SHR_CONST_REARTH&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="mf">1.E+003</span>
+
+        <span class="n">spac</span><span class="o">.</span><span class="n">mshID</span> <span class="o">=</span> <span class="s2">&quot;ellipsoid-grid&quot;</span>       <span class="c1"># use the elv. grid</span>
+        <span class="n">spac</span><span class="o">.</span><span class="n">radii</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span>
+            <span class="mi">3</span><span class="p">,</span> <span class="n">FULL_SPHERE_RADIUS</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">spac</span><span class="o">.</span><span class="n">REALS_t</span><span class="p">)</span>
+
+        <span class="n">spac</span><span class="o">.</span><span class="n">xgrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
+            <span class="o">-</span><span class="mf">1.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="o">+</span><span class="mf">1.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">hmat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">spac</span><span class="o">.</span><span class="n">ygrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
+            <span class="o">-</span><span class="mf">.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="o">+</span><span class="mf">.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">hmat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">R</span> <span class="o">=</span> <span class="n">hmat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">hmat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">spac</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">R</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">C</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="n">npos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">+</span><span class="mi">0</span><span class="p">,</span> <span class="n">hmat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">epos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">hmat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">spos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">hmat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">wpos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">+</span><span class="mi">0</span><span class="p">,</span> <span class="n">hmat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">npos</span><span class="p">[</span><span class="n">npos</span> <span class="o">&gt;=</span> <span class="o">+</span><span class="n">R</span><span class="p">]</span> <span class="o">=</span> <span class="n">R</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">spos</span><span class="p">[</span><span class="n">spos</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">+</span><span class="mi">0</span>
+        <span class="n">epos</span><span class="p">[</span><span class="n">epos</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">C</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">wpos</span><span class="p">[</span><span class="n">wpos</span> <span class="o">&gt;=</span> <span class="o">+</span><span class="n">C</span><span class="p">]</span> <span class="o">=</span> <span class="o">+</span><span class="mi">0</span>
+
+        <span class="n">npos</span><span class="p">,</span> <span class="n">epos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span>
+            <span class="n">npos</span><span class="p">,</span> <span class="n">epos</span><span class="p">,</span> <span class="n">sparse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s2">&quot;ij&quot;</span><span class="p">)</span>
+        <span class="n">spos</span><span class="p">,</span> <span class="n">wpos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span>
+            <span class="n">spos</span><span class="p">,</span> <span class="n">wpos</span><span class="p">,</span> <span class="n">sparse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s2">&quot;ij&quot;</span><span class="p">)</span>
+
+        <span class="n">spac</span><span class="o">.</span><span class="n">value</span> <span class="o">+=</span> <span class="n">hmat</span><span class="p">[</span><span class="n">npos</span><span class="p">,</span> <span class="n">epos</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="o">+</span><span class="mf">1.</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">)</span>
+        <span class="n">spac</span><span class="o">.</span><span class="n">value</span> <span class="o">+=</span> <span class="n">hmat</span><span class="p">[</span><span class="n">npos</span><span class="p">,</span> <span class="n">wpos</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="o">+</span><span class="mf">1.</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">)</span>
+        <span class="n">spac</span><span class="o">.</span><span class="n">value</span> <span class="o">+=</span> <span class="n">hmat</span><span class="p">[</span><span class="n">spos</span><span class="p">,</span> <span class="n">epos</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="o">+</span><span class="mf">1.</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">)</span>
+        <span class="n">spac</span><span class="o">.</span><span class="n">value</span> <span class="o">+=</span> <span class="n">hmat</span><span class="p">[</span><span class="n">spos</span><span class="p">,</span> <span class="n">wpos</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="o">+</span><span class="mf">1.</span> <span class="o">/</span> <span class="mf">4.</span><span class="p">)</span>
+
+        <span class="n">spac</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">limit_spacing_gradient</span><span class="p">(</span><span class="n">spac</span><span class="p">,</span> <span class="n">dhdx</span><span class="o">=</span><span class="n">dhdx</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">spac</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">spac</span><span class="o">.</span><span class="n">xgrid</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">spac</span><span class="o">.</span><span class="n">ygrid</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VRTidesMesh.limit_spacing_gradient">
+<a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.mesh.vr45to5.VRTidesMesh.limit_spacing_gradient.html#compass.ocean.tests.tides.mesh.vr45to5.VRTidesMesh.limit_spacing_gradient">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">limit_spacing_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spac</span><span class="p">,</span> <span class="n">dhdx</span><span class="p">):</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Smoothing h(x) via |dh/dx| limits...&quot;</span><span class="p">)</span>
+
+        <span class="n">opts</span> <span class="o">=</span> <span class="n">jigsawpy</span><span class="o">.</span><span class="n">jigsaw_jig_t</span><span class="p">()</span>
+
+        <span class="n">spac</span><span class="o">.</span><span class="n">slope</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">spac</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dhdx</span><span class="p">)</span>
+        <span class="n">opts</span><span class="o">.</span><span class="n">hfun_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s2">&quot;spac_pre_smooth.msh&quot;</span><span class="p">)</span>
+        <span class="n">opts</span><span class="o">.</span><span class="n">jcfg_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s2">&quot;opts_pre_smooth.jig&quot;</span><span class="p">)</span>
+        <span class="n">jigsawpy</span><span class="o">.</span><span class="n">savemsh</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">hfun_file</span><span class="p">,</span> <span class="n">spac</span><span class="p">)</span>
+
+        <span class="n">opts</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="o">+</span><span class="mi">1</span>
+
+        <span class="n">jigsawpy</span><span class="o">.</span><span class="n">cmd</span><span class="o">.</span><span class="n">marche</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="n">spac</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">spac</span></div>
+
+
+<div class="viewcode-block" id="VRTidesMesh.swe_wavelength_spacing">
+<a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.mesh.vr45to5.VRTidesMesh.swe_wavelength_spacing.html#compass.ocean.tests.tides.mesh.vr45to5.VRTidesMesh.swe_wavelength_spacing">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">swe_wavelength_spacing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                               <span class="n">ocnh</span><span class="p">,</span> <span class="n">nwav</span><span class="p">,</span> <span class="n">hmin</span><span class="p">,</span> <span class="n">hmax</span><span class="p">,</span> <span class="n">halo</span><span class="p">,</span> <span class="n">plev</span><span class="p">,</span>
+                               <span class="n">T_M2</span><span class="o">=</span><span class="mf">12.</span> <span class="o">*</span> <span class="mf">3600.</span><span class="p">,</span> <span class="n">grav</span><span class="o">=</span><span class="mf">9.806</span><span class="p">):</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Computing wavelength heuristic...&quot;</span><span class="p">)</span>
+
+        <span class="n">vals</span> <span class="o">=</span> <span class="n">T_M2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+            <span class="n">grav</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">ocnh</span><span class="p">))</span> <span class="o">/</span> <span class="n">nwav</span> <span class="o">/</span> <span class="mf">1000.</span>
+
+        <span class="n">vals</span><span class="p">[</span><span class="n">ocnh</span> <span class="o">&lt;=</span> <span class="mf">0.</span><span class="p">]</span> <span class="o">=</span> <span class="n">hmax</span>
+        <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">hmin</span><span class="p">)</span>
+        <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">hmax</span><span class="p">)</span>
+
+        <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>
+        <span class="c1"># vals = percentile(</span>
+        <span class="c1">#     vals, footprint=disk(halo), mask=(ocnh&gt;0.), p0=plev)</span>
+
+        <span class="k">return</span> <span class="n">vals</span></div>
+
+
+<div class="viewcode-block" id="VRTidesMesh.elev_sharpness_spacing">
+<a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.mesh.vr45to5.VRTidesMesh.elev_sharpness_spacing.html#compass.ocean.tests.tides.mesh.vr45to5.VRTidesMesh.elev_sharpness_spacing">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">elev_sharpness_spacing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                               <span class="n">ocnh</span><span class="p">,</span> <span class="n">nslp</span><span class="p">,</span> <span class="n">hmin</span><span class="p">,</span> <span class="n">hmax</span><span class="p">,</span> <span class="n">halo</span><span class="p">,</span> <span class="n">plev</span><span class="p">,</span> <span class="n">sdev</span><span class="p">):</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Computing GRAD(elev) heuristic...&quot;</span><span class="p">)</span>
+
+        <span class="n">dzdx</span> <span class="o">=</span> <span class="n">scharr</span><span class="p">(</span><span class="n">gaussian</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+            <span class="n">ocnh</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sdev</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;wrap&quot;</span><span class="p">))</span>
+
+        <span class="n">dzdx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mf">1.E-08</span><span class="p">,</span> <span class="n">dzdx</span><span class="p">)</span>  <span class="c1"># no divide-by-zero</span>
+
+        <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span>
+            <span class="mf">5.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ocnh</span><span class="p">))</span> <span class="o">/</span> <span class="n">dzdx</span> <span class="o">*</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">nslp</span>
+
+        <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">hmin</span><span class="p">)</span>
+        <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">hmax</span><span class="p">)</span>
+
+        <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>
+        <span class="c1"># vals = percentile(</span>
+        <span class="c1">#     vals, footprint=disk(halo), mask=(ocnh&gt;0.), p0=plev)</span>
+
+        <span class="k">return</span> <span class="n">vals</span></div>
+
+
+<div class="viewcode-block" id="VRTidesMesh.coarsen_spacing_pixels">
+<a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.tides.mesh.vr45to5.VRTidesMesh.coarsen_spacing_pixels.html#compass.ocean.tests.tides.mesh.vr45to5.VRTidesMesh.coarsen_spacing_pixels">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">coarsen_spacing_pixels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hmat</span><span class="p">,</span> <span class="n">down</span><span class="p">):</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Coarsening mesh-spacing pixels...&quot;</span><span class="p">)</span>
+
+        <span class="n">rows</span> <span class="o">=</span> <span class="n">hmat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="n">down</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="n">hmat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="n">down</span>
+
+        <span class="n">htmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">),</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">hmat</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">hmat</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">jpos</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">down</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">ipos</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">down</span><span class="p">):</span>
+
+                <span class="n">iend</span> <span class="o">=</span> <span class="n">hmat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">down</span> <span class="o">+</span> <span class="n">ipos</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">jend</span> <span class="o">=</span> <span class="n">hmat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">down</span> <span class="o">+</span> <span class="n">jpos</span> <span class="o">+</span> <span class="mi">1</span>
+
+                <span class="n">htmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">htmp</span><span class="p">,</span>
+                                  <span class="n">hmat</span><span class="p">[</span><span class="n">ipos</span><span class="p">:</span><span class="n">iend</span><span class="p">:</span><span class="n">down</span><span class="p">,</span> <span class="n">jpos</span><span class="p">:</span><span class="n">jend</span><span class="p">:</span><span class="n">down</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">htmp</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
