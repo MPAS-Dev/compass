@@ -215,9 +215,10 @@ class InitialState(Step):
         Run this step of the testcase
         """
 
-        self.load_balance_graphfile(min_lon=-190, max_lon=190,
-                                    min_lat=-100, max_lat=100,
-                                    inside_weight=1)
+        if self.wetdry == 'subgrid':
+            self.load_balance_graphfile(min_lon=-190, max_lon=190,
+                                        min_lat=-100, max_lat=100,
+                                        inside_weight=1)
         run_model(self)
 
         if self.wetdry == 'subgrid':
@@ -312,7 +313,9 @@ class InitialState(Step):
         init["landIceFraction"][0, :] = zeros
         init["landIceFloatingFraction"][0, :] = zeros
 
-        lat_mask = np.where(init["latCell"][:] < -59.0 * np.pi / 180.0)[0]
+        # lat_cutoff = -59.0
+        lat_cutoff = 90.0
+        lat_mask = np.where(init["latCell"][:] < lat_cutoff * np.pi / 180.0)[0]
         init["landIceDraft"][0, lat_mask] = -iced[lat_mask]  # NB. sign
         init["landIcePressure"][0, lat_mask] = icep[lat_mask]
         init["landIceMask"][0, lat_mask] = (icep[lat_mask] > 0.)
