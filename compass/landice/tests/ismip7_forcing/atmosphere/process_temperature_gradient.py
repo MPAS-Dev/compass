@@ -12,11 +12,12 @@ from compass.landice.tests.ismip7_forcing.create_mapfile import (
 from compass.step import Step
 
 
-class ProcessTemperature(Step):
+class ProcessTemperatureGradient(Step):
     """
-    A step for processing ISMIP7 ice surface temperature (ts) data.
-    Remaps monthly temperature from the ISMIP7 2km polar stereographic
-    grid to the MALI unstructured mesh.
+    A step for processing ISMIP7 temperature elevation gradient (dtsdz) data.
+    Remaps the annual temperature gradient from the ISMIP7 2km polar
+    stereographic grid to the MALI unstructured mesh. This field is used
+    for temperature-elevation feedback corrections.
     """
 
     def __init__(self, test_case):
@@ -28,7 +29,8 @@ class ProcessTemperature(Step):
         test_case : compass.landice.tests.ismip7_forcing.atmosphere.Atmosphere
             The test case this step belongs to
         """
-        super().__init__(test_case=test_case, name="process_temperature",
+        super().__init__(test_case=test_case,
+                         name="process_temperature_gradient",
                          ntasks=4, min_tasks=1)
 
     def setup(self):
@@ -65,13 +67,14 @@ class ProcessTemperature(Step):
         end_year = section.getint("end_year")
 
         # Discover input files
-        input_path = os.path.join(base_path_ismip7, "ts", "v2")
-        file_pattern = f"ts_AIS_{model}_{scenario}_SDBN1-2000m_v2_*.nc"
+        input_path = os.path.join(base_path_ismip7, "dtsdz", "v2")
+        file_pattern = (f"dtsdz_AIS_{model}_{scenario}_"
+                        f"SDBN1-2000m_v2_*.nc")
         all_files = sorted(glob.glob(os.path.join(input_path, file_pattern)))
 
         if not all_files:
             raise FileNotFoundError(
-                f"No temperature files found matching pattern:\n"
+                f"No temperature gradient files found matching pattern:\n"
                 f"  {os.path.join(input_path, file_pattern)}")
 
         # Filter to requested year range
@@ -83,13 +86,13 @@ class ProcessTemperature(Step):
 
         if not input_files:
             raise FileNotFoundError(
-                f"No temperature files for year range "
+                f"No temperature gradient files for year range "
                 f"{start_year}-{end_year}")
 
-        logger.info(f"Found {len(input_files)} temperature files for years "
-                    f"{start_year}-{end_year}")
+        logger.info(f"Found {len(input_files)} temperature gradient files "
+                    f"for years {start_year}-{end_year}")
 
-        # Build mapping file (reuse if already created by process_smb)
+        # Build mapping file (reuse if already created by other steps)
         mapping_file = f"map_ismip7_2km_to_{mali_mesh_name}_{method_remap}.nc"
 
         if not os.path.exists(mapping_file):
@@ -115,14 +118,14 @@ class ProcessTemperature(Step):
                     "-i", input_file,
                     "-o", remapped_file,
                     "-m", mapping_file,
-                    "-v", "ts"]
+                    "-v", "dtsdz"]
 
             check_call(args, logger=logger)
 
         # Combine remapped files and rename to MALI conventions
         logger.info("Combining remapped files and renaming variables...")
-        output_file = (f"{mali_mesh_name}_temperature_{model}_{scenario}_"
-                       f"{start_year}-{end_year}.nc")
+        output_file = (f"{mali_mesh_name}_temperature_gradient_{model}_"
+                       f"{scenario}_{start_year}-{end_year}.nc")
 
         self._combine_and_rename(remapped_files, output_file)
 
@@ -168,26 +171,25 @@ class ProcessTemperature(Step):
         if rename_dims:
             ds = ds.rename(rename_dims)
 
-        # Rename variable
-        if "ts" in ds:
-            ds = ds.rename({"ts": "surfaceAirTemperature"})
+        # Keep variable name as dtsdz for now.
+        # The MALI variable name will be determined once temperature
+        # elevation feedback support is added to MALI.
 
-        # Add xtime variable with monthly timestamps
+        # Add xtime variable with annual timestamps
         xtime = []
         for t_index in range(ds.sizes["Time"]):
             date = ds.Time[t_index]
             yr = int(date.dt.year.values)
-            mo = int(date.dt.month.values)
-            date_str = f"{yr:04d}-{mo:02d}-15_00:00:00".ljust(64)
+            date_str = f"{yr:04d}-01-01_00:00:00".ljust(64)
             xtime.append(date_str)
 
         ds["xtime"] = ("Time", xtime)
         ds["xtime"] = ds.xtime.astype("S")
 
         # Set attributes
-        ds["surfaceAirTemperature"].attrs = {
-            "long_name": "temperature at top of ice sheet model",
-            "units": "K",
+        ds["dtsdz"].attrs = {
+            "long_name": "temperature change with surface elevation",
+            "units": "K m-1",
         }
 
         # Drop auxiliary variables from remapping
@@ -198,4 +200,3 @@ class ProcessTemperature(Step):
             ds = ds.drop_vars(vars_to_drop)
 
         write_netcdf(ds, output_file)
-        ds.close()
