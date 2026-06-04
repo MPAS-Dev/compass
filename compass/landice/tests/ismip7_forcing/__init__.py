@@ -1,10 +1,11 @@
 from compass.landice.tests.ismip7_forcing.atmosphere import Atmosphere
+from compass.landice.tests.ismip7_forcing.ocean_thermal import OceanThermal
 from compass.testgroup import TestGroup
 
 
 class Ismip7Forcing(TestGroup):
     """
-    A test group for processing ISMIP7 atmosphere forcing data
+    A test group for processing ISMIP7 forcing data
     for the Antarctic Ice Sheet
     """
 
@@ -20,3 +21,4 @@ class Ismip7Forcing(TestGroup):
         super().__init__(mpas_core=mpas_core, name="ismip7_forcing")
 
         self.add_test_case(Atmosphere(test_group=self))
+        self.add_test_case(OceanThermal(test_group=self))
