@@ -30,8 +30,7 @@ class ProcessTemperatureGradient(Step):
             The test case this step belongs to
         """
         super().__init__(test_case=test_case,
-                         name="process_temperature_gradient",
-                         ntasks=4, min_tasks=1)
+                         name="process_temperature_gradient")
 
     def setup(self):
         """
@@ -97,7 +96,7 @@ class ProcessTemperatureGradient(Step):
 
         if not os.path.exists(mapping_file):
             logger.info("Building mapping file...")
-            build_mapping_file(config, self.ntasks, logger,
+            build_mapping_file(config, logger,
                                input_files[0], mapping_file,
                                mali_mesh_file=mali_mesh_file,
                                method_remap=method_remap)

@@ -5,7 +5,7 @@ from mpas_tools.logging import check_call
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
 
 
-def build_mapping_file(config, cores, logger, ismip7_grid_file,
+def build_mapping_file(config, logger, ismip7_grid_file,
                        mapping_file, mali_mesh_file=None,
                        method_remap=None):
     """
@@ -16,9 +16,6 @@ def build_mapping_file(config, cores, logger, ismip7_grid_file,
     ----------
     config : compass.config.CompassConfigParser
         Configuration options for the test case
-
-    cores : int
-        the number of cores for ESMF_RegridWeightGen
 
     logger : logging.Logger
         A logger for output from the step
@@ -83,6 +80,9 @@ def build_mapping_file(config, cores, logger, ismip7_grid_file,
 
     # create a mapping file using ESMF_RegridWeightGen
     logger.info(f"Creating mapping file with method: {method_remap}")
+
+    section = config["ismip7_ais"]
+    cores = section.getint("esmf_ntasks")
 
     parallel_executable = config.get("parallel", "parallel_executable")
     args = parallel_executable.split(" ")

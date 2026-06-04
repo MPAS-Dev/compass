@@ -28,8 +28,7 @@ class ProcessSmb(Step):
         test_case : compass.landice.tests.ismip7_forcing.atmosphere.Atmosphere
             The test case this step belongs to
         """
-        super().__init__(test_case=test_case, name="process_smb",
-                         ntasks=4, min_tasks=1)
+        super().__init__(test_case=test_case, name="process_smb")
 
     def setup(self):
         """
@@ -94,7 +93,7 @@ class ProcessSmb(Step):
 
         if not os.path.exists(mapping_file):
             logger.info("Building mapping file...")
-            build_mapping_file(config, self.ntasks, logger,
+            build_mapping_file(config, logger,
                                input_files[0], mapping_file,
                                mali_mesh_file=mali_mesh_file,
                                method_remap=method_remap)
