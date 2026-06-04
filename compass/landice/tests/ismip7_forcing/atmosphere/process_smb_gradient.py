@@ -169,9 +169,9 @@ class ProcessSmbGradient(Step):
         if rename_dims:
             ds = ds.rename(rename_dims)
 
-        # Keep variable name as dacabfdz for now.
-        # The MALI variable name will be determined by PR #169.
-        # Rename can be updated once that PR is merged.
+        # Rename to MALI convention (PR #169)
+        if "dacabfdz" in ds:
+            ds = ds.rename({"dacabfdz": "sfcMassBalLapseRate"})
 
         # Add xtime variable with annual timestamps
         xtime = []
@@ -185,8 +185,9 @@ class ProcessSmbGradient(Step):
         ds["xtime"] = ds.xtime.astype("S")
 
         # Set attributes
-        ds["dacabfdz"].attrs = {
-            "long_name": "surface mass balance change with surface elevation",
+        ds["sfcMassBalLapseRate"].attrs = {
+            "long_name": "vertical gradient dSMBdz used for SMB "
+                         "elevation-change correction",
             "units": "kg m-2 s-1 m-1",
         }
 

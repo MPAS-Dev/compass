@@ -170,9 +170,9 @@ class ProcessTemperatureGradient(Step):
         if rename_dims:
             ds = ds.rename(rename_dims)
 
-        # Keep variable name as dtsdz for now.
-        # The MALI variable name will be determined once temperature
-        # elevation feedback support is added to MALI.
+        # Rename to MALI convention (PR #169)
+        if "dtsdz" in ds:
+            ds = ds.rename({"dtsdz": "surfaceAirTemperatureLapseRate"})
 
         # Add xtime variable with annual timestamps
         xtime = []
@@ -186,8 +186,9 @@ class ProcessTemperatureGradient(Step):
         ds["xtime"] = ds.xtime.astype("S")
 
         # Set attributes
-        ds["dtsdz"].attrs = {
-            "long_name": "temperature change with surface elevation",
+        ds["surfaceAirTemperatureLapseRate"].attrs = {
+            "long_name": "vertical gradient dTdz used for SAT "
+                         "elevation-change correction",
             "units": "K m-1",
         }
 
