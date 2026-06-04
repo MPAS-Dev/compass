@@ -373,6 +373,43 @@ ismip6_run
    ismip6_ais_proj2300.set_up_experiment.SetUpExperiment.setup
    ismip6_ais_proj2300.set_up_experiment.SetUpExperiment.run
 
+ismip7_forcing
+~~~~~~~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.ismip7_forcing
+
+.. autosummary::
+   :toctree: generated/
+
+   Ismip7Forcing
+   configure.configure
+   ice_sheet_params.get_params
+   create_mapfile.build_mapping_file
+
+   atmosphere.Atmosphere
+   atmosphere.Atmosphere.configure
+   atmosphere.process_smb.ProcessSmb
+   atmosphere.process_smb.ProcessSmb.setup
+   atmosphere.process_smb.ProcessSmb.run
+   atmosphere.process_temperature.ProcessTemperature
+   atmosphere.process_temperature.ProcessTemperature.setup
+   atmosphere.process_temperature.ProcessTemperature.run
+   atmosphere.process_smb_gradient.ProcessSmbGradient
+   atmosphere.process_smb_gradient.ProcessSmbGradient.setup
+   atmosphere.process_smb_gradient.ProcessSmbGradient.run
+   atmosphere.process_temperature_gradient.ProcessTemperatureGradient
+   atmosphere.process_temperature_gradient.ProcessTemperatureGradient.setup
+   atmosphere.process_temperature_gradient.ProcessTemperatureGradient.run
+   atmosphere.process_runoff.ProcessRunoff
+   atmosphere.process_runoff.ProcessRunoff.setup
+   atmosphere.process_runoff.ProcessRunoff.run
+
+   ocean_thermal.OceanThermal
+   ocean_thermal.OceanThermal.configure
+   ocean_thermal.process_thermal_forcing.ProcessThermalForcing
+   ocean_thermal.process_thermal_forcing.ProcessThermalForcing.setup
+   ocean_thermal.process_thermal_forcing.ProcessThermalForcing.run
+
 isunnguata_sermia
 ~~~~~~~~~~~~~~~~~
 
