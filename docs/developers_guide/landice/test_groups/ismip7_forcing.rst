@@ -57,13 +57,11 @@ atmosphere
 ~~~~~~~~~~
 
 The :py:class:`compass.landice.tests.ismip7_forcing.atmosphere.Atmosphere`
-test case processes the ISMIP7 atmosphere forcing fields. It contains four
-steps that are always included (SMB, temperature, and their respective
-gradients) plus a conditional ``process_runoff`` step that is added only when
-``ice_sheet = gis``. Each step discovers input files matching the
-ice-sheet-specific naming pattern, builds or reuses a mapping file, remaps
-each input file with ``ncremap``, and combines/renames the results to MALI
-conventions.
+test case processes the ISMIP7 atmosphere forcing fields. It contains five
+steps: SMB, temperature, their respective gradients, and runoff. Each step
+discovers input files matching the ice-sheet-specific naming pattern, builds
+or reuses a mapping file, remaps each input file with ``ncremap``, and
+combines/renames the results to MALI conventions.
 
 Steps:
 
@@ -76,7 +74,7 @@ Steps:
 * :py:class:`~compass.landice.tests.ismip7_forcing.atmosphere.process_temperature_gradient.ProcessTemperatureGradient` —
   ``dtsdz`` → ``surfaceAirTemperatureLapseRate``
 * :py:class:`~compass.landice.tests.ismip7_forcing.atmosphere.process_runoff.ProcessRunoff` —
-  ``mrro`` → ``ismip6Runoff`` (GrIS only)
+  ``mrro`` → ``ismip6Runoff``
 
 .. _dev_landice_ismip7_forcing_ocean_thermal:
 

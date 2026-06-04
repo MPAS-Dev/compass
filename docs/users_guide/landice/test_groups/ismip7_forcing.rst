@@ -12,10 +12,9 @@ Ice Sheet (GrIS), controlled by a single ``ice_sheet`` config option.
 
 The test group includes two test cases: ``atmosphere`` and ``ocean_thermal``.
 
-* The ``atmosphere`` test case has four steps for both ice sheets:
-  ``process_smb``, ``process_temperature``, ``process_smb_gradient``, and
-  ``process_temperature_gradient``. For GrIS, a fifth step ``process_runoff``
-  is additionally included.
+* The ``atmosphere`` test case has five steps:
+  ``process_smb``, ``process_temperature``, ``process_smb_gradient``,
+  ``process_temperature_gradient``, and ``process_runoff``.
 
 * The ``ocean_thermal`` test case has one step: ``process_thermal_forcing``.
   For AIS this produces 3D thermal forcing (with 30 ocean depth layers); for
@@ -58,6 +57,7 @@ For AIS atmosphere (2km, polar stereographic EPSG:3031):
    ts/v2/ts_AIS_{model}_{scenario}_SDBN1-2000m_v2_{year_range}.nc
    dacabfdz/v2/dacabfdz_AIS_{model}_{scenario}_SDBN1-2000m_v2_{year_range}.nc
    dtsdz/v2/dtsdz_AIS_{model}_{scenario}_SDBN1-2000m_v2_{year_range}.nc
+   mrro/v2/mrro_AIS_{model}_{scenario}_SDBN1-2000m_v2_{year_range}.nc
 
 For AIS ocean thermal (8km, 30 depth levels, decade files):
 
@@ -173,7 +173,7 @@ Steps:
   (``dtsdz``) field. The output variable is
   ``surfaceAirTemperatureLapseRate``.
 
-* **process_runoff** (GrIS only): Remaps the ice sheet runoff (``mrro``)
+* **process_runoff**: Remaps the ice sheet runoff (``mrro``)
   field. The output variable is ``ismip6Runoff``.
 
 .. _landice_ismip7_forcing_ocean_thermal:

@@ -24,7 +24,7 @@ class Atmosphere(TestCase):
     A test case for processing ISMIP7 atmosphere forcing data.
     Remaps monthly SMB, temperature, and annual gradients (SMB and
     temperature) from the ISMIP7 polar stereographic grid to the
-    MALI unstructured mesh. For GrIS, also processes runoff (mrro).
+    MALI unstructured mesh. Also processes runoff (mrro).
     """
 
     def __init__(self, test_group):
@@ -44,14 +44,10 @@ class Atmosphere(TestCase):
         self.add_step(ProcessTemperature(test_case=self))
         self.add_step(ProcessSmbGradient(test_case=self))
         self.add_step(ProcessTemperatureGradient(test_case=self))
+        self.add_step(ProcessRunoff(test_case=self))
 
     def configure(self):
         """
         Configures test case
         """
         configure_testgroup(config=self.config)
-
-        # Add runoff step only for GrIS
-        ice_sheet = self.config.get("ismip7", "ice_sheet")
-        if ice_sheet == "gis":
-            self.add_step(ProcessRunoff(test_case=self))
