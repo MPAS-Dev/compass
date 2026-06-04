@@ -1,3 +1,6 @@
+from compass.landice.tests.ismip7_forcing.atmosphere.process_runoff import (
+    ProcessRunoff,
+)
 from compass.landice.tests.ismip7_forcing.atmosphere.process_smb import (
     ProcessSmb,
 )
@@ -18,10 +21,10 @@ from compass.testcase import TestCase
 
 class Atmosphere(TestCase):
     """
-    A test case for processing ISMIP7 AIS atmosphere forcing data.
+    A test case for processing ISMIP7 atmosphere forcing data.
     Remaps monthly SMB, temperature, and annual gradients (SMB and
-    temperature) from the ISMIP7 2km polar stereographic grid to the
-    MALI unstructured mesh.
+    temperature) from the ISMIP7 polar stereographic grid to the
+    MALI unstructured mesh. For GrIS, also processes runoff (mrro).
     """
 
     def __init__(self, test_group):
@@ -47,3 +50,8 @@ class Atmosphere(TestCase):
         Configures test case
         """
         configure_testgroup(config=self.config)
+
+        # Add runoff step only for GrIS
+        ice_sheet = self.config.get("ismip7", "ice_sheet")
+        if ice_sheet == "gis":
+            self.add_step(ProcessRunoff(test_case=self))

@@ -9,15 +9,18 @@ from mpas_tools.logging import check_call
 from compass.landice.tests.ismip7_forcing.create_mapfile import (
     build_mapping_file,
 )
+from compass.landice.tests.ismip7_forcing.ice_sheet_params import get_params
 from compass.step import Step
 
 
 class ProcessThermalForcing(Step):
     """
     A step for processing ISMIP7 ocean thermal forcing (tf) data.
-    Remaps annual 3D thermal forcing from the ISMIP7 8km polar
+    For AIS: Remaps annual 3D thermal forcing from the ISMIP7 8km polar
     stereographic grid to the MALI unstructured mesh, preserving
     the 30 vertical ocean layers.
+    For GrIS: Remaps monthly 2D thermal forcing from the ISMIP7 1km
+    grid to the MALI unstructured mesh.
     """
 
     def __init__(self, test_case):
@@ -37,7 +40,7 @@ class ProcessThermalForcing(Step):
         Set up this step of the test case
         """
         config = self.config
-        section = config["ismip7_ais"]
+        section = config["ismip7"]
         base_path_mali = section.get("base_path_mali")
         mali_mesh_file = section.get("mali_mesh_file")
 
@@ -51,24 +54,30 @@ class ProcessThermalForcing(Step):
         """
         logger = self.logger
         config = self.config
+        params = get_params(config)
 
-        section = config["ismip7_ais"]
+        section = config["ismip7"]
         base_path_ismip7 = section.get("base_path_ismip7")
         mali_mesh_name = section.get("mali_mesh_name")
         mali_mesh_file = section.get("mali_mesh_file")
         model = section.get("model")
         scenario = section.get("scenario")
         output_base_path = section.get("output_base_path")
+        ice_sheet = section.get("ice_sheet")
 
-        section = config["ismip7_ais_ocean_thermal"]
+        section = config["ismip7_ocean_thermal"]
         method_remap = section.get("method_remap")
         start_year = section.getint("start_year")
         end_year = section.getint("end_year")
 
-        # Discover input files (decade-spanning files)
-        input_path = os.path.join(base_path_ismip7, "ocean", "tf", "v3")
-        file_pattern = (f"tf_AIS_{model}_{scenario}_"
-                        f"ocean_v3_*.nc")
+        # Discover input files
+        prefix = params['prefix']
+        ocean_version = params['ocean_version']
+        ocean_3d = params['ocean_3d']
+        input_path = os.path.join(base_path_ismip7, "ocean", "tf",
+                                  ocean_version)
+        file_pattern = (f"tf_{prefix}_{model}_{scenario}_"
+                        f"ocean_{ocean_version}_*.nc")
         all_files = sorted(glob.glob(os.path.join(input_path, file_pattern)))
 
         if not all_files:
@@ -77,14 +86,15 @@ class ProcessThermalForcing(Step):
                 f"  {os.path.join(input_path, file_pattern)}")
 
         # Filter to files that overlap with the requested year range.
-        # Files are named with decade ranges (e.g., 1850-1859).
+        # AIS files are named with decade ranges (e.g., 1850-1859).
+        # GrIS files are named with single years (e.g., 2015).
         input_files = []
         for f in all_files:
             # Extract year range from filename (last part before .nc)
             year_str = os.path.basename(f).split("_")[-1].replace(".nc", "")
             parts = year_str.split("-")
             file_start = int(parts[0])
-            file_end = int(parts[1])
+            file_end = int(parts[-1])  # same as start for single-year files
             if file_end >= start_year and file_start <= end_year:
                 input_files.append(f)
 
@@ -97,9 +107,8 @@ class ProcessThermalForcing(Step):
                     f"overlapping years {start_year}-{end_year}")
 
         # Build mapping file using the first input file as grid template.
-        # Ocean grid (761x761, ~8km) differs from atmosphere (3041x3041, 2km).
-        mapping_file = (f"map_ismip7_ocean_8km_to_{mali_mesh_name}_"
-                        f"{method_remap}.nc")
+        mapping_file = (f"map_ismip7_{ice_sheet}_ocean_to_"
+                        f"{mali_mesh_name}_{method_remap}.nc")
 
         if not os.path.exists(mapping_file):
             logger.info("Building mapping file for ocean grid...")
@@ -133,8 +142,12 @@ class ProcessThermalForcing(Step):
         output_file = (f"{mali_mesh_name}_thermal_forcing_{model}_{scenario}_"
                        f"{start_year}-{end_year}.nc")
 
-        self._combine_and_rename(remapped_files, output_file,
-                                 start_year, end_year)
+        if ocean_3d:
+            self._combine_and_rename_3d(remapped_files, output_file,
+                                        start_year, end_year)
+        else:
+            self._combine_and_rename_2d(remapped_files, output_file,
+                                        start_year, end_year)
 
         # Clean up remapped files
         logger.info("Cleaning up temporary remapped files...")
@@ -153,11 +166,12 @@ class ProcessThermalForcing(Step):
 
         logger.info(f"Done. Output: {dst}")
 
-    def _combine_and_rename(self, remapped_files, output_file,
-                            start_year, end_year):
+    def _combine_and_rename_3d(self, remapped_files, output_file,
+                               start_year, end_year):
         """
-        Combine decade-spanning remapped files, subset to the requested
-        year range, and rename variables/dimensions to MALI conventions.
+        Combine decade-spanning remapped files (AIS), subset to the
+        requested year range, and rename variables/dimensions to MALI
+        conventions for 3D thermal forcing.
 
         Parameters
         ----------
@@ -253,6 +267,80 @@ class ProcessThermalForcing(Step):
         # Also drop the renamed z coordinate if it persists
         if "nISMIP6OceanLayers" in ds.coords:
             ds = ds.drop_vars("nISMIP6OceanLayers")
+
+        # Drop Time coordinate values (keep as dimension only)
+        if "Time" in ds.coords:
+            ds = ds.drop_vars("Time")
+
+        write_netcdf(ds, output_file)
+
+    def _combine_and_rename_2d(self, remapped_files, output_file,
+                               start_year, end_year):
+        """
+        Combine yearly remapped files (GrIS), subset to the requested
+        year range, and rename variables/dimensions to MALI conventions
+        for 2D thermal forcing.
+
+        Parameters
+        ----------
+        remapped_files : list of str
+            List of remapped NetCDF file paths
+
+        output_file : str
+            Output file path
+
+        start_year : int
+            First year to include in output
+
+        end_year : int
+            Last year to include in output
+        """
+        ds = xr.open_mfdataset(remapped_files, concat_dim="time",
+                               combine="nested", engine="netcdf4")
+
+        # Subset to requested year range
+        years = ds.time.dt.year
+        ds = ds.sel(time=(years >= start_year) & (years <= end_year))
+
+        # Rename dimensions to MALI conventions
+        rename_dims = {}
+        if "time" in ds.dims:
+            rename_dims["time"] = "Time"
+        if "ncol" in ds.dims:
+            rename_dims["ncol"] = "nCells"
+        if rename_dims:
+            ds = ds.rename(rename_dims)
+
+        # Rename thermal forcing variable
+        if "tf" in ds:
+            ds = ds.rename({"tf": "ismip6_2dThermalForcing"})
+
+        # Add xtime variable with monthly timestamps
+        xtime = []
+        for t_index in range(ds.sizes["Time"]):
+            date = ds.Time[t_index]
+            yr = int(date.dt.year.values)
+            mo = int(date.dt.month.values)
+            date_str = f"{yr:04d}-{mo:02d}-15_00:00:00".ljust(64)
+            xtime.append(date_str)
+
+        ds["xtime"] = ("Time", xtime)
+        ds["xtime"] = ds.xtime.astype("S")
+
+        # Set attributes
+        ds["ismip6_2dThermalForcing"].attrs = {
+            "long_name": "2D thermal forcing for ISMIP6 ice-shelf "
+                         "melting parameterization",
+            "units": "degC",
+        }
+
+        # Drop auxiliary variables from remapping
+        vars_to_drop = [v for v in ["lon", "lon_vertices", "lat",
+                                    "lat_vertices", "area",
+                                    "time_bnds", "x_bnds", "y_bnds"]
+                        if v in ds]
+        if vars_to_drop:
+            ds = ds.drop_vars(vars_to_drop)
 
         # Drop Time coordinate values (keep as dimension only)
         if "Time" in ds.coords:

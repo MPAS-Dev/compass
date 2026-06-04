@@ -9,9 +9,11 @@ from compass.testcase import TestCase
 
 class OceanThermal(TestCase):
     """
-    A test case for processing ISMIP7 AIS ocean thermal forcing data.
-    Remaps annual 3D thermal forcing from the ISMIP7 8km polar
-    stereographic grid to the MALI unstructured mesh.
+    A test case for processing ISMIP7 ocean thermal forcing data.
+    For AIS: Remaps annual 3D thermal forcing from the ISMIP7 8km
+    polar stereographic grid to the MALI mesh.
+    For GrIS: Remaps monthly 2D thermal forcing from the ISMIP7 1km
+    grid to the MALI mesh.
     """
 
     def __init__(self, test_group):

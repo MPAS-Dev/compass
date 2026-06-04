@@ -13,11 +13,11 @@ from compass.landice.tests.ismip7_forcing.ice_sheet_params import get_params
 from compass.step import Step
 
 
-class ProcessSmb(Step):
+class ProcessRunoff(Step):
     """
-    A step for processing ISMIP7 surface mass balance (acabf) data.
-    Remaps monthly full-field SMB from the ISMIP7 2km polar stereographic
-    grid to the MALI unstructured mesh.
+    A step for processing ISMIP7 ice sheet runoff (mrro) data.
+    Remaps monthly runoff from the ISMIP7 polar stereographic
+    grid to the MALI unstructured mesh. GrIS only.
     """
 
     def __init__(self, test_case):
@@ -29,7 +29,7 @@ class ProcessSmb(Step):
         test_case : compass.landice.tests.ismip7_forcing.atmosphere.Atmosphere
             The test case this step belongs to
         """
-        super().__init__(test_case=test_case, name="process_smb")
+        super().__init__(test_case=test_case, name="process_runoff")
 
     def setup(self):
         """
@@ -59,6 +59,7 @@ class ProcessSmb(Step):
         model = section.get("model")
         scenario = section.get("scenario")
         output_base_path = section.get("output_base_path")
+        ice_sheet = section.get("ice_sheet")
 
         section = config["ismip7_atmosphere"]
         method_remap = section.get("method_remap")
@@ -69,33 +70,32 @@ class ProcessSmb(Step):
         prefix = params['prefix']
         resolution = params['atm_resolution']
         version = params['atm_version']
-        input_path = os.path.join(base_path_ismip7, "acabf", version)
-        file_pattern = (f"acabf_{prefix}_{model}_{scenario}_"
+        input_path = os.path.join(base_path_ismip7, "mrro", version)
+        file_pattern = (f"mrro_{prefix}_{model}_{scenario}_"
                         f"SDBN1-{resolution}_{version}_*.nc")
         all_files = sorted(glob.glob(os.path.join(input_path, file_pattern)))
 
         if not all_files:
             raise FileNotFoundError(
-                f"No SMB files found matching pattern:\n"
+                f"No runoff files found matching pattern:\n"
                 f"  {os.path.join(input_path, file_pattern)}")
 
         # Filter to requested year range
         input_files = []
         for f in all_files:
-            # Extract year from filename (last part before .nc)
             year = int(os.path.basename(f).split("_")[-1].replace(".nc", ""))
             if start_year <= year <= end_year:
                 input_files.append(f)
 
         if not input_files:
             raise FileNotFoundError(
-                f"No SMB files found for year range {start_year}-{end_year}")
+                f"No runoff files found for year range "
+                f"{start_year}-{end_year}")
 
-        logger.info(f"Found {len(input_files)} SMB files for years "
+        logger.info(f"Found {len(input_files)} runoff files for years "
                     f"{start_year}-{end_year}")
 
-        # Build mapping file using the first input file as the grid template
-        ice_sheet = config.get("ismip7", "ice_sheet")
+        # Build mapping file (reuse if already created by other atm steps)
         mapping_file = (f"map_ismip7_{ice_sheet}_atm_to_"
                         f"{mali_mesh_name}_{method_remap}.nc")
 
@@ -122,13 +122,13 @@ class ProcessSmb(Step):
                     "-i", input_file,
                     "-o", remapped_file,
                     "-m", mapping_file,
-                    "-v", "acabf"]
+                    "-v", "mrro"]
 
             check_call(args, logger=logger)
 
         # Combine remapped files and rename to MALI conventions
         logger.info("Combining remapped files and renaming variables...")
-        output_file = (f"{mali_mesh_name}_SMB_{model}_{scenario}_"
+        output_file = (f"{mali_mesh_name}_runoff_{model}_{scenario}_"
                        f"{start_year}-{end_year}.nc")
 
         self._combine_and_rename(remapped_files, output_file)
@@ -176,8 +176,8 @@ class ProcessSmb(Step):
             ds = ds.rename(rename_dims)
 
         # Rename variable
-        if "acabf" in ds:
-            ds = ds.rename({"acabf": "sfcMassBal"})
+        if "mrro" in ds:
+            ds = ds.rename({"mrro": "ismip6Runoff"})
 
         # Add xtime variable with monthly timestamps
         xtime = []
@@ -192,8 +192,8 @@ class ProcessSmb(Step):
         ds["xtime"] = ds.xtime.astype("S")
 
         # Set attributes
-        ds["sfcMassBal"].attrs = {
-            "long_name": "surface mass balance",
+        ds["ismip6Runoff"].attrs = {
+            "long_name": "ice sheet runoff",
             "units": "kg m-2 s-1",
         }
 
@@ -205,4 +205,3 @@ class ProcessSmb(Step):
             ds = ds.drop_vars(vars_to_drop)
 
         write_netcdf(ds, output_file)
-        ds.close()

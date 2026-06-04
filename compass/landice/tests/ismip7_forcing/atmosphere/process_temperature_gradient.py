@@ -9,6 +9,7 @@ from mpas_tools.logging import check_call
 from compass.landice.tests.ismip7_forcing.create_mapfile import (
     build_mapping_file,
 )
+from compass.landice.tests.ismip7_forcing.ice_sheet_params import get_params
 from compass.step import Step
 
 
@@ -37,7 +38,7 @@ class ProcessTemperatureGradient(Step):
         Set up this step of the test case
         """
         config = self.config
-        section = config["ismip7_ais"]
+        section = config["ismip7"]
         base_path_mali = section.get("base_path_mali")
         mali_mesh_file = section.get("mali_mesh_file")
 
@@ -51,8 +52,9 @@ class ProcessTemperatureGradient(Step):
         """
         logger = self.logger
         config = self.config
+        params = get_params(config)
 
-        section = config["ismip7_ais"]
+        section = config["ismip7"]
         base_path_ismip7 = section.get("base_path_ismip7")
         mali_mesh_name = section.get("mali_mesh_name")
         mali_mesh_file = section.get("mali_mesh_file")
@@ -60,15 +62,18 @@ class ProcessTemperatureGradient(Step):
         scenario = section.get("scenario")
         output_base_path = section.get("output_base_path")
 
-        section = config["ismip7_ais_atmosphere"]
+        section = config["ismip7_atmosphere"]
         method_remap = section.get("method_remap")
         start_year = section.getint("start_year")
         end_year = section.getint("end_year")
 
         # Discover input files
-        input_path = os.path.join(base_path_ismip7, "dtsdz", "v2")
-        file_pattern = (f"dtsdz_AIS_{model}_{scenario}_"
-                        f"SDBN1-2000m_v2_*.nc")
+        prefix = params['prefix']
+        resolution = params['atm_resolution']
+        version = params['atm_version']
+        input_path = os.path.join(base_path_ismip7, "dtsdz", version)
+        file_pattern = (f"dtsdz_{prefix}_{model}_{scenario}_"
+                        f"SDBN1-{resolution}_{version}_*.nc")
         all_files = sorted(glob.glob(os.path.join(input_path, file_pattern)))
 
         if not all_files:
@@ -92,7 +97,9 @@ class ProcessTemperatureGradient(Step):
                     f"for years {start_year}-{end_year}")
 
         # Build mapping file (reuse if already created by other steps)
-        mapping_file = f"map_ismip7_2km_to_{mali_mesh_name}_{method_remap}.nc"
+        ice_sheet = config.get("ismip7", "ice_sheet")
+        mapping_file = (f"map_ismip7_{ice_sheet}_atm_to_"
+                        f"{mali_mesh_name}_{method_remap}.nc")
 
         if not os.path.exists(mapping_file):
             logger.info("Building mapping file...")

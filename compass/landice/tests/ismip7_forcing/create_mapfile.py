@@ -7,9 +7,9 @@ from mpas_tools.scrip.from_mpas import scrip_from_mpas
 
 def build_mapping_file(config, logger, ismip7_grid_file,
                        mapping_file, mali_mesh_file=None,
-                       method_remap=None):
+                       method_remap=None, projection=None):
     """
-    Build a mapping file for regridding from the ISMIP7 2km polar
+    Build a mapping file for regridding from an ISMIP7 polar
     stereographic grid to the MALI unstructured mesh.
 
     Parameters
@@ -31,6 +31,10 @@ def build_mapping_file(config, logger, ismip7_grid_file,
 
     method_remap : str, optional
         Remapping method: 'bilinear', 'neareststod', or 'conserve'
+
+    projection : str, optional
+        Projection flag for SCRIP generation (e.g., 'ais-bedmap2',
+        'gis-bamber'). If not provided, reads from ice_sheet_params.
     """
 
     if os.path.exists(mapping_file):
@@ -48,8 +52,14 @@ def build_mapping_file(config, logger, ismip7_grid_file,
         raise ValueError("Remapping method must be provided. "
                          "Options: 'bilinear', 'neareststod', 'conserve'.")
 
-    # AIS polar stereographic projection (EPSG:3031)
-    ismip7_projection = "ais-bedmap2"
+    # Determine projection from parameter or config
+    if projection is None:
+        from compass.landice.tests.ismip7_forcing.ice_sheet_params import (
+            get_params,
+        )
+        projection = get_params(config)['projection']
+
+    ismip7_projection = projection
 
     # name temporary scrip files
     source_grid_scripfile = "temp_source_scrip.nc"
@@ -81,7 +91,7 @@ def build_mapping_file(config, logger, ismip7_grid_file,
     # create a mapping file using ESMF_RegridWeightGen
     logger.info(f"Creating mapping file with method: {method_remap}")
 
-    section = config["ismip7_ais"]
+    section = config["ismip7"]
     cores = section.getint("esmf_ntasks")
 
     parallel_executable = config.get("parallel", "parallel_executable")
