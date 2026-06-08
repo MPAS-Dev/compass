@@ -54,6 +54,22 @@ class ProcessThermalForcing(Step):
         """
         Run this step of the test case
         """
+        config = self.config
+        section = config["ismip7"]
+
+        # Check if we should process climatology data
+        if section.getboolean("process_ocean_climatology"):
+            self._run_climatology()
+
+        # Check if we should process scenario (time-varying) data
+        if section.getboolean("process_ocean_thermal"):
+            self._run_scenario()
+
+    def _run_scenario(self):
+        """
+        Process time-varying ocean thermal forcing from an ESM
+        (e.g., CESM2-WACCM historical or ssp585).
+        """
         logger = self.logger
         config = self.config
         params = get_params(config)
@@ -170,6 +186,95 @@ class ProcessThermalForcing(Step):
         # Place output in appropriate directory
         output_path = os.path.join(output_base_path, "ocean_thermal_forcing",
                                    f"{model}_{scenario}")
+        if not os.path.exists(output_path):
+            os.makedirs(output_path)
+
+        dst = os.path.join(output_path, output_file)
+        shutil.copy(output_file, dst)
+
+        logger.info(f"Done. Output: {dst}")
+
+    def _run_climatology(self):
+        """
+        Process observational ocean thermal forcing climatology
+        (e.g., Zhou et al. for AIS). This is a static 3D field with
+        no time dimension.
+        """
+        logger = self.logger
+        config = self.config
+
+        section = config["ismip7"]
+        mali_mesh_name = section.get("mali_mesh_name")
+        mali_mesh_file = section.get("mali_mesh_file")
+        output_base_path = section.get("output_base_path")
+        ice_sheet = section.get("ice_sheet")
+
+        section = config["ismip7_ocean_climatology"]
+        method_remap = section.get("method_remap")
+        base_path_climatology = section.get("base_path_climatology")
+        version = 'v3'
+
+        # Discover climatology TF file
+        input_path = os.path.join(base_path_climatology, "tf", version)
+        all_files = sorted(glob.glob(os.path.join(input_path, "tf_*.nc")))
+
+        if not all_files:
+            raise FileNotFoundError(
+                f"No ocean climatology TF files found in:\n"
+                f"  {input_path}")
+
+        # Use the first (and likely only) file
+        input_file = all_files[0]
+        logger.info(f"Processing ocean TF climatology: "
+                    f"{os.path.basename(input_file)}")
+
+        # Build mapping file using the climatology file as grid template.
+        mapping_file = (f"map_ismip7_{ice_sheet}_ocean_to_"
+                        f"{mali_mesh_name}_{method_remap}.nc")
+
+        if not os.path.exists(mapping_file):
+            logger.info("Building mapping file for ocean grid...")
+            build_mapping_file(config, logger,
+                               input_file, mapping_file,
+                               mali_mesh_file=mali_mesh_file,
+                               method_remap=method_remap)
+
+        # Extrapolate and remap
+        basename = os.path.basename(input_file)
+        remapped_file = f"remapped_{basename}"
+
+        if not os.path.exists(remapped_file):
+            extrap_file = f"extrap_{basename}"
+            if not os.path.exists(extrap_file):
+                self._extrapolate_source(input_file, extrap_file, "tf",
+                                         logger)
+
+            logger.info(f"  Remapping: {basename}")
+            args = ["ncremap",
+                    "-i", extrap_file,
+                    "-o", remapped_file,
+                    "-m", mapping_file,
+                    "-v", "tf"]
+
+            check_call(args, logger=logger)
+
+            # Clean up extrapolated source file
+            os.remove(extrap_file)
+
+        # Rename to MALI conventions
+        logger.info("Renaming variables to MALI conventions...")
+        output_file = (f"{mali_mesh_name}_thermal_forcing_climatology_"
+                       f"{version}.nc")
+
+        self._rename_climatology_3d(remapped_file, output_file)
+
+        # Clean up remapped file
+        if os.path.exists(remapped_file):
+            os.remove(remapped_file)
+
+        # Place output in appropriate directory
+        output_path = os.path.join(output_base_path, "ocean_thermal_forcing",
+                                   "climatology")
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 
@@ -369,6 +474,87 @@ class ProcessThermalForcing(Step):
         # Drop Time coordinate values (keep as dimension only)
         if "Time" in ds.coords:
             ds = ds.drop_vars("Time")
+
+        write_netcdf(ds, output_file)
+
+    def _rename_climatology_3d(self, remapped_file, output_file):
+        """
+        Rename dimensions and variables in a remapped 3D climatology
+        file (no time dimension) to MALI conventions.
+
+        Parameters
+        ----------
+        remapped_file : str
+            Path to the remapped NetCDF file
+
+        output_file : str
+            Output file path
+        """
+        ds = xr.open_dataset(remapped_file, engine="netcdf4")
+
+        # Extract z coordinate and bounds before renaming
+        z_ocean = ds["z"]
+        z_bnds = ds["z_bnds"]
+
+        # Rename dimensions to MALI conventions
+        rename_dims = {}
+        if "ncol" in ds.dims:
+            rename_dims["ncol"] = "nCells"
+        if "z" in ds.dims:
+            rename_dims["z"] = "nISMIP6OceanLayers"
+        if "bnds" in ds.dims:
+            rename_dims["bnds"] = "TWO"
+        if rename_dims:
+            ds = ds.rename(rename_dims)
+
+        # Rename thermal forcing variable
+        if "tf" in ds:
+            ds = ds.rename({"tf": "ismip6shelfMelt_3dThermalForcing"})
+
+        # Set z coordinate and bounds as MALI-named variables
+        ds["ismip6shelfMelt_zOcean"] = (
+            "nISMIP6OceanLayers", z_ocean.values)
+        ds["ismip6shelfMelt_zBndsOcean"] = (
+            ("TWO", "nISMIP6OceanLayers"), z_bnds.values.T)
+
+        # Transpose thermal forcing to MALI dimension order
+        # NetCDF (C order): nCells, nISMIP6OceanLayers
+        ds["ismip6shelfMelt_3dThermalForcing"] = \
+            ds["ismip6shelfMelt_3dThermalForcing"].transpose(
+                "nCells", "nISMIP6OceanLayers")
+
+        # Ensure double precision for MALI compatibility
+        ds["ismip6shelfMelt_3dThermalForcing"] = \
+            ds["ismip6shelfMelt_3dThermalForcing"].astype(float)
+
+        # Set attributes
+        ds["ismip6shelfMelt_3dThermalForcing"].attrs = {
+            "long_name": "thermal forcing for ISMIP6 ice-shelf "
+                         "melting method",
+            "units": "degC",
+        }
+        ds["ismip6shelfMelt_3dThermalForcing"].encoding.clear()
+        ds["ismip6shelfMelt_zOcean"].attrs = {
+            "long_name": "depth coordinate for ocean thermal forcing",
+            "units": "m",
+        }
+        ds["ismip6shelfMelt_zBndsOcean"].attrs = {
+            "long_name": "bounds for ISMIP6 ocean layers",
+            "units": "m",
+        }
+
+        # Drop auxiliary variables from remapping
+        vars_to_drop = [v for v in ["lon", "lon_vertices", "lat",
+                                    "lat_vertices", "lon_bnds", "lat_bnds",
+                                    "area", "z_bnds", "time_bnds",
+                                    "x_bnds", "y_bnds"]
+                        if v in ds]
+        if vars_to_drop:
+            ds = ds.drop_vars(vars_to_drop)
+
+        # Drop the z coordinate if it persists
+        if "nISMIP6OceanLayers" in ds.coords:
+            ds = ds.drop_vars("nISMIP6OceanLayers")
 
         write_netcdf(ds, output_file)
 
