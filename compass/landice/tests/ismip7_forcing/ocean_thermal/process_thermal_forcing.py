@@ -241,6 +241,10 @@ class ProcessThermalForcing(Step):
             ds["ismip6shelfMelt_3dThermalForcing"].transpose(
                 "Time", "nCells", "nISMIP6OceanLayers")
 
+        # Ensure double precision for MALI compatibility
+        ds["ismip6shelfMelt_3dThermalForcing"] = \
+            ds["ismip6shelfMelt_3dThermalForcing"].astype(float)
+
         # Add xtime variable with annual timestamps
         xtime = []
         for t_index in range(ds.sizes["Time"]):
@@ -258,6 +262,8 @@ class ProcessThermalForcing(Step):
                          "melting method",
             "units": "degC",
         }
+        # Remove stale encoding (e.g. 'coordinates' from ncremap)
+        ds["ismip6shelfMelt_3dThermalForcing"].encoding.clear()
         ds["ismip6shelfMelt_zOcean"].attrs = {
             "long_name": "depth coordinate for ocean thermal forcing",
             "units": "m",
@@ -327,6 +333,10 @@ class ProcessThermalForcing(Step):
         if "tf" in ds:
             ds = ds.rename({"tf": "ismip6_2dThermalForcing"})
 
+        # Ensure double precision for MALI compatibility
+        ds["ismip6_2dThermalForcing"] = \
+            ds["ismip6_2dThermalForcing"].astype(float)
+
         # Add xtime variable with monthly timestamps
         xtime = []
         for t_index in range(ds.sizes["Time"]):
@@ -345,6 +355,8 @@ class ProcessThermalForcing(Step):
                          "melting parameterization",
             "units": "degC",
         }
+        # Remove stale encoding (e.g. 'coordinates' from ncremap)
+        ds["ismip6_2dThermalForcing"].encoding.clear()
 
         # Drop auxiliary variables from remapping
         vars_to_drop = [v for v in ["lon", "lon_vertices", "lat",

@@ -204,5 +204,10 @@ class ProcessSmb(Step):
         if vars_to_drop:
             ds = ds.drop_vars(vars_to_drop)
 
+        # Drop Time coordinate values (keep as dimension only);
+        # MALI uses xtime, not CF-encoded time coordinates
+        if "Time" in ds.coords:
+            ds = ds.drop_vars("Time")
+
         write_netcdf(ds, output_file)
         ds.close()
