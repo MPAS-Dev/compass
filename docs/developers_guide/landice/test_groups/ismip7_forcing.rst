@@ -87,13 +87,29 @@ test case processes the ISMIP7 ocean thermal forcing. It contains a single step,
 which handles both AIS (3D, decade-spanning files) and GrIS (2D, yearly files)
 by branching on the ``ocean_3d`` parameter from ``ice_sheet_params``.
 
-For AIS, the step:
+The ``run()`` method dispatches to two sub-methods based on the boolean config
+options ``process_ocean_thermal`` and ``process_ocean_climatology`` in the
+``[ismip7]`` section:
+
+* ``_run_scenario()``: Processes time-varying ESM scenario data (model +
+  scenario combination). Uses config from ``[ismip7_ocean_thermal]``.
+* ``_run_climatology()``: Processes the static observational climatology
+  (Zhou et al., AIS only). Uses config from ``[ismip7_ocean_climatology]``.
+  The TF version (currently v3) is hard-coded.
+
+For AIS scenario data, the step:
 
 * Remaps thermal forcing preserving 30 vertical ocean layers
 * Produces ``ismip6shelfMelt_3dThermalForcing`` (dims: Time × nCells ×
   nISMIP6OceanLayers)
 * Includes depth coordinate variables ``ismip6shelfMelt_zOcean`` and
   ``ismip6shelfMelt_zBndsOcean``
+
+For AIS climatology data, the step:
+
+* Extrapolates fill values, remaps, and renames to MALI conventions
+* Produces ``ismip6shelfMelt_3dThermalForcing`` (dims: nCells ×
+  nISMIP6OceanLayers) — no Time dimension
 
 For GrIS, the step:
 

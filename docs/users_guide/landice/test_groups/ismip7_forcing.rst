@@ -18,7 +18,9 @@ The test group includes two test cases: ``atmosphere`` and ``ocean_thermal``.
 
 * The ``ocean_thermal`` test case has one step: ``process_thermal_forcing``.
   For AIS this produces 3D thermal forcing (with 30 ocean depth layers); for
-  GrIS it produces 2D (depth-averaged) thermal forcing.
+  GrIS it produces 2D (depth-averaged) thermal forcing. The step can also
+  process the observational ocean thermal forcing climatology (Zhou et al.)
+  for AIS, controlled by the ``process_ocean_climatology`` config option.
 
 (For more details on the steps of each test case, see
 :ref:`landice_ismip7_forcing_atmosphere` and
@@ -65,6 +67,12 @@ For AIS ocean thermal (8km, 30 depth levels, decade files):
 
    ocean/tf/v3/tf_AIS_{model}_{scenario}_ocean_v3_{start_year}-{end_year}.nc
 
+For AIS ocean thermal climatology (8km, 30 depth levels, static):
+
+.. code-block:: none
+
+   {base_path_climatology}/tf/v3/tf_AIS_obs_ocean_climatology_*.nc
+
 For GrIS atmosphere (1km, polar stereographic EPSG:3413):
 
 .. code-block:: none
@@ -86,7 +94,7 @@ For GrIS ocean thermal (same 1km grid, 2D, yearly files):
 config options
 --------------
 
-The ``ismip7_forcing`` test group uses three config sections. The default
+The ``ismip7_forcing`` test group uses four config sections. The default
 values are:
 
 .. code-block:: cfg
@@ -121,6 +129,12 @@ values are:
    # Number of MPI tasks for ESMF_RegridWeightGen
    esmf_ntasks = 128
 
+   # Whether to process time-varying ocean thermal forcing (ESM scenario data)
+   process_ocean_thermal = true
+
+   # Whether to process observational ocean thermal forcing climatology
+   process_ocean_climatology = true
+
    # config options for ismip7 atmosphere forcing
    [ismip7_atmosphere]
 
@@ -145,8 +159,22 @@ values are:
    # End year for processing
    end_year = 2014
 
+   # config options for ismip7 ocean thermal forcing climatology
+   [ismip7_ocean_climatology]
+
+   # Remapping method: bilinear, neareststod, conserve
+   method_remap = bilinear
+
+   # Base path to observational climatology data
+   base_path_climatology = /path/to/ISMIP7/forcing/AIS/obs/zhou_annual_06_nov
+
 All ``NotAvailable`` options must be overridden in a user config file passed
 at setup time (e.g., ``compass setup ... -f my_ismip7.cfg``).
+
+The boolean options ``process_ocean_thermal`` and ``process_ocean_climatology``
+control which processing paths are executed when the ``ocean_thermal`` test
+case is run. Both default to ``true``. Set one to ``false`` in your user
+config to skip that processing path.
 
 .. _landice_ismip7_forcing_atmosphere:
 
@@ -185,12 +213,27 @@ The ``landice/ismip7_forcing/ocean_thermal`` test case processes the ISMIP7
 ocean thermal forcing (``tf``) and remaps it from the native polar
 stereographic grid to the MALI unstructured mesh.
 
-For **AIS**, thermal forcing is 3D with 30 vertical ocean layers. The input
-files span decades (e.g., 1850-1859). The output variable is
-``ismip6shelfMelt_3dThermalForcing`` with dimension
+The step supports two processing modes, controlled by boolean config options
+in the ``[ismip7]`` section:
+
+* **Scenario (time-varying) data** (``process_ocean_thermal = true``):
+  Processes ESM-driven thermal forcing for a given model/scenario combination.
+
+* **Observational climatology** (``process_ocean_climatology = true``):
+  Processes the static Zhou et al. observational thermal forcing climatology
+  (AIS only). This is a time-invariant 3D field referenced to 1995-2024.
+
+Both modes can be enabled simultaneously.
+
+For **AIS** scenario data, thermal forcing is 3D with 30 vertical ocean
+layers. The input files span decades (e.g., 1850-1859). The output variable
+is ``ismip6shelfMelt_3dThermalForcing`` with dimension
 ``nISMIP6OceanLayers``. Associated depth coordinate variables
 ``ismip6shelfMelt_zOcean`` and ``ismip6shelfMelt_zBndsOcean`` are also
 produced.
+
+For **AIS** climatology data, the output is the same 3D thermal forcing field
+but without a Time dimension, producing a single static file.
 
 For **GrIS**, thermal forcing is 2D (depth-averaged), with monthly temporal
 resolution and yearly input files. The output variable is
