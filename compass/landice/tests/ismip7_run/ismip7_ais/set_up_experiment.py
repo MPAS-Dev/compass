@@ -105,7 +105,8 @@ class SetUpExperiment(Step):
             shutil.copy(ctrl_tf_path, self.work_dir)
 
             # Find atmosphere climatology files
-            smb_files = glob.glob(os.path.join(ctrl_atm_path, '*smb*.nc'))
+            smb_files = glob.glob(os.path.join(ctrl_atm_path, '*SMB*.nc'))
+            smb_files = [f for f in smb_files if 'gradient' not in f]
             if len(smb_files) == 1:
                 smb_fname = os.path.split(smb_files[0])[-1]
                 shutil.copy(smb_files[0], self.work_dir)
@@ -115,6 +116,7 @@ class SetUpExperiment(Step):
 
             temp_files = glob.glob(
                 os.path.join(ctrl_atm_path, '*temperature*.nc'))
+            temp_files = [f for f in temp_files if 'gradient' not in f]
             if len(temp_files) == 1:
                 temp_fname = os.path.split(temp_files[0])[-1]
                 shutil.copy(temp_files[0], self.work_dir)
@@ -131,7 +133,7 @@ class SetUpExperiment(Step):
                 runoff_fname = ''  # runoff may not exist for ctrl
 
             smb_grad_files = glob.glob(
-                os.path.join(ctrl_atm_path, '*smb_gradient*.nc'))
+                os.path.join(ctrl_atm_path, '*SMB_gradient*.nc'))
             smb_grad_fname = ''
             if len(smb_grad_files) == 1:
                 smb_grad_fname = os.path.split(smb_grad_files[0])[-1]
@@ -150,8 +152,9 @@ class SetUpExperiment(Step):
             ocean_dir = os.path.join(forcing_dir, 'ocean_thermal_forcing')
 
             # SMB forcing
-            smb_search = os.path.join(atm_dir, '*smb_*.nc')
+            smb_search = os.path.join(atm_dir, '*SMB_*.nc')
             smb_list = glob.glob(smb_search)
+            smb_list = [f for f in smb_list if 'gradient' not in f]
             if len(smb_list) == 1:
                 smb_fname = os.path.split(smb_list[0])[-1]
                 shutil.copy(smb_list[0], self.work_dir)
@@ -162,6 +165,7 @@ class SetUpExperiment(Step):
             # Temperature forcing
             temp_search = os.path.join(atm_dir, '*temperature_*.nc')
             temp_list = glob.glob(temp_search)
+            temp_list = [f for f in temp_list if 'gradient' not in f]
             if len(temp_list) == 1:
                 temp_fname = os.path.split(temp_list[0])[-1]
                 shutil.copy(temp_list[0], self.work_dir)
@@ -178,7 +182,7 @@ class SetUpExperiment(Step):
                 shutil.copy(runoff_list[0], self.work_dir)
 
             # SMB gradient (lapse rate)
-            smb_grad_search = os.path.join(atm_dir, '*smb_gradient_*.nc')
+            smb_grad_search = os.path.join(atm_dir, '*SMB_gradient_*.nc')
             smb_grad_list = glob.glob(smb_grad_search)
             smb_grad_fname = ''
             if len(smb_grad_list) == 1:
