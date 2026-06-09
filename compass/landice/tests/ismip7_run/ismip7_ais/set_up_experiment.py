@@ -358,11 +358,11 @@ class SetUpExperiment(Step):
         # --- Symlink restart for projections/ctrl ---
         if not is_historical:
             hist_exp = f"historical_{model}"
-            os.symlink(f"../{hist_exp}/rst.2015-01-01.nc",
-                       os.path.join(self.work_dir, 'rst.2015-01-01.nc'))
+            os.symlink(f"../{hist_exp}/rst.2015-01-15.nc",
+                       os.path.join(self.work_dir, 'rst.2015-01-15.nc'))
             with open(os.path.join(self.work_dir, "restart_timestamp"),
                       "w") as text_file:
-                text_file.write("2015-01-01_00:00:00")
+                text_file.write("2015-01-15_00:00:00")
 
         # --- Add albany yaml, graph file, load script, job script ---
         self.add_input_file(

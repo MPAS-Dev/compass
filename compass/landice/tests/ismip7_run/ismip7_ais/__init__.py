@@ -12,57 +12,57 @@ from compass.testcase import TestCase
 EXPERIMENTS = {
     'historical_CESM2-WACCM': {
         'scenario': 'historical', 'model': 'CESM2-WACCM',
-        'start_time': '2000-01-01_00:00:00',
+        'start_time': '2000-01-15_00:00:00',
         'stop_time': '2015-01-01_00:00:00',
         'is_historical': True},
     'historical_MRI-ESM2-0': {
         'scenario': 'historical', 'model': 'MRI-ESM2-0',
-        'start_time': '2000-01-01_00:00:00',
+        'start_time': '2000-01-15_00:00:00',
         'stop_time': '2015-01-01_00:00:00',
         'is_historical': True},
     'ssp370_CESM2-WACCM': {
         'scenario': 'ssp370', 'model': 'CESM2-WACCM',
-        'start_time': '2015-01-01_00:00:00',
+        'start_time': '2015-01-15_00:00:00',
         'stop_time': '2101-01-01_00:00:00',
         'is_historical': False},
     'ssp370_MRI-ESM2-0': {
         'scenario': 'ssp370', 'model': 'MRI-ESM2-0',
-        'start_time': '2015-01-01_00:00:00',
+        'start_time': '2015-01-15_00:00:00',
         'stop_time': '2101-01-01_00:00:00',
         'is_historical': False},
     'ssp126_CESM2-WACCM': {
         'scenario': 'ssp126', 'model': 'CESM2-WACCM',
-        'start_time': '2015-01-01_00:00:00',
+        'start_time': '2015-01-15_00:00:00',
         'stop_time': '2301-01-01_00:00:00',
         'is_historical': False},
     'ssp126_MRI-ESM2-0': {
         'scenario': 'ssp126', 'model': 'MRI-ESM2-0',
-        'start_time': '2015-01-01_00:00:00',
+        'start_time': '2015-01-15_00:00:00',
         'stop_time': '2301-01-01_00:00:00',
         'is_historical': False},
     'ssp585_CESM2-WACCM': {
         'scenario': 'ssp585', 'model': 'CESM2-WACCM',
-        'start_time': '2015-01-01_00:00:00',
+        'start_time': '2015-01-15_00:00:00',
         'stop_time': '2301-01-01_00:00:00',
         'is_historical': False},
     'ssp585_MRI-ESM2-0': {
         'scenario': 'ssp585', 'model': 'MRI-ESM2-0',
-        'start_time': '2015-01-01_00:00:00',
+        'start_time': '2015-01-15_00:00:00',
         'stop_time': '2301-01-01_00:00:00',
         'is_historical': False},
     'ctrl_CESM2-WACCM': {
         'scenario': 'ctrl', 'model': 'CESM2-WACCM',
-        'start_time': '2015-01-01_00:00:00',
+        'start_time': '2015-01-15_00:00:00',
         'stop_time': '2301-01-01_00:00:00',
         'is_historical': False},
     'ctrl_MRI-ESM2-0': {
         'scenario': 'ctrl', 'model': 'MRI-ESM2-0',
-        'start_time': '2015-01-01_00:00:00',
+        'start_time': '2015-01-15_00:00:00',
         'stop_time': '2301-01-01_00:00:00',
         'is_historical': False},
     'ocx': {
         'scenario': 'ocx', 'model': None,
-        'start_time': '1990-01-01_00:00:00',
+        'start_time': '1990-01-15_00:00:00',
         'stop_time': '2026-01-01_00:00:00',
         'is_historical': True},
 }
