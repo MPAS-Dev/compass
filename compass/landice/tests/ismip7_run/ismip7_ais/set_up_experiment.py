@@ -1,6 +1,5 @@
 import glob
 import os
-import shutil
 import sys
 from importlib import resources
 
@@ -90,26 +89,34 @@ class SetUpExperiment(Step):
             forcing_dir = os.path.join(forcing_basepath,
                                        f"{model}_{scenario}")
 
-        # --- Copy input files ---
+        # --- Symlink input files ---
         if is_historical:
-            shutil.copy(init_cond_path, self.work_dir)
-        shutil.copy(melt_params_path, self.work_dir)
-        shutil.copy(region_mask_path, self.work_dir)
+            os.symlink(init_cond_path,
+                       os.path.join(self.work_dir,
+                                    os.path.basename(init_cond_path)))
+        os.symlink(melt_params_path,
+                   os.path.join(self.work_dir,
+                                os.path.basename(melt_params_path)))
+        os.symlink(region_mask_path,
+                   os.path.join(self.work_dir,
+                                os.path.basename(region_mask_path)))
 
-        # --- Find and copy forcing files ---
+        # --- Find and symlink forcing files ---
         if scenario == 'ctrl':
             # Control run: use climatology files
             ctrl_tf_path = section.get('ctrl_tf_climatology_path')
             ctrl_atm_path = section.get('ctrl_atm_climatology_path')
             tf_fname = os.path.split(ctrl_tf_path)[-1]
-            shutil.copy(ctrl_tf_path, self.work_dir)
+            os.symlink(ctrl_tf_path,
+                       os.path.join(self.work_dir, tf_fname))
 
             # Find atmosphere climatology files
             smb_files = glob.glob(os.path.join(ctrl_atm_path, '*SMB*.nc'))
             smb_files = [f for f in smb_files if 'gradient' not in f]
             if len(smb_files) == 1:
                 smb_fname = os.path.split(smb_files[0])[-1]
-                shutil.copy(smb_files[0], self.work_dir)
+                os.symlink(smb_files[0],
+                           os.path.join(self.work_dir, smb_fname))
             else:
                 sys.exit(f"ERROR: Expected 1 SMB climatology file in "
                          f"{ctrl_atm_path}, found {len(smb_files)}")
@@ -119,7 +126,8 @@ class SetUpExperiment(Step):
             temp_files = [f for f in temp_files if 'gradient' not in f]
             if len(temp_files) == 1:
                 temp_fname = os.path.split(temp_files[0])[-1]
-                shutil.copy(temp_files[0], self.work_dir)
+                os.symlink(temp_files[0],
+                           os.path.join(self.work_dir, temp_fname))
             else:
                 sys.exit(f"ERROR: Expected 1 temperature climatology file in "
                          f"{ctrl_atm_path}, found {len(temp_files)}")
@@ -128,7 +136,8 @@ class SetUpExperiment(Step):
                 os.path.join(ctrl_atm_path, '*runoff*.nc'))
             if len(runoff_files) == 1:
                 runoff_fname = os.path.split(runoff_files[0])[-1]
-                shutil.copy(runoff_files[0], self.work_dir)
+                os.symlink(runoff_files[0],
+                           os.path.join(self.work_dir, runoff_fname))
             else:
                 runoff_fname = ''  # runoff may not exist for ctrl
 
@@ -137,14 +146,16 @@ class SetUpExperiment(Step):
             smb_grad_fname = ''
             if len(smb_grad_files) == 1:
                 smb_grad_fname = os.path.split(smb_grad_files[0])[-1]
-                shutil.copy(smb_grad_files[0], self.work_dir)
+                os.symlink(smb_grad_files[0],
+                           os.path.join(self.work_dir, smb_grad_fname))
 
             temp_grad_files = glob.glob(
                 os.path.join(ctrl_atm_path, '*temperature_gradient*.nc'))
             temp_grad_fname = ''
             if len(temp_grad_files) == 1:
                 temp_grad_fname = os.path.split(temp_grad_files[0])[-1]
-                shutil.copy(temp_grad_files[0], self.work_dir)
+                os.symlink(temp_grad_files[0],
+                           os.path.join(self.work_dir, temp_grad_fname))
 
         else:
             # Standard or OCX experiment: find forcing in forcing_dir
@@ -157,7 +168,8 @@ class SetUpExperiment(Step):
             smb_list = [f for f in smb_list if 'gradient' not in f]
             if len(smb_list) == 1:
                 smb_fname = os.path.split(smb_list[0])[-1]
-                shutil.copy(smb_list[0], self.work_dir)
+                os.symlink(smb_list[0],
+                           os.path.join(self.work_dir, smb_fname))
             else:
                 sys.exit(f"ERROR: Expected 1 SMB file at {smb_search}, "
                          f"found {len(smb_list)}: {smb_list}")
@@ -168,7 +180,8 @@ class SetUpExperiment(Step):
             temp_list = [f for f in temp_list if 'gradient' not in f]
             if len(temp_list) == 1:
                 temp_fname = os.path.split(temp_list[0])[-1]
-                shutil.copy(temp_list[0], self.work_dir)
+                os.symlink(temp_list[0],
+                           os.path.join(self.work_dir, temp_fname))
             else:
                 sys.exit(f"ERROR: Expected 1 temperature file at "
                          f"{temp_search}, found {len(temp_list)}")
@@ -179,7 +192,8 @@ class SetUpExperiment(Step):
             runoff_fname = ''
             if len(runoff_list) == 1:
                 runoff_fname = os.path.split(runoff_list[0])[-1]
-                shutil.copy(runoff_list[0], self.work_dir)
+                os.symlink(runoff_list[0],
+                           os.path.join(self.work_dir, runoff_fname))
 
             # SMB gradient (lapse rate)
             smb_grad_search = os.path.join(atm_dir, '*SMB_gradient_*.nc')
@@ -187,7 +201,8 @@ class SetUpExperiment(Step):
             smb_grad_fname = ''
             if len(smb_grad_list) == 1:
                 smb_grad_fname = os.path.split(smb_grad_list[0])[-1]
-                shutil.copy(smb_grad_list[0], self.work_dir)
+                os.symlink(smb_grad_list[0],
+                           os.path.join(self.work_dir, smb_grad_fname))
 
             # Temperature gradient (lapse rate)
             temp_grad_search = os.path.join(atm_dir,
@@ -196,14 +211,16 @@ class SetUpExperiment(Step):
             temp_grad_fname = ''
             if len(temp_grad_list) == 1:
                 temp_grad_fname = os.path.split(temp_grad_list[0])[-1]
-                shutil.copy(temp_grad_list[0], self.work_dir)
+                os.symlink(temp_grad_list[0],
+                           os.path.join(self.work_dir, temp_grad_fname))
 
             # Thermal forcing
             tf_search = os.path.join(ocean_dir, '*thermal_forcing_*.nc')
             tf_list = glob.glob(tf_search)
             if len(tf_list) == 1:
                 tf_fname = os.path.split(tf_list[0])[-1]
-                shutil.copy(tf_list[0], self.work_dir)
+                os.symlink(tf_list[0],
+                           os.path.join(self.work_dir, tf_fname))
             else:
                 sys.exit(f"ERROR: Expected 1 TF file at {tf_search}, "
                          f"found {len(tf_list)}: {tf_list}")
