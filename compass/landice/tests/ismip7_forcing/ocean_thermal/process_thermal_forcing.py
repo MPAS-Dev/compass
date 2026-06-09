@@ -511,6 +511,9 @@ class ProcessThermalForcing(Step):
         if "tf" in ds:
             ds = ds.rename({"tf": "ismip6shelfMelt_3dThermalForcing"})
 
+        ds["ismip6shelfMelt_3dThermalForcing"] = \
+            ds["ismip6shelfMelt_3dThermalForcing"].expand_dims("Time", axis=0)
+
         # Set z coordinate and bounds as MALI-named variables
         ds["ismip6shelfMelt_zOcean"] = (
             "nISMIP6OceanLayers", z_ocean.values)
@@ -521,7 +524,7 @@ class ProcessThermalForcing(Step):
         # NetCDF (C order): nCells, nISMIP6OceanLayers
         ds["ismip6shelfMelt_3dThermalForcing"] = \
             ds["ismip6shelfMelt_3dThermalForcing"].transpose(
-                "nCells", "nISMIP6OceanLayers")
+                "Time", "nCells", "nISMIP6OceanLayers")
 
         # Ensure double precision for MALI compatibility
         ds["ismip6shelfMelt_3dThermalForcing"] = \
