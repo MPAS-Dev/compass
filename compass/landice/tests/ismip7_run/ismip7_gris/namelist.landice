@@ -2,25 +2,31 @@
     config_do_velocity_reconstruction_for_external_dycore = .false.
     config_unrealistic_velocity = 00.00159
     config_nonconvergence_error = .false.
+    config_flowParamA_calculation = 'PB1982'
 
-    config_thickness_advection = 'fo'
-    config_tracer_advection = 'fo'
+    config_thickness_advection = 'fct'
+    config_tracer_advection = 'fct'
+    config_horiz_tracer_adv_order = 3
+    config_advection_coef_3rd_order = 1.0
     config_zero_sfcMassBalApplied_over_bare_land = .true.
 
     config_uplift_method = 'none'
 
-    config_calving = 'none'
+    config_calving = 'crevasse_depth'
     config_apply_calving_mask = .false.
     config_restore_calving_front_prevent_retreat = .false.
-    config_calculate_damage = .true.
+    config_calculate_damage = .false.
     config_damage_calving_threshold = 0.95
     config_damage_calving_method = 'none'
     config_calving_speed_limit = 0.00063492063
-    config_restore_calving_front = .true.
+    config_restore_calving_front = .false.
     config_remove_icebergs = .true.
     config_remove_small_islands = .true.
     config_distribute_unablatedVolumeDynCell = .true.
     config_calving_error_threshold = 100000.0
+    config_apply_facemelt_strainrate_enhancement = .true.
+    config_calving_strainrate_scaling = 5.0
+
 
     config_thermal_solver = 'temperature'
     config_thermal_calculate_bmb = .true.
@@ -29,7 +35,7 @@
     config_surface_air_temperature_source = 'file'
     config_basal_heat_flux_source = 'file'
 
-    config_basal_mass_bal_float = 'ismip6'
+    config_basal_mass_bal_float = 'none'
     config_front_mass_bal_grounded = 'ismip6'
     config_use_3d_thermal_forcing_for_face_melt = .false.
     config_add_ocean_thermal_forcing = 0.0
@@ -41,7 +47,8 @@
     config_dynamic_thickness = 10.0
 
     config_dt = '0000-01-00_00:00:00'
-    config_time_integration = 'forward_euler'
+    config_time_integration = 'runge_kutta'
+    config_rk_order = 2
     config_adaptive_timestep = .true.
     config_adaptive_timestep_calvingCFL_fraction = 0.8
     config_adaptive_timestep_include_calving = .true.
