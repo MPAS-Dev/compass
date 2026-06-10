@@ -57,7 +57,6 @@ class SetUpExperiment(Step):
         region_mask_path = section.get('region_mask_path')
         region_mask_fname = os.path.split(region_mask_path)[-1]
         calving_method = section.get('calving_method')
-        use_face_melting = section.getboolean('use_face_melting')
 
         exp_info = self.exp_info
         scenario = exp_info['scenario']
@@ -275,13 +274,6 @@ class SetUpExperiment(Step):
                 resource_location, 'streams.vM_params',
                 out_name='streams.landice',
                 template_replacements=vM_stream_replacements)
-
-        if use_face_melting:
-            options = {
-                'config_front_mass_bal_grounded': "'ismip6'",
-                'config_use_3d_thermal_forcing_for_face_melt': '.false.'}
-            self.add_namelist_options(options=options,
-                                      out_name='namelist.landice')
 
         # --- Symlink restart for projections/ctrl ---
         if not is_historical:

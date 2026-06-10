@@ -61,7 +61,6 @@ class SetUpExperiment(Step):
         region_mask_path = section.get('region_mask_path')
         region_mask_fname = os.path.split(region_mask_path)[-1]
         calving_method = section.get('calving_method')
-        use_face_melting = section.getboolean('use_face_melting')
         sea_level_model = section.getboolean('sea_level_model')
 
         exp_info = self.exp_info
@@ -261,11 +260,6 @@ class SetUpExperiment(Step):
             out_name='streams.landice',
             template_replacements=stream_replacements)
 
-        if use_face_melting:
-            self.add_streams_file(
-                resource_location, 'streams.faceMelting',
-                out_name='streams.landice')
-
         # --- Set up namelist ---
         self.add_namelist_file(
             resource_location, 'namelist.landice',
@@ -306,14 +300,6 @@ class SetUpExperiment(Step):
                 resource_location, 'streams.vM_params',
                 out_name='streams.landice',
                 template_replacements=vM_stream_replacements)
-
-        # Face melting options
-        if use_face_melting:
-            options = {
-                'config_front_mass_bal_grounded': "'ismip6'",
-                'config_use_3d_thermal_forcing_for_face_melt': '.true.'}
-            self.add_namelist_options(options=options,
-                                      out_name='namelist.landice')
 
         # Sea-level model options
         if sea_level_model:
