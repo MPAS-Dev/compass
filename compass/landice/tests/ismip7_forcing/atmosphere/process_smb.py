@@ -180,12 +180,15 @@ class ProcessSmb(Step):
             ds = ds.rename({"acabf": "sfcMassBal"})
 
         # Add xtime variable with monthly timestamps
+        # ISMIP7 files encode time at mid-month (e.g., Jan 15) but
+        # this represents forcing for the full month (Jan 1-31).
+        # MALI needs xtime at the start of each forcing interval.
         xtime = []
         for t_index in range(ds.sizes["Time"]):
             date = ds.Time[t_index]
             yr = int(date.dt.year.values)
             mo = int(date.dt.month.values)
-            date_str = f"{yr:04d}-{mo:02d}-15_00:00:00".ljust(64)
+            date_str = f"{yr:04d}-{mo:02d}-01_00:00:00".ljust(64)
             xtime.append(date_str)
 
         ds["xtime"] = ("Time", xtime)
