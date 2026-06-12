@@ -60,6 +60,8 @@ class SetUpExperiment(Step):
         melt_params_fname = os.path.split(melt_params_path)[-1]
         region_mask_path = section.get('region_mask_path')
         region_mask_fname = os.path.split(region_mask_path)[-1]
+        reference_surface_path = section.get('reference_surface_path')
+        reference_surface_fname = os.path.split(reference_surface_path)[-1]
         calving_method = section.get('calving_method')
         sea_level_model = section.getboolean('sea_level_model')
 
@@ -99,6 +101,9 @@ class SetUpExperiment(Step):
         os.symlink(region_mask_path,
                    os.path.join(self.work_dir,
                                 os.path.basename(region_mask_path)))
+        os.symlink(reference_surface_path,
+                   os.path.join(self.work_dir,
+                                os.path.basename(reference_surface_path)))
 
         # --- Find and symlink forcing files ---
         if scenario == 'ctrl':
@@ -244,6 +249,7 @@ class SetUpExperiment(Step):
             'input_file_region_mask': region_mask_fname if is_historical
             else 'USE_RESTART_FILE_INSTEAD',
             'input_file_melt_params': melt_params_fname,
+            'input_file_reference_surface': reference_surface_fname,
             'input_file_SMB_forcing': smb_fname,
             'input_file_temperature_forcing': temp_fname,
             'input_file_TF_forcing': tf_fname,

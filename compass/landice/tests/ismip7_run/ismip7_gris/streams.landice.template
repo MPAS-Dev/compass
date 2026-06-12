@@ -81,6 +81,14 @@
         <var name="ismip6Runoff"/>
 </stream>
 
+<stream name="reference_surface"
+        type="input"
+        filename_template="{{ input_file_reference_surface }}"
+        input_interval="initial_only"
+        runtime_format="single_file">
+        <var name="surfaceElevationRef"/>
+</stream>
+
 <stream name="output"
         clobber_mode="overwrite"
         output_interval="0001-00-00_00:00:00"
