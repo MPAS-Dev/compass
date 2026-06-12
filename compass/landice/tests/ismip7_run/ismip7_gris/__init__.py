@@ -9,12 +9,12 @@ from compass.testcase import TestCase
 EXPERIMENTS = {
     'historical_CESM2-WACCM': {
         'scenario': 'historical', 'model': 'CESM2-WACCM',
-        'start_time': '2000-01-01_00:00:00',
+        'start_time': '2007-01-01_00:00:00',
         'stop_time': '2015-01-01_00:00:00',
         'is_historical': True},
     'historical_MRI-ESM2-0': {
         'scenario': 'historical', 'model': 'MRI-ESM2-0',
-        'start_time': '2000-01-01_00:00:00',
+        'start_time': '2007-01-01_00:00:00',
         'stop_time': '2015-01-01_00:00:00',
         'is_historical': True},
     'ssp370_CESM2-WACCM': {
