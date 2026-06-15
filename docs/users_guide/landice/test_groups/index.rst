@@ -24,6 +24,7 @@ physics but that are not run routinely.
    humboldt
    hydro_radial
    ismip6_forcing
+   ismip6_GrIS_forcing
    ismip6_run
    isunnguata_sermia
    kangerlussuaq
