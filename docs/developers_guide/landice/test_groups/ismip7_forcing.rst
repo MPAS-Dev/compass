@@ -36,6 +36,12 @@ The module :py:mod:`compass.landice.tests.ismip7_forcing.configure` validates
 that all required config options in the ``[ismip7]`` section have been set by
 the user (i.e., are not ``NotAvailable``).
 
+Repository-local example user configs are available at
+``compass/landice/tests/ismip7_forcing/ismip7_forcing_test.cfg`` (AIS) and
+``compass/landice/tests/ismip7_forcing/ismip7_forcing_test_gis.cfg`` (GrIS).
+These are intended for development/testing and include environment-specific
+paths.
+
 create_mapfile
 ~~~~~~~~~~~~~~
 

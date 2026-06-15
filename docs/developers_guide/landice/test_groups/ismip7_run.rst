@@ -65,24 +65,26 @@ The ``setup`` method sets up the experiment directory by:
 
 1. Creating symlinks to forcing files from the conventional path layout
    under ``forcing_basepath``.
-2. Copying and populating the streams template with the correct forcing
+2. Symlinking the ``reference_surface_path`` file into the run directory,
+   where it is used by MALI when applying lapse rates.
+3. Copying and populating the streams template with the correct forcing
    filenames and intervals (monthly for SMB/temperature/runoff, annual
    for lapse rates and thermal forcing, ``initial_only`` for melt
    parameters).
-3. Processing the namelist template for the experiment's time period
+4. Processing the namelist template for the experiment's time period
    and restart frequency.
-4. Adding calving-specific streams (face melting, von Mises params) if
+5. Adding calving-specific streams (face melting, von Mises params) if
    configured.
-5. Creating a restart symlink for projection experiments pointing to
+6. Creating a restart symlink for projection experiments pointing to
    the corresponding ESM's historical restart
    (``../historical_{model}/rst.2015-01-01.nc``).
-6. Setting up CTRL2015 experiments with constant-climate forcing
+7. Setting up CTRL2015 experiments with constant-climate forcing
    (``initial_only`` intervals).
-7. Setting up the OCX experiment with reanalysis-based forcing.
-8. If SLM coupling is enabled, adding a ``CreateSlmMappingFiles`` step
+8. Setting up the OCX experiment with reanalysis-based forcing.
+9. If SLM coupling is enabled, adding a ``CreateSlmMappingFiles`` step
    and writing the SLM namelist from the Jinja2 template.
-9. Generating a ``graph.info`` file and a SLURM job script.
-10. Symlinking the compass load script into the run directory.
+10. Generating a ``graph.info`` file and a SLURM job script.
+11. Symlinking the compass load script into the run directory.
 
 The ``run`` method executes MALI for the given experiment.
 

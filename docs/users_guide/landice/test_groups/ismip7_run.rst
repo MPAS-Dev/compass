@@ -151,10 +151,11 @@ All config options should be reviewed and altered as needed.
    # Base path to pre-processed forcing
    forcing_basepath = NotAvailable
 
-   # Initial condition and parameter files
-   init_cond_path = NotAvailable
-   melt_params_path = NotAvailable
-   region_mask_path = NotAvailable
+    # Initial condition and parameter files
+    init_cond_path = NotAvailable
+    melt_params_path = NotAvailable
+    reference_surface_path = NotAvailable
+    region_mask_path = NotAvailable
 
    # Climatology files for CTRL2015 experiments
    ctrl_tf_climatology_path = NotAvailable
@@ -178,8 +179,9 @@ All config options should be reviewed and altered as needed.
    slm_input_others = NotAvailable
    nglv = 2048
 
-**GrIS config** (``[ismip7_run_gris]``) is similar but without
-sea-level model options and with ``calving_method = von_mises`` as default.
+**GrIS config** (``[ismip7_run_gris]``) is similar (including
+``reference_surface_path``) but without sea-level model options and with
+``calving_method = von_mises`` as default.
 
 .. _landice_ismip7_run_forcing_streams:
 
