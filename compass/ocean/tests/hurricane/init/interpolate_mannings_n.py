@@ -50,7 +50,7 @@ class InterpolateManningsN(Step):
 
         self.add_input_file(
             filename=self.grid_file,
-            work_dir_target=f'{init.path}/ocean_subgrid_final.nc')
+            work_dir_target=f'{init.path}/ocean.nc')
 
     def interpolate_data(self, grid_file, data_file):
         """

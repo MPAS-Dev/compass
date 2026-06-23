@@ -91,10 +91,7 @@ class InitialState(Step):
 
         self.add_model_as_input()
 
-        if self.wetdry == 'subgrid':
-            self.add_output_file(filename='ocean_subgrid_final.nc')
-        else:
-            self.add_output_file(filename='ocean.nc')
+        self.add_output_file(filename='ocean.nc')
         self.add_output_file(filename='graph.info')
 
     def setup(self):
@@ -153,7 +150,7 @@ class InitialState(Step):
 
                 if i == nfiles - 1:
                     stream_replacements = {
-                        'output_file': 'ocean_subgrid_final.nc',
+                        'output_file': 'ocean.nc',
                         'input_file': f'ocean_subgrid{i}.nc'}
                 else:
                     stream_replacements = {
@@ -240,10 +237,7 @@ class InitialState(Step):
                     os.remove(f'ocean_subgrid{i - 2}.nc')
 
         mesh = nc.Dataset("mesh.nc", "r")
-        if self.wetdry == 'subgrid':
-            init = nc.Dataset("ocean_subgrid_final.nc", "r+")
-        else:
-            init = nc.Dataset("ocean.nc", "r+")
+        init = nc.Dataset("ocean.nc", "r+")
 
         # -- Estimate vert. grid for ice-shelves, min.-thicknesses, etc
         # -- Darren Engwirda

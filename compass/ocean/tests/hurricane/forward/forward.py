@@ -85,12 +85,7 @@ class ForwardStep(Step):
                 'compass.ocean.tests.hurricane.forward',
                 'streams.ocean_subgrid')
 
-        if wetdry == 'subgrid':
-            initial_state_target = \
-                f'{init.path}/initial_state/ocean_subgrid_final.nc'
-        else:
-            initial_state_target = \
-                f'{init.path}/initial_state/ocean.nc'
+        initial_state_target = f'{init.path}/initial_state/ocean.nc'
         self.add_input_file(filename='input.nc',
                             work_dir_target=initial_state_target)
         self.add_input_file(

@@ -148,11 +148,11 @@ class InterpolateAtmForcing(Step):
             return
 
         lon_data = orig_data[0]
-        lat_data = orig_data[1]
+        lat_data = orig_data[1][:-1]
         lon_grid = interp_data[0]
         lat_grid = interp_data[1]
 
-        data = orig_data[2]
+        data = orig_data[2][:-1, :]
         interp = interp_data[2]
 
         # Plot data
@@ -210,7 +210,7 @@ class InterpolateAtmForcing(Step):
 
             # Create time variable
             time = data_nc.createVariable('xtime', 'S1', ('Time', 'StrLen'))
-            time[:, :] = netCDF4.stringtochar(xtime)
+            time[:, :] = netCDF4.stringtochar(xtime, encoding='ascii')
 
         # Set variables
         data_var = data_nc.createVariable(var, np.float64, ('Time', 'nCells'))

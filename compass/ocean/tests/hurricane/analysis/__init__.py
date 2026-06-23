@@ -333,139 +333,8 @@ class Analysis(Step):
             hwm_mod[run] = np.asarray(hwm_mod[run])
             never_wet[run] = np.asarray(never_wet[run])
 
-        print(station_lon)
-        print(station_lon.shape)
-        idx_lon, = np.where(station_lon < -71.67)
-        print(idx_lon)
-        print(idx_lon.shape)
-        print(never_wet['standard'])
-        idx_nw, = np.where((station_lon < -71.67) &
-                           (never_wet['standard'] > 0.05))
-        print(idx_nw)
-        print(idx_nw.shape)
-        idx_sg_only, = np.where((station_lon < -71.67) &
-                                (never_wet['standard'] < 0.05) &
-                                (never_wet['subgrid'] > 0.05))
-        print(idx_sg_only)
-        print(idx_sg_only.shape)
-
-        # Plot modeled vs. observed hwm scatter
-        fig = plt.figure(figsize=(10, 3.33))
-        ax = fig.add_subplot(131)
-        labels = []
-        scatters = []
-        text = []
-        for i, run in enumerate(data):
-            diff = hwm_mod[run] - hwm_obs
-            rmse = np.sqrt(np.mean(np.square(diff[idx_lon])))
-            mae = np.mean(np.abs(diff[idx_lon]))
-            sc = ax.scatter(hwm_obs[idx_lon], hwm_mod[run][idx_lon], alpha=0.5)
-            text.append(f'{run} RMSE: {round(rmse, 2)} m')
-            text.append(f'{run} MAE: {round(mae, 2)} m')
-            scatters.append(sc)
-            labels.append(run)
-        ln, = ax.plot(hwm_obs, hwm_obs, 'k')
-        scatters.append(ln)
-        labels.append('perfect agreement')
-        ax.text(0.4, 20, '\n'.join(text), verticalalignment='top')
-        ax.set_xlabel('observed HWM (m)')
-        ax.set_ylabel('modeled HWM (m)')
-        ax.set_title('a)', loc='left', fontsize='x-large')
-
-        ax = fig.add_subplot(132)
-        diff = hwm_mod['subgrid'] - hwm_obs
-        rmse = np.sqrt(np.mean(np.square(diff[idx_sg_only])))
-        mae = np.mean(np.abs(diff[idx_sg_only]))
-        sc = ax.scatter(hwm_obs[idx_sg_only],
-                        hwm_mod['subgrid'][idx_sg_only], alpha=0.5)
-        text = '\n'.join([f'subgrid RMSE: {round(rmse, 2)} m',
-                          f'subgrid MAE: {round(mae, 2)} m'])
-        ax.text(0.4, 5.0, text, verticalalignment='top')
-        ln, = ax.plot(hwm_obs, hwm_obs, 'k')
-        scatters.append(ln)
-        labels.append('perfect agreement')
-        ax.set_xlabel('observed HWM (m)')
-        ax.set_ylabel('modeled HWM (m)')
-        ax.set_title('b)', loc='left', fontsize='x-large')
-
-        ax = fig.add_subplot(133)
-        labels = []
-        scatters = []
-        text = []
-        for i, run in enumerate(data):
-            diff = hwm_mod[run] - hwm_obs
-            rmse = np.sqrt(np.mean(np.square(diff[idx_nw])))
-            mae = np.mean(np.abs(diff[idx_nw]))
-            sc = ax.scatter(hwm_obs[idx_nw], hwm_mod[run][idx_nw], alpha=0.5)
-            text.append(f'{run} RMSE: {round(rmse, 2)} m')
-            text.append(f'{run} MAE: {round(mae, 2)} m')
-            scatters.append(sc)
-            labels.append(run)
-        ln, = ax.plot(hwm_obs, hwm_obs, 'k')
-        ax.text(2.8, 1.6, '\n'.join(text), verticalalignment='top')
-        scatters.append(ln)
-        labels.append('perfect agreement')
-        fig.legend(scatters, labels, loc='outside lower center',
-                   bbox_to_anchor=(0.5, -0.1),
-                   ncol=3, fancybox=False, edgecolor='k')
-        ax.set_xlabel('observed HWM (m)')
-        ax.set_ylabel('modeled HWM (m)')
-        ax.set_title('c)', loc='left', fontsize='x-large')
-
-        fig.tight_layout()
-        fig.savefig('hwm_mod_obs.png', dpi=400, bbox_inches='tight')
-        plt.close()
-
-        # Plot geographic hwm error
-        station_lon = station_lon[idx_lon]
-        station_lat = station_lat[idx_lon]
-        for run in data:
-            fig = plt.figure(figsize=(5, 4))
-            ax = fig.add_subplot(111, projection=ccrs.PlateCarree())
-
-            cm = ax.scatter(station_lon, station_lat, c=diff[idx_lon],
-                            cmap='PuOr', zorder=102, vmax=3.0, vmin=-3.0,
-                            edgecolor='k')
-
-            ax.set_extent([np.min(station_lon) - 0.1,
-                           np.max(station_lon) + 0.1,
-                           np.min(station_lat) - 0.1,
-                           np.max(station_lat) + 0.1],
-                          crs=ccrs.PlateCarree())
-            ax.add_feature(cfeature.LAND, zorder=100, color='gray')
-            ax.add_feature(cfeature.OCEAN, zorder=100)
-            ax.add_feature(cfeature.LAKES, alpha=0.5, zorder=101)
-            ax.coastlines('50m', zorder=101)
-
-            xticks = np.linspace(np.min(station_lon) - 0.1,
-                                 np.max(station_lon) + 0.1, 5)
-            yticks = np.linspace(np.min(station_lat) - 0.1,
-                                 np.max(station_lat) + 0.1, 5)
-            ax.set_xticks(xticks, crs=ccrs.PlateCarree())
-            ax.set_yticks(yticks, crs=ccrs.PlateCarree())
-            lon_formatter = LongitudeFormatter(number_format='.2f',
-                                               zero_direction_label=True)
-            lat_formatter = LatitudeFormatter(number_format='.2f')
-            ax.xaxis.set_major_formatter(lon_formatter)
-            ax.yaxis.set_major_formatter(lat_formatter)
-
-            plot_mode = 'paper'
-            title = run
-            if plot_mode == 'paper':
-                if 'subgrid' in run:
-                    title = 'a)'
-                elif 'standard' in run:
-                    title = 'b)'
-                loc = 'left'
-            else:
-                loc = 'center'
-            ax.set_title(title, loc=loc, fontsize='x-large')
-            cb = fig.colorbar(cm, extend='both', pad=0.1)
-            cb.set_label('max high water error (m)')
-            fig.tight_layout()
-
-            fig.savefig(f'hwm_spatial_{run}.png', dpi=400, bbox_inches='tight')
-            plt.close()
+        # Plot comparisons
+        #self.plot_hwm(station_lon, station_lat, hwm_obs, hwm_mod, never_wet, data)
 
     def find_data_in_bbox(self, sta_lon, sta_lat, eps):
 
@@ -759,6 +628,143 @@ class Analysis(Step):
         fig.savefig(f'{sta}_dem.png', dpi=400, bbox_inches='tight')
 
         plt.close()
+
+    def plot_hwm(self, station_lon, station_lat, hwm_obs, hwm_mod, never_wet, data):
+
+        # Print diagnostics
+        print(station_lon)
+        print(station_lon.shape)
+        idx_lon, = np.where(station_lon < -71.67)
+        print(idx_lon)
+        print(idx_lon.shape)
+        print(never_wet['standard'])
+        idx_nw, = np.where((station_lon < -71.67) &
+                           (never_wet['standard'] > 0.05))
+        print(idx_nw)
+        print(idx_nw.shape)
+        idx_sg_only, = np.where((station_lon < -71.67) &
+                                (never_wet['standard'] < 0.05) &
+                                (never_wet['subgrid'] > 0.05))
+        print(idx_sg_only)
+        print(idx_sg_only.shape)
+
+        # Plot modeled vs. observed hwm scatter
+        fig = plt.figure(figsize=(10, 3.33))
+        ax = fig.add_subplot(131)
+        labels = []
+        scatters = []
+        text = []
+        for i, run in enumerate(data):
+            diff = hwm_mod[run] - hwm_obs
+            rmse = np.sqrt(np.mean(np.square(diff[idx_lon])))
+            mae = np.mean(np.abs(diff[idx_lon]))
+            sc = ax.scatter(hwm_obs[idx_lon], hwm_mod[run][idx_lon], alpha=0.5)
+            text.append(f'{run} RMSE: {round(rmse, 2)} m')
+            text.append(f'{run} MAE: {round(mae, 2)} m')
+            scatters.append(sc)
+            labels.append(run)
+        ln, = ax.plot(hwm_obs, hwm_obs, 'k')
+        scatters.append(ln)
+        labels.append('perfect agreement')
+        ax.text(0.4, 20, '\n'.join(text), verticalalignment='top')
+        ax.set_xlabel('observed HWM (m)')
+        ax.set_ylabel('modeled HWM (m)')
+        ax.set_title('a)', loc='left', fontsize='x-large')
+
+        ax = fig.add_subplot(132)
+        diff = hwm_mod['subgrid'] - hwm_obs
+        rmse = np.sqrt(np.mean(np.square(diff[idx_sg_only])))
+        mae = np.mean(np.abs(diff[idx_sg_only]))
+        sc = ax.scatter(hwm_obs[idx_sg_only],
+                        hwm_mod['subgrid'][idx_sg_only], alpha=0.5)
+        text = '\n'.join([f'subgrid RMSE: {round(rmse, 2)} m',
+                          f'subgrid MAE: {round(mae, 2)} m'])
+        ax.text(0.4, 5.0, text, verticalalignment='top')
+        ln, = ax.plot(hwm_obs, hwm_obs, 'k')
+        scatters.append(ln)
+        labels.append('perfect agreement')
+        ax.set_xlabel('observed HWM (m)')
+        ax.set_ylabel('modeled HWM (m)')
+        ax.set_title('b)', loc='left', fontsize='x-large')
+
+        ax = fig.add_subplot(133)
+        labels = []
+        scatters = []
+        text = []
+        for i, run in enumerate(data):
+            diff = hwm_mod[run] - hwm_obs
+            rmse = np.sqrt(np.mean(np.square(diff[idx_nw])))
+            mae = np.mean(np.abs(diff[idx_nw]))
+            sc = ax.scatter(hwm_obs[idx_nw], hwm_mod[run][idx_nw], alpha=0.5)
+            text.append(f'{run} RMSE: {round(rmse, 2)} m')
+            text.append(f'{run} MAE: {round(mae, 2)} m')
+            scatters.append(sc)
+            labels.append(run)
+        ln, = ax.plot(hwm_obs, hwm_obs, 'k')
+        ax.text(2.8, 1.6, '\n'.join(text), verticalalignment='top')
+        scatters.append(ln)
+        labels.append('perfect agreement')
+        fig.legend(scatters, labels, loc='outside lower center',
+                   bbox_to_anchor=(0.5, -0.1),
+                   ncol=3, fancybox=False, edgecolor='k')
+        ax.set_xlabel('observed HWM (m)')
+        ax.set_ylabel('modeled HWM (m)')
+        ax.set_title('c)', loc='left', fontsize='x-large')
+
+        fig.tight_layout()
+        fig.savefig('hwm_mod_obs.png', dpi=400, bbox_inches='tight')
+        plt.close()
+
+        # Plot geographic hwm error
+        station_lon = station_lon[idx_lon]
+        station_lat = station_lat[idx_lon]
+        for run in data:
+            fig = plt.figure(figsize=(5, 4))
+            ax = fig.add_subplot(111, projection=ccrs.PlateCarree())
+
+            cm = ax.scatter(station_lon, station_lat, c=diff[idx_lon],
+                            cmap='PuOr', zorder=102, vmax=3.0, vmin=-3.0,
+                            edgecolor='k')
+
+            ax.set_extent([np.min(station_lon) - 0.1,
+                           np.max(station_lon) + 0.1,
+                           np.min(station_lat) - 0.1,
+                           np.max(station_lat) + 0.1],
+                          crs=ccrs.PlateCarree())
+            ax.add_feature(cfeature.LAND, zorder=100, color='gray')
+            ax.add_feature(cfeature.OCEAN, zorder=100)
+            ax.add_feature(cfeature.LAKES, alpha=0.5, zorder=101)
+            ax.coastlines('50m', zorder=101)
+
+            xticks = np.linspace(np.min(station_lon) - 0.1,
+                                 np.max(station_lon) + 0.1, 5)
+            yticks = np.linspace(np.min(station_lat) - 0.1,
+                                 np.max(station_lat) + 0.1, 5)
+            ax.set_xticks(xticks, crs=ccrs.PlateCarree())
+            ax.set_yticks(yticks, crs=ccrs.PlateCarree())
+            lon_formatter = LongitudeFormatter(number_format='.2f',
+                                               zero_direction_label=True)
+            lat_formatter = LatitudeFormatter(number_format='.2f')
+            ax.xaxis.set_major_formatter(lon_formatter)
+            ax.yaxis.set_major_formatter(lat_formatter)
+
+            plot_mode = 'paper'
+            title = run
+            if plot_mode == 'paper':
+                if 'subgrid' in run:
+                    title = 'a)'
+                elif 'standard' in run:
+                    title = 'b)'
+                loc = 'left'
+            else:
+                loc = 'center'
+            ax.set_title(title, loc=loc, fontsize='x-large')
+            cb = fig.colorbar(cm, extend='both', pad=0.1)
+            cb.set_label('max high water error (m)')
+            fig.tight_layout()
+
+            fig.savefig(f'hwm_spatial_{run}.png', dpi=400, bbox_inches='tight')
+            plt.close()
 
     def compute_cell_patches(self, dsMesh, bbox):
         patches = []
