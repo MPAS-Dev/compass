@@ -722,6 +722,7 @@ class Analysis(Step):
             fig = plt.figure(figsize=(5, 4))
             ax = fig.add_subplot(111, projection=ccrs.PlateCarree())
 
+            diff = hwm_mod[run] - hwm_obs
             cm = ax.scatter(station_lon, station_lat, c=diff[idx_lon],
                             cmap='PuOr', zorder=102, vmax=3.0, vmin=-3.0,
                             edgecolor='k')
