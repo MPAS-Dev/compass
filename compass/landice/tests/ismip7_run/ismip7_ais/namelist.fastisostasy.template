@@ -1,0 +1,83 @@
+&isostasy
+    ! FastIsostasy namelist for Antarctic Ice Sheet ISMIP7 simulations
+    ! Coupled with MALI via compass test case
+
+    ! ========================================================================
+    ! Main Options
+    ! ========================================================================
+    heterogeneous_ssh = .true.      ! Sea level varies spatially
+    interactive_sealevel = .true.   ! Sea level interacts with solid Earth
+    include_elastic = .true.        ! Include elastic deformation
+    correct_compression = .true.    ! Account for compression effects
+    correct_distortion = .false.    ! Account for distortion (false for stability)
+    method          = 3             ! 3: LV-ELVA (most realistic)
+    dt_diagnostics  = 10.           ! [yr] Diagnostics timestep
+    pad             = 0.            ! [km] No padding needed
+
+    ! ========================================================================
+    ! Rheology
+    ! ========================================================================
+    mantle = "uniform"              ! Uniform mantle viscosity
+    lithosphere = "uniform"         ! Uniform lithospheric thickness
+    layering    = "equalized"       ! Equalized layering
+    lumping     = "freqdomain"      ! Frequency domain lumping
+    viscosity_scaling_method = "none"
+    viscosity_scaling = 1.0         ! Only used if method = "scale"
+
+    ! ========================================================================
+    ! Rheology Parameters (Antarctic values)
+    ! ========================================================================
+    nl          = 2                 ! Number of viscous layers
+    zl = 120.0, 600.0               ! [km] Layer depths
+    viscosities = 0.5e21, 2.0e21    ! [Pa s] Layer viscosities
+    ref_viscosity = 1.0e21          ! [Pa s] Reference viscosity
+    tau = 3000.0                    ! [yr] Relaxation time
+    rheo_smoothing_radius = 40.0    ! [km] Smoothing radius
+    litho_thickness_scaling = 1.0   ! Lithosphere scaling
+
+    ! ========================================================================
+    ! Physical Constants
+    ! ========================================================================
+    E               = 66.0          ! [GPa] Young modulus
+    nu              = 0.28          ! [-] Poisson ratiols
+
+    rho_ice         = 910.0         ! [kg/m^3] Ice density
+    rho_seawater    = 1028.0        ! [kg/m^3] Seawater density
+    rho_water       = 1000.0        ! [kg/m^3] Freshwater density
+    rho_uppermantle = 3400.0        ! [kg/m^3] Upper mantle density
+    rho_litho       = 3200.0        ! [kg/m^3] Lithosphere density
+    g               = 9.81          ! [m/s^2] Gravity
+    r_earth         = 6.378e3       ! [km] Earth radius
+    m_earth         = 5.972e24      ! [kg] Earth mass
+
+    ! ========================================================================
+    ! Input Files
+    ! ========================================================================
+    restart = "None"                ! Restart file (not used)
+    mask_file = "None"              ! Mask file (MALI provides)
+    rheology_file = "None"          ! Rheology file
+
+    ! ========================================================================
+    ! Time Stepping
+    ! ========================================================================
+    dt_method = "tsit54"            ! Adaptive time stepping
+    dt_init = 1.0                   ! [yr] Initial timestep
+    dt_min = 1e-10                  ! [yr] Minimum timestep
+    dt_max = 10.0                   ! [yr] Maximum timestep
+    rtol = 1e-4                     ! Relative tolerance
+    atol = 1e-2                     ! Absolute tolerance
+    q = 1.0                         ! Timestep adaptation exponent
+/
+
+&barysealevel
+    ! ========================================================================
+    ! Barystatic Sea Level
+    ! ========================================================================
+    method      = "fastiso"         ! Compute from ice mass changes
+    bsl_init    = 0.0               ! [m] Initial sea level
+    sl_path     = "input/sl_deglaciation.dat"
+    sl_name     = "none"
+    A_ocean_pd  = 3.625e14          ! [m^2] Ocean area (Goelzer et al. 2020)
+    A_ocean_path = "None"
+    restart     = "None"
+/
