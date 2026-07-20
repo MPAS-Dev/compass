@@ -20,6 +20,7 @@ Test groups
    hydro_radial
    ismip6_forcing
    ismip6_run
+   ismip7_forcing
    isunnguata_sermia
    kangerlussuaq
    koge_bugt_s

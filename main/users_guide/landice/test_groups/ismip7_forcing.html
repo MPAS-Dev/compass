@@ -1,0 +1,378 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ismip7_forcing &mdash; compass 2.0.0-alpha.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=9fd2db84"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="isunnguata_sermia" href="isunnguata_sermia.html" />
+    <link rel="prev" title="ismip6_run" href="ismip6_run.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            compass
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_suites.html">Test Suites</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Landice core</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Test Groups</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="antarctica.html">antarctica</a></li>
+<li class="toctree-l3"><a class="reference internal" href="calving_dt_convergence.html">calving_dt_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="circular_shelf.html">circular_shelf</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crane.html">crane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dome.html">dome</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eismint2.html">eismint2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ensemble_generator.html">ensemble_generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="enthalpy_benchmark.html">enthalpy_benchmark</a></li>
+<li class="toctree-l3"><a class="reference internal" href="greenland.html">greenland</a></li>
+<li class="toctree-l3"><a class="reference internal" href="humboldt.html">humboldt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydro_radial.html">hydro_radial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ismip6_forcing.html">ismip6_forcing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ismip6_run.html">ismip6_run</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ismip7_forcing</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#input-data">Input Data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#atmosphere">atmosphere</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ocean-thermal">ocean_thermal</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="isunnguata_sermia.html">isunnguata_sermia</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kangerlussuaq.html">kangerlussuaq</a></li>
+<li class="toctree-l3"><a class="reference internal" href="koge_bugt_s.html">koge_bugt_s</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesh_convergence.html">mesh_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesh_modifications.html">mesh_modifications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mismipplus.html">mismipplus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slm_circ_icesheet.html">slm_circ_icesheet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thwaites.html">thwaites</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../suites.html">Test suites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../framework.html">Land-ice Framework</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/deploying_spack.html">Deploying a new spack environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_rrm.html">Developer Tutorial: Adding a new ocean/sea ice regionally refined mesh (RRM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Landice core</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Test Groups</a></li>
+      <li class="breadcrumb-item active">ismip7_forcing</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/users_guide/landice/test_groups/ismip7_forcing.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ismip7-forcing">
+<span id="landice-ismip7-forcing"></span><h1>ismip7_forcing<a class="headerlink" href="#ismip7-forcing" title="Link to this heading"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">landice/ismip7_forcing</span></code> test group processes (i.e., remaps and renames)
+the atmospheric and ocean thermal forcing data of the Ice Sheet Model
+Intercomparison for CMIP7 (ISMIP7) protocol. The processed data is used to
+force MALI in its simulations under the ISMIP7 experimental protocol.
+The test group supports both the Antarctic Ice Sheet (AIS) and the Greenland
+Ice Sheet (GrIS), controlled by a single <code class="docutils literal notranslate"><span class="pre">ice_sheet</span></code> config option.</p>
+<p>The test group includes two test cases: <code class="docutils literal notranslate"><span class="pre">atmosphere</span></code> and <code class="docutils literal notranslate"><span class="pre">ocean_thermal</span></code>.</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">atmosphere</span></code> test case has five steps:
+<code class="docutils literal notranslate"><span class="pre">process_smb</span></code>, <code class="docutils literal notranslate"><span class="pre">process_temperature</span></code>, <code class="docutils literal notranslate"><span class="pre">process_smb_gradient</span></code>,
+<code class="docutils literal notranslate"><span class="pre">process_temperature_gradient</span></code>, and <code class="docutils literal notranslate"><span class="pre">process_runoff</span></code>.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">ocean_thermal</span></code> test case has one step: <code class="docutils literal notranslate"><span class="pre">process_thermal_forcing</span></code>.
+For AIS this produces 3D thermal forcing (with 30 ocean depth layers); for
+GrIS it produces 2D (depth-averaged) thermal forcing. The step can also
+process the observational ocean thermal forcing climatology (Zhou et al.)
+for AIS, controlled by the <code class="docutils literal notranslate"><span class="pre">process_ocean_climatology</span></code> config option.</p></li>
+</ul>
+<p>(For more details on the steps of each test case, see
+<a class="reference internal" href="#landice-ismip7-forcing-atmosphere"><span class="std std-ref">atmosphere</span></a> and
+<a class="reference internal" href="#landice-ismip7-forcing-ocean-thermal"><span class="std std-ref">ocean_thermal</span></a>.)</p>
+<section id="usage">
+<span id="landice-ismip7-forcing-usage"></span><h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<p>To use this test group, users need to:</p>
+<ol class="arabic simple">
+<li><p>Provide a MALI mesh file onto which the source data will be remapped.</p></li>
+<li><p>Set the <code class="docutils literal notranslate"><span class="pre">ice_sheet</span></code> config option to either <code class="docutils literal notranslate"><span class="pre">ais</span></code> or <code class="docutils literal notranslate"><span class="pre">gis</span></code>.</p></li>
+<li><p>Provide the path to the ISMIP7 forcing data (<code class="docutils literal notranslate"><span class="pre">base_path_ismip7</span></code>).</p></li>
+<li><p>Run the <code class="docutils literal notranslate"><span class="pre">atmosphere</span></code> test case for each model and scenario combination.</p></li>
+<li><p>Run the <code class="docutils literal notranslate"><span class="pre">ocean_thermal</span></code> test case for each model and scenario combination.</p></li>
+</ol>
+</section>
+<section id="input-data">
+<span id="landice-ismip7-forcing-input-data"></span><h2>Input Data<a class="headerlink" href="#input-data" title="Link to this heading"></a></h2>
+<p>ISMIP7 forcing data is organized by variable and version. The expected
+directory structure under <code class="docutils literal notranslate"><span class="pre">base_path_ismip7</span></code> is:</p>
+<p>For AIS atmosphere (2km, polar stereographic EPSG:3031):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>acabf/v2/acabf_AIS_{model}_{scenario}_SDBN1-2000m_v2_{year_range}.nc
+ts/v2/ts_AIS_{model}_{scenario}_SDBN1-2000m_v2_{year_range}.nc
+dacabfdz/v2/dacabfdz_AIS_{model}_{scenario}_SDBN1-2000m_v2_{year_range}.nc
+dtsdz/v2/dtsdz_AIS_{model}_{scenario}_SDBN1-2000m_v2_{year_range}.nc
+mrro/v2/mrro_AIS_{model}_{scenario}_SDBN1-2000m_v2_{year_range}.nc
+</pre></div>
+</div>
+<p>For AIS ocean thermal (8km, 30 depth levels, decade files):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ocean/tf/v3/tf_AIS_{model}_{scenario}_ocean_v3_{start_year}-{end_year}.nc
+</pre></div>
+</div>
+<p>For AIS ocean thermal climatology (8km, 30 depth levels, static):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{base_path_climatology}/tf/v3/tf_AIS_obs_ocean_climatology_*.nc
+</pre></div>
+</div>
+<p>For GrIS atmosphere (1km, polar stereographic EPSG:3413):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>acabf/v2/acabf_GrIS_{model}_{scenario}_SDBN1-1000m_v2_{year}.nc
+ts/v2/ts_GrIS_{model}_{scenario}_SDBN1-1000m_v2_{year}.nc
+dacabfdz/v2/dacabfdz_GrIS_{model}_{scenario}_SDBN1-1000m_v2_{year}.nc
+dtsdz/v2/dtsdz_GrIS_{model}_{scenario}_SDBN1-1000m_v2_{year}.nc
+mrro/v2/mrro_GrIS_{model}_{scenario}_SDBN1-1000m_v2_{year}.nc
+</pre></div>
+</div>
+<p>For GrIS ocean thermal (same 1km grid, 2D, yearly files):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ocean/tf/v2/tf_GrIS_{model}_{scenario}_ocean_v2_{year}.nc
+</pre></div>
+</div>
+</section>
+<section id="config-options">
+<span id="landice-ismip7-forcing-config"></span><h2>config options<a class="headerlink" href="#config-options" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">ismip7_forcing</span></code> test group uses four config sections. The default
+values are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for ismip7 forcing data</span>
+<span class="k">[ismip7]</span>
+
+<span class="c1"># Ice sheet: ais (Antarctic) or gis (Greenland)</span>
+<span class="na">ice_sheet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NotAvailable</span>
+
+<span class="c1"># Base path to the input ISMIP7 forcing files</span>
+<span class="na">base_path_ismip7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NotAvailable</span>
+
+<span class="c1"># Base path to the MALI mesh</span>
+<span class="na">base_path_mali</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NotAvailable</span>
+
+<span class="c1"># Base path to which output forcing files are saved</span>
+<span class="na">output_base_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NotAvailable</span>
+
+<span class="c1"># Name of climate model (e.g., CESM2-WACCM, MRI-ESM2-0)</span>
+<span class="na">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NotAvailable</span>
+
+<span class="c1"># Scenario (e.g., historical, ssp126, ssp370, ssp585)</span>
+<span class="na">scenario</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NotAvailable</span>
+
+<span class="c1"># Name of the MALI mesh (used in output file naming)</span>
+<span class="na">mali_mesh_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NotAvailable</span>
+
+<span class="c1"># MALI mesh file name</span>
+<span class="na">mali_mesh_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NotAvailable</span>
+
+<span class="c1"># Number of MPI tasks for ESMF_RegridWeightGen</span>
+<span class="na">esmf_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">128</span>
+
+<span class="c1"># Whether to process time-varying ocean thermal forcing (ESM scenario data)</span>
+<span class="na">process_ocean_thermal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
+
+<span class="c1"># Whether to process observational ocean thermal forcing climatology</span>
+<span class="na">process_ocean_climatology</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
+
+<span class="c1"># config options for ismip7 atmosphere forcing</span>
+<span class="k">[ismip7_atmosphere]</span>
+
+<span class="c1"># Remapping method: bilinear, neareststod, conserve</span>
+<span class="na">method_remap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">conserve</span>
+
+<span class="c1"># Start year for processing</span>
+<span class="na">start_year</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1850</span>
+
+<span class="c1"># End year for processing</span>
+<span class="na">end_year</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2014</span>
+
+<span class="c1"># config options for ismip7 ocean thermal forcing</span>
+<span class="k">[ismip7_ocean_thermal]</span>
+
+<span class="c1"># Remapping method: bilinear, neareststod, conserve</span>
+<span class="na">method_remap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">bilinear</span>
+
+<span class="c1"># Start year for processing</span>
+<span class="na">start_year</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1850</span>
+
+<span class="c1"># End year for processing</span>
+<span class="na">end_year</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2014</span>
+
+<span class="c1"># config options for ismip7 ocean thermal forcing climatology</span>
+<span class="k">[ismip7_ocean_climatology]</span>
+
+<span class="c1"># Remapping method: bilinear, neareststod, conserve</span>
+<span class="na">method_remap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">bilinear</span>
+
+<span class="c1"># Base path to observational climatology data</span>
+<span class="na">base_path_climatology</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/path/to/ISMIP7/forcing/AIS/obs/zhou_annual_06_nov</span>
+</pre></div>
+</div>
+<p>All <code class="docutils literal notranslate"><span class="pre">NotAvailable</span></code> options must be overridden in a user config file passed
+at setup time (e.g., <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span> <span class="pre">...</span> <span class="pre">-f</span> <span class="pre">my_ismip7.cfg</span></code>).</p>
+<p>The boolean options <code class="docutils literal notranslate"><span class="pre">process_ocean_thermal</span></code> and <code class="docutils literal notranslate"><span class="pre">process_ocean_climatology</span></code>
+control which processing paths are executed when the <code class="docutils literal notranslate"><span class="pre">ocean_thermal</span></code> test
+case is run. Both default to <code class="docutils literal notranslate"><span class="pre">true</span></code>. Set one to <code class="docutils literal notranslate"><span class="pre">false</span></code> in your user
+config to skip that processing path.</p>
+</section>
+<section id="atmosphere">
+<span id="landice-ismip7-forcing-atmosphere"></span><h2>atmosphere<a class="headerlink" href="#atmosphere" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">landice/ismip7_forcing/atmosphere</span></code> test case processes the ISMIP7
+atmosphere forcing fields and remaps them from the native polar stereographic
+grid to the MALI unstructured mesh.</p>
+<p>Steps:</p>
+<ul class="simple">
+<li><p><strong>process_smb</strong>: Remaps the surface mass balance (<code class="docutils literal notranslate"><span class="pre">acabf</span></code>) field. The
+output variable is <code class="docutils literal notranslate"><span class="pre">sfcMassBal</span></code>.</p></li>
+<li><p><strong>process_temperature</strong>: Remaps the surface temperature (<code class="docutils literal notranslate"><span class="pre">ts</span></code>) field,
+clipped to a maximum of 273.15 K. The output variable is
+<code class="docutils literal notranslate"><span class="pre">surfaceAirTemperature</span></code>.</p></li>
+<li><p><strong>process_smb_gradient</strong>: Remaps the SMB lapse rate (<code class="docutils literal notranslate"><span class="pre">dacabfdz</span></code>) field.
+The output variable is <code class="docutils literal notranslate"><span class="pre">sfcMassBalLapseRate</span></code>.</p></li>
+<li><p><strong>process_temperature_gradient</strong>: Remaps the temperature lapse rate
+(<code class="docutils literal notranslate"><span class="pre">dtsdz</span></code>) field. The output variable is
+<code class="docutils literal notranslate"><span class="pre">surfaceAirTemperatureLapseRate</span></code>.</p></li>
+<li><p><strong>process_runoff</strong>: Remaps the ice sheet runoff (<code class="docutils literal notranslate"><span class="pre">mrro</span></code>)
+field. The output variable is <code class="docutils literal notranslate"><span class="pre">ismip6Runoff</span></code>.</p></li>
+</ul>
+</section>
+<section id="ocean-thermal">
+<span id="landice-ismip7-forcing-ocean-thermal"></span><h2>ocean_thermal<a class="headerlink" href="#ocean-thermal" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">landice/ismip7_forcing/ocean_thermal</span></code> test case processes the ISMIP7
+ocean thermal forcing (<code class="docutils literal notranslate"><span class="pre">tf</span></code>) and remaps it from the native polar
+stereographic grid to the MALI unstructured mesh.</p>
+<p>The step supports two processing modes, controlled by boolean config options
+in the <code class="docutils literal notranslate"><span class="pre">[ismip7]</span></code> section:</p>
+<ul class="simple">
+<li><p><strong>Scenario (time-varying) data</strong> (<code class="docutils literal notranslate"><span class="pre">process_ocean_thermal</span> <span class="pre">=</span> <span class="pre">true</span></code>):
+Processes ESM-driven thermal forcing for a given model/scenario combination.</p></li>
+<li><p><strong>Observational climatology</strong> (<code class="docutils literal notranslate"><span class="pre">process_ocean_climatology</span> <span class="pre">=</span> <span class="pre">true</span></code>):
+Processes the static Zhou et al. observational thermal forcing climatology
+(AIS only). This is a time-invariant 3D field referenced to 1995-2024.</p></li>
+</ul>
+<p>Both modes can be enabled simultaneously.</p>
+<p>For <strong>AIS</strong> scenario data, thermal forcing is 3D with 30 vertical ocean
+layers. The input files span decades (e.g., 1850-1859). The output variable
+is <code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_3dThermalForcing</span></code> with dimension
+<code class="docutils literal notranslate"><span class="pre">nISMIP6OceanLayers</span></code>. Associated depth coordinate variables
+<code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_zOcean</span></code> and <code class="docutils literal notranslate"><span class="pre">ismip6shelfMelt_zBndsOcean</span></code> are also
+produced.</p>
+<p>For <strong>AIS</strong> climatology data, the output is the same 3D thermal forcing field
+but without a Time dimension, producing a single static file.</p>
+<p>For <strong>GrIS</strong>, thermal forcing is 2D (depth-averaged), with monthly temporal
+resolution and yearly input files. The output variable is
+<code class="docutils literal notranslate"><span class="pre">ismip6_2dThermalForcing</span></code>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ismip6_run.html" class="btn btn-neutral float-left" title="ismip6_run" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="isunnguata_sermia.html" class="btn btn-neutral float-right" title="isunnguata_sermia" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2024, Triad National Security, LLC (Ocean: LA-CC-13-047; Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
