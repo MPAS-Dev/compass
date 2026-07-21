@@ -106,7 +106,7 @@ Key differences from the AIS test case:
 
 * Ocean thermal forcing is 2D (depth-averaged) rather than 3D.
 * No sea-level model coupling.
-* Default calving method is ``von_mises``.
+* Default calving method is ``crevasse_depth``.
 * Config section is ``[ismip7_run_gris]``.
 
 set_up_experiment (GrIS)

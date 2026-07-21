@@ -180,8 +180,7 @@ All config options should be reviewed and altered as needed.
    nglv = 2048
 
 **GrIS config** (``[ismip7_run_gris]``) is similar (including
-``reference_surface_path``) but without sea-level model options and with
-``calving_method = von_mises`` as default.
+``reference_surface_path``) but without sea-level model options
 
 .. _landice_ismip7_run_forcing_streams:
 
@@ -195,13 +194,13 @@ ISMIP7 uses more forcing fields than ISMIP6, at mixed temporal resolutions:
 * ``sfcMassBal`` — surface mass balance
 * ``surfaceAirTemperature`` — surface air temperature
 * ``ismip6Runoff`` — ice sheet runoff
+* ``ismip6_2dThermalForcing`` (GrIS) — ocean thermal forcing
 
 **Annual forcing** (``input_interval = 0001-00-00_00:00:00``):
 
 * ``sfcMassBalLapseRate`` — SMB elevation lapse rate
 * ``surfaceAirTemperatureLapseRate`` — temperature lapse rate
-* ``ismip6shelfMelt_3dThermalForcing`` (AIS) or
-  ``ismip6_2dThermalForcing`` (GrIS) — ocean thermal forcing
+* ``ismip6shelfMelt_3dThermalForcing`` (AIS)
 
 **Static** (``input_interval = initial_only``):
 
@@ -227,4 +226,4 @@ ismip7_gris
 
 ``landice/ismip7_run/ismip7_gris`` sets up GrIS experiments with 2D
 (depth-averaged) ocean thermal forcing. Sea-level model coupling is not
-currently supported for GrIS. Von Mises calving is the default.
+currently supported for GrIS. Crevasse-depth calving is the default.
