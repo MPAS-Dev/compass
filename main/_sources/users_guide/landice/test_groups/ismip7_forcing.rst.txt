@@ -43,6 +43,21 @@ To use this test group, users need to:
 
 5. Run the ``ocean_thermal`` test case for each model and scenario combination.
 
+Example user config files are provided in the source tree for local testing:
+
+* ``compass/landice/tests/ismip7_forcing/ismip7_forcing_test.cfg``
+  (AIS-focused example)
+* ``compass/landice/tests/ismip7_forcing/ismip7_forcing_test_gis.cfg``
+  (GrIS-focused example)
+
+These files contain machine-specific absolute paths and are intended as
+templates, not portable defaults. Copy one and edit paths and options for
+your environment before using it with ``compass setup ... -f USER.cfg``.
+
+The AIS example enables both ocean processing modes and uses a 2015-2300
+processing window for both atmosphere and ocean thermal scenario forcing.
+The GrIS example enables scenario ocean processing only and uses 1980-2015.
+
 .. _landice_ismip7_forcing_input_data:
 
 Input Data

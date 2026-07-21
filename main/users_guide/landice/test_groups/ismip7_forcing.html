@@ -19,7 +19,7 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="isunnguata_sermia" href="isunnguata_sermia.html" />
+    <link rel="next" title="ismip7_run" href="ismip7_run.html" />
     <link rel="prev" title="ismip6_run" href="ismip6_run.html" /> 
 </head>
 
@@ -71,6 +71,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#ocean-thermal">ocean_thermal</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ismip7_run.html">ismip7_run</a></li>
 <li class="toctree-l3"><a class="reference internal" href="isunnguata_sermia.html">isunnguata_sermia</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kangerlussuaq.html">kangerlussuaq</a></li>
 <li class="toctree-l3"><a class="reference internal" href="koge_bugt_s.html">koge_bugt_s</a></li>
@@ -179,6 +180,19 @@ for AIS, controlled by the <code class="docutils literal notranslate"><span clas
 <li><p>Run the <code class="docutils literal notranslate"><span class="pre">atmosphere</span></code> test case for each model and scenario combination.</p></li>
 <li><p>Run the <code class="docutils literal notranslate"><span class="pre">ocean_thermal</span></code> test case for each model and scenario combination.</p></li>
 </ol>
+<p>Example user config files are provided in the source tree for local testing:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">compass/landice/tests/ismip7_forcing/ismip7_forcing_test.cfg</span></code>
+(AIS-focused example)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compass/landice/tests/ismip7_forcing/ismip7_forcing_test_gis.cfg</span></code>
+(GrIS-focused example)</p></li>
+</ul>
+<p>These files contain machine-specific absolute paths and are intended as
+templates, not portable defaults. Copy one and edit paths and options for
+your environment before using it with <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span> <span class="pre">...</span> <span class="pre">-f</span> <span class="pre">USER.cfg</span></code>.</p>
+<p>The AIS example enables both ocean processing modes and uses a 2015-2300
+processing window for both atmosphere and ocean thermal scenario forcing.
+The GrIS example enables scenario ocean processing only and uses 1980-2015.</p>
 </section>
 <section id="input-data">
 <span id="landice-ismip7-forcing-input-data"></span><h2>Input Data<a class="headerlink" href="#input-data" title="Link to this heading"></a></h2>
@@ -349,7 +363,7 @@ resolution and yearly input files. The output variable is
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ismip6_run.html" class="btn btn-neutral float-left" title="ismip6_run" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="isunnguata_sermia.html" class="btn btn-neutral float-right" title="isunnguata_sermia" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ismip7_run.html" class="btn btn-neutral float-right" title="ismip7_run" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

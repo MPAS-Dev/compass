@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>humboldt &mdash; compass 2.0.0-alpha.2 documentation</title>
+  <title>ismip7_run &mdash; compass 2.0.0-alpha.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
@@ -19,8 +19,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="hydro_radial" href="hydro_radial.html" />
-    <link rel="prev" title="greenland" href="greenland.html" /> 
+    <link rel="next" title="isunnguata_sermia" href="isunnguata_sermia.html" />
+    <link rel="prev" title="ismip7_forcing" href="ismip7_forcing.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -69,19 +69,17 @@
 <li class="toctree-l3"><a class="reference internal" href="enthalpy_benchmark.html">enthalpy_benchmark</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eismint2.html">eismint2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenland.html">greenland</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">humboldt</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#framework">framework</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#mesh-gen">mesh_gen</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#run-model">run_model</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#decomposition-test">decomposition_test</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#restart-test">restart_test</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="humboldt.html">humboldt</a></li>
 <li class="toctree-l3"><a class="reference internal" href="hydro_radial.html">hydro_radial</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ismip6_forcing.html">ismip6_forcing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ismip6_run.html">ismip6_run</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ismip7_forcing.html">ismip7_forcing</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ismip7_run.html">ismip7_run</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ismip7_run</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#framework">framework</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ismip7-ais">ismip7_ais</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ismip7-gris">ismip7_gris</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="isunnguata_sermia.html">isunnguata_sermia</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kangerlussuaq.html">kangerlussuaq</a></li>
 <li class="toctree-l3"><a class="reference internal" href="koge_bugt_s.html">koge_bugt_s</a></li>
@@ -137,9 +135,9 @@
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Landice core</a></li>
           <li class="breadcrumb-item"><a href="index.html">Test groups</a></li>
-      <li class="breadcrumb-item active">humboldt</li>
+      <li class="breadcrumb-item active">ismip7_run</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/developers_guide/landice/test_groups/humboldt.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/developers_guide/landice/test_groups/ismip7_run.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -147,64 +145,110 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="humboldt">
-<span id="dev-landice-humboldt"></span><h1>humboldt<a class="headerlink" href="#humboldt" title="Link to this heading"></a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">humboldt</span></code> test group (<a class="reference internal" href="../generated/compass.landice.tests.humboldt.Humboldt.html#compass.landice.tests.humboldt.Humboldt" title="compass.landice.tests.humboldt.Humboldt"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.humboldt.Humboldt</span></code></a>)
-creates a variable resolution 1-10 km mesh for a regional domain of Humboldt Glacier
-(see <a class="reference internal" href="../../../users_guide/landice/test_groups/humboldt.html#landice-humboldt"><span class="std std-ref">humboldt</span></a>), and includes a number of tests running MALI on a
-pre-generated mesh.  Here, we describe the shared framework for this test group.</p>
+  <section id="ismip7-run">
+<span id="dev-landice-ismip7-run"></span><h1>ismip7_run<a class="headerlink" href="#ismip7-run" title="Link to this heading"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">ismip7_run</span></code> test group
+(<code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_run</span></code>) sets up experiments from
+the ISMIP7 experimental protocol for both the Antarctic Ice Sheet (AIS)
+and the Greenland Ice Sheet (GrIS).  Optionally, the AIS test case
+supports coupled MALI–Sea Level Model (SLM) simulations.
+(see <a class="reference internal" href="../../../users_guide/landice/test_groups/ismip7_run.html#landice-ismip7-run"><span class="std std-ref">ismip7_run</span></a>).</p>
 <section id="framework">
-<span id="dev-landice-humboldt-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Link to this heading"></a></h2>
-<p>The shared config options for the <code class="docutils literal notranslate"><span class="pre">humboldt</span></code> test group are described
-in <a class="reference internal" href="../../../users_guide/landice/test_groups/humboldt.html#landice-humboldt"><span class="std std-ref">humboldt</span></a> in the User’s Guide.</p>
-<section id="mesh">
-<h3>mesh<a class="headerlink" href="#mesh" title="Link to this heading"></a></h3>
-<p>The class <a class="reference internal" href="../generated/compass.landice.tests.humboldt.mesh.Mesh.html#compass.landice.tests.humboldt.mesh.Mesh" title="compass.landice.tests.humboldt.mesh.Mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.humboldt.mesh.Mesh</span></code></a>
-defines a step for creating a variable resolution Humboldt Glacier mesh.
-This is used by the <code class="docutils literal notranslate"><span class="pre">mesh_gen</span></code> test case.</p>
+<h2>framework<a class="headerlink" href="#framework" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">ismip7_run</span></code> test group
+(<code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_run.Ismip7Run</span></code>) registers two
+test cases:</p>
+<ul class="simple">
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_run.ismip7_ais.Ismip7Ais</span></code></p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_run.ismip7_gris.Ismip7Gris</span></code></p></li>
+</ul>
+<p>There is no shared functionality between the two test cases at present.
+Shared functions may be added in the future if the needed functionality
+can be generalized.</p>
+</section>
+<section id="ismip7-ais">
+<h2>ismip7_ais<a class="headerlink" href="#ismip7-ais" title="Link to this heading"></a></h2>
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_run.ismip7_ais.Ismip7Ais</span></code>
+test case sets up an ensemble of ISMIP7 Antarctica simulations
+(standalone MALI or coupled MALI-SLM).</p>
+<p>The constructor (<code class="docutils literal notranslate"><span class="pre">__init__</span></code>) does nothing other than allow the
+<code class="docutils literal notranslate"><span class="pre">ismip7_ais</span></code> test case to be listed by <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">list</span></code> without having
+all individual experiments listed in a verbose listing.  Each individual
+experiment is a step rather than a test case to avoid excessive
+subdirectories.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">configure</span></code> method parses the <code class="docutils literal notranslate"><span class="pre">exp_list</span></code> config option from the
+<code class="docutils literal notranslate"><span class="pre">[ismip7_run_ais]</span></code> section. It supports:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">all</span></code> — all 11 core experiments</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">historical</span></code> — just the two historical runs</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">projections</span></code> — the six SSP projection runs</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ctrl</span></code> — the two CTRL2015 runs</p></li>
+<li><p>A comma-delimited list of specific experiment names</p></li>
+</ul>
+<p>Each selected experiment is added as a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">SetUpExperiment</span></code>
+step and immediately removed from <code class="docutils literal notranslate"><span class="pre">steps_to_run</span></code> (experiments should be
+submitted individually, not run through the test case).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">run</span></code> method raises an error instructing the user to submit batch
+jobs for each experiment individually.</p>
+<section id="set-up-experiment-ais">
+<h3>set_up_experiment (AIS)<a class="headerlink" href="#set-up-experiment-ais" title="Link to this heading"></a></h3>
+<p>The class
+<code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_run.ismip7_ais.set_up_experiment.SetUpExperiment</span></code>
+defines a step for a single ISMIP7 AIS experiment.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">setup</span></code> method sets up the experiment directory by:</p>
+<ol class="arabic simple">
+<li><p>Creating symlinks to forcing files from the conventional path layout
+under <code class="docutils literal notranslate"><span class="pre">forcing_basepath</span></code>.</p></li>
+<li><p>Symlinking the <code class="docutils literal notranslate"><span class="pre">reference_surface_path</span></code> file into the run directory,
+where it is used by MALI when applying lapse rates.</p></li>
+<li><p>Copying and populating the streams template with the correct forcing
+filenames and intervals (monthly for SMB/temperature/runoff, annual
+for lapse rates and thermal forcing, <code class="docutils literal notranslate"><span class="pre">initial_only</span></code> for melt
+parameters).</p></li>
+<li><p>Processing the namelist template for the experiment’s time period
+and restart frequency.</p></li>
+<li><p>Adding calving-specific streams (face melting, von Mises params) if
+configured.</p></li>
+<li><p>Creating a restart symlink for projection experiments pointing to
+the corresponding ESM’s historical restart
+(<code class="docutils literal notranslate"><span class="pre">../historical_{model}/rst.2015-01-01.nc</span></code>).</p></li>
+<li><p>Setting up CTRL2015 experiments with constant-climate forcing
+(<code class="docutils literal notranslate"><span class="pre">initial_only</span></code> intervals).</p></li>
+<li><p>Setting up the OCX experiment with reanalysis-based forcing.</p></li>
+<li><p>If SLM coupling is enabled, adding a <code class="docutils literal notranslate"><span class="pre">CreateSlmMappingFiles</span></code> step
+and writing the SLM namelist from the Jinja2 template.</p></li>
+<li><p>Generating a <code class="docutils literal notranslate"><span class="pre">graph.info</span></code> file and a SLURM job script.</p></li>
+<li><p>Symlinking the compass load script into the run directory.</p></li>
+</ol>
+<p>The <code class="docutils literal notranslate"><span class="pre">run</span></code> method executes MALI for the given experiment.</p>
+</section>
+<section id="create-slm-mapping-files">
+<h3>create_slm_mapping_files<a class="headerlink" href="#create-slm-mapping-files" title="Link to this heading"></a></h3>
+<p>The class
+<code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_run.ismip7_ais.create_slm_mapping_files.CreateSlmMappingFiles</span></code>
+creates mapping files between the MALI mesh and the SLM grid.  This step
+is only added when sea-level model coupling is enabled.</p>
 </section>
 </section>
-<section id="mesh-gen">
-<h2>mesh_gen<a class="headerlink" href="#mesh-gen" title="Link to this heading"></a></h2>
-<p>The <a class="reference internal" href="../generated/compass.landice.tests.humboldt.mesh_gen.MeshGen.html#compass.landice.tests.humboldt.mesh_gen.MeshGen" title="compass.landice.tests.humboldt.mesh_gen.MeshGen"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.humboldt.mesh_gen.MeshGen</span></code></a>
-calls the <a class="reference internal" href="../generated/compass.landice.tests.humboldt.mesh.Mesh.html#compass.landice.tests.humboldt.mesh.Mesh" title="compass.landice.tests.humboldt.mesh.Mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.humboldt.mesh.Mesh</span></code></a> to create
-the 1-10 km variable resolution Humboldt Glacier mesh.</p>
-<p>Optional BedMachine and MEaSUREs interpolation can be enabled through
-<code class="docutils literal notranslate"><span class="pre">[mesh]</span></code> config options <code class="docutils literal notranslate"><span class="pre">nProcs</span></code>, <code class="docutils literal notranslate"><span class="pre">src_proj</span></code>, <code class="docutils literal notranslate"><span class="pre">data_path</span></code>,
-<code class="docutils literal notranslate"><span class="pre">bedmachine_filename</span></code>, and <code class="docutils literal notranslate"><span class="pre">measures_filename</span></code>. If enabled, source
-datasets are subset to the
-configured mesh bounding box before SCRIP generation and conservative
-remapping.
-The <code class="docutils literal notranslate"><span class="pre">src_proj</span></code> option is used for optional remapping only; the
-base-mesh projection in <code class="docutils literal notranslate"><span class="pre">build_mali_mesh()</span></code> is fixed for this test case.</p>
+<section id="ismip7-gris">
+<h2>ismip7_gris<a class="headerlink" href="#ismip7-gris" title="Link to this heading"></a></h2>
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_run.ismip7_gris.Ismip7Gris</span></code>
+test case mirrors <code class="docutils literal notranslate"><span class="pre">ismip7_ais</span></code> but for the Greenland Ice Sheet.</p>
+<p>Key differences from the AIS test case:</p>
+<ul class="simple">
+<li><p>Ocean thermal forcing is 2D (depth-averaged) rather than 3D.</p></li>
+<li><p>No sea-level model coupling.</p></li>
+<li><p>Default calving method is <code class="docutils literal notranslate"><span class="pre">crevasse_depth</span></code>.</p></li>
+<li><p>Config section is <code class="docutils literal notranslate"><span class="pre">[ismip7_run_gris]</span></code>.</p></li>
+</ul>
+<section id="set-up-experiment-gris">
+<h3>set_up_experiment (GrIS)<a class="headerlink" href="#set-up-experiment-gris" title="Link to this heading"></a></h3>
+<p>The class
+<code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.ismip7_run.ismip7_gris.set_up_experiment.SetUpExperiment</span></code>
+follows the same logic as the AIS version, with the differences noted
+above (2D TF stream, no SLM support).</p>
 </section>
-<section id="run-model">
-<h2>run_model<a class="headerlink" href="#run-model" title="Link to this heading"></a></h2>
-<p>The <a class="reference internal" href="../generated/compass.landice.tests.humboldt.run_model.RunModel.html#compass.landice.tests.humboldt.run_model.RunModel" title="compass.landice.tests.humboldt.run_model.RunModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.humboldt.run_model.RunModel</span></code></a> defines
-the process for setting up and running a MALI simulation for the humboldt
-configuration.  It is called by
-<a class="reference internal" href="../generated/compass.landice.tests.humboldt.decomposition_test.DecompositionTest.html#compass.landice.tests.humboldt.decomposition_test.DecompositionTest" title="compass.landice.tests.humboldt.decomposition_test.DecompositionTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.humboldt.decomposition_test.DecompositionTest</span></code></a>
-and
-<a class="reference internal" href="../generated/compass.landice.tests.humboldt.restart_test.RestartTest.html#compass.landice.tests.humboldt.restart_test.RestartTest" title="compass.landice.tests.humboldt.restart_test.RestartTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.humboldt.restart_test.RestartTest</span></code></a>.</p>
-</section>
-<section id="decomposition-test">
-<h2>decomposition_test<a class="headerlink" href="#decomposition-test" title="Link to this heading"></a></h2>
-<p><a class="reference internal" href="../generated/compass.landice.tests.humboldt.decomposition_test.DecompositionTest.html#compass.landice.tests.humboldt.decomposition_test.DecompositionTest" title="compass.landice.tests.humboldt.decomposition_test.DecompositionTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.humboldt.decomposition_test.DecompositionTest</span></code></a>
-performs the same simulation on different numbers of cores. It ensures
-relevant variables are identical or have expected differences. Decomposition
-sizes are selected with
-<a class="reference internal" href="../generated/compass.landice.util.calculate_decomp_core_pair.html#compass.landice.util.calculate_decomp_core_pair" title="compass.landice.util.calculate_decomp_core_pair"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.util.calculate_decomp_core_pair()</span></code></a>, which returns
-the processor list <code class="docutils literal notranslate"><span class="pre">[low_tasks,</span> <span class="pre">max_tasks]</span></code> used for the two runs.</p>
-</section>
-<section id="restart-test">
-<h2>restart_test<a class="headerlink" href="#restart-test" title="Link to this heading"></a></h2>
-<p><a class="reference internal" href="../generated/compass.landice.tests.humboldt.restart_test.RestartTest.html#compass.landice.tests.humboldt.restart_test.RestartTest" title="compass.landice.tests.humboldt.restart_test.RestartTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.humboldt.restart_test.RestartTest</span></code></a> performs a
-run of a full specified duration followed by a short run plus a restart
-to equal the same total duration.  It checks that relevant variables
-are bit-for-bit when doing a restart.</p>
-<p>The restart step works by creating two different namelist and streams files,
-one each with landice as the suffix and one each with landice.rst as the
-suffix.</p>
 </section>
 </section>
 
@@ -212,8 +256,8 @@ suffix.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="greenland.html" class="btn btn-neutral float-left" title="greenland" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="hydro_radial.html" class="btn btn-neutral float-right" title="hydro_radial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ismip7_forcing.html" class="btn btn-neutral float-left" title="ismip7_forcing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="isunnguata_sermia.html" class="btn btn-neutral float-right" title="isunnguata_sermia" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
