@@ -21,6 +21,7 @@ Test groups
    ismip6_forcing
    ismip6_run
    ismip7_forcing
+   ismip7_run
    isunnguata_sermia
    kangerlussuaq
    koge_bugt_s
