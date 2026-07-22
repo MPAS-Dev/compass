@@ -110,7 +110,7 @@ Note that meshes and test cases may modify these options, as noted below.
 
     plot_station_dems = False
 
-.. _hurricane_meshes:
+.. _ocean_hurricane_meshes:
 
 Meshes
 ------
@@ -126,7 +126,7 @@ The finest mesh (RRS6to18) is reproduced from the ``global_ocean`` test group.
 These meshes are designed to work with the barotropic, single layer
 ``hurricane`` configurations, and they do not include ice-shelf cavities.
 
-.. _hurricane_mesh_dequ120at30cr10rr2:
+.. _ocean_hurricane_mesh_dequ120at30cr10rr2:
 
 DEQU120at30cr10rr2
 ^^^^^^^^^^^^^^^^^^
@@ -137,7 +137,7 @@ Mid-Atlantic Bight, and (4) 2 km refinement along the coastal floodplain. The
 floodplain is defined by a 10 m elevation threshold. This mesh is primarily for
 testing purposes.
 
-.. _hurricane_mesh_devr45to5rr1:
+.. _ocean_hurricane_mesh_devr45to5rr1:
 
 DEVR45to5rr1
 ^^^^^^^^^^^^
@@ -149,7 +149,7 @@ floodplain is defined by a 40 m elevation threshold, and only where refinement
 exceeds 4 km. This mesh is designed for predicting hurricane flooding along the
 US East Coast, such as the flooding caused by hurricanes Sandy and Irene.
 
-.. _hurricane_mesh_rrs6to18:
+.. _ocean_hurricane_mesh_rrs6to18:
 
 RRS6to18
 ^^^^^^^^
@@ -161,12 +161,12 @@ GEOJSON region file. Additionally, the floodplain is constrained by a 20 m
 elevation threshold, and only where refinement exceeds 16 km. The use of this
 mesh for flooding simulations is experimental.
 
-.. _hurricane_test_cases:
+.. _ocean_hurricane_test_cases:
 
 Test cases
 ----------
 
-.. _hurricane_mesh:
+.. _ocean_hurricane_mesh:
 
 mesh test case
 ^^^^^^^^^^^^^^
@@ -182,7 +182,7 @@ region GEOJSON file ``floodplain_geojson``. Finally, the bathymetry is
 re-interpolated onto the mesh since this data is not carried over from the
 cell culling process.
 
-.. _hurricane_mesh_lts:
+.. _ocean_hurricane_mesh_lts:
 
 If either LTS option is selected for the mesh test case, an additional step
 is carried out after the mesh culling. This step appropriately flags 
@@ -191,7 +191,7 @@ use time-steps of different sizes on different regions of the mesh.
 The parallel partitioning is modified accordingly to achieve proper
 load balancing.
 
-.. _hurricane_init:
+.. _ocean_hurricane_init:
 
 init test case
 ^^^^^^^^^^^^^^
@@ -229,19 +229,19 @@ condition file for the forward run. The vertical mesh is setup for a
 single layer case and the ssh with a thin layer on land for wetting and
 drying cases.
 
-.. _hurricane_init_subgrid:
+.. _ocean_hurricane_init_subgrid:
 
 If the ``subgrid`` option is selected, the Digital Elevation Model (DEM) and
 Land Use/Land Cover (LULC) tiles are processed to create look-up tables for
 the forward step corrections, and the DEM tiles are averaged to create the
 coastal and floodplain topography.
 
-.. _hurricane_init_lts:
+.. _ocean_hurricane_init_lts:
 
 If either LTS option is selected for the init test case, the modified
 partitioning done in the mesh step is used to run MPAS-Ocean init mode.
 
-.. _hurricane_sandy:
+.. _ocean_hurricane_sandy:
 
 sandy test case
 ^^^^^^^^^^^^^^^
@@ -254,12 +254,12 @@ The forward step runs the model simulation of the storm. The simulation
 begins with a spinup period, where the tides and atmospheric forcing
 are ramped to their full value to avoid shocking the system.
 
-.. _hurricane_init_subgrid:
+.. _ocean_hurricane_init_subgrid:
 
 If the ``subgrid`` option is selected, look-up tables are used to make the
 DEM and LULC corrections in the forward mode.
 
-.. _hurricane_sandy_lts:
+.. _ocean_hurricane_sandy_lts:
 
 If either LTS option is selected for the sandy test case, the LTS scheme
 is used to advance the solution in time rather than the default RK4 scheme.
@@ -271,13 +271,13 @@ to compare the modeled and observed data. Both NOAA and USGS station data
 are used for the validation.
 
 .. image:: images/hurricane_subgrid_stationSSSNJHUD002WL.png
-   :width: 500 px
+   :width: 800 px
    :align: center
 
 .. image:: images/hurricane_subgrid_error.png
-   :width: 500 px
+   :width: 800 px
    :align: center
 
 .. image:: images/hurricane_subgrid_spatialerror.png
-   :width: 500 px
+   :width: 800 px
    :align: center
