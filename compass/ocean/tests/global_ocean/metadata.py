@@ -1,6 +1,10 @@
+import glob
+import importlib.metadata
+import json
 import os
 import shutil
 import subprocess
+import sys
 from datetime import datetime
 
 import numpy
@@ -188,7 +192,9 @@ def _get_metadata(dsInit, config):
     if 'bgc' in descriptions:
         metadata['MPAS_Mesh_Biogeochemistry'] = descriptions['bgc']
 
-    packages = {'compass': 'compass', 'JIGSAW': 'jigsaw',
+    # JIGSAW is built as part of the jigsawpy package so the two share a
+    # version
+    packages = {'compass': 'compass', 'JIGSAW': 'jigsawpy',
                 'JIGSAW_Python': 'jigsawpy', 'MPAS_Tools': 'mpas_tools',
                 'NCO': 'nco', 'ESMF': 'esmf',
                 'geometric_features': 'geometric_features',
@@ -197,17 +203,40 @@ def _get_metadata(dsInit, config):
     for name in packages:
         package = packages[name]
         metadata[f'MPAS_Mesh_{name}_Version'] = \
-            _get_conda_package_version(package)
+            _get_package_version(package)
 
     return metadata
 
 
-def _get_conda_package_version(package):
-    conda = subprocess.check_output(['conda', 'list', package]).decode("utf-8")
-    lines = conda.split('\n')
-    for line in lines:
-        parts = line.split()
-        if len(parts) > 0 and parts[0] == package:
-            return parts[1]
+def _get_package_version(package):
+    """
+    Get the version of a package in the pixi environment, either from the
+    conda package records or, for packages installed with pip (such as compass
+    itself), from the python package metadata
+    """
+    version = _get_conda_package_version(package)
+    if version is None:
+        version = _get_python_package_version(package)
+    if version is None:
+        version = 'not found'
+    return version
 
-    return 'not found'
+
+def _get_conda_package_version(package):
+    """ Get the version of a conda package installed in this environment """
+    pattern = os.path.join(sys.prefix, 'conda-meta', f'{package}-*.json')
+    for filename in sorted(glob.glob(pattern)):
+        with open(filename) as data_file:
+            record = json.load(data_file)
+        if record.get('name') == package:
+            return record.get('version')
+
+    return None
+
+
+def _get_python_package_version(package):
+    """ Get the version of a python package installed in this environment """
+    try:
+        return importlib.metadata.version(package)
+    except importlib.metadata.PackageNotFoundError:
+        return None
