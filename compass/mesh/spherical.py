@@ -142,29 +142,29 @@ class SphericalBaseStep(Step):
         image_filename = config.get('spherical_mesh',
                                     'cell_width_image_filename')
         register_sci_viz_colormaps()
-        fig = plt.figure(figsize=[16.0, 8.0])
+        plt.figure(figsize=[16.0, 8.0])
         ax = plt.axes(projection=ccrs.PlateCarree())
         ax.set_global()
         im = ax.imshow(cell_width, origin='lower',
                        transform=ccrs.PlateCarree(),
                        extent=[-180, 180, -90, 90], cmap=cmap, zorder=0)
         ax.add_feature(cartopy.feature.LAND, edgecolor='black', zorder=1)
-        gl = ax.gridlines(
+        # only request the labels we want.  Creating the top and right labels
+        # and then hiding them confuses cartopy's title placement, leading to
+        # a non-finite axes bounding box
+        ax.gridlines(
             crs=ccrs.PlateCarree(),
-            draw_labels=True,
+            draw_labels=['left', 'bottom'],
             linewidth=1,
             color='gray',
             alpha=0.5,
             linestyle='-', zorder=2)
-        gl.top_labels = False
-        gl.right_labels = False
         min_width = np.amin(cell_width)
         max_width = np.amax(cell_width)
         plt.title(
             f'Grid cell size, km, min: {min_width:.1f} max: {max_width:.1f}')
         plt.colorbar(im, shrink=.60)
-        fig.canvas.draw()
-        plt.tight_layout()
+        # no tight_layout() here: bbox_inches='tight' already crops the figure
         plt.savefig(image_filename, bbox_inches='tight')
         plt.close()
 
