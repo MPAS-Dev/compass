@@ -254,7 +254,7 @@ The forward step runs the model simulation of the storm. The simulation
 begins with a spinup period, where the tides and atmospheric forcing
 are ramped to their full value to avoid shocking the system.
 
-.. _ocean_hurricane_init_subgrid:
+.. _ocean_hurricane_sandy_subgrid:
 
 If the ``subgrid`` option is selected, look-up tables are used to make the
 DEM and LULC corrections in the forward mode.
