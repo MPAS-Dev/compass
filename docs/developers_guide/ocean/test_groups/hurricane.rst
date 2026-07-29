@@ -42,6 +42,7 @@ The mesh is defined by
 The default config options for this mesh are:
 
 .. code-block:: cfg
+
     # options for spherical meshes
     [spherical_mesh]
 
@@ -92,6 +93,7 @@ The mesh is defined by
 The default config options for this mesh are:
 
 .. code-block:: cfg
+
     # options for spherical meshes
     [spherical_mesh]
 
@@ -146,6 +148,7 @@ The mesh is defined by
 The default config options for this mesh are:
 
 .. code-block:: cfg
+
     # options for spherical meshes
     [spherical_mesh]
 
@@ -225,7 +228,7 @@ conditions, atmospheric forcing, and parameterized wave and bottom drag, and
 prepares the station locations for timeseries output.
 
 initial_state
-=============
+"""""""""""""
 The class :py:class:`compass.ocean.tests.hurricane.init.initial_state.InitialState`
 defines a step for running MPAS-Ocean in init mode. The vertical mesh is
 set up with a single layer. For the subgrid scheme, the ``initial_state`` step
@@ -234,20 +237,20 @@ look-up tables and construct the floodplain topography averaged from the
 high-resolution DEM.
 
 interpolate_atm_forcing
-=======================
+"""""""""""""""""""""""
 The class :py:class:`compass.ocean.tests.hurricane.init.interpolate_atm_forcing.InterpolateAtmForcing`
 defines a step for interpolating CFSv2 reanalysis data for atmospheric winds
 and pressure onto the MPAS-Ocean mesh at hourly time intervals. The forward
 run uses this as input to update the time varying atmospheric forcing.
 
 create_pointstats_file
-======================
+""""""""""""""""""""""
 The class :py:class:`compass.ocean.tests.hurricane.init.create_pointstats_file.CreatePointstatsFile`
 defines a step to create the input file for the MPAS-Ocean pointWiseStats
 analysis member based on station locations which have observed data.
 
 topographic_wave_drag
-=====================
+"""""""""""""""""""""
 The class :py:class:`compass.ocean.tests.hurricane.lts.init.topographic_wave_drag.ComputeTopographicWaveDrag`
 defines a step for interpolating the reciprocal of the ``r_inv`` to the mesh edges.
 This step is needed to include the contribution of the topographic wave drag
@@ -260,7 +263,7 @@ sandy test case
 The sandy test case is responsible for the forward model simulation and analysis.
 
 forward
-=======
+"""""""
 The class :py:class:`compass.ocean.tests.hurricane.forward.forward.ForwardStep`
 defines a step to run MPAS-Ocean in forward mode. For the subgrid scheme, the
 ``forward`` step is where the ``wetdry`` parameter determines whether to apply
@@ -268,7 +271,7 @@ the subgrid corrections via the look-up tables built in the ``initial_state``
 step.
 
 analysis
-========
+""""""""
 The class :py:class:`compass.ocean.tests.hurricane.analysis.Analysis`
 defines a step to generate validation plots comparing sea surface height
 timeseries between modeled and observed data at several different stations.
