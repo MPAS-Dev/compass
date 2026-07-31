@@ -334,7 +334,8 @@ class Analysis(Step):
             never_wet[run] = np.asarray(never_wet[run])
 
         # Plot comparisons
-        #self.plot_hwm(station_lon, station_lat, hwm_obs, hwm_mod, never_wet, data)
+        # self.plot_hwm(
+        #     station_lon, station_lat, hwm_obs, hwm_mod, never_wet, data)
 
     def find_data_in_bbox(self, sta_lon, sta_lat, eps):
         """
