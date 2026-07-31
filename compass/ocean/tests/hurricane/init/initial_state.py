@@ -32,8 +32,11 @@ class InitialState(Step):
         mesh : compass.ocean.tests.hurricane.mesh.Mesh
             The test case that creates the mesh used by this test case
 
-        use_lts: bool
-            Whether local time-stepping is used
+        use_lts : bool
+            Whether local time-stepping is used (use `LTS` or `FB_LTS` as True)
+
+        wetdry : str
+            Type of wetting-drying scheme (`off`, `standard`, or `subgrid`)
 
         """
 

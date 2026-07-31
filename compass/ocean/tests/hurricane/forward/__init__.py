@@ -37,7 +37,11 @@ class Forward(TestCase):
             The test case that produces the initial condition for this run
 
         use_lts : bool
-            Whether local time-stepping is to be used
+            Whether local time-stepping is used (use `LTS` or `FB_LTS` as True)
+
+        wetdry : str
+            Type of wetting-drying scheme (`off`, `standard`, or `subgrid`)
+
         """
         mesh_name = mesh.mesh_name
 

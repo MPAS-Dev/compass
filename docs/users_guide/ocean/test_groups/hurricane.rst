@@ -24,12 +24,12 @@ simulate coastal inundation using the wetting and drying scheme.
 The time stepping options to run the simulations include the fourth
 order Runge-Kutta scheme (RK4), and two local time-stepping schemes.
 The first LTS scheme is based on a strong stability preserving Runge-Kutta
-scheme of order three and is called LTS3, see 
+scheme of order three and is called LTS3, see
 `Lilly et al. (2023) <https://doi.org/10.1029/2022MS003327>`_
 for details.
 The second LTS scheme is based on a forward-backward Runge-Kutta scheme
 of order two and is called FB-LTS.
-Each test case in the ``ocean/hurricane`` test group has a counterpart 
+Each test case in the ``ocean/hurricane`` test group has a counterpart
 for each LTS scheme which is identified by appending the test case name
 with ``_lts`` for LTS3 and ``_fblts`` for FB-LTS.
 
@@ -173,7 +173,7 @@ mesh test case
 The mesh test case uses the ``mesh`` step from the ``global_ocean`` test group
 to generate the global mesh based on a specified mesh resolution function.
 Next, bathymetry/topography data is interpolated onto the mesh from the NASA
-Shuttle Radar Topography Mission 15 arcsecond (STRM15+) data product. This
+Shuttle Radar Topography Mission 15 arcsecond (SRTM15+) data product. This
 interpolation step is necessary, because the topography in the floodplain is
 used to set a mask for the cell culling process. The land cells above the
 ``floodplain_elevation`` are then culled from the mesh. The floodplain can be
@@ -185,7 +185,7 @@ cell culling process.
 .. _ocean_hurricane_mesh_lts:
 
 If either LTS option is selected for the mesh test case, an additional step
-is carried out after the mesh culling. This step appropriately flags 
+is carried out after the mesh culling. This step appropriately flags
 the cells of the mesh according to a user defined criterion in order to
 use time-steps of different sizes on different regions of the mesh.
 The parallel partitioning is modified accordingly to achieve proper
@@ -217,15 +217,15 @@ closest to them. A file is created that is the input to the
 compute topographic wave drag step
 """"""""""""""""""""""""""""""""""
 The reciprocal of the e-folding time, ``r_inv``, from the HyCOM model,
-is computed in this step. See 
-`Buijsman et al. (2016) <https://doi.org/10.1175/JPO-D-15-0074.1>`_ 
-for details on the computation. This coefficient is needed to account 
+is computed in this step. See
+`Buijsman et al. (2016) <https://doi.org/10.1175/JPO-D-15-0074.1>`_
+for details on the computation. This coefficient is needed to account
 for the topographic wave drag tendency in the model.
 
 initial state step
 """"""""""""""""""
 The initial state step runs MPAS-Ocean in init mode to create the initial
-condition file for the forward run. The vertical mesh is setup for a
+condition file for the forward run. The vertical mesh is set up for a
 single layer case and the ssh with a thin layer on land for wetting and
 drying cases.
 

@@ -43,7 +43,11 @@ class Init(TestCase):
             The name of the storm to be run
 
         use_lts : bool
-            Whether local time-stepping is used
+            Whether local time-stepping is used (use `LTS` or `FB_LTS` as True)
+
+        wetdry : str
+            Type of wetting-drying scheme (`off`, `standard`, or `subgrid`)
+
         """
 
         self.mesh = mesh

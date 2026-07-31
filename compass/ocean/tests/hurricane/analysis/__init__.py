@@ -337,6 +337,9 @@ class Analysis(Step):
         #self.plot_hwm(station_lon, station_lat, hwm_obs, hwm_mod, never_wet, data)
 
     def find_data_in_bbox(self, sta_lon, sta_lat, eps):
+        """
+        Find data in bounding box
+        """
 
         dsMesh = xr.open_dataset('mesh.nc')
 
@@ -398,6 +401,9 @@ class Analysis(Step):
 
     def plot_timeseries(self, obs, sta, sta_lon, sta_lat,
                         obs_data, tree, data):
+        """
+        Plot timeseries
+        """
 
         # Create figure
         fig = plt.figure(figsize=[6, 4])
@@ -470,6 +476,9 @@ class Analysis(Step):
         plt.close()
 
     def plot_dem(self, sta, sta_lon, sta_lat):
+        """
+        Plot Digital Elevation Model around station
+        """
 
         # eps = 0.25
         eps = 0.76
@@ -629,7 +638,11 @@ class Analysis(Step):
 
         plt.close()
 
-    def plot_hwm(self, station_lon, station_lat, hwm_obs, hwm_mod, never_wet, data):
+    def plot_hwm(self, station_lon, station_lat, hwm_obs, hwm_mod,
+                 never_wet, data):
+        """
+        Plot High-Water Mark statistics
+        """
 
         # Print diagnostics
         print(station_lon)
@@ -768,6 +781,10 @@ class Analysis(Step):
             plt.close()
 
     def compute_cell_patches(self, dsMesh, bbox):
+        """
+        Compute cell patches
+        """
+
         patches = []
         nVerticesOnCell = dsMesh.nEdgesOnCell.values
         verticesOnCell = dsMesh.verticesOnCell.values - 1
