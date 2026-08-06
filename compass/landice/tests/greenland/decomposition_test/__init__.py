@@ -23,7 +23,7 @@ class DecompositionTest(TestCase):
         The names of the subdirectories for the two decomposition runs
     """
 
-    def __init__(self, test_group, velo_solver):
+    def __init__(self, test_group, velo_solver, advection_type):
         """
         Create the test case
 
@@ -34,12 +34,16 @@ class DecompositionTest(TestCase):
 
         velo_solver : {'sia', 'FO'}
             The velocity solver to use for the test case
+
+        advection_type : {'fo', 'fct'}
+            The type of advection to use for thickness and tracers
         """
         name = 'decomposition_test'
         self.velo_solver = velo_solver
+        self.advection_type = advection_type
         self.proc_list = None
         self.run_dirs = None
-        subdir = '{}_{}'.format(velo_solver.lower(), name)
+        subdir = '{}_{}_{}'.format(velo_solver.lower(), advection_type, name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
     def configure(self):
@@ -68,11 +72,18 @@ class DecompositionTest(TestCase):
             if name in self.run_dirs:
                 name = '{}_{}'.format(name, len(self.run_dirs) + 1)
             self.run_dirs.append(name)
-            self.add_step(
-                RunModel(test_case=self, velo_solver=self.velo_solver,
-                         name=name,
-                         subdir=name, ntasks=procs, min_tasks=procs,
-                         openmp_threads=1))
+            step = RunModel(
+                test_case=self, velo_solver=self.velo_solver,
+                name=name,
+                subdir=name, ntasks=procs, min_tasks=procs,
+                openmp_threads=1)
+            if self.advection_type == 'fct':
+                step.add_namelist_options(
+                    {'config_thickness_advection': "'fct'",
+                     'config_tracer_advection': "'fct'",
+                     'config_time_integration': "'runge_kutta'"},
+                    out_name='namelist.landice')
+            self.add_step(step)
 
     # no run() method is needed
 
