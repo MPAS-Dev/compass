@@ -1,9 +1,15 @@
 from compass.ocean.mesh.cull import CullMeshStep
+from compass.ocean.mesh.remap_topography import RemapTopography
 from compass.ocean.tests.hurricane.configure import configure_hurricane
 from compass.ocean.tests.hurricane.lts.mesh.lts_regions import LTSRegionsStep
 from compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2 import (
     DEQU120at30cr10rr2BaseMesh,
 )
+from compass.ocean.tests.hurricane.mesh.devr45to5rr1 import (
+    DEVR45to5rr1BaseMesh,
+)
+from compass.ocean.tests.hurricane.mesh.rrs6to18 import RRS6to18BaseMesh
+from compass.ocean.tests.tides.dem import CreatePixelFile
 from compass.testcase import TestCase
 
 
@@ -38,6 +44,9 @@ class Mesh(TestCase):
         subdir = '{}/{}'.format(mesh_name, name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
+        pixel_step = CreatePixelFile(self)
+        self.add_step(pixel_step)
+
         name = 'base_mesh'
         if mesh_name == 'DEQU120at30cr10rr2':
             base_mesh_step = DEQU120at30cr10rr2BaseMesh(
@@ -47,6 +56,18 @@ class Mesh(TestCase):
             base_mesh_step = DEQU120at30cr10rr2BaseMesh(
                 self, name=name, preserve_floodplain=True)
             mesh_lower = 'dequ120at30cr10rr2'
+        elif mesh_name == 'DEVR45to5rr1':
+            base_mesh_step = DEVR45to5rr1BaseMesh(
+                self, pixel_step,
+                name='base_mesh', subdir=None,
+                elev_file='RTopo_2_0_4_GEBCO_v2023_30sec_pixel.nc',
+                spac_dhdx=0.125, spac_hmin=5, spac_hmax=45, spac_hbar=45,
+                ncell_nwav=80, ncell_nslp=4,
+                filt_sdev=0.5, filt_halo=50, filt_plev=0.325)
+            mesh_lower = 'devr45to5rr1'
+        elif mesh_name == 'RRS6to18':
+            base_mesh_step = RRS6to18BaseMesh(self, pixel_step, name=name)
+            mesh_lower = 'rrs6to18'
         else:
             raise ValueError(f'Unexpected mesh name {mesh_name}')
 
@@ -55,10 +76,15 @@ class Mesh(TestCase):
 
         self.add_step(base_mesh_step)
 
+        remap_step = RemapTopography(test_case=self,
+                                     base_mesh_step=base_mesh_step,
+                                     mesh_name=mesh_name)
+        self.add_step(remap_step)
+
         cull_mesh_step = CullMeshStep(
             test_case=self, base_mesh_step=base_mesh_step,
-            with_ice_shelf_cavities=False, do_inject_bathymetry=True,
-            preserve_floodplain=True)
+            with_ice_shelf_cavities=True,
+            preserve_floodplain=True, unsmoothed_topo=remap_step)
 
         self.add_step(cull_mesh_step)
 

@@ -2,6 +2,8 @@ import datetime as dt
 import os
 import subprocess
 
+import matplotlib as mpl
+import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
@@ -43,6 +45,9 @@ class Viz(Step):
         Run this step of the test case
         """
 
+        mpl.rcParams['mathtext.fontset'] = 'stix'
+        mpl.rcParams['font.family'] = 'STIXGeneral'
+
         points = self.get_points()
         self.timeseries_plots(points)
         self.inject_exact_solution()
@@ -67,7 +72,7 @@ class Viz(Step):
         for each resolution
         """
 
-        fig, ax = plt.subplots(nrows=len(points), ncols=1)
+        fig, ax = plt.subplots(figsize=(5, 4), nrows=len(points), ncols=1)
 
         for res in self.resolutions:
             ds = xr.open_dataset(f'output_{res}km.nc')
@@ -82,25 +87,41 @@ class Viz(Step):
             for i, pt in enumerate(points):
 
                 ssh = interp(pt).T
-                ax[i].plot(t / 86400, ssh, label=f'{res}km')
+                ax[i].plot(t / 86400, ssh, label=f'{res} km')
 
         for i, pt in enumerate(points):
             ssh_exact = self.exact_solution('zeta', pt[0], pt[1], t)
-            ax[i].plot(t / 86400, ssh_exact, label='exact')
+            ax[i].plot(t / 86400, ssh_exact, label='exact', color='k')
 
         for i, pt in enumerate(points):
             ax[i].set_xlabel('t (days)')
             ax[i].set_ylabel('ssh (m)')
-            ax[i].set_title(f'Point ({pt[0]/1000}, {pt[1]/1000})')
+            ax[i].set_title(f'Point ({pt[0] / 1000}, {pt[1] / 1000})')
             if i == len(points) - 1:
                 lines, labels = ax[i].get_legend_handles_labels()
 
-        fig.suptitle(f'{self.wetdry} ({self.ramp_type})')
+        plot_mode = 'paper'
+        if plot_mode == 'paper':
+            ha = 'left'
+            x = 0.0
+            y = 0.98
+            titles = {'subgrid (ramp)': 'a)',
+                      'subgrid (noramp)': 'c)',
+                      'standard (ramp)': 'b)',
+                      'standard (npramp)': 'd)'}
+            title = titles[f'{self.wetdry} ({self.ramp_type})']
+        else:
+            ha = 'center'
+            x = 0.5
+            y = 0.98
+            title = f'{self.wetdry} ({self.ramp_type}) '
+
+        fig.suptitle(title, x=x, y=y, ha=ha, fontsize='x-large')
         fig.tight_layout()
         fig.subplots_adjust(bottom=0.2)
         fig.legend(lines, labels,
                    loc='lower center', ncol=4)
-        fig.savefig('points.png')
+        fig.savefig('points.png', dpi=400)
 
     def inject_exact_solution(self):
         """
@@ -127,7 +148,7 @@ class Viz(Step):
                 ds.ssh_exact.encoding['_FillValue'] = None
                 ds.layerThickness_exact.encoding['_FillValue'] = None
                 ds.to_netcdf(f'output_{res}km.nc',
-                             format="NETCDF3_64BIT_OFFSET", mode='a')
+                             format="NETCDF3_64BIT", mode='a')
             ds.close()
 
     def contour_plots(self, points):
@@ -140,6 +161,12 @@ class Viz(Step):
         sol_max = 2
         clevels = np.linspace(sol_min, sol_max, 50)
         cmap = plt.get_cmap('RdBu')
+
+        minval = 0.2
+        maxval = 0.8
+        cmap = mcolors.LinearSegmentedColormap.from_list(
+            'truncated RdBu',
+            cmap(np.linspace(minval, maxval, 256)))
 
         ds = xr.open_dataset(f'output_{self.resolutions[0]}km.nc')
         time = [dt.datetime.strptime(x.decode(), '%Y-%m-%d_%H:%M:%S')
@@ -155,7 +182,7 @@ class Viz(Step):
 
             ncols = len(self.resolutions) + 1
             fig, ax = plt.subplots(nrows=1, ncols=ncols,
-                                   figsize=(5 * ncols, 5),
+                                   figsize=(3 * ncols, 3),
                                    constrained_layout=True)
 
             for j, res in enumerate(self.resolutions):
@@ -165,7 +192,7 @@ class Viz(Step):
                                   levels=clevels, cmap=cmap,
                                   vmin=sol_min, vmax=sol_max, extend='both')
                 ax[j].set_aspect('equal', 'box')
-                ax[j].set_title(f'{res}km resolution')
+                ax[j].set_title(f'{res} km resolution')
                 ax[j].set_xlabel('x (km)')
                 ax[j].set_ylabel('y (km)')
                 ds.close()
@@ -185,12 +212,30 @@ class Viz(Step):
             ax[ncols - 1].set_ylabel('y (km)')
             ds.close()
 
-            cb = fig.colorbar(cm, ax=ax[-1], shrink=0.6)
+            plot_mode = 'paper'
+            if plot_mode == 'paper':
+                ha = 'left'
+                x = 0.0
+                y = 0.98
+                titles = {'subgrid (ramp)': 'a)',
+                          'subgrid (noramp)': 'c)',
+                          'standard (ramp)': 'b)',
+                          'standard (npramp)': 'd)'}
+                title = titles[f'{self.wetdry} ({self.ramp_type})']
+            else:
+                ha = 'center'
+                x = 0.5
+                y = 0.98
+                t = round((time[i] - time[0]).total_seconds() / 86400., 2)
+                title = f'{self.wetdry} ({self.ramp_type}) ' \
+                        f'ssh solution at t={t} days'
+
+            tick_step = 0.5
+            ticks = np.arange(sol_min, sol_max + tick_step, tick_step)
+            cb = fig.colorbar(cm, ax=ax[-1], shrink=0.7, ticks=ticks)
             cb.set_label('ssh (m)')
-            t = round((time[i] - time[0]).total_seconds() / 86400., 2)
-            fig.suptitle((f'{self.wetdry} ({self.ramp_type}) '
-                          f'ssh solution at t={t} days'))
-            fig.savefig(f'solution_{i:03d}.png')
+            fig.suptitle(title, x=x, y=y, ha=ha, fontsize='x-large')
+            fig.savefig(f'solution_{i:03d}.png', dpi=400)
             plt.close()
 
     def rmse_plots(self):
@@ -205,10 +250,14 @@ class Viz(Step):
             noramp_name = 'noramp_lts'
 
         comparisons = []
-        cases = {'standard_ramp': f'../../../standard/{ramp_name}/viz',
-                 'standard_noramp': f'../../../standard/{noramp_name}/viz',
-                 'subgrid_ramp': f'../../../subgrid/{ramp_name}/viz',
-                 'subgrid_noramp': f'../../../subgrid/{noramp_name}/viz'}
+        cases = {'standard (ramp)': f'../../../standard/{ramp_name}/viz',
+                 'standard (no ramp)': f'../../../standard/{noramp_name}/viz',
+                 'subgrid (ramp)': f'../../../subgrid/{ramp_name}/viz',
+                 'subgrid (no ramp)': f'../../../subgrid/{noramp_name}/viz'}
+        colors = {'standard (ramp)': '#e66101',
+                  'standard (no ramp)': '#fdb863',
+                  'subgrid (ramp)': '#5e3c99',
+                  'subgrid (no ramp)': '#b2abd2'}
         for case in cases:
             include = True
             for res in self.resolutions:
@@ -217,7 +266,8 @@ class Viz(Step):
             if include:
                 comparisons.append(case)
 
-        fig, ax = plt.subplots(nrows=1, ncols=1)
+        fig, ax = plt.subplots(figsize=(5, 4),
+                               nrows=1, ncols=1, layout='constrained')
 
         max_rmse = 0
         resolutions = self.resolutions
@@ -233,7 +283,8 @@ class Viz(Step):
                     max_rmse = rmse[i]
 
             ax.loglog(resolutions, rmse,
-                      linestyle='-', marker='o', label=comp)
+                      linestyle='-', marker='o',
+                      label=comp, color=colors[comp])
 
         rmse_1st_order = np.zeros(len(resolutions))
         rmse_1st_order[0] = max_rmse
@@ -245,12 +296,12 @@ class Viz(Step):
 
         ax.set_xlabel('Cell size (km)')
         ax.set_ylabel('RMSE (m)')
-        ax.invert_xaxis()
 
-        ax.legend(loc='lower right')
-        ax.set_title('Layer thickness convergence')
-        fig.tight_layout()
-        fig.savefig('error.png')
+        fig.legend(loc='outside lower center', ncol=3)
+        plot_mode = 'plot'
+        if plot_mode != 'plot':
+            ax.set_title('Layer thickness convergence')
+        fig.savefig('error.png', dpi=400)
 
     def compute_rmse(self, varname, filename):
         """

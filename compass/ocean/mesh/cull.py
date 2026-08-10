@@ -14,7 +14,6 @@ from mpas_tools.mesh.conversion import cull
 from mpas_tools.mesh.creation.sort_mesh import sort_mesh
 from mpas_tools.mesh.cull import cull_dataset, map_culled_to_base
 from mpas_tools.mesh.mask import compute_mpas_flood_fill_mask
-from mpas_tools.ocean import inject_bathymetry
 from mpas_tools.ocean.coastline_alteration import (
     add_critical_land_blockages,
     add_land_locked_cells_to_mask,
@@ -38,13 +37,9 @@ class CullMeshStep(Step):
     with_ice_shelf_cavities : bool
         Whether the mesh includes ice-shelf cavities
 
-    do_inject_bathymetry : bool
-        Whether to interpolate bathymetry from a data file so it
-        can be used as a culling criteria
-
     preserve_floodplain : bool
-        Whether to leave land cells in the mesh based on bathymetry
-        specified by do_inject_bathymetry
+        Whether to leave land cells in the mesh based on floodplain
+        specified by regionCellMasks
 
     unsmoothed_topo : compass.ocean.mesh.remap_topography.RemapTopography
         A step for remapping topography. If provided, the remapped
@@ -57,7 +52,7 @@ class CullMeshStep(Step):
     """
 
     def __init__(self, test_case, base_mesh_step, with_ice_shelf_cavities,
-                 name='cull_mesh', subdir=None, do_inject_bathymetry=False,
+                 name='cull_mesh', subdir=None,
                  preserve_floodplain=False, unsmoothed_topo=None,
                  smoothed_topo=None):
         """
@@ -80,13 +75,10 @@ class CullMeshStep(Step):
         subdir : str, optional
             the subdirectory for the step.  The default is ``name``
 
-        do_inject_bathymetry : bool, optional
-            Whether to interpolate bathymetry from a data file so it
-            can be used as a culling criteria
 
         preserve_floodplain : bool, optional
-            Whether to leave land cells in the mesh based on bathymetry
-            specified by do_inject_bathymetry
+            Whether to leave land cells in the mesh based on floodplain
+            specified by regionCellMasks
 
         unsmoothed_topo : compass.ocean.mesh.remap_topography.RemapTopography, optional
             A step for remapping topography. If provided, the remapped
@@ -110,7 +102,6 @@ class CullMeshStep(Step):
             self.add_output_file(filename='land_ice_mask.nc')
 
         self.with_ice_shelf_cavities = with_ice_shelf_cavities
-        self.do_inject_bathymetry = do_inject_bathymetry
         self.preserve_floodplain = preserve_floodplain
 
     def setup(self):
@@ -119,11 +110,6 @@ class CullMeshStep(Step):
         dependencies.
         """
         super().setup()
-        if self.do_inject_bathymetry:
-            self.add_input_file(
-                filename='earth_relief_15s.nc',
-                target='SRTM15_plus_earth_relief_15s.nc',
-                database='bathymetry_database')
 
         base_path = self.base_mesh_step.path
         base_filename = self.base_mesh_step.config.get(
@@ -180,7 +166,6 @@ class CullMeshStep(Step):
         # only use progress bars if we're not writing to a log file
         use_progress_bar = self.log_filename is None
 
-        do_inject_bathymetry = self.do_inject_bathymetry
         preserve_floodplain = self.preserve_floodplain
 
         convert_to_cdf5 = config.getboolean('spherical_mesh',
@@ -199,9 +184,6 @@ class CullMeshStep(Step):
                   convert_to_cdf5=convert_to_cdf5,
                   latitude_threshold=latitude_threshold,
                   sweep_count=sweep_count)
-
-        if do_inject_bathymetry:
-            inject_bathymetry(mesh_file='culled_mesh.nc')
 
 
 def cull_mesh(with_cavities=False, with_critical_passages=False,
@@ -257,7 +239,7 @@ def cull_mesh(with_cavities=False, with_critical_passages=False,
         (``with_critical_passages=True``)
 
     preserve_floodplain : bool, optional
-        Whether to use the ``cellSeedMask`` field in the base mesh to preserve
+        Whether to use ``regionCellMasks`` field in the base mesh to preserve
         a floodplain at elevations above z=0
 
     logger : logging.Logger, optional
@@ -399,6 +381,7 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
         dsPreserve.append(dsCritPassMask)
 
     if preserve_floodplain:
+        # base mesh contains regionCellMasks field to indicate floodplain
         dsPreserve.append(dsBaseMesh)
 
     # fix land locked cells after adding critical land blockages, as these

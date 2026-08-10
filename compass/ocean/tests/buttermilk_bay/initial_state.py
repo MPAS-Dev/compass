@@ -1,3 +1,4 @@
+import numpy as np
 from mpas_tools.io import write_netcdf
 from mpas_tools.mesh.conversion import convert, cull
 from mpas_tools.planar_hex import make_planar_hex_mesh
@@ -23,6 +24,7 @@ class InitialState(Step):
         """
         self.coord_type = coord_type
         self.resolution = resolution
+        self.wetdry = wetdry
 
         super().__init__(test_case=test_case, name=name, ntasks=1,
                          min_tasks=1, openmp_threads=1)
@@ -40,13 +42,18 @@ class InitialState(Step):
         self.add_input_file(
             filename='buttermilk_bathy.nc',
             target='buttermilk_bathy.nc',
-            database='bathymetry_database')
+            database='buttermilk_bay')
 
         for file in ['base_mesh.nc', 'culled_mesh.nc', 'culled_graph.info',
                      'ocean.nc', 'init_mode_forcing_data.nc']:
             self.add_output_file(file)
 
         self.add_model_as_input()
+
+    def setup(self):
+        level = int(self.resolution * np.tan(np.pi / 6.0)) + 1
+        option = {'config_subgrid_refinement_level': f'{level}'}
+        self.add_namelist_options(option, mode='init')
 
     def run(self):
         """
@@ -62,6 +69,7 @@ class InitialState(Step):
         else:
             vert_levels = config.getint('vertical_grid', 'vert_levels')
             options = {'config_buttermilk_bay_vert_levels': f'{vert_levels}'}
+
         self.update_namelist_at_runtime(options)
 
         # Determine mesh parameters

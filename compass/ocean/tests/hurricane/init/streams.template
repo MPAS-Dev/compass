@@ -1,0 +1,102 @@
+<streams>
+
+<immutable_stream name="input_init"
+                  type="input"
+                  filename_template="mesh.nc"
+                  input_interval="initial_only"/>
+
+<stream name="output_init"
+        type="output"
+        filename_template="{{ output_file }}"
+        clobber_mode="truncate"
+        output_interval="0000_00:00:01"
+        io_type="pnetcdf,cdf5">
+
+    <stream name="input_init"/>
+    <var_struct name="tracers"/>
+    <var name="refZMid"/>
+    <var name="normalVelocity"/>
+    <var name="layerThickness"/>
+    <var name="restingThickness"/>
+    <var name="refBottomDepth"/>
+    <var name="bottomDepth"/>
+    <var name="bottomDepthObserved"/>
+    <var name="maxLevelCell"/>
+    <var name="vertCoordMovementWeights"/>
+    <var name="ssh"/>
+    <var name="bottomDrag"/>
+    <var name="fEdge"/>
+    <var name="fCell"/>
+    <var name="fVertex"/>
+    <var name="subgridWetVolumeCellTable"/>
+    <var name="subgridWetVolumeEdgeTable"/>
+    <var name="subgridWetVolumeVertexTable"/>
+    <var name="subgridWetFractionCellTable"/>
+    <var name="subgridWetFractionEdgeTable"/>
+    <var name="subgridWetFractionVertexTable"/>
+    <var name="subgridSshCellTableRange"/>
+    <var name="subgridSshEdgeTableRange"/>
+    <var name="subgridSshVertexTableRange"/>
+    <var name="subgridEdgeBathymetryMean"/>
+    <var name="subgridVertexBathymetryMean"/>
+    <var name="subgridCellBathymetryMin"/>
+    <var name="subgridEdgeBathymetryMin"/>
+    <var name="subgridVertexBathymetryMin"/>
+    <var name="subgridLayerThicknessDebug"/>
+    <var name="subgridSshDragEdgeTableRange"/>
+    <var name="subgridDragEdgeTable"/>
+    <var name="subgridEdgeArea"/>
+    <var name="landIceFraction"/>
+    <var name="landIceMask"/>
+    <var name="landIcePressure"/>
+    <var name="landIceDraft"/>
+    <var name="landIceFloatingMask"/>
+    <var name="landIceFloatingFraction"/>
+</stream>
+
+<stream name="subgrid_init"
+        type="input"
+        filename_template="{{ input_file }}"
+        clobber_mode="truncate"
+        input_interval="initial_only"
+        io_type="pnetcdf,cdf5">
+
+    <var name="layerThickness"/>
+    <var name="ssh"/>
+    <var name="bottomDepth"/>
+    <var name="subgridWetVolumeCellTable"/>
+    <var name="subgridWetVolumeEdgeTable"/>
+    <var name="subgridWetVolumeVertexTable"/>
+    <var name="subgridWetFractionCellTable"/>
+    <var name="subgridWetFractionEdgeTable"/>
+    <var name="subgridWetFractionVertexTable"/>
+    <var name="subgridSshCellTableRange"/>
+    <var name="subgridSshEdgeTableRange"/>
+    <var name="subgridSshVertexTableRange"/>
+    <var name="subgridEdgeBathymetryMean"/>
+    <var name="subgridVertexBathymetryMean"/>
+    <var name="subgridCellBathymetryMin"/>
+    <var name="subgridEdgeBathymetryMin"/>
+    <var name="subgridVertexBathymetryMin"/>
+    <var name="subgridLayerThicknessDebug"/>
+    <var name="subgridSshDragEdgeTableRange"/>
+    <var name="subgridDragEdgeTable"/>
+    <var name="subgridEdgeArea"/>
+    <var name="landIceFraction"/>
+    <var name="landIceMask"/>
+    <var name="landIcePressure"/>
+    <var name="landIceDraft"/>
+    <var name="landIceFloatingMask"/>
+    <var name="landIceFloatingFraction"/>
+</stream>
+
+<stream name="bathymetry"
+        filename_template="{{ input_file }}"
+        type="input"
+        input_interval="initial_only"
+        io_type="pnetcdf,cdf5">
+
+    <var name="bottomDepthObserved"/>
+</stream>
+
+</streams>

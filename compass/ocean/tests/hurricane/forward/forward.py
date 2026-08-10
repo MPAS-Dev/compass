@@ -1,3 +1,5 @@
+import numpy as np
+
 from compass.model import run_model
 from compass.step import Step
 
@@ -18,7 +20,7 @@ class ForwardStep(Step):
     use_lts: bool
         Whether local time-stepping is used
     """
-    def __init__(self, test_case, mesh, init, use_lts,
+    def __init__(self, test_case, mesh, init, use_lts, wetdry,
                  name='forward', subdir=None):
         """
         Create a new step
@@ -35,7 +37,10 @@ class ForwardStep(Step):
             The test case that produces the initial condition for this run
 
         use_lts : bool
-            Whether local time-stepping is to be used
+            Whether local time-stepping is used (use `LTS` or `FB_LTS` as True)
+
+        wetdry : str
+            Type of wetting-drying scheme (`off`, `standard`, or `subgrid`)
 
         name : str, optional
             the name of the step
@@ -75,19 +80,25 @@ class ForwardStep(Step):
             mesh_package = mesh.package
             self.add_namelist_file(mesh_package, 'namelist.ocean')
 
-        initial_state_target = \
-            f'{init.path}/initial_state/ocean.nc'
+        if wetdry == 'subgrid':
+            self.add_namelist_file(
+                'compass.ocean.tests.hurricane.forward',
+                'namelist.ocean.subgrid')
+            self.add_streams_file(
+                'compass.ocean.tests.hurricane.forward',
+                'streams.ocean_subgrid')
+
+        initial_state_target = f'{init.path}/initial_state/ocean.nc'
         self.add_input_file(filename='input.nc',
                             work_dir_target=initial_state_target)
         self.add_input_file(
             filename='atmospheric_forcing.nc',
             work_dir_target=f'{init.path}/interpolate/atmospheric_forcing.nc')
 
-        if use_lts:
-            file_in = 'topographic_wave_drag.nc'
-            self.add_input_file(
-                filename='topographic_wave_drag.nc',
-                work_dir_target=f'{init.path}/topodrag/{file_in}')
+        file_in = 'topographic_wave_drag.nc'
+        self.add_input_file(
+            filename='topographic_wave_drag.nc',
+            work_dir_target=f'{init.path}/wave_drag/{file_in}')
 
         self.add_input_file(
             filename='points.nc',
@@ -111,6 +122,41 @@ class ForwardStep(Step):
         """
         self._get_resources()
         super().constrain_resources(available_resources)
+
+    def update_namelist_pio(self, out_name=None):
+        """
+        Modify the namelist so the number of PIO tasks and the stride between
+        them consistent with the number of nodes and cores (one PIO task per
+        node).
+
+        Parameters
+        ----------
+        out_name : str, optional
+            The name of the namelist file to write out, ``namelist.<core>`` by
+            default
+        """
+        config = self.config
+        cores = self.ntasks * self.cpus_per_task
+
+        if out_name is None:
+            out_name = f'namelist.{self.mpas_core.name}'
+
+        cores_per_node = config.getint('parallel', 'cores_per_node')
+
+        # update PIO tasks based on the machine settings and the available
+        # number or cores
+        pio_num_iotasks = 2 * int(np.ceil(cores / cores_per_node))
+        pio_stride = self.ntasks // pio_num_iotasks
+        if pio_stride > cores_per_node:
+            raise ValueError(f'Not enough nodes for the number of cores.  '
+                             f'cores: {cores}, cores per node: '
+                             f'{cores_per_node}')
+
+        replacements = {'config_pio_num_iotasks': f'{pio_num_iotasks}',
+                        'config_pio_stride': f'{pio_stride}'}
+
+        self.update_namelist_at_runtime(options=replacements,
+                                        out_name=out_name)
 
     def run(self):
         """

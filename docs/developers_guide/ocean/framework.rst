@@ -133,8 +133,8 @@ an attribute:
 ``self.preserve_floodplain``
     A ``bool`` defining whether the mesh includes land cells
 
-and including topography in the base mesh from the
-`SRTM15_plus_earth_relief_15s.nc` file in the `bathymetry_database`.  The
+and including region a region mask in the base mesh from the
+based on bathymetry from :py:func:`compass.ocean.tests.tides.dem.dem_remap`.  The
 ``run()`` method uses the config option:
 
 .. code-block:: ini
@@ -147,7 +147,7 @@ and including topography in the base mesh from the
 
 to determine the elevation of the floodplain to maintain above sea level.
 The bathymetry and the floodplain are added to the mesh using
-:py:func:`mpas_tools.ocean.inject_bathymetry()` and
+`regionCellMasks` and
 :py:func:`mpas_tools.ocean.inject_preserve_floodplain()`, respectively.
 
 .. _dev_ocean_framework_haney:

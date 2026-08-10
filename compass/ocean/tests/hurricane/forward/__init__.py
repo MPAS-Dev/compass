@@ -18,7 +18,7 @@ class Forward(TestCase):
     init : compass.ocean.tests.hurricane.init.Init
         The test case that produces the initial condition for this run
     """
-    def __init__(self, test_group, mesh, storm, init, use_lts):
+    def __init__(self, test_group, mesh, storm, init, use_lts, wetdry):
         """
         Create test case
 
@@ -37,7 +37,11 @@ class Forward(TestCase):
             The test case that produces the initial condition for this run
 
         use_lts : bool
-            Whether local time-stepping is to be used
+            Whether local time-stepping is used (use `LTS` or `FB_LTS` as True)
+
+        wetdry : str
+            Type of wetting-drying scheme (`off`, `standard`, or `subgrid`)
+
         """
         mesh_name = mesh.mesh_name
 
@@ -45,6 +49,8 @@ class Forward(TestCase):
             name = f'{storm}_lts'
         elif use_lts == 'FB_LTS':
             name = f'{storm}_fblts'
+        elif wetdry == 'subgrid':
+            name = f'{storm}_subgrid'
         else:
             name = storm
         subdir = os.path.join(mesh_name, name)
@@ -56,7 +62,8 @@ class Forward(TestCase):
         step = ForwardStep(test_case=self,
                            mesh=mesh,
                            init=init,
-                           use_lts=use_lts)
+                           use_lts=use_lts,
+                           wetdry=wetdry)
 
         step.add_output_file(filename='output.nc')
         step.add_output_file(filename='pointwiseStats.nc')

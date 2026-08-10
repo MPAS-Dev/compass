@@ -8,9 +8,13 @@ from compass.ocean.tests.hurricane.init.initial_state import InitialState
 from compass.ocean.tests.hurricane.init.interpolate_atm_forcing import (
     InterpolateAtmForcing,
 )
-from compass.ocean.tests.hurricane.lts.init.topographic_wave_drag import (
-    ComputeTopographicWaveDrag,
+from compass.ocean.tests.hurricane.init.interpolate_mannings_n import (
+    InterpolateManningsN,
 )
+from compass.ocean.tests.tides.init.calculate_wave_drag import (
+    CalculateWaveDrag,
+)
+from compass.ocean.tests.tides.init.remap_bathymetry import RemapBathymetry
 from compass.testcase import TestCase
 
 
@@ -23,7 +27,7 @@ class Init(TestCase):
     mesh : compass.ocean.tests.hurricane.mesh.Mesh
         The test case that creates the mesh used by this test case
     """
-    def __init__(self, test_group, mesh, storm, use_lts):
+    def __init__(self, test_group, mesh, storm, use_lts, wetdry):
         """
         Create the test case
 
@@ -39,7 +43,11 @@ class Init(TestCase):
             The name of the storm to be run
 
         use_lts : bool
-            Whether local time-stepping is used
+            Whether local time-stepping is used (use `LTS` or `FB_LTS` as True)
+
+        wetdry : str
+            Type of wetting-drying scheme (`off`, `standard`, or `subgrid`)
+
         """
 
         self.mesh = mesh
@@ -49,22 +57,25 @@ class Init(TestCase):
             name = 'init_lts'
         elif use_lts == 'FB_LTS':
             name = 'init_fblts'
+        elif wetdry == 'subgrid':
+            name = 'init_subgrid'
         else:
             name = 'init'
         mesh_name = mesh.mesh_name
         subdir = os.path.join(mesh_name, name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
-        self.add_step(InitialState(test_case=self, mesh=mesh, use_lts=use_lts))
+        self.add_step(CalculateWaveDrag(test_case=self, mesh=mesh))
+        self.add_step(RemapBathymetry(test_case=self, mesh=mesh,
+                                      limit_bathy_outside_refinement=True))
+        init = InitialState(test_case=self, mesh=mesh,
+                            use_lts=use_lts, wetdry=wetdry)
+        self.add_step(init)
         self.add_step(InterpolateAtmForcing(test_case=self, mesh=mesh,
                                             storm=storm))
-
-        if use_lts:
-            topo = ComputeTopographicWaveDrag(test_case=self, mesh=mesh)
-            self.add_step(topo)
-
         self.add_step(CreatePointstatsFile(test_case=self, mesh=mesh,
                                            storm=storm))
+        self.add_step(InterpolateManningsN(test_case=self, init=init))
 
     def configure(self):
         """
