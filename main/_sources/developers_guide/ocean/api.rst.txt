@@ -393,6 +393,11 @@ test cases and steps
 
    mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh
    mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh.build_cell_width_lat_lon
+   mesh.devr45to5rr1.DEVR45to5rr1BaseMesh
+   mesh.devr45to5rr1.DEVR45to5rr1BaseMesh.build_cell_width_lat_lon
+   mesh.devr45to5rr1.DEVR45to5rr1BaseMesh.region_multiplier
+   mesh.rrs6to18.RRS6to18BaseMesh
+   mesh.rrs6to18.RRS6to18BaseMesh.build_cell_width_lat_lon
 
    init.Init
    init.Init.configure
@@ -408,6 +413,10 @@ test cases and steps
    init.interpolate_atm_forcing.InterpolateAtmForcing.plot_interp_data
    init.interpolate_atm_forcing.InterpolateAtmForcing.write_to_file
    init.interpolate_atm_forcing.InterpolateAtmForcing.run
+   init.interpolate_mannings_n.InterpolateManningsN
+   init.interpolate_mannings_n.InterpolateManningsN.interpolate_data
+   init.interpolate_mannings_n.InterpolateManningsN.plot_interp_data
+   init.interpolate_mannings_n.InterpolateManningsN.run
 
    forward.Forward
    forward.Forward.configure
@@ -421,6 +430,12 @@ test cases and steps
    analysis.Analysis.read_pointstats
    analysis.Analysis.read_station_data
    analysis.Analysis.read_station_file
+   analysis.Analysis.adjust_station_data
+   analysis.Analysis.compute_cell_patches
+   analysis.Analysis.find_data_in_bbox
+   analysis.Analysis.plot_timeseries
+   analysis.Analysis.plot_dem
+   analysis.Analysis.plot_hwm
    analysis.Analysis.run
 
    lts.mesh.lts_regions.LTSRegionsStep

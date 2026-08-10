@@ -6,16 +6,16 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>hurricane &mdash; compass 2.0.0-alpha.2 documentation</title>
+  <title>hurricane &mdash; compass 2.0.0-alpha.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=9fd2db84"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=3baa5f9d"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -70,14 +70,8 @@
 <li class="toctree-l3"><a class="reference internal" href="global_ocean.html">global_ocean</a></li>
 <li class="toctree-l3"><a class="reference internal" href="gotm.html">gotm</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">hurricane</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#mesh">mesh</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lts-regions">lts_regions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#initial-state">initial_state</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#interpolate-atm-forcing">interpolate_atm_forcing</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#create-pointstats-file">create_pointstats_file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#topographic-wave-drag">topographic_wave_drag</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#forward">forward</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#analysis">analysis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#meshes">Meshes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-cases">Test cases</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ice_shelf_2d.html">ice_shelf_2d</a></li>
@@ -156,63 +150,249 @@
 <p>The <code class="docutils literal notranslate"><span class="pre">hurricane</span></code> test group implements regionally refined, single layer
 barotropic, tropical cyclone cases as described in <a class="reference internal" href="../../../users_guide/ocean/test_groups/hurricane.html#ocean-hurricane"><span class="std std-ref">hurricane</span></a> in
 the User’s Guide.</p>
-<section id="mesh">
-<h2>mesh<a class="headerlink" href="#mesh" title="Link to this heading"></a></h2>
-<p>The class
-<a class="reference internal" href="../generated/compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh.html#compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh" title="compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh</span></code></a>
-defines a step for generating the global regionally refined mesh for the test group.
-It inherits from the <a class="reference internal" href="../generated/compass.ocean.mesh.floodplain.FloodplainMeshStep.html#compass.ocean.mesh.floodplain.FloodplainMeshStep" title="compass.ocean.mesh.floodplain.FloodplainMeshStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.mesh.floodplain.FloodplainMeshStep</span></code></a>
-and provides the <a class="reference internal" href="../generated/compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh.build_cell_width_lat_lon.html#compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh.build_cell_width_lat_lon" title="compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh.build_cell_width_lat_lon"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh.build_cell_width_lat_lon()</span></code></a>
-method to specify the mesh resolution function using the <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/master/generated/mpas_tools.ocean.coastal_tools.coastal_refined_mesh.html#mpas_tools.ocean.coastal_tools.coastal_refined_mesh" title="(in mpas_tools vmaster)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.ocean.coastal_tools.coastal_refined_mesh()</span></code></a>
-function.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">hurricane</span></code> test group uses the MPAS-Ocean wetting and drying scheme to
+simulate coastal flooding due to storm surge. Three wetting and drying options
+are accepted as a <code class="docutils literal notranslate"><span class="pre">wetdry</span></code> argument into the <code class="docutils literal notranslate"><span class="pre">Init</span></code> and <code class="docutils literal notranslate"><span class="pre">Forward</span></code> cases
+(<code class="docutils literal notranslate"><span class="pre">off</span></code>, <code class="docutils literal notranslate"><span class="pre">standard</span></code>, <code class="docutils literal notranslate"><span class="pre">subgrid</span></code>). If <code class="docutils literal notranslate"><span class="pre">subgrid</span></code> is used, the test group
+will build look-up tables from a high-resolution DEM in order to apply the
+Shallow Water Subgrid scheme corrections to the barotropic momentum equations.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">hurricane</span></code> test group also supports two local time-stepping schemes
+(<code class="docutils literal notranslate"><span class="pre">LTS</span></code>, <code class="docutils literal notranslate"><span class="pre">FB-LTS</span></code>), passed as the <code class="docutils literal notranslate"><span class="pre">use_lts</span></code> argument in the <code class="docutils literal notranslate"><span class="pre">Mesh</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Init</span></code> and <code class="docutils literal notranslate"><span class="pre">Forward</span></code> cases.</p>
+<section id="meshes">
+<span id="dev-ocean-hurricane-meshes"></span><h2>Meshes<a class="headerlink" href="#meshes" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">hurricane</span></code> test group supports 3 meshes (<code class="docutils literal notranslate"><span class="pre">DEQU120at30cr10rr2</span></code>,
+<code class="docutils literal notranslate"><span class="pre">DEVR45to5rr1</span></code>, <code class="docutils literal notranslate"><span class="pre">RRS6to18</span></code>). Each mesh inherits from the
+<a class="reference internal" href="../generated/compass.ocean.mesh.floodplain.FloodplainMeshStep.html#compass.ocean.mesh.floodplain.FloodplainMeshStep" title="compass.ocean.mesh.floodplain.FloodplainMeshStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.mesh.floodplain.FloodplainMeshStep</span></code></a> class,
+and provides a <code class="docutils literal notranslate"><span class="pre">build_cell_width_lat_lon()</span></code> method to specify the mesh
+resolution array using the
+<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/master/generated/mpas_tools.ocean.coastal_tools.coastal_refined_mesh.html#mpas_tools.ocean.coastal_tools.coastal_refined_mesh" title="(in mpas_tools master)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.ocean.coastal_tools.coastal_refined_mesh()</span></code></a> function. Each
+mesh also uses config options to determine how the floodplain is defined.</p>
+<section id="dequ120at30cr10rr2">
+<span id="dev-ocean-hurricane-dequ120at30cr10rr2"></span><h3>DEQU120at30cr10rr2<a class="headerlink" href="#dequ120at30cr10rr2" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">DEQU120at30cr10rr2</span></code> mesh is a quasi-uniform, 120 km horizontal resoution
+global mesh with regional refinement along the Mid-Atlantic Bight down to 2 km.
+The mesh is defined by
+<a class="reference internal" href="../generated/compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh.html#compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh" title="compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2BaseMesh</span></code></a>.</p>
+<p>The default config options for this mesh are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for spherical meshes</span>
+<span class="k">[spherical_mesh]</span>
+
+<span class="c1">## config options related to the step for culling land from the mesh</span>
+<span class="c1"># number of cores to use</span>
+<span class="na">cull_mesh_cpus_per_task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">18</span>
+<span class="c1"># minimum of cores, below which the step fails</span>
+<span class="na">cull_mesh_min_cpus_per_task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="c1"># maximum memory usage allowed (in MB)</span>
+<span class="na">cull_mesh_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span>
+
+<span class="c1"># Elevation threshold to use for including land cells</span>
+<span class="na">floodplain_elevation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span>
+
+
+<span class="c1"># options for hurricane testcases</span>
+<span class="k">[hurricane]</span>
+
+<span class="c1">## config options related to the initial_state step</span>
+<span class="c1"># number of MPI tasks to use</span>
+<span class="na">init_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">36</span>
+<span class="c1"># minimum of MPI tasks, below which the step fails</span>
+<span class="na">init_min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span>
+<span class="c1"># maximum memory usage allowed (in MB)</span>
+<span class="na">init_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span>
+<span class="c1"># number of threads</span>
+<span class="na">init_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+
+<span class="c1">## config options related to the forward steps</span>
+<span class="c1"># number of MPI tasks to use</span>
+<span class="na">forward_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">180</span>
+<span class="c1"># minimum of MPI tasks, below which the step fails</span>
+<span class="na">forward_min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">18</span>
+<span class="c1"># maximum memory usage allowed (in MB)</span>
+<span class="na">forward_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span>
+<span class="c1"># number of threads</span>
+<span class="na">forward_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+</pre></div>
+</div>
 </section>
-<section id="lts-regions">
-<h2>lts_regions<a class="headerlink" href="#lts-regions" title="Link to this heading"></a></h2>
-<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.hurricane.lts.mesh.lts_regions.LTSRegionsStep.html#compass.ocean.tests.hurricane.lts.mesh.lts_regions.LTSRegionsStep" title="compass.ocean.tests.hurricane.lts.mesh.lts_regions.LTSRegionsStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.hurricane.lts.mesh.lts_regions.LTSRegionsStep</span></code></a> creates a
-copy of the culled mesh file that additionally includes an array called <code class="docutils literal notranslate"><span class="pre">LTSRegion</span></code>.
+<section id="devr45to5rr1">
+<span id="dev-ocean-hurricane-devr45to5rr1"></span><h3>DEVR45to5rr1<a class="headerlink" href="#devr45to5rr1" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">DEVR45to5rr1</span></code> mesh is a variable-resolution 45 km to 5 km global mesh
+with regional refinement along the Mid-Atlantic Bight down to 1 km.
+The mesh is defined by
+<a class="reference internal" href="../generated/compass.ocean.tests.hurricane.mesh.devr45to5rr1.DEVR45to5rr1BaseMesh.html#compass.ocean.tests.hurricane.mesh.devr45to5rr1.DEVR45to5rr1BaseMesh" title="compass.ocean.tests.hurricane.mesh.devr45to5rr1.DEVR45to5rr1BaseMesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.hurricane.mesh.devr45to5rr1.DEVR45to5rr1BaseMesh</span></code></a>.</p>
+<p>The default config options for this mesh are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for spherical meshes</span>
+<span class="k">[spherical_mesh]</span>
+
+<span class="c1">## config options related to the step for culling land from the mesh</span>
+<span class="c1"># number of cores to use</span>
+<span class="na">cull_mesh_cpus_per_task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">18</span>
+<span class="c1"># minimum of cores, below which the step fails</span>
+<span class="na">cull_mesh_min_cpus_per_task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="c1"># maximum memory usage allowed (in MB)</span>
+<span class="na">cull_mesh_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span>
+
+<span class="c1"># Elevation threshold to use for including land cells</span>
+<span class="na">floodplain_elevation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">40.0</span>
+<span class="c1"># Resolution threshold to use for including land cells</span>
+<span class="na">floodplain_resolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4.0</span>
+<span class="c1"># Minimum depth to enforce outside floodplain region</span>
+<span class="na">min_depth_outside_floodplain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.0</span>
+
+
+<span class="c1"># options for hurricane testcases</span>
+<span class="k">[hurricane]</span>
+
+<span class="c1">## config options related to the initial_state step</span>
+<span class="c1"># number of MPI tasks to use</span>
+<span class="na">init_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">512</span>
+<span class="c1"># minimum of MPI tasks, below which the step fails</span>
+<span class="na">init_min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">512</span>
+<span class="c1"># maximum memory usage allowed (in MB)</span>
+<span class="na">init_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span>
+<span class="c1"># number of threads</span>
+<span class="na">init_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+
+<span class="c1">## config options related to the forward steps</span>
+<span class="c1"># number of MPI tasks to use</span>
+<span class="na">forward_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1024</span>
+<span class="c1"># minimum of MPI tasks, below which the step fails</span>
+<span class="na">forward_min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1024</span>
+<span class="c1"># maximum memory usage allowed (in MB)</span>
+<span class="na">forward_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span>
+<span class="c1"># number of threads</span>
+<span class="na">forward_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+</pre></div>
+</div>
+</section>
+<section id="rrs6to18">
+<span id="dev-ocean-hurricane-rrs6to18"></span><h3>RRS6to18<a class="headerlink" href="#rrs6to18" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">RRS6to18</span></code> mesh is a high-resolution global mesh with Rossby-radius-scaling
+of horizontal resolution from 18 km down to 6 km.
+The mesh is defined by
+<a class="reference internal" href="../generated/compass.ocean.tests.hurricane.mesh.rrs6to18.RRS6to18BaseMesh.html#compass.ocean.tests.hurricane.mesh.rrs6to18.RRS6to18BaseMesh" title="compass.ocean.tests.hurricane.mesh.rrs6to18.RRS6to18BaseMesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.hurricane.mesh.rrs6to18.RRS6to18BaseMesh</span></code></a>.</p>
+<p>The default config options for this mesh are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for spherical meshes</span>
+<span class="k">[spherical_mesh]</span>
+
+<span class="c1">## config options related to the step for culling land from the mesh</span>
+<span class="na">convert_culled_mesh_to_cdf5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="c1"># number of cores to use</span>
+<span class="na">cull_mesh_cpus_per_task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">18</span>
+<span class="c1"># minimum of cores, below which the step fails</span>
+<span class="na">cull_mesh_min_cpus_per_task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="c1"># maximum memory usage allowed (in MB)</span>
+<span class="na">cull_mesh_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span>
+
+<span class="c1"># Elevation threshold to use for including land cells</span>
+<span class="na">floodplain_elevation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">20.0</span>
+<span class="c1"># Resolution threshold to use for including land cells</span>
+<span class="na">floodplain_resolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">16.0</span>
+<span class="na">floodplain_geojson</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mab_floodplain.geojson</span>
+<span class="c1"># Minimum depth to enforce outside floodplain region</span>
+<span class="na">min_depth_outside_floodplain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.0</span>
+
+
+<span class="c1"># options for hurricane testcases</span>
+<span class="k">[hurricane]</span>
+
+<span class="c1">## config options related to the initial_state step</span>
+<span class="c1"># number of MPI tasks to use</span>
+<span class="na">init_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">512</span>
+<span class="c1"># minimum of MPI tasks, below which the step fails</span>
+<span class="na">init_min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="c1"># maximum memory usage allowed (in MB)</span>
+<span class="na">init_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span>
+<span class="c1"># number of threads</span>
+<span class="na">init_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+
+<span class="c1">## config options related to the forward steps</span>
+<span class="c1"># number of MPI tasks to use</span>
+<span class="na">forward_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1024</span>
+<span class="c1"># minimum of MPI tasks, below which the step fails</span>
+<span class="na">forward_min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1024</span>
+<span class="c1"># maximum memory usage allowed (in MB)</span>
+<span class="na">forward_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span>
+<span class="c1"># number of threads</span>
+<span class="na">forward_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="test-cases">
+<h2>Test cases<a class="headerlink" href="#test-cases" title="Link to this heading"></a></h2>
+<section id="mesh-test-case">
+<span id="dev-ocean-hurricane-mesh"></span><h3>mesh test case<a class="headerlink" href="#mesh-test-case" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">mesh</span></code> test case generates an MPAS horizontal mesh, then culls out the
+land cells to improve model efficiency. For <code class="docutils literal notranslate"><span class="pre">hurricane</span></code> meshes, the culling
+step preserves a coastal floodplain according to config options. The
+<a class="reference internal" href="../generated/compass.ocean.tests.hurricane.mesh.Mesh.html#compass.ocean.tests.hurricane.mesh.Mesh" title="compass.ocean.tests.hurricane.mesh.Mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.hurricane.mesh.Mesh</span></code></a> class is instantiated with
+the desired mesh name in order to build the mesh.</p>
+<p id="dev-ocean-hurricane-mesh-lts">If either of the local time-stepping schemes (LTS, FB-LTS) are enabled, the
+<a class="reference internal" href="../generated/compass.ocean.tests.hurricane.lts.mesh.lts_regions.LTSRegionsStep.html#compass.ocean.tests.hurricane.lts.mesh.lts_regions.LTSRegionsStep" title="compass.ocean.tests.hurricane.lts.mesh.lts_regions.LTSRegionsStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.hurricane.lts.mesh.lts_regions.LTSRegionsStep</span></code></a>
+class creates a copy of the culled mesh file that additionally includes an
+array called <code class="docutils literal notranslate"><span class="pre">LTSRegion</span></code>.
 This array has appropriate flags that determine what time-step should be used on
 a certain cell of the mesh, according to the local-time stepping scheme.
 The <code class="docutils literal notranslate"><span class="pre">graph.info</span></code> file is also copied and modified to address proper load balancing.
 The aforementioned class receives the
 <a class="reference internal" href="../generated/compass.ocean.mesh.cull.CullMeshStep.html#compass.ocean.mesh.cull.CullMeshStep" title="compass.ocean.mesh.cull.CullMeshStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.mesh.cull.CullMeshStep</span></code></a> as input.</p>
 </section>
+<section id="init-test-case">
+<span id="dev-ocean-hurricane-init"></span><h3>init test case<a class="headerlink" href="#init-test-case" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">init</span></code> test performs steps to set up the vertical mesh, initial
+conditions, atmospheric forcing, and parameterized wave and bottom drag, and
+prepares the station locations for timeseries output.</p>
 <section id="initial-state">
-<h2>initial_state<a class="headerlink" href="#initial-state" title="Link to this heading"></a></h2>
+<h4>initial_state<a class="headerlink" href="#initial-state" title="Link to this heading"></a></h4>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.hurricane.init.initial_state.InitialState.html#compass.ocean.tests.hurricane.init.initial_state.InitialState" title="compass.ocean.tests.hurricane.init.initial_state.InitialState"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.hurricane.init.initial_state.InitialState</span></code></a>
 defines a step for running MPAS-Ocean in init mode. The vertical mesh is
-set up with a single layer.</p>
+set up with a single layer. For the subgrid scheme, the <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step
+is where the <code class="docutils literal notranslate"><span class="pre">wetdry</span></code> parameter determines whether to build the subgrid
+look-up tables and construct the floodplain topography averaged from the
+high-resolution DEM.</p>
 </section>
 <section id="interpolate-atm-forcing">
-<h2>interpolate_atm_forcing<a class="headerlink" href="#interpolate-atm-forcing" title="Link to this heading"></a></h2>
+<h4>interpolate_atm_forcing<a class="headerlink" href="#interpolate-atm-forcing" title="Link to this heading"></a></h4>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.hurricane.init.interpolate_atm_forcing.InterpolateAtmForcing.html#compass.ocean.tests.hurricane.init.interpolate_atm_forcing.InterpolateAtmForcing" title="compass.ocean.tests.hurricane.init.interpolate_atm_forcing.InterpolateAtmForcing"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.hurricane.init.interpolate_atm_forcing.InterpolateAtmForcing</span></code></a>
 defines a step for interpolating CFSv2 reanalysis data for atmospheric winds
 and pressure onto the MPAS-Ocean mesh at hourly time intervals. The forward
 run uses this as input to update the time varying atmospheric forcing.</p>
 </section>
 <section id="create-pointstats-file">
-<h2>create_pointstats_file<a class="headerlink" href="#create-pointstats-file" title="Link to this heading"></a></h2>
+<h4>create_pointstats_file<a class="headerlink" href="#create-pointstats-file" title="Link to this heading"></a></h4>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.hurricane.init.create_pointstats_file.CreatePointstatsFile.html#compass.ocean.tests.hurricane.init.create_pointstats_file.CreatePointstatsFile" title="compass.ocean.tests.hurricane.init.create_pointstats_file.CreatePointstatsFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.hurricane.init.create_pointstats_file.CreatePointstatsFile</span></code></a>
 defines a step to create the input file for the MPAS-Ocean pointWiseStats
 analysis member based on station locations which have observed data.</p>
 </section>
 <section id="topographic-wave-drag">
-<h2>topographic_wave_drag<a class="headerlink" href="#topographic-wave-drag" title="Link to this heading"></a></h2>
+<h4>topographic_wave_drag<a class="headerlink" href="#topographic-wave-drag" title="Link to this heading"></a></h4>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.hurricane.lts.init.topographic_wave_drag.ComputeTopographicWaveDrag.html#compass.ocean.tests.hurricane.lts.init.topographic_wave_drag.ComputeTopographicWaveDrag" title="compass.ocean.tests.hurricane.lts.init.topographic_wave_drag.ComputeTopographicWaveDrag"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.hurricane.lts.init.topographic_wave_drag.ComputeTopographicWaveDrag</span></code></a>
 defines a step for interpolating the reciprocal of the <code class="docutils literal notranslate"><span class="pre">r_inv</span></code> to the mesh edges.
 This step is needed to include the contribution of the topographic wave drag
 in the model momentum tendency.</p>
 </section>
+</section>
+<section id="sandy-test-case">
+<span id="dev-ocean-hurricane-sandy"></span><h3>sandy test case<a class="headerlink" href="#sandy-test-case" title="Link to this heading"></a></h3>
+<p>The sandy test case is responsible for the forward model simulation and analysis.</p>
 <section id="forward">
-<h2>forward<a class="headerlink" href="#forward" title="Link to this heading"></a></h2>
+<h4>forward<a class="headerlink" href="#forward" title="Link to this heading"></a></h4>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.hurricane.forward.forward.ForwardStep.html#compass.ocean.tests.hurricane.forward.forward.ForwardStep" title="compass.ocean.tests.hurricane.forward.forward.ForwardStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.hurricane.forward.forward.ForwardStep</span></code></a>
-defines a step to run MPAS-Ocean in forward mode</p>
+defines a step to run MPAS-Ocean in forward mode. For the subgrid scheme, the
+<code class="docutils literal notranslate"><span class="pre">forward</span></code> step is where the <code class="docutils literal notranslate"><span class="pre">wetdry</span></code> parameter determines whether to apply
+the subgrid corrections via the look-up tables built in the <code class="docutils literal notranslate"><span class="pre">initial_state</span></code>
+step.</p>
 </section>
 <section id="analysis">
-<h2>analysis<a class="headerlink" href="#analysis" title="Link to this heading"></a></h2>
+<h4>analysis<a class="headerlink" href="#analysis" title="Link to this heading"></a></h4>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.hurricane.analysis.Analysis.html#compass.ocean.tests.hurricane.analysis.Analysis" title="compass.ocean.tests.hurricane.analysis.Analysis"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.hurricane.analysis.Analysis</span></code></a>
 defines a step to generate validation plots comparing sea surface height
 timeseries between modeled and observed data at several different stations.
 Both NOAA and USGS observations are plotted.</p>
+</section>
+</section>
 </section>
 </section>
 

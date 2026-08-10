@@ -5,16 +5,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.ocean.tests.parabolic_bowl.viz &mdash; compass 2.0.0-alpha.2 documentation</title>
+  <title>compass.ocean.tests.parabolic_bowl.viz &mdash; compass 2.0.0-alpha.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../_static/documentation_options.js?v=9fd2db84"></script>
-      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=3baa5f9d"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -113,6 +113,8 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mcolors</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
@@ -161,6 +163,9 @@
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+        <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;mathtext.fontset&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;stix&#39;</span>
+        <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.family&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;STIXGeneral&#39;</span>
+
         <span class="n">points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_points</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">timeseries_plots</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inject_exact_solution</span><span class="p">()</span>
@@ -191,7 +196,7 @@
 <span class="sd">        for each resolution</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">),</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">nrows</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">),</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">:</span>
             <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;output_</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km.nc&#39;</span><span class="p">)</span>
@@ -206,25 +211,41 @@
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">points</span><span class="p">):</span>
 
                 <span class="n">ssh</span> <span class="o">=</span> <span class="n">interp</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
-                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span> <span class="o">/</span> <span class="mi">86400</span><span class="p">,</span> <span class="n">ssh</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km&#39;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span> <span class="o">/</span> <span class="mi">86400</span><span class="p">,</span> <span class="n">ssh</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1"> km&#39;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">points</span><span class="p">):</span>
             <span class="n">ssh_exact</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exact_solution</span><span class="p">(</span><span class="s1">&#39;zeta&#39;</span><span class="p">,</span> <span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">t</span><span class="p">)</span>
-            <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span> <span class="o">/</span> <span class="mi">86400</span><span class="p">,</span> <span class="n">ssh_exact</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;exact&#39;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span> <span class="o">/</span> <span class="mi">86400</span><span class="p">,</span> <span class="n">ssh_exact</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;exact&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">points</span><span class="p">):</span>
             <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;t (days)&#39;</span><span class="p">)</span>
             <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;ssh (m)&#39;</span><span class="p">)</span>
-            <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Point (</span><span class="si">{</span><span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">1000</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">1000</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Point (</span><span class="si">{</span><span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1000</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1000</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">lines</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
 
-        <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ramp_type</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+        <span class="n">plot_mode</span> <span class="o">=</span> <span class="s1">&#39;paper&#39;</span>
+        <span class="k">if</span> <span class="n">plot_mode</span> <span class="o">==</span> <span class="s1">&#39;paper&#39;</span><span class="p">:</span>
+            <span class="n">ha</span> <span class="o">=</span> <span class="s1">&#39;left&#39;</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="mf">0.98</span>
+            <span class="n">titles</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;subgrid (ramp)&#39;</span><span class="p">:</span> <span class="s1">&#39;a)&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;subgrid (noramp)&#39;</span><span class="p">:</span> <span class="s1">&#39;c)&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;standard (ramp)&#39;</span><span class="p">:</span> <span class="s1">&#39;b)&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;standard (npramp)&#39;</span><span class="p">:</span> <span class="s1">&#39;d)&#39;</span><span class="p">}</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="n">titles</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ramp_type</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ha</span> <span class="o">=</span> <span class="s1">&#39;center&#39;</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="mf">0.5</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="mf">0.98</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ramp_type</span><span class="si">}</span><span class="s1">) &#39;</span>
+
+        <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="n">ha</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;x-large&#39;</span><span class="p">)</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span>
                    <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower center&#39;</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;points.png&#39;</span><span class="p">)</span></div>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;points.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Viz.inject_exact_solution">
@@ -254,7 +275,7 @@
                 <span class="n">ds</span><span class="o">.</span><span class="n">ssh_exact</span><span class="o">.</span><span class="n">encoding</span><span class="p">[</span><span class="s1">&#39;_FillValue&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="n">ds</span><span class="o">.</span><span class="n">layerThickness_exact</span><span class="o">.</span><span class="n">encoding</span><span class="p">[</span><span class="s1">&#39;_FillValue&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="n">ds</span><span class="o">.</span><span class="n">to_netcdf</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;output_</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km.nc&#39;</span><span class="p">,</span>
-                             <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;NETCDF3_64BIT_OFFSET&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+                             <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;NETCDF3_64BIT&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
             <span class="n">ds</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
@@ -271,6 +292,12 @@
         <span class="n">clevels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">sol_min</span><span class="p">,</span> <span class="n">sol_max</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
         <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;RdBu&#39;</span><span class="p">)</span>
 
+        <span class="n">minval</span> <span class="o">=</span> <span class="mf">0.2</span>
+        <span class="n">maxval</span> <span class="o">=</span> <span class="mf">0.8</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">mcolors</span><span class="o">.</span><span class="n">LinearSegmentedColormap</span><span class="o">.</span><span class="n">from_list</span><span class="p">(</span>
+            <span class="s1">&#39;truncated RdBu&#39;</span><span class="p">,</span>
+            <span class="n">cmap</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">minval</span><span class="p">,</span> <span class="n">maxval</span><span class="p">,</span> <span class="mi">256</span><span class="p">)))</span>
+
         <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;output_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">km.nc&#39;</span><span class="p">)</span>
         <span class="n">time</span> <span class="o">=</span> <span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">decode</span><span class="p">(),</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">_%H:%M:%S&#39;</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">xtime</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
@@ -285,7 +312,7 @@
 
             <span class="n">ncols</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
             <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="n">ncols</span><span class="p">,</span>
-                                   <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="n">ncols</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+                                   <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">ncols</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
                                    <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">):</span>
@@ -295,7 +322,7 @@
                                   <span class="n">levels</span><span class="o">=</span><span class="n">clevels</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
                                   <span class="n">vmin</span><span class="o">=</span><span class="n">sol_min</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">sol_max</span><span class="p">,</span> <span class="n">extend</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">)</span>
                 <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">,</span> <span class="s1">&#39;box&#39;</span><span class="p">)</span>
-                <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km resolution&#39;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1"> km resolution&#39;</span><span class="p">)</span>
                 <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x (km)&#39;</span><span class="p">)</span>
                 <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;y (km)&#39;</span><span class="p">)</span>
                 <span class="n">ds</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -315,12 +342,30 @@
             <span class="n">ax</span><span class="p">[</span><span class="n">ncols</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;y (km)&#39;</span><span class="p">)</span>
             <span class="n">ds</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-            <span class="n">cb</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+            <span class="n">plot_mode</span> <span class="o">=</span> <span class="s1">&#39;paper&#39;</span>
+            <span class="k">if</span> <span class="n">plot_mode</span> <span class="o">==</span> <span class="s1">&#39;paper&#39;</span><span class="p">:</span>
+                <span class="n">ha</span> <span class="o">=</span> <span class="s1">&#39;left&#39;</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="mf">0.98</span>
+                <span class="n">titles</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;subgrid (ramp)&#39;</span><span class="p">:</span> <span class="s1">&#39;a)&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;subgrid (noramp)&#39;</span><span class="p">:</span> <span class="s1">&#39;c)&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;standard (ramp)&#39;</span><span class="p">:</span> <span class="s1">&#39;b)&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;standard (npramp)&#39;</span><span class="p">:</span> <span class="s1">&#39;d)&#39;</span><span class="p">}</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="n">titles</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ramp_type</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ha</span> <span class="o">=</span> <span class="s1">&#39;center&#39;</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="mf">0.5</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="mf">0.98</span>
+                <span class="n">t</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="n">time</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">/</span> <span class="mf">86400.</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ramp_type</span><span class="si">}</span><span class="s1">) &#39;</span> \
+                        <span class="sa">f</span><span class="s1">&#39;ssh solution at t=</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s1"> days&#39;</span>
+
+            <span class="n">tick_step</span> <span class="o">=</span> <span class="mf">0.5</span>
+            <span class="n">ticks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">sol_min</span><span class="p">,</span> <span class="n">sol_max</span> <span class="o">+</span> <span class="n">tick_step</span><span class="p">,</span> <span class="n">tick_step</span><span class="p">)</span>
+            <span class="n">cb</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="n">ticks</span><span class="p">)</span>
             <span class="n">cb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;ssh (m)&#39;</span><span class="p">)</span>
-            <span class="n">t</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="n">time</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">/</span> <span class="mf">86400.</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-            <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">((</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ramp_type</span><span class="si">}</span><span class="s1">) &#39;</span>
-                          <span class="sa">f</span><span class="s1">&#39;ssh solution at t=</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s1"> days&#39;</span><span class="p">))</span>
-            <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;solution_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">03d</span><span class="si">}</span><span class="s1">.png&#39;</span><span class="p">)</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="n">ha</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;x-large&#39;</span><span class="p">)</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;solution_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">03d</span><span class="si">}</span><span class="s1">.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
@@ -338,10 +383,14 @@
             <span class="n">noramp_name</span> <span class="o">=</span> <span class="s1">&#39;noramp_lts&#39;</span>
 
         <span class="n">comparisons</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">cases</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;standard_ramp&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;../../../standard/</span><span class="si">{</span><span class="n">ramp_name</span><span class="si">}</span><span class="s1">/viz&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;standard_noramp&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;../../../standard/</span><span class="si">{</span><span class="n">noramp_name</span><span class="si">}</span><span class="s1">/viz&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;subgrid_ramp&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;../../../subgrid/</span><span class="si">{</span><span class="n">ramp_name</span><span class="si">}</span><span class="s1">/viz&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;subgrid_noramp&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;../../../subgrid/</span><span class="si">{</span><span class="n">noramp_name</span><span class="si">}</span><span class="s1">/viz&#39;</span><span class="p">}</span>
+        <span class="n">cases</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;standard (ramp)&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;../../../standard/</span><span class="si">{</span><span class="n">ramp_name</span><span class="si">}</span><span class="s1">/viz&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;standard (no ramp)&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;../../../standard/</span><span class="si">{</span><span class="n">noramp_name</span><span class="si">}</span><span class="s1">/viz&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;subgrid (ramp)&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;../../../subgrid/</span><span class="si">{</span><span class="n">ramp_name</span><span class="si">}</span><span class="s1">/viz&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;subgrid (no ramp)&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;../../../subgrid/</span><span class="si">{</span><span class="n">noramp_name</span><span class="si">}</span><span class="s1">/viz&#39;</span><span class="p">}</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;standard (ramp)&#39;</span><span class="p">:</span> <span class="s1">&#39;#e66101&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;standard (no ramp)&#39;</span><span class="p">:</span> <span class="s1">&#39;#fdb863&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;subgrid (ramp)&#39;</span><span class="p">:</span> <span class="s1">&#39;#5e3c99&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;subgrid (no ramp)&#39;</span><span class="p">:</span> <span class="s1">&#39;#b2abd2&#39;</span><span class="p">}</span>
         <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="n">cases</span><span class="p">:</span>
             <span class="n">include</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">:</span>
@@ -350,7 +399,8 @@
             <span class="k">if</span> <span class="n">include</span><span class="p">:</span>
                 <span class="n">comparisons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">case</span><span class="p">)</span>
 
-        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+                               <span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s1">&#39;constrained&#39;</span><span class="p">)</span>
 
         <span class="n">max_rmse</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">resolutions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span>
@@ -366,7 +416,8 @@
                     <span class="n">max_rmse</span> <span class="o">=</span> <span class="n">rmse</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
             <span class="n">ax</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">resolutions</span><span class="p">,</span> <span class="n">rmse</span><span class="p">,</span>
-                      <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">comp</span><span class="p">)</span>
+                      <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span>
+                      <span class="n">label</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">comp</span><span class="p">])</span>
 
         <span class="n">rmse_1st_order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">resolutions</span><span class="p">))</span>
         <span class="n">rmse_1st_order</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_rmse</span>
@@ -378,12 +429,12 @@
 
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Cell size (km)&#39;</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;RMSE (m)&#39;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">invert_xaxis</span><span class="p">()</span>
 
-        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower right&#39;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Layer thickness convergence&#39;</span><span class="p">)</span>
-        <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;error.png&#39;</span><span class="p">)</span></div>
+        <span class="n">fig</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;outside lower center&#39;</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">plot_mode</span> <span class="o">=</span> <span class="s1">&#39;plot&#39;</span>
+        <span class="k">if</span> <span class="n">plot_mode</span> <span class="o">!=</span> <span class="s1">&#39;plot&#39;</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Layer thickness convergence&#39;</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;error.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Viz.compute_rmse">

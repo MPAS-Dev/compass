@@ -5,16 +5,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.ocean.tests.buttermilk_bay.initial_state &mdash; compass 2.0.0-alpha.2 documentation</title>
+  <title>compass.ocean.tests.buttermilk_bay.initial_state &mdash; compass 2.0.0-alpha.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../_static/documentation_options.js?v=9fd2db84"></script>
-      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=3baa5f9d"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -109,7 +109,8 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.buttermilk_bay.initial_state</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.mesh.conversion</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">cull</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.planar_hex</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_planar_hex_mesh</span>
 
@@ -138,6 +139,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">coord_type</span> <span class="o">=</span> <span class="n">coord_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span> <span class="o">=</span> <span class="n">wetdry</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                          <span class="n">min_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -155,7 +157,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;buttermilk_bathy.nc&#39;</span><span class="p">,</span>
             <span class="n">target</span><span class="o">=</span><span class="s1">&#39;buttermilk_bathy.nc&#39;</span><span class="p">,</span>
-            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;bathymetry_database&#39;</span><span class="p">)</span>
+            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;buttermilk_bay&#39;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
                      <span class="s1">&#39;ocean.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;init_mode_forcing_data.nc&#39;</span><span class="p">]:</span>
@@ -163,6 +165,11 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span></div>
 
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">6.0</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">option</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_subgrid_refinement_level&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="InitialState.run">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.buttermilk_bay.initial_state.InitialState.run.html#compass.ocean.tests.buttermilk_bay.initial_state.InitialState.run">[docs]</a>
@@ -180,6 +187,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">vert_levels</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;vert_levels&#39;</span><span class="p">)</span>
             <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_buttermilk_bay_vert_levels&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">vert_levels</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">}</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
 
         <span class="c1"># Determine mesh parameters</span>

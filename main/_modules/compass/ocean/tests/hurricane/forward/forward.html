@@ -5,16 +5,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.ocean.tests.hurricane.forward.forward &mdash; compass 2.0.0-alpha.2 documentation</title>
+  <title>compass.ocean.tests.hurricane.forward.forward &mdash; compass 2.0.0-alpha.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../../_static/documentation_options.js?v=9fd2db84"></script>
-      <script src="../../../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=3baa5f9d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../../search.html" /> 
@@ -110,7 +110,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.hurricane.forward.forward</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_model</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
 
@@ -134,7 +136,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="ForwardStep.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.forward.forward.ForwardStep.html#compass.ocean.tests.hurricane.forward.forward.ForwardStep.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">use_lts</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">use_lts</span><span class="p">,</span> <span class="n">wetdry</span><span class="p">,</span>
                  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new step</span>
@@ -151,7 +153,10 @@
 <span class="sd">            The test case that produces the initial condition for this run</span>
 
 <span class="sd">        use_lts : bool</span>
-<span class="sd">            Whether local time-stepping is to be used</span>
+<span class="sd">            Whether local time-stepping is used (use `LTS` or `FB_LTS` as True)</span>
+
+<span class="sd">        wetdry : str</span>
+<span class="sd">            Type of wetting-drying scheme (`off`, `standard`, or `subgrid`)</span>
 
 <span class="sd">        name : str, optional</span>
 <span class="sd">            the name of the step</span>
@@ -191,19 +196,25 @@
             <span class="n">mesh_package</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">package</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">mesh_package</span><span class="p">,</span> <span class="s1">&#39;namelist.ocean&#39;</span><span class="p">)</span>
 
-        <span class="n">initial_state_target</span> <span class="o">=</span> \
-            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/initial_state/ocean.nc&#39;</span>
+        <span class="k">if</span> <span class="n">wetdry</span> <span class="o">==</span> <span class="s1">&#39;subgrid&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
+                <span class="s1">&#39;compass.ocean.tests.hurricane.forward&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;namelist.ocean.subgrid&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
+                <span class="s1">&#39;compass.ocean.tests.hurricane.forward&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;streams.ocean_subgrid&#39;</span><span class="p">)</span>
+
+        <span class="n">initial_state_target</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/initial_state/ocean.nc&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;input.nc&#39;</span><span class="p">,</span>
                             <span class="n">work_dir_target</span><span class="o">=</span><span class="n">initial_state_target</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;atmospheric_forcing.nc&#39;</span><span class="p">,</span>
             <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/interpolate/atmospheric_forcing.nc&#39;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">use_lts</span><span class="p">:</span>
-            <span class="n">file_in</span> <span class="o">=</span> <span class="s1">&#39;topographic_wave_drag.nc&#39;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;topographic_wave_drag.nc&#39;</span><span class="p">,</span>
-                <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/topodrag/</span><span class="si">{</span><span class="n">file_in</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">file_in</span> <span class="o">=</span> <span class="s1">&#39;topographic_wave_drag.nc&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;topographic_wave_drag.nc&#39;</span><span class="p">,</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/wave_drag/</span><span class="si">{</span><span class="n">file_in</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;points.nc&#39;</span><span class="p">,</span>
@@ -231,6 +242,41 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_resources</span><span class="p">()</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">constrain_resources</span><span class="p">(</span><span class="n">available_resources</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_namelist_pio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Modify the namelist so the number of PIO tasks and the stride between</span>
+<span class="sd">        them consistent with the number of nodes and cores (one PIO task per</span>
+<span class="sd">        node).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        out_name : str, optional</span>
+<span class="sd">            The name of the namelist file to write out, ``namelist.&lt;core&gt;`` by</span>
+<span class="sd">            default</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">cores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span>
+
+        <span class="k">if</span> <span class="n">out_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">out_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;namelist.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="n">cores_per_node</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;cores_per_node&#39;</span><span class="p">)</span>
+
+        <span class="c1"># update PIO tasks based on the machine settings and the available</span>
+        <span class="c1"># number or cores</span>
+        <span class="n">pio_num_iotasks</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">cores</span> <span class="o">/</span> <span class="n">cores_per_node</span><span class="p">))</span>
+        <span class="n">pio_stride</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">//</span> <span class="n">pio_num_iotasks</span>
+        <span class="k">if</span> <span class="n">pio_stride</span> <span class="o">&gt;</span> <span class="n">cores_per_node</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Not enough nodes for the number of cores.  &#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39;cores: </span><span class="si">{</span><span class="n">cores</span><span class="si">}</span><span class="s1">, cores per node: &#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cores_per_node</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_pio_num_iotasks&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pio_num_iotasks</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;config_pio_stride&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pio_stride</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">replacements</span><span class="p">,</span>
+                                        <span class="n">out_name</span><span class="o">=</span><span class="n">out_name</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ForwardStep.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.forward.forward.ForwardStep.run.html#compass.ocean.tests.hurricane.forward.forward.ForwardStep.run">[docs]</a>

@@ -5,16 +5,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.ocean.tests.hurricane.analysis &mdash; compass 2.0.0-alpha.2 documentation</title>
+  <title>compass.ocean.tests.hurricane.analysis &mdash; compass 2.0.0-alpha.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../_static/documentation_options.js?v=9fd2db84"></script>
-      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=3baa5f9d"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -116,11 +116,18 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">cartopy.crs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ccrs</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">cartopy.feature</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cfeature</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cmocean</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mcolors</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.dates</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mdates</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.gridspec</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gridspec</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">netCDF4</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cartopy.mpl.ticker</span><span class="w"> </span><span class="kn">import</span> <span class="n">LatitudeFormatter</span><span class="p">,</span> <span class="n">LongitudeFormatter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">PatchCollection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Polygon</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">spatial</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
@@ -142,10 +149,6 @@
 
 <span class="sd">    max_data : str</span>
 <span class="sd">        End of time period to plot in frmt format</span>
-
-<span class="sd">    pointstats_file : dict</span>
-<span class="sd">        Dictionary of pointwiseStats outputs to plot. Dictionary key</span>
-<span class="sd">        becomes the lable in the legend.</span>
 
 <span class="sd">    observation : dict</span>
 <span class="sd">        Dictionary of stations belonging to a certain data product</span>
@@ -169,6 +172,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;pointwiseStats.nc&#39;</span><span class="p">,</span>
                             <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../forward/pointwiseStats.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../forward/input.nc&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">frmt</span> <span class="o">=</span> <span class="s1">&#39;%Y %m </span><span class="si">%d</span><span class="s1"> %H %M&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">storm</span> <span class="o">=</span> <span class="n">storm</span></div>
@@ -183,9 +188,10 @@
         <span class="n">package</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">storm</span> <span class="o">==</span> <span class="s1">&#39;sandy&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">min_date</span> <span class="o">=</span> <span class="s1">&#39;2012 10 24 00 00&#39;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">max_date</span> <span class="o">=</span> <span class="s1">&#39;2012 11 04 00 00&#39;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pointstats_file</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;MPAS-O&#39;</span><span class="p">:</span> <span class="s1">&#39;./pointwiseStats.nc&#39;</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run_min_date</span> <span class="o">=</span> <span class="s1">&#39;2012 10 10 00 00&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run_max_date</span> <span class="o">=</span> <span class="s1">&#39;2012 11 04 00 00&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">adjust_min_date</span> <span class="o">=</span> <span class="s1">&#39;2012 10 01 00 00&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">adjust_max_date</span> <span class="o">=</span> <span class="s1">&#39;2012 10 25 00 00&#39;</span>
 
             <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;sandy_stations.json&#39;</span>
             <span class="k">with</span> <span class="n">resources</span><span class="o">.</span><span class="n">open_text</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span><span class="k">as</span> <span class="n">stations_file</span><span class="p">:</span>
@@ -202,7 +208,25 @@
                         <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_data/</span><span class="si">{</span><span class="n">sta</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">,</span>
                         <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;sandy_validation/&#39;</span>
                                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_stations/</span><span class="si">{</span><span class="n">sta</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">,</span>
-                        <span class="n">database</span><span class="o">=</span><span class="s1">&#39;hurricane&#39;</span><span class="p">)</span></div>
+                        <span class="n">database</span><span class="o">=</span><span class="s1">&#39;hurricane&#39;</span><span class="p">)</span>
+
+            <span class="n">package</span> <span class="o">=</span> <span class="s1">&#39;compass.ocean.tests.hurricane.init&#39;</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;bathy_data.json&#39;</span>
+            <span class="k">with</span> <span class="n">resources</span><span class="o">.</span><span class="n">open_text</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">bathy_file</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bathy_files</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">bathy_file</span><span class="p">)</span>
+
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="si">}</span><span class="s1">/NCEI_data&#39;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="si">}</span><span class="s1">/LULC_data&#39;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">dem</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bathy_files</span><span class="p">[</span><span class="s2">&quot;NCEI&quot;</span><span class="p">]):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+                    <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;NCEI_data/</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;ncei/</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="n">database</span><span class="o">=</span><span class="s1">&#39;bathymetry_database&#39;</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+                    <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;LULC_data/landuse_from_</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;LULC/landuse_from_</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="n">database</span><span class="o">=</span><span class="s1">&#39;hurricane&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Analysis.read_pointstats">
@@ -211,7 +235,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Read the pointwiseStats data from the MPAS-Ocean run</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">pointstats_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="s1">&#39;pointwiseStats.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">pointstats_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">pointstats_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">data</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pointstats_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xtime&#39;</span><span class="p">][:]</span>
         <span class="n">data</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -307,6 +331,31 @@
         <span class="k">return</span> <span class="n">stations</span></div>
 
 
+<div class="viewcode-block" id="Analysis.adjust_station_data">
+<a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.analysis.Analysis.adjust_station_data.html#compass.ocean.tests.hurricane.analysis.Analysis.adjust_station_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">adjust_station_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs_data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adjust mean sea level in observation data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">adjust_max_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adjust_max_date</span><span class="p">,</span>
+                                                     <span class="bp">self</span><span class="o">.</span><span class="n">frmt</span><span class="p">)</span>
+
+        <span class="c1"># Get mean sea level within adjust period</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">cnt</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">adjust_max_date</span><span class="p">:</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">val</span> <span class="o">+</span> <span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">cnt</span> <span class="o">=</span> <span class="n">cnt</span> <span class="o">+</span> <span class="mf">1.0</span>
+        <span class="k">if</span> <span class="n">cnt</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="n">mean</span> <span class="o">=</span> <span class="n">val</span> <span class="o">/</span> <span class="n">cnt</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mean</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="c1"># Correct observations for mean sea level</span>
+        <span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">mean</span></div>
+
+
 <div class="viewcode-block" id="Analysis.run">
 <a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.analysis.Analysis.run.html#compass.ocean.tests.hurricane.analysis.Analysis.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -315,15 +364,60 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">switch_backend</span><span class="p">(</span><span class="s1">&#39;agg&#39;</span><span class="p">)</span>
 
+        <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;mathtext.fontset&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;stix&#39;</span>
+        <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.family&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;STIXGeneral&#39;</span>
+
+        <span class="n">plot_station_dems</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;hurricane_analysis&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;plot_station_dems&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Get paths to run data to plot</span>
+        <span class="n">pointstats_file</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">comparison_runs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hurricane_analysis&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;analysis_runs&#39;</span><span class="p">)</span>
+        <span class="n">comparison_runs_sp</span> <span class="o">=</span> <span class="n">comparison_runs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">comparison_runs_sp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">comparison_runs_sp</span><span class="p">:</span>
+                <span class="n">run_sp</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+                <span class="n">run_name</span> <span class="o">=</span> <span class="n">run_sp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">run_path</span> <span class="o">=</span> <span class="n">run_sp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">run_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">run_path</span><span class="si">}</span><span class="s1">/pointwiseStats.nc&#39;</span>
+
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">run_file</span><span class="p">):</span>
+                    <span class="n">pointstats_file</span><span class="p">[</span><span class="n">run_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">run_file</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No run paths specified for analysis&quot;</span><span class="p">)</span>
+
         <span class="c1"># Read in model point output data and create kd-tree</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">tree</span> <span class="o">=</span> <span class="p">{}</span>
-
-        <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pointstats_file</span><span class="p">:</span>
-            <span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_pointstats</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pointstats_file</span><span class="p">[</span><span class="n">run</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">pointstats_file</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_pointstats</span><span class="p">(</span><span class="n">pointstats_file</span><span class="p">[</span><span class="n">run</span><span class="p">])</span>
             <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;lon&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;lat&#39;</span><span class="p">]))</span><span class="o">.</span><span class="n">T</span>
             <span class="n">tree</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">KDTree</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
 
+        <span class="c1"># Initialize for plotting high water marks after time series plots</span>
+        <span class="n">hwm_obs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">hwm_mod</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">never_wet</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">station_lon</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">station_lat</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">run</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+            <span class="n">hwm_mod</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">never_wet</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Create new colormap for LULC</span>
+        <span class="n">tab20_colors</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;tab20&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">colors</span>
+        <span class="n">tab20</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">tab20_colors</span><span class="p">:</span>
+            <span class="n">tab20</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mcolors</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+        <span class="n">new_colors</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;#91a9b1&#39;</span><span class="p">,</span>  <span class="c1"># Seafoam green</span>
+            <span class="s1">&#39;#b46617&#39;</span><span class="p">,</span>  <span class="c1"># Burnt orange</span>
+        <span class="p">]</span>
+        <span class="n">tab20</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">new_colors</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tab25</span> <span class="o">=</span> <span class="n">mcolors</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">(</span><span class="n">tab20</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;tab25&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Plot time series</span>
         <span class="k">for</span> <span class="n">obs</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_plots&#39;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -332,79 +426,559 @@
 
             <span class="k">for</span> <span class="n">sta</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="p">[</span><span class="n">obs</span><span class="p">]:</span>
 
+                <span class="nb">print</span><span class="p">(</span><span class="n">sta</span><span class="p">)</span>
                 <span class="n">i</span> <span class="o">=</span> <span class="n">stations</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">sta</span><span class="p">)</span>
+
+                <span class="n">sta_lon</span> <span class="o">=</span> <span class="n">stations</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">sta_lat</span> <span class="o">=</span> <span class="n">stations</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">station_lon</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sta_lon</span><span class="p">)</span>
+                <span class="n">station_lat</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sta_lat</span><span class="p">)</span>
 
                 <span class="c1"># Read in observed data and get coordinates</span>
                 <span class="n">obs_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_station_data</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_data/</span><span class="si">{</span><span class="n">sta</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span>
-                                                  <span class="bp">self</span><span class="o">.</span><span class="n">min_date</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_date</span><span class="p">)</span>
-                <span class="n">sta_lon</span> <span class="o">=</span> <span class="n">stations</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
-                <span class="n">sta_lat</span> <span class="o">=</span> <span class="n">stations</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+                                                  <span class="bp">self</span><span class="o">.</span><span class="n">adjust_min_date</span><span class="p">,</span>
+                                                  <span class="bp">self</span><span class="o">.</span><span class="n">run_max_date</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">adjust_station_data</span><span class="p">(</span><span class="n">obs_data</span><span class="p">)</span>
+                <span class="n">hwm_obs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">][</span><span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">99.0</span><span class="p">]))</span>
 
-                <span class="c1"># Create figure</span>
-                <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
-                <span class="n">gs</span> <span class="o">=</span> <span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
-
-                <span class="c1"># Plot observation station location</span>
-                <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
-                <span class="n">ax1</span><span class="o">.</span><span class="n">set_extent</span><span class="p">([</span><span class="n">sta_lon</span> <span class="o">-</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">sta_lon</span> <span class="o">+</span> <span class="mf">10.00</span><span class="p">,</span>
-                               <span class="n">sta_lat</span> <span class="o">-</span> <span class="mf">7.0</span><span class="p">,</span> <span class="n">sta_lat</span> <span class="o">+</span> <span class="mf">7.0</span><span class="p">],</span>
-                               <span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
-                <span class="n">ax1</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">LAND</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-                <span class="n">ax1</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">LAKES</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
-                <span class="n">ax1</span><span class="o">.</span><span class="n">coastlines</span><span class="p">(</span><span class="s1">&#39;50m&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
-                <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">,</span> <span class="s1">&#39;C0o&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">102</span><span class="p">)</span>
-
-                <span class="c1"># Plot local observation station location</span>
-                <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
-                <span class="n">ax2</span><span class="o">.</span><span class="n">set_extent</span><span class="p">([</span><span class="n">sta_lon</span> <span class="o">-</span> <span class="mf">2.5</span><span class="p">,</span> <span class="n">sta_lon</span> <span class="o">+</span> <span class="mf">2.5</span><span class="p">,</span>
-                               <span class="n">sta_lat</span> <span class="o">-</span> <span class="mf">1.75</span><span class="p">,</span> <span class="n">sta_lat</span> <span class="o">+</span> <span class="mf">1.75</span><span class="p">],</span>
-                               <span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
-                <span class="n">ax2</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">LAND</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-                <span class="n">ax2</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">LAKES</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
-                <span class="n">ax2</span><span class="o">.</span><span class="n">coastlines</span><span class="p">(</span><span class="s1">&#39;50m&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
-                <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">,</span> <span class="s1">&#39;C0o&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">102</span><span class="p">)</span>
-
-                <span class="c1"># Plot observed data</span>
-                <span class="n">ax3</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span>
-                <span class="n">l1</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">],</span> <span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">],</span> <span class="s1">&#39;C0-&#39;</span><span class="p">)</span>
-                <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Observed&#39;</span><span class="p">]</span>
-                <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">l1</span><span class="p">]</span>
-
-                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">run</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
 
                     <span class="c1"># Find closest output point to station location</span>
                     <span class="n">d</span><span class="p">,</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">tree</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">]))</span>
 
-                    <span class="c1"># Plot output point location</span>
-                    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;lon&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">],</span>
-                             <span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;lat&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">],</span>
-                             <span class="s1">&#39;C&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
-                    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;lon&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">],</span>
-                             <span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;lat&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">],</span>
-                             <span class="s1">&#39;C&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+                    <span class="n">hwm_mod</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;ssh&#39;</span><span class="p">][:,</span> <span class="n">idx</span><span class="p">]))</span>
+                    <span class="n">diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;ssh&#39;</span><span class="p">][</span><span class="mi">1000</span><span class="p">:,</span> <span class="n">idx</span><span class="p">])</span> <span class="o">-</span>
+                                  <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;ssh&#39;</span><span class="p">][</span><span class="mi">1000</span><span class="p">:,</span> <span class="n">idx</span><span class="p">]))</span>
+                    <span class="n">never_wet</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span>
 
-                    <span class="c1"># Plot modelled data</span>
-                    <span class="n">l2</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;datetime&#39;</span><span class="p">],</span>
-                                   <span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;ssh&#39;</span><span class="p">][:,</span> <span class="n">idx</span><span class="p">],</span>
-                                   <span class="s1">&#39;C&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
-                    <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
-                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l2</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">plot_timeseries</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">sta</span><span class="p">,</span> <span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">,</span>
+                                     <span class="n">obs_data</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
 
-                <span class="c1"># Set figure labels and axis properties and save</span>
-                <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
-                <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;ssh (m)&#39;</span><span class="p">)</span>
-                <span class="n">min_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_date</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">frmt</span><span class="p">)</span>
-                <span class="n">max_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_date</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">frmt</span><span class="p">)</span>
-                <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">min_date</span><span class="p">,</span> <span class="n">max_date</span><span class="p">])</span>
-                <span class="n">ax3</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">mdates</span><span class="o">.</span><span class="n">DateFormatter</span><span class="p">(</span><span class="s1">&#39;%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">))</span>
-                <span class="n">lgd</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
-                                 <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">),</span>
-                                 <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">fancybox</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
-                <span class="n">st</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Station &#39;</span> <span class="o">+</span> <span class="n">sta</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.025</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
-                <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-                <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_plots/</span><span class="si">{</span><span class="n">sta</span><span class="si">}</span><span class="s1">.png&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span>
-                            <span class="n">bbox_extra_artists</span><span class="o">=</span><span class="p">(</span><span class="n">lgd</span><span class="p">,</span> <span class="n">st</span><span class="p">,))</span>
-                <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+                <span class="c1"># Plot DEM and LULC around station</span>
+                <span class="k">if</span> <span class="n">plot_station_dems</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">plot_dem</span><span class="p">(</span><span class="n">sta</span><span class="p">,</span> <span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">)</span>
+
+        <span class="c1"># Convert to numpy arrays</span>
+        <span class="n">station_lon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">station_lon</span><span class="p">)</span>
+        <span class="n">station_lat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">station_lat</span><span class="p">)</span>
+        <span class="n">hwm_obs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">hwm_obs</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">run</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+            <span class="n">hwm_mod</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">hwm_mod</span><span class="p">[</span><span class="n">run</span><span class="p">])</span>
+            <span class="n">never_wet</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">never_wet</span><span class="p">[</span><span class="n">run</span><span class="p">])</span></div>
+
+
+        <span class="c1"># Plot comparisons</span>
+        <span class="c1"># self.plot_hwm(</span>
+        <span class="c1">#     station_lon, station_lat, hwm_obs, hwm_mod, never_wet, data)</span>
+
+<div class="viewcode-block" id="Analysis.find_data_in_bbox">
+<a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.analysis.Analysis.find_data_in_bbox.html#compass.ocean.tests.hurricane.analysis.Analysis.find_data_in_bbox">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_data_in_bbox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">,</span> <span class="n">eps</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Find data in bounding box</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Find DEM tile containing station</span>
+        <span class="n">lat_name</span> <span class="o">=</span> <span class="s1">&#39;lat&#39;</span>
+        <span class="n">lon_name</span> <span class="o">=</span> <span class="s1">&#39;lon&#39;</span>
+        <span class="n">locs</span> <span class="o">=</span> <span class="p">[[</span><span class="n">sta_lon</span> <span class="o">-</span> <span class="n">eps</span><span class="p">,</span> <span class="n">sta_lat</span> <span class="o">+</span> <span class="n">eps</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span> <span class="o">+</span> <span class="n">eps</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">sta_lon</span> <span class="o">+</span> <span class="n">eps</span><span class="p">,</span> <span class="n">sta_lat</span> <span class="o">+</span> <span class="n">eps</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">sta_lon</span> <span class="o">-</span> <span class="n">eps</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">sta_lon</span> <span class="o">+</span> <span class="n">eps</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">sta_lon</span> <span class="o">-</span> <span class="n">eps</span><span class="p">,</span> <span class="n">sta_lat</span> <span class="o">-</span> <span class="n">eps</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span> <span class="o">-</span> <span class="n">eps</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">sta_lon</span> <span class="o">+</span> <span class="n">eps</span><span class="p">,</span> <span class="n">sta_lat</span> <span class="o">-</span> <span class="n">eps</span><span class="p">]]</span>
+
+        <span class="n">bbox</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">sta_lon</span> <span class="o">-</span> <span class="n">eps</span><span class="p">,</span> <span class="n">sta_lon</span> <span class="o">+</span> <span class="n">eps</span><span class="p">,</span>
+                         <span class="n">sta_lat</span> <span class="o">-</span> <span class="n">eps</span><span class="p">,</span> <span class="n">sta_lat</span> <span class="o">+</span> <span class="n">eps</span><span class="p">])</span>
+        <span class="n">patches1</span><span class="p">,</span> <span class="n">patches2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_cell_patches</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">bbox</span><span class="p">)</span>
+
+        <span class="n">dems</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">dem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bathy_files</span><span class="p">[</span><span class="s1">&#39;NCEI&#39;</span><span class="p">]:</span>
+            <span class="n">ds_topo</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;NCEI_data/</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">lon</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="o">.</span><span class="n">lon</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">lat</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="o">.</span><span class="n">lat</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">da_topo</span> <span class="o">=</span> <span class="n">ds_topo</span><span class="o">.</span><span class="n">Band1</span>
+            <span class="n">lon_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span>
+            <span class="n">lon_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span>
+            <span class="n">lat_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span>
+            <span class="n">lat_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">locs</span><span class="p">:</span>
+                <span class="c1"># lon_pt = loc[0]</span>
+                <span class="c1"># lat_pt = loc[1]</span>
+                <span class="c1"># if lon_pt &gt; lon_min and lon_pt &lt; lon_max and \</span>
+                <span class="c1">#    lat_pt &gt; lat_min and lat_pt &lt; lat_max:</span>
+                <span class="k">if</span> <span class="n">lon_max</span> <span class="o">&gt;</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">lon_min</span> <span class="o">&lt;</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> \
+                   <span class="n">lat_max</span> <span class="o">&gt;</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">and</span> <span class="n">lat_min</span> <span class="o">&lt;</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
+
+                    <span class="k">if</span> <span class="n">lat_name</span> <span class="ow">in</span> <span class="n">da_topo</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+                        <span class="n">lat</span> <span class="o">=</span> <span class="n">da_topo</span><span class="p">[</span><span class="n">lat_name</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">lat</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="p">(</span><span class="n">lat</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">lat_name</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+                            <span class="n">da_topo</span> <span class="o">=</span> <span class="n">da_topo</span><span class="o">.</span><span class="n">sortby</span><span class="p">(</span><span class="n">lat_name</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">lon_name</span> <span class="ow">in</span> <span class="n">da_topo</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+                        <span class="n">lon</span> <span class="o">=</span> <span class="n">da_topo</span><span class="p">[</span><span class="n">lon_name</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">lon</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="p">(</span><span class="n">lon</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">lon_name</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+                            <span class="n">da_topo</span> <span class="o">=</span> <span class="n">da_topo</span><span class="o">.</span><span class="n">sortby</span><span class="p">(</span><span class="n">lon_name</span><span class="p">)</span>
+
+                    <span class="n">dems</span><span class="p">[</span><span class="n">dem</span><span class="p">]</span> <span class="o">=</span> <span class="n">da_topo</span>
+
+        <span class="n">lulcs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">dem</span> <span class="ow">in</span> <span class="n">dems</span><span class="p">:</span>
+            <span class="n">ds_lulc</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;LULC_data/landuse_from_</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">da_lulc</span> <span class="o">=</span> <span class="n">ds_lulc</span><span class="o">.</span><span class="n">Band1</span>
+
+            <span class="n">lulcs</span><span class="p">[</span><span class="n">dem</span><span class="p">]</span> <span class="o">=</span> <span class="n">da_lulc</span>
+
+        <span class="k">return</span> <span class="n">dems</span><span class="p">,</span> <span class="n">lulcs</span><span class="p">,</span> <span class="n">patches1</span><span class="p">,</span> <span class="n">patches2</span></div>
+
+
+<div class="viewcode-block" id="Analysis.plot_timeseries">
+<a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.analysis.Analysis.plot_timeseries.html#compass.ocean.tests.hurricane.analysis.Analysis.plot_timeseries">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_timeseries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">sta</span><span class="p">,</span> <span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">,</span>
+                        <span class="n">obs_data</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot timeseries</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Create figure</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+        <span class="n">gs</span> <span class="o">=</span> <span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+
+        <span class="c1"># Plot observation station location</span>
+        <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_extent</span><span class="p">([</span><span class="n">sta_lon</span> <span class="o">-</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">sta_lon</span> <span class="o">+</span> <span class="mf">10.00</span><span class="p">,</span>
+                       <span class="n">sta_lat</span> <span class="o">-</span> <span class="mf">7.0</span><span class="p">,</span> <span class="n">sta_lat</span> <span class="o">+</span> <span class="mf">7.0</span><span class="p">],</span>
+                       <span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">LAND</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">LAKES</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">coastlines</span><span class="p">(</span><span class="s1">&#39;50m&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">,</span> <span class="s1">&#39;C0o&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">102</span><span class="p">)</span>
+
+        <span class="c1"># Plot local observation station location</span>
+        <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_extent</span><span class="p">([</span><span class="n">sta_lon</span> <span class="o">-</span> <span class="mf">2.5</span><span class="p">,</span> <span class="n">sta_lon</span> <span class="o">+</span> <span class="mf">2.5</span><span class="p">,</span>
+                       <span class="n">sta_lat</span> <span class="o">-</span> <span class="mf">1.75</span><span class="p">,</span> <span class="n">sta_lat</span> <span class="o">+</span> <span class="mf">1.75</span><span class="p">],</span>
+                       <span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">LAND</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">LAKES</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">coastlines</span><span class="p">(</span><span class="s1">&#39;50m&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">,</span> <span class="s1">&#39;C0o&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">102</span><span class="p">)</span>
+
+        <span class="c1"># Plot observed data</span>
+        <span class="n">ax3</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="n">l1</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">],</span> <span class="n">obs_data</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">],</span> <span class="s1">&#39;C0-&#39;</span><span class="p">)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;observed&#39;</span><span class="p">]</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">l1</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">run</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+
+            <span class="c1"># Find closest output point to station location</span>
+            <span class="n">d</span><span class="p">,</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">tree</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">]))</span>
+
+            <span class="c1"># Plot output point location</span>
+            <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;lon&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">],</span>
+                     <span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;lat&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">],</span>
+                     <span class="s1">&#39;C&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;lon&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">],</span>
+                     <span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;lat&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">],</span>
+                     <span class="s1">&#39;C&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+
+            <span class="c1"># Plot modelled data</span>
+            <span class="n">l2</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;datetime&#39;</span><span class="p">],</span>
+                           <span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="s1">&#39;ssh&#39;</span><span class="p">][:,</span> <span class="n">idx</span><span class="p">],</span>
+                           <span class="s1">&#39;C&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
+            <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l2</span><span class="p">)</span>
+
+        <span class="c1"># Set figure labels and axis properties and save</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;ssh (m)&#39;</span><span class="p">)</span>
+        <span class="n">plot_min_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hurricane_analysis&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;plot_min_date&#39;</span><span class="p">)</span>
+        <span class="n">plot_max_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hurricane_analysis&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;plot_max_date&#39;</span><span class="p">)</span>
+        <span class="n">min_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">plot_min_date</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">frmt</span><span class="p">)</span>
+        <span class="n">max_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">plot_max_date</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">frmt</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">min_date</span><span class="p">,</span> <span class="n">max_date</span><span class="p">])</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">mdates</span><span class="o">.</span><span class="n">DateFormatter</span><span class="p">(</span><span class="s1">&#39;%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">))</span>
+        <span class="n">lgd</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
+                         <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">),</span>
+                         <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">fancybox</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+        <span class="n">st</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Station &#39;</span> <span class="o">+</span> <span class="n">sta</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.025</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">obs</span><span class="si">}</span><span class="s1">_plots/</span><span class="si">{</span><span class="n">sta</span><span class="si">}</span><span class="s1">_sta.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span>
+                    <span class="n">bbox_extra_artists</span><span class="o">=</span><span class="p">(</span><span class="n">lgd</span><span class="p">,</span> <span class="n">st</span><span class="p">,))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Analysis.plot_dem">
+<a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.analysis.Analysis.plot_dem.html#compass.ocean.tests.hurricane.analysis.Analysis.plot_dem">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_dem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sta</span><span class="p">,</span> <span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot Digital Elevation Model around station</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># eps = 0.25</span>
+        <span class="n">eps</span> <span class="o">=</span> <span class="mf">0.76</span>
+        <span class="n">dems</span><span class="p">,</span> <span class="n">lulcs</span><span class="p">,</span> <span class="n">patches1</span><span class="p">,</span> <span class="n">patches2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_data_in_bbox</span><span class="p">(</span><span class="n">sta_lon</span><span class="p">,</span>
+                                                                 <span class="n">sta_lat</span><span class="p">,</span>
+                                                                 <span class="n">eps</span><span class="p">)</span>
+
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+        <span class="c1"># Plot DEM topo and LULC around station</span>
+        <span class="c1"># for i, eps in enumerate([0.75]):</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">eps</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">]):</span>
+            <span class="n">bbox</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">sta_lon</span> <span class="o">-</span> <span class="n">eps</span><span class="p">,</span> <span class="n">sta_lon</span> <span class="o">+</span> <span class="n">eps</span><span class="p">,</span>
+                             <span class="n">sta_lat</span> <span class="o">-</span> <span class="n">eps</span><span class="p">,</span> <span class="n">sta_lat</span> <span class="o">+</span> <span class="n">eps</span><span class="p">])</span>
+
+            <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="c1"># bbox_dems = np.array([1e10, -1e10, 1e10, -1e10])</span>
+            <span class="k">for</span> <span class="n">dem</span> <span class="ow">in</span> <span class="n">dems</span><span class="p">:</span>
+                <span class="n">da_topo</span> <span class="o">=</span> <span class="n">dems</span><span class="p">[</span><span class="n">dem</span><span class="p">]</span>
+                <span class="n">da_lulc</span> <span class="o">=</span> <span class="n">lulcs</span><span class="p">[</span><span class="n">dem</span><span class="p">]</span>
+                <span class="n">skip_topo</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">da</span> <span class="o">=</span> <span class="n">da_topo</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">lon</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">.25</span> <span class="o">*</span> <span class="n">eps</span><span class="p">,</span>
+                                               <span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">.25</span> <span class="o">*</span> <span class="n">eps</span><span class="p">),</span>
+                                     <span class="n">lat</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">bbox</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="mf">.25</span> <span class="o">*</span> <span class="n">eps</span><span class="p">,</span>
+                                               <span class="n">bbox</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="mf">.25</span> <span class="o">*</span> <span class="n">eps</span><span class="p">))</span>
+                <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;topo slicing failed&#39;</span><span class="p">)</span>
+                    <span class="n">skip_topo</span> <span class="o">=</span> <span class="kc">True</span>
+
+                <span class="k">if</span> <span class="n">da</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">da</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">skip_topo</span> <span class="o">=</span> <span class="kc">True</span>
+
+                <span class="k">if</span> <span class="n">skip_topo</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="n">j</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="c1"># if da[&quot;lon&quot;].min() &lt; bbox_dems[0]:</span>
+                <span class="c1">#     bbox_dems[0] = da[&quot;lon&quot;].min()</span>
+                <span class="c1"># if da[&quot;lon&quot;].max() &gt; bbox_dems[1]:</span>
+                <span class="c1">#     bbox_dems[1] = da[&quot;lon&quot;].max()</span>
+                <span class="c1"># if da[&quot;lat&quot;].min() &lt; bbox_dems[2]:</span>
+                <span class="c1">#     bbox_dems[2] = da[&quot;lat&quot;].min()</span>
+                <span class="c1"># if da[&quot;lat&quot;].max() &gt; bbox_dems[3]:</span>
+                <span class="c1">#     bbox_dems[3] = da[&quot;lat&quot;].max()</span>
+
+                <span class="c1"># Plot DEM topo</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">40.0</span>
+                    <span class="n">vmax</span> <span class="o">=</span> <span class="mf">40.0</span>
+                <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">20.0</span>
+                    <span class="n">vmax</span> <span class="o">=</span> <span class="mf">20.0</span>
+
+                <span class="n">axi</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">i</span>
+                <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">da</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">],</span>
+                            <span class="n">cmap</span><span class="o">=</span><span class="n">cmocean</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">topo</span><span class="p">,</span>
+                            <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span>
+                            <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span>
+                            <span class="n">cbar_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;bathymetry/topography&#39;</span><span class="p">})</span>
+                    <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">,</span>
+                                 <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span>
+                                 <span class="n">markerfacecolor</span><span class="o">=</span><span class="s1">&#39;tab:orange&#39;</span><span class="p">,</span>
+                                 <span class="n">markeredgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span>
+                                 <span class="n">zorder</span><span class="o">=</span><span class="mi">102</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="n">patches1</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="n">patches2</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">da</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">],</span>
+                            <span class="n">cmap</span><span class="o">=</span><span class="n">cmocean</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">topo</span><span class="p">,</span>
+                            <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span>
+                            <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span>
+                            <span class="n">add_colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">autoscale</span><span class="p">(</span><span class="n">enable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;longitude&#39;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;latitude&#39;</span><span class="p">)</span>
+                <span class="c1"># if j == len(dems):</span>
+                <span class="c1">#     if bbox_dems[0] &gt; bbox[0]:</span>
+                <span class="c1">#         bbox[0] = bbox_dems[0]</span>
+                <span class="c1">#     if bbox_dems[1] &lt; bbox[1]:</span>
+                <span class="c1">#         bbox[1] = bbox_dems[1]</span>
+                <span class="c1">#     if bbox_dems[2] &gt; bbox[2]:</span>
+                <span class="c1">#         bbox[2] = bbox_dems[2]</span>
+                <span class="c1">#     if bbox_dems[3] &lt; bbox[3]:</span>
+                <span class="c1">#         bbox[3] = bbox_dems[3]</span>
+                <span class="c1">#     ax[axi].set_xlim(bbox[0], bbox[1])</span>
+                <span class="c1">#     ax[axi].set_ylim(bbox[2], bbox[3])</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bbox</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+
+                <span class="c1"># Plot LULC</span>
+                <span class="n">tick_locations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">23.5</span><span class="p">,</span> <span class="mi">22</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                <span class="n">tick_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;h.i. dev&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;m.i. dev&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;l.i. dev&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;open dev&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;cul land&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;pasture&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;grassland&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;dec forest&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;eve forest&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;mix forest&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;scrub&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;p.f. wetland&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;p.s. wetland&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;p.e. wetland&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;e.f. wetland&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;e.s. wetland&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;e.e. wetland&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;u.c. shore&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;bare land&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;open water&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;p.a. bed&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;e.a. bed&#39;</span><span class="p">]</span>
+
+                <span class="n">da</span> <span class="o">=</span> <span class="n">da_lulc</span>
+                <span class="n">formt</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">FuncFormatter</span><span class="p">(</span>
+                    <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">tick_labels</span><span class="p">[</span><span class="n">tick_locations</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">x</span><span class="p">)])</span>
+
+                <span class="n">axi</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">da</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">],</span>
+                            <span class="n">cmap</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tab25</span><span class="p">,</span>
+                            <span class="n">vmin</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                            <span class="n">vmax</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span>
+                            <span class="n">cbar_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;LULC&#39;</span><span class="p">,</span>
+                                         <span class="s1">&#39;ticks&#39;</span><span class="p">:</span> <span class="n">tick_locations</span><span class="p">,</span>
+                                         <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="n">formt</span><span class="p">})</span>
+                    <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sta_lon</span><span class="p">,</span> <span class="n">sta_lat</span><span class="p">,</span>
+                                 <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span>
+                                 <span class="n">markerfacecolor</span><span class="o">=</span><span class="s1">&#39;tab:orange&#39;</span><span class="p">,</span>
+                                 <span class="n">markeredgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span>
+                                 <span class="n">zorder</span><span class="o">=</span><span class="mi">102</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">da</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">],</span>
+                            <span class="n">cmap</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tab25</span><span class="p">,</span>
+                            <span class="n">add_colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">vmin</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                            <span class="n">vmax</span><span class="o">=</span><span class="mi">23</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;longitude&#39;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;latitude&#39;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">axi</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bbox</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+
+        <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">sta</span><span class="si">}</span><span class="s1">_dem.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Analysis.plot_hwm">
+<a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.analysis.Analysis.plot_hwm.html#compass.ocean.tests.hurricane.analysis.Analysis.plot_hwm">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_hwm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">station_lon</span><span class="p">,</span> <span class="n">station_lat</span><span class="p">,</span> <span class="n">hwm_obs</span><span class="p">,</span> <span class="n">hwm_mod</span><span class="p">,</span>
+                 <span class="n">never_wet</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot High-Water Mark statistics</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Print diagnostics</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">station_lon</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">station_lon</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">idx_lon</span><span class="p">,</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">station_lon</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">71.67</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">idx_lon</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">idx_lon</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">never_wet</span><span class="p">[</span><span class="s1">&#39;standard&#39;</span><span class="p">])</span>
+        <span class="n">idx_nw</span><span class="p">,</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">station_lon</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">71.67</span><span class="p">)</span> <span class="o">&amp;</span>
+                           <span class="p">(</span><span class="n">never_wet</span><span class="p">[</span><span class="s1">&#39;standard&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.05</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">idx_nw</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">idx_nw</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">idx_sg_only</span><span class="p">,</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">station_lon</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">71.67</span><span class="p">)</span> <span class="o">&amp;</span>
+                                <span class="p">(</span><span class="n">never_wet</span><span class="p">[</span><span class="s1">&#39;standard&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">)</span> <span class="o">&amp;</span>
+                                <span class="p">(</span><span class="n">never_wet</span><span class="p">[</span><span class="s1">&#39;subgrid&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.05</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">idx_sg_only</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">idx_sg_only</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="c1"># Plot modeled vs. observed hwm scatter</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">3.33</span><span class="p">))</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">131</span><span class="p">)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">scatters</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">run</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">hwm_mod</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="o">-</span> <span class="n">hwm_obs</span>
+            <span class="n">rmse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">diff</span><span class="p">[</span><span class="n">idx_lon</span><span class="p">])))</span>
+            <span class="n">mae</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">diff</span><span class="p">[</span><span class="n">idx_lon</span><span class="p">]))</span>
+            <span class="n">sc</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">hwm_obs</span><span class="p">[</span><span class="n">idx_lon</span><span class="p">],</span> <span class="n">hwm_mod</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="n">idx_lon</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+            <span class="n">text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1"> RMSE: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">rmse</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> m&#39;</span><span class="p">)</span>
+            <span class="n">text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1"> MAE: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">mae</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> m&#39;</span><span class="p">)</span>
+            <span class="n">scatters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sc</span><span class="p">)</span>
+            <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
+        <span class="n">ln</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hwm_obs</span><span class="p">,</span> <span class="n">hwm_obs</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+        <span class="n">scatters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ln</span><span class="p">)</span>
+        <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;perfect agreement&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;observed HWM (m)&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;modeled HWM (m)&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;a)&#39;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;x-large&#39;</span><span class="p">)</span>
+
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">132</span><span class="p">)</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">hwm_mod</span><span class="p">[</span><span class="s1">&#39;subgrid&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">hwm_obs</span>
+        <span class="n">rmse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">diff</span><span class="p">[</span><span class="n">idx_sg_only</span><span class="p">])))</span>
+        <span class="n">mae</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">diff</span><span class="p">[</span><span class="n">idx_sg_only</span><span class="p">]))</span>
+        <span class="n">sc</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">hwm_obs</span><span class="p">[</span><span class="n">idx_sg_only</span><span class="p">],</span>
+                        <span class="n">hwm_mod</span><span class="p">[</span><span class="s1">&#39;subgrid&#39;</span><span class="p">][</span><span class="n">idx_sg_only</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;subgrid RMSE: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">rmse</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> m&#39;</span><span class="p">,</span>
+                          <span class="sa">f</span><span class="s1">&#39;subgrid MAE: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">mae</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> m&#39;</span><span class="p">])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
+        <span class="n">ln</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hwm_obs</span><span class="p">,</span> <span class="n">hwm_obs</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+        <span class="n">scatters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ln</span><span class="p">)</span>
+        <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;perfect agreement&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;observed HWM (m)&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;modeled HWM (m)&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;b)&#39;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;x-large&#39;</span><span class="p">)</span>
+
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">133</span><span class="p">)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">scatters</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">run</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">hwm_mod</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="o">-</span> <span class="n">hwm_obs</span>
+            <span class="n">rmse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">diff</span><span class="p">[</span><span class="n">idx_nw</span><span class="p">])))</span>
+            <span class="n">mae</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">diff</span><span class="p">[</span><span class="n">idx_nw</span><span class="p">]))</span>
+            <span class="n">sc</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">hwm_obs</span><span class="p">[</span><span class="n">idx_nw</span><span class="p">],</span> <span class="n">hwm_mod</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="n">idx_nw</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+            <span class="n">text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1"> RMSE: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">rmse</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> m&#39;</span><span class="p">)</span>
+            <span class="n">text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1"> MAE: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">mae</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> m&#39;</span><span class="p">)</span>
+            <span class="n">scatters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sc</span><span class="p">)</span>
+            <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
+        <span class="n">ln</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hwm_obs</span><span class="p">,</span> <span class="n">hwm_obs</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">2.8</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
+        <span class="n">scatters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ln</span><span class="p">)</span>
+        <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;perfect agreement&#39;</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">scatters</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;outside lower center&#39;</span><span class="p">,</span>
+                   <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">),</span>
+                   <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">fancybox</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;observed HWM (m)&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;modeled HWM (m)&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;c)&#39;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;x-large&#39;</span><span class="p">)</span>
+
+        <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;hwm_mod_obs.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="c1"># Plot geographic hwm error</span>
+        <span class="n">station_lon</span> <span class="o">=</span> <span class="n">station_lon</span><span class="p">[</span><span class="n">idx_lon</span><span class="p">]</span>
+        <span class="n">station_lat</span> <span class="o">=</span> <span class="n">station_lat</span><span class="p">[</span><span class="n">idx_lon</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">hwm_mod</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="o">-</span> <span class="n">hwm_obs</span>
+            <span class="n">cm</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">station_lon</span><span class="p">,</span> <span class="n">station_lat</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">diff</span><span class="p">[</span><span class="n">idx_lon</span><span class="p">],</span>
+                            <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;PuOr&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">102</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">3.0</span><span class="p">,</span>
+                            <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_extent</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">station_lon</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.1</span><span class="p">,</span>
+                           <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">station_lon</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">,</span>
+                           <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">station_lat</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.1</span><span class="p">,</span>
+                           <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">station_lat</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">],</span>
+                          <span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">LAND</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">OCEAN</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">LAKES</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">coastlines</span><span class="p">(</span><span class="s1">&#39;50m&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>
+
+            <span class="n">xticks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">station_lon</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.1</span><span class="p">,</span>
+                                 <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">station_lon</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+            <span class="n">yticks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">station_lat</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.1</span><span class="p">,</span>
+                                 <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">station_lat</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">xticks</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">yticks</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+            <span class="n">lon_formatter</span> <span class="o">=</span> <span class="n">LongitudeFormatter</span><span class="p">(</span><span class="n">number_format</span><span class="o">=</span><span class="s1">&#39;.2f&#39;</span><span class="p">,</span>
+                                               <span class="n">zero_direction_label</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">lat_formatter</span> <span class="o">=</span> <span class="n">LatitudeFormatter</span><span class="p">(</span><span class="n">number_format</span><span class="o">=</span><span class="s1">&#39;.2f&#39;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">lon_formatter</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">lat_formatter</span><span class="p">)</span>
+
+            <span class="n">plot_mode</span> <span class="o">=</span> <span class="s1">&#39;paper&#39;</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="n">run</span>
+            <span class="k">if</span> <span class="n">plot_mode</span> <span class="o">==</span> <span class="s1">&#39;paper&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s1">&#39;subgrid&#39;</span> <span class="ow">in</span> <span class="n">run</span><span class="p">:</span>
+                    <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;a)&#39;</span>
+                <span class="k">elif</span> <span class="s1">&#39;standard&#39;</span> <span class="ow">in</span> <span class="n">run</span><span class="p">:</span>
+                    <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;b)&#39;</span>
+                <span class="n">loc</span> <span class="o">=</span> <span class="s1">&#39;left&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">loc</span> <span class="o">=</span> <span class="s1">&#39;center&#39;</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">loc</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;x-large&#39;</span><span class="p">)</span>
+            <span class="n">cb</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">extend</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+            <span class="n">cb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;max high water error (m)&#39;</span><span class="p">)</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+            <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;hwm_spatial_</span><span class="si">{</span><span class="n">run</span><span class="si">}</span><span class="s1">.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Analysis.compute_cell_patches">
+<a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.analysis.Analysis.compute_cell_patches.html#compass.ocean.tests.hurricane.analysis.Analysis.compute_cell_patches">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_cell_patches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">,</span> <span class="n">bbox</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute cell patches</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">patches</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">nVerticesOnCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">nEdgesOnCell</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">verticesOnCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">verticesOnCell</span><span class="o">.</span><span class="n">values</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">lonVertex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">lonVertex</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">latVertex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">latVertex</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">lonVertex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">lonVertex</span> <span class="o">+</span> <span class="mf">180.0</span><span class="p">,</span> <span class="mf">360.0</span><span class="p">)</span> <span class="o">-</span> <span class="mf">180.0</span>
+        <span class="n">lonCell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">lonCell</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">latCell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">latCell</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">lonCell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">lonCell</span> <span class="o">+</span> <span class="mf">180.0</span><span class="p">,</span> <span class="mf">360.0</span><span class="p">)</span> <span class="o">-</span> <span class="mf">180.0</span>
+        <span class="k">for</span> <span class="n">iCell</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">lonCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">lonCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">latCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">latCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">nVert</span> <span class="o">=</span> <span class="n">nVerticesOnCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">]</span>
+            <span class="n">vertexIndices</span> <span class="o">=</span> <span class="n">verticesOnCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">,</span> <span class="p">:</span><span class="n">nVert</span><span class="p">]</span>
+            <span class="n">vertices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nVert</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+            <span class="n">vertices</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">lonVertex</span><span class="p">[</span><span class="n">vertexIndices</span><span class="p">]</span>
+            <span class="n">vertices</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">latVertex</span><span class="p">[</span><span class="n">vertexIndices</span><span class="p">]</span>
+
+            <span class="n">in_box</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">vertices</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">and</span> \
+               <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">vertices</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="ow">and</span> \
+               <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">vertices</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="ow">and</span> \
+               <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">vertices</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">3</span><span class="p">]):</span>
+                <span class="n">in_box</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">in_box</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">polygon</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">closed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">patches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">polygon</span><span class="p">)</span>
+
+        <span class="c1"># need two copies becuase same collection</span>
+        <span class="c1"># cannot be added to separate axes</span>
+        <span class="n">p1</span> <span class="o">=</span> <span class="n">PatchCollection</span><span class="p">(</span><span class="n">patches</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                             <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">p2</span> <span class="o">=</span> <span class="n">PatchCollection</span><span class="p">(</span><span class="n">patches</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                             <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span></div>
 </div>
 
 </pre></div>

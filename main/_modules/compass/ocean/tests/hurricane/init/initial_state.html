@@ -5,16 +5,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.ocean.tests.hurricane.init.initial_state &mdash; compass 2.0.0-alpha.2 documentation</title>
+  <title>compass.ocean.tests.hurricane.init.initial_state &mdash; compass 2.0.0-alpha.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../../_static/documentation_options.js?v=9fd2db84"></script>
-      <script src="../../../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=3baa5f9d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../../search.html" /> 
@@ -110,7 +110,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.hurricane.init.initial_state</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_model</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">importlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">resources</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">netCDF4</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
 
 
@@ -129,7 +136,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="InitialState.__init__">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.init.initial_state.InitialState.html#compass.ocean.tests.hurricane.init.initial_state.InitialState.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">use_lts</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">use_lts</span><span class="p">,</span> <span class="n">wetdry</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the step</span>
 
@@ -141,22 +148,35 @@
 <span class="sd">        mesh : compass.ocean.tests.hurricane.mesh.Mesh</span>
 <span class="sd">            The test case that creates the mesh used by this test case</span>
 
-<span class="sd">        use_lts: bool</span>
-<span class="sd">            Whether local time-stepping is used</span>
+<span class="sd">        use_lts : bool</span>
+<span class="sd">            Whether local time-stepping is used (use `LTS` or `FB_LTS` as True)</span>
+
+<span class="sd">        wetdry : str</span>
+<span class="sd">            Type of wetting-drying scheme (`off`, `standard`, or `subgrid`)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;initial_state&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_lts</span> <span class="o">=</span> <span class="n">use_lts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span> <span class="o">=</span> <span class="n">wetdry</span>
 
         <span class="n">package</span> <span class="o">=</span> <span class="s1">&#39;compass.ocean.tests.hurricane.init&#39;</span>
 
         <span class="c1"># generate the namelist, replacing a few default options</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;namelist.init&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">mesh_name</span> <span class="o">==</span> <span class="s1">&#39;DEVR45to5rr1&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;namelist.init.wd&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+
         <span class="c1"># generate the streams file</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;streams.init&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span> <span class="o">==</span> <span class="s1">&#39;subgrid&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;namelist.init_subgrid&#39;</span><span class="p">,</span>
+                                   <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;streams.ocean_subgrid0&#39;</span><span class="p">,</span>
+                                  <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;streams.init&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">use_lts</span><span class="p">:</span>
 
@@ -165,10 +185,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
                 <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span>
                 <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/culled_mesh.nc&#39;</span><span class="p">)</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
-                <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/culled_graph.info&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span> <span class="o">!=</span> <span class="s1">&#39;subgrid&#39;</span><span class="p">:</span>
+                <span class="c1"># subgrid uses a specialized weighted graph file</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+                    <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
+                    <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/culled_graph.info&#39;</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
 
@@ -182,10 +203,15 @@
                 <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
                 <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/lts_graph.info&#39;</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span> <span class="o">==</span> <span class="s1">&#39;subgrid&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info.noweights&#39;</span><span class="p">,</span>
+                <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_path</span><span class="si">}</span><span class="s1">/culled_graph.info&#39;</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
 
-        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ocean.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;graph.info&#39;</span><span class="p">]:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">file</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;ocean.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="InitialState.setup">
@@ -195,6 +221,70 @@
 <span class="sd">        Set up the test case in the work directory, including downloading any</span>
 <span class="sd">        dependencies</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">package</span> <span class="o">=</span> <span class="s1">&#39;compass.ocean.tests.hurricane.init&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span> <span class="o">==</span> <span class="s1">&#39;subgrid&#39;</span><span class="p">:</span>
+
+            <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;bathy_data.json&#39;</span>
+            <span class="k">with</span> <span class="n">resources</span><span class="o">.</span><span class="n">open_text</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">bathy_file</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bathy_files</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">bathy_file</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;namelist.init_subgrid&#39;</span><span class="p">,</span>
+                                   <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+            <span class="n">dem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bathy_files</span><span class="p">[</span><span class="s2">&quot;NCEI&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+                <span class="n">config_subgrid_topography_file</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;&#39;NCEI_data/</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">,</span>
+                <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.ocean&#39;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;streams.ocean_subgrid0&#39;</span><span class="p">,</span>
+                                  <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="si">}</span><span class="s1">/NCEI_data&#39;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="si">}</span><span class="s1">/LULC_data&#39;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">nfiles</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bathy_files</span><span class="p">[</span><span class="s2">&quot;NCEI&quot;</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">dem</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bathy_files</span><span class="p">[</span><span class="s2">&quot;NCEI&quot;</span><span class="p">]):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+                    <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;NCEI_data/</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;ncei/</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="n">database</span><span class="o">=</span><span class="s1">&#39;bathymetry_database&#39;</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+                    <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;LULC_data/landuse_from_</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;LULC/landuse_from_</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="n">database</span><span class="o">=</span><span class="s1">&#39;hurricane&#39;</span><span class="p">)</span>
+
+                <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">config_subgrid_topography_file</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;&#39;NCEI_data/</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
+                    <span class="n">config_subgrid_lulc_file</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;&#39;LULC_data/landuse_from_</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;namelist.init&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">,</span>
+                                       <span class="n">out_name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;namelist.ocean_subgrid</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;namelist.init.wd&#39;</span><span class="p">,</span>
+                                       <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">,</span>
+                                       <span class="n">out_name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;namelist.ocean_subgrid</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;namelist.init_subgrid&#39;</span><span class="p">,</span>
+                                       <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">,</span>
+                                       <span class="n">out_name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;namelist.ocean_subgrid</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span>
+                    <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">,</span>
+                    <span class="n">out_name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;namelist.ocean_subgrid</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">nfiles</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span>
+                        <span class="s1">&#39;output_file&#39;</span><span class="p">:</span> <span class="s1">&#39;ocean.nc&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;input_file&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;ocean_subgrid</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">}</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span>
+                        <span class="s1">&#39;output_file&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;ocean_subgrid</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;input_file&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;ocean_subgrid</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">}</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">stream_replacements</span><span class="p">[</span><span class="s1">&#39;input_file&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ocean_init.nc&#39;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
+                    <span class="n">package</span><span class="p">,</span> <span class="s1">&#39;streams.template&#39;</span><span class="p">,</span>
+                    <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">,</span>
+                    <span class="n">out_name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;streams.ocean_subgrid</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_resources</span><span class="p">()</span></div>
 
 
@@ -205,13 +295,163 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_resources</span><span class="p">()</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">constrain_resources</span><span class="p">(</span><span class="n">available_resources</span><span class="p">)</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_namelist_pio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Modify the namelist so the number of PIO tasks and the stride between</span>
+<span class="sd">        them consistent with the number of nodes and cores (one PIO task per</span>
+<span class="sd">        node).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        out_name : str, optional</span>
+<span class="sd">            The name of the namelist file to write out, ``namelist.&lt;core&gt;`` by</span>
+<span class="sd">            default</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">cores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span>
+
+        <span class="k">if</span> <span class="n">out_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">out_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;namelist.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="n">cores_per_node</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;cores_per_node&#39;</span><span class="p">)</span>
+
+        <span class="c1"># update PIO tasks based on the machine settings and the available</span>
+        <span class="c1"># number or cores</span>
+        <span class="n">pio_num_iotasks</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">cores</span> <span class="o">/</span> <span class="n">cores_per_node</span><span class="p">))</span>
+        <span class="n">pio_stride</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">//</span> <span class="n">pio_num_iotasks</span>
+        <span class="k">if</span> <span class="n">pio_stride</span> <span class="o">&gt;</span> <span class="n">cores_per_node</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Not enough nodes for the number of cores.  &#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39;cores: </span><span class="si">{</span><span class="n">cores</span><span class="si">}</span><span class="s1">, cores per node: &#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cores_per_node</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_pio_num_iotasks&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pio_num_iotasks</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;config_pio_stride&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pio_stride</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">replacements</span><span class="p">,</span>
+                                        <span class="n">out_name</span><span class="o">=</span><span class="n">out_name</span><span class="p">)</span>
+
 <div class="viewcode-block" id="InitialState.run">
 <a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.hurricane.init.initial_state.InitialState.run.html#compass.ocean.tests.hurricane.init.initial_state.InitialState.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the testcase</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span> <span class="o">==</span> <span class="s1">&#39;subgrid&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_balance_graphfile</span><span class="p">(</span><span class="n">min_lon</span><span class="o">=-</span><span class="mi">190</span><span class="p">,</span> <span class="n">max_lon</span><span class="o">=</span><span class="mi">190</span><span class="p">,</span>
+                                        <span class="n">min_lat</span><span class="o">=-</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_lat</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                                        <span class="n">inside_weight</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">wetdry</span> <span class="o">==</span> <span class="s1">&#39;subgrid&#39;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">dem</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bathy_files</span><span class="p">[</span><span class="s2">&quot;NCEI&quot;</span><span class="p">]):</span>
+
+                <span class="n">ds</span> <span class="o">=</span> <span class="n">nc</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;NCEI_data/</span><span class="si">{</span><span class="n">dem</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">lon</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;lon&quot;</span><span class="p">][:]</span>
+                <span class="n">lat</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;lat&quot;</span><span class="p">][:]</span>
+                <span class="n">min_lon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span>
+                <span class="n">max_lon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span>
+                <span class="n">min_lat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span>
+                <span class="n">max_lat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">load_balance_graphfile</span><span class="p">(</span><span class="n">min_lon</span><span class="p">,</span> <span class="n">max_lon</span><span class="p">,</span> <span class="n">min_lat</span><span class="p">,</span> <span class="n">max_lat</span><span class="p">)</span>
+                <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">namelist</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;namelist.ocean_subgrid</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                          <span class="n">streams</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;streams.ocean_subgrid</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ocean_subgrid</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">):</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ocean_subgrid</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">)</span>
+
+        <span class="n">mesh</span> <span class="o">=</span> <span class="n">nc</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="s2">&quot;mesh.nc&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+        <span class="n">init</span> <span class="o">=</span> <span class="n">nc</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="s2">&quot;ocean.nc&quot;</span><span class="p">,</span> <span class="s2">&quot;r+&quot;</span><span class="p">)</span>
+
+        <span class="c1"># -- Estimate vert. grid for ice-shelves, min.-thicknesses, etc</span>
+        <span class="c1"># -- Darren Engwirda</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Est. layering to account for ice-shelves&quot;</span><span class="p">)</span>
+
+        <span class="n">botd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="o">-</span><span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;bottomDepthObserved&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="c1"># ossh = np.asarray(init[&quot;ssh&quot;][0,:], dtype=np.float64)</span>
+        <span class="n">ossh</span> <span class="o">=</span> <span class="mf">0.</span> <span class="o">*</span> <span class="n">botd</span>  <span class="c1"># assume ssh is zero</span>
+
+        <span class="n">grav</span> <span class="o">=</span> <span class="mf">9.80665</span>  <span class="c1"># gravitational accel.</span>
+        <span class="n">irho</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">init</span><span class="o">.</span><span class="n">config_land_ice_flux_rho_ice</span><span class="p">)</span>
+        <span class="n">orho</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">init</span><span class="o">.</span><span class="n">config_density0</span><span class="p">)</span>
+        <span class="n">minh</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">init</span><span class="o">.</span><span class="n">config_drying_min_cell_height</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ice-shelf density:&quot;</span><span class="p">,</span> <span class="n">irho</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ocn-const density:&quot;</span><span class="p">,</span> <span class="n">orho</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;min-layer thickness:&quot;</span><span class="p">,</span> <span class="n">minh</span><span class="p">)</span>
+
+        <span class="n">iceh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;ice_thickness&quot;</span><span class="p">][:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="c1"># icef = np.asarray(mesh[&quot;ice_cover&quot;][:], dtype=np.float64)</span>
+
+        <span class="n">icep</span> <span class="o">=</span> <span class="n">irho</span> <span class="o">*</span> <span class="n">grav</span> <span class="o">*</span> <span class="n">iceh</span>  <span class="c1"># ice pressure</span>
+        <span class="n">iced</span> <span class="o">=</span> <span class="n">icep</span> <span class="o">/</span> <span class="n">grav</span> <span class="o">/</span> <span class="n">orho</span>  <span class="c1"># ice draft</span>
+
+        <span class="c1"># ensure thin-layer beneath ice-shelves</span>
+        <span class="n">iced</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">iced</span><span class="p">,</span> <span class="o">+</span><span class="n">botd</span> <span class="o">-</span> <span class="n">minh</span><span class="p">)</span>
+        <span class="n">iced</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">iced</span><span class="p">,</span> <span class="o">+</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">ossh</span> <span class="o">=</span> <span class="n">ossh</span> <span class="o">-</span> <span class="n">iced</span>
+
+        <span class="n">icep</span><span class="p">[</span><span class="n">iced</span> <span class="o">&lt;=</span> <span class="mf">0.</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+
+        <span class="c1"># allow thin-layer in partially flooded zone</span>
+        <span class="n">ossh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">ossh</span><span class="p">,</span> <span class="o">-</span><span class="n">botd</span> <span class="o">+</span> <span class="n">minh</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;max ice-draft:&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">iced</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;max ice-pressure:&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">icep</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;ssh&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">init</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">init</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;ssh&quot;</span><span class="p">,</span> <span class="s2">&quot;f8&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;landIceDraft&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">init</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">init</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;landIceDraft&quot;</span><span class="p">,</span> <span class="s2">&quot;f8&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;landIcePressure&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">init</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">init</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;landIcePressure&quot;</span><span class="p">,</span> <span class="s2">&quot;f8&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;landIceMask&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">init</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">init</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;landIceMask&quot;</span><span class="p">,</span> <span class="s2">&quot;i4&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;landIceFloatingMask&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">init</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">init</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;landIceFloatingMask&quot;</span><span class="p">,</span> <span class="s2">&quot;i4&quot;</span><span class="p">,</span>
+                                <span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;landIceFraction&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">init</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">init</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;landIceFraction&quot;</span><span class="p">,</span> <span class="s2">&quot;f8&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;landIceFloatingFraction&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">init</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">init</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s2">&quot;landIceFloatingFraction&quot;</span><span class="p">,</span> <span class="s2">&quot;f8&quot;</span><span class="p">,</span>
+                                <span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="s2">&quot;nCells&quot;</span><span class="p">))</span>
+
+        <span class="n">zeros</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">iced</span><span class="p">)</span>
+        <span class="n">init</span><span class="p">[</span><span class="s2">&quot;landIceDraft&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">zeros</span>
+        <span class="n">init</span><span class="p">[</span><span class="s2">&quot;landIcePressure&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">zeros</span>
+        <span class="n">init</span><span class="p">[</span><span class="s2">&quot;landIceMask&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">zeros</span>
+        <span class="n">init</span><span class="p">[</span><span class="s2">&quot;landIceFloatingMask&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">zeros</span>
+        <span class="n">init</span><span class="p">[</span><span class="s2">&quot;landIceFraction&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">zeros</span>
+        <span class="n">init</span><span class="p">[</span><span class="s2">&quot;landIceFloatingFraction&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">zeros</span>
+
+        <span class="c1"># lat_cutoff = -59.0</span>
+        <span class="n">lat_cutoff</span> <span class="o">=</span> <span class="mf">90.0</span>
+        <span class="n">lat_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">init</span><span class="p">[</span><span class="s2">&quot;latCell&quot;</span><span class="p">][:]</span> <span class="o">&lt;</span> <span class="n">lat_cutoff</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">init</span><span class="p">[</span><span class="s2">&quot;landIceDraft&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="n">lat_mask</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">iced</span><span class="p">[</span><span class="n">lat_mask</span><span class="p">]</span>  <span class="c1"># NB. sign</span>
+        <span class="n">init</span><span class="p">[</span><span class="s2">&quot;landIcePressure&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="n">lat_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">icep</span><span class="p">[</span><span class="n">lat_mask</span><span class="p">]</span>
+        <span class="n">init</span><span class="p">[</span><span class="s2">&quot;landIceMask&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="n">lat_mask</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">icep</span><span class="p">[</span><span class="n">lat_mask</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">)</span>
+        <span class="n">init</span><span class="p">[</span><span class="s2">&quot;landIceFloatingMask&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="n">lat_mask</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">icep</span><span class="p">[</span><span class="n">lat_mask</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">)</span>
+        <span class="n">init</span><span class="p">[</span><span class="s2">&quot;landIceFraction&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="n">lat_mask</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">icep</span><span class="p">[</span><span class="n">lat_mask</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">)</span>
+        <span class="n">init</span><span class="p">[</span><span class="s2">&quot;landIceFloatingFraction&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="n">lat_mask</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">icep</span><span class="p">[</span><span class="n">lat_mask</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">)</span>
+
+        <span class="n">init</span><span class="p">[</span><span class="s2">&quot;bottomDepth&quot;</span><span class="p">][</span><span class="n">lat_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">botd</span><span class="p">[</span><span class="n">lat_mask</span><span class="p">]</span>
+        <span class="n">ssh</span> <span class="o">=</span> <span class="n">init</span><span class="p">[</span><span class="s2">&quot;ssh&quot;</span><span class="p">][:]</span>
+        <span class="n">ssh</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">lat_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossh</span><span class="p">[</span><span class="n">lat_mask</span><span class="p">]</span>
+        <span class="n">init</span><span class="p">[</span><span class="s2">&quot;ssh&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">ssh</span>
+
+        <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">init</span><span class="p">[</span><span class="s2">&quot;layerThickness&quot;</span><span class="p">][:]</span>
+        <span class="n">layerThickness</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">lat_mask</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ossh</span><span class="p">[</span><span class="n">lat_mask</span><span class="p">]</span> <span class="o">+</span> <span class="n">botd</span><span class="p">[</span><span class="n">lat_mask</span><span class="p">]</span>
+        <span class="n">init</span><span class="p">[</span><span class="s2">&quot;layerThickness&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">layerThickness</span>
+
+        <span class="n">init</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -219,7 +459,55 @@
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;hurricane&#39;</span><span class="p">,</span> <span class="s1">&#39;init_ntasks&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;hurricane&#39;</span><span class="p">,</span> <span class="s1">&#39;init_min_tasks&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">openmp_threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;hurricane&#39;</span><span class="p">,</span> <span class="s1">&#39;init_threads&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">openmp_threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;hurricane&#39;</span><span class="p">,</span> <span class="s1">&#39;init_threads&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_balance_graphfile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_lon</span><span class="p">,</span> <span class="n">max_lon</span><span class="p">,</span>
+                               <span class="n">min_lat</span><span class="p">,</span> <span class="n">max_lat</span><span class="p">,</span> <span class="n">inside_weight</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">outside_weight</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="n">mesh_filename</span> <span class="o">=</span> <span class="s1">&#39;mesh.nc&#39;</span>
+        <span class="n">graph_filename</span> <span class="o">=</span> <span class="s2">&quot;graph.info.noweights&quot;</span>
+        <span class="n">output_filename</span> <span class="o">=</span> <span class="s2">&quot;graph.info&quot;</span>
+
+        <span class="c1"># Read the cell centers from the CSV file.</span>
+        <span class="n">grid_nc</span> <span class="o">=</span> <span class="n">nc</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">lon_grid</span> <span class="o">=</span> <span class="n">grid_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;lonCell&#39;</span><span class="p">][:]</span> <span class="o">*</span> <span class="mf">180.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="n">lat_grid</span> <span class="o">=</span> <span class="n">grid_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;latCell&#39;</span><span class="p">][:]</span> <span class="o">*</span> <span class="mf">180.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="n">lon_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">lon_grid</span> <span class="o">+</span> <span class="mf">180.0</span><span class="p">,</span> <span class="mf">360.0</span><span class="p">)</span> <span class="o">-</span> <span class="mf">180.0</span>
+        <span class="n">nCells</span> <span class="o">=</span> <span class="n">lon_grid</span><span class="o">.</span><span class="n">size</span>
+
+        <span class="n">inside_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">iCell</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nCells</span><span class="p">):</span>
+            <span class="n">lon</span> <span class="o">=</span> <span class="n">lon_grid</span><span class="p">[</span><span class="n">iCell</span><span class="p">]</span>
+            <span class="n">lat</span> <span class="o">=</span> <span class="n">lat_grid</span><span class="p">[</span><span class="n">iCell</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_inside</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">min_lon</span><span class="p">,</span> <span class="n">max_lon</span><span class="p">,</span> <span class="n">min_lat</span><span class="p">,</span> <span class="n">max_lat</span><span class="p">):</span>
+                <span class="n">weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inside_weight</span><span class="p">)</span>
+                <span class="n">inside_count</span> <span class="o">=</span> <span class="n">inside_count</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">outside_weight</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;cells inside: </span><span class="si">{</span><span class="n">inside_count</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">nCells</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">graph_filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+        <span class="n">weight_lines</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">weight_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">weight_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s1"> 010&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Write the weights to the output file, one weight per line.</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">weight_lines</span><span class="p">:</span>
+                <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_inside</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">min_lon</span><span class="p">,</span> <span class="n">max_lon</span><span class="p">,</span> <span class="n">min_lat</span><span class="p">,</span> <span class="n">max_lat</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determine if a given coordinate (lon, lat) is within the bounding box.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">min_lon</span> <span class="o">&lt;=</span> <span class="n">lon</span> <span class="o">&lt;=</span> <span class="n">max_lon</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">min_lat</span> <span class="o">&lt;=</span> <span class="n">lat</span> <span class="o">&lt;=</span> <span class="n">max_lat</span><span class="p">)</span></div>
 
 </pre></div>
 

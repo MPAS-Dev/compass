@@ -5,16 +5,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.ocean.tests.hurricane.mesh &mdash; compass 2.0.0-alpha.2 documentation</title>
+  <title>compass.ocean.tests.hurricane.mesh &mdash; compass 2.0.0-alpha.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../_static/documentation_options.js?v=9fd2db84"></script>
-      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=3baa5f9d"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -110,11 +110,17 @@
              
   <h1>Source code for compass.ocean.tests.hurricane.mesh</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.mesh.cull</span><span class="w"> </span><span class="kn">import</span> <span class="n">CullMeshStep</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.mesh.remap_topography</span><span class="w"> </span><span class="kn">import</span> <span class="n">RemapTopography</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.hurricane.configure</span><span class="w"> </span><span class="kn">import</span> <span class="n">configure_hurricane</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.hurricane.lts.mesh.lts_regions</span><span class="w"> </span><span class="kn">import</span> <span class="n">LTSRegionsStep</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">DEQU120at30cr10rr2BaseMesh</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.hurricane.mesh.devr45to5rr1</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DEVR45to5rr1BaseMesh</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.hurricane.mesh.rrs6to18</span><span class="w"> </span><span class="kn">import</span> <span class="n">RRS6to18BaseMesh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compass.ocean.tests.tides.dem</span><span class="w"> </span><span class="kn">import</span> <span class="n">CreatePixelFile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compass.testcase</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestCase</span>
 
 
@@ -153,6 +159,9 @@
         <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
+        <span class="n">pixel_step</span> <span class="o">=</span> <span class="n">CreatePixelFile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">pixel_step</span><span class="p">)</span>
+
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;base_mesh&#39;</span>
         <span class="k">if</span> <span class="n">mesh_name</span> <span class="o">==</span> <span class="s1">&#39;DEQU120at30cr10rr2&#39;</span><span class="p">:</span>
             <span class="n">base_mesh_step</span> <span class="o">=</span> <span class="n">DEQU120at30cr10rr2BaseMesh</span><span class="p">(</span>
@@ -162,6 +171,18 @@
             <span class="n">base_mesh_step</span> <span class="o">=</span> <span class="n">DEQU120at30cr10rr2BaseMesh</span><span class="p">(</span>
                 <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">preserve_floodplain</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">mesh_lower</span> <span class="o">=</span> <span class="s1">&#39;dequ120at30cr10rr2&#39;</span>
+        <span class="k">elif</span> <span class="n">mesh_name</span> <span class="o">==</span> <span class="s1">&#39;DEVR45to5rr1&#39;</span><span class="p">:</span>
+            <span class="n">base_mesh_step</span> <span class="o">=</span> <span class="n">DEVR45to5rr1BaseMesh</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="n">pixel_step</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;base_mesh&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">elev_file</span><span class="o">=</span><span class="s1">&#39;RTopo_2_0_4_GEBCO_v2023_30sec_pixel.nc&#39;</span><span class="p">,</span>
+                <span class="n">spac_dhdx</span><span class="o">=</span><span class="mf">0.125</span><span class="p">,</span> <span class="n">spac_hmin</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">spac_hmax</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">spac_hbar</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span>
+                <span class="n">ncell_nwav</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">ncell_nslp</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                <span class="n">filt_sdev</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">filt_halo</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">filt_plev</span><span class="o">=</span><span class="mf">0.325</span><span class="p">)</span>
+            <span class="n">mesh_lower</span> <span class="o">=</span> <span class="s1">&#39;devr45to5rr1&#39;</span>
+        <span class="k">elif</span> <span class="n">mesh_name</span> <span class="o">==</span> <span class="s1">&#39;RRS6to18&#39;</span><span class="p">:</span>
+            <span class="n">base_mesh_step</span> <span class="o">=</span> <span class="n">RRS6to18BaseMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pixel_step</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">mesh_lower</span> <span class="o">=</span> <span class="s1">&#39;rrs6to18&#39;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unexpected mesh name </span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
@@ -170,10 +191,15 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">base_mesh_step</span><span class="p">)</span>
 
+        <span class="n">remap_step</span> <span class="o">=</span> <span class="n">RemapTopography</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                                     <span class="n">base_mesh_step</span><span class="o">=</span><span class="n">base_mesh_step</span><span class="p">,</span>
+                                     <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">remap_step</span><span class="p">)</span>
+
         <span class="n">cull_mesh_step</span> <span class="o">=</span> <span class="n">CullMeshStep</span><span class="p">(</span>
             <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_mesh_step</span><span class="o">=</span><span class="n">base_mesh_step</span><span class="p">,</span>
-            <span class="n">with_ice_shelf_cavities</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">do_inject_bathymetry</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">preserve_floodplain</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">with_ice_shelf_cavities</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">preserve_floodplain</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">unsmoothed_topo</span><span class="o">=</span><span class="n">remap_step</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">cull_mesh_step</span><span class="p">)</span>
 

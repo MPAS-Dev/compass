@@ -5,16 +5,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.ocean.tests.hurricane.init.interpolate_atm_forcing &mdash; compass 2.0.0-alpha.2 documentation</title>
+  <title>compass.ocean.tests.hurricane.init.interpolate_atm_forcing &mdash; compass 2.0.0-alpha.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../../_static/documentation_options.js?v=9fd2db84"></script>
-      <script src="../../../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=3baa5f9d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../../search.html" /> 
@@ -270,11 +270,11 @@
             <span class="k">return</span>
 
         <span class="n">lon_data</span> <span class="o">=</span> <span class="n">orig_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">lat_data</span> <span class="o">=</span> <span class="n">orig_data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">lat_data</span> <span class="o">=</span> <span class="n">orig_data</span><span class="p">[</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">lon_grid</span> <span class="o">=</span> <span class="n">interp_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">lat_grid</span> <span class="o">=</span> <span class="n">interp_data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="n">orig_data</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">orig_data</span><span class="p">[</span><span class="mi">2</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
         <span class="n">interp</span> <span class="o">=</span> <span class="n">interp_data</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 
         <span class="c1"># Plot data</span>
@@ -335,7 +335,7 @@
 
             <span class="c1"># Create time variable</span>
             <span class="n">time</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;xtime&#39;</span><span class="p">,</span> <span class="s1">&#39;S1&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;StrLen&#39;</span><span class="p">))</span>
-            <span class="n">time</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">stringtochar</span><span class="p">(</span><span class="n">xtime</span><span class="p">)</span>
+            <span class="n">time</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">stringtochar</span><span class="p">(</span><span class="n">xtime</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
 
         <span class="c1"># Set variables</span>
         <span class="n">data_var</span> <span class="o">=</span> <span class="n">data_nc</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;nCells&#39;</span><span class="p">))</span>
