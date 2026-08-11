@@ -1,3 +1,4 @@
+import json
 import os
 import re
 import sys
@@ -229,7 +230,8 @@ def clip_mesh_to_bounding_box(mask_ds, base_ds, bounding_box):
 def set_cell_width(self, section_name, thk, bed, vx=None, vy=None,
                    dist_to_edge=None, dist_to_grounding_line=None,
                    dist_to_coast=None,
-                   flood_fill_iStart=None, flood_fill_jStart=None):
+                   flood_fill_iStart=None, flood_fill_jStart=None,
+                   hull_mask=None):
     """
     Set cell widths based on settings in config file to pass to
     :py:func:`mpas_tools.mesh.creation.build_mesh.build_planar_mesh()`.
@@ -286,6 +288,11 @@ def set_cell_width(self, section_name, thk, bed, vx=None, vy=None,
 
     flood_fill_jStart : int, optional
         y-index location to start flood-fill when using bed topography
+
+    hull_mask : numpy.ndarray, optional
+        Boolean array on the gridded dataset that is ``True`` inside a
+        user-supplied geojson hull. Where ``True`` and ``bed < 0``, cell
+        spacing is set to ``min_spac``. ``None`` disables this term.
 
     Returns
     -------
@@ -424,10 +431,19 @@ def set_cell_width(self, section_name, thk, bed, vx=None, vy=None,
         spacing_coast[land_mask] = min_spac
         spacing_coast[ocean_mask] = min_spac
 
+    # Set minimum spacing below sea level within a user-supplied geojson hull.
+    if hull_mask is not None:
+        logger.info('Using geojson hull to set minimum spacing where '
+                    'bed < 0')
+        spacing_hull = max_spac * np.ones_like(thk)
+        spacing_hull[np.logical_and(hull_mask, bed < 0.0)] = min_spac
+    else:
+        spacing_hull = max_spac * np.ones_like(thk)
+
     # Merge cell spacing methods
     cell_width = max_spac * np.ones_like(thk)
     for width in [spacing_bed, spacing_speed, spacing_edge,
-                  spacing_gl, spacing_coast]:
+                  spacing_gl, spacing_coast, spacing_hull]:
         cell_width = np.minimum(cell_width, width)
 
     # Set large cell_width in areas we are going to cull anyway (speeds up
@@ -595,8 +611,65 @@ def get_dist_to_edge_and_gl(self, thk, topg, x, y, section_name,
     return dist_to_edge, dist_to_grounding_line, dist_to_coast
 
 
+def geojson_to_grid_mask(geojson_file, x, y, projection):
+    """
+    Build a boolean mask on the gridded ``(x, y)`` points for the area inside
+    the polygon(s) defined in a lon/lat geojson file.
+
+    Parameters
+    ----------
+    geojson_file : str
+        Path to a geojson file with Polygon or MultiPolygon geometry in
+        lon/lat coordinates
+
+    x, y : numpy.ndarray
+        1D projected coordinates of the gridded dataset
+
+    projection : str
+        Projection key (e.g. ``'ais-bedmap2'``) or proj4/EPSG string used to
+        transform the geojson lon/lat vertices to the gridded coordinates
+
+    Returns
+    -------
+    mask : numpy.ndarray
+        Boolean array of shape ``(len(y), len(x))`` that is ``True`` inside
+        the geojson polygon(s)
+    """
+    with open(geojson_file) as fp:
+        gj = json.load(fp)
+
+    mesh_crs = LANDICE_PROJECTIONS.get(projection, projection)
+    transformer = Transformer.from_crs('epsg:4326', mesh_crs, always_xy=True)
+
+    exterior_rings = []
+    for feature in gj.get('features', [gj]):
+        geom = feature.get('geometry', feature)
+        if geom['type'] == 'Polygon':
+            polygons = [geom['coordinates']]
+        elif geom['type'] == 'MultiPolygon':
+            polygons = geom['coordinates']
+        else:
+            continue
+        for polygon in polygons:
+            exterior_rings.append(np.asarray(polygon[0]))
+
+    if not exterior_rings:
+        raise ValueError(
+            f'No Polygon or MultiPolygon geometry found in {geojson_file}')
+
+    xx, yy = np.meshgrid(x, y)
+    pts = np.column_stack([xx.ravel(), yy.ravel()])
+    inside = np.zeros(pts.shape[0], dtype=bool)
+    for ring in exterior_rings:
+        rx, ry = transformer.transform(ring[:, 0], ring[:, 1])
+        path = Path(np.column_stack([rx, ry]), closed=True)
+        inside |= path.contains_points(pts)
+
+    return inside.reshape(xx.shape)
+
+
 def build_cell_width(self, section_name, gridded_dataset,
-                     flood_fill_start=[None, None]):
+                     flood_fill_start=[None, None], projection=None):
     """
     Determine MPAS mesh cell size based on user-defined density function.
 
@@ -620,6 +693,12 @@ def build_cell_width(self, section_name, gridded_dataset,
         ``i`` and ``j`` indices used to define starting location for flood
         fill. Most cases will use ``[None, None]``, which will just start the
         flood fill in the center of the gridded dataset.
+
+    projection : str, optional
+        Projection key (e.g. ``'ais-bedmap2'``) or proj4/EPSG string of the
+        gridded dataset. Required only when the config option
+        ``min_spac_geojson`` is set, to transform the geojson lon/lat hull
+        to the gridded coordinates.
 
     Returns
     -------
@@ -659,6 +738,19 @@ def build_cell_width(self, section_name, gridded_dataset,
 
     f.close()
 
+    # Optionally build a mask for a geojson hull within which spacing is
+    # minimized below sea level.
+    geojson_min_spac = section.get('min_spac_geojson', fallback=None)
+    if geojson_min_spac is not None and \
+            geojson_min_spac.strip().lower() not in ['', 'none']:
+        if projection is None:
+            raise ValueError(
+                'A projection must be provided to build_cell_width when the '
+                "config option 'min_spac_geojson' is set.")
+        hull_mask = geojson_to_grid_mask(geojson_min_spac, x1, y1, projection)
+    else:
+        hull_mask = None
+
     # Get bounds defined by user, or use bounds from the gridded dataset.
     bnds = get_mesh_config_bounding_box(
         section,
@@ -685,7 +777,8 @@ def build_cell_width(self, section_name, gridded_dataset,
                                 dist_to_grounding_line=distToGL,
                                 dist_to_coast=distToCoast,
                                 flood_fill_iStart=flood_fill_start[0],
-                                flood_fill_jStart=flood_fill_start[1])
+                                flood_fill_jStart=flood_fill_start[1],
+                                hull_mask=hull_mask)
 
     return (cell_width.astype('float64'), x1.astype('float64'),
             y1.astype('float64'), geom_points, geom_edges, flood_mask)
