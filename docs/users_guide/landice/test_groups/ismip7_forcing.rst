@@ -51,7 +51,8 @@ To use this test group, users need to:
 5. Run the ``ocean_thermal`` test case for each model and scenario combination.
 
 6. Run the ``fracture`` test case (AIS only) for each model and scenario
-   combination to process the Path C ice shelf collapse mask.
+   combination to process the surface-melt-driven ice shelf collapse
+   pathways (excess melt, lake properties, and the ice shelf collapse mask).
 
 Example user config files are provided in the source tree for local testing:
 
