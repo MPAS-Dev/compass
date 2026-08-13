@@ -10,7 +10,8 @@ force MALI in its simulations under the ISMIP7 experimental protocol.
 The test group supports both the Antarctic Ice Sheet (AIS) and the Greenland
 Ice Sheet (GrIS), controlled by a single ``ice_sheet`` config option.
 
-The test group includes two test cases: ``atmosphere`` and ``ocean_thermal``.
+The test group includes three test cases: ``atmosphere``, ``ocean_thermal``,
+and ``fracture``.
 
 * The ``atmosphere`` test case has five steps:
   ``process_smb``, ``process_temperature``, ``process_smb_gradient``,
@@ -22,9 +23,15 @@ The test group includes two test cases: ``atmosphere`` and ``ocean_thermal``.
   process the observational ocean thermal forcing climatology (Zhou et al.)
   for AIS, controlled by the ``process_ocean_climatology`` config option.
 
+* The ``fracture`` test case has three steps: ``process_excess_melt``
+  (Path A), ``process_lake_properties`` (Path B), and
+  ``process_shelf_collapse`` (Path C). It processes the ISMIP7
+  surface-melt-driven ice shelf collapse forcing (AIS only).
+
 (For more details on the steps of each test case, see
-:ref:`landice_ismip7_forcing_atmosphere` and
-:ref:`landice_ismip7_forcing_ocean_thermal`.)
+:ref:`landice_ismip7_forcing_atmosphere`,
+:ref:`landice_ismip7_forcing_ocean_thermal`, and
+:ref:`landice_ismip7_forcing_fracture`.)
 
 .. _landice_ismip7_forcing_usage:
 
@@ -42,6 +49,9 @@ To use this test group, users need to:
 4. Run the ``atmosphere`` test case for each model and scenario combination.
 
 5. Run the ``ocean_thermal`` test case for each model and scenario combination.
+
+6. Run the ``fracture`` test case (AIS only) for each model and scenario
+   combination to process the Path C ice shelf collapse mask.
 
 Example user config files are provided in the source tree for local testing:
 
@@ -87,6 +97,12 @@ For AIS ocean thermal climatology (8km, 30 depth levels, static):
 .. code-block:: none
 
    {base_path_climatology}/tf/v3/tf_AIS_obs_ocean_climatology_*.nc
+
+For AIS fracture / ice shelf collapse mask (8km, annual, Path C):
+
+.. code-block:: none
+
+   fracture/v2/ice_shelf_collapse_mask_*.nc
 
 For GrIS atmosphere (1km, polar stereographic EPSG:3413):
 
@@ -183,6 +199,28 @@ values are:
    # Base path to observational climatology data
    base_path_climatology = /path/to/ISMIP7/forcing/AIS/obs/zhou_annual_06_nov
 
+   # config options for ismip7 fracture (Path C, ice shelf collapse) forcing
+   [ismip7_fracture]
+
+   # Remapping method for the ice shelf collapse mask (Path C).
+   # neareststod preserves the 0/1 mask values
+   method_remap_shelf_collapse = neareststod
+
+   # Remapping method for the excess meltwater field (Path A), a flux
+   method_remap_excess_melt = conserve
+
+   # Remapping method for the supraglacial lake properties (Path B)
+   method_remap_lake_properties = bilinear
+
+   # Version subdirectory of the fracture forcing data
+   version = v2
+
+   # Start year for processing
+   start_year = 1850
+
+   # End year for processing
+   end_year = 2014
+
 All ``NotAvailable`` options must be overridden in a user config file passed
 at setup time (e.g., ``compass setup ... -f my_ismip7.cfg``).
 
@@ -253,3 +291,53 @@ but without a Time dimension, producing a single static file.
 For **GrIS**, thermal forcing is 2D (depth-averaged), with monthly temporal
 resolution and yearly input files. The output variable is
 ``ismip6_2dThermalForcing``.
+
+.. _landice_ismip7_forcing_fracture:
+
+fracture
+--------
+
+The ``landice/ismip7_forcing/fracture`` test case processes the ISMIP7
+surface-melt-driven ice shelf collapse forcing (AIS only). It implements the
+three ISMIP7 pathways as separate steps, each remapping annual fields from
+the native 8km polar stereographic grid onto the MALI unstructured mesh.
+
+All three source files are discovered from the ``fracture/{version}/``
+subdirectory of ``base_path_ismip7``.
+
+* **process_excess_melt** (Path A): Remaps the excess meltwater field
+  (melt + rain after firn air content depletion), matching
+  ``excess_melt_*.nc``. The output variable is ``ismip7ExcessMelt``
+  (mm w.e. yr-1) and is written to
+  ``{output_base_path}/excess_melt/{model}_{scenario}/``. Conservative
+  remapping is used by default since this is a flux. This source file has no
+  ``x``/``y`` coordinate variables and its array is flipped along the y axis
+  relative to the other fracture files, so the step reconstructs the source
+  grid (borrowing ``x``/``y`` from a sibling fracture file and flipping the
+  data to match) before remapping.
+
+* **process_lake_properties** (Path B): Remaps the supraglacial lake mean
+  depth and area fraction from the Grau et al. (2025) parameterization,
+  matching ``lake_properties_*.nc``. The output variables are
+  ``ismip7LakeDepth`` (m) and ``ismip7LakeAreaFraction`` (unitless), written
+  to ``{output_base_path}/lake_properties/{model}_{scenario}/``. Bilinear
+  remapping is used by default.
+
+* **process_shelf_collapse** (Path C): Remaps the annual ice shelf collapse
+  mask, matching ``ice_shelf_collapse_mask_*.nc``.
+  An ice shelf grid cell is flagged as collapsed (mask value 1) when excess
+  meltwater, computed after firn air content depletion, exceeds 72.5 mm/yr for
+  10 consecutive years; otherwise the mask value is 0. The mask is applied on
+  floating areas only, similar to ISMIP6, and ice shelves collapse on
+  January 1st of each year. The remapping uses ``neareststod`` by default so
+  that the 0/1 mask values are preserved, and the remapped mask is rounded to
+  0/1. The output variable is ``calvingMask`` with an accompanying ``xtime``
+  variable, and the result is written to
+  ``{output_base_path}/shelf_collapse/{model}_{scenario}/``.
+
+All three pathways produce continuous fields (Paths A and B) or a discrete
+mask (Path C) with an accompanying ``xtime`` variable. The output variable
+names for Paths A and B (``ismip7ExcessMelt``, ``ismip7LakeDepth``,
+``ismip7LakeAreaFraction``) are descriptive placeholders and may need to be
+aligned with the MALI Registry once the corresponding model input fields are
+defined.
