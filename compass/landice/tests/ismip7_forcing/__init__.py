@@ -1,4 +1,5 @@
 from compass.landice.tests.ismip7_forcing.atmosphere import Atmosphere
+from compass.landice.tests.ismip7_forcing.fracture import Fracture
 from compass.landice.tests.ismip7_forcing.ocean_thermal import OceanThermal
 from compass.testgroup import TestGroup
 
@@ -22,3 +23,4 @@ class Ismip7Forcing(TestGroup):
 
         self.add_test_case(Atmosphere(test_group=self))
         self.add_test_case(OceanThermal(test_group=self))
+        self.add_test_case(Fracture(test_group=self))
