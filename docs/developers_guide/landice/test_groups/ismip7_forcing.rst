@@ -9,7 +9,7 @@ The ``ismip7_forcing`` test group
 the Ice Sheet Model Intercomparison for CMIP7 (ISMIP7) protocol from its
 native polar stereographic grid to the MALI unstructured mesh. The test group
 supports both AIS and GrIS via the ``ice_sheet`` config option. It includes
-two test cases: ``atmosphere`` and ``ocean_thermal``.
+three test cases: ``atmosphere``, ``ocean_thermal``, and ``fracture``.
 
 .. _dev_landice_ismip7_forcing_framework:
 
@@ -121,3 +121,46 @@ For GrIS, the step:
 
 * Remaps 2D monthly thermal forcing
 * Produces ``ismip6_2dThermalForcing`` (dims: Time × nCells)
+
+.. _dev_landice_ismip7_forcing_fracture:
+
+fracture
+~~~~~~~~
+
+The :py:class:`compass.landice.tests.ismip7_forcing.fracture.Fracture`
+test case processes the ISMIP7 surface-melt-driven ice shelf collapse
+forcing (AIS only). It implements the three ISMIP7 pathways as independent
+steps, each discovering its source file from the ``fracture/{version}/``
+subdirectory of ``base_path_ismip7``, building or reusing a mapping file,
+remapping with ``ncremap``, and renaming the result to MALI conventions with
+an accompanying ``xtime`` variable. Per-pathway remapping methods are set in
+the ``[ismip7_fracture]`` config section.
+
+Steps:
+
+* :py:class:`~compass.landice.tests.ismip7_forcing.fracture.process_excess_melt.ProcessExcessMelt`
+  (Path A) — ``excess_melt`` → ``ismip7ExcessMelt``. The excess melt file
+  lacks ``x``/``y`` coordinate variables and its array is flipped along the
+  y axis relative to the other fracture files (it was produced with CDO).
+  The ``_prepare_source_grid()`` method borrows ``x``/``y`` from a sibling
+  fracture file, flips the data to match (raising if the flipped ``lat`` does
+  not match the sibling grid), and writes a reconstructed source file. The
+  field is then extrapolated (nearest neighbor, filling NaNs) and remapped
+  conservatively by default (it is a flux).
+* :py:class:`~compass.landice.tests.ismip7_forcing.fracture.process_lake_properties.ProcessLakeProperties`
+  (Path B) — ``lake_depth`` → ``ismip7LakeDepth`` and
+  ``fraction_lake_area`` → ``ismip7LakeAreaFraction``. Both variables are
+  extrapolated and remapped in a single ``ncremap`` call (bilinear by
+  default).
+* :py:class:`~compass.landice.tests.ismip7_forcing.fracture.process_shelf_collapse.ProcessShelfCollapse`
+  (Path C) — ``mask`` → ``calvingMask``. Remapped with ``neareststod`` by
+  default and rounded to 0/1 so the discrete collapse mask is preserved.
+
+The annual source fields use an integer ``year``/``time`` coordinate with
+``units="year"`` (not CF-compliant), so each step opens the data with
+``decode_times=False`` and constructs ``xtime`` at January 1st of each year.
+
+The output variable names for Paths A and B (``ismip7ExcessMelt``,
+``ismip7LakeDepth``, ``ismip7LakeAreaFraction``) are descriptive placeholders
+and may need to be aligned with the MALI Registry once the corresponding
+model input fields are defined.
