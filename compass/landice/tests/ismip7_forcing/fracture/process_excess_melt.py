@@ -74,6 +74,12 @@ class ProcessExcessMelt(Step):
         start_year = section.getint("start_year")
         end_year = section.getint("end_year")
 
+        # Skip this pathway if no remapping method is requested
+        if method_remap.lower() == "none":
+            logger.info("method_remap_excess_melt is None; skipping excess "
+                        "melt (Path A) processing.")
+            return
+
         # Discover the excess melt file
         input_path = os.path.join(base_path_ismip7, "fracture", version)
         file_pattern = "excess_melt_*.nc"

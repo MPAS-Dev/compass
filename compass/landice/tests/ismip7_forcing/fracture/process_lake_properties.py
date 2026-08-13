@@ -82,6 +82,12 @@ class ProcessLakeProperties(Step):
         start_year = section.getint("start_year")
         end_year = section.getint("end_year")
 
+        # Skip this pathway if no remapping method is requested
+        if method_remap.lower() == "none":
+            logger.info("method_remap_lake_properties is None; skipping lake "
+                        "properties (Path B) processing.")
+            return
+
         # Discover the lake properties file
         input_path = os.path.join(base_path_ismip7, "fracture", version)
         file_pattern = "lake_properties_*.nc"

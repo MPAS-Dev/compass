@@ -134,7 +134,9 @@ steps, each discovering its source file from the ``fracture/{version}/``
 subdirectory of ``base_path_ismip7``, building or reusing a mapping file,
 remapping with ``ncremap``, and renaming the result to MALI conventions with
 an accompanying ``xtime`` variable. Per-pathway remapping methods are set in
-the ``[ismip7_fracture]`` config section.
+the ``[ismip7_fracture]`` config section. Setting a pathway's remapping-method
+option to ``None`` causes that step to return early without processing its
+file, which is useful when only some pathway source files are available.
 
 Steps:
 

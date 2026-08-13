@@ -202,6 +202,9 @@ values are:
    # config options for ismip7 fracture (Path C, ice shelf collapse) forcing
    [ismip7_fracture]
 
+   # Remapping method for each pathway. Set a method to None to skip
+   # processing that pathway's file.
+
    # Remapping method for the ice shelf collapse mask (Path C).
    # neareststod preserves the 0/1 mask values
    method_remap_shelf_collapse = neareststod
@@ -304,6 +307,11 @@ the native 8km polar stereographic grid onto the MALI unstructured mesh.
 
 All three source files are discovered from the ``fracture/{version}/``
 subdirectory of ``base_path_ismip7``.
+
+Each pathway is run independently and can be skipped by setting its
+remapping-method config option to ``None`` in the ``[ismip7_fracture]``
+section (for example, ``method_remap_excess_melt = None`` skips Path A). This
+is useful when only some of the pathway source files are available.
 
 * **process_excess_melt** (Path A): Remaps the excess meltwater field
   (melt + rain after firn air content depletion), matching

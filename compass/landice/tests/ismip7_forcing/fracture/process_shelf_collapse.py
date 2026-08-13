@@ -68,6 +68,12 @@ class ProcessShelfCollapse(Step):
         start_year = section.getint("start_year")
         end_year = section.getint("end_year")
 
+        # Skip this pathway if no remapping method is requested
+        if method_remap.lower() == "none":
+            logger.info("method_remap_shelf_collapse is None; skipping ice "
+                        "shelf collapse mask (Path C) processing.")
+            return
+
         # Discover the ice shelf collapse mask file
         input_path = os.path.join(base_path_ismip7, "fracture", version)
         file_pattern = "ice_shelf_collapse_mask_*.nc"
