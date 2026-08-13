@@ -182,6 +182,9 @@ class ProcessLakeProperties(Step):
         # not CF-compliant, so disable time decoding.
         ds = xr.open_dataset(remapped_file, decode_times=False)
 
+        # Capture integer years before the time coordinate is renamed
+        years = ds["time"].values.astype(int)
+
         rename_dims = {}
         if "ncol" in ds.dims:
             rename_dims["ncol"] = "nCells"
@@ -196,7 +199,6 @@ class ProcessLakeProperties(Step):
         ds = ds.rename(rename_vars)
 
         # Restrict to the requested year range
-        years = ds["time"].values.astype(int)
         keep = (years >= start_year) & (years <= end_year)
         ds = ds.isel(Time=keep)
         years = years[keep]
@@ -215,7 +217,7 @@ class ProcessLakeProperties(Step):
                 }
 
         vars_to_drop = [v for v in ["lat_vertices", "lon_vertices", "lat",
-                                    "lon", "area", "time"]
+                                    "lon", "area", "Time"]
                         if v in ds]
         if vars_to_drop:
             ds = ds.drop_vars(vars_to_drop)

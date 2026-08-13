@@ -160,6 +160,9 @@ class ProcessShelfCollapse(Step):
         # which is not CF-compliant, so disable time decoding.
         ds = xr.open_dataset(remapped_file, decode_times=False)
 
+        # Capture integer years before the time coordinate is renamed
+        years = ds["time"].values.astype(int)
+
         # Rename dimensions to MALI conventions
         rename_dims = {}
         if "ncol" in ds.dims:
@@ -174,7 +177,6 @@ class ProcessShelfCollapse(Step):
             ds = ds.rename({"mask": "calvingMask"})
 
         # Restrict to the requested year range
-        years = ds["time"].values.astype(int)
         keep = (years >= start_year) & (years <= end_year)
         ds = ds.isel(Time=keep)
         years = years[keep]
@@ -196,7 +198,7 @@ class ProcessShelfCollapse(Step):
 
         # Drop auxiliary variables carried over from remapping
         vars_to_drop = [v for v in ["lat_vertices", "lon_vertices", "lat",
-                                    "lon", "area", "time"]
+                                    "lon", "area", "Time"]
                         if v in ds]
         if vars_to_drop:
             ds = ds.drop_vars(vars_to_drop)
