@@ -2,14 +2,15 @@ import glob
 import os
 import shutil
 
-import numpy as np
-import xarray as xr
-from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
-from scipy.ndimage import distance_transform_edt
 
 from compass.landice.tests.ismip7_forcing.create_mapfile import (
     build_mapping_file,
+)
+from compass.landice.tests.ismip7_forcing.fracture.remap_utils import (
+    add_xtime_and_write,
+    extrapolate_source,
+    open_rename_and_trim,
 )
 from compass.step import Step
 
@@ -122,8 +123,8 @@ class ProcessLakeProperties(Step):
         # Extrapolate fill values on the source grid before remapping so
         # they don't pollute neighboring cells during interpolation
         extrap_file = f"extrap_{basename}"
-        self._extrapolate_source(input_file, extrap_file,
-                                 list(self._variables.keys()), logger)
+        extrapolate_source(input_file, extrap_file,
+                           list(self._variables.keys()), logger)
 
         # Remap both lake property variables onto the MALI mesh
         remapped_file = f"remapped_{basename}"
@@ -178,35 +179,10 @@ class ProcessLakeProperties(Step):
         end_year : int
             Last year (inclusive) to retain
         """
-        # The time coordinate has units="year" (integer years), which is
-        # not CF-compliant, so disable time decoding.
-        ds = xr.open_dataset(remapped_file, decode_times=False)
-
-        # Capture integer years before the time coordinate is renamed
-        years = ds["time"].values.astype(int)
-
-        rename_dims = {}
-        if "ncol" in ds.dims:
-            rename_dims["ncol"] = "nCells"
-        if "time" in ds.dims:
-            rename_dims["time"] = "Time"
-        if rename_dims:
-            ds = ds.rename(rename_dims)
-
         rename_vars = {src: info["mali_name"]
-                       for src, info in self._variables.items()
-                       if src in ds}
-        ds = ds.rename(rename_vars)
-
-        # Restrict to the requested year range
-        keep = (years >= start_year) & (years <= end_year)
-        ds = ds.isel(Time=keep)
-        years = years[keep]
-
-        # Lake properties are annual fields applied at the start of each year
-        xtime = [f"{int(yr):04d}-01-01_00:00:00".ljust(64) for yr in years]
-        ds["xtime"] = ("Time", xtime)
-        ds["xtime"] = ds.xtime.astype("S")
+                       for src, info in self._variables.items()}
+        ds, years = open_rename_and_trim(remapped_file, rename_vars,
+                                         start_year, end_year)
 
         for info in self._variables.values():
             mali_name = info["mali_name"]
@@ -216,63 +192,4 @@ class ProcessLakeProperties(Step):
                     "units": info["units"],
                 }
 
-        vars_to_drop = [v for v in ["lat_vertices", "lon_vertices", "lat",
-                                    "lon", "area", "Time"]
-                        if v in ds]
-        if vars_to_drop:
-            ds = ds.drop_vars(vars_to_drop)
-
-        write_netcdf(ds, output_file)
-        ds.close()
-
-    def _extrapolate_source(self, input_file, output_file, varnames, logger):
-        """
-        Extrapolate fill/missing values on the source polar stereographic
-        grid using nearest-neighbor via distance_transform_edt. This must
-        be done before remapping so that fill values don't contaminate the
-        interpolation stencil.
-
-        Parameters
-        ----------
-        input_file : str
-            Path to the input NetCDF file on the source grid
-
-        output_file : str
-            Path to write the extrapolated file
-
-        varnames : list of str
-            Names of the variables to extrapolate
-
-        logger : logging.Logger
-            Logger for status messages
-        """
-        logger.info(f"    Extrapolating fill values on source grid: "
-                    f"{os.path.basename(input_file)}")
-
-        ds = xr.open_dataset(input_file, decode_times=False)
-
-        for varname in varnames:
-            data = ds[varname]
-            values = data.values.copy()
-            non_spatial_shape = values.shape[:-2]
-
-            for idx in np.ndindex(non_spatial_shape):
-                slab = values[idx]
-                valid_mask = np.isfinite(slab)
-                if valid_mask.all() or not valid_mask.any():
-                    continue
-                nearest_inds = distance_transform_edt(
-                    ~valid_mask, return_distances=False,
-                    return_indices=True)
-                invalid = ~valid_mask
-                values[idx][invalid] = slab[
-                    nearest_inds[0, invalid],
-                    nearest_inds[1, invalid]]
-
-            ds[varname] = (data.dims, values)
-            ds[varname].attrs = data.attrs
-            if "_FillValue" in ds[varname].encoding:
-                del ds[varname].encoding["_FillValue"]
-
-        write_netcdf(ds, output_file)
-        ds.close()
+        add_xtime_and_write(ds, years, output_file)

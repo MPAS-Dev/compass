@@ -162,6 +162,14 @@ The annual source fields use an integer ``year``/``time`` coordinate with
 ``units="year"`` (not CF-compliant), so each step opens the data with
 ``decode_times=False`` and constructs ``xtime`` at January 1st of each year.
 
+Shared remapping helpers used by the fracture steps live in
+:py:mod:`compass.landice.tests.ismip7_forcing.fracture.remap_utils`:
+``extrapolate_source`` (nearest-neighbor fill of NaNs on the source grid),
+``open_rename_and_trim`` (open a remapped file, rename dimensions/variables
+to MALI conventions, and restrict to the requested year range), and
+``add_xtime_and_write`` (add the ``xtime`` variable, drop auxiliary remapping
+variables, and write the output).
+
 The output variable names for Paths A and B (``ismip7ExcessMelt``,
 ``ismip7LakeDepth``, ``ismip7LakeAreaFraction``) are descriptive placeholders
 and may need to be aligned with the MALI Registry once the corresponding

@@ -2,12 +2,14 @@ import glob
 import os
 import shutil
 
-import xarray as xr
-from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 
 from compass.landice.tests.ismip7_forcing.create_mapfile import (
     build_mapping_file,
+)
+from compass.landice.tests.ismip7_forcing.fracture.remap_utils import (
+    add_xtime_and_write,
+    open_rename_and_trim,
 )
 from compass.step import Step
 
@@ -156,52 +158,17 @@ class ProcessShelfCollapse(Step):
         end_year : int
             Last year (inclusive) to retain
         """
-        # The collapse mask time coordinate has units="year" (integer years),
-        # which is not CF-compliant, so disable time decoding.
-        ds = xr.open_dataset(remapped_file, decode_times=False)
-
-        # Capture integer years before the time coordinate is renamed
-        years = ds["time"].values.astype(int)
-
-        # Rename dimensions to MALI conventions
-        rename_dims = {}
-        if "ncol" in ds.dims:
-            rename_dims["ncol"] = "nCells"
-        if "time" in ds.dims:
-            rename_dims["time"] = "Time"
-        if rename_dims:
-            ds = ds.rename(rename_dims)
-
-        # Rename variable
-        if "mask" in ds:
-            ds = ds.rename({"mask": "calvingMask"})
-
-        # Restrict to the requested year range
-        keep = (years >= start_year) & (years <= end_year)
-        ds = ds.isel(Time=keep)
-        years = years[keep]
+        ds, years = open_rename_and_trim(remapped_file,
+                                         {"mask": "calvingMask"},
+                                         start_year, end_year)
 
         # Round the remapped mask to 0/1 and store as integers. Ice shelves
         # collapse on January 1st, so the mask is applied at the start of
         # each year.
-        calving_mask = (ds["calvingMask"] >= 0.5).astype(int)
-        ds["calvingMask"] = calving_mask
-
-        # Add xtime variable, one entry per year at January 1st
-        xtime = [f"{int(yr):04d}-01-01_00:00:00".ljust(64) for yr in years]
-        ds["xtime"] = ("Time", xtime)
-        ds["xtime"] = ds.xtime.astype("S")
+        ds["calvingMask"] = (ds["calvingMask"] >= 0.5).astype(int)
 
         ds["calvingMask"].attrs = {
             "long_name": "ice shelf collapse mask (1 = collapse)",
         }
 
-        # Drop auxiliary variables carried over from remapping
-        vars_to_drop = [v for v in ["lat_vertices", "lon_vertices", "lat",
-                                    "lon", "area", "Time"]
-                        if v in ds]
-        if vars_to_drop:
-            ds = ds.drop_vars(vars_to_drop)
-
-        write_netcdf(ds, output_file)
-        ds.close()
+        add_xtime_and_write(ds, years, output_file)

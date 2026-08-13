@@ -412,6 +412,9 @@ ismip7_forcing
 
    fracture.Fracture
    fracture.Fracture.configure
+   fracture.remap_utils.extrapolate_source
+   fracture.remap_utils.open_rename_and_trim
+   fracture.remap_utils.add_xtime_and_write
    fracture.process_excess_melt.ProcessExcessMelt
    fracture.process_excess_melt.ProcessExcessMelt.setup
    fracture.process_excess_melt.ProcessExcessMelt.run
