@@ -317,7 +317,7 @@ is useful when only some of the pathway source files are available.
 * **process_excess_melt** (Path A): Remaps the excess meltwater field
   (melt + rain after firn air content depletion), matching
   ``excess_melt_*.nc``. The output variable is ``ismip7ExcessMelt``
-  (mm w.e. yr-1) and is written to
+  (converted from mm w.e. yr-1 to SI units of kg m-2 s-1) and is written to
   ``{output_base_path}/excess_melt/{model}_{scenario}/``. Conservative
   remapping is used by default since this is a flux. This source file has no
   ``x``/``y`` coordinate variables and its array is flipped along the y axis

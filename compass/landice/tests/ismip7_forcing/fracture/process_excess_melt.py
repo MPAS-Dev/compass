@@ -275,9 +275,14 @@ class ProcessExcessMelt(Step):
         ds["xtime"] = ("Time", xtime)
         ds["xtime"] = ds.xtime.astype("S")
 
+        # Convert from mm w.e. yr-1 to SI units of kg m-2 s-1
+        # (1 mm w.e. = 1 kg m-2; 365-day year, as used elsewhere in MALI)
+        seconds_per_year = 365.0 * 24.0 * 3600.0
+        ds["ismip7ExcessMelt"] = ds["ismip7ExcessMelt"] / seconds_per_year
+
         ds["ismip7ExcessMelt"].attrs = {
             "long_name": "excess meltwater after firn air content depletion",
-            "units": "mm w.e. yr-1",
+            "units": "kg m-2 s-1",
         }
 
         vars_to_drop = [v for v in ["lat_vertices", "lon_vertices", "lat",
