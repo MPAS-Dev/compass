@@ -1,5 +1,8 @@
 import os
 
+from compass.landice.tests.ismip7_run.ismip7_ais.create_fastiso_mapping_files import (  # noqa
+    CreateFastIsoMappingFiles,
+)
 from compass.landice.tests.ismip7_run.ismip7_ais.create_slm_mapping_files import (  # noqa
     CreateSlmMappingFiles,
 )
@@ -145,6 +148,19 @@ class Ismip7Ais(TestCase):
                                           subdir=subdir))
                 self.steps_to_run.append('mapping_files')
 
+        # Optionally set up FastIsostasy mapping files
+        fastisostasy = config.getboolean('ismip7_run_ais', 'fastisostasy')
+        if fastisostasy:
+            subdir = 'fastiso_mapping_files'
+            if os.path.exists(os.path.join(self.work_dir, subdir)):
+                print(f"WARNING: {subdir} path already exists; skipping.")
+            else:
+                self.add_step(
+                    CreateFastIsoMappingFiles(test_case=self,
+                                              name='fastiso_mapping_files',
+                                              subdir=subdir))
+                self.steps_to_run.append('fastiso_mapping_files')
+
     def run(self):
         """
         A dummy run method
@@ -154,4 +170,7 @@ class Ismip7Ais(TestCase):
             "level for this test. Please submit the job script in each "
             "experiment's subdirectory manually instead. "
             "To create Sea-Level Model mapping files, submit job script "
-            "or execute 'compass run' from the 'mapping_files' subdirectory.")
+            "or execute 'compass run' from the 'mapping_files' subdirectory. "
+            "To create FastIsostasy mapping files, submit job script "
+            "or execute 'compass run' from the 'fastiso_mapping_files' "
+            "subdirectory.")
