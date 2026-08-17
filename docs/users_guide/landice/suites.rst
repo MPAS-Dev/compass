@@ -45,6 +45,8 @@ it is run on different numbers of cores (``decomposition_test``).
     landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-none_subglacialhydro
     landice/humboldt/mesh-3km_restart_test/velo-none_calving-none_subglacialhydro
     landice/circular_shelf/decomposition_test
+    landice/mismipplus/smoke_test/2000m/regularized_coulomb
+    landice/mismipplus/smoke_test/2000m/debris_friction
     landice/dome/2000m/fo_decomposition_test
     landice/dome/2000m/fo_restart_test
     landice/dome/variable_resolution/fo_restart_test

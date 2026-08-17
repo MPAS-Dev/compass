@@ -1,5 +1,7 @@
 import os
 
+import xarray as xr
+
 from compass.landice.tests.mismipplus.tasks import (
     approx_cell_count,
     exact_cell_count,
@@ -25,9 +27,14 @@ class RunModel(Step):
 
     resolution : float
         The nominal distance [m] between horizontal grid points (dcEdge).
+
+    basal_friction : {'weertman', 'regularized_coulomb', 'debris_friction'}
+        The basal-friction variant for this run.
     """
     def __init__(self, test_case, name, subdir=None, resolution=None,
-                 ntasks=1, min_tasks=None, openmp_threads=1, suffixes=None):
+                 ntasks=1, min_tasks=None, openmp_threads=1, suffixes=None,
+                 basal_friction='weertman',
+                 update_mesh_for_basal_friction=False):
         """
         Create a new test case
 
@@ -67,11 +74,35 @@ class RunModel(Step):
             the ``restart_run`` step of the ``restart_test`` runs the model
             twice, the second time with ``namelist.landice.rst`` and
             ``streams.landice.rst``
+
+        basal_friction : {'weertman', 'regularized_coulomb',
+                          'debris_friction'}, optional
+            The basal-friction variant for this run.
+
+        update_mesh_for_basal_friction : bool, optional
+            Whether to apply basal-friction-specific updates to mesh fields
+            before the run.
         """
 
         if suffixes is None:
             suffixes = ['landice']
         self.suffixes = suffixes
+        valid_basal_friction = {
+            'weertman',
+            'regularized_coulomb',
+            'debris_friction'
+        }
+        if basal_friction not in valid_basal_friction:
+            raise ValueError(
+                f'Unsupported basal_friction "{basal_friction}". '
+                f'Valid options are: {sorted(valid_basal_friction)}')
+        self.basal_friction = basal_friction
+        self.update_mesh_for_basal_friction = update_mesh_for_basal_friction
+        albany_input_yaml = {
+            'weertman': 'albany_input_weertman.yaml',
+            'regularized_coulomb': 'albany_input_regularized_coulomb.yaml',
+            'debris_friction': 'albany_input_debrisfriction.yaml'
+        }[self.basal_friction]
 
         # The condition below will only be true for the `SpinUp` testcase
         # where resolution is not know at the time of object construction
@@ -105,8 +136,9 @@ class RunModel(Step):
                 out_name='streams.{}'.format(suffix))
 
         self.add_input_file(filename='albany_input.yaml',
-                            package='compass.landice.tests.mismipplus',
-                            copy=True)
+                    target=albany_input_yaml,
+                    package='compass.landice.tests.mismipplus',
+                    copy=True)
 
         self.add_model_as_input()
 
@@ -164,6 +196,28 @@ class RunModel(Step):
 
         super().constrain_resources(available_resources)
 
+    def process_inputs_and_outputs(self):
+        """
+        Process inputs/outputs and apply optional mesh updates during setup.
+
+        Notes
+        -----
+        Overriding ``process_inputs_and_outputs()`` is uncommon in COMPASS
+        steps, where most customization happens in ``setup()`` or
+        ``runtime_setup()``.  We override it here so friction-specific mesh
+        updates are applied only after all input files have been staged,
+        ensuring ``landice_grid.nc`` exists and that users can inspect the
+        updated mesh directly after ``compass setup`` and prior to
+        ``compass run``.
+        """
+        super().process_inputs_and_outputs()
+
+        if self.update_mesh_for_basal_friction:
+            if self.basal_friction == 'regularized_coulomb':
+                self._update_mesh_for_regularized_coulomb()
+            elif self.basal_friction == 'debris_friction':
+                self._update_mesh_for_debris_friction()
+
     def run(self):
         """
         Run this step of the test case
@@ -184,3 +238,25 @@ class RunModel(Step):
         for suffix in self.suffixes:
             run_model(step=self, namelist='namelist.{}'.format(suffix),
                       streams='streams.{}'.format(suffix))
+
+    def _update_mesh_for_debris_friction(self):
+        mesh_filename = os.path.join(self.work_dir, self.mesh_file)
+
+        with xr.open_dataset(mesh_filename) as ds_mesh:
+            ds_mesh['muFriction'].loc[:] = 0.4
+            ds_mesh['bedRoughnessRC'] = xr.full_like(ds_mesh['muFriction'],
+                                                     6000.0)
+            ds_mesh['basalDebrisFactor'] = xr.where(
+                ds_mesh['xCell'] < 200000.0, 3.2e-2, 0.0)
+            ds_mesh['bulkFriction'] = xr.where(
+                ds_mesh['xCell'] < 400000.0, 0.005, 0.0)
+            ds_mesh.to_netcdf(mesh_filename, mode='a')
+
+    def _update_mesh_for_regularized_coulomb(self):
+        mesh_filename = os.path.join(self.work_dir, self.mesh_file)
+
+        with xr.open_dataset(mesh_filename) as ds_mesh:
+            ds_mesh['muFriction'].loc[:] = 0.4
+            ds_mesh['bedRoughnessRC'] = xr.full_like(ds_mesh['muFriction'],
+                                                     6250.0)
+            ds_mesh.to_netcdf(mesh_filename, mode='a')
