@@ -1332,6 +1332,7 @@ def add_grid_imask_from_dst_scrip_hull(source_scrip, dest_scrip,
                                        source_crs='EPSG:4326',
                                        mesh_crs=None,
                                        hull_path=None,
+                                       valid_mask=None,
                                        logger=None):
     """
     Create a new source SCRIP file with grid_imask set to 1 only for cells
@@ -1372,6 +1373,11 @@ def add_grid_imask_from_dst_scrip_hull(source_scrip, dest_scrip,
         When provided, dest_scrip is not read and the boundary is not
         recomputed, which is useful when masking multiple source datasets
         against the same destination mesh.
+
+    valid_mask : numpy.ndarray or None, optional
+        1D 0/1 (or boolean) mask over the source ``grid_size`` marking cells
+        with valid data. When provided, ``grid_imask`` is the intersection of
+        the hull footprint and this mask, so ESMF excludes no-data cells.
 
     logger : logging.Logger, optional
         Logger for status messages; falls back to print if None.
@@ -1417,6 +1423,13 @@ def add_grid_imask_from_dst_scrip_hull(source_scrip, dest_scrip,
 
         src_pts = np.column_stack([xc, yc])
         inside = hull_path.contains_points(src_pts).astype(np.int32)
+        if valid_mask is not None:
+            valid_mask = np.asarray(valid_mask).astype(np.int32).ravel()
+            if valid_mask.size != inside.size:
+                raise ValueError(
+                    f'valid_mask size {valid_mask.size} does not match '
+                    f'source grid_size {inside.size}')
+            inside = inside * valid_mask
         _log(f'active source cells after masking: '
              f'{inside.sum()} / {inside.size}')
 
@@ -1564,9 +1577,43 @@ def plot_hull_diagnostic(hull_path, dest_scrip, source_bbox_files,
         _log(f'Warning: could not save mesh boundary plot: {exc}')
 
 
+def _compute_source_valid_mask(source_file, varnames):
+    """
+    Build a 1D valid-data mask (C-order, matching SCRIP ``grid_size``) that is
+    True only where every listed source variable has finite data.
+
+    Parameters
+    ----------
+    source_file : str
+        Path to the source gridded dataset.
+
+    varnames : list of str
+        Source variable names whose combined finite footprint defines validity
+        (a cell is valid only where all listed variables are finite).
+
+    Returns
+    -------
+    numpy.ndarray
+        Boolean mask flattened in C-order over the source grid.
+    """
+    # xarray decodes _FillValue to NaN, so isfinite drops no-data without
+    # discarding genuine zeros (e.g. stagnant ice).
+    with xarray.open_dataset(source_file) as ds:
+        valid = None
+        for name in varnames:
+            arr = ds[name].squeeze()
+            if arr.ndim != 2:
+                raise ValueError(
+                    f"Expected a 2D field for '{name}' in {source_file}, "
+                    f"got shape {arr.shape}")
+            finite = np.isfinite(arr.values)
+            valid = finite if valid is None else (valid & finite)
+    return valid.ravel()
+
+
 def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
                         nProcs, dest_file, proj, variables="all",
-                        hull_path=None):
+                        hull_path=None, valid_mask_varnames=None):
     """
     Interpolate gridded dataset (e.g. MEASURES, BedMachine) onto a MALI mesh
 
@@ -1599,6 +1646,12 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
         When provided, the boundary is not recomputed from mali_scrip, which
         avoids redundant I/O and computation when this function is called
         multiple times with the same destination mesh.
+
+    valid_mask_varnames : list of str or None, optional
+        Source variable names whose finite footprint defines valid data. When
+        provided, no-data source cells are excluded from the remapping weights
+        (and ESMF renormalizes/fills accordingly), removing the need for a
+        pre-extrapolated source raster. When None, all in-hull cells are used.
 
     Returns
     -------
@@ -1637,6 +1690,12 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
     # ESMF_RegridWeightGen only processes the cells that overlap the target.
     stem = os.path.splitext(source_scrip)[0]  # strips .nc
     masked_source_scrip = f'{stem}_masked.nc'
+
+    valid_mask = None
+    if valid_mask_varnames is not None:
+        valid_mask = _compute_source_valid_mask(source_file,
+                                                valid_mask_varnames)
+
     logger.info('masking source SCRIP to destination mesh footprint')
     add_grid_imask_from_dst_scrip_hull(
         source_scrip=source_scrip,
@@ -1644,6 +1703,7 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
         masked_source_scrip=masked_source_scrip,
         domain=proj,
         hull_path=hull_path,
+        valid_mask=valid_mask,
         logger=logger)
 
     # Generate remapping weights
@@ -1659,6 +1719,11 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
         "--dst_regional",
         "--src_regional",
         '--ignore_unmapped']
+    # With no-data cells excluded, renormalize partially covered dst cells and
+    # fill any left unmapped from nearest source.
+    if valid_mask is not None and not valid_mask.all():
+        args += ['--norm_type', 'fracarea',
+                 '--extrap_method', 'neareststod']
     check_call(args, logger=logger)
 
     # Perform actual interpolation using the weights
@@ -1963,11 +2028,13 @@ def run_optional_interpolation(
             measures_vars = ['observedSurfaceVelocityX',
                              'observedSurfaceVelocityY',
                              'observedSurfaceVelocityUncertainty']
+            # velocity vars are always named vx/vy
             interp_gridded2mali(self, measures_dataset, dst_scrip_file,
                                 parallel_executable, nProcs,
                                 mesh_filename, src_proj,
                                 variables=measures_vars,
-                                hull_path=hull_path)
+                                hull_path=hull_path,
+                                valid_mask_varnames=['vx', 'vy'])
 
         # Diagnostic plot: show hull, MALI domain, and bounding boxes for
         # all source datasets that were interpolated.

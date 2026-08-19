@@ -78,6 +78,16 @@ pass a pre-built ``hull_path`` (from
 :py:func:`compass.landice.mesh.build_dst_scrip_hull()`) to avoid recomputing the
 hull for each dataset.
 
+Optionally, ``valid_mask_varnames`` may be passed to also exclude no-data source
+cells (those where any listed variable is not finite) from the remapping
+weights. This lets a raw, unextrapolated source dataset be used directly instead
+of a pre-extrapolated one: excluded cells cannot pollute ice-margin values, and
+when any cells are excluded the ESMF call adds ``--norm_type fracarea`` (to
+renormalize partially covered destination cells) and ``--extrap_method
+neareststod`` (to fill any unmapped destination cells from the nearest valid
+source). When ``valid_mask_varnames`` is ``None`` (the default), all
+in-footprint cells are used, matching a pre-extrapolated source.
+
 :py:func:`compass.landice.mesh.build_dst_scrip_hull()` builds a buffered
 concave boundary from a destination SCRIP file and returns it as a
 ``matplotlib.path.Path``. The boundary is constructed by rasterising
@@ -98,7 +108,9 @@ fall within the concave boundary of the destination SCRIP footprint (plus a
 configurable buffer, default 50 km).  The function projects both SCRIP files
 into a planar stereographic coordinate system (determined by the ``domain``
 argument, e.g. ``'gis-gimp'`` or ``'ais-bedmap2'``) and uses a
-``matplotlib.path.Path`` point-in-polygon test for efficiency.  The resulting
+``matplotlib.path.Path`` point-in-polygon test for efficiency.  If an optional
+``valid_mask`` array is supplied, ``grid_imask`` is further intersected with it
+so no-data source cells are also excluded.  The resulting
 masked SCRIP file is passed to ``ESMF_RegridWeightGen`` in place of the
 full-domain source SCRIP.
 
