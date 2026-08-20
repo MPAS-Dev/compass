@@ -82,7 +82,7 @@ the mesh generation options are adjusted through the config file.
 
     # filename of the MEASURES ice velocity dataset
     # (default value is for Perlmutter)
-    measures_filename = antarctica_ice_velocity_450m_v2_edits_extrap.nc
+    measures_filename = antarctica_ice_velocity_450m_v2_edits.nc
 
     # projection of the source datasets, according to the dictionary keys
     # create_scrip_file_from_planar_rectangular_grid from MPAS_Tools
@@ -103,12 +103,15 @@ The test case performs interpolation of observational data from gridded datasets
 to the Antarctic mesh. This takes care of the peculiarities of the current gridded
 compilation dataset (antarctica_8km_2020_10_20.nc), as well as using conservative
 remapping directly from the high-resolution BedMachineAntarctica and MeASUReS
-velocity datasets. There is a fairly heavy degree of pre-processing done to get
-the BedMachine and MeASUReS datasets ready to be used here. The pre-processing
-includes renaming variables, setting reasonable _FillValue and missing_value
-attributes, extrapolating fields to avoid interpolation ramps at ice margins,
-updating mask values, and raising the bed topography at Lake Vostok to ensure
-a flat ice surface there.
+velocity datasets. The MEaSUREs velocity dataset is used directly in its raw
+(lightly edited) form: no-data cells are excluded from the remapping weights via
+source masking (see ``interp_gridded2mali()`` below), so no offline velocity
+extrapolation is required. The BedMachine dataset still needs some pre-processing
+to be ready for use here, including renaming variables, setting reasonable
+_FillValue and missing_value attributes, extrapolating thickness to avoid
+interpolation ramps at ice margins, updating mask values, and raising the bed
+topography at Lake Vostok to ensure a flat ice surface there. Bed topography is
+never extrapolated, so it retains its true values everywhere.
 
 Those data files and processing scripts currently live here on Perlmutter:
 ``/global/cfs/cdirs/fanssie/standard_datasets/AIS_datasets``.
@@ -127,8 +130,15 @@ case.
 Before running ``ESMF_RegridWeightGen``, the interpolation step automatically
 masks the source SCRIP file so that only cells overlapping a tight concave
 boundary around the destination mesh (plus a 50 km buffer) are active. The
-boundary follows the actual domain shape rather than a simple convex hull.
-This avoids unnecessary weight computation for the large portions of the
+boundary follows the actual domain shape rather than a simple convex hull. For
+the MEaSUREs velocity dataset, no-data cells inside that boundary are also
+excluded, and the conservative ``ESMF_RegridWeightGen`` call uses ``--norm_type
+fracarea`` so partially covered destination cells are renormalized. Since ESMF
+cannot extrapolate with conservative methods, any destination cells left
+unmapped are filled with nearest active-source weights computed directly and
+merged into the conservative weights, so ``ESMF_RegridWeightGen`` is still run
+only once. This avoids unnecessary weight computation for the large portions of
+the
 BedMachine Antarctica domain that lie outside the target mesh and substantially
 reduces ESMF weight-generation time.
 
