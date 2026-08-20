@@ -132,10 +132,13 @@ masks the source SCRIP file so that only cells overlapping a tight concave
 boundary around the destination mesh (plus a 50 km buffer) are active. The
 boundary follows the actual domain shape rather than a simple convex hull. For
 the MEaSUREs velocity dataset, no-data cells inside that boundary are also
-excluded, and ``ESMF_RegridWeightGen`` is run with ``--norm_type fracarea`` and
-``--extrap_method neareststod`` so partially covered destination cells are
-renormalized and any left unmapped are filled from the nearest valid source.
-This avoids unnecessary weight computation for the large portions of the
+excluded, and the conservative ``ESMF_RegridWeightGen`` call uses ``--norm_type
+fracarea`` so partially covered destination cells are renormalized. Since ESMF
+cannot extrapolate with conservative methods, any destination cells left
+unmapped are filled with nearest active-source weights computed directly and
+merged into the conservative weights, so ``ESMF_RegridWeightGen`` is still run
+only once. This avoids unnecessary weight computation for the large portions of
+the
 BedMachine Antarctica domain that lie outside the target mesh and substantially
 reduces ESMF weight-generation time.
 
