@@ -104,9 +104,10 @@ to the Antarctic mesh. This takes care of the peculiarities of the current gridd
 compilation dataset (antarctica_8km_2020_10_20.nc), as well as using conservative
 remapping directly from the high-resolution BedMachineAntarctica and MeASUReS
 velocity datasets. The MEaSUREs velocity dataset is used directly in its raw
-(lightly edited) form: no-data cells are excluded from the remapping weights via
-source masking (see ``interp_gridded2mali()`` below), so no offline velocity
-extrapolation is required. The BedMachine dataset still needs some pre-processing
+(lightly edited) form: its no-data gaps are extrapolated on the fly on the
+source raster (a fast nearest-value distance transform, see
+``interp_gridded2mali()`` below), so no offline velocity extrapolation is
+required. The BedMachine dataset still needs some pre-processing
 to be ready for use here, including renaming variables, setting reasonable
 _FillValue and missing_value attributes, extrapolating thickness to avoid
 interpolation ramps at ice margins, updating mask values, and raising the bed
@@ -131,14 +132,10 @@ Before running ``ESMF_RegridWeightGen``, the interpolation step automatically
 masks the source SCRIP file so that only cells overlapping a tight concave
 boundary around the destination mesh (plus a 50 km buffer) are active. The
 boundary follows the actual domain shape rather than a simple convex hull. For
-the MEaSUREs velocity dataset, no-data cells inside that boundary are also
-excluded, and the conservative ``ESMF_RegridWeightGen`` call uses ``--norm_type
-fracarea`` so partially covered destination cells are renormalized. Since ESMF
-cannot extrapolate with conservative methods, any destination cells left
-unmapped are filled with nearest active-source weights computed directly and
-merged into the conservative weights, so ``ESMF_RegridWeightGen`` is still run
-only once. This avoids unnecessary weight computation for the large portions of
-the
+the MEaSUREs velocity dataset, no-data gaps are additionally extrapolated on the
+source raster (nearest-value distance transform) before a plain conservative
+remap, so margins are free of interpolation ramps and fill artifacts. This
+avoids unnecessary weight computation for the large portions of the
 BedMachine Antarctica domain that lie outside the target mesh and substantially
 reduces ESMF weight-generation time.
 

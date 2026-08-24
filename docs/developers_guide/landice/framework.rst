@@ -78,18 +78,16 @@ pass a pre-built ``hull_path`` (from
 :py:func:`compass.landice.mesh.build_dst_scrip_hull()`) to avoid recomputing the
 hull for each dataset.
 
-Optionally, ``valid_mask_varnames`` may be passed to also exclude no-data source
-cells (those where any listed variable is not finite) from the remapping
-weights. This lets a raw, unextrapolated source dataset be used directly instead
-of a pre-extrapolated one: excluded cells cannot pollute ice-margin values. When
-any cells are excluded the conservative weight-gen call adds ``--norm_type
-fracarea`` (to renormalize partially covered destination cells). Because ESMF
-cannot extrapolate with conservative methods, any destination cells left
-unmapped (no valid source overlap) are then filled with nearest active-source
-weights computed directly (via a KD-tree, so ``ESMF_RegridWeightGen`` is still
-called only once) and merged into the conservative weights. When
-``valid_mask_varnames`` is ``None`` (the default), all in-footprint cells are
-used, matching a pre-extrapolated source.
+Optionally, ``extrap_varnames`` may be passed to extrapolate a raw,
+unextrapolated source dataset on the fly. The listed variables are
+nearest-filled into their no-data (non-finite) cells on the source raster using
+a fast Euclidean-distance transform, written to a temporary copy that is
+remapped in place of the original. This lets a plain conservative remap have
+valid data across the whole mesh footprint, so margins are free of
+interpolation ramps and single-pixel fill artifacts, without requiring an
+offline pre-extrapolated source file. When ``extrap_varnames`` is ``None`` (the
+default), the source is remapped as-is (appropriate for datasets that are
+already gap-free or intentionally left unfilled, e.g. bed topography).
 
 :py:func:`compass.landice.mesh.build_dst_scrip_hull()` builds a buffered
 concave boundary from a destination SCRIP file and returns it as a

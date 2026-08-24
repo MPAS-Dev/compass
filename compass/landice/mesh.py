@@ -23,7 +23,6 @@ from pyproj import Transformer
 from scipy import ndimage
 from scipy.interpolate import interpn
 from scipy.ndimage import binary_dilation, distance_transform_edt
-from scipy.spatial import cKDTree
 
 
 def mpas_flood_fill(seed_mask, grow_mask, cellsOnCell, nEdgesOnCell,
@@ -977,6 +976,45 @@ def add_bedmachine_thk_to_ais_gridded_data(self, source_gridded_dataset,
     return gridded_dataset_with_bm_thk
 
 
+def _nearest_fill_from_valid(field2d, valid_mask):
+    """
+    Fill invalid cells in a 2D regular raster using the value from the nearest
+    valid cell on the same grid, via a fast Euclidean-distance transform.
+
+    Parameters
+    ----------
+    field2d : numpy.ndarray
+        2D field to be filled.
+
+    valid_mask : numpy.ndarray
+        Boolean mask where True marks valid cells.
+
+    Returns
+    -------
+    filled : numpy.ndarray
+        Copy of ``field2d`` with invalid cells filled from the nearest valid
+        cell.
+    """
+    valid_mask = np.asarray(valid_mask, dtype=bool)
+
+    if field2d.shape != valid_mask.shape:
+        raise ValueError('field2d and valid_mask must have the same shape')
+
+    if not np.any(valid_mask):
+        raise ValueError('No valid cells available for nearest fill.')
+
+    # distance_transform_edt maps each True (foreground) cell to the nearest
+    # False cell, so pass ~valid_mask to get nearest-valid indices.
+    nearest_inds = distance_transform_edt(
+        ~valid_mask, return_distances=False, return_indices=True)
+
+    filled = np.array(field2d, copy=True)
+    invalid = ~valid_mask
+    filled[invalid] = field2d[nearest_inds[0, invalid],
+                              nearest_inds[1, invalid]]
+    return filled
+
+
 def preprocess_ais_data(self, source_gridded_dataset, floodFillMask):
     """
     Perform adjustments to gridded AIS datasets needed
@@ -996,45 +1034,6 @@ def preprocess_ais_data(self, source_gridded_dataset, floodFillMask):
         name of NetCDF file with preprocessed version of gridded dataset
     """
     logger = self.logger
-
-    def _nearest_fill_from_valid(field2d, valid_mask):
-        """
-        Fill invalid cells in a 2D regular raster using the value from the
-        nearest valid cell on the same grid.
-
-        Parameters
-        ----------
-        field2d : numpy.ndarray
-            2D field to be filled
-        valid_mask : numpy.ndarray
-            Boolean mask where True marks valid cells
-
-        Returns
-        -------
-        filled : numpy.ndarray
-            Copy of field2d with invalid cells filled
-        """
-        valid_mask = np.asarray(valid_mask, dtype=bool)
-
-        if field2d.shape != valid_mask.shape:
-            raise ValueError('field2d and valid_mask must have the same shape')
-
-        if not np.any(valid_mask):
-            raise ValueError('No valid cells available for nearest fill.')
-
-        # For EDT, foreground=True cells get mapped to nearest background=False
-        # cell when return_indices=True. So we pass ~valid_mask.
-        nearest_inds = distance_transform_edt(
-            ~valid_mask, return_distances=False, return_indices=True
-        )
-
-        filled = np.array(field2d, copy=True)
-        invalid = ~valid_mask
-        filled[invalid] = field2d[
-            nearest_inds[0, invalid],
-            nearest_inds[1, invalid]
-        ]
-        return filled
 
     # Apply floodFillMask to thickness field to help with culling
     file_with_flood_fill = \
@@ -1333,7 +1332,6 @@ def add_grid_imask_from_dst_scrip_hull(source_scrip, dest_scrip,
                                        source_crs='EPSG:4326',
                                        mesh_crs=None,
                                        hull_path=None,
-                                       valid_mask=None,
                                        logger=None):
     """
     Create a new source SCRIP file with grid_imask set to 1 only for cells
@@ -1374,11 +1372,6 @@ def add_grid_imask_from_dst_scrip_hull(source_scrip, dest_scrip,
         When provided, dest_scrip is not read and the boundary is not
         recomputed, which is useful when masking multiple source datasets
         against the same destination mesh.
-
-    valid_mask : numpy.ndarray or None, optional
-        1D 0/1 (or boolean) mask over the source ``grid_size`` marking cells
-        with valid data. When provided, ``grid_imask`` is the intersection of
-        the hull footprint and this mask, so ESMF excludes no-data cells.
 
     logger : logging.Logger, optional
         Logger for status messages; falls back to print if None.
@@ -1424,13 +1417,6 @@ def add_grid_imask_from_dst_scrip_hull(source_scrip, dest_scrip,
 
         src_pts = np.column_stack([xc, yc])
         inside = hull_path.contains_points(src_pts).astype(np.int32)
-        if valid_mask is not None:
-            valid_mask = np.asarray(valid_mask).astype(np.int32).ravel()
-            if valid_mask.size != inside.size:
-                raise ValueError(
-                    f'valid_mask size {valid_mask.size} does not match '
-                    f'source grid_size {inside.size}')
-            inside = inside * valid_mask
         _log(f'active source cells after masking: '
              f'{inside.sum()} / {inside.size}')
 
@@ -1578,10 +1564,17 @@ def plot_hull_diagnostic(hull_path, dest_scrip, source_bbox_files,
         _log(f'Warning: could not save mesh boundary plot: {exc}')
 
 
-def _compute_source_valid_mask(source_file, varnames):
+def _write_extrapolated_source(source_file, varnames, logger=None):
     """
-    Build a 1D valid-data mask (C-order, matching SCRIP ``grid_size``) that is
-    True only where every listed source variable has finite data.
+    Write a copy of ``source_file`` with each listed variable nearest-filled
+    into its no-data (non-finite) cells using a fast Euclidean-distance
+    transform.
+
+    Conservative remapping from this extrapolated copy has valid data across
+    the whole mesh footprint, avoiding the margin ramps and single-pixel fill
+    artifacts that arise when no-data cells are instead masked out of the
+    remapping weights. Only the listed variables and their coordinates are
+    written, keeping the temporary file small.
 
     Parameters
     ----------
@@ -1589,75 +1582,16 @@ def _compute_source_valid_mask(source_file, varnames):
         Path to the source gridded dataset.
 
     varnames : list of str
-        Source variable names whose combined finite footprint defines validity
-        (a cell is valid only where all listed variables are finite).
-
-    Returns
-    -------
-    numpy.ndarray
-        Boolean mask flattened in C-order over the source grid.
-    """
-    # xarray decodes _FillValue to NaN, so isfinite drops no-data without
-    # discarding genuine zeros (e.g. stagnant ice).
-    with xarray.open_dataset(source_file) as ds:
-        valid = None
-        for name in varnames:
-            arr = ds[name].squeeze()
-            if arr.ndim != 2:
-                raise ValueError(
-                    f"Expected a 2D field for '{name}' in {source_file}, "
-                    f"got shape {arr.shape}")
-            finite = np.isfinite(arr.values)
-            valid = finite if valid is None else (valid & finite)
-    return valid.ravel()
-
-
-def _scrip_centers_xyz(ds):
-    """
-    Return SCRIP cell centers as unit-sphere Cartesian coordinates so nearest
-    neighbors are correct even over the poles (unlike raw lat/lon distance).
-    """
-    lat = np.asarray(ds['grid_center_lat'].values, dtype=float).ravel()
-    lon = np.asarray(ds['grid_center_lon'].values, dtype=float).ravel()
-    units = ds['grid_center_lat'].attrs.get('units', 'degrees').lower()
-    if units.startswith('deg'):
-        lat = np.deg2rad(lat)
-        lon = np.deg2rad(lon)
-    cos_lat = np.cos(lat)
-    return np.column_stack([cos_lat * np.cos(lon),
-                            cos_lat * np.sin(lon),
-                            np.sin(lat)])
-
-
-def _fill_unmapped_weights(conserve_weights, masked_source_scrip, mali_scrip,
-                           logger=None):
-    """
-    Fill destination cells left unmapped by conservative regridding with
-    nearest active-source weights, merged into ``conserve_weights`` in place.
-
-    ESMF forbids extrapolation with conservative methods, so any destination
-    cell with no valid source overlap is simply absent from the conservative
-    weight file. Rather than run a second (expensive) ``ESMF_RegridWeightGen``
-    pass, the nearest active source cell for each unmapped destination cell is
-    found directly with a KD-tree and appended as a unit-weight row, producing
-    a single weight file usable by ``interpolate_to_mpasli_grid`` (which uses
-    ``S``/``col``/``row`` directly).
-
-    Parameters
-    ----------
-    conserve_weights : str
-        Path to the conservative ESMF weight file; overwritten with the merged
-        weights.
-
-    masked_source_scrip : str
-        SCRIP file for the source grid whose ``grid_imask`` marks the active
-        (in-hull, valid-data) cells that may be used as nearest neighbors.
-
-    mali_scrip : str
-        SCRIP file for the destination MALI mesh.
+        Source variable names to extrapolate (e.g. ``['vx', 'vy', 'vErr']``).
+        Names not present in the source are skipped.
 
     logger : logging.Logger, optional
         Logger for status messages; falls back to print if None.
+
+    Returns
+    -------
+    str
+        Path to the extrapolated source copy written to the current directory.
     """
     def _log(msg):
         if logger is not None:
@@ -1665,49 +1599,41 @@ def _fill_unmapped_weights(conserve_weights, masked_source_scrip, mali_scrip,
         else:
             print(msg)
 
-    with xarray.open_dataset(conserve_weights) as ds_w:
-        ds_w.load()
+    out_file = f'extrap_{os.path.basename(source_file)}'
 
-    n_b = int(ds_w.sizes['n_b'])
-    mapped = np.unique(ds_w['row'].values)  # 1-based dst indices with weights
-    all_dst = np.arange(1, n_b + 1, dtype=ds_w['row'].dtype)
-    unmapped = all_dst[~np.isin(all_dst, mapped)]
+    with xarray.open_dataset(source_file) as ds:
+        coord_vars = [c for c in ('x', 'y', 'x1', 'y1') if c in ds]
+        present = [v for v in varnames if v in ds]
+        for name in varnames:
+            if name not in ds:
+                _log(f"  '{name}' not in source; skipping extrapolation")
+        ds_out = ds[present + coord_vars].load()
 
-    _log(f'filling {unmapped.size} unmapped destination cells from '
-         f'nearest source')
-    if unmapped.size == 0:
-        return
+    for name in present:
+        da = ds_out[name]
+        values = np.asarray(da.values, dtype=float)
+        if values.ndim < 2:
+            raise ValueError(
+                f"Expected a >=2D field for '{name}', got shape "
+                f"{values.shape}")
+        ny, nx = values.shape[-2:]
+        planes = values.reshape(-1, ny, nx)
+        for k in range(planes.shape[0]):
+            valid = np.isfinite(planes[k])
+            n_fill = int((~valid).sum())
+            if n_fill == 0:
+                continue
+            _log(f"  extrapolating '{name}': filling {n_fill} no-data cells")
+            planes[k] = _nearest_fill_from_valid(planes[k], valid)
+        ds_out[name] = (da.dims, planes.reshape(values.shape).astype(da.dtype))
 
-    with xarray.open_dataset(masked_source_scrip) as ds_s:
-        src_xyz = _scrip_centers_xyz(ds_s)
-        active = np.flatnonzero(
-            np.asarray(ds_s['grid_imask'].values).ravel().astype(bool))
-    with xarray.open_dataset(mali_scrip) as ds_d:
-        dst_xyz = _scrip_centers_xyz(ds_d)
-
-    # Nearest active source cell for each unmapped destination cell.
-    tree = cKDTree(src_xyz[active])
-    _, nn = tree.query(dst_xyz[unmapped - 1])
-    nearest_src = active[nn]  # 0-based source indices
-
-    # ESMF stores col/row as 1-based; match that so the appended rows are
-    # applied identically to the conservative ones.
-    col = np.concatenate([ds_w['col'].values,
-                          (nearest_src + 1).astype(ds_w['col'].dtype)])
-    row = np.concatenate([ds_w['row'].values, unmapped])
-    s = np.concatenate([ds_w['S'].values,
-                        np.ones(unmapped.size, dtype=ds_w['S'].dtype)])
-
-    ds_out = ds_w.drop_vars(['S', 'col', 'row'])
-    ds_out['col'] = ('n_s', col)
-    ds_out['row'] = ('n_s', row)
-    ds_out['S'] = ('n_s', s)
-    ds_out.to_netcdf(conserve_weights)
+    ds_out.to_netcdf(out_file)
+    return out_file
 
 
 def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
                         nProcs, dest_file, proj, variables="all",
-                        hull_path=None, valid_mask_varnames=None):
+                        hull_path=None, extrap_varnames=None):
     """
     Interpolate gridded dataset (e.g. MEASURES, BedMachine) onto a MALI mesh
 
@@ -1741,13 +1667,13 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
         avoids redundant I/O and computation when this function is called
         multiple times with the same destination mesh.
 
-    valid_mask_varnames : list of str or None, optional
-        Source variable names whose finite footprint defines valid data. When
-        provided, no-data source cells are excluded from the remapping weights;
-        partially covered destination cells are renormalized (``fracarea``) and
-        any left unmapped are filled from a merged nearest-source weight file,
-        removing the need for a pre-extrapolated source raster. When None, all
-        in-hull cells are used.
+    extrap_varnames : list of str or None, optional
+        Source variable names to extrapolate into their no-data regions (via a
+        fast nearest-value distance transform) before remapping. When provided,
+        a temporary extrapolated copy of the source is remapped instead of the
+        raw file, so conservative remapping has valid data across the whole
+        mesh footprint and margins are free of interpolation ramps and
+        single-pixel fill artifacts. When None, the source is remapped as-is.
 
     Returns
     -------
@@ -1756,6 +1682,18 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
     """
 
     logger = self.logger
+
+    # Optionally extrapolate the source's no-data regions into a temporary
+    # copy so a plain conservative remap has valid data across the whole mesh
+    # footprint (avoids margin ramps and single-pixel fill artifacts).
+    extrap_file = None
+    if extrap_varnames is not None:
+        logger.info('extrapolating source no-data regions before remapping')
+        extrap_file = _write_extrapolated_source(
+            source_file, extrap_varnames, logger=logger)
+        interp_source = extrap_file
+    else:
+        interp_source = source_file
 
     bare = os.path.splitext(os.path.basename(source_file))[0]
     match = re.search(r'(^.*[_-]v\d*[_-])+', bare)
@@ -1776,7 +1714,7 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
     logger.info('creating scrip file for source dataset')
     # Note: writing scrip file to workdir
     args = ['create_scrip_file_from_planar_rectangular_grid',
-            '-i', source_file,
+            '-i', interp_source,
             '-s', source_scrip,
             '-p', proj,
             '-r', '2']
@@ -1787,11 +1725,6 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
     stem = os.path.splitext(source_scrip)[0]  # strips .nc
     masked_source_scrip = f'{stem}_masked.nc'
 
-    valid_mask = None
-    if valid_mask_varnames is not None:
-        valid_mask = _compute_source_valid_mask(source_file,
-                                                valid_mask_varnames)
-
     logger.info('masking source SCRIP to destination mesh footprint')
     add_grid_imask_from_dst_scrip_hull(
         source_scrip=source_scrip,
@@ -1799,14 +1732,10 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
         masked_source_scrip=masked_source_scrip,
         domain=proj,
         hull_path=hull_path,
-        valid_mask=valid_mask,
         logger=logger)
 
     # Generate remapping weights
     logger.info('generating gridded dataset -> MPAS weights')
-    # No-data source cells are excluded from the weights when a valid_mask is
-    # provided, so some destination cells may be left unmapped.
-    fill_unmapped = valid_mask is not None and not valid_mask.all()
     args = parallel_executable.split() + [
         '-n', nProcs,
         'ESMF_RegridWeightGen',
@@ -1818,30 +1747,22 @@ def interp_gridded2mali(self, source_file, mali_scrip, parallel_executable,
         "--dst_regional",
         "--src_regional",
         '--ignore_unmapped']
-    if fill_unmapped:
-        # Renormalize partially covered dst cells by their covered fraction
-        # instead of diluting them with the excluded no-data area.
-        args += ['--norm_type', 'fracarea']
     check_call(args, logger=logger)
-
-    if fill_unmapped:
-        # ESMF cannot extrapolate with conservative methods. Rather than a
-        # second (expensive) weight-gen pass, fill any dst cells left unmapped
-        # (no valid source overlap) with nearest active-source weights computed
-        # directly and merged into the conservative weights.
-        _fill_unmapped_weights(weights_filename, masked_source_scrip,
-                               mali_scrip, logger=logger)
 
     # Perform actual interpolation using the weights
     logger.info('calling interpolate_to_mpasli_grid')
     args = ['interpolate_to_mpasli_grid',
-            '-s', source_file,
+            '-s', interp_source,
             '-d', dest_file,
             '-m', 'e',
             '-w', weights_filename,
             '-v'] + variables
 
     check_call(args, logger=logger)
+
+    if extrap_file is not None and os.path.exists(extrap_file):
+        logger.info('removing temporary extrapolated source file')
+        os.remove(extrap_file)
 
     return masked_source_scrip
 
@@ -2134,13 +2055,14 @@ def run_optional_interpolation(
             measures_vars = ['observedSurfaceVelocityX',
                              'observedSurfaceVelocityY',
                              'observedSurfaceVelocityUncertainty']
-            # velocity vars are always named vx/vy
+            # extrapolate raw velocity/error into no-data gaps on the source
+            # raster so conservative remapping has clean margins
             interp_gridded2mali(self, measures_dataset, dst_scrip_file,
                                 parallel_executable, nProcs,
                                 mesh_filename, src_proj,
                                 variables=measures_vars,
                                 hull_path=hull_path,
-                                valid_mask_varnames=['vx', 'vy'])
+                                extrap_varnames=['vx', 'vy', 'vErr'])
 
         # Diagnostic plot: show hull, MALI domain, and bounding boxes for
         # all source datasets that were interpolated.
